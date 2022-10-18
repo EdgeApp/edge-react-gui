@@ -4,13 +4,11 @@ import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { memo, useRef } from '../../types/reactHooks'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
@@ -26,7 +24,7 @@ type Props = {
 function WalletListSwipeableLoadingRowComponent(props: Props) {
   const { navigation, walletId } = props
 
-  const rowRef = useRef<SwipableRowRef>(null)
+  const rowRef = React.useRef<SwipableRowRef>(null)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -76,4 +74,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableLoadingRow = memo(WalletListSwipeableLoadingRowComponent)
+export const WalletListSwipeableLoadingRow = React.memo(WalletListSwipeableLoadingRowComponent)

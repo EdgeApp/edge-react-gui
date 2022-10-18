@@ -30,7 +30,12 @@ export type WalletListMenuKey =
   | 'rawDelete'
   | string // for split keys like splitBCH, splitETH, etc.
 
-export function walletListMenuAction(navigation: NavigationProp<'walletList'>, walletId: string, option: WalletListMenuKey, tokenId?: string) {
+export function walletListMenuAction(
+  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
+  walletId: string,
+  option: WalletListMenuKey,
+  tokenId?: string
+) {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
@@ -79,6 +84,10 @@ export function walletListMenuAction(navigation: NavigationProp<'walletList'>, w
             }
           }
         }
+
+        // If we are in the tx list scene, go back to the wallet list so we don't crash on a deleted wallet
+        // Otherwise, goBack() does nothing if already in Wallet List
+        navigation.goBack()
         if (fioAddress) {
           dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_fio_extra_message_mobile))
         } else if (wallet.currencyCode && wallet.currencyCode.toLowerCase() === 'eth') {

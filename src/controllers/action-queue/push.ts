@@ -1,15 +1,18 @@
 import { asMaybe } from 'cleaners'
 
-// @ts-expect-error
-import ENV from '../../../env'
+import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
-import { exhaustiveCheck } from '../../util/exhaustiveCheck'
 import { filterNull } from '../../util/safeFilters'
-import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput } from './types'
+import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
 import { asErrorResponse, asLoginPayload, LoginUpdatePayload, PushRequestBody, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
 import { BroadcastTx, NewPushEvent, PushEventState, PushEventStatus, PushMessage, PushTrigger } from './types/pushTypes'
 import { base58 } from './util/encoding'
+
+export interface PushEventInfo {
+  newPushEvent: NewPushEvent
+  pushEventEffect: PushEventEffect
+}
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
 const { pushServerUri } = ACTION_QUEUE
@@ -18,13 +21,13 @@ const { pushServerUri } = ACTION_QUEUE
 Each PushEvent's trigger should be the effect of the previous ExecutionOutput:
 
   [ A, B, C ]
-  -> [ 
+  -> [
     {trigger: initEffect, ...convertToPushEvent(A)},
-    {trigger: A.effect, ...convertToPushEvent(B)}, 
-    {trigger: B.effect, ...convertToPushEvent(C)}, 
+    {trigger: A.effect, ...convertToPushEvent(B)},
+    {trigger: B.effect, ...convertToPushEvent(C)},
   ]
 
-The initEffect is the current effect in the program's state. This should 
+The initEffect is the current effect in the program's state. This should
 always be defined because the first action in the program should be run even
 for new programs.
 
@@ -36,7 +39,7 @@ export async function prepareNewPushEvents(
   program: ActionProgram,
   initEffect: ActionEffect,
   dryrunOutputs: ExecutionOutput[]
-): Promise<NewPushEvent[]> {
+): Promise<PushEventInfo[]> {
   const { account } = context
   const { programId } = program
 
@@ -46,9 +49,9 @@ export async function prepareNewPushEvents(
     body: s.strings.action_queue_push_notification_body
   }
 
-  const pushEvents: NewPushEvent[] = await Promise.all(
+  const pushEventInfos: PushEventInfo[] = await Promise.all(
     dryrunOutputs.map(async (output, index) => {
-      const prevEffect = index > 0 ? dryrunOutputs[index - 1].effect : initEffect
+      const triggeringEffect = index > 0 ? dryrunOutputs[index - 1].effect : initEffect
 
       const callStackId = getCallStackId(output.effect)
       const eventId = `${programId}:${callStackId}`
@@ -63,14 +66,14 @@ export async function prepareNewPushEvents(
           return broadcastTx
         })
       )
-      const trigger = await actionEffectToPushTrigger(context, prevEffect)
+      const trigger = await actionEffectToPushTrigger(context, triggeringEffect)
 
       // Assert that the given prevEffect is a convertible to a PushTrigger
       if (trigger == null) {
-        throw new Error(`Unsupported effect type ${prevEffect.type} in conversion to PushTrigger`)
+        throw new Error(`Unsupported effect type ${triggeringEffect.type} in conversion to PushTrigger`)
       }
 
-      const pushEvent: NewPushEvent = {
+      const newPushEvent: NewPushEvent = {
         eventId,
         broadcastTxs,
         // Include pushMessage only for the last event because device should only wake up when the server finishes all push events.
@@ -78,11 +81,20 @@ export async function prepareNewPushEvents(
         trigger
       }
 
-      return pushEvent
+      const pushEventEffect: PushEventEffect = {
+        type: 'push-event',
+        eventId: eventId,
+        effect: triggeringEffect
+      }
+
+      return {
+        newPushEvent,
+        pushEventEffect
+      }
     })
   )
 
-  return pushEvents
+  return pushEventInfos
 }
 
 export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
@@ -160,7 +172,7 @@ export async function uploadPushEvents(context: ExecutionContext, payload: Login
   }
 }
 
-async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | undefined> {
+async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | null> {
   const { account } = context
   const UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE =
     `Unexpected null effect while converting to PushTrigger. ` + `This could be caused by a partial dryrun not properly short-circuiting.`
@@ -210,19 +222,14 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
     }
 
     case 'done': {
-      return
+      return null
     }
     case 'par': {
-      return
+      return null
     }
     // Would this cause infinite recursion? We may never want to add conversion support for this.
     case 'push-event': {
-      return
-    }
-    default: {
-      // $ExpectError
-      // @ts-expect-error
-      throw exhaustiveCheck(effect.type)
+      return null
     }
   }
 }

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { memo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -44,4 +43,4 @@ const SettingsRadioRowComponent = (props: Props) => {
   )
 }
 
-export const SettingsRadioRow = memo(SettingsRadioRowComponent)
+export const SettingsRadioRow = React.memo(SettingsRadioRowComponent)

@@ -9,7 +9,6 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
-import { useEffect, useMemo, useRef, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -33,13 +32,13 @@ type Props = {
 
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
-  const [selectedWallet, setSelectedWallet] = useState({ walletId: '', currencyCode: '' })
-  const connected = useRef(false)
+  const [selectedWallet, setSelectedWallet] = React.useState({ walletId: '', currencyCode: '' })
+  const connected = React.useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
   const { uri } = props.route.params
-  const [dappDetails, setDappDetails] = useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
-  const [walletAddress, setWalletAddress] = useState('')
+  const [dappDetails, setDappDetails] = React.useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
+  const [walletAddress, setWalletAddress] = React.useState('')
 
   const account = useSelector(state => state.core.account)
   const { walletName, wallet, currencyWallets } = useSelector(state => {
@@ -54,8 +53,7 @@ export const WcConnectScene = (props: Props) => {
     }
   })
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
   }, [wallet])
 
@@ -106,15 +104,14 @@ export const WcConnectScene = (props: Props) => {
     )
   }
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
       showWalletListModal()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWallet.walletId, selectedWallet.currencyCode])
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       if (!connected.current && wallet?.otherMethods?.wcDisconnect != null) wallet.otherMethods.wcDisconnect(uri)
     }
@@ -137,7 +134,7 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>

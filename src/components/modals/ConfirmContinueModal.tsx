@@ -5,7 +5,6 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
@@ -37,7 +36,7 @@ export function ConfirmContinueModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const [isAgreed, setAgreed] = useState(false)
+  const [isAgreed, setAgreed] = React.useState(false)
   const handleTogggle = () => setAgreed(!isAgreed)
 
   const handleClose = () => bridge.resolve(false)

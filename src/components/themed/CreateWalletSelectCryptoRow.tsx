@@ -2,7 +2,6 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { memo } from '../../types/reactHooks'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -82,4 +81,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoRow = memo(CreateWalletSelectCryptoRowComponent)
+export const CreateWalletSelectCryptoRow = React.memo(CreateWalletSelectCryptoRowComponent)

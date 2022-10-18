@@ -25,10 +25,10 @@ const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, as
   if (zeroString(yesterdayExchangeRate) || zeroString(yesterdayDeltaPct)) return { percentString: '', deltaColorStyle: theme.secondaryText }
 
   // Colored, signed percentString representing daily price delta. Prepends a '+'
-  // symbol to the percent string if > 0.
+  // symbol to the percent string if > 0, otherwise a "-" if < 0.
   const percentString = toPercentString(abs(yesterdayDeltaPct), { noGrouping: true })
   if (gt(yesterdayDeltaPct, '0')) return { percentString: `+${percentString}`, deltaColorStyle: theme.positiveText }
-  return { percentString: `${percentString}`, deltaColorStyle: theme.negativeText }
+  return { percentString: `-${percentString}`, deltaColorStyle: theme.negativeText }
 }
 
 /**

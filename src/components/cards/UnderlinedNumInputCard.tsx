@@ -4,7 +4,6 @@ import FastImage from 'react-native-fast-image'
 
 import { useLayout } from '../../hooks/useLayout'
 import s from '../../locales/strings'
-import { memo, useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -26,15 +25,14 @@ const UnderlinedNumInputCardComponent = (props: {
   // HACK: EdgeText doesn't seem to work with useLayout, so instead subtract the
   // exponent width from the total valueContainer view width to get the textBase
   // width.
-  const [exponentTextWidth, setExponentTextWidth] = useState(1)
+  const [exponentTextWidth, setExponentTextWidth] = React.useState(1)
   const handleExponentLayout = (event: any) => {
     setExponentTextWidth(event.nativeEvent.layout.width)
   }
 
   return (
     <View style={styles.container}>
-      {/* @ts-expect-error */}
-      <TouchableOpacity onPress={onPress} underlayColor={theme.backgroundGradientColors[0]}>
+      <TouchableOpacity onPress={onPress}>
         <Card>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
@@ -117,4 +115,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const UnderlinedNumInputCard = memo(UnderlinedNumInputCardComponent)
+export const UnderlinedNumInputCard = React.memo(UnderlinedNumInputCardComponent)

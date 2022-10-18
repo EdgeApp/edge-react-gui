@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { memo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -26,7 +25,7 @@ type Props = {
 /**
  * A settings row with a smaller text on the right side.
  */
-export const SettingsLabelRowComponent = (props: Props): React.ReactNode => {
+export const SettingsLabelRowComponent = (props: Props) => {
   const { children, disabled, label, right, onPress } = props
   const theme = useTheme()
   const style = {
@@ -44,4 +43,4 @@ export const SettingsLabelRowComponent = (props: Props): React.ReactNode => {
   )
 }
 
-export const SettingsLabelRow = memo(SettingsLabelRowComponent)
+export const SettingsLabelRow = React.memo(SettingsLabelRowComponent)

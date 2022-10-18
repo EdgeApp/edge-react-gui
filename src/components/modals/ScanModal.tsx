@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
-// @ts-expect-error
-import { launchImageLibrary } from 'react-native-image-picker/src/index.ts'
+import { launchImageLibrary } from 'react-native-image-picker'
 import RNPermissions from 'react-native-permissions'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import RNQRGenerator from 'rn-qr-generator'
@@ -11,7 +10,6 @@ import RNQRGenerator from 'rn-qr-generator'
 import { useLayout } from '../../hooks/useLayout'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import s from '../../locales/strings'
-import { useEffect, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -39,13 +37,13 @@ export const ScanModal = (props: Props) => {
 
   // @ts-expect-error
   const cameraPermission = useSelector(state => state.permissions.camera)
-  const [torchEnabled, setTorchEnabled] = useState(false)
-  const [scanEnabled, setScanEnabled] = useState(false)
+  const [torchEnabled, setTorchEnabled] = React.useState(false)
+  const [scanEnabled, setScanEnabled] = React.useState(false)
 
   const handleFlash = () => setTorchEnabled(!torchEnabled)
 
   // Mount effects
-  useEffect(() => {
+  React.useEffect(() => {
     setScanEnabled(true)
     requestPermission('camera')
 
@@ -75,7 +73,6 @@ export const ScanModal = (props: Props) => {
       {
         mediaType: 'photo'
       },
-      // @ts-expect-error
       async result => {
         if (result.didCancel) return
 

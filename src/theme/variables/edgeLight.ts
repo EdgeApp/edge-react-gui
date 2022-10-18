@@ -7,7 +7,6 @@ import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMo
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
-import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
@@ -21,7 +20,6 @@ import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
-import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
@@ -349,7 +347,6 @@ export const edgeLight: Theme = {
 
   paymentTypeLogoApplePay: paymentTypeLogoApplePay,
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,
-  paymentTypeLogoBankgirot: paymentTypeLogoBankgirot,
   paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
   paymentTypeLogoCash: paymentTypeLogoCash,
   paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
@@ -363,7 +360,6 @@ export const edgeLight: Theme = {
   paymentTypeLogoPaynow,
   paymentTypeLogoPoli: paymentTypeLogoPoli,
   paymentTypeLogoSofort: paymentTypeLogoSofort,
-  paymentTypeLogoSwish: paymentTypeLogoSwish,
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
   primaryLogo: edgeLogo,

@@ -2,8 +2,7 @@ import { Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
-// @ts-expect-error
-import ENV from '../../env'
+import ENV from '../../env.json'
 
 type CleanStoreRecord<T> = {
   update: (data: T) => Promise<void>

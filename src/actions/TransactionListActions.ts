@@ -1,4 +1,4 @@
-import { EdgeTransaction } from 'edge-core-js'
+import { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown'
 import { showError } from '../components/services/AirshipInstance'
@@ -68,7 +68,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   }
 }
 
-const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: EdgeGetTransactionsOptions) => {
   const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (!wallet) return
@@ -179,7 +179,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   showTransactionDropdown(edgeTransaction, walletId)
 }
 
-export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {
+export const fetchTransactions = (walletId: string, currencyCode: string, options?: object) => (dispatch: Dispatch, getState: GetState) => {
   const state: RootState = getState()
   let startEntries, startIndex
   if (options) {

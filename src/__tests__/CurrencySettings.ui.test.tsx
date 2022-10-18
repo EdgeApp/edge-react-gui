@@ -33,8 +33,10 @@ describe('CurrencySettings', () => {
 
     const actual = renderer.create(
       <Provider store={store}>
-        {/* @ts-expect-error */}
-        <CurrencySettingsScene route={route} />
+        <CurrencySettingsScene
+          // @ts-expect-error
+          route={route}
+        />
       </Provider>
     )
 

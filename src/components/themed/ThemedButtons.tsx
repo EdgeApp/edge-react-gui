@@ -51,8 +51,12 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={[margin, padding]}>
-      {/* @ts-expect-error */}
-      <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.secondaryButton} onPress={onPress}>
+      <TouchableHighlight
+        activeOpacity={theme.underlayOpacity}
+        // @ts-expect-error
+        underlayColor={theme.secondaryButton}
+        onPress={onPress}
+      >
         <View style={[styles.radio, right && styles.radioRight]}>
           <RadioIcon value={value} />
           {children}

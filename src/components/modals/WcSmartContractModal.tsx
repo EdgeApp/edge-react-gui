@@ -134,8 +134,7 @@ export const WcSmartContractModal = (props: Props) => {
       }}
       paddingRem={[1, 0]}
     >
-      {/* @ts-expect-error */}
-      <View style={styles.title} paddingRem={[0, 0, 0, 1]}>
+      <View style={styles.title}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
       </View>

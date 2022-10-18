@@ -208,9 +208,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeLogoBankTransfer": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
               },
-              "paymentTypeLogoBankgirot": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankgirot.png",
-              },
               "paymentTypeLogoCash": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
               },
@@ -246,9 +243,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "paymentTypeLogoSofort": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
-              },
-              "paymentTypeLogoSwish": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSwish.png",
               },
               "paymentTypeLogoUpi": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
@@ -625,9 +619,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeLogoBankTransfer": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
               },
-              "paymentTypeLogoBankgirot": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankgirot.png",
-              },
               "paymentTypeLogoCash": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
               },
@@ -663,9 +654,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "paymentTypeLogoSofort": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
-              },
-              "paymentTypeLogoSwish": Object {
-                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSwish.png",
               },
               "paymentTypeLogoUpi": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",

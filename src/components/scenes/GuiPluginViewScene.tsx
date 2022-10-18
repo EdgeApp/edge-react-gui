@@ -9,7 +9,6 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
 import { RouteProp } from '../../types/routerTypes'
-// @ts-expect-error
 import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -22,7 +21,7 @@ import { requestPermissionOnSettings } from '../services/PermissionsManager'
 
 type WebViewCallbacks = {
   onMessage: (event: any) => void
-  setRef: (webView: any) => void
+  setRef: (webView: WebView | null) => void
 }
 
 /**
@@ -37,7 +36,7 @@ type WebViewCallbacks = {
 function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: boolean = false): WebViewCallbacks {
   let bridge: Bridge | undefined
   let gatedRoot: Root | undefined
-  let webview: WebView | undefined
+  let webview: WebView | null = null
 
   // Gate the root object on the webview being ready:
   const tryReleasingRoot = () => {
@@ -105,8 +104,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
   }
 
   // Listen for the webview component to mount:
-  // @ts-expect-error
-  const setRef = element => {
+  const setRef = (element: WebView | null) => {
     webview = element
     tryReleasingRoot()
   }
@@ -138,7 +136,7 @@ class GuiPluginView extends React.Component<Props, State> {
   _edgeProvider: EdgeProvider
   _promoCode: string | undefined
   _promoMessage: string | undefined
-  _webview: WebView | undefined
+  _webview: WebView | null = null
 
   // @ts-expect-error
   constructor(props) {
@@ -167,7 +165,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Capture the WebView ref:
     const { setRef } = this._callbacks
-    this._callbacks.setRef = (element: WebView | undefined) => {
+    this._callbacks.setRef = (element: WebView | null) => {
       if (element == null) this._canGoBack = false
       this._webview = element
       setRef(element)
@@ -265,7 +263,6 @@ class GuiPluginView extends React.Component<Props, State> {
           ref={this._callbacks.setRef}
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
-          useWebKit
           mediaPlaybackRequiresUserAction={false}
         />
       </SceneWrapper>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -40,15 +40,14 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }:
   )
 }
 
-// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonCap = {
+  const commonCap: ViewStyle = {
     borderColor: theme.lineDivider,
     borderBottomWidth: theme.thinLineWidth,
     borderTopWidth: theme.thinLineWidth,
     width: theme.rem(1)
   }
-  const commonArrow = {
+  const commonArrow: ViewStyle = {
     position: 'absolute',
     width: theme.thinLineWidth * 2,
     height: theme.rem(0.625),

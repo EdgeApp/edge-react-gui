@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
-import { memo } from '../../types/reactHooks'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
@@ -63,4 +62,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FiatIcon = memo(FiatIconComponent)
+export const FiatIcon = React.memo(FiatIconComponent)

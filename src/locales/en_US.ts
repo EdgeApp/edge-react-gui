@@ -29,11 +29,11 @@ const strings = {
   action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
   // swap
   action_queue_display_swap_title: `Swap %1$s into %2$s`,
-  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s.`,
+  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).`,
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
-  action_queue_push_notification_body: `Edge has finished working on your behalf.`,
+  action_queue_push_notification_body: `Edge has completed processing your loan operation.`,
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
@@ -502,6 +502,7 @@ const strings = {
   title_wallets: 'Wallets',
   title_buy: 'Buy',
   title_sell: 'Sell',
+  title_map: 'Map',
   no_exchanges_available: 'No Exchanges Enabled',
   check_exchange_settings: 'Please enable them in your Exchange Settings.',
   amount_above_limit: 'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
@@ -924,7 +925,7 @@ const strings = {
   loan_add_collateral: 'Add Collateral',
   loan_add_from: 'Add from %s',
   loan_amount_borrow: 'Amount to Borrow',
-  loan_amount_exceeds_s_collateral: 'Loan exceeds %1$s of collateral value in your %2$s wallet',
+  loan_amount_exceeds_s_collateral: 'Total loan value exceeds %1$s of total collateral value.',
   loan_available_equity: 'Available Equity',
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
@@ -937,7 +938,7 @@ const strings = {
   loan_collateral_required: 'Collateral Amount Required',
   loan_collateral_source: 'Collateral Source',
   loan_collateral_value: 'Collateral Value',
-  loan_create_confirmation_title: 'Borrow Details',
+  loan_create_confirmation_title: 'Loan Confirmation',
   loan_create_title: 'Borrow With Aave',
   loan_current_collateral: 'Current Collateral',
   loan_current_principal: 'Current Principal',
@@ -959,10 +960,12 @@ const strings = {
   loan_insufficient_funds_warning:
     'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
   loan_interest_rate: 'Interest Rate',
+  loan_loading_loans: 'Loading Loans...',
   loan_loan_breakdown_title: 'Loan Breakdown',
   loan_loan_to_value_ratio: 'Loan to Value Ratio',
   loan_make_payment: 'Make Payment',
   loan_must_be_s_or_less: 'Loan must be less than %1$s of your total collateral value',
+  loan_no_active_loans: 'You have no active loans.\nCreate a loan and start earning with AAVE!',
   loan_new_loan: 'New Loan',
   loan_new_collateral: 'New Collateral',
   loan_new_principal: 'New Principal',
@@ -974,7 +977,7 @@ const strings = {
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
-  loan_aave: 'AAVE',
+  loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",

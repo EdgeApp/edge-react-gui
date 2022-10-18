@@ -2,7 +2,6 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -46,7 +45,7 @@ export function ClickableText(props: Props) {
   const { alignSelf = 'auto', children, disabled = false, icon, label, marginRem, onPress, paddingRem, spinner = false } = props
 
   // `onPress` promise logic:
-  const [pending, setPending] = useState(false)
+  const [pending, setPending] = React.useState(false)
   const handlePress = () => {
     if (onPress == null || pending) return
     const out = onPress()

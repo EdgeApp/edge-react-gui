@@ -8,7 +8,8 @@ import {
   EdgeSwapQuote,
   EdgeSwapRequest,
   EdgeToken,
-  EdgeTransaction
+  EdgeTransaction,
+  JsonObject
 } from 'edge-core-js/types'
 
 import { RootState } from './reduxTypes'
@@ -17,6 +18,7 @@ import { Theme } from './Theme'
 export type BooleanMap = { [key: string]: boolean }
 export type NumberMap = { [key: string]: number }
 export type StringMap = { [key: string]: string }
+export type MapObject<T> = { [key: string]: T }
 
 export type GuiWallet = {
   id: string
@@ -149,7 +151,7 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
 export type SubcategorySearchResultData = {
   index: number
   item: string
-  separators: Object
+  separators: object
 }
 
 export type CurrencyConverter = {
@@ -276,12 +278,12 @@ export type GuiMakeSpendInfo = {
   metadata?: any
   nativeAmount?: string
   networkFeeOption?: FeeOption
-  customNetworkFee?: Object
+  customNetworkFee?: JsonObject
   publicAddress?: string
   spendTargets?: EdgeSpendTarget[]
   lockInputs?: boolean
   uniqueIdentifier?: string
-  otherParams?: Object
+  otherParams?: JsonObject
   dismissAlert?: boolean
   fioAddress?: string
   fioPendingRequest?: FioRequest
@@ -333,6 +335,12 @@ export type AppConfig = {
   supportSite: string
   termsOfServiceSite: string
   website: string
+  extraTab?: {
+    webviewUrl: string
+    tabTitleKey: string
+    extraTabBarIconFont: string
+    extraTabBarIconName: string
+  }
 }
 
 /**

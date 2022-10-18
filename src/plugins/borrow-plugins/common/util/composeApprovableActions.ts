@@ -1,6 +1,7 @@
 import { add } from 'biggystring'
+import { EdgeTransaction } from 'edge-core-js'
 
-import { BroadcastTx } from '../../../../controllers/action-queue/types'
+import { BroadcastTx, PendingTxMap } from '../../../../controllers/action-queue/types'
 import { ApprovableAction } from '../../types'
 
 export const composeApprovableActions = (...actions: ApprovableAction[]): ApprovableAction => {
@@ -13,20 +14,30 @@ export const composeApprovableActions = (...actions: ApprovableAction[]): Approv
 
   const currencyCode = actions[0].networkFee.currencyCode
   const nativeAmount = actions.reduce((sum, action) => add(sum, action.networkFee.nativeAmount), '0')
+  const unsignedTxs = actions.reduce((txs: EdgeTransaction[], action) => [...txs, ...action.unsignedTxs], [])
 
   return {
     networkFee: {
       currencyCode,
       nativeAmount
     },
-    // @ts-expect-error
-    unsignedTxs: actions.reduce((txs, action) => [...txs, ...action.unsignedTxs], []),
-    dryrun: async () => {
-      const outputs: BroadcastTx[] = []
+    unsignedTxs,
+    dryrun: async (pendingTxMap: PendingTxMap) => {
+      // Copy map so as not to mutate it for the caller.
+      const pendingTxMapCopy = { ...pendingTxMap }
+
+      const out: BroadcastTx[] = []
       for (const action of actions) {
-        outputs.push(...(await action.dryrun()))
+        const outputs = await action.dryrun(pendingTxMapCopy)
+        // Add dryrun outputs to pendingTxMap
+        for (const output of outputs) {
+          const { walletId, tx } = output
+          pendingTxMapCopy[walletId] = [...(pendingTxMapCopy[output.walletId] ?? []), tx]
+        }
+        // Push dryrun outputs to return value
+        out.push(...outputs)
       }
-      return outputs
+      return out
     },
     approve: async () => {
       const outputs: BroadcastTx[] = []

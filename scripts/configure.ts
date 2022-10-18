@@ -88,11 +88,6 @@ const asConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  CURRENCYCONVERTERAPI_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
   ETHEREUM_INIT: asCorePluginInit(
     asObject({
       alethioApiKey: asOptional(asString, ''),
@@ -145,11 +140,6 @@ const asConfig = asObject({
     }).withRest
   ),
   MONERO_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  NOMICS_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
     }).withRest

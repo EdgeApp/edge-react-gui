@@ -1,5 +1,21 @@
 [
   {
+    "id": "iach",
+    "pluginId": "iach",
+    "description": "Fee: 4-5%\nSettlement: 1 - 4 days",
+    "paymentType": "iach",
+    "paymentTypes": [
+      "iach"
+    ],
+    "title": "Instant ACH",
+    "forCountries": [
+      "US"
+    ],
+    "cryptoCodes": [
+    ],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "creditcard",
     "pluginId": "creditcard",
     "description": "Fee: 5-7%\nSettlement: 10 - 30 minutes",
@@ -313,43 +329,6 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "safello",
-    "pluginId": "safello",
-    "paymentTypes": [
-      "credit"
-    ],
-    "description": "Fee: 5.75%\nSettlement: Instant",
-    "title": "Credit Card",
-    "partnerIconPath": "Safello-Logo-Green-background.png",
-    "forCountries": [
-      "SE"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH"
-    ],
-    "paymentTypeLogoKey": "credit"
-  },
-  {
-    "id": "safello.bank",
-    "pluginId": "safello",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Fee: 4%\nSettlement: 1 - 2 days",
-    "title": "Bank Transfer",
-    "partnerIconPath": "Safello-Logo-Green-background.png",
-    "forCountries": [
-      "SE"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH"
-    ],
-    "paymentTypeLogoKey": "bank",
-    "deepPath": "/buy/bank"
-  },
-  {
     "id": "libertyx",
     "pluginId": "libertyx",
     "paymentTypes": [
@@ -591,10 +570,6 @@
     "sortIndex": 6
   },
   {
-    "id": "safello.bank",
-    "sortIndex": 1
-  },
-  {
     "id": "banxa.bank",
     "sortIndex": 4.5
   },
@@ -613,10 +588,6 @@
   {
     "id": "libertyx",
     "sortIndex": 7
-  },
-  {
-    "id": "safello",
-    "sortIndex": 6
   },
   {
     "id": "moonpay",
@@ -1123,34 +1094,6 @@
     "paymentTypeLogoKey": "googlepay"
   },
   "----- Country Specifics -----",
-  {
-    "id": "safello",
-    "forCountries": [
-      "SE"
-    ],
-    "paymentTypes": [
-      "bank",
-      "credit"
-    ],
-    "title": "Swish and Credit Card",
-    "sortIndex": 2,
-    "paymentTypeLogoKey": "swish"
-  },
-  {
-    "id": "safello.bank",
-    "forCountries": [
-      "SE"
-    ],
-    "paymentTypeLogoKey": "bankgirot",
-    "title": "Bankgiro"
-  },
-  {
-    "id": "safello.bank",
-    "forCountries": [
-      "DK"
-    ],
-    "title": "DKK Bank Transfer"
-  },
   {
     "id": "banxa.bank",
     "forCountries": [

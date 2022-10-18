@@ -1,11 +1,10 @@
-import { useEffect, useRef } from '../types/reactHooks'
-// Hook
+import * as React from 'react'
+
 export const useWhyDidYouUpdate = <T extends object>(name: string, props: T) => {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.
-  const previousProps = useRef({})
-  // @ts-expect-error
-  useEffect(() => {
+  const previousProps = React.useRef({})
+  React.useEffect(() => {
     if (previousProps.current) {
       // Get all keys from previous and current props
       const allKeys = Object.keys({ ...previousProps.current, ...props })

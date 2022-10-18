@@ -24,7 +24,7 @@ import { Actions } from '../types/routerTypes'
  * Performs the fetch commands to BitPay.
  * Throws errors when response is not OK.
  */
-async function fetchBitPayJsonResponse(uri: string, init: Object): Promise<Response> {
+async function fetchBitPayJsonResponse(uri: string, init: object): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()

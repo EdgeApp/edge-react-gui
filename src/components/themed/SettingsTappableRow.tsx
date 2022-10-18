@@ -2,7 +2,6 @@ import * as React from 'react'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import { memo } from '../../types/reactHooks'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -55,4 +54,4 @@ const SettingsTappableRowComponent = (props: Props) => {
   )
 }
 
-export const SettingsTappableRow = memo(SettingsTappableRowComponent)
+export const SettingsTappableRow = React.memo(SettingsTappableRowComponent)

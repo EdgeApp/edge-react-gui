@@ -1,11 +1,11 @@
 import { EdgeAccount } from 'edge-core-js'
+import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useEffect, useRef, useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
@@ -128,9 +128,8 @@ export function SortedWalletList(props: Props) {
   // Phase 3: Check for differences.
   const dispatch = useDispatch()
   const emptyList: WalletListItem[] = [] // Needed for Flow.
-  const lastList = useRef(emptyList)
-  // @ts-expect-error
-  useEffect(() => {
+  const lastList = React.useRef(emptyList)
+  React.useEffect(() => {
     if (!matchWalletList(sorted, lastList.current)) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })
     }
@@ -144,7 +143,7 @@ export function SortedWalletList(props: Props) {
  * Subscribes to all the enabled token lists in the account.
  */
 function useEnabledWalletIds(account: EdgeAccount): EnabledTokenIds {
-  const [out, setOut] = useState<EnabledTokenIds>(() => {
+  const [out, setOut] = React.useState<EnabledTokenIds>(() => {
     const out: EnabledTokenIds = {}
     for (const walletId of account.activeWalletIds) {
       const wallet = account.currencyWallets[walletId]

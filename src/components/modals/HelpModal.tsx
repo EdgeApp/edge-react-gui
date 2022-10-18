@@ -38,7 +38,7 @@ type Props = {
 }
 
 class HelpWebViewModal extends React.Component<Props & { uri: string; title: string }> {
-  webview: WebView | undefined
+  webview: WebView | null = null
   handleClose = () => this.props.bridge.resolve()
 
   render() {
@@ -48,7 +48,6 @@ class HelpWebViewModal extends React.Component<Props & { uri: string; title: str
         <ModalTitle center paddingRem={[0, 1, 1]}>
           {title}
         </ModalTitle>
-        {/* @ts-expect-error */}
         <WebView ref={element => (this.webview = element)} source={{ uri }} />
 
         <ModalCloseArrow onPress={this.handleClose} />

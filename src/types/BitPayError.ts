@@ -20,7 +20,7 @@ type BitPayErrorOptions = {
   header?: string
   statusCode?: string
   text?: string
-  errorData?: Object
+  errorData?: any
 }
 
 /**
@@ -46,7 +46,7 @@ export class BitPayError extends Error {
   header: string
   statusCode: string
   text: string
-  errorData: Object
+  errorData: any
 
   constructor(code: BitPayErrorCode, options: BitPayErrorOptions) {
     const { header = '', statusCode = '', text = '', errorData = {} } = options

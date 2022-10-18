@@ -4,7 +4,6 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -51,15 +50,14 @@ type Props = {
  * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
  * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
  */
-declare class OutlinedTextInputRef extends React.Component<Props> {
+export interface OutlinedTextInputRef {
   focus: () => void
   blur: () => void
   isFocused: () => boolean
   clear: () => void
 }
 
-// @ts-expect-error
-export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props: Props, ref) => {
+export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((props: Props, ref) => {
   const {
     // Contents:
     error,
@@ -94,11 +92,11 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   const hasValue = value !== ''
 
   // Show/Hide password input:
-  const [hidePassword, setHidePassword] = useState(secureTextEntry ?? false)
+  const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
   const handleHidePassword = () => setHidePassword(!hidePassword)
 
   // Imperative methods:
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = React.useRef<TextInput>(null)
   function blur(): void {
     if (inputRef.current != null) inputRef.current.blur()
   }
@@ -114,22 +112,21 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
-  useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
+  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
 
   // Captures the width of the placeholder label:
-  const [labelWidth, setLabelWidth] = useState(0)
+  const [labelWidth, setLabelWidth] = React.useState(0)
   // @ts-expect-error
   const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
 
   // Captures the width of the counter label:
-  const [counterWidth, setCounterWidth] = useState(0)
+  const [counterWidth, setCounterWidth] = React.useState(0)
   // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
 
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     errorAnimation.value = withTiming(hasError ? 1 : 0)
   }, [errorAnimation, hasError])
 
@@ -199,12 +196,15 @@ export const OutlinedTextInput: Class<OutlinedTextInputRef> = forwardRef((props:
   }
 
   // Animated styles:
-  const getBorderColor = useMemo(
+  const getBorderColor = React.useMemo(
     () => getIterpolatedColor(theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused, theme.dangerText),
     [theme]
   )
 
-  const getLabelColor = useMemo(() => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText), [theme])
+  const getLabelColor = React.useMemo(
+    () => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText),
+    [theme]
+  )
 
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value

@@ -4,7 +4,6 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings'
-import { useEffect, useMemo, useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { WcConnectionInfo, wcGetConnection } from '../../types/types'
@@ -25,7 +24,7 @@ export const WcConnectionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [connections, setConnections] = useState<WcConnectionInfo[]>([])
+  const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
   const { tempWallet, currencyWallets, wcEnabledWalletIds } = useSelector(state => {
     const { currencyWallets } = state.core.account
 
@@ -47,8 +46,7 @@ export const WcConnectionsScene = (props: Props) => {
     return { tempWallet, currencyWallets, wcEnabledWalletIds }
   })
 
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     getdAppconnections().then(connections => setConnections(connections))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props])
@@ -116,7 +114,7 @@ export const WcConnectionsScene = (props: Props) => {
       })
   }
 
-  const sceneHeader = useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
+  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>

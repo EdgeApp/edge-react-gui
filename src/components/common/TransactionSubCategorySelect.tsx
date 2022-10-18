@@ -75,10 +75,7 @@ export class SubCategorySelect extends React.Component<Props, State> {
       <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => this.props.onPressFxn(data.item)}>
         <View style={styles.rowContent}>
           <View style={styles.rowCategoryTextWrap}>
-            {/* @ts-expect-error */}
-            <FormattedText style={styles.rowCategoryText} numberOfLines={1}>
-              {data.item}
-            </FormattedText>
+            <FormattedText style={styles.rowCategoryText}>{data.item}</FormattedText>
           </View>
           {renderAdd()}
         </View>

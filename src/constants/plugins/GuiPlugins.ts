@@ -18,8 +18,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   moonpay: {
     pluginId: 'moonpay',
     storeId: 'io.moonpay.buy',
-    baseUri: 'https://buy.moonpay.io',
-    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', enableRecurringBuys: 'true' },
+    baseUri: 'https://sell.moonpay.io',
+    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', paymentMethod: 'ach_bank_transfer' },
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
     permissions: ['camera'],
@@ -55,20 +55,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
       ZRX: { pluginId: 'ethereum', tokenId: 'e41d2489571d322189246dafa5ebde1f4699f498' }
     }
   },
-  safello: {
-    pluginId: 'safello',
-    storeId: 'com.safello',
-    baseUri: 'https://safello.com/edge',
-    displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
-  },
-  'safello-sell': {
-    pluginId: 'safello-sell',
-    storeId: 'com.safello',
-    baseUri: 'https://app.safello.com',
-    displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
-  },
   bitsofgold: {
     pluginId: 'bitsofgold',
     storeId: 'bitsofgold',
@@ -91,6 +77,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: creditCardPlugin,
     displayName: 'Credit Card'
+  },
+  iach: {
+    pluginId: 'creditcard',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: creditCardPlugin,
+    displayName: 'Instant ACH'
   },
   simplex: {
     pluginId: 'simplex',

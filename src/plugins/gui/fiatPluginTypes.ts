@@ -4,8 +4,8 @@ import { EdgeAccount } from 'edge-core-js'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
-export const asFiatPaymentTypes = asValue('credit', 'applepay', 'googlepay')
-export type FiatPaymentType = 'credit' | 'applepay' | 'googlepay'
+export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
+export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
 
 export type FiatPluginGetMethodsResponse = {

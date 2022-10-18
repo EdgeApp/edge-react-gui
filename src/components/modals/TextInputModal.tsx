@@ -3,7 +3,6 @@ import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings'
-import { useState } from '../../types/reactHooks'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
@@ -63,10 +62,9 @@ export function TextInputModal(props: Props) {
     warningMessage
   } = props
 
-  // @ts-expect-error
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
-  const [spinning, setSpinning] = useState(false)
-  const [text, setText] = useState(initialValue)
+  const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
+  const [spinning, setSpinning] = React.useState(false)
+  const [text, setText] = React.useState(initialValue)
 
   const handleChangeText = (text: string) => {
     setText(text)

@@ -1,10 +1,10 @@
 import { EdgeAccount } from 'edge-core-js'
+import * as React from 'react'
 
 import { deleteLoanAccount, loadLoanAccounts } from '../../controllers/loan-manager/redux/actions'
 import { LoanAccountMap } from '../../controllers/loan-manager/types'
 import { checkLoanHasFunds } from '../../controllers/loan-manager/util/checkLoanHasFunds'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useEffect } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 
 export const LoanManagerService = () => {
@@ -27,7 +27,7 @@ export const LoanManagerService = () => {
   // Cleanup Routine
   //
 
-  useEffect(() => {
+  React.useEffect(() => {
     const cleanup = () => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         const { borrowEngine } = loanAccount

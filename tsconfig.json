@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "target": "esnext",
     "types": ["react-native"],
+    "sourceMap": true,
 
     "strict": true
   }

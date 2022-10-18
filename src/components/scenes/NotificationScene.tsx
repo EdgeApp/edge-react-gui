@@ -6,7 +6,6 @@ import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useMemo } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -41,7 +40,7 @@ export const NotificationScene = (props: Props) => {
     }
   })
 
-  const rows = useMemo(
+  const rows = React.useMemo(
     () => [
       <SettingsSwitchRow key="all" label={s.strings.settings_notifications_switch} value={!settings.ignorePriceChanges} onPress={toggleNotifications} />,
       ...Object.keys(currencyConfigs)

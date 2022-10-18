@@ -8,14 +8,12 @@ import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { memo, useEffect, useMemo, useRef } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-// @ts-expect-error
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
@@ -37,14 +35,13 @@ type Props = {
 function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const { navigation, openTutorial = false, token, tokenId, wallet } = props
 
-  const rowRef = useRef<SwipableRowRef>(null)
+  const rowRef = React.useRef<SwipableRowRef>(null)
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   // Tutorial mode:
-  // @ts-expect-error
-  useEffect(() => {
+  React.useEffect(() => {
     if (openTutorial && rowRef.current != null) {
       rowRef.current.openRight()
     }
@@ -131,7 +128,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
     </>
   )
 
-  const slopOpts = useMemo(
+  const slopOpts = React.useMemo(
     () => ({
       right: -theme.rem(1.5)
     }),
@@ -183,4 +180,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSwipeableCurrencyRow = memo(WalletListSwipeableCurrencyRowComponent)
+export const WalletListSwipeableCurrencyRow = React.memo(WalletListSwipeableCurrencyRowComponent)
