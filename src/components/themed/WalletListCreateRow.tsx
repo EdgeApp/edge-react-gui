@@ -3,11 +3,11 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { createWallet, CreateWalletOptions } from '../../actions/CreateWalletActions'
+import { createWallet, CreateWalletOptions, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
 import { Airship, showError } from '../../components/services/AirshipInstance'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { getPluginId } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
@@ -125,7 +125,7 @@ const createAndSelectToken =
                 if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
                 return await createWallet(account, {
                   walletType,
-                  walletName: getSpecialCurrencyInfo(walletType).initWalletName,
+                  walletName: getUniqueWalletName(account, pluginId),
                   fiatCurrencyCode: defaultIsoFiat
                 })
               })()
@@ -138,11 +138,11 @@ const createAndSelectToken =
     return ''
   }
 
-const createAndSelectWallet = ({ walletType, fiatCurrencyCode, walletName }: CreateWalletOptions) => {
-  walletName = walletName ?? getSpecialCurrencyInfo(walletType).initWalletName
+const createAndSelectWallet = ({ walletType, fiatCurrencyCode }: CreateWalletOptions) => {
   return async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
+    const walletName = getUniqueWalletName(account, getPluginId(walletType))
     try {
       const wallet = await showFullScreenSpinner(
         s.strings.wallet_list_modal_creating_wallet,

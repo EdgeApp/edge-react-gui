@@ -36,7 +36,12 @@ describe('CreateWalletSelectFiatComponent', () => {
           }
         },
         currencyWallets: {
-          'bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=': {}
+          'bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=': {
+            name: 'My Ether',
+            currencyInfo: {
+              pluginId: 'ethereum'
+            }
+          }
         }
       }
     }
