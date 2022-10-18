@@ -143,6 +143,20 @@ Array [
     "cryptoCodes": Array [],
     "deepPath": "",
     "deepQuery": Object {},
+    "description": "Fee: 4-5%
+Settlement: 10 - 30 minutes",
+    "paymentType": "iach",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": Array [
+      "iach",
+    ],
+    "pluginId": "iach",
+    "title": "Instant ACH",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "applepay",
