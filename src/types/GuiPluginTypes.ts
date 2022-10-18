@@ -1,6 +1,6 @@
 import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
-import { asFiatPaymentTypes, FiatPaymentType, FiatPluginFactory } from '../plugins/gui/fiatPluginTypes'
+import { asFiatPaymentType, FiatPaymentType, FiatPluginFactory } from '../plugins/gui/fiatPluginTypes'
 import { Permission } from '../reducers/PermissionsReducer'
 import { EdgeTokenId } from '../types/types'
 import { UriQueryMap } from './WebTypes'
@@ -89,7 +89,7 @@ const asGuiPluginJsonRow = asObject({
   deepQuery: asOptional(asMap(asEither(asString, asNull))),
 
   // Optional params to sent to native Fiat Plugins
-  paymentType: asOptional(asFiatPaymentTypes),
+  paymentType: asOptional(asFiatPaymentType),
 
   // List display options:
   title: asOptional(asString),
