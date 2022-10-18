@@ -144,7 +144,7 @@ Array [
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 4-5%
-Settlement: 10 - 30 minutes",
+Settlement: 1 - 4 days",
     "paymentType": "iach",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -222,6 +222,19 @@ Settlement: Instant",
 
 exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
 Array [
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
+    "partnerIconPath": "icon_black_small.png",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "moonpay",
+    "title": "Instant ACH",
+  },
   Object {
     "cryptoCodes": Array [
       "BTC",

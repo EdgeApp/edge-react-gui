@@ -1,5 +1,19 @@
 [
   {
+    "id": "moonpay",
+    "pluginId": "moonpay",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
+    "title": "Instant ACH",
+    "partnerIconPath": "icon_black_small.png",
+    "forCountries": [
+      "US"
+    ],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "wyre",
     "pluginId": "wyre",
     "paymentTypes": [
