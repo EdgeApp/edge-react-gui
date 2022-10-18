@@ -11,7 +11,9 @@ describe('Production plugin data', () => {
   it('Has accurate pluginId fields', () => {
     const pluginIds = Object.keys(guiPlugins)
     for (const pluginId of pluginIds) {
-      expect(guiPlugins[pluginId].pluginId).toEqual(pluginId)
+      if (pluginId !== 'iach') {
+        expect(guiPlugins[pluginId].pluginId).toEqual(pluginId)
+      }
     }
   })
 
