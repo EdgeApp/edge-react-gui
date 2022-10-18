@@ -242,8 +242,6 @@ export const LoanManageScene = (props: Props) => {
       }
       setActionProgram(await makeActionProgram(actionOp))
     }
-
-    return () => {}
   }, [actionNativeAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
 
   // Get Network Fees

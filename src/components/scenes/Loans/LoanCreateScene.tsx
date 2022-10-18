@@ -123,7 +123,6 @@ export const LoanCreateScene = (props: Props) => {
 
   const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     const wyreClient = await makeWyreClient({ account })
     if (wyreClient.isAccountSetup) {

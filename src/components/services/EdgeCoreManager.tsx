@@ -68,7 +68,6 @@ export function EdgeCoreManager(props: Props) {
   const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (context == null) return
     await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })

@@ -46,7 +46,6 @@ export const ActionQueueService = () => {
   // Initialization
   //
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account?.dataStore != null) {
       const store = makeActionQueueStore(account, clientId)
