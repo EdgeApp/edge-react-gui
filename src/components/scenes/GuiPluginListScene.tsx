@@ -14,7 +14,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import s from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
-import { executePlugin } from '../../plugins/gui/fiatPlugin'
+import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
@@ -85,6 +85,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 type State = {
   developerUri: string
   buySellPlugins: BuySellPlugins
+  hasWyreAccountHack: boolean
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
@@ -101,7 +102,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       developerUri: '',
-      buySellPlugins
+      buySellPlugins,
+      hasWyreAccountHack: false
     }
     this.componentMounted = true
   }
@@ -115,6 +117,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       const clean = asDeveloperUri(JSON.parse(text))
       this.setState({ developerUri: clean.uri })
     }
+    checkWyreHasLinkedBank(this.props.account.dataStore)
+      .then(linked => {
+        if (this.componentMounted && linked != null) {
+          this.setState({ hasWyreAccountHack: linked })
+        }
+      })
+      .catch((e: any) => console.error(e.message))
   }
 
   componentWillUnmount() {
@@ -332,6 +341,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     // Filter disabled plugins:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
     plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
+
+    if (!this.state.hasWyreAccountHack) {
+      plugins = plugins.filter(plugin => plugin.pluginId !== 'wyre')
+    }
 
     // Add the dev mode plugin if enabled:
     if (developerModeOn) {
