@@ -110,6 +110,7 @@ export const moonpayProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+    const { direction } = params
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
     const out = {
@@ -164,7 +165,7 @@ export const moonpayProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, paymentTypes } = params
+        const { regionCode, paymentTypes, amountType } = params
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
         let useIAch = false
@@ -189,20 +190,26 @@ export const moonpayProvider: FiatProviderFactory = {
         const maxCrypto = Math.max(cryptoCurrencyObj.maxAmount ?? 0, cryptoCurrencyObj.maxBuyAmount ?? 0)
         const minCrypto = Math.min(cryptoCurrencyObj.minAmount ?? Infinity, cryptoCurrencyObj.minBuyAmount ?? Infinity)
         const exchangeAmount = parseFloat(params.exchangeAmount)
-        if (params.amountType === 'fiat') {
+        if (amountType === 'fiat') {
           if (exchangeAmount > maxFiat) throw new FiatProviderError({ errorType: 'overLimit', errorAmount: maxFiat })
           if (exchangeAmount < minFiat) throw new FiatProviderError({ errorType: 'underLimit', errorAmount: minFiat })
-          // User typed a fiat amount. Need a crypto value
-          amountParam = `baseCurrencyAmount=${params.exchangeAmount}`
         } else {
           if (exchangeAmount > maxCrypto) throw new FiatProviderError({ errorType: 'overLimit', errorAmount: maxCrypto })
           if (exchangeAmount < minCrypto) throw new FiatProviderError({ errorType: 'underLimit', errorAmount: minCrypto })
+        }
+        if ((amountType === 'fiat' && direction === 'buy') || (amountType === 'crypto' && direction === 'sell')) {
+          // User typed a fiat amount. Need a crypto value
+          amountParam = `baseCurrencyAmount=${params.exchangeAmount}`
+        } else {
           amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
         }
 
         const fiatCode = params.fiatCurrencyCode.replace('iso:', '').toLowerCase()
         const paymentMethod = useIAch ? 'ach_bank_transfer' : 'credit_debit_card'
-        const url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
+        const apiMethod = direction === 'buy' ? 'buy_quote' : 'sell_quote'
+        const quoteCurrencyCode = direction === 'buy' ? cryptoCurrencyObj.code : fiatCode
+        const baseCurrencyCode = direction === 'buy' ? fiatCode : cryptoCurrencyObj.code
+        const url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/${apiMethod}/?apiKey=${apiKey}&quoteCurrencyCode=${quoteCurrencyCode}&baseCurrencyCode=${baseCurrencyCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
         const response = await fetch(url).catch(e => {
           console.log(e)
           return undefined
@@ -234,7 +241,7 @@ export const moonpayProvider: FiatProviderFactory = {
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { coreWallet, showUi } = approveParams
             const receiveAddress = await coreWallet.getReceiveAddress()
-            const url = new URL('https://buy.moonpay.com?', true)
+            const url = new URL(direction === 'buy' ? 'https://buy.moonpay.com?' : 'https://sell.moonpay.com?', true)
             const queryObj: MoonpayWidgetQueryParams = {
               apiKey,
               walletAddress: receiveAddress.publicAddress,

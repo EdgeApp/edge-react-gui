@@ -223,6 +223,20 @@ Settlement: Instant",
 exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
 Array [
   Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "Fee: 4-5%
+Settlement: 10 - 30 minutes",
+    "paymentType": "iach",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": Array [
+      "iach",
+    ],
+    "pluginId": "iach",
+    "title": "Instant ACH",
+  },
+  Object {
     "cryptoCodes": Array [
       "BTC",
       "ETH",

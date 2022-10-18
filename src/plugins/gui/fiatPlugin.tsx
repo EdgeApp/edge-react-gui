@@ -25,9 +25,10 @@ export const executePlugin = async (params: {
   regionCode: FiatPluginRegionCode
   paymentType?: FiatPaymentType
   account: EdgeAccount
+  direction: 'buy' | 'sell'
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
 }): Promise<void> => {
-  const { guiPlugin, navigation, account, regionCode, paymentType } = params
+  const { guiPlugin, navigation, account, regionCode, paymentType, direction } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
@@ -52,12 +53,13 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
+      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, flipInputs } = params
       return new Promise((resolve, reject) => {
         navigation.navigate('guiPluginEnterAmount', {
           headerTitle,
           label1,
           label2,
+          flipInputs,
           initialAmount1,
           getMethods,
           convertValue,
@@ -77,7 +79,7 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ showUi, account })
+  const plugin = await guiPlugin.nativePlugin({ showUi, account, direction })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }
@@ -85,7 +87,8 @@ export const executePlugin = async (params: {
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
     regionCode,
-    paymentTypes
+    paymentTypes,
+    direction
   }
   plugin.startPlugin(startPluginParams)
 }

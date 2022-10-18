@@ -85,6 +85,7 @@ export type FiatProvider = {
 export type FiatProviderFactoryParams = {
   io: { store: FiatProviderStore }
   apiKeys?: unknown
+  direction: 'buy' | 'sell'
 }
 
 export type FiatProviderFactory = {

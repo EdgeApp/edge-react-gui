@@ -27,9 +27,9 @@ export type EnterAmountPoweredBy = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
-  const [value1, setValue1] = React.useState<string>(initialAmount1)
-  const [value2, setValue2] = React.useState<string>('')
+  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods, flipInputs } = props.route.params
+  const [value1, setValue1] = React.useState<string>(!flipInputs ? initialAmount1 : '')
+  const [value2, setValue2] = React.useState<string>(flipInputs ? initialAmount1 : '')
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
   const [spinner2, setSpinner2] = React.useState<boolean>(false)
   const [statusTextContent, setStatusTextContent] = React.useState<string>('')
@@ -59,14 +59,25 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     })
 
   if (firstRun.current && initialAmount1 != null) {
-    setValue2(' ')
-    setSpinner2(true)
-    convertValue(1, initialAmount1).then(val => {
-      if (typeof val === 'string') {
-        setValue2(val)
-        setSpinner2(false)
-      }
-    })
+    if (flipInputs) {
+      setValue1(' ')
+      setSpinner1(true)
+      convertValue(2, initialAmount1).then(val => {
+        if (typeof val === 'string') {
+          setValue1(val)
+          setSpinner1(false)
+        }
+      })
+    } else {
+      setValue2(' ')
+      setSpinner2(true)
+      convertValue(1, initialAmount1).then(val => {
+        if (typeof val === 'string') {
+          setValue2(val)
+          setSpinner2(false)
+        }
+      })
+    }
   }
   firstRun.current = false
   let headerIcon = null
@@ -115,32 +126,65 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       </SceneHeader>
       <View style={styles.container}>
         <View style={styles.textFields}>
-          <OutlinedTextInput
-            numeric
-            maxDecimals={2}
-            autoCorrect={false}
-            autoFocus
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label1}
-            onChangeText={handleChangeText1}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner1}
-            value={value1 ?? '0'}
-          />
-          <OutlinedTextInput
-            numeric
-            maxDecimals={6}
-            autoCorrect={false}
-            autoFocus={false}
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label2}
-            onChangeText={handleChangeText2}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner2}
-            value={value2 ?? '0'}
-          />
+          {flipInputs === true ? (
+            <>
+              <OutlinedTextInput
+                numeric
+                maxDecimals={6}
+                autoCorrect={false}
+                autoFocus={false}
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label2}
+                onChangeText={handleChangeText2}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner2}
+                value={value2 ?? '0'}
+              />
+              <OutlinedTextInput
+                numeric
+                maxDecimals={2}
+                autoCorrect={false}
+                autoFocus
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label1}
+                onChangeText={handleChangeText1}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner1}
+                value={value1 ?? '0'}
+              />
+            </>
+          ) : (
+            <>
+              <OutlinedTextInput
+                numeric
+                maxDecimals={2}
+                autoCorrect={false}
+                autoFocus
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label1}
+                onChangeText={handleChangeText1}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner1}
+                value={value1 ?? '0'}
+              />
+              <OutlinedTextInput
+                numeric
+                maxDecimals={6}
+                autoCorrect={false}
+                autoFocus={false}
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label2}
+                onChangeText={handleChangeText2}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner2}
+                value={value2 ?? '0'}
+              />
+            </>
+          )}
         </View>
         {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
         {poweredBy != null ? (

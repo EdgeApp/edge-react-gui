@@ -1,5 +1,21 @@
 [
   {
+    "id": "iach",
+    "pluginId": "iach",
+    "description": "Fee: 4-5%\nSettlement: 10 - 30 minutes",
+    "paymentType": "iach",
+    "paymentTypes": [
+      "iach"
+    ],
+    "title": "Instant ACH",
+    "forCountries": [
+      "US"
+    ],
+    "cryptoCodes": [
+    ],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "wyre",
     "pluginId": "wyre",
     "paymentTypes": [

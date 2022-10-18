@@ -28,7 +28,7 @@ const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
-  const { showUi, account } = params
+  const { showUi, account, direction } = params
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
@@ -45,7 +45,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
     }
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
+    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys, direction }))
   }
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
@@ -114,12 +114,18 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
+      let initialAmount1
+      if (direction === 'buy') {
+        initialAmount1 = '500'
+      } else {
+        initialAmount1 = '0.1'
+      }
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
-
+        flipInputs: direction === 'sell',
         label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
-        initialAmount1: '500',
+        initialAmount1,
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
           enterAmountMethods = methods
         },
@@ -173,7 +179,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           if (myCounter !== counter) return
 
           for (const quote of quotes) {
-            if (quote.direction !== 'buy') continue
             // @ts-expect-error
             if (pluginPriority[pluginId] != null && pluginPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)

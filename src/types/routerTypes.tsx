@@ -187,6 +187,7 @@ export type ParamList = {
     onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
     label1: string
     label2: string
+    flipInputs?: boolean
     onChangeText: (fieldNum: number, value: string) => Promise<void>
     convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
     getMethods?: (methods: FiatPluginGetMethodsResponse) => void

@@ -18,6 +18,7 @@ export type FiatPluginEnterAmountParams = {
   headerTitle: string
   label1: string
   label2: string
+  flipInputs?: boolean
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
   getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   initialAmount1?: string
@@ -55,6 +56,7 @@ export type FiatPluginFactoryArgs = {
   // }
   showUi: FiatPluginUi
   account: EdgeAccount
+  direction: 'buy' | 'sell'
 }
 
 export type FiatPluginRegionCode = {
