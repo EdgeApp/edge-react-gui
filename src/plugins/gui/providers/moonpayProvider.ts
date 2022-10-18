@@ -3,7 +3,7 @@ import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, a
 import URL from 'url-parse'
 
 import { StringMap } from '../../../types/types'
-import { asFiatPaymentTypes } from '../fiatPluginTypes'
+import { asFiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -168,7 +168,7 @@ export const moonpayProvider: FiatProviderFactory = {
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
         for (const type of paymentTypes) {
-          const t = asFiatPaymentTypes(type)
+          const t = asFiatPaymentType(type)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
             break
