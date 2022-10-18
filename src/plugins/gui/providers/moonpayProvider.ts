@@ -3,7 +3,7 @@ import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, a
 import URL from 'url-parse'
 
 import { StringMap } from '../../../types/types'
-import { asFiatPaymentType } from '../fiatPluginTypes'
+import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -21,7 +21,7 @@ const pluginDisplayName = 'Moonpay'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
-const allowedPaymentTypes = { applepay: true, credit: true, googlepay: true }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false, iach: true }
 
 const asMoonpayCurrency = asObject({
   type: asValue('crypto', 'fiat'),
@@ -68,6 +68,7 @@ type MoonpayWidgetQueryParams = {
   walletAddress: string
   showAllCurrencies: boolean
   enableRecurringBuys: boolean
+  paymentMethod: 'ach_bank_transfer' | 'credit_debit_card'
   quoteCurrencyAmount?: number
   baseCurrencyAmount?: number
 }
@@ -167,11 +168,14 @@ export const moonpayProvider: FiatProviderFactory = {
         const { regionCode, paymentTypes } = params
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
+        let useIAch = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
-            break
+          }
+          if (type === 'iach') {
+            useIAch = true
           }
         }
         if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
@@ -198,7 +202,8 @@ export const moonpayProvider: FiatProviderFactory = {
         }
 
         const fiatCode = params.fiatCurrencyCode.replace('iso:', '').toLowerCase()
-        const url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=credit_debit_card&areFeesIncluded=true&${amountParam}`
+        const paymentMethod = useIAch ? 'ach_bank_transfer' : 'credit_debit_card'
+        const url = `https://api.moonpay.com/v3/currencies/${cryptoCurrencyObj.code}/buy_quote/?apiKey=${apiKey}&quoteCurrencyCode=${cryptoCurrencyObj.code}&baseCurrencyCode=${fiatCode}&paymentMethod=${paymentMethod}&areFeesIncluded=true&${amountParam}`
         const response = await fetch(url).catch(e => {
           console.log(e)
           return undefined
@@ -235,6 +240,7 @@ export const moonpayProvider: FiatProviderFactory = {
               apiKey,
               walletAddress: receiveAddress.publicAddress,
               currencyCode: cryptoCurrencyObj.code,
+              paymentMethod,
               baseCurrencyCode: fiatCurrencyObj.code,
               lockAmount: true,
               showAllCurrencies: false,
