@@ -81,18 +81,18 @@ export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void
 
     for (const key of Object.keys(loanAccountMapRecord.data)) {
       const loanAccountEntry = loanAccountMapRecord.data[key]
-      const { walletId, borrowPluginId, closed, programEdges } = loanAccountEntry
-      const wallet = await account.waitForCurrencyWallet(walletId)
-      const borrowPlugin = borrowPluginMap[borrowPluginId]
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
-      await borrowEngine.startEngine()
-      const loanAccount: LoanAccount = {
-        id: walletId,
-        borrowPlugin,
-        borrowEngine,
-        closed,
-        programEdges
-      }
+      const wallet = await account.waitForCurrencyWallet(loanAccountEntry.walletId)
+      const borrowPlugin = borrowPluginMap[loanAccountEntry.borrowPluginId]
+
+      // Instantiate loan account from loanAccountEntry
+      const loanAccount = await makeLoanAccount(borrowPlugin, wallet)
+      loanAccount.closed = loanAccountEntry.closed
+      loanAccount.programEdges = loanAccountEntry.programEdges
+
+      // Start the engine
+      await loanAccount.borrowEngine.startEngine()
+
+      // Save the loan account
       dispatch({
         type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
         loanAccount
