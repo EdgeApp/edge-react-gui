@@ -173,7 +173,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     />
   )
 
-  keyExtractor = (item: TransactionListTx) => String(item.key)
+  keyExtractor = (item: TransactionListTx) => item.txid
 
   getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
 
