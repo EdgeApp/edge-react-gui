@@ -4,7 +4,7 @@ import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
 import { fetchInfo } from '../../../util/network'
 import { makeUuid } from '../../../util/utils'
-import { asFiatPaymentTypes } from '../fiatPluginTypes'
+import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -120,7 +120,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
-const allowedPaymentTypes = { applepay: true, credit: true, googlepay: false }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false }
 
 for (const pluginId in SIMPLEX_ID_MAP) {
   const codesObject = SIMPLEX_ID_MAP[pluginId]
@@ -215,7 +215,7 @@ export const simplexProvider: FiatProviderFactory = {
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
         let foundPaymentType = false
         for (const type of paymentTypes) {
-          const t = asFiatPaymentTypes(type)
+          const t = asFiatPaymentType(type)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
             break

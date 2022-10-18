@@ -18,8 +18,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   moonpay: {
     pluginId: 'moonpay',
     storeId: 'io.moonpay.buy',
-    baseUri: 'https://buy.moonpay.io',
-    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', enableRecurringBuys: 'true' },
+    baseUri: 'https://sell.moonpay.io',
+    baseQuery: { apiKey: 'pk_live_Y1vQHUgfppB4oMEZksB8DYNQAdA4sauy', paymentMethod: 'ach_bank_transfer' },
     queryPromoCode: 'apiKey',
     displayName: 'MoonPay',
     permissions: ['camera'],
@@ -77,6 +77,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: creditCardPlugin,
     displayName: 'Credit Card'
+  },
+  iach: {
+    pluginId: 'creditcard',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: creditCardPlugin,
+    displayName: 'Instant ACH'
   },
   simplex: {
     pluginId: 'simplex',
