@@ -287,12 +287,13 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
   const out: WalletCreateItem[] = []
   const searchTarget = normalizeForSearch(searchText)
   for (const item of createWalletList) {
-    const { currencyCode, displayName, pluginId } = item
-    if (
-      normalizeForSearch(currencyCode).includes(searchTarget) ||
-      normalizeForSearch(displayName).includes(searchTarget) ||
-      normalizeForSearch(pluginId).includes(searchTarget)
-    ) {
+    const { currencyCode, displayName, pluginId, walletType } = item
+    if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
+      out.push(item)
+      continue
+    }
+    // Do an additional search for pluginId for mainnet create items
+    if (walletType != null && normalizeForSearch(pluginId).includes(searchTarget)) {
       out.push(item)
     }
   }
