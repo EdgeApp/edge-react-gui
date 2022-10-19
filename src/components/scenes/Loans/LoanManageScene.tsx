@@ -1,4 +1,4 @@
-import { div, gt, mul } from 'biggystring'
+import { div, gt, lte, mul } from 'biggystring'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
@@ -18,6 +18,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
+import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
@@ -128,9 +129,15 @@ export const LoanManageScene = (props: Props) => {
   // #region State
   // -----------------------------------------------------------------------------
 
-  const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = React.useState('0')
+  const [actionNativeAmount, setActionNativeAmount] = React.useState('0')
   const [newDebtApr, setNewDebtApr] = React.useState(0)
   const [actionProgram, setActionProgram] = React.useState<ActionProgram | undefined>(undefined)
+  const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
+  const [pendingDebtOrCollateral, setPendingDebtOrCollateral] = React.useState<BorrowDebt | BorrowCollateral>({
+    nativeAmount: '0',
+    tokenId: selectedAsset.tokenId,
+    apr: 0
+  })
 
   const [bankAccountsMap] = useAsyncValue<PaymentMethodsMap>(async (): Promise<PaymentMethodsMap> => {
     if (account == null) return {}
@@ -139,15 +146,12 @@ export const LoanManageScene = (props: Props) => {
     return await wyreClient.getPaymentMethods()
   }, [account])
 
-  const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
-
   // New debt/collateral amount
   const amountChange = actionOpType === 'loan-borrow' || actionOpType === 'loan-deposit' ? 'increase' : 'decrease'
-  const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
-  const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedAsset.tokenId, apr: 0 }
+  const actionAmountSign = amountChange === 'increase' ? '1' : '-1'
 
   // APR change
-  const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
+  const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
 
   // LTV exceeded checks
   const pendingDebts = isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : debts
@@ -159,7 +163,8 @@ export const LoanManageScene = (props: Props) => {
   const hardLtvRatio = '0.74'
   const isLtvExceeded =
     (actionOpType === 'loan-borrow' || actionOpType === 'loan-withdraw') &&
-    (zeroString(pendingCollateralsFiatValue) || gt(div(pendingDebtsFiatValue, pendingCollateralsFiatValue, DECIMAL_PRECISION), hardLtvRatio))
+    (lte(pendingCollateralsFiatValue, '0') || // Extra redundancy for withdrawing more than available collateral
+      gt(div(pendingDebtsFiatValue, pendingCollateralsFiatValue, DECIMAL_PRECISION), hardLtvRatio)) // Requested borrow or withdraw results in exceeding LTV
 
   // #endregion State
 
@@ -167,9 +172,29 @@ export const LoanManageScene = (props: Props) => {
   // #region Hooks
   // -----------------------------------------------------------------------------
 
+  // TODO: Full max button implementation and behavior
+  // Withdraw/repay ceilings
+  useAsyncEffect(async () => {
+    let availableNativeAmount: string | undefined
+
+    if (actionOpType === 'loan-withdraw') {
+      availableNativeAmount = collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount
+    } else if (actionOpType === 'loan-repay') {
+      availableNativeAmount = debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount
+    } else {
+      availableNativeAmount = undefined // Use uncapped actionNativeAmount
+    }
+
+    const cappedActionNativeAmount = availableNativeAmount != null && gt(actionNativeAmount, availableNativeAmount) ? availableNativeAmount : actionNativeAmount
+
+    setPendingDebtOrCollateral({ nativeAmount: mul(actionAmountSign, cappedActionNativeAmount), tokenId: selectedAsset.tokenId, apr: 0 })
+
+    return () => {}
+  }, [actionNativeAmount, selectedAsset.tokenId])
+
   // Build Action Program
   useAsyncEffect(async () => {
-    if (zeroString(actionNativeCryptoAmount) || isLtvExceeded) {
+    if (zeroString(actionNativeAmount) || isLtvExceeded) {
       setActionProgram(undefined)
     } else {
       let actionOp: ActionOp
@@ -178,7 +203,7 @@ export const LoanManageScene = (props: Props) => {
           actionOp = await makeAaveDepositAction({
             borrowPluginId,
             depositTokenId: hardAllowedCollateralAsset[0].tokenId,
-            nativeAmount: actionNativeCryptoAmount,
+            nativeAmount: actionNativeAmount,
             borrowEngineWallet: borrowEngineWallet,
             srcTokenId: selectedAsset.tokenId,
             srcWallet: borrowEngineWallet
@@ -189,7 +214,7 @@ export const LoanManageScene = (props: Props) => {
             const destination: LoanAsset = {
               wallet: borrowEngineWallet,
               tokenId: selectedAsset.tokenId,
-              nativeAmount: actionNativeCryptoAmount,
+              nativeAmount: actionNativeAmount,
               ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
               ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
             }
@@ -207,7 +232,7 @@ export const LoanManageScene = (props: Props) => {
               {
                 type: actionOpType,
                 borrowPluginId,
-                nativeAmount: actionNativeCryptoAmount,
+                nativeAmount: actionNativeAmount,
                 walletId: borrowEngineWallet.id,
                 tokenId: selectedAsset.tokenId
               }
@@ -219,7 +244,7 @@ export const LoanManageScene = (props: Props) => {
     }
 
     return () => {}
-  }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
+  }, [actionNativeAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
 
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
@@ -248,7 +273,7 @@ export const LoanManageScene = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   const handleFiatAmountChanged = useHandler((fiatAmount, nativeCryptoAmount) => {
-    setActionNativeCryptoAmount(nativeCryptoAmount)
+    setActionNativeAmount(nativeCryptoAmount)
   })
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
@@ -348,7 +373,7 @@ export const LoanManageScene = (props: Props) => {
         <LtvRatioTile
           borrowEngine={borrowEngine}
           tokenId={selectedAsset.tokenId}
-          nativeAmount={actionNativeCryptoAmount}
+          nativeAmount={actionNativeAmount}
           type={sceneType}
           direction={amountChange}
           key="ltv"
