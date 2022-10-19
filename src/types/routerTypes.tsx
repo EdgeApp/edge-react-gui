@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
+import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
@@ -61,27 +62,20 @@ export type ParamList = {
     selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
   }
-  createWalletChoice: {
-    selectedWalletType: CreateWalletType
+  createWalletCompletion: {
+    createWalletList: WalletCreateItem[]
+    walletNames: { [key: string]: string }
+    fiatCode: string
+    importText?: string
   }
   createWalletImport: {
-    selectedWalletType: CreateWalletType
-  }
-  createWalletName: {
-    cleanedPrivateKey?: string
-    selectedFiat: GuiFiatType
-    selectedWalletType: CreateWalletType
-  }
-  createWalletReview: {
-    cleanedPrivateKey?: string // for creating wallet from import private key
-    selectedFiat: GuiFiatType
-    selectedWalletType: CreateWalletType
-    walletName: string
+    createWalletList: WalletCreateItem[]
+    walletNames: { [key: string]: string }
+    fiatCode: string
   }
   createWalletSelectCrypto: {}
   createWalletSelectFiat: {
-    selectedWalletType: CreateWalletType
-    cleanedPrivateKey?: string
+    createWalletList: WalletCreateItem[]
   }
   currencyNotificationSettings: {
     currencyInfo: EdgeCurrencyInfo
@@ -215,26 +209,21 @@ export type ParamList = {
   loanClose: {
     loanAccountId: string
   }
-  loanAddCollateralScene: {
+  loanDeposit: {
     loanAccountId: string
   }
-  loanBorrowMoreScene: {
+  loanBorrow: {
     loanAccountId: string
   }
-  loanWithdrawCollateralScene: {
+  loanWithdraw: {
     loanAccountId: string
   }
-  loanRepayScene: {
+  loanRepay: {
     loanAccountId: string
   }
   loanStatus: {
     actionQueueId: string
-  }
-  loanCreateStatus: {
-    actionQueueId: string
-  }
-  loanDetailsStatus: {
-    actionQueueId: string
+    loanAccountId?: string
   }
   manageTokens: {
     walletId: string

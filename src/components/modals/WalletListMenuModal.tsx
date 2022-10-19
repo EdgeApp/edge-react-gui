@@ -66,7 +66,7 @@ const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet; tokenId?: 
     ]
   }
 
-  const result = []
+  const result: Option[] = []
 
   const splittable = await account.listSplittableWalletTypes(wallet.id)
 

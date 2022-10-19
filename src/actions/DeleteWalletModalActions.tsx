@@ -3,6 +3,7 @@ import * as React from 'react'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
+import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import s from '../locales/strings'
 import { B } from '../styles/common/textStyles'
 import { Dispatch, GetState } from '../types/reduxTypes'
@@ -41,5 +42,10 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
       .then(r => {
         logActivity(`Archived Wallet ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
       })
+
+    // Remove loan accounts associated with the wallet
+    if (state.loanManager.loanAccounts[walletId] != null) {
+      await dispatch(deleteLoanAccount(walletId))
+    }
   }
 }

@@ -1,4 +1,3 @@
-import { div } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -8,7 +7,8 @@ import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { filterNull } from '../../util/safeFilters'
-import { checkEffectIsDone, getEffectErrors } from './runtime'
+import { checkEffectIsDone } from './util/checkEffectIsDone'
+import { getEffectErrors } from './util/getEffectErrors'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
   return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
@@ -157,23 +157,29 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'loan-repay': {
-      return {
-        ...baseDisplayInfo,
-        title: s.strings.action_queue_display_loan_repay_title,
-        message: sprintf(s.strings.action_queue_display_loan_repay_message)
+      if (actionOp.fromTokenId != null) {
+        return {
+          ...baseDisplayInfo,
+          title: s.strings.action_queue_display_loan_repay_with_collateral_title,
+          message: s.strings.action_queue_display_loan_repay_with_collateral_message
+        }
+      } else {
+        return {
+          ...baseDisplayInfo,
+          title: s.strings.action_queue_display_loan_repay_title,
+          message: s.strings.action_queue_display_loan_repay_message
+        }
       }
     }
     case 'loan-withdraw': {
-      const { nativeAmount, walletId, tokenId } = actionOp
+      const { walletId, tokenId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
-      const { currencyCode, denominations } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
-      const { multiplier } = denominations[0]
-      const amount = div(nativeAmount, multiplier, multiplier.length)
-      const displayAmount = `${amount} ${currencyCode}`
+      const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
+
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_withdraw_title,
-        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, displayAmount)
+        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, currencyCode)
       }
     }
     case 'broadcast-tx': {

@@ -1,23 +1,33 @@
-import RNPermissions from 'react-native-permissions'
+import { Platform } from 'react-native'
+import { PERMISSIONS, PermissionStatus } from 'react-native-permissions'
+import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
-const { UNAVAILABLE, BLOCKED, DENIED, GRANTED, LIMITED } = RNPermissions.RESULTS
 
-// To add new permissions, just put them in this list an in `initialState`:
-export type Permission = 'camera' | 'contacts' | 'location'
-export type PermissionStatus = typeof UNAVAILABLE | typeof BLOCKED | typeof DENIED | typeof GRANTED | typeof LIMITED
 export type PermissionsState = {
-  // @ts-expect-error
-  [permission: Permission]: PermissionStatus
+  camera: PermissionStatus
+  contacts: PermissionStatus
+  location: PermissionStatus
 }
 
-export const initialState = {
-  camera: DENIED,
-  contacts: DENIED,
-  location: DENIED
+export type Permission = keyof PermissionsState
+
+/**
+ * Maps from our names to the react-native-permissions names.
+ */
+export const permissionNames = {
+  camera: Platform.OS === 'android' ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA,
+  contacts: Platform.OS === 'android' ? PERMISSIONS.ANDROID.READ_CONTACTS : PERMISSIONS.IOS.CONTACTS,
+  location: Platform.OS === 'android' ? PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION : PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
 }
 
-export const permissions = (state: PermissionsState = initialState, action: Action) => {
+export const initialState: PermissionsState = {
+  camera: 'denied',
+  contacts: 'denied',
+  location: 'denied'
+}
+
+export const permissions: Reducer<PermissionsState, Action> = (state = initialState, action) => {
   switch (action.type) {
     case 'PERMISSIONS/UPDATE': {
       return {

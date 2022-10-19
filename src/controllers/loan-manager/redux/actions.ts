@@ -3,6 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 import { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { Dispatch, GetState } from '../../../types/reduxTypes'
 import { makeCleanStore } from '../../../util/CleanStore'
+import { logActivity } from '../../../util/logger'
 import { scheduleActionProgram } from '../../action-queue/redux/actions'
 import { ActionProgram } from '../../action-queue/types'
 import { borrowPluginMap } from '../borrowPluginConfig'
@@ -49,6 +50,8 @@ export const createLoanAccount = (loanAccount: LoanAccount) => async (dispatch: 
     throw new Error('Creating duplicate LoanAccount id: ' + loanAccount.id)
   }
 
+  logActivity(`Create Loan Account`, { loanAccountId: loanAccount.id })
+
   dispatch({
     type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
     loanAccount: loanAccount
@@ -93,14 +96,16 @@ export const updateLoanAccount = (loanAccount: LoanAccount) => async (dispatch: 
   const store = makeCleanStore(account, LOAN_MANAGER_STORE_ID)
   const loanAccountMapRecord = await store.initRecord(LOAN_ACCOUNT_MAP, asLoanAccountMapRecord)
 
+  // Create loan if it doesn't exist
   if (loanAccountMapRecord.data[loanAccount.id] == null) {
-    throw new Error('Could not find LoanAccount id: ' + loanAccount.id)
-  } else {
-    const { closed, programEdges } = loanAccount
-    loanAccountMapRecord.data[loanAccount.id].closed = closed
-    loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
-    loanAccountMapRecord.update(loanAccountMapRecord.data)
+    await dispatch(createLoanAccount(loanAccount))
+    return
   }
+
+  const { closed, programEdges } = loanAccount
+  loanAccountMapRecord.data[loanAccount.id].closed = closed
+  loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
+  loanAccountMapRecord.update(loanAccountMapRecord.data)
 
   dispatch({
     type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
@@ -125,6 +130,8 @@ export const deleteLoanAccount = (loanAccountOrId: LoanAccount | string) => asyn
   } else {
     throw new Error('Could not find LoanAccount id: ' + loanAccountId)
   }
+
+  logActivity(`Delete Loan Account`, { loanAccountId })
 
   dispatch({
     type: 'LOAN_MANAGER/DELETE_LOAN_ACCOUNT',

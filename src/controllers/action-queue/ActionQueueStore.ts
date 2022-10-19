@@ -7,8 +7,8 @@ import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
-import { checkEffectIsDone } from './runtime'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from './types'
+import { checkEffectIsDone } from './util/checkEffectIsDone'
 
 const { debugStore } = ENV.ACTION_QUEUE
 
@@ -116,14 +116,16 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
 }
 
 export const useRunningActionQueueId = (programType: LoanProgramType, walletId: string): string | undefined => {
-  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const loanAccount = useSelector(state => state.loanManager.loanAccounts[walletId])
   if (loanAccount == null) return
 
   const programEdge = loanAccount.programEdges.find((programEdge: LoanProgramEdge) => {
     if (programEdge.programType === programType) {
       const actionQueueItem = actionQueueMap[programEdge.programId]
-      return actionQueueItem != null && actionQueueItem.state.effect?.type !== 'done'
+      if (actionQueueItem == null) return false
+      if (checkEffectIsDone(actionQueueItem.state.effect)) return false
+      return true
     }
     return false
   })

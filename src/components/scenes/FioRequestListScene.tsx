@@ -97,7 +97,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (this.state.addressCachedUpdated || this.state.loadingPending || this.state.loadingSent) return
 
     const { fioRequestsPending, fioRequestsSent } = this.state
-    const addressArray = []
+    const addressArray: string[] = []
     for (const request of fioRequestsPending) {
       addressArray.push(request.payee_fio_address)
       addressArray.push(request.payer_fio_address)
@@ -117,8 +117,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { pendingRequestPaging, fioRequestsPending } = this.state
     const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
-    // @ts-expect-error
-    let newRequests = []
+    let newRequests: FioRequest[] = []
     try {
       newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
     } catch (e: any) {
@@ -129,7 +128,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({
       fioRequestsPending: [
         ...fioRequestsPending,
-        // @ts-expect-error
         ...newRequests.filter(({ payer_fio_address: payerFioAddress }: FioRequest) => fioAddressNames.includes(payerFioAddress))
       ],
       loadingPending: false,
@@ -142,8 +140,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { fioRequestsSent, sentRequestPaging } = this.state
     const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
-    // @ts-expect-error
-    let newRequests = []
+    let newRequests: FioRequest[] = []
     try {
       newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
     } catch (e: any) {
@@ -151,7 +148,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     this.setState({
-      // @ts-expect-error
       fioRequestsSent: [...fioRequestsSent, ...newRequests],
       loadingSent: false,
       sentRequestPaging

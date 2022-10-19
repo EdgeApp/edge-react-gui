@@ -7,7 +7,6 @@ import { sprintf } from 'sprintf-js'
 
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { ActionOp } from '../../../controllers/action-queue/types'
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
@@ -20,7 +19,7 @@ import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, ParamList } from '../../../types/routerTypes'
+import { Actions, NavigationProp, ParamList } from '../../../types/routerTypes'
 import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -71,31 +70,18 @@ type Props<T extends keyof ParamList> = {
 }
 
 export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
-  const { action, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
-  const sceneType = ['loan-borrow', 'loan-repay'].includes(actionOpType) ? 'debts' : 'collaterals'
-
-  // -----------------------------------------------------------------------------
-  // #region Initialization
-  // -----------------------------------------------------------------------------
-
-  const { borrowEngine, borrowPlugin } = loanAccount
-  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
-
-  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId(actionOpType, borrowEngineWallet.id)
-  if (existingProgramId != null) navigation.navigate('loanDetailsStatus', { actionQueueId: existingProgramId })
-
-  // #endregion Initialization
-
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
+  const { action, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
 
+  const { borrowEngine, borrowPlugin } = loanAccount
+  const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
@@ -118,6 +104,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtAddr }]
 
   // Selected debt/collateral
+  const sceneType = ['loan-borrow', 'loan-repay'].includes(actionOpType) ? 'debts' : 'collaterals'
   const isSceneTypeDebts = sceneType === 'debts'
   const defaultTokenId = isSceneTypeDebts ? hardDebtAddr : hardCollateralAddr
 
@@ -257,7 +244,9 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
       const actionProgram = await makeActionProgram(actionOp)
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
-        navigation.navigate('loanDetailsStatus', { actionQueueId: actionProgram.programId })
+
+        // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
+        Actions.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
       } catch (e: any) {
         showError(e)
       } finally {

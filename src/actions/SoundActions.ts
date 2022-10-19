@@ -1,17 +1,15 @@
 import Sound from 'react-native-sound'
 
-// @ts-expect-error
-let receiveSoundPromise, sendSoundPromise
+let receiveSoundPromise: Promise<Sound> | undefined
+let sendSoundPromise: Promise<Sound> | undefined
 Sound.setCategory('Ambient')
 
 export async function playReceiveSound(): Promise<void> {
-  // @ts-expect-error
   if (!receiveSoundPromise) receiveSoundPromise = loadSound('audio_received.mp3')
   return receiveSoundPromise.then(playSound)
 }
 
 export async function playSendSound(): Promise<void> {
-  // @ts-expect-error
   if (!sendSoundPromise) sendSoundPromise = loadSound('audio_sent.mp3')
   return sendSoundPromise.then(playSound)
 }

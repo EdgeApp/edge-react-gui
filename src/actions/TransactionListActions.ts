@@ -15,9 +15,6 @@ export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACT
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
-// @ts-expect-error
-const emptyArray = []
-
 export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state: RootState = getState()
   const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
@@ -28,8 +25,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   // if we are resetting then start over
   if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
     currentEndIndex = 0
-    // @ts-expect-error
-    existingTransactions = emptyArray
+    existingTransactions = []
   }
 
   // new batch will start with the first index after previous end index
@@ -74,16 +70,14 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
   let transactionsWithKeys: TransactionListTx[] = [] // array of transactions as objects with key included for sorting?
-  let transactionIdMap = {} // maps id to sort order(?)
+  let transactionIdMap: { [txid: string]: boolean } = {} // maps id to sort order(?)
   // assume counter starts at zero (eg this is the first fetch)
-  let key = 0
   // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
   // @ts-expect-error
   if (options && options.startIndex > 0) {
     // then insert the already-loaded transactions into the master array of transactions
     transactionsWithKeys = [...state.ui.scenes.transactionList.transactions] // start off with previous values included
     transactionIdMap = { ...state.ui.scenes.transactionList.transactionIdMap }
-    key = transactionsWithKeys.length // and fast forward the counter
   }
   try {
     const numTransactions = await wallet.getNumTransactions({ currencyCode }) // get number of transactions on wallet
@@ -92,20 +86,16 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
     for (const tx of transactions) {
       // for each transaction, add some meta info
       const { date, time } = unixToLocaleDateTime(tx.date)
-      // @ts-expect-error
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
-        // @ts-expect-error
-        transactionIdMap[tx.txid] = key
+        transactionIdMap[tx.txid] = true
         // @ts-expect-error
         transactionsWithKeys.push({
           // then add it
           ...tx,
           dateString: date,
-          time,
-          key
+          time
         })
-        key++
       }
     }
     const transactionCount = transactionsWithKeys.length
@@ -155,7 +145,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
-  const receivedTxs = []
+  const receivedTxs: EdgeTransaction[] = []
   for (const transaction of edgeTransactions) {
     if (isReceivedTransaction(transaction)) {
       receivedTxs.push(transaction)

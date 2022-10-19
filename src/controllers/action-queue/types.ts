@@ -62,6 +62,7 @@ export type LoanRepayActionOp = {
   nativeAmount: string
   walletId: string
   tokenId?: string
+  fromTokenId?: string
 }
 export type LoanWithdrawActionOp = {
   type: 'loan-withdraw'
@@ -175,13 +176,22 @@ export type BroadcastTx = {
   networkFee: EdgeNetworkFee
   tx: EdgeTransaction
 }
+export type EffectCheckResult = {
+  delay: number
+  isEffective: boolean
+  updatedEffect?: ActionEffect
+}
 export type ExecutableAction = {
-  dryrun: (pendingTxMap: PendingTxMap) => Promise<ExecutionOutput | null>
+  dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput | null>
   execute: () => Promise<ExecutionOutput>
 }
 export type ExecutionContext = {
   account: EdgeAccount
   clientId: string
+
+  // Methods
+  evaluateAction: (program: ActionProgram, state: ActionProgramState) => Promise<ExecutableAction>
+  checkActionEffect: (effect: ActionEffect) => Promise<EffectCheckResult>
 }
 export type ExecutionOutput = {
   effect: ActionEffect
@@ -191,7 +201,7 @@ export type ExecutionResults = {
   nextState: ActionProgramState
 }
 export type PendingTxMap = {
-  [walletId: string]: EdgeTransaction[]
+  [walletId: string]: EdgeTransaction[] | undefined
 }
 
 //

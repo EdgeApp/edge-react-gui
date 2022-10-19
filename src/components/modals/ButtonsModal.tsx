@@ -70,7 +70,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
       </View>
       <View style={buttonsStyle}>
         {Object.keys(buttons).map((key, i, arr) => {
-          let defaultType
+          let defaultType: 'primary' | 'secondary'
           if (theme.preferPrimaryButton) {
             defaultType = i === 0 ? 'primary' : 'secondary'
           } else {
@@ -91,7 +91,6 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
             )
           }
 
-          // @ts-expect-error
           return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
         })}
         {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}

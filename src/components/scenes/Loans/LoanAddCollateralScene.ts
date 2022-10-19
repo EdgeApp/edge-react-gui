@@ -4,8 +4,8 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { ManageCollateralScene } from './ManageCollateralScene'
 
 type Props = {
-  navigation: NavigationProp<'loanAddCollateralScene'>
-  route: RouteProp<'loanAddCollateralScene'>
+  navigation: NavigationProp<'loanDeposit'>
+  route: RouteProp<'loanDeposit'>
 }
 
 export const LoanAddCollateralScene = (props: Props) => {

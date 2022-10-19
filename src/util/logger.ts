@@ -13,7 +13,7 @@ const padZeros = (n: number): string => {
 }
 
 const makePaths = (type: LogType): string[] => {
-  const fileArray = []
+  const fileArray: string[] = []
   for (let i = 0; i < NUM_FILES; i++) {
     fileArray.push(`${RNFS.DocumentDirectoryPath}/logs_${type}.${padZeros(i)}.txt`)
   }

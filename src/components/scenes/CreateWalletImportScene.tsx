@@ -1,167 +1,170 @@
-import { EdgeAccount } from 'edge-core-js'
+import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
-import { getPluginId, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import ImportKeySvg from '../../assets/images/import-key-icon.svg'
+import { useHandler } from '../../hooks/useHandler'
+import { useLayout } from '../../hooks/useLayout'
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
-import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui'
-import { THEME } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
-import { scale } from '../../util/scaling'
-import { FormField } from '../common/FormField'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
+import { MainButton } from '../themed/MainButton'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SceneHeader } from '../themed/SceneHeader'
+import { WalletCreateItem } from '../themed/WalletList'
 
-type OwnProps = {
+type Props = {
   navigation: NavigationProp<'createWalletImport'>
   route: RouteProp<'createWalletImport'>
 }
-type StateProps = {
-  account: EdgeAccount
-}
-type Props = OwnProps & StateProps
 
-type State = {
-  input: string
-  error: string
-  isProcessing: boolean
-  cleanedPrivateKey: string
-}
+const CreateWalletImportComponent = (props: Props) => {
+  const { navigation, route } = props
+  const { createWalletList, walletNames, fiatCode } = route.params
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-export class CreateWalletImportComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      input: '',
-      error: '',
-      isProcessing: false,
-      cleanedPrivateKey: ''
-    }
-  }
+  const account = useSelector(state => state.core.account)
+  const { currencyConfig } = account
 
-  handleNext = (): void => {
-    const { account, navigation, route } = this.props
-    const { selectedWalletType } = route.params
-    const { input } = this.state
-    const { walletType } = selectedWalletType
-    const currencyPluginName = getPluginId(walletType)
-    const currencyPlugin = account.currencyConfig[currencyPluginName]
-    const [, format] = walletType.split('-')
+  const [importText, setImportText] = React.useState('')
 
-    this.setState({ isProcessing: true })
-    currencyPlugin
-      .importKey(input, { keyOptions: { format } })
-      .then(() => {
-        navigation.navigate('createWalletSelectFiat', {
-          selectedWalletType,
-          cleanedPrivateKey: input
+  const handleNext = useHandler(async () => {
+    const cleanImportText = importText.trim()
+
+    // Test imports
+    const { newWalletItems } = splitCreateWalletItems(createWalletList)
+
+    const pluginIds = newWalletItems.map(item => item.pluginId)
+
+    // Loop over plugin importPrivateKey
+    const promises = pluginIds.map(
+      async pluginId =>
+        await currencyConfig[pluginId].importKey(cleanImportText).catch(e => {
+          console.warn('importKey failed', e)
         })
-      })
-      .catch(async error =>
-        Airship.show<'ok' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            buttons={{ ok: { label: s.strings.string_ok } }}
-            message={error.message}
-            title={s.strings.create_wallet_failed_import_header}
-          />
-        ))
-      )
-      .then(() => this.setState({ isProcessing: false }))
-  }
-
-  onChangeText = (input: string) => {
-    this.setState({ input })
-  }
-
-  render() {
-    const { route } = this.props
-    const { error, isProcessing, input } = this.state
-    const { selectedWalletType } = route.params
-    const { walletType } = selectedWalletType
-
-    const specialCurrencyInfo = getSpecialCurrencyInfo(walletType)
-    if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
-    const instructionSyntax = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
-    const labelKeySyntax = specialCurrencyInfo.isImportKeySupported.privateKeyLabel
-    return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.view}>
-            <View style={styles.createWalletPromptArea}>
-              <Text style={styles.instructionalText}>{instructionSyntax}</Text>
-            </View>
-            <FormField
-              autoFocus
-              autoCorrect={false}
-              onChangeText={this.onChangeText}
-              label={labelKeySyntax}
-              value={input}
-              returnKeyType="next"
-              onSubmitEditing={this.handleNext}
-              multiline
-              error={error}
-            />
-            <View style={styles.buttons}>
-              <PrimaryButton style={styles.next} onPress={this.handleNext} disabled={isProcessing}>
-                {isProcessing ? (
-                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                ) : (
-                  <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-                )}
-              </PrimaryButton>
-            </View>
-          </View>
-        </View>
-      </SafeAreaView>
     )
-  }
+
+    const results = await Promise.all(promises)
+
+    const successMap: { [pluginId: string]: JsonObject } = {}
+
+    for (const [i, keys] of results.entries()) {
+      if (typeof keys === 'object') {
+        // Success
+        successMap[pluginIds[i]] = keys
+      }
+    }
+
+    // Split up the original list of create items into success and failure lists
+    const failureItems: WalletCreateItem[] = []
+    const successItems: WalletCreateItem[] = []
+
+    for (const item of createWalletList) {
+      if (successMap[item.pluginId] != null) {
+        // Any asset associated to this pluginId is good to go
+        successItems.push(item)
+      } else if (item.createWalletIds != null && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID) {
+        // Token items to be enabled on existing wallets and aren't dependent on a failed import are are good to go, too
+        successItems.push(item)
+      } else {
+        // No good
+        failureItems.push(item)
+      }
+    }
+
+    if (successItems.length === 0) {
+      await Airship.show<'edit' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.create_wallet_failed_import_header}
+          message={s.strings.create_wallet_all_failed}
+          buttons={{
+            edit: { label: s.strings.create_wallet_edit }
+          }}
+        />
+      ))
+
+      return
+    }
+
+    if (failureItems.length > 0) {
+      // Show modal with errors
+      const displayNames = failureItems.map(item => item.displayName).join(', ')
+      const resolveValue = await Airship.show<'continue' | 'edit' | 'cancel' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.create_wallet_failed_import_header}
+          message={sprintf(s.strings.create_wallet_some_failed, displayNames)}
+          buttons={{
+            continue: { label: s.strings.legacy_address_modal_continue },
+            cancel: { label: s.strings.string_cancel_cap }
+          }}
+        />
+      ))
+
+      if (resolveValue === 'cancel' || resolveValue == null) {
+        return
+      }
+    }
+
+    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
+  })
+
+  // Scale the icon to match the height of the first MainButton container for consistency
+  const [iconContainerLayout, handleIconContainerLayout] = useLayout()
+  const svgHeightToWidthRatio = 62 / 58 // Original SVG height and width
+  const svgHeight = iconContainerLayout.height
+  const svgWidth = svgHeightToWidthRatio * svgHeight
+
+  return (
+    <SceneWrapper avoidKeyboard background="theme">
+      <SceneHeader withTopMargin title={s.strings.create_wallet_import_title} />
+      <View style={styles.icon}>
+        <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+      </View>
+      <EdgeText style={styles.instructionalText} numberOfLines={2}>
+        {s.strings.create_wallet_import_all_instructions}
+      </EdgeText>
+      <OutlinedTextInput
+        value={importText}
+        returnKeyType="next"
+        label={s.strings.create_wallet_import_input_key_or_seed_prompt}
+        autoCapitalize="none"
+        autoCorrect={false}
+        blurOnClear={false}
+        onChangeText={setImportText}
+        marginRem={[1, 0.75, 1.25]}
+      />
+      <View onLayout={handleIconContainerLayout}>
+        <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
+      </View>
+    </SceneWrapper>
+  )
 }
 
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  gradient: {
-    height: THEME.HEADER,
-    width: '100%',
-    position: 'absolute'
-  },
-  view: {
-    position: 'relative',
-    top: THEME.HEADER,
-    paddingHorizontal: 20,
-    height: PLATFORM.usableHeight
-  },
-  createWalletPromptArea: {
-    paddingTop: scale(16),
-    paddingBottom: scale(8)
+const getStyles = cacheStyles((theme: Theme) => ({
+  icon: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: theme.rem(1)
   },
   instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
-  },
-  buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
-  },
-  next: {
-    marginLeft: scale(1),
-    flex: 1
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    paddingHorizontal: theme.rem(1),
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(0.5),
+    textAlign: 'center'
   }
-})
+}))
 
-export const CreateWalletImportScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    account: state.core.account
-  }),
-  dispatch => ({})
-)(CreateWalletImportComponent)
+export const CreateWalletImportScene = React.memo(CreateWalletImportComponent)

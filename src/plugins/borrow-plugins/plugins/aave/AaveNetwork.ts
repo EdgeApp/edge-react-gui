@@ -3,6 +3,7 @@ import { BigNumber, ethers } from 'ethers'
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
 import ERC20_ABI from './abi/ERC20_ABI.json'
 import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
+import PARASWAP_ABI from './abi/PARASWAP_ABI.json'
 import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
 import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
 import VARIABLE_DEBT_TOKEN_ABI from './abi/VARIABLE_DEBT_TOKEN_ABI.json'
@@ -15,6 +16,7 @@ export type AaveNetworkBlueprint = {
   contractAddresses: {
     lendingPool: string
     protocolDataProvider: string
+    paraSwapRepayAdapter: string
   }
   enabledTokens: { [currencyCode: string]: boolean }
 }
@@ -26,10 +28,11 @@ export type AaveNetwork = {
   // Contracts
   lendingPool: ethers.Contract
   protocolDataProvider: ethers.Contract
+  paraSwapRepayAdapter: ethers.Contract
 
   // Helpers
   getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
-  getReserveTokenAddresses: (address: string) => Promise<{
+  getReserveTokenContracts: (address: string) => Promise<{
     aToken: any
     sToken: any
     vToken: any
@@ -49,11 +52,13 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
 
   const lendingPool = new ethers.Contract(contractAddresses.lendingPool, LENDING_POOL_ABI, provider)
   const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
+  const paraSwapRepayAdapter = new ethers.Contract(contractAddresses.paraSwapRepayAdapter, PARASWAP_ABI, provider)
 
   const instance: AaveNetwork = {
     provider,
     lendingPool,
     protocolDataProvider,
+    paraSwapRepayAdapter,
 
     //
     // Helpers
@@ -67,7 +72,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     },
 
     // TODO: Cache the response for this function
-    async getReserveTokenAddresses(address) {
+    async getReserveTokenContracts(address) {
       const [aTokenAddress, sTokenAddress, vTokenAddress] = await protocolDataProvider.getReserveTokensAddresses(address)
       const aToken = new ethers.Contract(aTokenAddress, A_TOKEN_ABI, provider)
       const sToken = new ethers.Contract(sTokenAddress, STABLE_DEBT_TOKEN_ABI, provider)
@@ -79,7 +84,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     async getReserveTokenBalances(address) {
       const reserveTokens = await instance.getAllReservesTokens()
       const whenReserveTokenBalances = reserveTokens.map(async token => {
-        const { aToken, vToken } = await instance.getReserveTokenAddresses(token.address)
+        const { aToken, vToken } = await instance.getReserveTokenContracts(token.address)
         const aBalance = await aToken.balanceOf(address)
         const vBalance = await vToken.balanceOf(address)
         const { variableApr } = await instance.getReserveTokenRates(token.address)

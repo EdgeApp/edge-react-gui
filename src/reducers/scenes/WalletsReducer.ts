@@ -183,7 +183,7 @@ const fioWallets = (state = [], action: Action): WalletsState['fioWallets'] => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets
-      const fioWallets = []
+      const fioWallets: EdgeCurrencyWallet[] = []
       for (const walletId of Object.keys(wallets)) {
         if (wallets[walletId] && wallets[walletId].type === FIO_WALLET_TYPE) {
           fioWallets.push(wallets[walletId])

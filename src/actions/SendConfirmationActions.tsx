@@ -194,8 +194,8 @@ export const updateMaxSpend =
   }
 
 export const signBroadcastAndSave =
-  // @ts-expect-error
-  (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => async (dispatch: Dispatch, getState: GetState) => {
+  (fioSender: FioSenderInfo | undefined, walletId: string | undefined, selectedCurrencyCode: string | undefined, resetSlider: () => void) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account

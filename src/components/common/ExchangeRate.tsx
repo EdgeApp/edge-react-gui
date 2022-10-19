@@ -39,8 +39,7 @@ class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & Stat
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style, wallet } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
-    // @ts-expect-error
-    const getDisplayExchangeAmount = secondaryDisplayAmount => {
+    const getDisplayExchangeAmount = (secondaryDisplayAmount: string) => {
       const primaryRatio = div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       const secondaryRatio = div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       return mul(div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount)

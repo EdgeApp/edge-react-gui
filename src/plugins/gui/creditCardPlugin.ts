@@ -12,7 +12,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
-import { FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
@@ -30,9 +30,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const pluginId = 'creditcard'
   const { showUi, account } = params
 
-  // @ts-expect-error
-  const assetPromises = []
-  const providerPromises = []
+  const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
+  const providerPromises: Array<Promise<FiatProvider>> = []
   let priorityArray = [{}]
   let pluginPriority = {}
 
@@ -67,7 +66,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
       const { regionCode, paymentTypes } = params
-      // @ts-expect-error
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
       const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
@@ -75,9 +73,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       for (const assetMap of assetArray) {
         if (assetMap == null) continue
-        // @ts-expect-error
         for (const currencyPluginId in assetMap.crypto) {
-          // @ts-expect-error
           const currencyCodeMap = assetMap.crypto[currencyPluginId]
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
@@ -89,7 +85,6 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
               }
             }
           }
-          // @ts-expect-error
           for (const fiatCode in assetMap.fiat) {
             allowedFiats[fiatCode] = true
           }
@@ -168,10 +163,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           }
 
           const quotePromises = providers.map(async p => p.getQuote(quoteParams))
-          // @ts-expect-error
-          let errors = []
-          let quotes = []
-          quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
+          let errors: unknown[] = []
+          const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
             return []
           })
@@ -188,8 +181,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            // @ts-expect-error
-            const bestErrorText = getBestError(errors, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
             if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
             return
           }
@@ -269,7 +261,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 }
 
 export const createPriorityArray = (pluginPriority: FiatPluginPriority): PriorityArray => {
-  const priorityArray = []
+  const priorityArray: PriorityArray = []
   if (pluginPriority != null) {
     const temp: Array<{ pluginId: string; priority: number }> = []
     for (const pluginId in pluginPriority) {

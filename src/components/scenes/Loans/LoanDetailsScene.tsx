@@ -10,6 +10,7 @@ import { Fontello } from '../../../assets/vector'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
+import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
@@ -44,7 +45,7 @@ export const LoanDetailsScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const actionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const { route, navigation } = props
@@ -70,8 +71,7 @@ export const LoanDetailsScene = (props: Props) => {
   // Running action program display
   const runningProgramEdge = loanAccount.programEdges.find(programEdge => {
     const actionQueueItem = actionQueueMap[programEdge.programId]
-    // @ts-expect-error
-    return actionQueueItem != null && actionQueueItem.state.effect != null && actionQueueItem.state.effect !== 'done'
+    return actionQueueItem != null && !checkEffectIsDone(actionQueueItem.state.effect)
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
@@ -97,25 +97,23 @@ export const LoanDetailsScene = (props: Props) => {
   ]
 
   const handleAddCollateralPress = () => {
-    navigation.navigate('loanAddCollateralScene', { loanAccountId })
+    navigation.navigate('loanDeposit', { loanAccountId })
   }
   const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdrawCollateralScene', { loanAccountId })
+    navigation.navigate('loanWithdraw', { loanAccountId })
   }
   const handleLoanClosePress = () => {
     navigation.navigate('loanClose', { loanAccountId })
   }
   const handleBorrowMorePress = () => {
-    navigation.navigate('loanBorrowMoreScene', { loanAccountId })
+    navigation.navigate('loanBorrow', { loanAccountId })
   }
   const handleRepayPress = () => {
-    navigation.navigate('loanRepayScene', { loanAccountId })
+    navigation.navigate('loanRepay', { loanAccountId })
   }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
-    // Go to LoanDetailsStatusScene or LoanCreateStatusScene, depending on the action program
-    const statusScene = programEdge.programType === 'loan-create' ? 'loanCreateStatus' : 'loanDetailsStatus'
-    navigation.navigate(statusScene, { actionQueueId: programEdge.programId })
+    navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {

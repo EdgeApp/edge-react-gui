@@ -6,6 +6,7 @@ import URL from 'url-parse'
 import { EdgeTokenId } from '../../../types/types'
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
+import { FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -292,14 +293,13 @@ export const banxaProvider: FiatProviderFactory = {
 
         const priceQuote = banxaPrices.data.prices[0]
 
-        const chosenPaymentTypes = []
+        const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)
 
         const paymentQuote: FiatProviderQuote = {
           pluginId,
           regionCode,
           direction,
-          // @ts-expect-error
           paymentTypes: chosenPaymentTypes,
           partnerIcon,
           pluginDisplayName,

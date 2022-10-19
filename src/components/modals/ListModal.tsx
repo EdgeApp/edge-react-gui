@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { FlatList, Keyboard, ListRenderItem } from 'react-native'
+import { FlatList, Keyboard, ListRenderItem, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -11,6 +11,7 @@ type Props<T> = {
   bridge: AirshipBridge<any>
   // Header Props
   title?: string
+  message?: string
   textInput?: boolean // Defaults to 'true'
   initialValue?: string // Defaults to ''
   // OutlinedTextInput properties:
@@ -32,6 +33,7 @@ type Props<T> = {
   fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
+  onViewableItemsChanged?: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
   // Footer Props
   closeArrow?: boolean // Defaults to 'true'
 }
@@ -39,6 +41,7 @@ type Props<T> = {
 export function ListModal<T>({
   bridge,
   title,
+  message,
   textInput = true,
   initialValue = '',
   rowsData = [],
@@ -47,6 +50,7 @@ export function ListModal<T>({
   rowDataFilter,
   closeArrow = true,
   onSubmitEditing,
+  onViewableItemsChanged,
   ...textProps
 }: Props<T>) {
   const [text, setText] = React.useState<string>(initialValue)
@@ -63,6 +67,7 @@ export function ListModal<T>({
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+      {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {textInput && (
         <OutlinedTextInput
           // Our props:
@@ -87,6 +92,7 @@ export function ListModal<T>({
         keyboardShouldPersistTaps="handled"
         renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
       {closeArrow && <ModalCloseArrow onPress={handleCancel} />}
     </ThemedModal>

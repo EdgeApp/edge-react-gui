@@ -1,91 +1,533 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateWalletImportComponent should render with loading props 1`] = `
-<SafeAreaViewComponent>
+exports[`CreateWalletImportScene should render with loading props 1`] = `
+<BVLinearGradient
+  colors={
+    Array [
+      4279050565,
+      4278994026,
+    ]
+  }
+  endPoint={
+    Object {
+      "x": 1,
+      "y": 0,
+    }
+  }
+  locations={null}
+  startPoint={
+    Object {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  style={
+    Object {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
+  }
+>
   <View
+    collapsable={false}
     style={
       Object {
-        "backgroundColor": "#FFFFFF",
-        "flex": 1,
+        "alignItems": "stretch",
+        "bottom": 0,
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "left": 0,
+        "maxHeight": 1270,
+        "padding": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 64,
       }
     }
   >
-    <WithTheme(GradientComponent)
+    <View
+      style={
+        Array [
+          Object {
+            "justifyContent": "center",
+            "marginLeft": 22,
+            "paddingBottom": 22,
+          },
+          Object {
+            "marginTop": 22,
+          },
+          undefined,
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          Array [
+            Object {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            Object {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+            },
+            null,
+          ]
+        }
+      >
+        Import Wallet
+      </Text>
+    </View>
+    <View
       style={
         Object {
-          "height": 44,
-          "position": "absolute",
-          "width": "100%",
+          "marginBottom": 11,
+          "marginLeft": 22,
         }
       }
     />
     <View
       style={
         Object {
-          "height": 1221,
-          "paddingHorizontal": 20,
-          "position": "relative",
-          "top": 44,
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "marginVertical": 22,
         }
       }
     >
-      <View
-        style={
+      <ImportKeySvg
+        color="#66EDA8"
+        height={0}
+        width={0}
+      />
+    </View>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={2}
+      style={
+        Array [
           Object {
-            "paddingBottom": 11.236619718309859,
-            "paddingTop": 22.473239436619718,
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+            "marginBottom": 22,
+            "marginHorizontal": 11,
+            "marginTop": 11,
+            "paddingHorizontal": 22,
+            "textAlign": "center",
+          },
+          null,
+        ]
+      }
+    >
+      Enter your private seed, private key, or active key to verify and restore the associated wallet
+    </Text>
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          Object {
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 11,
+            "justifyContent": "center",
+            "minHeight": 67,
+            "paddingHorizontal": 22,
+          },
+          Object {
+            "flexGrow": 0,
+            "marginBottom": 28,
+            "marginLeft": 17,
+            "marginRight": 17,
+            "marginTop": 22,
+            "paddingLeft": 22,
+            "paddingRight": 65,
+            "paddingVertical": 0,
+          },
+        ]
+      }
+    >
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "right": 11,
+            },
           }
         }
-      >
-        <FormattedText
-          style={
-            Object {
-              "color": "#4A5157",
-              "fontSize": 22.473239436619718,
-              "textAlign": "center",
-            }
+        collapsable={false}
+        style={
+          Object {
+            "borderColor": "rgba(164, 199, 223, 1)",
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 22,
+            "position": "absolute",
+            "right": 11,
           }
-        >
-          Enter your private seed or private key to verify and restore the associated wallet
-        </FormattedText>
-      </View>
-      <FormField
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoFocus={true}
-        error=""
-        keyboardType="default"
-        label="Private Key or Private Seed"
-        multiline={true}
-        onChangeText={[Function]}
-        onSubmitEditing={[Function]}
-        returnKeyType="next"
-        value=""
+        }
+      />
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+            },
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "borderBottomLeftRadius": 11,
+            "borderBottomWidth": 1,
+            "borderColor": "rgba(164, 199, 223, 1)",
+            "borderLeftWidth": 1,
+            "borderRightWidth": 0,
+            "borderTopLeftRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "width": 22,
+          }
+        }
+      />
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+            },
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "borderBottomRightRadius": 11,
+            "borderBottomWidth": 1,
+            "borderColor": "rgba(164, 199, 223, 1)",
+            "borderLeftWidth": 0,
+            "borderRightWidth": 1,
+            "borderTopRightRadius": 11,
+            "borderTopWidth": 1,
+            "bottom": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "width": 22,
+          }
+        }
+      />
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "left": 22,
+            },
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "borderColor": "rgba(164, 199, 223, 1)",
+            "borderTopWidth": 1,
+            "left": 22,
+            "position": "absolute",
+            "right": 22,
+            "top": 0,
+          }
+        }
       />
       <View
         style={
-          Object {
-            "flexDirection": "row",
-            "marginTop": 33.709859154929575,
-          }
+          Array [
+            Object {
+              "height": 67,
+              "justifyContent": "center",
+              "left": 0,
+              "paddingHorizontal": 22,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "paddingLeft": 22,
+              "paddingRight": 65,
+            },
+          ]
         }
       >
-        <PrimaryButton
-          disabled={false}
-          onPress={[Function]}
+        <Text
+          animatedStyle={
+            Object {
+              "value": Object {
+                "color": "rgba(164, 199, 223, 1)",
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateY": -0,
+                  },
+                  Object {
+                    "scale": 1,
+                  },
+                ],
+              },
+            }
+          }
+          collapsable={false}
+          numberOfLines={1}
+          onLayout={[Function]}
           style={
             Object {
-              "flex": 1,
-              "marginLeft": 1.4045774647887324,
+              "alignSelf": "flex-start",
+              "color": "rgba(164, 199, 223, 1)",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+              "transform": Array [
+                Object {
+                  "translateX": 0,
+                },
+                Object {
+                  "translateY": -0,
+                },
+                Object {
+                  "scale": 1,
+                },
+              ],
             }
           }
         >
-          <Text>
+          Private Key or Private Seed
+        </Text>
+      </View>
+      <Text
+        animatedStyle={
+          Object {
+            "value": Object {
+              "opacity": 0,
+            },
+          }
+        }
+        collapsable={false}
+        numberOfLines={1}
+        style={
+          Object {
+            "bottom": -28,
+            "color": "#E85466",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "left": 28,
+            "opacity": 0,
+            "position": "absolute",
+          }
+        }
+      />
+      <Text
+        animatedStyle={
+          Object {
+            "value": Object {
+              "color": "rgba(164, 199, 223, 1)",
+              "opacity": 0,
+              "transform": Array [
+                Object {
+                  "translateX": 6,
+                },
+                Object {
+                  "scale": 0,
+                },
+              ],
+            },
+          }
+        }
+        collapsable={false}
+        numberOfLines={1}
+        onLayout={[Function]}
+        style={
+          Object {
+            "bottom": -10,
+            "color": "rgba(164, 199, 223, 1)",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 17,
+            "opacity": 0,
+            "position": "absolute",
+            "right": 28,
+            "transform": Array [
+              Object {
+                "translateX": 6,
+              },
+              Object {
+                "scale": 0,
+              },
+            ],
+          }
+        }
+      >
+        
+      </Text>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoFocus={true}
+        editable={true}
+        multiline={false}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        returnKeyType="next"
+        secureTextEntry={false}
+        selectionColor="#FFFFFF"
+        style={
+          Array [
+            Object {
+              "alignSelf": "stretch",
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+            },
+            Object {
+              "flexGrow": 0,
+            },
+          ]
+        }
+        textAlignVertical="top"
+        value=""
+      />
+    </View>
+    <View
+      onLayout={[Function]}
+    >
+      <View
+        accessibilityState={
+          Object {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "elevation": 0,
+            "opacity": 1,
+            "shadowColor": "#000000",
+            "shadowOffset": Object {
+              "height": 0,
+              "width": 0,
+            },
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            Array [
+              16777215,
+              16777215,
+            ]
+          }
+          endPoint={
+            Object {
+              "x": 1,
+              "y": 1,
+            }
+          }
+          locations={null}
+          startPoint={
+            Object {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "borderColor": "#66EDA8",
+                "borderRadius": 6,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 67,
+                "minWidth": 202,
+              },
+              Object {
+                "alignSelf": "center",
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
+              },
+              Object {
+                "borderRadius": 6,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
+            style={
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 0,
+                "paddingBottom": 11,
+                "paddingLeft": 17,
+                "paddingRight": 17,
+                "paddingTop": 11,
+              }
+            }
+          >
             Next
           </Text>
-        </PrimaryButton>
+        </BVLinearGradient>
       </View>
     </View>
   </View>
-</SafeAreaViewComponent>
+</BVLinearGradient>
 `;

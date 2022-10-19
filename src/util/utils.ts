@@ -26,7 +26,7 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
 import s from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { EdgeTokenId, GuiDenomination, GuiExchangeRates, TransactionListTx } from '../types/types'
+import { EdgeTokenId, GuiDenomination, GuiExchangeRates, GuiFiatType, TransactionListTx } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
 
@@ -179,12 +179,10 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
   return denom
 }
 
-export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string; value: string }> => {
-  const out = []
-  // @ts-expect-error
-  if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
+export const getSupportedFiats = (defaultCurrencyCode?: string): GuiFiatType[] => {
+  const out: GuiFiatType[] = []
+  if (defaultCurrencyCode != null && FIAT_CODES_SYMBOLS[defaultCurrencyCode] != null) {
     out.push({
-      // @ts-expect-error
       label: `${defaultCurrencyCode} - ${FIAT_CODES_SYMBOLS[defaultCurrencyCode]}`,
       value: defaultCurrencyCode
     })
@@ -194,7 +192,6 @@ export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: 
       continue
     }
     out.push({
-      // @ts-expect-error
       label: `${currencyCode} - ${FIAT_CODES_SYMBOLS[currencyCode]}`,
       value: currencyCode
     })
