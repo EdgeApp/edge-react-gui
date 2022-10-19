@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { ThunkAction } from '../../../types/reduxTypes'
@@ -11,6 +11,7 @@ import { makeLoanAccount } from '../LoanAccount'
 import { asLoanAccountMapRecord, LOAN_ACCOUNT_MAP, LOAN_MANAGER_STORE_ID, LoanAccountEntry, LoanProgramEdge, LoanProgramType } from '../store'
 import { LoanAccount } from '../types'
 import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
+import { waitForBorrowEngineSync } from '../util/waitForLoanAccountSync'
 import { selectLoanAccount } from './selectors'
 
 type SetLoanAccountAction = {
@@ -27,6 +28,24 @@ type UpdateSyncRatio = {
 }
 
 export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction | UpdateSyncRatio
+
+/**
+ * Returns a loan account selected from the redux store, or creates a new loan
+ * account, saves, and returns it if it doesn't exists.
+ */
+export function getOrCreateLoanAccount(borrowPlugin: BorrowPlugin, wallet: EdgeCurrencyWallet): ThunkAction<Promise<LoanAccount>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const existingLoanAccount = selectLoanAccount(state, wallet.id)
+    if (existingLoanAccount) return existingLoanAccount
+
+    const newLoanAccount = await makeLoanAccount(borrowPlugin, wallet)
+
+    await dispatch(saveLoanAccount(newLoanAccount))
+
+    return newLoanAccount
+  }
+}
 
 /**
  * Save a new LoanAccount to disk and sets it in the Redux state.
@@ -180,12 +199,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
             // Start engine
             await borrowEngine.startEngine()
 
-            // Wait for engine to fully synced
-            await new Promise<void>(resolve => {
-              borrowEngine.watch('syncRatio', syncRatio => {
-                if (syncRatio >= 1) resolve()
-              })
-            })
+            await waitForBorrowEngineSync(borrowEngine)
 
             if (checkLoanHasFunds(borrowEngine)) {
               // Save the new loan account if it has funds
@@ -202,13 +216,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
             const loanAccount = existingLoanAccount
             const borrowEngine = loanAccount.borrowEngine
 
-            // Wait if engine isn't fully synced
-            await new Promise(resolve => {
-              borrowEngine.watch('syncRatio', syncRatio => {
-                // @ts-expect-error
-                if (syncRatio >= 1) resolve()
-              })
-            })
+            await waitForBorrowEngineSync(borrowEngine)
 
             if (!checkLoanHasFunds(borrowEngine) && existingLoanAccount.closed) {
               // Cleanup and remove loan account if it's marked as closed
