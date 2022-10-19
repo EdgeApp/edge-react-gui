@@ -5,7 +5,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils'
 
@@ -15,9 +15,8 @@ const levels = [20, 200, 2000, 20000, 200000]
  * Show a modal if the user's balance is over one of the limits &
  * they don't have recovery set up.
  */
-export const checkPasswordRecovery =
-  () =>
-  (dispatch: Dispatch, getState: GetState): void => {
+export function checkPasswordRecovery(): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     if (account.recoveryKey != null) return
@@ -38,7 +37,7 @@ export const checkPasswordRecovery =
       return
     }
   }
-
+}
 /**
  * Actually show the password reminder modal.
  */

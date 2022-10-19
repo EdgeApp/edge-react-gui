@@ -8,7 +8,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { Permission, permissionNames, PermissionsState } from '../../reducers/PermissionsReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch, GetState } from '../../types/reduxTypes'
+import { ThunkAction } from '../../types/reduxTypes'
 import { ContactsPermissionModal, ContactsPermissionResult } from '../modals/ContactsPermissionModal'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
@@ -95,25 +95,27 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
   return false
 }
 
-export const setNewPermissions = (currentPermissions: PermissionsState) => async (dispatch: Dispatch, getState: GetState) => {
-  const names: Permission[] = Object.keys(permissionNames) as any[]
-  const devicePermissions = await checkMultiple(names.map(name => permissionNames[name]))
+export function setNewPermissions(currentPermissions: PermissionsState): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const names: Permission[] = Object.keys(permissionNames) as any[]
+    const devicePermissions = await checkMultiple(names.map(name => permissionNames[name]))
 
-  // Figure out which ones have changed to avoid a pointless dispatch:
-  const newPermissions: Partial<PermissionsState> = {}
-  for (const name of names) {
-    const devicePermission = devicePermissions[permissionNames[name]]
+    // Figure out which ones have changed to avoid a pointless dispatch:
+    const newPermissions: Partial<PermissionsState> = {}
+    for (const name of names) {
+      const devicePermission = devicePermissions[permissionNames[name]]
 
-    // Only add changed permissions
-    if (devicePermission !== currentPermissions[name]) {
-      newPermissions[name] = devicePermission
+      // Only add changed permissions
+      if (devicePermission !== currentPermissions[name]) {
+        newPermissions[name] = devicePermission
+      }
     }
-  }
 
-  if (Object.keys(newPermissions).length > 0) {
-    console.log('Permissions updated')
-    dispatch({ type: 'PERMISSIONS/UPDATE', data: newPermissions })
-  } else {
-    console.log('Permissions unchanged')
+    if (Object.keys(newPermissions).length > 0) {
+      console.log('Permissions updated')
+      dispatch({ type: 'PERMISSIONS/UPDATE', data: newPermissions })
+    } else {
+      console.log('Permissions unchanged')
+    }
   }
 }

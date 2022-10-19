@@ -19,7 +19,7 @@ import {
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer'
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
@@ -51,163 +51,165 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   return { walletId, currencyCode }
 }
 
-export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  // Log in as quickly as possible, but we do need the sort order:
-  const syncedSettings = await getSyncedSettings(account)
-  const { walletSort } = syncedSettings
-  dispatch({ type: 'LOGIN', data: { account, walletSort } })
-  Actions.push('edge', {})
+export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    // Log in as quickly as possible, but we do need the sort order:
+    const syncedSettings = await getSyncedSettings(account)
+    const { walletSort } = syncedSettings
+    dispatch({ type: 'LOGIN', data: { account, walletSort } })
+    Actions.push('edge', {})
 
-  // Show a notice for deprecated electrum server settings
-  const pluginIdsNeedingUserAction: string[] = []
-  for (const pluginId in account.currencyConfig) {
-    const currencyConfig = account.currencyConfig[pluginId]
-    const { userSettings } = currencyConfig
-    if (userSettings == null) continue
-    if (userSettings.disableFetchingServers === true && userSettings.enableCustomServers == null) {
-      userSettings.enableCustomServers = true
-      userSettings.blockbookServers = []
-      userSettings.electrumServers = []
-      pluginIdsNeedingUserAction.push(pluginId)
-    }
-  }
-  if (pluginIdsNeedingUserAction.length > 0) {
-    await Airship.show<boolean>(bridge => (
-      <ConfirmContinueModal
-        bridge={bridge}
-        title={s.strings.update_notice_deprecate_electrum_servers_title}
-        body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
-      />
-    ))
-      .finally(async () => {
-        for (const pluginId of pluginIdsNeedingUserAction) {
-          const currencyConfig = account.currencyConfig[pluginId]
-          const { userSettings = {} } = currencyConfig
-          await currencyConfig.changeUserSettings(userSettings)
-        }
-      })
-      .catch(err => showError(err))
-  }
-
-  // Check for security alerts:
-  if (hasSecurityAlerts(account)) {
-    Actions.push('securityAlerts', {})
-  }
-
-  const state = getState()
-  const { context } = state.core
-
-  // Sign up for push notifications:
-  dispatch(attachToUser())
-
-  const walletInfos = account.allKeys
-  const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
-  console.log('Wallet Infos:', filteredWalletInfos)
-
-  // Merge and prepare settings files:
-  let accountInitObject: AccountInitPayload = {
-    account,
-    autoLogoutTimeInSeconds: 3600,
-    countryCode: '',
-    currencyCode: '',
-    defaultFiat: '',
-    defaultIsoFiat: '',
-    denominationSettings: {},
-    developerModeOn: false,
-    isAccountBalanceVisible: false,
-    mostRecentWallets: [],
-    passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
-    passwordReminder: passwordReminderInitialState,
-    pinLoginEnabled: false,
-    preferredSwapPluginId: undefined,
-    spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
-    touchIdInfo,
-    walletId: '',
-    walletsSort: 'manual'
-  }
-  try {
-    let newAccount = false
-    let defaultFiat = USD_FIAT
-    if (account.activeWalletIds.length < 1) {
-      const [phoneCurrency] = getCurrencies()
-      if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
-        defaultFiat = phoneCurrency
-      }
-
-      newAccount = true
-    } else {
-      // We have a wallet
-      const { walletId, currencyCode } = getFirstActiveWalletInfo(account)
-      accountInitObject.walletId = walletId
-      accountInitObject.currencyCode = currencyCode
-    }
-    const activeWalletIds = account.activeWalletIds
-    dispatch({
-      type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-      data: { activeWalletIds }
-    })
-
-    accountInitObject = { ...accountInitObject, ...syncedSettings }
-
-    const loadedLocalSettings = await getLocalSettings(account)
-    const localSettings = { ...loadedLocalSettings }
-    const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
-    if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
-      setLocalSettings(account, syncedSettings)
-    }
-    accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
-
-    accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
-
-    if (newAccount) {
-      accountInitObject.defaultFiat = defaultFiat
-      accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
-    }
-
-    const defaultDenominationSettings = state.ui.settings.denominationSettings
-    const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}
-    const mergedDenominationSettings = {}
-
-    for (const plugin of Object.keys(defaultDenominationSettings)) {
-      // @ts-expect-error
-      mergedDenominationSettings[plugin] = {}
-      // @ts-expect-error
-      for (const code of Object.keys(defaultDenominationSettings[plugin])) {
-        // @ts-expect-error
-        mergedDenominationSettings[plugin][code] = {
-          // @ts-expect-error
-          ...defaultDenominationSettings[plugin][code],
-          ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
-        }
+    // Show a notice for deprecated electrum server settings
+    const pluginIdsNeedingUserAction: string[] = []
+    for (const pluginId in account.currencyConfig) {
+      const currencyConfig = account.currencyConfig[pluginId]
+      const { userSettings } = currencyConfig
+      if (userSettings == null) continue
+      if (userSettings.disableFetchingServers === true && userSettings.enableCustomServers == null) {
+        userSettings.enableCustomServers = true
+        userSettings.blockbookServers = []
+        userSettings.electrumServers = []
+        pluginIdsNeedingUserAction.push(pluginId)
       }
     }
-    accountInitObject.denominationSettings = { ...mergedDenominationSettings }
+    if (pluginIdsNeedingUserAction.length > 0) {
+      await Airship.show<boolean>(bridge => (
+        <ConfirmContinueModal
+          bridge={bridge}
+          title={s.strings.update_notice_deprecate_electrum_servers_title}
+          body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
+        />
+      ))
+        .finally(async () => {
+          for (const pluginId of pluginIdsNeedingUserAction) {
+            const currencyConfig = account.currencyConfig[pluginId]
+            const { userSettings = {} } = currencyConfig
+            await currencyConfig.changeUserSettings(userSettings)
+          }
+        })
+        .catch(err => showError(err))
+    }
 
-    dispatch({
-      type: 'ACCOUNT_INIT_COMPLETE',
-      data: { ...accountInitObject }
-    })
+    // Check for security alerts:
+    if (hasSecurityAlerts(account)) {
+      Actions.push('securityAlerts', {})
+    }
 
-    if (newAccount) {
-      // Ensure the creation reason is available before creating wallets:
-      await dispatch(loadAccountReferral(account))
-      const { currencyCodes } = getState().account.accountReferral
-      const fiatCurrencyCode = 'iso:' + defaultFiat
-      if (currencyCodes && currencyCodes.length > 0) {
-        await createCustomWallets(account, fiatCurrencyCode, currencyCodes, dispatch)
+    const state = getState()
+    const { context } = state.core
+
+    // Sign up for push notifications:
+    dispatch(attachToUser())
+
+    const walletInfos = account.allKeys
+    const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
+    console.log('Wallet Infos:', filteredWalletInfos)
+
+    // Merge and prepare settings files:
+    let accountInitObject: AccountInitPayload = {
+      account,
+      autoLogoutTimeInSeconds: 3600,
+      countryCode: '',
+      currencyCode: '',
+      defaultFiat: '',
+      defaultIsoFiat: '',
+      denominationSettings: {},
+      developerModeOn: false,
+      isAccountBalanceVisible: false,
+      mostRecentWallets: [],
+      passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
+      passwordReminder: passwordReminderInitialState,
+      pinLoginEnabled: false,
+      preferredSwapPluginId: undefined,
+      spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
+      touchIdInfo,
+      walletId: '',
+      walletsSort: 'manual'
+    }
+    try {
+      let newAccount = false
+      let defaultFiat = USD_FIAT
+      if (account.activeWalletIds.length < 1) {
+        const [phoneCurrency] = getCurrencies()
+        if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
+          defaultFiat = phoneCurrency
+        }
+
+        newAccount = true
       } else {
-        await createDefaultWallets(account, fiatCurrencyCode, dispatch)
+        // We have a wallet
+        const { walletId, currencyCode } = getFirstActiveWalletInfo(account)
+        accountInitObject.walletId = walletId
+        accountInitObject.currencyCode = currencyCode
       }
-      dispatch(refreshAccountReferral())
-    } else {
-      // Load the creation reason more lazily:
-      dispatch(loadAccountReferral(account)).then(async () => dispatch(refreshAccountReferral()))
-    }
+      const activeWalletIds = account.activeWalletIds
+      dispatch({
+        type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
+        data: { activeWalletIds }
+      })
 
-    dispatch(expiredFioNamesCheckDates())
-    await updateWalletsRequest()(dispatch, getState)
-  } catch (error: any) {
-    showError(error)
+      accountInitObject = { ...accountInitObject, ...syncedSettings }
+
+      const loadedLocalSettings = await getLocalSettings(account)
+      const localSettings = { ...loadedLocalSettings }
+      const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
+      if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
+        setLocalSettings(account, syncedSettings)
+      }
+      accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
+
+      accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
+
+      if (newAccount) {
+        accountInitObject.defaultFiat = defaultFiat
+        accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
+      }
+
+      const defaultDenominationSettings = state.ui.settings.denominationSettings
+      const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}
+      const mergedDenominationSettings = {}
+
+      for (const plugin of Object.keys(defaultDenominationSettings)) {
+        // @ts-expect-error
+        mergedDenominationSettings[plugin] = {}
+        // @ts-expect-error
+        for (const code of Object.keys(defaultDenominationSettings[plugin])) {
+          // @ts-expect-error
+          mergedDenominationSettings[plugin][code] = {
+            // @ts-expect-error
+            ...defaultDenominationSettings[plugin][code],
+            ...(syncedDenominationSettings?.[plugin]?.[code] ?? {})
+          }
+        }
+      }
+      accountInitObject.denominationSettings = { ...mergedDenominationSettings }
+
+      dispatch({
+        type: 'ACCOUNT_INIT_COMPLETE',
+        data: { ...accountInitObject }
+      })
+
+      if (newAccount) {
+        // Ensure the creation reason is available before creating wallets:
+        await dispatch(loadAccountReferral(account))
+        const { currencyCodes } = getState().account.accountReferral
+        const fiatCurrencyCode = 'iso:' + defaultFiat
+        if (currencyCodes && currencyCodes.length > 0) {
+          await createCustomWallets(account, fiatCurrencyCode, currencyCodes, dispatch)
+        } else {
+          await createDefaultWallets(account, fiatCurrencyCode, dispatch)
+        }
+        dispatch(refreshAccountReferral())
+      } else {
+        // Load the creation reason more lazily:
+        dispatch(loadAccountReferral(account)).then(async () => dispatch(refreshAccountReferral()))
+      }
+
+      dispatch(expiredFioNamesCheckDates())
+      await updateWalletsRequest()(dispatch, getState)
+    } catch (error: any) {
+      showError(error)
+    }
   }
 }
 
@@ -257,9 +259,8 @@ export const mergeSettings = (
   }
 }
 
-export const logoutRequest =
-  (username?: string) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<void> => {
+export function logoutRequest(username?: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     Actions.popTo('login')
     Airship.clear()
     const state = getState()
@@ -267,6 +268,7 @@ export const logoutRequest =
     dispatch({ type: 'LOGOUT', data: { username } })
     if (typeof account.logout === 'function') await account.logout()
   }
+}
 
 /**
  * Finds the currency info for a currency code.

@@ -12,7 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Dispatch, GetState } from '../../types/reduxTypes'
+import { ThunkAction } from '../../types/reduxTypes'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
@@ -98,9 +98,16 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   )
 }
 
-const createAndSelectToken =
-  ({ tokenCode, pluginId, createWalletId }: { tokenCode: string; pluginId: string; createWalletId?: string }) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<string> => {
+function createAndSelectToken({
+  tokenCode,
+  pluginId,
+  createWalletId
+}: {
+  tokenCode: string
+  pluginId: string
+  createWalletId?: string
+}): ThunkAction<Promise<string>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account, disklet } = state.core
     const { defaultIsoFiat } = state.ui.settings
@@ -137,9 +144,10 @@ const createAndSelectToken =
     }
     return ''
   }
+}
 
-const createAndSelectWallet = ({ walletType, fiatCurrencyCode }: CreateWalletOptions) => {
-  return async (dispatch: Dispatch, getState: GetState) => {
+function createAndSelectWallet({ walletType, fiatCurrencyCode }: CreateWalletOptions): ThunkAction<Promise<string>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     const walletName = getUniqueWalletName(account, getPluginId(walletType))

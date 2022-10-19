@@ -13,7 +13,7 @@ import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } fr
 import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { logActivity } from '../util/logger'
@@ -35,31 +35,30 @@ export type FioSenderInfo = {
   skipRecord?: boolean
 }
 
-const updateAmount =
-  (
-    nativeAmount: string,
-    exchangeAmount: string,
-    fiatPerCrypto: string,
-    forceUpdateGui: boolean = false,
-    selectedWalletId?: string,
-    selectedCurrencyCode?: string
-  ) =>
-  (dispatch: Dispatch, getState: GetState) => {
+function updateAmount(
+  nativeAmount: string,
+  exchangeAmount: string,
+  fiatPerCrypto: string,
+  forceUpdateGui: boolean = false,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string
+): ThunkAction<void> {
+  return (dispatch, getState) => {
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
     dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
   }
+}
 
-export const sendConfirmationUpdateTx =
-  (
-    guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
-    forceUpdateGui: boolean = true,
-    selectedWalletId?: string,
-    selectedCurrencyCode?: string,
-    isFeeChanged: boolean = false
-  ) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function sendConfirmationUpdateTx(
+  guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
+  forceUpdateGui: boolean = true,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string,
+  isFeeChanged: boolean = false
+): ThunkAction<Promise<unknown>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
@@ -151,9 +150,10 @@ export const sendConfirmationUpdateTx =
         })
       })
   }
+}
 
-export const updateMaxSpend =
-  (selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
+export function updateMaxSpend(selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
@@ -190,10 +190,15 @@ export const updateMaxSpend =
       })
       .catch(showError)
   }
+}
 
-export const signBroadcastAndSave =
-  (fioSender: FioSenderInfo | undefined, walletId: string | undefined, selectedCurrencyCode: string | undefined, resetSlider: () => void) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function signBroadcastAndSave(
+  fioSender: FioSenderInfo | undefined,
+  walletId: string | undefined,
+  selectedCurrencyCode: string | undefined,
+  resetSlider: () => void
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
@@ -425,6 +430,7 @@ export const signBroadcastAndSave =
       ])
     }
   }
+}
 
 export const displayFeeAlert = async (currency: string, fee: string) => {
   let additionalMessage = ''
@@ -447,8 +453,8 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
 
 let lastUpdateTransactionAmountNonce = 0
 
-export const updateTransactionAmount =
-  (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+export function updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
     const edgeWallet = state.core.account.currencyWallets[walletId]
     const sceneState = state.ui.scenes.sendConfirmation
@@ -516,3 +522,4 @@ export const updateTransactionAmount =
         })
       })
   }
+}

@@ -1,7 +1,7 @@
 import { mul } from 'biggystring'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { RootState, ThunkAction } from '../types/reduxTypes'
 import { GuiWallet } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { convertNativeToExchange, zeroString } from '../util/utils'
@@ -39,14 +39,14 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
   return convertedAmount
 }
 
-export const convertCurrencyFromState =
-  (fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1') =>
-  (dispatch: Dispatch, getState: GetState): string => {
+export function convertCurrencyFromState(fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): ThunkAction<string> {
+  return (dispatch, getState): string => {
     const state = getState()
     const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
     const convertedAmount = mul(amount, exchangeRate)
     return convertedAmount
   }
+}
 
 export const convertCurrencyFromExchangeRates = (
   exchangeRates: { [pair: string]: string },

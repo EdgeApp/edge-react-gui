@@ -1,22 +1,21 @@
 import { convertCurrency } from '../selectors/WalletSelectors'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { AccountReferral } from '../types/ReferralTypes'
 import { logEvent, TrackingEvent, TrackingValues } from '../util/tracking'
 
 /**
  * Tracks a conversion, which involves some of revenue.
  */
-export const trackConversion =
-  (
-    event: TrackingEvent,
-    opts: {
-      currencyCode: string
-      exchangeAmount: number
-      pluginId: string
-      orderId?: string
-    }
-  ) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function trackConversion(
+  event: TrackingEvent,
+  opts: {
+    currencyCode: string
+    exchangeAmount: number
+    pluginId: string
+    orderId?: string
+  }
+): ThunkAction<Promise<unknown>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { currencyCode, exchangeAmount, pluginId, orderId } = opts
 
@@ -32,14 +31,14 @@ export const trackConversion =
       ...makeTrackingValues(accountReferral)
     })
   }
+}
 
 /**
  * Tracks an event tied to a particular account's affiliate information,
  * such as creating the initial wallets.
  */
-export const trackAccountEvent =
-  (event: TrackingEvent, trackingValues: TrackingValues = {}) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function trackAccountEvent(event: TrackingEvent, trackingValues: TrackingValues = {}): ThunkAction<Promise<unknown>> {
+  return async (dispatch, getState) => {
     const state = getState()
 
     // Record the event:
@@ -49,6 +48,7 @@ export const trackAccountEvent =
       ...makeTrackingValues(accountReferral)
     })
   }
+}
 
 /**
  * Turn account affiliate information into clean tracking values.
