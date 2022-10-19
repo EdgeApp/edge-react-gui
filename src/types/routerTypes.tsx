@@ -282,7 +282,10 @@ export type ParamList = {
     amountFiat?: number
     thumbnailPath?: string
   }
-  transactionList: {}
+  transactionList: {
+    walletId: string
+    currencyCode: string
+  }
   transactionsExport: {
     sourceWallet: EdgeCurrencyWallet
     currencyCode: string

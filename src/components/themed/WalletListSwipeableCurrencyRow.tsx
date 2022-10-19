@@ -83,7 +83,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           // Or because it is already activated:
           (await wallet.getReceiveAddress()).publicAddress !== '')
       ) {
-        navigation.navigate('transactionList', {})
+        navigation.navigate('transactionList', { walletId: wallet.id, currencyCode })
       }
     })
   })
