@@ -37,7 +37,7 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      const childEffectCheck = await checkActionEffect(context, childEffect)
+      const childEffectCheck = await context.checkActionEffect(childEffect)
 
       // Completely effective
       if (childEffectCheck.isEffective && effect.opIndex >= effect.childEffects.length - 1) {
@@ -73,7 +73,7 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
 
       // Check all child effects concurrently
       const childEffectPromises = checkedEffects.map(async childEffect => {
-        return await checkActionEffect(context, childEffect)
+        return await context.checkActionEffect(childEffect)
       })
       const childEffectChecks = await Promise.all(childEffectPromises)
       const isEffective = childEffectChecks.every(result => result.isEffective)

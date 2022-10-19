@@ -46,7 +46,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         programId: `${program.programId}[${nextOpIndex}]`,
         actionOp: actionOp.actions[nextOpIndex]
       }
-      const childExecutableAction: ExecutableAction = await evaluateAction(context, nextProgram, state)
+      const childExecutableAction: ExecutableAction = await context.evaluateAction(nextProgram, state)
 
       return {
         dryrun: async pendingTxMap => {
@@ -82,7 +82,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const promises = actionOp.actions.map(async (actionOp, index) => {
         const programId = `${program.programId}(${index})`
         const subProgram: ActionProgram = { programId, actionOp }
-        return await evaluateAction(context, subProgram, state)
+        return await context.evaluateAction(subProgram, state)
       })
       const childExecutableActions = await Promise.all(promises)
 

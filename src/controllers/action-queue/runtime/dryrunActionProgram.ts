@@ -1,6 +1,5 @@
 import { ActionEffect, ActionProgram, ActionProgramState, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
-import { evaluateAction } from './evaluateAction'
 
 export async function dryrunActionProgram(
   context: ExecutionContext,
@@ -12,7 +11,7 @@ export async function dryrunActionProgram(
   const outputs: ExecutionOutput[] = []
   const simulatedState = { ...state }
   while (true) {
-    const executableAction = await evaluateAction(context, program, simulatedState)
+    const executableAction = await context.evaluateAction(program, simulatedState)
     const dryrunOutput = await executableAction.dryrun(pendingTxMap)
 
     // In order to avoid infinite loops, we must break when we reach the end

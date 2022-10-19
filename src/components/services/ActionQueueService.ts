@@ -6,7 +6,8 @@ import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueue
 import { mockActionProgram } from '../../controllers/action-queue/mock'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
-import { ActionProgramState, ActionQueueMap, ExecutionContext, ExecutionResults } from '../../controllers/action-queue/types'
+import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
+import { makeExecutionContext } from '../../controllers/action-queue/util/makeExecutionContext'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -28,11 +29,12 @@ export const ActionQueueService = () => {
   const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
 
-  const executionContext: ExecutionContext = React.useMemo(
-    () => ({
-      account,
-      clientId
-    }),
+  const executionContext = React.useMemo(
+    () =>
+      makeExecutionContext({
+        account,
+        clientId
+      }),
     [account, clientId]
   )
 

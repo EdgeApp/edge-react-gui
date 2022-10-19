@@ -4,6 +4,7 @@ import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { uploadPushEvents } from '../push'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from '../types'
 import { getEffectPushEventIds } from '../util/getEffectPushEventIds'
+import { makeExecutionContext } from '../util/makeExecutionContext'
 
 type LoadActionQueueStateAction = {
   type: 'ACTION_QUEUE/LOAD_QUEUE'
@@ -63,7 +64,8 @@ export const cancelActionProgram = (programId: string) => async (dispatch: Dispa
 
   const pushEventIds = getEffectPushEventIds(programState.effect)
   if (pushEventIds.length > 0) {
-    await uploadPushEvents({ account, clientId }, { removeEvents: pushEventIds })
+    const executionContext = makeExecutionContext({ account, clientId })
+    await uploadPushEvents(executionContext, { removeEvents: pushEventIds })
   }
 
   programState.effect = { type: 'done', cancelled: true }

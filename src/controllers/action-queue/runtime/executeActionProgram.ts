@@ -3,9 +3,7 @@ import { logActivity } from '../../../util/logger'
 import { effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from '../push'
 import { ActionEffect, ActionProgram, ActionProgramState, EffectCheckResult, ExecutionContext, ExecutionResults } from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
-import { checkActionEffect } from './checkActionEffect'
 import { dryrunActionProgram } from './dryrunActionProgram'
-import { evaluateAction } from './evaluateAction'
 
 export const executeActionProgram = async (context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutionResults> => {
   const { effect } = state
@@ -68,7 +66,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   if (!state.effective && effect != null) {
     let effectCheck: EffectCheckResult
     try {
-      effectCheck = await checkActionEffect(context, effect)
+      effectCheck = await context.checkActionEffect(effect)
     } catch (err: any) {
       console.warn(`Action effect check failed:\n\t${String(err)}`)
       console.error(err)
@@ -101,7 +99,7 @@ export const executeActionProgram = async (context: ExecutionContext, program: A
   logActivity(`Executing next action`, { programId: program.programId, program, state })
 
   // Execute Action
-  const executableAction = await evaluateAction(context, program, state)
+  const executableAction = await context.evaluateAction(program, state)
   const output = await executableAction.execute()
   const { effect: nextEffect } = output
   const isEffectDone = checkEffectIsDone(nextEffect)
