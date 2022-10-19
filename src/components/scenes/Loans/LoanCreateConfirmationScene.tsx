@@ -5,6 +5,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
+import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
 import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
@@ -73,17 +74,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     })
 
     const actionProgram = await makeActionProgram(actionOp)
-
-    const actionProgramState = {
-      clientId,
-      programId: actionProgram.programId,
-      effective: false,
-      executing: false,
-      lastExecutionTime: 0,
-      nextExecutionTime: 0
-    }
     const executionContext = makeExecutionContext({ account, clientId })
-    const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
+    const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
 
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
 

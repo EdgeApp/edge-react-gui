@@ -9,6 +9,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
+import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -223,17 +224,8 @@ export const LoanManageScene = (props: Props) => {
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
     if (actionProgram != null) {
-      // Get fees
-      const actionProgramState = {
-        clientId,
-        programId: actionProgram.programId,
-        effective: false,
-        executing: false,
-        lastExecutionTime: 0,
-        nextExecutionTime: 0
-      }
       const executionContext = makeExecutionContext({ account, clientId })
-      const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
+      const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
       return getExecutionNetworkFees(executionOutputs)
     } else {
       return {}
