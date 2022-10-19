@@ -131,6 +131,7 @@ type SpecialCurrencyInfo = {
   keysOnlyMode?: boolean
   isPrivateKeySweepable?: boolean
   isBitPayProtocolSupported?: boolean
+  isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
   stakeActions?: { [stakeActionKey: string]: string }
@@ -382,7 +383,8 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isBitPayProtocolSupported: false
+    isBitPayProtocolSupported: false,
+    isTransactionListUnsupported: true
   },
   tezos: {
     initWalletName: s.strings.string_first_tezos_wallet_name,

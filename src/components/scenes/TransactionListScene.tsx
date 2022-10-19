@@ -3,6 +3,7 @@ import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -42,6 +43,7 @@ type OwnProps = {
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {
+  isTransactionListUnsupported: boolean
   reset: boolean
   searching: boolean
   filteredTransactions: TransactionListTx[]
@@ -52,6 +54,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
+      isTransactionListUnsupported: false,
       reset: true,
       searching: false,
       filteredTransactions: [],
@@ -63,6 +66,10 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
+    }
+
+    if (this.props.wallet != null && !!SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported) {
+      this.setState({ isTransactionListUnsupported: true })
     }
   }
 
@@ -160,25 +167,30 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return <TransactionListRow walletId={wallet.id} currencyCode={currencyCode} transaction={transaction.item} />
   }
 
-  renderTop = () => (
-    <Top
-      walletId={this.props.wallet.id}
-      isEmpty={this.props.transactions.length < 1}
-      searching={this.state.searching}
-      navigation={this.props.navigation}
-      tokenId={this.props.tokenId}
-      onChangeSortingState={this.handleChangeSortingState}
-      onSearchTransaction={this.handleSearchTransaction}
-    />
-  )
+  renderTop = () => {
+    const { wallet } = this.props
+    const { isTransactionListUnsupported } = this.state
+
+    return (
+      <Top
+        walletId={wallet.id}
+        isEmpty={isTransactionListUnsupported || this.props.transactions.length < 1}
+        searching={this.state.searching}
+        navigation={this.props.navigation}
+        tokenId={this.props.tokenId}
+        onChangeSortingState={this.handleChangeSortingState}
+        onSearchTransaction={this.handleSearchTransaction}
+      />
+    )
+  }
 
   keyExtractor = (item: TransactionListTx) => item.txid
 
   getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
 
   render() {
-    const { filteredTransactions, loading, reset, searching } = this.state
-    const transactions = reset ? [] : searching ? filteredTransactions : this.props.transactions
+    const { filteredTransactions, loading, reset, searching, isTransactionListUnsupported } = this.state
+    const transactions = isTransactionListUnsupported || reset ? [] : searching ? filteredTransactions : this.props.transactions
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
