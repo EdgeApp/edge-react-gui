@@ -40,8 +40,7 @@ const updateAmount =
     nativeAmount: string,
     exchangeAmount: string,
     fiatPerCrypto: string,
-    // @ts-expect-error
-    forceUpdateGui?: boolean = false,
+    forceUpdateGui: boolean = false,
     selectedWalletId?: string,
     selectedCurrencyCode?: string
   ) =>
@@ -55,8 +54,7 @@ const updateAmount =
 export const sendConfirmationUpdateTx =
   (
     guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
-    // @ts-expect-error
-    forceUpdateGui?: boolean = true,
+    forceUpdateGui: boolean = true,
     selectedWalletId?: string,
     selectedCurrencyCode?: string,
     isFeeChanged: boolean = false
