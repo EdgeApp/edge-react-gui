@@ -8,12 +8,12 @@ import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
-import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
@@ -87,6 +87,8 @@ export const LoanManageScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
+  const executionContext = useExecutionContext()
 
   const loanAccount = loanAccounts[loanAccountId]
   const { borrowEngine, borrowPlugin } = loanAccount
@@ -247,7 +249,6 @@ export const LoanManageScene = (props: Props) => {
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
     if (actionProgram != null) {
-      const executionContext = makeExecutionContext({ account, clientId })
       const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
       return getExecutionNetworkFees(executionOutputs)
     } else {

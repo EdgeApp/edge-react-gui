@@ -1,5 +1,7 @@
 import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
+import { Dispatch, GetState } from '../../types/reduxTypes'
+
 //
 // Action Operations
 //
@@ -192,6 +194,10 @@ export type ExecutionContext = {
   // Methods
   evaluateAction: (program: ActionProgram, state: ActionProgramState) => Promise<ExecutableAction>
   checkActionEffect: (effect: ActionEffect) => Promise<EffectCheckResult>
+
+  // Redux Methods
+  dispatch: Dispatch
+  getState: GetState
 }
 export type ExecutionOutput = {
   effect: ActionEffect
