@@ -65,7 +65,7 @@ exports[`BuyCrypto should render with some props 1`] = `
         }
       }
     >
-      No transactions yet!
+      No transactions yet
     </WithTheme(EdgeTextComponent)>
   </View>
 </React.Fragment>
