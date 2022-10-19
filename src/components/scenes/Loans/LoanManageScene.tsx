@@ -1,5 +1,4 @@
 import { div, gt, mul } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
@@ -7,23 +6,25 @@ import { sprintf } from 'sprintf-js'
 
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
-import { ActionOp } from '../../../controllers/action-queue/types'
+import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
+import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
+import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
+import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
-import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { Actions, NavigationProp, ParamList } from '../../../types/routerTypes'
-import { makeAaveDepositAction } from '../../../util/ActionProgramUtils'
+import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
@@ -41,53 +42,62 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 import { FormScene } from '../FormScene'
 
-type ManageCollateralRequest =
-  | {
-      tokenId?: string
-      fromWallet: EdgeCurrencyWallet
-      nativeAmount: string
-    }
-  | {
-      tokenId?: string
-      toWallet: EdgeCurrencyWallet
-      nativeAmount: string
-    }
+export type LoanManageActionOpType = 'loan-deposit' | 'loan-withdraw' | 'loan-borrow' | 'loan-repay'
 
-type ActionOpType = 'loan-borrow' | 'loan-deposit' | 'loan-repay' | 'loan-withdraw'
+// User input display strings
+const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string } } = {
+  'loan-deposit': {
+    headerText: s.strings.loan_add_collateral,
+    amountCard: s.strings.loan_fragment_deposit,
+    srcDestCard: s.strings.loan_fund_source
+  },
+  'loan-withdraw': {
+    headerText: s.strings.loan_withdraw_collateral,
+    amountCard: s.strings.loan_fragment_withdraw,
+    srcDestCard: s.strings.loan_fund_destination
+  },
+  'loan-borrow': {
+    headerText: s.strings.loan_borrow_more,
+    amountCard: s.strings.loan_fragment_loan,
+    srcDestCard: s.strings.loan_fund_destination
+  },
+  'loan-repay': {
+    headerText: s.strings.loan_make_payment,
+    amountCard: s.strings.loan_fragment_repay,
+    srcDestCard: s.strings.loan_fund_source
+  }
+} as const
 
-type Props<T extends keyof ParamList> = {
-  // TODO: Remove use of ApprovableAction to calculate fees. Update ActionQueue to handle fee calcs
-  action: (request: ManageCollateralRequest) => Promise<ApprovableAction>
-  actionOpType: ActionOpType
-  actionWallet: 'fromWallet' | 'toWallet'
-  amountChange?: 'increase' | 'decrease'
-  loanAccount: LoanAccount
-
-  showAprChange?: boolean
-
-  headerText: string
-  navigation: NavigationProp<T>
+type Props = {
+  navigation: NavigationProp<'loanManage'>
+  route: RouteProp<'loanManage'>
 }
 
-export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>) => {
+export const LoanManageScene = (props: Props) => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
-  const { action, actionOpType, actionWallet, amountChange = 'increase', loanAccount, showAprChange = false, headerText, navigation } = props
+  const { navigation, route } = props
+  const { actionOpType, loanAccountId } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
+  const clientId = useSelector(state => state.core.context.clientId)
+  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
+  const loanAccount = loanAccounts[loanAccountId]
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
+  const actionOpStrings = ACTIONOP_TYPE_STRING_MAP[actionOpType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
   const borrowPluginInfo = borrowPlugin.borrowInfo
   const borrowPluginId = borrowPluginInfo.borrowPluginId
+  const isShowAprChange = actionOpType === 'loan-repay' || actionOpType === 'loan-borrow'
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
@@ -112,24 +122,15 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
 
-  // User input display strings
-  const opTypeStringMap = {
-    'loan-borrow': { amountCard: s.strings.loan_fragment_loan, srcDestCard: s.strings.loan_fund_destination },
-    'loan-deposit': { amountCard: s.strings.loan_fragment_deposit, srcDestCard: s.strings.loan_fund_source },
-    'loan-repay': { amountCard: s.strings.loan_fragment_repay, srcDestCard: s.strings.loan_fund_source },
-    'loan-withdraw': { amountCard: s.strings.loan_fragment_withdraw, srcDestCard: s.strings.loan_fund_destination }
-  }
-
   // #endregion Constants
 
   // -----------------------------------------------------------------------------
   // #region State
   // -----------------------------------------------------------------------------
 
-  const [approvalAction, setApprovalAction] = React.useState<ApprovableAction | null>(null)
   const [actionNativeCryptoAmount, setActionNativeCryptoAmount] = React.useState('0')
   const [newDebtApr, setNewDebtApr] = React.useState(0)
-  const [actionOp, setActionOp] = React.useState<ActionOp | undefined>(undefined)
+  const [actionProgram, setActionProgram] = React.useState<ActionProgram | undefined>(undefined)
 
   const [bankAccountsMap] = useAsyncValue<PaymentMethodsMap>(async (): Promise<PaymentMethodsMap> => {
     if (account == null) return {}
@@ -141,11 +142,9 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
 
   // New debt/collateral amount
+  const amountChange = actionOpType === 'loan-borrow' || actionOpType === 'loan-deposit' ? 'increase' : 'decrease'
   const actionAmountChange = amountChange === 'increase' ? '1' : '-1'
   const pendingDebtOrCollateral = { nativeAmount: mul(actionNativeCryptoAmount, actionAmountChange), tokenId: selectedAsset.tokenId, apr: 0 }
-
-  // Fees
-  const feeNativeAmount = approvalAction != null ? approvalAction.networkFee.nativeAmount : '0'
 
   // APR change
   const newDebt = { nativeAmount: actionNativeCryptoAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
@@ -168,66 +167,79 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #region Hooks
   // -----------------------------------------------------------------------------
 
-  // @ts-expect-error
-  useAsyncEffect(async () => {
-    const actionOp: ActionOp = {
-      type: 'seq',
-      actions: []
-    }
-
-    // Build the sequence ops:
-    if (actionOpType === 'loan-deposit') {
-      actionOp.actions = await makeAaveDepositAction({
-        borrowPluginId,
-        depositTokenId: hardAllowedCollateralAsset[0].tokenId,
-        nativeAmount: actionNativeCryptoAmount,
-        borrowEngineWallet: borrowEngineWallet,
-        srcTokenId: selectedAsset.tokenId,
-        srcWallet: borrowEngineWallet
-      })
-    } else {
-      actionOp.actions = [
-        {
-          type: actionOpType,
-          borrowPluginId,
-          nativeAmount: actionNativeCryptoAmount,
-          walletId: borrowEngineWallet.id,
-          tokenId: selectedAsset.tokenId
-        }
-      ]
-    }
-
-    setActionOp(actionOp)
-  }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, selectedAsset])
-
-  // @ts-expect-error
+  // Build Action Program
   useAsyncEffect(async () => {
     if (zeroString(actionNativeCryptoAmount) || isLtvExceeded) {
-      setApprovalAction(null)
-      return
+      setActionProgram(undefined)
+    } else {
+      let actionOp: ActionOp
+      switch (actionOpType) {
+        case 'loan-deposit':
+          actionOp = await makeAaveDepositAction({
+            borrowPluginId,
+            depositTokenId: hardAllowedCollateralAsset[0].tokenId,
+            nativeAmount: actionNativeCryptoAmount,
+            borrowEngineWallet: borrowEngineWallet,
+            srcTokenId: selectedAsset.tokenId,
+            srcWallet: borrowEngineWallet
+          })
+          break
+        case 'loan-borrow':
+          {
+            const destination: LoanAsset = {
+              wallet: borrowEngineWallet,
+              tokenId: selectedAsset.tokenId,
+              nativeAmount: actionNativeCryptoAmount,
+              ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
+              ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
+            }
+            actionOp = await makeAaveBorrowAction({
+              borrowEngineWallet,
+              borrowPluginId,
+              destination
+            })
+          }
+          break
+        default: {
+          actionOp = {
+            type: 'seq',
+            actions: [
+              {
+                type: actionOpType,
+                borrowPluginId,
+                nativeAmount: actionNativeCryptoAmount,
+                walletId: borrowEngineWallet.id,
+                tokenId: selectedAsset.tokenId
+              }
+            ]
+          }
+        }
+      }
+      setActionProgram(await makeActionProgram(actionOp))
     }
 
-    const request: ManageCollateralRequest =
-      actionWallet === 'fromWallet'
-        ? {
-            nativeAmount: actionNativeCryptoAmount,
-            fromWallet: borrowEngineWallet,
-            tokenId: selectedAsset.tokenId
-          }
-        : {
-            nativeAmount: actionNativeCryptoAmount,
-            toWallet: borrowEngineWallet,
-            tokenId: selectedAsset.tokenId
-          }
+    return () => {}
+  }, [actionNativeCryptoAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
 
-    const approvalAction = await action(request)
-    setApprovalAction(approvalAction)
+  // Get Network Fees
+  const [networkFeeMap = {}] = useAsyncValue(async () => {
+    if (actionProgram != null) {
+      const executionContext = makeExecutionContext({ account, clientId })
+      const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
+      return getExecutionNetworkFees(executionOutputs)
+    } else {
+      return {}
+    }
+  }, [account, actionProgram, clientId])
 
-    if (showAprChange) {
+  // APR
+  useAsyncEffect(async () => {
+    if (isShowAprChange) {
       const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
       setNewDebtApr(apr)
     }
-  }, [action, actionNativeCryptoAmount, actionWallet, borrowEngine, borrowEngineWallet, selectedAsset, showAprChange])
+    return () => {}
+  }, [borrowEngine, selectedAsset.tokenId, isShowAprChange])
 
   // #endregion Hooks
 
@@ -240,8 +252,7 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   })
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
-    if (actionOp != null) {
-      const actionProgram = await makeActionProgram(actionOp)
+    if (actionProgram != null) {
       try {
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, actionOpType))
 
@@ -295,18 +306,18 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
   // #endregion Handlers
 
   return (
-    <FormScene headerText={headerText} onSliderComplete={handleSliderComplete} sliderDisabled={approvalAction == null}>
+    <FormScene headerText={actionOpStrings.headerText} onSliderComplete={handleSliderComplete} sliderDisabled={actionProgram == null}>
       <Space vertical around={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
           inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
-          title={sprintf(s.strings.loan_enter_s_amount_s, opTypeStringMap[actionOpType].amountCard, fiatCurrencyCode)}
+          title={sprintf(s.strings.loan_enter_s_amount_s, actionOpStrings.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
-        {showAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-        <EdgeText style={styles.textTitle}>{opTypeStringMap[actionOpType].srcDestCard}</EdgeText>
+        {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
+        <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCard}</EdgeText>
         {bankAccountsMap != null ? (
           <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
         ) : (
@@ -332,8 +343,8 @@ export const ManageCollateralScene = <T extends keyof ParamList>(props: Props<T>
           debtsOrCollaterals={isSceneTypeDebts ? collaterals : debts}
           key="counterAsset"
         />
-        <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={feeNativeAmount} key="fee" />
-        {showAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
+        <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]?.nativeAmount ?? '0'} key="fee" />
+        {isShowAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
         <LtvRatioTile
           borrowEngine={borrowEngine}
           tokenId={selectedAsset.tokenId}

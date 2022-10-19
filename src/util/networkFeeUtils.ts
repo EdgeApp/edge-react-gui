@@ -4,7 +4,7 @@ import { EdgeNetworkFee } from 'edge-core-js'
 import { ExecutionOutput } from '../controllers/action-queue/types'
 
 // Map: currencyCode -> nativeAmount
-interface NetworkFeeMap {
+export interface NetworkFeeMap {
   [currencyCode: string]: EdgeNetworkFee | undefined
 }
 export const getExecutionNetworkFees = (executionOutputs: ExecutionOutput[]): NetworkFeeMap => {

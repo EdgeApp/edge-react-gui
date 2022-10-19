@@ -5,6 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
+import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
@@ -80,16 +81,8 @@ export const LoanCloseScene = (props: Props) => {
   const [networkFeeMap, networkFeeMapError] = useAsyncValue(async () => {
     if (actionProgram === undefined) return
     if (actionProgram === null) return null
-    const actionProgramState = {
-      clientId,
-      programId: actionProgram.programId,
-      effective: false,
-      executing: false,
-      lastExecutionTime: 0,
-      nextExecutionTime: 0
-    }
     const executionContext = makeExecutionContext({ account, clientId })
-    const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, actionProgramState, false)
+    const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
     return networkFeeMap
   }, [actionProgram])
