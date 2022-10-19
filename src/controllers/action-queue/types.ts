@@ -188,6 +188,10 @@ export type ExecutableAction = {
 export type ExecutionContext = {
   account: EdgeAccount
   clientId: string
+
+  // Methods
+  evaluateAction: (program: ActionProgram, state: ActionProgramState) => Promise<ExecutableAction>
+  checkActionEffect: (effect: ActionEffect) => Promise<EffectCheckResult>
 }
 export type ExecutionOutput = {
   effect: ActionEffect

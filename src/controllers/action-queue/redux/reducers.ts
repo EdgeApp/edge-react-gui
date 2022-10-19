@@ -1,8 +1,8 @@
 import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../../../types/reduxTypes'
-import { checkEffectIsDone } from '../runtime'
 import { ActionQueueMap } from '../types'
+import { checkEffectIsDone } from '../util/checkEffectIsDone'
 
 export type ActionQueueState = {
   readonly actionQueueMap: ActionQueueMap

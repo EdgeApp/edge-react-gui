@@ -1,8 +1,10 @@
 import { Dispatch, GetState } from '../../../types/reduxTypes'
+import { logActivity } from '../../../util/logger'
 import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { uploadPushEvents } from '../push'
-import { getEffectPushEventIds } from '../runtime'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from '../types'
+import { getEffectPushEventIds } from '../util/getEffectPushEventIds'
+import { makeExecutionContext } from '../util/makeExecutionContext'
 
 type LoadActionQueueStateAction = {
   type: 'ACTION_QUEUE/LOAD_QUEUE'
@@ -30,6 +32,8 @@ export const scheduleActionProgram = (program: ActionProgram) => async (dispatch
 
   // Persist the ActionProgram to the ActionQueueStore
   const programState = await store.createActionQueueItem(program)
+
+  logActivity(`Scheduled Action Program`, { programId })
 
   dispatch({
     type: 'ACTION_QUEUE/QUEUE_ITEM',
@@ -60,12 +64,15 @@ export const cancelActionProgram = (programId: string) => async (dispatch: Dispa
 
   const pushEventIds = getEffectPushEventIds(programState.effect)
   if (pushEventIds.length > 0) {
-    await uploadPushEvents({ account, clientId }, { removeEvents: pushEventIds })
+    const executionContext = makeExecutionContext({ account, clientId })
+    await uploadPushEvents(executionContext, { removeEvents: pushEventIds })
   }
 
   programState.effect = { type: 'done', cancelled: true }
 
   await store.updateActionQueueItem(programState)
+
+  logActivity(`Cancelled Action Program`, { programId })
 
   dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
 }

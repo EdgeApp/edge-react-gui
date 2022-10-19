@@ -1,3 +1,4 @@
+import { uncleaner } from 'cleaners'
 import { EdgeDataDump } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -7,10 +8,51 @@ import { base16, base64 } from 'rfc4648'
 import packageJson from '../../package.json'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
+import { asActionProgram, asActionProgramState } from '../controllers/action-queue/cleaners'
+import { ActionProgram, ActionProgramState } from '../controllers/action-queue/types'
 import s from '../locales/strings'
 import { sendLogs } from '../modules/Logs/api'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { log, logWithType, readLogs } from '../util/logger'
+
+type LogOutput = {
+  isoDate: string
+  uniqueId: string
+  userMessage: string
+  deviceInfo: string
+  appVersion: string
+  OS: string
+  acctRepoId?: string
+  accounts: Accounts[]
+  loggedInUser?: LoggedInUser
+  data: string
+}
+
+type Accounts = {
+  username: string
+  userId: string // Not sure what this is used for, but adding the type anyway
+}
+
+type LoggedInUser = {
+  userName: string
+  userId: string
+  wallets: WalletData[]
+  actions: ActionData[]
+}
+
+type WalletData = {
+  currencyCode?: string
+  imported?: boolean
+  repoId?: string
+  pluginDump?: EdgeDataDump
+}
+
+// Modeled from ActionQueueItem type but separate in order to avoid
+// be explicit about what information is shared.
+type ActionData = {
+  program: ActionProgram
+  state: ActionProgramState
+}
 
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -48,28 +90,37 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
     data: ''
   }
 
-  const activityOutput = { ...logOutput }
+  const activityOutput: LogOutput = { ...logOutput }
   activityOutput.uniqueId = activityId
 
   const state = getState()
+  const { actionQueue } = state
   const { account, context } = state.core
+
   if (context) {
     // Get local accounts
     for (const user of context.localUsers) {
-      // @ts-expect-error
       logOutput.accounts.push({ username: user.username, userId: '' })
     }
   }
 
   if (account.loggedIn) {
     const { currencyWallets, rootLoginId, keys, username } = account
+    const { actionQueueMap } = actionQueue
+
     logOutput.loggedInUser = {
       userId: rootLoginId,
       userName: username,
-      wallets: []
+      wallets: [],
+      actions: []
     }
     logOutput.acctRepoId = getRepoId(keys.syncKey)
     logOutput.data += '***Account Wallet Summary***\n'
+
+    //
+    // Wallet Data
+    //
+
     for (const walletId of Object.keys(currencyWallets)) {
       // Wallet TX summary
       const codes = await currencyWallets[walletId].getEnabledTokens()
@@ -87,12 +138,23 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
         const currencyCode = wallet.currencyInfo.currencyCode ?? ''
         logOutput.loggedInUser.wallets.push({
           currencyCode,
-          repoId: getRepoId(wallet.keys.syncKey),
-          // @ts-expect-error
           imported: wallet.keys.imported,
+          repoId: getRepoId(wallet.keys.syncKey),
           pluginDump: await wallet.dumpData()
         })
       }
+    }
+
+    //
+    // Action Data
+    //
+
+    for (const actionQueueItem of Object.values(actionQueueMap)) {
+      const actionData = {
+        program: uncleaner(asActionProgram)(actionQueueItem.program),
+        state: uncleaner(asActionProgramState)(actionQueueItem.state)
+      }
+      logOutput.loggedInUser.actions.push(actionData)
     }
   }
   logOutput.data += `App version: ${packageJson.version}
@@ -100,6 +162,10 @@ App build: ${getVersion()}.${getBuildNumber()}
 os: ${Platform.OS} ${Platform.Version}
 device: ${getBrand()} ${getDeviceId()}
 `
+
+  //
+  // Send log output
+  //
 
   await logWithType('activity', 'SENDING ACTIVITY LOGS WITH MESSAGE: ' + text)
     .then(async () => await readLogs('activity'))
@@ -127,33 +193,4 @@ function getRepoId(key: string): string {
     return base16.stringify(base64.parse(key)).toLowerCase()
   }
   return 'Invalid syncKey type'
-}
-
-type Accounts = {
-  username: string
-}
-
-type Wallets = {
-  currencyCode?: string
-  repoId?: string
-  pluginDump?: EdgeDataDump
-}
-
-type LoggedInUser = {
-  userName: string
-  userId: string
-  wallets: Wallets[]
-}
-
-type LogOutput = {
-  isoDate: string
-  uniqueId: string
-  userMessage: string
-  deviceInfo: string
-  appVersion: string
-  OS: string
-  acctRepoId?: string
-  accounts: Accounts[]
-  loggedInUser?: LoggedInUser
-  data: string
 }
