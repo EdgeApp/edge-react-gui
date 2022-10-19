@@ -12,6 +12,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
+import { ExplorerCard } from '../themed/ExplorerCard'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 
@@ -146,7 +147,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderEmptyComponent = () => {
     const { tokenId, numTransactions, wallet } = this.props
-    if (numTransactions > 0) {
+    const { isTransactionListUnsupported } = this.state
+
+    if (isTransactionListUnsupported) {
+      return <ExplorerCard wallet={wallet} tokenId={tokenId} />
+    } else if (numTransactions > 0) {
       return <EmptyLoader />
     } else {
       return <BuyCrypto wallet={wallet} tokenId={tokenId} />
