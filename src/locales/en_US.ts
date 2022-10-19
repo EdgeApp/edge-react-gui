@@ -167,7 +167,7 @@ const strings = {
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
-  transaction_list_no_tx_yet: 'No transactions yet!',
+  transaction_list_no_tx_yet: 'No transactions yet',
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
   transaction_list_search_no_result: 'Search returned no results',
