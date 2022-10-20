@@ -171,6 +171,11 @@ const asConfig = asObject({
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  SWAPUZ_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   SWITCHAIN_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
