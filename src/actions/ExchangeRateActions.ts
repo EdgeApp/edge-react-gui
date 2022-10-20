@@ -1,7 +1,7 @@
 import { div, eq } from 'biggystring'
 import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
 
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { RootState, ThunkAction } from '../types/reduxTypes'
 import { GuiExchangeRates } from '../types/types'
 import { fetchRates } from '../util/network'
 import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils'
@@ -19,13 +19,15 @@ const asRatesResponse = asObject({
   )
 })
 
-export const updateExchangeRates = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const exchangeRates = await buildExchangeRates(state)
-  dispatch({
-    type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
-    data: { exchangeRates }
-  })
+export function updateExchangeRates(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const exchangeRates = await buildExchangeRates(state)
+    dispatch({
+      type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
+      data: { exchangeRates }
+    })
+  }
 }
 
 async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {

@@ -8,3 +8,5 @@ export type Dispatch = {
   (action: Action): Action
   <Return>(thunk: (dispatch: Dispatch, getState: GetState) => Return): Return
 }
+
+export type ThunkAction<Return> = (dispatch: Dispatch, getState: GetState) => Return

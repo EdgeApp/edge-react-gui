@@ -1,4 +1,4 @@
-import { Dispatch, GetState } from '../../../types/reduxTypes'
+import { ThunkAction } from '../../../types/reduxTypes'
 import { logActivity } from '../../../util/logger'
 import { ActionQueueStore, makeActionQueueStore } from '../ActionQueueStore'
 import { uploadPushEvents } from '../push'
@@ -24,55 +24,61 @@ type UpdateProgramStateAction = {
 
 export type ActionQueueAction = LoadActionQueueStateAction | ScheduleProgramAction | UpdateProgramStateAction
 
-export const scheduleActionProgram = (program: ActionProgram) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const clientId = state.core.context.clientId
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
-  const programId = program.programId
+export function scheduleActionProgram(program: ActionProgram): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const clientId = state.core.context.clientId
+    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+    const programId = program.programId
 
-  // Persist the ActionProgram to the ActionQueueStore
-  const programState = await store.createActionQueueItem(program)
+    // Persist the ActionProgram to the ActionQueueStore
+    const programState = await store.createActionQueueItem(program)
 
-  logActivity(`Scheduled Action Program`, { programId })
+    logActivity(`Scheduled Action Program`, { programId })
 
-  dispatch({
-    type: 'ACTION_QUEUE/QUEUE_ITEM',
-    programId,
-    item: {
-      program,
-      state: programState
-    }
-  })
-}
-
-export const updateActionProgramState = (programState: ActionProgramState) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const clientId = state.core.context.clientId
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
-
-  await store.updateActionQueueItem(programState)
-
-  dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
-}
-
-export const cancelActionProgram = (programId: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = state.core.account
-  const clientId = state.core.context.clientId
-  const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
-  const { state: programState } = state.actionQueue.actionQueueMap[programId]
-
-  const pushEventIds = getEffectPushEventIds(programState.effect)
-  if (pushEventIds.length > 0) {
-    const executionContext = makeExecutionContext({ account, clientId })
-    await uploadPushEvents(executionContext, { removeEvents: pushEventIds })
+    dispatch({
+      type: 'ACTION_QUEUE/QUEUE_ITEM',
+      programId,
+      item: {
+        program,
+        state: programState
+      }
+    })
   }
+}
 
-  programState.effect = { type: 'done', cancelled: true }
+export function updateActionProgramState(programState: ActionProgramState): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const clientId = state.core.context.clientId
+    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
 
-  await store.updateActionQueueItem(programState)
+    await store.updateActionQueueItem(programState)
 
-  logActivity(`Cancelled Action Program`, { programId })
+    dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
+  }
+}
 
-  dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
+export function cancelActionProgram(programId: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+    const clientId = state.core.context.clientId
+    const store: ActionQueueStore = makeActionQueueStore(state.core.account, clientId)
+    const { state: programState } = state.actionQueue.actionQueueMap[programId]
+
+    const pushEventIds = getEffectPushEventIds(programState.effect)
+    if (pushEventIds.length > 0) {
+      const executionContext = makeExecutionContext({ account, clientId })
+      await uploadPushEvents(executionContext, { removeEvents: pushEventIds })
+    }
+
+    programState.effect = { type: 'done', cancelled: true }
+
+    await store.updateActionQueueItem(programState)
+
+    logActivity(`Cancelled Action Program`, { programId })
+
+    dispatch({ type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE', state: programState })
+  }
 }

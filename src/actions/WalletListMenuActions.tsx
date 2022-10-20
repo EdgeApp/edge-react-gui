@@ -9,7 +9,7 @@ import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
 import s from '../locales/strings'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
@@ -35,12 +35,12 @@ export function walletListMenuAction(
   walletId: string,
   option: WalletListMenuKey,
   tokenId?: string
-) {
+): ThunkAction<void | Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
     case 'manageTokens': {
-      return (dispatch: Dispatch, getState: GetState) => {
+      return (dispatch, getState) => {
         navigation.navigate('manageTokens', {
           walletId
         })
@@ -48,14 +48,14 @@ export function walletListMenuAction(
     }
 
     case 'rawDelete': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
         account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
       }
     }
     case 'delete': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const state = getState()
         const wallets = state.ui.wallets.byId
         const wallet = wallets[walletId]
@@ -99,19 +99,19 @@ export function walletListMenuAction(
     }
 
     case 'resync': {
-      return (dispatch: Dispatch) => {
+      return dispatch => {
         dispatch(showResyncWalletModal(walletId))
       }
     }
 
     case 'split': {
-      return async (dispatch: Dispatch) => {
+      return async dispatch => {
         dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
       }
     }
 
     case 'viewXPub': {
-      return (dispatch: Dispatch, getState: GetState) => {
+      return (dispatch, getState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
         const { displayPublicSeed, currencyInfo } = currencyWallets[walletId]
@@ -151,7 +151,7 @@ export function walletListMenuAction(
     }
 
     case 'exportWalletTransactions': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
@@ -163,7 +163,7 @@ export function walletListMenuAction(
     }
 
     case 'getSeed': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
         const { currencyWallets } = account
@@ -205,7 +205,7 @@ export function walletListMenuAction(
     }
 
     case 'getRawKeys': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const passwordValid = await dispatch(
           validatePassword({
             title: s.strings.fragment_wallets_get_raw_keys_title,
@@ -225,7 +225,7 @@ export function walletListMenuAction(
     }
 
     case 'rename': {
-      return async (dispatch: Dispatch, getState: GetState) => {
+      return async (dispatch, getState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
@@ -253,6 +253,6 @@ export function walletListMenuAction(
     }
 
     default:
-      return (dispatch: Dispatch) => undefined
+      return () => undefined
   }
 }

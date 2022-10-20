@@ -12,10 +12,13 @@
 #
 # When adding commits to this file, always mention the date and
 # any tooling changes from the previous commit.
-# 
+#
 # Verify all "yarn fix" commits are present in this file:
 #   git log --all -i --grep='yarn\sfix' --pretty=%H
 ##
+
+# 2022-10-19 (Re-indenting all Redux thunks)
+1b9f6fa659e303ff1b590a108ad9c90066d5d9e3
 
 # 2021-05-24
 8b0bc2bc945073f89b05f9b064b84f11af6299c3
