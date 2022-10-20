@@ -62,10 +62,10 @@ export const LoanDetailsScene = (props: Props) => {
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const openCollaterals = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
-  const isWithdrawAvailable = openCollaterals.length > 0
+  const isCollateralAvailable = openCollaterals.length > 0
 
   const openDebts = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
-  const isRepayAvailable = openDebts.length > 0
+  const isDebtAvailable = openDebts.length > 0
 
   const loanToValue = useWatch(borrowEngine, 'loanToValue')
 
@@ -193,33 +193,39 @@ export const LoanDetailsScene = (props: Props) => {
             </Space>
             <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning || !isWithdrawAvailable}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning || !isCollateralAvailable}>
             <Space right>
               <Fontello
                 name="withdraw-collateral"
                 size={theme.rem(2)}
-                color={isActionProgramRunning || !isWithdrawAvailable ? theme.deactivatedText : theme.iconTappable}
+                color={isActionProgramRunning || !isCollateralAvailable ? theme.deactivatedText : theme.iconTappable}
               />
             </Space>
-            <EdgeText style={isActionProgramRunning || !isWithdrawAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
+            <EdgeText style={isActionProgramRunning || !isCollateralAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
               {s.strings.loan_action_withdraw_collateral}
             </EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress} disabled={isActionProgramRunning}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress} disabled={isActionProgramRunning || !isDebtAvailable}>
             <Space right>
-              <Fontello name="borrow-more" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
+              <Fontello
+                name="borrow-more"
+                size={theme.rem(2)}
+                color={isActionProgramRunning || !isCollateralAvailable ? theme.deactivatedText : theme.iconTappable}
+              />
             </Space>
-            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
+            <EdgeText style={isActionProgramRunning || !isCollateralAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
+              {s.strings.loan_borrow_more}
+            </EdgeText>
           </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning || isActionProgramRunning || !isRepayAvailable}>
+          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning || !isCollateralAvailable}>
             <Space right>
               <Fontello
                 name="make-payment"
                 size={theme.rem(2)}
-                color={isActionProgramRunning || !isRepayAvailable ? theme.deactivatedText : theme.iconTappable}
+                color={isActionProgramRunning || !isDebtAvailable ? theme.deactivatedText : theme.iconTappable}
               />
             </Space>
-            <EdgeText style={isActionProgramRunning || !isRepayAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
+            <EdgeText style={isActionProgramRunning || !isDebtAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
               {s.strings.loan_make_payment}
             </EdgeText>
           </TappableCard>
