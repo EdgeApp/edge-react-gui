@@ -13,6 +13,8 @@ import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowReq
 import { AaveNetwork } from './AaveNetwork'
 export { ContractMethod, SwapSide } from 'paraswap-core'
 
+const BALANCE_RESYNC_INTERVAL = 10 * 60 * 1000
+const LTV_RESYNC_INTERVAL = 60 * 1000
 const PARASWAP_SLIPPAGE_PERCENT = 1
 
 export type BorrowEngineBlueprint = {
@@ -113,39 +115,52 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Network Synchronization
     //
 
+    const RESYNC_TIMES = {
+      LTV: 0,
+      BALANCE: 0
+    }
     const startNetworkSyncLoop = async (): Promise<void> => {
       if (!instance.isRunning) return
 
+      const now = Date.now()
+
       try {
-        // Collaterals and Debts:
-        const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-        const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
-          return {
-            tokenId: addressToTokenId(address),
-            nativeAmount: aBalance.toString()
-          }
-        })
-        const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
-          return {
-            tokenId: addressToTokenId(address),
-            nativeAmount: vBalance.toString(),
-            apr: variableApr
-          }
-        })
+        if (now >= RESYNC_TIMES.LTV) {
+          // Loan to value:
+          await updateLtv()
+          RESYNC_TIMES.LTV = now + LTV_RESYNC_INTERVAL
+        }
 
-        // Loan to value:
-        await updateLtv()
+        if (now >= RESYNC_TIMES.BALANCE) {
+          // Collaterals and Debts:
+          const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+          const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: aBalance.toString()
+            }
+          })
+          const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: vBalance.toString(),
+              apr: variableApr
+            }
+          })
+          instance.collaterals = collaterals
+          instance.debts = debts
+          instance.syncRatio = 1
 
-        instance.collaterals = collaterals
-        instance.debts = debts
-        instance.syncRatio = 1
+          RESYNC_TIMES.BALANCE = now + BALANCE_RESYNC_INTERVAL
+        }
       } catch (error: any) {
         // TODO: Handle error cases such as rate limits
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
       } finally {
-        // Re-sync after delay
-        await snooze(15000)
+        // Loop delay
+        await snooze(1000)
+        // Restart loop
         await startNetworkSyncLoop()
       }
     }
