@@ -32,20 +32,22 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
   }
 >
   <View
-    collapsable={false}
     style={
-      Object {
-        "alignItems": "stretch",
-        "bottom": 0,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "left": 0,
-        "maxHeight": 1270,
-        "padding": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 64,
-      }
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "position": "absolute",
+        },
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "padding": 0,
+          "right": 0,
+          "top": 64,
+        },
+      ]
     }
   >
     <View
