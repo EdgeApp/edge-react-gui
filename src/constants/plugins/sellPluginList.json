@@ -6,7 +6,7 @@
       "credit"
     ],
     "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "title": "Instant ACH",
+    "title": "ACH Bank Transfer",
     "partnerIconPath": "icon_black_small.png",
     "forCountries": [
       "US"
@@ -20,7 +20,7 @@
       "bank"
     ],
     "description": "Fee: 1% / Settlement: 1 - 5 days\nMonthly Limit: $150000",
-    "title": "ACH Bank Transfer",
+    "title": "ACH (deprecated)",
     "partnerIconPath": "wyre-logo-square-small.png",
     "forCountries": [
       "US"

@@ -84,7 +84,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: '',
     lockUriPath: true,
     nativePlugin: creditCardPlugin,
-    displayName: 'Instant ACH'
+    displayName: 'ACH Bank Transfer'
   },
   simplex: {
     pluginId: 'simplex',
