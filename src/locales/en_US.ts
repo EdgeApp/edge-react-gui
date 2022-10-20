@@ -78,6 +78,7 @@ const strings = {
   warning_low_or_custom_fee:
     'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
+  warning_please_wait_title: 'Please Wait',
 
   warning_scam_title: 'Scam Warning',
   warning_scam_message_financial_advice: 'Edge will not give financial advice.',
@@ -929,6 +930,7 @@ const strings = {
   // Loan
   loan_action_add_collateral: 'Add Collateral',
   loan_action_close_loan: 'Close Loan',
+  loan_action_program_running: 'Loan operations in progress, please wait.',
   loan_action_withdraw_collateral: 'Withdraw Collateral',
   loan_actions_title: 'Actions',
   loan_active_loans_title: 'Active Loans',
