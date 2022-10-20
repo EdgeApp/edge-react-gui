@@ -16,7 +16,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
@@ -36,7 +36,10 @@ const CreateWalletImportComponent = (props: Props) => {
 
   const [importText, setImportText] = React.useState('')
 
+  const textInputRef = React.useRef<OutlinedTextInputRef>(null)
+
   const handleNext = useHandler(async () => {
+    textInputRef.current?.blur()
     const cleanImportText = importText.trim()
 
     // Test imports
@@ -141,7 +144,9 @@ const CreateWalletImportComponent = (props: Props) => {
         autoCorrect={false}
         blurOnClear={false}
         onChangeText={setImportText}
+        onSubmitEditing={handleNext}
         marginRem={[1, 0.75, 1.25]}
+        ref={textInputRef}
       />
       <View onLayout={handleIconContainerLayout}>
         <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
