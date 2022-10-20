@@ -151,7 +151,7 @@ Settlement: 1 - 4 days",
       "iach",
     ],
     "pluginId": "iach",
-    "title": "Instant ACH",
+    "title": "ACH Bank Transfer",
   },
   Object {
     "cryptoCodes": Array [],
@@ -198,7 +198,7 @@ Settlement: 1 - 5 days",
       "bank",
     ],
     "pluginId": "wyre",
-    "title": "ACH Bank Transfer",
+    "title": "ACH (deprecated)",
   },
   Object {
     "cryptoCodes": Array [
@@ -233,7 +233,7 @@ Array [
       "credit",
     ],
     "pluginId": "moonpay",
-    "title": "Instant ACH",
+    "title": "ACH Bank Transfer",
   },
   Object {
     "cryptoCodes": Array [
@@ -252,7 +252,7 @@ Monthly Limit: $150000",
       "bank",
     ],
     "pluginId": "wyre",
-    "title": "ACH Bank Transfer",
+    "title": "ACH (deprecated)",
   },
   Object {
     "cryptoCodes": Array [
