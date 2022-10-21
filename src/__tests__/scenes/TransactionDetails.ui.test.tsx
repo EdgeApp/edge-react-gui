@@ -2,9 +2,9 @@ import { describe, expect, it, jest } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene'
-import { getTheme } from '../components/services/ThemeContext'
-import { GuiWallet } from '../types/types'
+import { TransactionDetailsComponent } from '../../components/scenes/TransactionDetailsScene'
+import { getTheme } from '../../components/services/ThemeContext'
+import { GuiWallet } from '../../types/types'
 
 const fakeGuiWallet: GuiWallet = {
   blockHeight: 12345,

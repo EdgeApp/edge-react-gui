@@ -4,8 +4,8 @@ import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
-import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene'
-import { rootReducer } from '../reducers/RootReducer'
+import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
+import { rootReducer } from '../../reducers/RootReducer'
 
 describe('CurrencySettings', () => {
   it('should render', () => {

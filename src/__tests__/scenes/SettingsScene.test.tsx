@@ -3,9 +3,9 @@ import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 import renderer from 'react-test-renderer'
 
-import { SettingsSceneComponent } from '../components/scenes/SettingsScene'
-import { config } from '../theme/appConfig'
-import { fakeNavigation } from '../util/fake/fakeNavigation'
+import { SettingsSceneComponent } from '../../components/scenes/SettingsScene'
+import { config } from '../../theme/appConfig'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 const typeHack: any = {
   currencyConfig: {},

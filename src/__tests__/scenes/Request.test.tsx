@@ -2,8 +2,8 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { RequestComponent } from '../components/scenes/RequestScene'
-import { getTheme } from '../components/services/ThemeContext'
+import { RequestComponent } from '../../components/scenes/RequestScene'
+import { getTheme } from '../../components/services/ThemeContext'
 
 describe('Request', () => {
   it('should render with loading props', () => {

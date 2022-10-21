@@ -2,9 +2,9 @@ import { describe, expect, it, jest } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { ChangeMiningFeeComponent } from '../components/scenes/ChangeMiningFeeScene'
-import { getTheme } from '../components/services/ThemeContext'
-import { fakeNavigation } from '../util/fake/fakeNavigation'
+import { ChangeMiningFeeComponent } from '../../components/scenes/ChangeMiningFeeScene'
+import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('Change Mining Fees', () => {
   const onSubmit = jest.fn()
