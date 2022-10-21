@@ -118,10 +118,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         instance.loanToValue = loanToValue
         instance.syncRatio = 1
       } catch (error: any) {
+        // TODO: Handle error cases such as rate limits
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
-        await snooze(2000)
-        return await startNetworkSyncLoop()
       } finally {
         // Re-sync after delay
         await snooze(15000)
