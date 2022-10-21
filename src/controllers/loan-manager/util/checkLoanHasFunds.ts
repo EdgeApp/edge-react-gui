@@ -11,5 +11,5 @@ export const checkLoanHasFunds = (borrowEngine: BorrowEngine): boolean => {
     borrowEngine.collaterals.reduce((sum, collateral) => add(sum, collateral.nativeAmount), '0'),
     '0'
   )
-  return hasDebt && hasCollateral
+  return hasDebt || hasCollateral
 }
