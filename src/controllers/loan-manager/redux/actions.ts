@@ -216,7 +216,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
             const loanAccount = existingLoanAccount
             const borrowEngine = loanAccount.borrowEngine
 
-            await waitForBorrowEngineSync(borrowEngine)
+            await waitForBorrowEngineSync(borrowEngine) // If it exists in loan manager, it should be started
 
             if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
               // Cleanup and remove loan account if it's marked as closed
