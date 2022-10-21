@@ -6,7 +6,6 @@ import { createStore } from 'redux'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene'
 import { rootReducer } from '../../reducers/RootReducer'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CurrencyNotificationComponent', () => {
   const mockStore: any = {
@@ -25,53 +24,42 @@ describe('CurrencyNotificationComponent', () => {
   const store = createStore(rootReducer, mockStore)
 
   it('should render with loading props', () => {
-    const props: any = {
-      navigation: fakeNavigation,
-      route: {
-        params: {
-          currencyInfo: {
-            pluginId: 'bitcoin',
-            displayName: 'Bitcoin',
-            walletType: 'My Bitcoin Wallet',
-            currencyCode: 'BTC',
-            denominations: [
-              {
-                multiplier: '10000000',
-                name: 'Sats'
-              }
-            ],
-            addressExplorer: 'Blockchair',
-            transactionExplorer: 'Blockchair',
-            defaultSettings: ['JsonSettings'],
-            metaTokens: [
-              {
+    const actual = renderer.create(
+      <Provider store={store}>
+        <CurrencyNotificationScene
+          route={{
+            name: 'currencyNotificationSettings',
+            params: {
+              currencyInfo: {
+                pluginId: 'bitcoin',
+                displayName: 'Bitcoin',
+                walletType: 'My Bitcoin Wallet',
                 currencyCode: 'BTC',
-                currencyName: 'Bitcoin',
                 denominations: [
                   {
                     multiplier: '10000000',
                     name: 'Sats'
                   }
+                ],
+                addressExplorer: 'Blockchair',
+                transactionExplorer: 'Blockchair',
+                defaultSettings: ['JsonSettings'],
+                metaTokens: [
+                  {
+                    currencyCode: 'BTC',
+                    currencyName: 'Bitcoin',
+                    denominations: [
+                      {
+                        multiplier: '10000000',
+                        name: 'Sats'
+                      }
+                    ]
+                  }
                 ]
               }
-            ]
-          }
-        }
-      },
-
-      userId: '',
-      disklet: {
-        state: {
-          core: {
-            disklet: () => undefined
-          }
-        }
-      }
-    }
-
-    const actual = renderer.create(
-      <Provider store={store}>
-        <CurrencyNotificationScene {...props} />
+            }
+          }}
+        />
       </Provider>
     )
 

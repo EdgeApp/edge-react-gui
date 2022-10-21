@@ -27,7 +27,7 @@ import {
 import { showError } from '../services/AirshipInstance'
 import { TransactionRow } from './TransactionRow'
 
-export type Props = {
+type Props = {
   walletId: string
   currencyCode: string
   transaction: TransactionListTx

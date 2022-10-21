@@ -9,12 +9,7 @@ describe('WalletListSortModalComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      bridge: fakeAirshipBridge,
-      sortOption: 'name'
-    }
-    // @ts-expect-error
-    const actual = renderer.render(<WalletListSortModal {...props} />)
+    const actual = renderer.render(<WalletListSortModal bridge={fakeAirshipBridge} sortOption="name" />)
 
     expect(actual).toMatchSnapshot()
   })

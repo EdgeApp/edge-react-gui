@@ -10,22 +10,23 @@ describe('TransactionAdvanceDetailsComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      bridge: fakeAirshipBridge,
-      transaction: {
-        blockHeight: 0,
-        currencyCode: 'BCH',
-        date: 0,
-        nativeAmount: '-681',
-        networkFee: '681',
-        otherParams: {},
-        ourReceiveAddresses: ['123123123'],
-        signedTx: '',
-        txid: ''
-      },
-      theme: getTheme()
-    }
-    const actual = renderer.render(<TransactionAdvanceDetailsComponent {...props} />)
+    const actual = renderer.render(
+      <TransactionAdvanceDetailsComponent
+        bridge={fakeAirshipBridge}
+        transaction={{
+          blockHeight: 0,
+          currencyCode: 'BCH',
+          date: 0,
+          nativeAmount: '-681',
+          networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

@@ -9,28 +9,27 @@ describe('AddressTileComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      coreWallet: {
-        addCustomToken: 'shib',
-        currencyInfo: {
-          currencyCode: 'SHIB'
-        },
-        // @ts-expect-error
-        parseUri: (address, currencyCode) => 'wallet'
-      },
-      currencyCode: 'BTC',
-      title: 'Title',
-      recipientAddress: 'bc1',
-      // @ts-expect-error
-      onChangeAddress: async (guiMakeSpendInfo, parsedUri) => undefined,
-      resetSendTransaction: () => undefined,
-      lockInputs: true,
-      addressTileRef: {},
-      isCameraOpen: true,
-      theme: getTheme()
+    const fakeWallet: any = {
+      addCustomToken: 'shib',
+      currencyInfo: {
+        currencyCode: 'SHIB'
+      }
     }
-    // @ts-expect-error
-    const actual = renderer.render(<AddressTileComponent {...props} />)
+
+    const actual = renderer.render(
+      <AddressTileComponent
+        coreWallet={fakeWallet}
+        currencyCode="BTC"
+        title="Title"
+        recipientAddress="bc1"
+        onChangeAddress={async (guiMakeSpendInfo, parsedUri) => undefined}
+        resetSendTransaction={() => undefined}
+        lockInputs
+        addressTileRef={{}}
+        isCameraOpen
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

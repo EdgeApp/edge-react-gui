@@ -24,18 +24,17 @@ describe('CurrencySettings', () => {
         'bitcoin-gold': { currencyInfo }
       }
     }
-    const route = {
-      name: 'currencySettings',
-      params: { currencyInfo }
-    }
+
     const state: any = { core: { account } }
     const store = createStore(rootReducer, state)
 
     const actual = renderer.create(
       <Provider store={store}>
         <CurrencySettingsScene
-          // @ts-expect-error
-          route={route}
+          route={{
+            name: 'currencySettings',
+            params: { currencyInfo }
+          }}
         />
       </Provider>
     )

@@ -9,12 +9,7 @@ describe('SelectableRowComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      onPress: () => undefined,
-      title: 'title',
-      theme: getTheme()
-    }
-    const actual = renderer.render(<SelectableRowComponent {...props} />)
+    const actual = renderer.render(<SelectableRowComponent onPress={() => undefined} title="title" theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

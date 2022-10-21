@@ -10,6 +10,19 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
+    const fakeAccount: any = {
+      swapConfig: {
+        ChangeNow: {
+          swapInfo: {
+            pluginId: 'ChangeNow',
+            displayName: 'ChangeNow',
+            orderUri: 'ChangeNow.ChangeNow',
+            supportEmail: 'ChangeNow@ChangeNow'
+          }
+        }
+      }
+    }
+
     const swapInfo: GuiSwapInfo = {
       quote: {
         isEstimate: true,
@@ -59,35 +72,23 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       toFiat: '1'
     }
 
-    const props: any = {
-      route: {
-        params: { swapInfo, onApprove: () => undefined }
-      },
-      account: {
-        swapConfig: {
-          ChangeNow: {
-            swapInfo: {
-              pluginId: 'ChangeNow',
-              displayName: 'ChangeNow',
-              orderUri: 'ChangeNow.ChangeNow',
-              supportEmail: 'ChangeNow@ChangeNow'
-            }
-          }
-        }
-      },
-      fromDenomination: 'BTC',
-      fromWalletCurrencyName: { fromDenomination: '' },
-      pending: true,
-      toDenomination: 'ETH',
-      toWalletCurrencyName: { fromDenomination: '' },
-
-      // @ts-expect-error
-      shift: (swapInfo, onApprove) => undefined,
-      // @ts-expect-error
-      timeExpired: (swapInfo, onApprove) => undefined,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<CryptoExchangeQuoteScreenComponent {...props} />)
+    const actual = renderer.render(
+      <CryptoExchangeQuoteScreenComponent
+        route={{
+          name: 'exchangeQuote',
+          params: { swapInfo, onApprove: () => undefined }
+        }}
+        account={fakeAccount}
+        fromDenomination="BTC"
+        fromWalletCurrencyName={{ fromDenomination: '' } as any}
+        pending
+        toDenomination="ETH"
+        toWalletCurrencyName={{ fromDenomination: '' } as any}
+        shift={(swapInfo, onApprove) => undefined}
+        timeExpired={(swapInfo, onApprove) => undefined}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

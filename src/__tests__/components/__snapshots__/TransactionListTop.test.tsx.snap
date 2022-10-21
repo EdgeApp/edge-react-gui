@@ -84,6 +84,7 @@ exports[`TransactionListTop should render with loading props 1`] = `
                 <Memo(CryptoIconComponent)
                   currencyCode="string"
                   sizeRem={1.5}
+                  walletId="string"
                 />
                 <WithTheme(EdgeTextComponent)
                   style={

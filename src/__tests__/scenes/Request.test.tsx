@@ -4,27 +4,27 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('Request', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      currencyCode: null,
-      currentScene: 'request',
-      wallet: null,
-      exchangeSecondaryToPrimaryRatio: null,
-      guiWallet: null,
-      loading: true,
-      primaryCurrencyInfo: null,
-      receiveAddress: null,
-      secondaryCurrencyInfo: null,
-      showToWalletModal: null,
-      useLegacyAddress: null,
-      wallets: {},
-      theme: getTheme()
-    }
-    const actual = renderer.render(<RequestComponent {...props} />)
+    const actual = renderer.render(
+      <RequestComponent
+        navigation={fakeNavigation}
+        isConnected={false}
+        currencyCode={null as any}
+        wallet={null as any}
+        exchangeSecondaryToPrimaryRatio={null as any}
+        primaryCurrencyInfo={null as any}
+        secondaryCurrencyInfo={null as any}
+        useLegacyAddress={null as any}
+        theme={getTheme()}
+        refreshAllFioAddresses={() => undefined}
+        onSelectWallet={(walletId, currencyCode) => undefined}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })
@@ -32,22 +32,23 @@ describe('Request', () => {
   it('should render with loaded props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      currencyCode: 'BTC',
-      wallet: { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } },
-      exchangeSecondaryToPrimaryRatio: {},
-      guiWallet: {},
-      loading: false,
-      primaryCurrencyInfo: { displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } },
-      receiveAddress: {},
-      secondaryCurrencyInfo: {},
-      showToWalletModal: false,
-      useLegacyAddress: false,
-      currentScene: 'request',
-      wallets: {},
-      theme: getTheme()
-    }
-    const actual = renderer.render(<RequestComponent {...props} />)
+    const fakeWallet: any = { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } }
+
+    const actual = renderer.render(
+      <RequestComponent
+        navigation={fakeNavigation}
+        isConnected={false}
+        currencyCode="BTC"
+        wallet={fakeWallet}
+        exchangeSecondaryToPrimaryRatio={{} as any}
+        primaryCurrencyInfo={{ displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
+        secondaryCurrencyInfo={{} as any}
+        useLegacyAddress={false}
+        theme={getTheme()}
+        refreshAllFioAddresses={() => undefined}
+        onSelectWallet={(walletId, currencyCode) => undefined}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

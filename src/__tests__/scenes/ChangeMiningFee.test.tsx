@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { ChangeMiningFeeComponent } from '../../components/scenes/ChangeMiningFeeScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('Change Mining Fees', () => {
@@ -22,40 +23,60 @@ describe('Change Mining Fees', () => {
     currencyCode: 'BCH',
     metadata: {}
   }
-  const commonProps = {
-    navigation: fakeNavigation,
-    route: {
-      name: 'changeMiningFee',
-      params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
-    },
-    theme: getTheme()
+  const route: RouteProp<'changeMiningFee'> = {
+    name: 'changeMiningFee',
+    params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
   }
 
   it('should render with standard props', () => {
     const renderer = createRenderer()
-    // @ts-expect-error
-    const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="standard" />
+    const element = (
+      <ChangeMiningFeeComponent
+        navigation={fakeNavigation}
+        route={route}
+        theme={getTheme()}
+        // networkFeeOption="standard"
+      />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with high props', () => {
     const renderer = createRenderer()
-    // @ts-expect-error
-    const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="high" />
+    const element = (
+      <ChangeMiningFeeComponent
+        navigation={fakeNavigation}
+        route={route}
+        theme={getTheme()}
+        // networkFeeOption="high"
+      />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with low props', () => {
     const renderer = createRenderer()
-    // @ts-expect-error
-    const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="low" />
+    const element = (
+      <ChangeMiningFeeComponent
+        navigation={fakeNavigation}
+        route={route}
+        theme={getTheme()}
+        // networkFeeOption="low"
+      />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
   it('should render with custom props', () => {
     const renderer = createRenderer()
-    // @ts-expect-error
-    const element = <ChangeMiningFeeComponent {...commonProps} networkFeeOption="custom" />
+    const element = (
+      <ChangeMiningFeeComponent
+        navigation={fakeNavigation}
+        route={route}
+        theme={getTheme()}
+        // networkFeeOption="custom"
+      />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 })

@@ -58,11 +58,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             "name": "USD",
             "symbol": "$",
           },
-          "exchangeCurrencyCode": Object {
-            "wallet": Object {
-              "fiatCurrencyCode": "USD",
-            },
-          },
+          "exchangeCurrencyCode": "iso:USD",
           "exchangeDenomination": Object {
             "multiplier": "100",
             "name": "USD",
@@ -123,11 +119,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             "name": "USD",
             "symbol": "$",
           },
-          "exchangeCurrencyCode": Object {
-            "wallet": Object {
-              "fiatCurrencyCode": "USD",
-            },
-          },
+          "exchangeCurrencyCode": "iso:USD",
           "exchangeDenomination": Object {
             "multiplier": "100",
             "name": "USD",
