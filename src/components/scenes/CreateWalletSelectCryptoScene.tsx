@@ -58,7 +58,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       return map
     }, {})
   )
-  const [numSelected, setNumSelected] = React.useState(0)
+  const [numSelected, setNumSelected] = React.useState(Object.values(selectedItems).filter(Boolean).length)
 
   const createMainnetItem = useHandler(pluginId => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
