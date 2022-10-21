@@ -9,6 +9,11 @@ import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
+jest.mock('react-native-keyboard-aware-scroll-view', () => {
+  const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children
+  return { KeyboardAwareScrollView }
+})
+
 // Jest doesn't like direct SVG imports
 jest.mock('../../assets/images/import-key-icon.svg', () => 'ImportKeySvg')
 

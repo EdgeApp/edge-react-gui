@@ -1,6 +1,7 @@
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -16,7 +17,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
@@ -35,8 +36,12 @@ const CreateWalletImportComponent = (props: Props) => {
   const { currencyConfig } = account
 
   const [importText, setImportText] = React.useState('')
+  const [scrollEnabled, setScrollEnabled] = React.useState(false)
+
+  const textInputRef = React.useRef<OutlinedTextInputRef>(null)
 
   const handleNext = useHandler(async () => {
+    textInputRef.current?.blur()
     const cleanImportText = importText.trim()
 
     // Test imports
@@ -125,27 +130,35 @@ const CreateWalletImportComponent = (props: Props) => {
   const svgWidth = svgHeightToWidthRatio * svgHeight
 
   return (
-    <SceneWrapper avoidKeyboard background="theme">
+    <SceneWrapper background="theme">
       <SceneHeader withTopMargin title={s.strings.create_wallet_import_title} />
-      <View style={styles.icon}>
-        <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
-      </View>
-      <EdgeText style={styles.instructionalText} numberOfLines={2}>
-        {s.strings.create_wallet_import_all_instructions}
-      </EdgeText>
-      <OutlinedTextInput
-        value={importText}
-        returnKeyType="next"
-        label={s.strings.create_wallet_import_input_key_or_seed_prompt}
-        autoCapitalize="none"
-        autoCorrect={false}
-        blurOnClear={false}
-        onChangeText={setImportText}
-        marginRem={[1, 0.75, 1.25]}
-      />
-      <View onLayout={handleIconContainerLayout}>
-        <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
-      </View>
+      <KeyboardAwareScrollView
+        onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
+        onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
+        scrollEnabled={scrollEnabled}
+      >
+        <View style={styles.icon}>
+          <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+        </View>
+        <EdgeText style={styles.instructionalText} numberOfLines={2}>
+          {s.strings.create_wallet_import_all_instructions}
+        </EdgeText>
+        <OutlinedTextInput
+          value={importText}
+          returnKeyType="next"
+          label={s.strings.create_wallet_import_input_key_or_seed_prompt}
+          autoCapitalize="none"
+          autoCorrect={false}
+          blurOnClear={false}
+          onChangeText={setImportText}
+          onSubmitEditing={handleNext}
+          marginRem={[1, 0.75, 1.25]}
+          ref={textInputRef}
+        />
+        <View onLayout={handleIconContainerLayout}>
+          <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
+        </View>
+      </KeyboardAwareScrollView>
     </SceneWrapper>
   )
 }
