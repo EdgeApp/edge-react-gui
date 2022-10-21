@@ -31,18 +31,15 @@ export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction 
 
 /**
  * Returns a loan account selected from the redux store, or creates a new loan
- * account, saves, and returns it if it doesn't exists.
+ * account and return it if it doesn't exists.
  */
 export function getOrCreateLoanAccount(borrowPlugin: BorrowPlugin, wallet: EdgeCurrencyWallet): ThunkAction<Promise<LoanAccount>> {
-  return async (dispatch, getState) => {
+  return async (_dispatch, getState) => {
     const state = getState()
     const existingLoanAccount = selectLoanAccount(state, wallet.id)
     if (existingLoanAccount) return existingLoanAccount
 
     const newLoanAccount = await makeLoanAccount(borrowPlugin, wallet)
-
-    await dispatch(saveLoanAccount(newLoanAccount))
-
     return newLoanAccount
   }
 }
@@ -201,7 +198,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
             await waitForBorrowEngineSync(borrowEngine)
 
-            if (checkLoanHasFunds(borrowEngine)) {
+            if (checkLoanHasFunds(loanAccount)) {
               // Save the new loan account if it has funds
               await dispatch(saveLoanAccount(loanAccount))
             } else {
@@ -216,9 +213,9 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
             const loanAccount = existingLoanAccount
             const borrowEngine = loanAccount.borrowEngine
 
-            await waitForBorrowEngineSync(borrowEngine)
+            await waitForBorrowEngineSync(borrowEngine) // If it exists in loan manager, it should be started
 
-            if (!checkLoanHasFunds(borrowEngine) && existingLoanAccount.closed) {
+            if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
               // Cleanup and remove loan account if it's marked as closed
               await existingLoanAccount.borrowEngine.stopEngine()
               await dispatch(deleteLoanAccount(loanAccountId))

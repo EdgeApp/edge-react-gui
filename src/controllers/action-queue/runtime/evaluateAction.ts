@@ -1,6 +1,6 @@
 import { add } from 'biggystring'
 
-import { ApprovableAction, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
+import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
@@ -205,12 +205,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
-      await waitForBorrowEngineSync(borrowEngine)
-
       // Do the thing
       const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-deposit': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -223,12 +221,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
-      await waitForBorrowEngineSync(borrowEngine)
-
       // Do the thing
       const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-repay': {
       const { borrowPluginId, nativeAmount, walletId, tokenId, fromTokenId } = actionOp
@@ -241,12 +237,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
-      await waitForBorrowEngineSync(borrowEngine)
-
       // Do the thing
       const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, fromTokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-withdraw': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -259,12 +253,10 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
-      await waitForBorrowEngineSync(borrowEngine)
-
       // Do the thing
       const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'swap': {
       const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId, amountFor } = actionOp
@@ -359,9 +351,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
   }
 }
 
-async function approvableActionToExecutableAction(approvableAction: ApprovableAction): Promise<ExecutableAction> {
+async function approvableActionToExecutableAction(borrowEngine: BorrowEngine, approvableAction: ApprovableAction): Promise<ExecutableAction> {
   // Execute:
   const execute = async (): Promise<ExecutionOutput> => {
+    await waitForBorrowEngineSync(borrowEngine)
+
     const broadcastTxs = await approvableAction.approve()
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {
