@@ -1,4 +1,4 @@
-import { min } from 'biggystring'
+import { add, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
@@ -6,7 +6,7 @@ import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
-import { asTxInfo, CallInfo, makeApprovableCall, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
+import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
 import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowRequest, DepositRequest, RepayRequest, WithdrawRequest } from '../../types'
@@ -46,6 +46,26 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           return tokenId
         }
       }
+    }
+    const adjustCollateral = (tokenId: string | undefined, amount: string) => {
+      if (instance.collaterals.length === 0) throw new Error(`Invalid execution time; too early invocation`)
+      const index = instance.collaterals.findIndex(collateral => collateral.tokenId === tokenId)
+      if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
+      // Update entry
+      const collateral = instance.collaterals[index]
+      collateral.nativeAmount = add(collateral.nativeAmount, amount)
+      // Update entries field to trigger change event
+      instance.collaterals = [...instance.collaterals]
+    }
+    const adjustDebt = (tokenId: string | undefined, amount: string) => {
+      if (instance.debts.length === 0) throw new Error(`Invalid execution time; too early invocation`)
+      const index = instance.debts.findIndex(debt => debt.tokenId === tokenId)
+      if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
+      // Update entry
+      const debt = instance.debts[index]
+      debt.nativeAmount = add(debt.nativeAmount, amount)
+      // Update entries field to trigger change event
+      instance.debts = [...instance.debts]
     }
     const getToken = (tokenId?: string): EdgeToken => {
       if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
@@ -210,7 +230,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const actions = await makeTxCalls(txCallInfos)
 
-        return composeApprovableActions(...actions)
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustCollateral(tokenId, nativeAmount)
+        })
+
+        return composeApprovableActions(...actions, mutateStateAction)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
         const { tokenId, toWallet = wallet } = request
@@ -236,7 +260,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const withdrawTx = asGracefulTxInfo(await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, amount, to, { gasLimit: '800000', gasPrice }))
 
-        return await makeApprovableCall({
+        const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
           metadata: {
@@ -245,6 +269,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             notes: `Withdraw ${token.currencyCode} collateral`
           }
         })
+
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustCollateral(tokenId, mul('-1', nativeAmount))
+        })
+
+        return composeApprovableActions(withdrawAction, mutateStateAction)
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
@@ -266,7 +296,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           })
         )
 
-        return await makeApprovableCall({
+        const borrowAction = await makeApprovableCall({
           tx: borrowTx,
           wallet,
           metadata: {
@@ -275,6 +305,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             notes: `Borrow ${token.displayName} loan`
           }
         })
+
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustDebt(tokenId, nativeAmount)
+        })
+
+        return composeApprovableActions(borrowAction, mutateStateAction)
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
         const { fromTokenId, tokenId, fromWallet = wallet } = request
@@ -307,6 +343,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const amountToCover = BigNumber.from(nativeAmount)
         const gasPrice: BigNumberish = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
+
+        const actions: ApprovableAction[] = []
 
         // Repay with collateral
         if (fromTokenId != null) {
@@ -389,8 +427,13 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             }
           })
 
-          const actions = await makeTxCalls(txCallInfos)
-          return composeApprovableActions(...actions)
+          actions.push(...(await makeTxCalls(txCallInfos)))
+
+          const mutateStateAction = makeSideEffectApprovableAction(async () => {
+            adjustCollateral(fromTokenId, mul('-1', priceRoute.srcAmount))
+            adjustDebt(tokenId, mul('-1', nativeAmount))
+          })
+          actions.push(mutateStateAction)
         } else {
           // Repay with wallet funds
           const tokenContract = await aaveNetwork.makeTokenContract(debtTokenAddress)
@@ -426,8 +469,15 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               notes: `Repay ${debtToken.displayName} loan`
             }
           })
+
+          actions.push(...(await makeTxCalls(txCallInfos)))
+
+          const mutateStateAction = makeSideEffectApprovableAction(async () => {
+            adjustDebt(tokenId, mul('-1', nativeAmount))
+          })
+          actions.push(mutateStateAction)
         }
-        const actions = await makeTxCalls(txCallInfos)
+
         return composeApprovableActions(...actions)
       }
     })
