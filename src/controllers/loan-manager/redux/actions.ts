@@ -201,7 +201,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
             await waitForBorrowEngineSync(borrowEngine)
 
-            if (checkLoanHasFunds(borrowEngine)) {
+            if (checkLoanHasFunds(loanAccount)) {
               // Save the new loan account if it has funds
               await dispatch(saveLoanAccount(loanAccount))
             } else {
@@ -218,7 +218,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
             await waitForBorrowEngineSync(borrowEngine)
 
-            if (!checkLoanHasFunds(borrowEngine) && existingLoanAccount.closed) {
+            if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
               // Cleanup and remove loan account if it's marked as closed
               await existingLoanAccount.borrowEngine.stopEngine()
               await dispatch(deleteLoanAccount(loanAccountId))

@@ -1,8 +1,9 @@
 import { add, gt } from 'biggystring'
 
-import { BorrowEngine } from '../../../plugins/borrow-plugins/types'
+import { LoanAccount } from '../types'
 
-export const checkLoanHasFunds = (borrowEngine: BorrowEngine): boolean => {
+export const checkLoanHasFunds = (loanAccount: LoanAccount): boolean => {
+  const { borrowEngine } = loanAccount
   const hasDebt = gt(
     borrowEngine.debts.reduce((sum, debt) => add(sum, debt.nativeAmount), '0'),
     '0'
