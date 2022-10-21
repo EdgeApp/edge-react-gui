@@ -78,6 +78,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       if (tokenAddress == null) throw new Error(`Unable to find contract address for ${token.displayName} (${token.currencyCode})`)
       return tokenAddress
     }
+    const updateLtv = async () => {
+      const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+      const { totalCollateralETH, totalDebtETH } = userData
+      const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+      instance.loanToValue = loanToValue
+    }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)
         throw new Error(
@@ -128,13 +134,10 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         })
 
         // Loan to value:
-        const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
-        const { totalCollateralETH, totalDebtETH } = userData
-        const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+        await updateLtv()
 
         instance.collaterals = collaterals
         instance.debts = debts
-        instance.loanToValue = loanToValue
         instance.syncRatio = 1
       } catch (error: any) {
         // TODO: Handle error cases such as rate limits
