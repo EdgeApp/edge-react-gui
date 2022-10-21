@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, jest, test } from '@jest/globals'
 import { EdgeDataStore } from 'edge-core-js'
 
-import { ValidateFuncs, validatePromoCardsInner } from '../actions/AccountReferralActions'
-import { MessageTweak } from '../types/TweakTypes'
+import { ValidateFuncs, validatePromoCardsInner } from '../../actions/AccountReferralActions'
+import { MessageTweak } from '../../types/TweakTypes'
 
 beforeAll(() => {
   jest.useRealTimers()

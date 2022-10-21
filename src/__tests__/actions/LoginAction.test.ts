@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 
-import { mergeSettings } from '../actions/LoginActions'
-import { asSyncedAccountSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS } from '../modules/Core/Account/settings'
+import { mergeSettings } from '../../actions/LoginActions'
+import { asSyncedAccountSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 
 test('synced settings missing properties are replaced', () => {
   const loadedSyncedSettings = {}

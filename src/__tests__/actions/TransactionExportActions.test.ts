@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { EdgeTransaction } from 'edge-core-js'
 import fs from 'fs'
 
-import { exportTransactionsToCSVInner, exportTransactionsToQBOInner } from '../actions/TransactionExportActions'
+import { exportTransactionsToCSVInner, exportTransactionsToQBOInner } from '../../actions/TransactionExportActions'
 
 const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', { encoding: 'utf8' })
 const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encoding: 'utf8' })
