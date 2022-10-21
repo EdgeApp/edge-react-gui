@@ -31,18 +31,15 @@ export type LoanManagerActions = SetLoanAccountAction | DeleteLoanAccountAction 
 
 /**
  * Returns a loan account selected from the redux store, or creates a new loan
- * account, saves, and returns it if it doesn't exists.
+ * account and return it if it doesn't exists.
  */
 export function getOrCreateLoanAccount(borrowPlugin: BorrowPlugin, wallet: EdgeCurrencyWallet): ThunkAction<Promise<LoanAccount>> {
-  return async (dispatch, getState) => {
+  return async (_dispatch, getState) => {
     const state = getState()
     const existingLoanAccount = selectLoanAccount(state, wallet.id)
     if (existingLoanAccount) return existingLoanAccount
 
     const newLoanAccount = await makeLoanAccount(borrowPlugin, wallet)
-
-    await dispatch(saveLoanAccount(newLoanAccount))
-
     return newLoanAccount
   }
 }
