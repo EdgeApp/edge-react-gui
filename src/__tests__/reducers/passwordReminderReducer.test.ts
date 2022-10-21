@@ -119,12 +119,11 @@ describe('PasswordReminder', () => {
           nonPasswordLoginsLimit: MAX_NON_PASSWORD_LOGINS_LIMIT
         }
         const expected = MAX_NON_PASSWORD_LOGINS_LIMIT
-        // @ts-expect-error
         const action: PasswordReminderReducerAction = {
           type: 'PASSWORD_LOGIN',
           data: {
             ...previousState,
-            lastLoginDate: testDate
+            lastLoginDate: testDate.valueOf()
           }
         }
         const actual = uut(previousState, action).nonPasswordLoginsLimit
@@ -186,12 +185,11 @@ describe('PasswordReminder', () => {
         nonPasswordLoginsRemaining
       }
       const expected = true
-      // @ts-expect-error
       const action: PasswordReminderReducerAction = {
         type: 'NON_PASSWORD_LOGIN',
         data: {
           ...previousState,
-          lastLoginDate: testDate
+          lastLoginDate: testDate.valueOf()
         }
       }
       const actual = uut(previousState, action).needsPasswordCheck

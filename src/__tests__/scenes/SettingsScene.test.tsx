@@ -15,7 +15,6 @@ const typeHack: any = {
 }
 const account: EdgeAccount = typeHack
 const context: EdgeContext = typeHack
-const nop: any = () => undefined
 
 describe('MyComponent', () => {
   it('should render UnLocked SettingsOverview', () => {
@@ -34,18 +33,15 @@ describe('MyComponent', () => {
         supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
-        // @ts-expect-error
-        confirmPassword={nop}
-        dispatchUpdateEnableTouchIdEnable={nop}
-        handleSendLogs={nop}
-        lockSettings={nop}
-        onTogglePinLoginEnabled={nop}
-        resetConfirmPasswordError={nop}
-        setAutoLogoutTimeInSeconds={nop}
-        showRestoreWalletsModal={nop}
-        showUnlockSettingsModal={nop}
-        toggleDeveloperMode={nop}
-        logoutRequest={nop}
+        dispatchUpdateEnableTouchIdEnable={async () => undefined}
+        handleSendLogs={() => undefined}
+        lockSettings={() => undefined}
+        onTogglePinLoginEnabled={async () => undefined}
+        setAutoLogoutTimeInSeconds={() => undefined}
+        showRestoreWalletsModal={() => undefined}
+        showUnlockSettingsModal={() => undefined}
+        toggleDeveloperMode={() => undefined}
+        logoutRequest={async () => undefined}
       />
     )
 
@@ -68,18 +64,15 @@ describe('MyComponent', () => {
         supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
-        // @ts-expect-error
-        confirmPassword={nop}
-        dispatchUpdateEnableTouchIdEnable={nop}
-        lockSettings={nop}
-        handleSendLogs={nop}
-        onTogglePinLoginEnabled={nop}
-        resetConfirmPasswordError={nop}
-        setAutoLogoutTimeInSeconds={nop}
-        showRestoreWalletsModal={nop}
-        showUnlockSettingsModal={nop}
-        toggleDeveloperMode={nop}
-        logoutRequest={nop}
+        dispatchUpdateEnableTouchIdEnable={async () => undefined}
+        lockSettings={() => undefined}
+        handleSendLogs={() => undefined}
+        onTogglePinLoginEnabled={async () => undefined}
+        setAutoLogoutTimeInSeconds={() => undefined}
+        showRestoreWalletsModal={() => undefined}
+        showUnlockSettingsModal={() => undefined}
+        toggleDeveloperMode={() => undefined}
+        logoutRequest={async () => undefined}
       />
     )
 

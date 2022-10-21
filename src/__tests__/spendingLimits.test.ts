@@ -11,7 +11,7 @@ describe('spendingLimits', () => {
 
   describe('when logging in', () => {
     it('should update', () => {
-      const loginAction = {
+      const actual = spendingLimits(initialState, {
         type: 'ACCOUNT_INIT_COMPLETE',
         data: {
           spendingLimits: {
@@ -20,10 +20,8 @@ describe('spendingLimits', () => {
               amount: 150
             }
           }
-        }
-      }
-      // @ts-expect-error: The action should have many other properties
-      const actual = spendingLimits(initialState, loginAction)
+        } as any
+      })
 
       expect(actual).toMatchSnapshot()
     })
@@ -37,7 +35,7 @@ describe('spendingLimits', () => {
           amount: 0
         }
       }
-      const updateAction = {
+      const actual = spendingLimits(initialState, {
         type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
         data: {
           spendingLimits: {
@@ -47,9 +45,7 @@ describe('spendingLimits', () => {
             }
           }
         }
-      }
-      // @ts-expect-error
-      const actual = spendingLimits(initialState, updateAction)
+      })
 
       expect(actual).toMatchSnapshot()
     })
@@ -61,7 +57,7 @@ describe('spendingLimits', () => {
           amount: 0
         }
       }
-      const updateAction = {
+      const actual = spendingLimits(initialState, {
         type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
         data: {
           spendingLimits: {
@@ -71,9 +67,7 @@ describe('spendingLimits', () => {
             }
           }
         }
-      }
-      // @ts-expect-error
-      const actual = spendingLimits(initialState, updateAction)
+      })
 
       expect(actual).toMatchSnapshot()
     })

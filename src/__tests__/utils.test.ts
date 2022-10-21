@@ -236,8 +236,7 @@ describe('daysBetween', () => {
     const days = end - start
     const a = new Date(MILLISECONDS_PER_DAY * start)
     const b = new Date(MILLISECONDS_PER_DAY * end)
-    // @ts-expect-error
-    expect(daysBetween(a, b)).toEqual(days)
+    expect(daysBetween(a.valueOf(), b.valueOf())).toEqual(days)
   })
 
   test('5 days', () => {
