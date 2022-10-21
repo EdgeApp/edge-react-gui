@@ -1,8 +1,10 @@
 import { add } from 'biggystring'
 
-import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
+import { ApprovableAction, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
+import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
 import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
 import { makeWyreClient } from '../WyreClient'
 
@@ -21,7 +23,7 @@ import { makeWyreClient } from '../WyreClient'
  * developer (via comments).
  */
 export async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
-  const { account } = context
+  const { account, dispatch } = context
   const { actionOp } = program
   const { effect } = state
 
@@ -198,13 +200,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+
+      await waitForBorrowEngineSync(borrowEngine)
 
       // Do the thing
       const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
@@ -217,13 +218,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+
+      await waitForBorrowEngineSync(borrowEngine)
 
       // Do the thing
       const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
@@ -236,13 +236,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+
+      await waitForBorrowEngineSync(borrowEngine)
 
       // Do the thing
       const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, fromTokenId })
@@ -255,13 +254,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
+
+      await waitForBorrowEngineSync(borrowEngine)
 
       // Do the thing
       const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })

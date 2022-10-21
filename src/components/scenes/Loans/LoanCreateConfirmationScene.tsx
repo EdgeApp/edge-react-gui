@@ -4,11 +4,12 @@ import * as React from 'react'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
-import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { makeLoanAccount } from '../../../controllers/loan-manager/LoanAccount'
-import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { selectLoanAccount } from '../../../controllers/loan-manager/redux/selectors'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
@@ -46,10 +47,14 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   const clientId = useSelector(state => state.core.context.clientId)
-  const account = useSelector(state => state.core.account)
+  const executionContext = useExecutionContext()
   const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
 
-  const [loanAccount, loanAccountError] = useAsyncValue(async () => makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet), [borrowPlugin, borrowEngine])
+  const existingLoanAccount = useSelector(state => selectLoanAccount(state, borrowEngineWallet.id))
+  const [loanAccount, loanAccountError] = useAsyncValue(
+    async () => existingLoanAccount ?? (await makeLoanAccount(borrowPlugin, borrowEngine.currencyWallet)),
+    [borrowPlugin, borrowEngine]
+  )
 
   const [[actionProgram, networkFeeMap = {}] = [], actionProgramError] = useAsyncValue(async () => {
     const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
@@ -74,7 +79,6 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     })
 
     const actionProgram = await makeActionProgram(actionOp)
-    const executionContext = makeExecutionContext({ account, clientId })
     const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
 
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
@@ -136,7 +140,10 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
       try {
-        await dispatch(updateLoanAccount(loanAccount))
+        // Make sure to start the borrow engine
+        if (!loanAccount.borrowEngine.isRunning) await loanAccount.borrowEngine.startEngine()
+
+        await dispatch(saveLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
         // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.

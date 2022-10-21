@@ -4,10 +4,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
-import { makeExecutionContext } from '../../../controllers/action-queue/util/makeExecutionContext'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
-import { runLoanActionProgram, updateLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
@@ -39,9 +39,10 @@ export const LoanCloseScene = (props: Props) => {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
   const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
+
+  const executionContext = useExecutionContext()
 
   const { navigation, route } = props
   const { loanAccountId } = route.params
@@ -81,7 +82,6 @@ export const LoanCloseScene = (props: Props) => {
   const [networkFeeMap, networkFeeMapError] = useAsyncValue(async () => {
     if (actionProgram === undefined) return
     if (actionProgram === null) return null
-    const executionContext = makeExecutionContext({ account, clientId })
     const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
     return networkFeeMap
@@ -101,7 +101,7 @@ export const LoanCloseScene = (props: Props) => {
     if (actionProgram === undefined) return
 
     // Always update the loan program marking it as close
-    await dispatch(updateLoanAccount({ ...loanAccount, closed: true }))
+    await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
 
     // No action program necessary to close loan
     if (actionProgram !== null) {

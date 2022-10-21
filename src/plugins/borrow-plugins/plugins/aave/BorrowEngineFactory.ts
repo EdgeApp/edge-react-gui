@@ -88,8 +88,9 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Network Synchronization
     //
 
-    // @ts-expect-error
-    const loadNetworkData = async () => {
+    const startNetworkSyncLoop = async (): Promise<void> => {
+      if (!instance.isRunning) return
+
       try {
         // Collaterals and Debts:
         const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
@@ -99,7 +100,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             nativeAmount: aBalance.toString()
           }
         })
-        // @ts-expect-error
         const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
           return {
             tokenId: addressToTokenId(address),
@@ -118,14 +118,13 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         instance.loanToValue = loanToValue
         instance.syncRatio = 1
       } catch (error: any) {
+        // TODO: Handle error cases such as rate limits
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
-        await snooze(2000)
-        return await loadNetworkData()
       } finally {
         // Re-sync after delay
         await snooze(15000)
-        await loadNetworkData()
+        await startNetworkSyncLoop()
       }
     }
 
@@ -133,13 +132,22 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Engine Instance
     //
 
-    // @ts-expect-error
     const instance: BorrowEngine = withWatchableProps({
       currencyWallet: wallet,
-      collaterals: [],
-      debts: [],
+      collaterals: [] as BorrowCollateral[],
+      debts: [] as BorrowDebt[],
       loanToValue: 0,
+      isRunning: false,
       syncRatio: 0,
+
+      async startEngine() {
+        if (instance.isRunning) return
+        instance.isRunning = true
+        startNetworkSyncLoop()
+      },
+      async stopEngine() {
+        instance.isRunning = false
+      },
 
       async getAprQuote(tokenId?: string): Promise<number> {
         const token = getToken(tokenId)
@@ -273,7 +281,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         // HACK: Action queue doesn't wait until borrowEngine has synced before using it
         if (instance.debts.find(debt => debt.tokenId === tokenId) == null) {
           const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-          // @ts-expect-error
           instance.debts = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
             return {
               tokenId: addressToTokenId(address),
@@ -417,9 +424,6 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       }
     })
-
-    // Initialization:
-    loadNetworkData()
 
     // Return instance:
     return instance

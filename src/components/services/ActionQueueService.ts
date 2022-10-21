@@ -6,8 +6,8 @@ import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueue
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
 import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
-import { makeExecutionContext } from '../../controllers/action-queue/util/makeExecutionContext'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useExecutionContext } from '../../hooks/useExecutionContext'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -28,6 +28,9 @@ export const ActionQueueService = () => {
   const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
 
+  const executionContext = useExecutionContext()
+  const executionContextMock = useExecutionContext(true)
+
   const updateProgramState = useHandler(async (state: ActionProgramState, executing: boolean) => {
     const { programId } = state
     // Update service level state
@@ -46,7 +49,6 @@ export const ActionQueueService = () => {
   // Initialization
   //
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account?.dataStore != null) {
       const store = makeActionQueueStore(account, clientId)
@@ -103,9 +105,9 @@ export const ActionQueueService = () => {
         await updateProgramState(state, true)
 
         // Use mock execution function if program is marked as mockMode
-        const executionContext = makeExecutionContext({ account, clientId }, program.mockMode)
+        const context = program.mockMode ? executionContextMock : executionContext
 
-        const { nextState } = await executeActionProgram(executionContext, program, state).catch((error: Error): ExecutionResults => {
+        const { nextState } = await executeActionProgram(context, program, state).catch((error: Error): ExecutionResults => {
           console.warn(new Error('Action Program Exception: ' + error.message))
           console.error(error)
           return {

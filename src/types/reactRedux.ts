@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactRedux from 'react-redux'
 
-import { Dispatch, RootState } from '../types/reduxTypes'
+import { Dispatch, RootState, Store } from '../types/reduxTypes'
 
 /**
  * The react-redux connect function, locked to our own Redux types
@@ -20,6 +20,10 @@ type UseDispatch = () => Dispatch
 
 type UseSelector = <T>(selector: (state: RootState) => T) => T
 
+type UseStore = () => Store
+
 export const useDispatch: UseDispatch = ReactRedux.useDispatch
 
 export const useSelector: UseSelector = ReactRedux.useSelector
+
+export const useStore: UseStore = ReactRedux.useStore

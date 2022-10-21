@@ -2,14 +2,14 @@ import * as React from 'react'
 
 import { showError } from '../components/services/AirshipInstance'
 
-type Cleanup = (() => void) | undefined
-type AsyncEffect = () => Promise<Cleanup>
+type Cleanup = () => void
+type AsyncEffect = () => Promise<Cleanup | undefined> | Promise<void>
 
 type State = {
   closed: boolean
   dirty: boolean
   effect: AsyncEffect
-  lastCleanup: Cleanup
+  lastCleanup: Cleanup | undefined
   lastDeps: unknown[] | undefined
   running: boolean
 }
@@ -77,7 +77,7 @@ function wakeup(state: State): void {
     Promise.resolve()
       .then(async () => state.effect())
       .then(cleanup => {
-        state.lastCleanup = cleanup
+        state.lastCleanup = cleanup ?? undefined
         state.running = false
         wakeup(state)
       })
