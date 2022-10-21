@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 
-import { createWallet as createWalletReducer } from '../reducers/scenes/CreateWalletReducer'
+import { createWallet as createWalletReducer } from '../../reducers/scenes/CreateWalletReducer'
 
 test('initialState', () => {
   const expected = {

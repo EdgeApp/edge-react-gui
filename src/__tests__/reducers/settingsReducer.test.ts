@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 
-import { initialState, settings as settingsReducer } from '../reducers/scenes/SettingsReducer'
+import { initialState, settings as settingsReducer } from '../../reducers/scenes/SettingsReducer'
 
 test('initialState', () => {
   const expected = initialState

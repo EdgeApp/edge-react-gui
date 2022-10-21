@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 
-import { requestType as requestTypeReducer } from '../reducers/RequestTypeReducer'
+import { requestType as requestTypeReducer } from '../../reducers/RequestTypeReducer'
 
 test('initialState', () => {
   const expected = {

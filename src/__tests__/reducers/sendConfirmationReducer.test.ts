@@ -2,9 +2,9 @@ import { describe, expect, test } from '@jest/globals'
 import { EdgeTransaction } from 'edge-core-js'
 import { cloneDeep } from 'lodash'
 
-import s from '../locales/strings'
-import { initialState } from '../modules/UI/scenes/SendConfirmation/selectors'
-import { sendConfirmation } from '../reducers/scenes/SendConfirmationReducer'
+import s from '../../locales/strings'
+import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import { sendConfirmation } from '../../reducers/scenes/SendConfirmationReducer'
 
 describe('sendConfirmation reducer', () => {
   test('initialState', () => {

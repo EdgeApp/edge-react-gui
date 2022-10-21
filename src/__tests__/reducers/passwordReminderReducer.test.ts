@@ -6,8 +6,8 @@ import {
   MAX_NON_PASSWORD_LOGINS_LIMIT,
   PasswordReminderReducerAction,
   untranslatedReducer as uut
-} from '../reducers/PasswordReminderReducer'
-import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils'
+} from '../../reducers/PasswordReminderReducer'
+import { daysBetween, MILLISECONDS_PER_DAY } from '../../util/utils'
 
 describe('PasswordReminder', () => {
   test('initialState', () => {
