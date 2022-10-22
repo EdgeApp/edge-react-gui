@@ -14,7 +14,6 @@ import { AaveNetwork } from './AaveNetwork'
 export { ContractMethod, SwapSide } from 'paraswap-core'
 
 const PARASWAP_SLIPPAGE_PERCENT = 1
-export const MAX_AMOUNT = ethers.constants.MaxUint256
 
 export type BorrowEngineBlueprint = {
   aaveNetwork: AaveNetwork

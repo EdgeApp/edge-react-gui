@@ -1,8 +1,8 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
 
+import { MAX_AMOUNT } from '../constants/valueConstants'
 import { ActionOp, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
 import { BorrowEngine } from '../plugins/borrow-plugins/types'
-import { MAX_AMOUNT } from './../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 import { zeroString } from './utils'
