@@ -1,4 +1,4 @@
-import { gt } from 'biggystring'
+import { min } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
@@ -214,8 +214,15 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, toWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+        const { tokenId, toWallet = wallet } = request
+
+        const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
+        if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
+
+        // Let the debt total be the upper boundary for nativeAmount
+        const nativeAmount = min(request.nativeAmount, collateral.nativeAmount)
+
+        if (nativeAmount === '0') throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
 
         validateWalletParam(toWallet)
 
@@ -271,8 +278,16 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         })
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        const { nativeAmount, fromTokenId, tokenId, fromWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
+        const { fromTokenId, tokenId, fromWallet = wallet } = request
+
+        const debt = instance.debts.find(debt => debt.tokenId === tokenId)
+        if (debt == null) throw new Error(`No debt to repay for ${tokenId}`)
+
+        // Let the debt total be the upper boundary for nativeAmount
+        const nativeAmount = min(request.nativeAmount, debt.nativeAmount)
+
+        // nativeAmount can't be zero
+        if (nativeAmount === '0') throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
         const fromAddress = (await fromWallet.getReceiveAddress()).publicAddress
 
@@ -289,15 +304,8 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             }
           })
         }
-        const debt = instance.debts.find(debt => debt.tokenId === tokenId)
-        if (debt == null) throw new Error(`No debts to repay for ${tokenId}`)
 
-        const amount = BigNumber.from(nativeAmount)
-        const amountToCover =
-          amount.eq(MAX_AMOUNT) || gt(debt.nativeAmount, nativeAmount)
-            ? BigNumber.from(instance.debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0)
-            : amount
-
+        const amountToCover = BigNumber.from(nativeAmount)
         const gasPrice: BigNumberish = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
 
@@ -403,7 +411,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           }
 
           const repayTx = asGracefulTxInfo(
-            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amount, INTEREST_RATE_MODE, fromAddress, {
+            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amountToCover, INTEREST_RATE_MODE, fromAddress, {
               gasLimit: '800000',
               gasPrice
             })
