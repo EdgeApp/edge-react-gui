@@ -82,9 +82,10 @@ export type SwapActionOp = {
   toTokenId?: string
   toWalletId: string
 }
-export type ActionOp =
-  | SeqActionOp
-  | ParActionOp
+
+export type NodeActionOp = SeqActionOp | ParActionOp
+
+export type LeafActionOp =
   | BroadcastTxActionOp
   | WyreBuyActionOp
   | WyreSellActionOp
@@ -93,6 +94,22 @@ export type ActionOp =
   | LoanRepayActionOp
   | LoanWithdrawActionOp
   | SwapActionOp
+
+export type ActionOpDisplayKey =
+  | 'display-create-swap'
+  | 'display-create-swap-fees'
+  | 'display-create'
+  | 'display-deposit'
+  | 'display-deposit-swap'
+  | 'display-borrow'
+  | 'display-borrow-bank'
+  | 'display-repay-balance'
+  | 'display-repay-balance'
+  | 'display-repay-collateral'
+  | 'display-withdraw'
+export type ActionOpDisplay = { actionOpDisplayKey?: ActionOpDisplayKey; otherProps?: any }
+
+export type ActionOp = (NodeActionOp | LeafActionOp) & ActionOpDisplay
 
 //
 // Action (After) Effects
@@ -148,9 +165,11 @@ export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEv
 export type ActionProgram = {
   programId: string
   actionOp: ActionOp
+  intent: string // LOAN create
   // Development mode flag
   mockMode?: boolean
 }
+
 export type ActionProgramState = {
   clientId: string
   programId: string

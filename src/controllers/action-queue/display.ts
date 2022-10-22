@@ -32,7 +32,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         steps: await Promise.all(
           actionOp.actions.map(async (op, index) => {
             let childEffect: ActionEffect | undefined
-            // If there is no effect, then this mean the program hasn't started
+            // If there is no effect, then this means the program hasn't started
             if (effect != null) {
               // If the sequence effect is done without an error, then the
               // sequence has completed successfully, and all the child effects

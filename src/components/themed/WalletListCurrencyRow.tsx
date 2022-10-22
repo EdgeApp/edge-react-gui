@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
+import Animated, { LightSpeedInLeft } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { CurrencyRow } from '../data/row/CurrencyRow'
@@ -39,9 +40,11 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   })
 
   return (
-    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
-      <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
-    </TouchableOpacity>
+    <Animated.View entering={LightSpeedInLeft.duration(1000)}>
+      <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
+        <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
+      </TouchableOpacity>
+    </Animated.View>
   )
 }
 

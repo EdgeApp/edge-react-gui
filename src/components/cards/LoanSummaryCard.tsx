@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
+import Animated, { LightSpeedInLeft } from 'react-native-reanimated'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -49,7 +50,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
     return (
-      <View>
+      <Animated.View entering={LightSpeedInLeft.duration(1000)}>
         <TappableCard marginRem={0.5} onPress={onPress}>
           <View style={styles.cardContainer}>
             <View style={styles.row}>
@@ -74,7 +75,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
             <FillLoader />
           </View>
         ) : null}
-      </View>
+      </Animated.View>
     )
   } catch (err: any) {
     showError(err.message)

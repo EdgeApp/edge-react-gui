@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 
 import { ActionDisplayInfo } from '../../controllers/action-queue/types'
 import s from '../../locales/strings'
@@ -28,18 +29,45 @@ const StepProgressRowComponent = ({
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const sActivateMult = useSharedValue(0)
+  const sCompleteMult = useSharedValue(0)
+
+  const isNodePending = !isNodeActive && !isNodeCompleted
+
+  // circlePending: {
+  //   ...circleCommon,
+  //   borderWidth: theme.thinLineWidth,
+  //   borderColor: theme.deactivatedText,
+  //   backgroundColor: theme.modal
+  // },
+  // circleActive: {
+  //   ...circleCommon,
+  //   borderWidth: theme.thinLineWidth,
+  //   borderColor: theme.iconTappable,
+  //   backgroundColor: theme.modal
+  // },
+  // circleCompleted: {
+  //   ...circleCommon,
+  //   backgroundColor: theme.iconTappable
+  // },
+  React.useEffect(() => {
+    sActivateMult.value = withTiming(isNodeActive || isNodeCompleted ? 1 : 0, { duration: 1000 })
+    sCompleteMult.value = withTiming(isNodeCompleted ? 1 : 0, { duration: 1000 })
+  }, [sActivateMult, sCompleteMult, isNodeActive, isNodeCompleted])
+
+  const aNodeStyle = useAnimatedStyle(() => {
+    return {
+      borderColor: interpolateColor(sActivateMult.value, [0, 1], [theme.deactivatedText, theme.iconTappable]),
+      backgroundColor: interpolateColor(sCompleteMult.value, [0, 1], [theme.modal, theme.iconTappable])
+    }
+  })
+
+  const aTestStyle = useAnimatedStyle(() => {
+    return {}
+  })
+
   // Circular part of the step progress bar
-  const node = React.useMemo(() => {
-    if (isNodeActive) {
-      // 'start' and 'end' LinearGradient coordinates close to each other give
-      // the illusion of a partial solid fill.
-      return <LinearGradient style={styles.circleCommon} start={{ x: 0, y: 0.49 }} end={{ x: 0, y: 0.51 }} colors={[theme.iconTappable, theme.fadeDisable]} />
-    } else
-      return (
-        // Queued/completed
-        <View style={isNodeCompleted ? styles.circleCompleted : styles.circleQueued} />
-      )
-  }, [isNodeActive, isNodeCompleted, styles.circleCommon, styles.circleCompleted, styles.circleQueued, theme.fadeDisable, theme.iconTappable])
+  const node = <Animated.View style={[styles.circleCommon, aNodeStyle]} />
 
   // Render connecting segment lines between the bottom of this node and the
   // top of the next node (omitting if this is the last node).
@@ -48,8 +76,8 @@ const StepProgressRowComponent = ({
 
   // Combine the node+segment on the left with the text elements on the right
   // into a completed StepProgressRow
-  const titleStyle = isNodeCompleted || isNodeActive ? styles.textTitleActive : styles.textTitleDisabled
-  const bodyStyle = isNodeCompleted || isNodeActive ? styles.textBodyActive : styles.textBodyDisabled
+  const titleStyle = isNodeCompleted || isNodeActive ? styles.textTitleActive : styles.textTitlePending
+  const bodyStyle = isNodeCompleted || isNodeActive ? styles.textBodyActive : styles.textBodyPending
 
   return (
     <View style={styles.actionRow}>
@@ -135,7 +163,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     width: theme.rem(1),
     height: theme.rem(1),
     borderRadius: theme.rem(0.5),
-    zIndex: 1
+    zIndex: 1,
+
+    borderWidth: theme.mediumLineWidth
+    // borderColor: theme.deactivatedText
   }
 
   // Lines are rendered underneath the circles' layer, to hide the y overlap
@@ -165,9 +196,17 @@ const getStyles = cacheStyles((theme: Theme) => {
     circleCommon: {
       ...circleCommon
     },
-    circleQueued: {
+    circlePending: {
       ...circleCommon,
-      backgroundColor: theme.deactivatedText
+      borderWidth: theme.thinLineWidth,
+      borderColor: theme.deactivatedText,
+      backgroundColor: theme.modal
+    },
+    circleActive: {
+      ...circleCommon,
+      borderWidth: theme.thinLineWidth,
+      borderColor: theme.iconTappable,
+      backgroundColor: theme.modal
     },
     circleCompleted: {
       ...circleCommon,
@@ -181,19 +220,29 @@ const getStyles = cacheStyles((theme: Theme) => {
       ...lineCommon,
       backgroundColor: theme.iconTappable
     },
+    textBodyPending: {
+      color: theme.deactivatedText,
+      fontSize: theme.rem(0.75)
+    },
+    textTitlePending: {
+      fontSize: theme.rem(1),
+      color: theme.deactivatedText,
+      fontFamily: theme.fontFaceBold,
+      marginBottom: theme.rem(0.5)
+    },
     textBodyActive: {
       fontSize: theme.rem(0.75)
     },
     textTitleActive: {
+      fontSize: theme.rem(1),
       fontFamily: theme.fontFaceBold,
       marginBottom: theme.rem(0.5)
     },
-    textBodyDisabled: {
-      color: theme.deactivatedText,
+    textBodyCompleted: {
       fontSize: theme.rem(0.75)
     },
-    textTitleDisabled: {
-      color: theme.deactivatedText,
+    textTitleCompleted: {
+      fontSize: theme.rem(1),
       fontFamily: theme.fontFaceBold,
       marginBottom: theme.rem(0.5)
     }
