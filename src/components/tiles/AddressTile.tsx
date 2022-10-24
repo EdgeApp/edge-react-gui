@@ -8,6 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions'
 import { addressWarnings } from '../../actions/ScanActions'
+import { ENS_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
@@ -102,7 +103,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
 
     // Try resolving address by ENS domain for ethereum wallets only
-    if (coreWallet.currencyInfo.pluginId === 'ethereum' && /^.*\.eth$/.test(address)) {
+    if (coreWallet.currencyInfo.pluginId === 'ethereum' && ENS_DOMAINS.some(domain => address.endsWith(domain))) {
       const chainId = 1 // Hard-coded to Ethereum mainnet
       const network = ethers.providers.getNetwork(chainId)
       if (network.name !== 'unknown') {
