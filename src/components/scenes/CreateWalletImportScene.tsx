@@ -7,7 +7,6 @@ import { sprintf } from 'sprintf-js'
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
 import { useHandler } from '../../hooks/useHandler'
-import { useLayout } from '../../hooks/useLayout'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -123,11 +122,9 @@ const CreateWalletImportComponent = (props: Props) => {
     navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
   })
 
-  // Scale the icon to match the height of the first MainButton container for consistency
-  const [iconContainerLayout, handleIconContainerLayout] = useLayout()
-  const svgHeightToWidthRatio = 62 / 58 // Original SVG height and width
-  const svgHeight = iconContainerLayout.height
-  const svgWidth = svgHeightToWidthRatio * svgHeight
+  // Scale the icon
+  const svgHeight = React.useMemo(() => 36 * theme.rem(0.0625), [theme])
+  const svgWidth = React.useMemo(() => 83 * theme.rem(0.0625), [theme])
 
   return (
     <SceneWrapper background="theme">
@@ -155,9 +152,7 @@ const CreateWalletImportComponent = (props: Props) => {
           marginRem={[1, 0.75, 1.25]}
           ref={textInputRef}
         />
-        <View onLayout={handleIconContainerLayout}>
-          <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
-        </View>
+        <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
@@ -167,7 +162,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginVertical: theme.rem(1)
+    marginVertical: theme.rem(2)
   },
   instructionalText: {
     fontSize: theme.rem(1),
