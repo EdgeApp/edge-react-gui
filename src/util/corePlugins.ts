@@ -61,6 +61,7 @@ export const swapPlugins = {
   letsexchange: ENV.LETSEXCHANGE_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
+  swapuz: ENV.SWAPUZ_INIT,
   switchain: ENV.SWITCHAIN_INIT,
 
   // Defi Swaps

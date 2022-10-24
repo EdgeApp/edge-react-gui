@@ -160,6 +160,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Swapuz',
+    hasThumbnail: true,
+    thumbnailPath: 'swapuz.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Switchain',
     hasThumbnail: true,
     thumbnailPath: 'switchain.png',
