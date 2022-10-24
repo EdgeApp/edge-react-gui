@@ -41,6 +41,7 @@ export interface Props {
   inputAccessoryViewID?: string
   headerCallback?: () => void
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
+  onNext?: () => void
 }
 
 const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
@@ -57,6 +58,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const {
     walletId,
     tokenId,
+    onNext,
     startNativeAmount,
     onAmountChanged,
     headerText,
@@ -102,6 +104,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   })
 
   const convertFromCryptoNative = useHandler((nativeAmount: string) => {
+    if (nativeAmount === '') return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
     const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
     const displayAmount = div(nativeAmount, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
     const fiatAmount = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
@@ -109,6 +112,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   })
 
   const convertFromFiat = useHandler((fiatAmount: string) => {
+    if (fiatAmount === '') return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
     const exchangeAmountLong = convertCurrency(fiatAmount, fiatCurrencyCode, cryptoCurrencyCode)
     const nativeAmountLong = mul(exchangeAmountLong, cryptoExchangeDenom.multiplier)
     const displayAmountLong = div(nativeAmountLong, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
@@ -198,6 +202,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
           </TouchableOpacity>
 
           <FlipInput2
+            onNext={onNext}
             ref={flipInputRef}
             convertValue={convertValue}
             editable={editable}
