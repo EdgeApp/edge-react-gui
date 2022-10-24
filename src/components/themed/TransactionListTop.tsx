@@ -86,13 +86,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidMount() {
-    stakePlugin.getStakePolicies().then(stakePolicies => {
-      const { currencyCode, pluginId } = this.props
-      const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
-        return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+    const { currencyCode, pluginId } = this.props
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
+      stakePlugin.getStakePolicies().then(stakePolicies => {
+        const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
+          return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+        })
+        this.setState({ stakePolicies: filteredStatePolicies })
       })
-      this.setState({ stakePolicies: filteredStatePolicies })
-    })
+    } else {
+      this.setState({ stakePolicies: [] })
+    }
   }
 
   handleOpenWalletListModal = () => {
