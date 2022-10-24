@@ -196,7 +196,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
   })
 
   return (
-    <SceneWrapper avoidKeyboard background="theme">
+    <SceneWrapper background="theme">
       <View style={styles.content}>
         <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
         {renderSelectedFiatRow()}
