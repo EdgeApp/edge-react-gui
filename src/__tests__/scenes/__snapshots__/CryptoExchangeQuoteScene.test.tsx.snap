@@ -15,15 +15,19 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       title="From"
     />
     <WithTheme(ExchangeQuoteComponent)
+      cryptoAmount="1"
       currency={
         Object {
           "fromDenomination": "",
         }
       }
       currencyCode="BTC"
+      fiatCurrencyAmount="1"
       fiatCurrencyCode="USD"
       isTop={true}
+      miningFee="1"
       showFeeWarning={false}
+      total="1"
       walletName=""
     />
     <Memo(LineTextDividerComponent)
@@ -31,12 +35,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       title="To"
     />
     <WithTheme(ExchangeQuoteComponent)
+      cryptoAmount="1"
       currency={
         Object {
           "fromDenomination": "",
         }
       }
       currencyCode="ETH"
+      fiatCurrencyAmount="1"
       fiatCurrencyCode="USD"
       walletName=""
     />

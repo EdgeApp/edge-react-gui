@@ -4,20 +4,24 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressRegistered } from '../../components/scenes/FioAddressRegisteredScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('FioAddressRegistered', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      route: {
-        params: {
-          fioName: 'myFio@edge'
-        }
-      },
-      theme: getTheme()
-    }
-    const actual = renderer.render(<FioAddressRegistered {...props} />)
+    const actual = renderer.render(
+      <FioAddressRegistered
+        navigation={fakeNavigation}
+        route={{
+          name: 'fioAddressRegisterSuccess',
+          params: {
+            fioName: 'myFio@edge'
+          }
+        }}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

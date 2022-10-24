@@ -9,15 +9,13 @@ describe('EdgeText', () => {
   it('should render with some props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      children: 'Hello world',
-      ellipsizeMode: 'tail',
-      numberOfLines: 2,
-      style: {},
-      disableFontScaling: false,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<EdgeTextComponent {...props} />)
+    const fakeChild: React.ReactNode = 'Hello world'
+
+    const actual = renderer.render(
+      <EdgeTextComponent ellipsizeMode="tail" numberOfLines={2} style={{}} disableFontScaling={false} theme={getTheme()}>
+        {fakeChild}
+      </EdgeTextComponent>
+    )
 
     expect(actual).toMatchSnapshot()
   })

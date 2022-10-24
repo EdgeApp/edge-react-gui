@@ -2,9 +2,9 @@ import { describe, expect, test } from '@jest/globals'
 import { EdgeTransaction } from 'edge-core-js'
 import { cloneDeep } from 'lodash'
 
-import s from '../locales/strings'
-import { initialState } from '../modules/UI/scenes/SendConfirmation/selectors'
-import { sendConfirmation } from '../reducers/scenes/SendConfirmationReducer'
+import s from '../../locales/strings'
+import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import { sendConfirmation } from '../../reducers/scenes/SendConfirmationReducer'
 
 describe('sendConfirmation reducer', () => {
   test('initialState', () => {
@@ -43,8 +43,7 @@ describe('sendConfirmation reducer', () => {
           txid: ''
         }
         // use initialState after sendConfirmation reducer not longer mutates state
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -79,8 +78,7 @@ describe('sendConfirmation reducer', () => {
           txid: ''
         }
         // use initialState after sendConfirmation reducer not longer mutates state
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -98,8 +96,7 @@ describe('sendConfirmation reducer', () => {
         const guiMakeSpendInfo = { nativeAmount: '100000' }
         const error = new Error()
         // use initialState after sendConfirmation reducer not longer mutates state
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -128,8 +125,7 @@ describe('sendConfirmation reducer', () => {
         }
         const error = new Error(s.strings.incorrect_pin)
         // use initialState after sendConfirmation reducer not longer mutates state
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
@@ -152,8 +148,7 @@ describe('sendConfirmation reducer', () => {
           spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
           metadata: { name: 'airbitz' }
         }
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
@@ -169,8 +164,7 @@ describe('sendConfirmation reducer', () => {
           spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
           metadata: {}
         }
-        const initialStateClone = cloneDeep(initialState)
-        // @ts-expect-error
+        const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {
           type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
@@ -187,9 +181,8 @@ describe('sendConfirmation reducer', () => {
         spendTargets: [{ publicAddress: '123123123', nativeAmount: '0' }],
         metadata: {}
       }
-      const initialStateClone = cloneDeep(initialState)
+      const initialStateClone: any = cloneDeep(initialState)
 
-      // @ts-expect-error
       const actual = sendConfirmation(initialStateClone, {
         type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
         data: { spendInfo, authRequired: 'none' }
@@ -200,8 +193,8 @@ describe('sendConfirmation reducer', () => {
   })
 
   test('pin', () => {
-    const initialStateClone = cloneDeep(initialState)
-    // @ts-expect-error
+    const initialStateClone: any = cloneDeep(initialState)
+
     const actual = sendConfirmation(initialStateClone, {
       type: 'UI/SEND_CONFIRMATION/NEW_PIN',
       data: { pin: '1234' }

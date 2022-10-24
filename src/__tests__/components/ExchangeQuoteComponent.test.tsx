@@ -9,20 +9,21 @@ describe('ExchangeQuote', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      isTop: true,
-      cryptoAmount: '1',
-      currency: 'BTC',
-      currencyCode: 'BTC',
-      fiatCurrencyCode: 'USD',
-      fiatCurrencyAmount: '40000',
-      walletId: '123456789',
-      walletName: 'myWallet',
-      total: '40001',
-      miningFee: '1',
-      theme: getTheme()
-    }
-    const actual = renderer.render(<ExchangeQuoteComponent {...props} />)
+    const actual = renderer.render(
+      <ExchangeQuoteComponent
+        isTop
+        cryptoAmount="1"
+        currency="BTC"
+        currencyCode="BTC"
+        fiatCurrencyCode="USD"
+        fiatCurrencyAmount="40000"
+        walletId="123456789"
+        walletName="myWallet"
+        total="40001"
+        miningFee="1"
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

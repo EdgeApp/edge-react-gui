@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { RESULTS } from 'react-native-permissions'
 
-import { initialState, permissions as permissionsReducer } from '../reducers/PermissionsReducer'
+import { initialState, permissions as permissionsReducer } from '../../reducers/PermissionsReducer'
 
 test('initialState', () => {
   const expected = initialState

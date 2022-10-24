@@ -10,16 +10,14 @@ describe('DateModalIos', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      bridge: fakeAirshipBridge,
-      // @ts-expect-error
-      initialValue: () => (number, format) => require('dateformat')(number, format, true),
-      darkMode: true,
-      // @ts-expect-error
-      date: (number, format) => require('dateformat')(number, format, true),
-      theme: getTheme()
-    }
-    const actual = renderer.render(<DateModalIos {...props} />)
+    const actual = renderer.render(
+      <DateModalIos
+        bridge={fakeAirshipBridge}
+        // Chancellor on brink of second bailout for banks:
+        initialValue={new Date('2009-01-03T18:15:05.000Z')}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

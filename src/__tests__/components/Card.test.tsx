@@ -9,14 +9,13 @@ describe('Card', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      children: 'string',
-      warning: true,
-      marginRem: 11,
-      paddingRem: 11,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<CardComponent {...props} />)
+    const fakeChild: React.ReactNode = 'string'
+
+    const actual = renderer.render(
+      <CardComponent warning marginRem={11} paddingRem={11} theme={getTheme()}>
+        {fakeChild}
+      </CardComponent>
+    )
 
     expect(actual).toMatchSnapshot()
   })

@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 
-import { transactionList as transactionListReducer } from '../reducers/scenes/TransactionListReducer'
+import { transactionList as transactionListReducer } from '../../reducers/scenes/TransactionListReducer'
 
 test('initialState', () => {
   const expected = {

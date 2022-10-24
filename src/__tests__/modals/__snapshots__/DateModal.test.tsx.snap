@@ -36,7 +36,7 @@ exports[`DateModalIos should render with loading props 1`] = `
     display="spinner"
     mode="date"
     onChange={[Function]}
-    value={[Function]}
+    value={2009-01-03T18:15:05.000Z}
   />
 </AirshipModal>
 `;

@@ -9,15 +9,16 @@ describe('BalanceBox', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      showBalance: true,
-      fiatAmount: 11,
-      defaultIsoFiat: 'string',
-      exchangeRates: 'GuiExchangeRates',
-      toggleAccountBalanceVisibility: () => undefined,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<BalanceBox {...props} />)
+    const actual = renderer.render(
+      <BalanceBox
+        showBalance
+        fiatAmount={11}
+        defaultIsoFiat="string"
+        exchangeRates={'GuiExchangeRates' as any}
+        toggleAccountBalanceVisibility={() => undefined}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

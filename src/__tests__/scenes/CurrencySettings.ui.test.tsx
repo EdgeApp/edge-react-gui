@@ -4,8 +4,8 @@ import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
-import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene'
-import { rootReducer } from '../reducers/RootReducer'
+import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
+import { rootReducer } from '../../reducers/RootReducer'
 
 describe('CurrencySettings', () => {
   it('should render', () => {
@@ -24,18 +24,17 @@ describe('CurrencySettings', () => {
         'bitcoin-gold': { currencyInfo }
       }
     }
-    const route = {
-      name: 'currencySettings',
-      params: { currencyInfo }
-    }
+
     const state: any = { core: { account } }
     const store = createStore(rootReducer, state)
 
     const actual = renderer.create(
       <Provider store={store}>
         <CurrencySettingsScene
-          // @ts-expect-error
-          route={route}
+          route={{
+            name: 'currencySettings',
+            params: { currencyInfo }
+          }}
         />
       </Provider>
     )

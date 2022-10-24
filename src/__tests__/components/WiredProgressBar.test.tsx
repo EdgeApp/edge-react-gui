@@ -9,11 +9,7 @@ describe('ProgressBar', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      progress: 11,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<ProgressBarComponent {...props} />)
+    const actual = renderer.render(<ProgressBarComponent progress={11} theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

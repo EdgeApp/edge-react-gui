@@ -10,11 +10,7 @@ describe('HelpModal', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      bridge: fakeAirshipBridge,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<HelpModalComponent {...props} />)
+    const actual = renderer.render(<HelpModalComponent bridge={fakeAirshipBridge} theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

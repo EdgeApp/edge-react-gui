@@ -9,19 +9,23 @@ describe('ClickableRow', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      onPress: () => undefined,
-      onLongPress: () => undefined,
-      highlight: 11,
-      gradient: 11,
-      autoHeight: 11,
-      children: 'String',
-      underline: 11,
-      marginRem: 11,
-      paddingRem: 11,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<ClickableRowComponent {...props} />)
+    const fakeChild: React.ReactNode = 'String'
+
+    const actual = renderer.render(
+      <ClickableRowComponent
+        onPress={() => undefined}
+        onLongPress={() => undefined}
+        highlight
+        gradient
+        autoHeight
+        underline
+        marginRem={11}
+        paddingRem={11}
+        theme={getTheme()}
+      >
+        {fakeChild}
+      </ClickableRowComponent>
+    )
 
     expect(actual).toMatchSnapshot()
   })

@@ -23,7 +23,6 @@ import {
   truncateDecimals,
   zerosAfterDecimal
 } from '../util/utils'
-import fixtures from './fixtures.json'
 
 describe('isValidInput', function () {
   describe('when input is valid', function () {
@@ -236,8 +235,7 @@ describe('daysBetween', () => {
     const days = end - start
     const a = new Date(MILLISECONDS_PER_DAY * start)
     const b = new Date(MILLISECONDS_PER_DAY * end)
-    // @ts-expect-error
-    expect(daysBetween(a, b)).toEqual(days)
+    expect(daysBetween(a.valueOf(), b.valueOf())).toEqual(days)
   })
 
   test('5 days', () => {
@@ -481,7 +479,32 @@ describe('Sanitize Decimal Amount', function () {
 })
 
 describe('precisionAdjust', function () {
-  const tests = fixtures.precisionAdjust
+  const tests = {
+    'BTC for precision adjustment and max conversion decimal': {
+      input: {
+        displayDenominationMultiplier: '100000000',
+        primaryExchangeMultiplier: '100000000',
+        secondaryExchangeMultiplier: '100',
+        exchangeSecondaryToPrimaryRatio: 32533.217120011082
+      },
+      output: {
+        precisionAdjustmentValue: 0,
+        maxPrimaryCurrencyConversionDecimals: 8
+      }
+    },
+    'ETH for precision adjustment and max conversion decimal': {
+      input: {
+        displayDenominationMultiplier: '1000000000000000000',
+        primaryExchangeMultiplier: '1000000000000000000',
+        secondaryExchangeMultiplier: '100',
+        exchangeSecondaryToPrimaryRatio: 1359.8708229894155
+      },
+      output: {
+        precisionAdjustmentValue: 11,
+        maxPrimaryCurrencyConversionDecimals: 7
+      }
+    }
+  }
 
   for (const key in tests) {
     // @ts-expect-error
@@ -499,8 +522,114 @@ describe('precisionAdjust', function () {
 })
 
 describe('getDisplayDenomination', function () {
-  const { getDisplayDenomination: tests, state } = fixtures
+  const tests = {
+    title: 'Display Denomination of',
+    input: [
+      {
+        pluginId: 'bitcoin',
+        currencyCode: 'BTC'
+      },
+      {
+        pluginId: 'ethereum',
+        currencyCode: 'ETH'
+      },
+      {
+        pluginId: 'ethereum',
+        currencyCode: 'TKN'
+      }
+    ],
+    output: [
+      {
+        multiplier: '1',
+        name: 'sats',
+        symbol: 's'
+      },
+      {
+        multiplier: '1000000000000000',
+        name: 'mETH',
+        symbol: 'mΞ'
+      },
+      {
+        multiplier: '10000000000000000000000000000000000000000000000000',
+        name: 'TKN'
+      }
+    ]
+  }
   const { title, input, output } = tests
+
+  const state = {
+    ui: {
+      settings: {
+        denominationSettings: {
+          bitcoin: {
+            BTC: {
+              multiplier: '1',
+              name: 'sats',
+              symbol: 's'
+            }
+          },
+          ethereum: {
+            ETH: {
+              multiplier: '1000000000000000',
+              name: 'mETH',
+              symbol: 'mΞ'
+            }
+          }
+        },
+        customTokens: []
+      }
+    },
+    core: {
+      account: {
+        currencyConfig: {
+          ethereum: {
+            allTokens: {
+              '1985365e9f78359a9B6AD760e32412f4a445E862': {
+                currencyCode: 'TKN',
+                displayName: 'Token',
+                denominations: [
+                  {
+                    name: 'TKN',
+                    multiplier: '10000000000000000000000000000000000000000000000000'
+                  }
+                ],
+                contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
+              }
+            },
+            currencyInfo: {
+              currencyCode: 'ETH',
+              pluginId: 'ethereum',
+              denominations: [
+                {
+                  name: 'ETH',
+                  multiplier: '1000000000000000000',
+                  symbol: 'Ξ'
+                },
+                {
+                  name: 'mETH',
+                  multiplier: '1000000000000000',
+                  symbol: 'mΞ'
+                }
+              ],
+              metaTokens: [
+                {
+                  currencyCode: 'TKN',
+                  currencyName: 'Token',
+                  denominations: [
+                    {
+                      name: 'TKN',
+                      multiplier: '10000000000000000000000000000000000000000000000000'
+                    }
+                  ],
+                  contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
 
   input.forEach((currency, index) => {
     test(`${title} ${currency.currencyCode}`, function () {
@@ -511,8 +640,70 @@ describe('getDisplayDenomination', function () {
 })
 
 describe('getExchangeDenomination', function () {
-  const { getExchangeDenomination: tests, currencyInfos } = fixtures
+  const tests = {
+    title: 'Exchange Denomination of',
+    input: ['BTC', 'ETH', 'TKN'],
+    output: [
+      {
+        multiplier: '100000000',
+        name: 'BTC',
+        symbol: '₿'
+      },
+      {
+        multiplier: '1000000000000000000',
+        name: 'ETH',
+        symbol: 'Ξ'
+      },
+      {
+        multiplier: '10000000000000000000000000000000000000000000000000',
+        name: 'TKN'
+      }
+    ]
+  }
   const { title, input, output } = tests
+
+  const currencyInfos = {
+    BTC: {
+      currencyCode: 'BTC',
+      pluginId: 'bitcoin',
+      denominations: [
+        { name: 'BTC', multiplier: '100000000', symbol: '₿' },
+        { name: 'mBTC', multiplier: '100000', symbol: 'm₿' },
+        { name: 'bits', multiplier: '100', symbol: 'ƀ' },
+        { name: 'sats', multiplier: '1', symbol: 's' }
+      ],
+      metaTokens: []
+    },
+    ETH: {
+      currencyCode: 'ETH',
+      pluginId: 'ethereum',
+      denominations: [
+        {
+          name: 'ETH',
+          multiplier: '1000000000000000000',
+          symbol: 'Ξ'
+        },
+        {
+          name: 'mETH',
+          multiplier: '1000000000000000',
+          symbol: 'mΞ'
+        }
+      ],
+      metaTokens: [
+        {
+          currencyCode: 'TKN',
+          currencyName: 'Augur',
+          denominations: [
+            {
+              name: 'TKN',
+              multiplier: '10000000000000000000000000000000000000000000000000'
+            }
+          ],
+          contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
+        }
+      ]
+    }
+  }
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
@@ -524,7 +715,11 @@ describe('getExchangeDenomination', function () {
 })
 
 describe('zerosAfterDecimal', function () {
-  const tests = fixtures.zerosAfterDecimal
+  const tests = {
+    title: 'Zeros after decimal place of',
+    input: ['0.00036270', '128372', '12392.0123', '123.456'],
+    output: [3, 0, 1, 0]
+  }
   const { title, input, output } = tests
 
   input.forEach((amount, index) => {
@@ -535,7 +730,11 @@ describe('zerosAfterDecimal', function () {
 })
 
 describe('roundUpToLeastSignificant', function () {
-  const tests = fixtures.roundUpToLeastSignificant
+  const tests = {
+    title: 'Rounded up to least significant digit of',
+    input: ['123.4567', '0.0001239', '123'],
+    output: ['123.4568', '0.000124', '123']
+  }
   const { title, input, output } = tests
 
   input.forEach((amount, index) => {
@@ -546,7 +745,32 @@ describe('roundUpToLeastSignificant', function () {
 })
 
 describe('roundedFee', function () {
-  const tests = fixtures.roundedFee
+  const tests = {
+    title: 'Truncate and rounded up to least significant digit of',
+    input: [
+      {
+        amount: '1234567',
+        decimalPlacesBeyondLeadingZeros: 2,
+        multiplier: '1000000000000'
+      },
+      {
+        amount: '548735948753',
+        decimalPlacesBeyondLeadingZeros: 4,
+        multiplier: '1000'
+      },
+      {
+        amount: '92837289000037373',
+        decimalPlacesBeyondLeadingZeros: 1,
+        multiplier: '1000000000000000000'
+      },
+      {
+        amount: '',
+        decimalPlacesBeyondLeadingZeros: 12,
+        multiplier: '1000000000'
+      }
+    ],
+    output: ['0.0000013 ', '548735948.753 ', '0.1 ', '']
+  }
   const { title, input, output } = tests
 
   input.forEach((obj, index) => {
