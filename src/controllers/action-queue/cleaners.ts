@@ -8,14 +8,17 @@ import {
   ActionEffect,
   ActionOp,
   ActionProgram,
+  ActionProgramCompleteMessage,
   ActionProgramState,
   AddressBalanceEffect,
   BroadcastTxActionOp,
   DoneEffect,
+  LeafActionOp,
   LoanBorrowActionOp,
   LoanDepositActionOp,
   LoanRepayActionOp,
   LoanWithdrawActionOp,
+  NodeActionOp,
   ParActionOp,
   ParEffect,
   PriceLevelEffect,
@@ -67,21 +70,27 @@ const asSeqActionOp = asObject<SeqActionOp>({
   type: asValue('seq'),
   actions: asArray((raw: any) => asActionOp(raw))
 })
+
 const asParActionOp = asObject<ParActionOp>({
   type: asValue('par'),
-  actions: asArray((raw: any) => asActionOp(raw))
+  actions: asArray((raw: any) => asActionOp(raw)),
+  displayKey: (raw: unknown) => asOptional(asParActionOpDisplayKey)(raw)
 })
+const asParActionOpDisplayKey = asValue('create', 'swap-deposit-fees')
+
 const asBroadcastTxActionOp = asObject<BroadcastTxActionOp>({
   type: asValue('broadcast-tx'),
   pluginId: asString,
   rawTx: asBase64
 })
+
 const asWyreBuyActionOp = asObject<WyreBuyActionOp>({
   type: asValue('wyre-buy'),
   nativeAmount: asString,
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asWyreSellActionOp = asObject<WyreSellActionOp>({
   type: asValue('wyre-sell'),
   wyreAccountId: asString,
@@ -89,6 +98,7 @@ const asWyreSellActionOp = asObject<WyreSellActionOp>({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asLoanBorrowActionOp = asObject<LoanBorrowActionOp>({
   type: asValue('loan-borrow'),
   borrowPluginId: asString,
@@ -96,6 +106,7 @@ const asLoanBorrowActionOp = asObject<LoanBorrowActionOp>({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asLoanDepositActionOp = asObject<LoanDepositActionOp>({
   type: asValue('loan-deposit'),
   borrowPluginId: asString,
@@ -103,6 +114,7 @@ const asLoanDepositActionOp = asObject<LoanDepositActionOp>({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asLoanRepayActionOp = asObject<LoanRepayActionOp>({
   type: asValue('loan-repay'),
   borrowPluginId: asString,
@@ -110,6 +122,7 @@ const asLoanRepayActionOp = asObject<LoanRepayActionOp>({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
   type: asValue('loan-withdraw'),
   borrowPluginId: asString,
@@ -117,6 +130,7 @@ const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
   walletId: asString,
   tokenId: asOptional(asString)
 })
+
 const asSwapActionOp = asObject<SwapActionOp>({
   type: asValue('swap'),
   amountFor: asValue('from', 'to'),
@@ -124,11 +138,13 @@ const asSwapActionOp = asObject<SwapActionOp>({
   fromWalletId: asString,
   nativeAmount: asString,
   toTokenId: asOptional(asString),
-  toWalletId: asString
+  toWalletId: asString,
+  displayKey: (raw: unknown) => asOptional(asSwapActionOpDisplayKey)(raw)
 })
-export const asActionOp: Cleaner<ActionOp> = asEither(
-  asSeqActionOp,
-  asParActionOp,
+const asSwapActionOpDisplayKey = asValue('swap-deposit')
+
+export const asNodeActionOp: Cleaner<NodeActionOp> = asEither(asSeqActionOp, asParActionOp)
+export const asLeafActionOp: Cleaner<LeafActionOp> = asEither(
   asBroadcastTxActionOp,
   asWyreBuyActionOp,
   asWyreSellActionOp,
@@ -138,6 +154,7 @@ export const asActionOp: Cleaner<ActionOp> = asEither(
   asLoanWithdrawActionOp,
   asSwapActionOp
 )
+export const asActionOp: Cleaner<ActionOp> = asEither(asNodeActionOp, asLeafActionOp)
 
 //
 // Action Effects
@@ -196,10 +213,12 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 // Action Program
 //
 
+const asActionProgramCompleteMessage = asObject<ActionProgramCompleteMessage>({ title: asString, message: asString })
 export const asActionProgram = asObject<ActionProgram>({
   programId: asString,
   actionOp: asActionOp,
-  mockMode: asOptional(asBoolean)
+  mockMode: asOptional(asBoolean),
+  completeMessage: asActionProgramCompleteMessage
 })
 
 export const asActionProgramState = asObject<ActionProgramState>({
