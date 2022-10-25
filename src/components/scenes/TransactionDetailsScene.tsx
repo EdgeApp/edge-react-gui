@@ -28,11 +28,11 @@ import {
 } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
+import { CategoryModal, CategoryModalResult } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails'
-import { CategoryModalResult, TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -194,7 +194,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   openCategoryInput = () => {
     Airship.show<CategoryModalResult | undefined>(bridge => (
-      <TransactionDetailsCategoryInput
+      <CategoryModal
         bridge={bridge}
         categories={categories}
         subCategories={this.props.subcategoriesList}

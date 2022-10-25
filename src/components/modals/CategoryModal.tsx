@@ -35,7 +35,7 @@ interface State {
   subCategory: string
 }
 
-export class TransactionDetailsCategoryInput extends React.Component<Props, State> {
+export class CategoryModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { category, subCategory } = props

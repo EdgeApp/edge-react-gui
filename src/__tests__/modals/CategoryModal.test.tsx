@@ -2,15 +2,15 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { TransactionDetailsCategoryInput } from '../../components/modals/TransactionDetailsCategoryInput'
+import { CategoryModal } from '../../components/modals/CategoryModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
-describe('TransactionDetailsCategoryInput', () => {
+describe('CategoryModal', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
-      <TransactionDetailsCategoryInput
+      <CategoryModal
         bridge={fakeAirshipBridge}
         categories={{
           exchange: {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionDetailsCategoryInput should render with loading props 1`] = `
+exports[`CategoryModal should render with loading props 1`] = `
 <AirshipModal
   bridge={
     Object {
