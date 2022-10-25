@@ -754,7 +754,7 @@
   "fio_address_to_transfer": "Adresse zum Übertragen",
   "fio_domain_to_transfer": "Zu übertragende Domain",
   "fio_domain_transferred": "Erfolgreich übertragen",
-  "scan_address_modal_title": "Empfänger FIO, ENS oder öffentliche Adresse eingeben",
+  "scan_address_modal_title": "Empfänger FIO, ENS, RNS oder öffentliche Adresse eingeben",
   "scan_private_key_modal_title": " Private Key eingeben",
   "scan_private_key_modal_label": "Private Key",
   "address_modal_default_header": "Adresse eingeben",

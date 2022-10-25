@@ -831,7 +831,7 @@ const strings = {
   fio_address_to_transfer: 'Address to Transfer',
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
-  scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
+  scan_address_modal_title: 'Enter Recipient FIO, ENS, RNS or Public Address',
   scan_private_key_modal_title: 'Enter Private Key',
   scan_private_key_modal_label: 'Private Key',
   address_modal_default_header: 'Enter Address',

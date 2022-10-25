@@ -754,7 +754,7 @@
   "fio_address_to_transfer": "Indirizzo da trasferire",
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
-  "scan_address_modal_title": "Inserisci indirizzo FIO, ENS o indirizzo pubblico del destinatario",
+  "scan_address_modal_title": "Inserisci indirizzo FIO, ENS, RNS o indirizzo pubblico del destinatario",
   "scan_private_key_modal_title": "Inserisci chiavi privata",
   "scan_private_key_modal_label": "Chiave privata",
   "address_modal_default_header": "Inserisci indirizzo",
