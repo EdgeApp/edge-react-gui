@@ -61,17 +61,10 @@ export const LoanDetailsScene = (props: Props) => {
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
-  const openCollaterals = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
-  const isCollateralAvailable = openCollaterals.length > 0
-
-  const openDebts = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
-  const isDebtAvailable = openDebts.length > 0
-
   const loanToValue = useWatch(borrowEngine, 'loanToValue')
 
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
-
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
 
@@ -105,21 +98,6 @@ export const LoanDetailsScene = (props: Props) => {
     }
   ]
 
-  const handleAddCollateralPress = () => {
-    navigation.navigate('loanManage', { actionOpType: 'loan-deposit', loanAccountId })
-  }
-  const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanManage', { actionOpType: 'loan-withdraw', loanAccountId })
-  }
-  const handleBorrowMorePress = () => {
-    navigation.navigate('loanManage', { actionOpType: 'loan-borrow', loanAccountId })
-  }
-  const handleRepayPress = () => {
-    navigation.navigate('loanManage', { actionOpType: 'loan-repay', loanAccountId })
-  }
-  const handleLoanClosePress = () => {
-    navigation.navigate('loanClose', { loanAccountId })
-  }
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
@@ -138,6 +116,90 @@ export const LoanDetailsScene = (props: Props) => {
       )
     } else return null
   }
+
+  // #region Loan Action Cards
+
+  const collateralPositions = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
+  const debtPositions = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
+
+  const actionCards = React.useMemo(() => {
+    const isOpenCollaterals = collateralPositions.length > 0
+    const isOpenDebts = debtPositions.length > 0
+    const actionCardConfigs: Array<{
+      title: string
+      iconName: string
+      handlePress: () => void
+      isDisabled: boolean
+    }> = [
+      {
+        title: s.strings.loan_action_add_collateral,
+        iconName: 'add-collateral',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-deposit', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning
+      },
+      {
+        title: s.strings.loan_action_withdraw_collateral,
+        iconName: 'withdraw-collateral',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-withdraw', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenCollaterals
+      },
+      {
+        title: s.strings.loan_borrow_more,
+        iconName: 'borrow-more',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-borrow', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenCollaterals
+      },
+      {
+        title: s.strings.loan_make_payment,
+        iconName: 'make-payment',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-repay', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenDebts
+      },
+      {
+        title: s.strings.loan_action_close_loan,
+        iconName: 'close-loan',
+        handlePress: () => {
+          navigation.navigate('loanClose', { loanAccountId })
+        },
+        isDisabled: isActionProgramRunning
+      }
+    ]
+
+    return (
+      <>
+        {actionCardConfigs.map(actionCardConfigData => {
+          const { title, iconName, handlePress, isDisabled } = actionCardConfigData
+          return (
+            <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
+              <Space right>
+                <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
+              </Space>
+              <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
+            </TappableCard>
+          )
+        })}
+      </>
+    )
+  }, [
+    isActionProgramRunning,
+    loanAccountId,
+    navigation,
+    collateralPositions.length,
+    debtPositions.length,
+    styles.actionLabel,
+    styles.actionLabelDisabled,
+    theme
+  ])
+
+  // #endregion
 
   return (
     <SceneWrapper>
@@ -187,54 +249,7 @@ export const LoanDetailsScene = (props: Props) => {
               <Alert type="warning" title={s.strings.warning_please_wait_title} message={s.strings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
             ) : null}
           </Space>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress} disabled={isActionProgramRunning}>
-            <Space right>
-              <Fontello name="add-collateral" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
-            </Space>
-            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress} disabled={isActionProgramRunning || !isCollateralAvailable}>
-            <Space right>
-              <Fontello
-                name="withdraw-collateral"
-                size={theme.rem(2)}
-                color={isActionProgramRunning || !isCollateralAvailable ? theme.deactivatedText : theme.iconTappable}
-              />
-            </Space>
-            <EdgeText style={isActionProgramRunning || !isCollateralAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
-              {s.strings.loan_action_withdraw_collateral}
-            </EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress} disabled={isActionProgramRunning || !isDebtAvailable}>
-            <Space right>
-              <Fontello
-                name="borrow-more"
-                size={theme.rem(2)}
-                color={isActionProgramRunning || !isCollateralAvailable ? theme.deactivatedText : theme.iconTappable}
-              />
-            </Space>
-            <EdgeText style={isActionProgramRunning || !isCollateralAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
-              {s.strings.loan_borrow_more}
-            </EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress} disabled={isActionProgramRunning || !isCollateralAvailable}>
-            <Space right>
-              <Fontello
-                name="make-payment"
-                size={theme.rem(2)}
-                color={isActionProgramRunning || !isDebtAvailable ? theme.deactivatedText : theme.iconTappable}
-              />
-            </Space>
-            <EdgeText style={isActionProgramRunning || !isDebtAvailable ? styles.actionLabelDisabled : styles.actionLabel}>
-              {s.strings.loan_make_payment}
-            </EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress} disabled={isActionProgramRunning}>
-            <Space right>
-              <Fontello name="close-loan" size={theme.rem(2)} color={isActionProgramRunning ? theme.deactivatedText : theme.iconTappable} />
-            </Space>
-            <EdgeText style={isActionProgramRunning ? styles.actionLabelDisabled : styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
-          </TappableCard>
+          {actionCards}
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
