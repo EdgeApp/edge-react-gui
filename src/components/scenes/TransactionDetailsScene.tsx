@@ -17,15 +17,8 @@ import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelector
 import { connect } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
-import {
-  autoCorrectDate,
-  capitalize,
-  convertNativeToDisplay,
-  convertNativeToExchange,
-  isValidInput,
-  splitTransactionCategory,
-  truncateDecimals
-} from '../../util/utils'
+import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { autoCorrectDate, convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
 import { CategoryModal, CategoryModalResult } from '../modals/CategoryModal'
@@ -68,7 +61,6 @@ interface State {
   direction: string
   bizId: number
   category: string
-  subCategory: string
 }
 
 const categories = {
@@ -118,37 +110,23 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { metadata } = edgeTransaction
     const { name: contactName = '', notes = '', amountFiat = 0 } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
-    const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
+    const category = joinCategory(
+      splitCategory(
+        metadata?.category,
+        // Pick the right default:
+        direction === 'receive' ? 'income' : 'expense'
+      )
+    )
 
     this.state = {
       amountFiat: displayFiatAmount(amountFiat),
       contactName,
       notes,
       category,
-      subCategory,
       thumbnailPath,
       direction,
       bizId: 0
     }
-  }
-
-  initializeFormattedCategories = (metadata: EdgeMetadata | undefined, direction: string) => {
-    const defaultCategory = direction === 'receive' ? categories.income.key : categories.expense.key
-    if (metadata) {
-      const fullCategory = metadata.category || ''
-      const colonOccurrence = fullCategory.indexOf(':')
-      if (fullCategory && colonOccurrence) {
-        const splittedFullCategory = splitTransactionCategory(fullCategory)
-        const { subCategory } = splittedFullCategory
-        const category = splittedFullCategory.category.toLowerCase()
-        return {
-          // @ts-expect-error
-          category: categories[category] ? categories[category].key : defaultCategory,
-          subCategory
-        }
-      }
-    }
-    return { category: defaultCategory, subCategory: '' }
   }
 
   componentDidMount() {
@@ -193,16 +171,27 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openCategoryInput = () => {
+    const { category } = this.state
+    const split = splitCategory(category)
     Airship.show<CategoryModalResult | undefined>(bridge => (
       <CategoryModal
         bridge={bridge}
         categories={categories}
         subCategories={this.props.subcategoriesList}
-        category={this.state.category}
-        subCategory={this.state.subCategory}
+        category={split.category}
+        subCategory={split.subcategory}
         setNewSubcategory={this.props.setNewSubcategory}
       />
-    )).then(categoryInfo => this.onSaveTxDetails(categoryInfo))
+    )).then(result => {
+      if (result == null) return
+
+      this.onSaveTxDetails({
+        category: joinCategory({
+          category: result.category as any,
+          subcategory: result.subCategory
+        })
+      })
+    })
   }
 
   openNotesInput = () => {
@@ -339,10 +328,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     if (newDetails == null) return
     const { route } = this.props
     // @ts-expect-error
-    const { contactName, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
+    const { contactName, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction } = route.params
     let finalAmountFiat
-    const fullCategory = category ? `${capitalize(category)}:${subCategory}` : undefined
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
     if (isNaN(decimalAmountFiat)) {
       // if invalid number set to previous saved amountFiat
@@ -353,7 +341,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
     edgeTransaction.metadata = {
       name: contactName,
-      category: fullCategory,
+      category,
       notes,
       amountFiat: finalAmountFiat,
       bizId
@@ -440,7 +428,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   render() {
     const { currencyInfo, guiWallet, theme, route } = this.props
     const { edgeTransaction } = route.params
-    const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
+    const { direction, amountFiat, contactName, thumbnailPath, notes, category } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
 
@@ -470,8 +458,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       edgeTransaction.otherParams?.nonceUsed
     )
 
-    // @ts-expect-error
-    const categoriesText = categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')
+    const categoriesText = formatCategory(splitCategory(category))
 
     return (
       <SceneWrapper background="theme">

@@ -35,13 +35,6 @@ export const DEFAULT_TRUNCATE_PRECISION = 6
 
 export const normalizeForSearch = (str: string, delimiter: string = '') => str.replace(/\s/g, delimiter).toLowerCase()
 
-export function capitalize(string: string): string {
-  if (!string) return ''
-  const firstLetter = string.charAt(0).toUpperCase()
-  const otherLetters = string.slice(1)
-  return `${firstLetter}${otherLetters}`
-}
-
 // Replaces extra chars with '...' either in the middle or end of the input string
 export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
@@ -370,18 +363,6 @@ export const getYesterdayDateRoundDownHour = () => {
   date.setMilliseconds(0)
   const yesterday = date.setDate(date.getDate() - 1)
   return new Date(yesterday).toISOString()
-}
-
-export function splitTransactionCategory(fullCategory: string): {
-  category: string
-  subCategory: string
-} {
-  const splittedCategory = fullCategory.split(':')
-  const categoryArray = splittedCategory.shift()
-  return {
-    category: categoryArray ?? '',
-    subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
-  }
 }
 
 type AsyncFunction = () => Promise<any>

@@ -5,7 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 import s from '../../locales/strings'
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
-import { splitTransactionCategory } from '../../util/utils'
+import { splitCategory } from '../../util/categories'
 import { AirshipModal } from '../common/AirshipModal'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
 import { SubCategorySelect } from '../common/TransactionSubCategorySelect'
@@ -64,13 +64,11 @@ export class CategoryModal extends React.Component<Props, State> {
 
   onSelectSubCategory = (input: string) => {
     const { bridge, subCategories, setNewSubcategory } = this.props
-    const splittedFullCategory = splitTransactionCategory(input)
-    const { subCategory } = splittedFullCategory
-    const category = splittedFullCategory.category.toLowerCase()
     if (!subCategories.find(item => item === input)) {
       setNewSubcategory(input, subCategories)
     }
-    bridge.resolve({ category, subCategory })
+    const { category, subcategory } = splitCategory(input)
+    bridge.resolve({ category, subCategory: subcategory })
   }
 
   render() {
