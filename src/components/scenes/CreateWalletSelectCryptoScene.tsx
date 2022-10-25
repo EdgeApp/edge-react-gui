@@ -214,7 +214,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
 
   return (
-    <SceneWrapper avoidKeyboard background="theme">
+    <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
