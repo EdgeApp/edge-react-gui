@@ -1,5 +1,24 @@
-const strings = {
-  // Action Queue Display Info
+// Stricter typing for feature-specific strings
+
+export interface ActionDisplayStrings {
+  [`action_display_title_create`]: string
+  [`action_display_title_swap`]: string
+
+  [`action_display_title_complete_default`]: string
+
+  [`action_display_message_create_3s`]: string
+  [`action_display_message_swap_4s`]: string
+  [`action_display_message_swap_fees_5s`]: string
+
+  [`action_display_message_complete_default`]: string
+  [`action_display_message_complete_wallet_2s`]: string
+  [`action_display_message_complete_bank`]: string
+}
+
+const strings: ActionDisplayStrings & {
+  [key: string]: string
+} = {
+  // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
@@ -37,6 +56,27 @@ const strings = {
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
   action_queue_push_notification_body: `Edge has completed processing your loan operation.`,
+
+  // #endregion
+
+  // #region ActionDisplay v2:
+
+  // Action Step Display Strings
+  action_display_title_create: 'Creating Loan',
+  action_display_title_swap: 'Swapping Funds',
+
+  action_display_message_create_3s: '%1$s is creating your loan on %2$s using your %3$s as collateral',
+  action_display_message_swap_4s: '%1$s is swapping your %2$s into %3$s for deposit into %4$s. This may take a few mins to several hours…',
+  action_display_message_swap_fees_5s:
+    '%1$s is swapping your %2$s into %3$s and %4$s (to pay fees) for deposit into %5$s. This may take a few mins to several hours…',
+
+  // Complete Display Strings
+  action_display_title_complete_default: 'Congratulations!',
+  action_display_message_complete_default: 'Your transactions completed successfully!\nPlease allow time for your accounts to update.',
+  action_display_message_complete_wallet_2s: 'Your loan is complete! \nYou should see %1$s in your %2$s account',
+  action_display_message_complete_bank: 'Your loan is complete! \nYou should see funds in your bank account in 1-4 days',
+
+  // #endregion
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
@@ -998,7 +1038,6 @@ const strings = {
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
-  loan_status_complete: 'Your loan has completed successfully!\nPlease allow time for your account to be credited.',
   loan_status_title: 'Loan Status',
   loan_status_failed_title: 'Failed to process actions',
 
