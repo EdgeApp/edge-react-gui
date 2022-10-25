@@ -1,8 +1,12 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
+import { sprintf } from 'sprintf-js'
 
 import { MAX_AMOUNT } from '../constants/valueConstants'
-import { ActionOp, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
+import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import s from '../locales/strings'
 import { BorrowEngine } from '../plugins/borrow-plugins/types'
+import { config } from '../theme/appConfig'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 import { zeroString } from './utils'
@@ -34,7 +38,7 @@ interface AaveBorrowActionParams {
   destination: LoanAsset
 }
 
-export const makeAaveCreateAction = async (params: AaveCreateActionParams): Promise<ActionOp> => {
+export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams): Promise<ActionProgram> => {
   const { borrowEngineWallet, borrowPluginId, source, destination } = params
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
 
@@ -65,14 +69,16 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
       nativeAmount: source.nativeAmount,
       toTokenId: toTokenId,
       toWalletId: borrowEngineWallet.id,
-      amountFor: 'to'
+      amountFor: 'to',
+      displayKey: 'swap-deposit'
     })
   }
 
   const loanParallelActions: ActionOp[] = []
   sequenceActions.push({
     type: 'par',
-    actions: loanParallelActions
+    actions: loanParallelActions,
+    displayKey: 'create'
   })
 
   // Construct the deposit action
@@ -91,7 +97,14 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
   const borrowAction = ((await makeAaveBorrowAction({ borrowEngineWallet, borrowPluginId, destination })) as SeqActionOp).actions[0] as ParActionOp
   if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
 
-  return actionOp
+  // Special complete message for withdraw to bank
+  return makeActionProgram(actionOp, {
+    title: s.strings.action_display_title_complete_default,
+    message:
+      destination.paymentMethodId != null
+        ? s.strings.action_display_message_complete_bank
+        : sprintf(s.strings.action_display_message_complete_wallet_2s, getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ?? 'NA', config.appName)
+  })
 }
 
 export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Promise<ActionOp> => {
@@ -191,7 +204,8 @@ export const makeAaveDepositAction = async ({
       nativeAmount,
       toTokenId: tokenId,
       toWalletId: borrowEngineWallet.id,
-      amountFor: 'to'
+      amountFor: 'to',
+      displayKey: 'swap-deposit'
     })
   }
 
