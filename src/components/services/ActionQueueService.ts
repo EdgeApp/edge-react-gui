@@ -139,7 +139,7 @@ export const ActionQueueService = () => {
 
     // Cleanup loop
     return () => periodicTask.stop()
-  }, [account, clientId, dispatch, updateProgramState, actionQueueMap, activeProgramIds])
+  }, [account, clientId, dispatch, updateProgramState, actionQueueMap, activeProgramIds, executionContextMock, executionContext])
 
   // Return no component/view
   return null
