@@ -12,6 +12,7 @@ import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
+  EdgeTokenId,
   FeeOption,
   FioConnectionWalletItem,
   FioDomain,
@@ -74,7 +75,10 @@ export interface ParamList {
     walletNames: { [key: string]: string }
     fiatCode: string
   }
-  createWalletSelectCrypto: {}
+  createWalletSelectCrypto: {
+    newAccountFlow?: (items: WalletCreateItem[]) => Promise<void>
+    defaultSelection?: EdgeTokenId[]
+  }
   createWalletSelectFiat: {
     createWalletList: WalletCreateItem[]
   }

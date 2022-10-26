@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { USD_FIAT } from '../constants/WalletAndCurrencyConstants'
+import { WalletCreateItem } from '../components/themed/WalletList'
 import s from '../locales/strings'
 import {
   getLocalSettings,
@@ -58,7 +58,31 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
     const syncedSettings = await getSyncedSettings(account)
     const { walletsSort } = syncedSettings
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
-    Actions.push('edge', {})
+    await dispatch(loadAccountReferral(account))
+    const newAccount = account.newAccount
+
+    if (newAccount) {
+      let defaultFiat = syncedSettings.defaultFiat
+      const [phoneCurrency] = getCurrencies()
+      if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
+        defaultFiat = phoneCurrency
+      }
+      // Ensure the creation reason is available before creating wallets:
+      const currencyCodes = getState().account.accountReferral.currencyCodes ?? config.defaultWallets
+      const defaultSelection = currencyCodesToEdgeTokenIds(account, currencyCodes)
+      const fiatCurrencyCode = 'iso:' + defaultFiat
+
+      const newAccountFlow = async (items: WalletCreateItem[]) => {
+        Actions.replace('edge', {})
+        const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
+        await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
+        await updateWalletsRequest()(dispatch, getState)
+      }
+
+      Actions.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
+    } else {
+      Actions.push('edge', {})
+    }
 
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
@@ -128,16 +152,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
       walletsSort: 'manual'
     }
     try {
-      let newAccount = false
-      let defaultFiat = USD_FIAT
-      if (account.activeWalletIds.length < 1) {
-        const [phoneCurrency] = getCurrencies()
-        if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
-          defaultFiat = phoneCurrency
-        }
-
-        newAccount = true
-      } else {
+      if (!newAccount) {
         // We have a wallet
         const { walletId, currencyCode } = getFirstActiveWalletInfo(account)
         accountInitObject.walletId = walletId
@@ -185,23 +200,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
         data: { ...accountInitObject }
       })
 
-      if (newAccount) {
-        // Ensure the creation reason is available before creating wallets:
-        await dispatch(loadAccountReferral(account))
-        const { currencyCodes } = getState().account.accountReferral
-        const fiatCurrencyCode = 'iso:' + defaultFiat
-        if (currencyCodes && currencyCodes.length > 0) {
-          const edgeTokenIds = currencyCodesToEdgeTokenIds(account, currencyCodes)
-          await createCustomWallets(account, fiatCurrencyCode, edgeTokenIds, dispatch)
-        } else {
-          await createDefaultWallets(account, fiatCurrencyCode, dispatch)
-        }
-        dispatch(refreshAccountReferral())
-      } else {
-        // Load the creation reason more lazily:
-        dispatch(loadAccountReferral(account)).then(async () => dispatch(refreshAccountReferral()))
-      }
-
+      dispatch(refreshAccountReferral())
       dispatch(expiredFioNamesCheckDates())
       await updateWalletsRequest()(dispatch, getState)
     } catch (error: any) {

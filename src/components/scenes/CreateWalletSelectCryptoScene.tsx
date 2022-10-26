@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -23,10 +23,13 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 interface Props {
   navigation: NavigationProp<'createWalletSelectCrypto'>
+  route: RouteProp<'createWalletSelectCrypto'>
 }
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { newAccountFlow, defaultSelection = [] } = route.params
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -46,18 +49,29 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   )
   const [searchTerm, setSearchTerm] = React.useState('')
 
-  const createWalletList = React.useMemo(() => getCreateWalletList(account), [account])
+  const createWalletList = React.useMemo(() => {
+    const createList = getCreateWalletList(account)
+    const preselectedList: WalletCreateItem[] = []
+    for (const edgeTokenId of defaultSelection) {
+      const i = createList.findIndex(item => item.pluginId === edgeTokenId.pluginId && item.tokenId === edgeTokenId.tokenId)
+      preselectedList.push(createList.splice(i, 1)[0])
+    }
+    return [...preselectedList, ...createList]
+  }, [account, defaultSelection])
+
   const filteredCreateWalletList = React.useMemo(
     () => filterWalletCreateItemListBySearchText(createWalletList, searchTerm.toLowerCase()),
     [createWalletList, searchTerm]
   )
 
-  const [selectedItems, setSelectedItems] = React.useState(
-    createWalletList.reduce((map: { [key: string]: boolean }, item) => {
-      map[item.key] = false
+  const [selectedItems, setSelectedItems] = React.useState(() => {
+    return createWalletList.reduce((map: { [key: string]: boolean }, item) => {
+      const { key, pluginId, tokenId } = item
+      map[key] = defaultSelection.find(edgeTokenId => edgeTokenId.pluginId === pluginId && edgeTokenId.tokenId === tokenId) != null
       return map
     }, {})
-  )
+  })
+
   const [numSelected, setNumSelected] = React.useState(Object.values(selectedItems).filter(Boolean).length)
 
   const createMainnetItem = useHandler(pluginId => {
@@ -162,13 +176,18 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       }
     }
 
-    // Navigate to the fiat/name change scene if new wallets are being created. Otherwise enable the tokens and return to the main scene.
-    if (newWalletItems.length > 0) {
-      const newList = [...newWalletItems, ...newTokenItems]
-        .sort((a, b) => (a.pluginId < b.pluginId ? 1 : -1)) // Sort alphabetically by pluginId
-        .sort((a, b) => (a.pluginId === b.pluginId && (a.tokenId ?? '') > (b.tokenId ?? '') ? 1 : -1)) // Sort tokens below mainnet wallets
+    const newList = [...newWalletItems, ...newTokenItems]
+      .sort((a, b) => (a.pluginId < b.pluginId ? 1 : -1)) // Sort alphabetically by pluginId
+      .sort((a, b) => (a.pluginId === b.pluginId && (a.tokenId ?? '') > (b.tokenId ?? '') ? 1 : -1)) // Sort tokens below mainnet wallets
+
+    if (newAccountFlow != null) {
+      // This scene is used when an account is just created. Allow the initialization method to define what needs to be done.
+      newAccountFlow(newList)
+    } else if (newWalletItems.length > 0) {
+      // Navigate to the fiat/name change scene if new wallets are being created.
       navigation.push('createWalletSelectFiat', { createWalletList: newList })
     } else {
+      // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
       navigation.navigate('walletListScene', {})
     }
@@ -202,13 +221,13 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(
     () => (
-      <Fade visible={numSelected > 0} duration={300}>
+      <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
           <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
-    [handleNext, numSelected]
+    [defaultSelection, handleNext, numSelected]
   )
 
   const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
