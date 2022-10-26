@@ -1,22 +1,92 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CategoryModal should render with a subcategory 1`] = `
-<AirshipModal
-  bridge={
-    Object {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
+Array [
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
-  }
-  onCancel={[Function]}
->
-  <TouchableWithoutFeedback
-    onPress={[Function]}
+  >
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>,
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "alignSelf": "flex-end",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": undefined,
+        "borderTopLeftRadius": 22.473239436619718,
+        "borderTopRightRadius": 22.473239436619718,
+        "borderWidth": 0,
+        "flexDirection": undefined,
+        "flexShrink": 1,
+        "justifyContent": undefined,
+        "marginBottom": -64,
+        "marginLeft": 0,
+        "marginRight": 0,
+        "marginTop": 45,
+        "maxHeight": undefined,
+        "overflow": "visible",
+        "paddingBottom": 64,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 0,
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 1,
+        "shadowRadius": 10,
+        "transform": Array [
+          Object {
+            "translateY": 1334,
+          },
+        ],
+        "width": 512,
+      }
+    }
   >
     <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         Object {
           "flex": 1,
@@ -24,17 +94,32 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         }
       }
     >
-      <FormattedText
+      <Text
         style={
-          Object {
-            "alignSelf": "center",
-            "fontSize": 27,
-            "marginBottom": 22,
-          }
+          Array [
+            Array [
+              Object {
+                "fontFamily": "SourceSansPro-Black",
+              },
+              Object {
+                "alignSelf": "center",
+                "fontSize": 27,
+                "marginBottom": 22,
+              },
+            ],
+            Object {
+              "fontSize": 19.664084507042254,
+            },
+            Object {
+              "alignSelf": "center",
+              "fontSize": 27,
+              "marginBottom": 22,
+            },
+          ]
         }
       >
         Category
-      </FormattedText>
+      </Text>
       <View
         style={
           Object {
@@ -42,17 +127,32 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           }
         }
       >
-        <FormattedText
+        <Text
           style={
-            Object {
-              "color": "#0E4B75",
-              "fontSize": 16,
-              "marginBottom": 7,
-            }
+            Array [
+              Array [
+                Object {
+                  "fontFamily": "SourceSansPro-Black",
+                },
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 7,
+                },
+              ],
+              Object {
+                "fontSize": 19.664084507042254,
+              },
+              Object {
+                "color": "#0E4B75",
+                "fontSize": 16,
+                "marginBottom": 7,
+              },
+            ]
           }
         >
           Choose a Category:
-        </FormattedText>
+        </Text>
         <View
           style={
             Object {
@@ -61,115 +161,191 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             }
           }
         >
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
               }
-            >
-              <FormattedText
-                style={
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Exchange
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Exchange
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Expense
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Expense
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Transfer
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#A4C7DF",
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Transfer
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "backgroundColor": "#A4C7DF",
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Income
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
+                  },
+                ]
+              }
+            >
+              Income
+            </Text>
+          </View>
         </View>
       </View>
       <View
@@ -179,75 +355,715 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           }
         }
       >
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoFocus={true}
-          baseColor="#0D2145"
-          containerStyle={
+        <View
+          onResponderRelease={[Function]}
+          onStartShouldSetResponder={[Function]}
+          pointerEvents="auto"
+          style={
             Object {
               "height": 77,
               "position": "relative",
               "width": "100%",
             }
           }
-          errorColor="#E85466"
-          fontSize={20}
-          keyboardType="default"
-          label="Choose a sub-category"
-          labelFontSize={15}
-          onChangeText={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="done"
-          textColor="#25292C"
-          tintColor="#0E4B75"
-          titleTextStyle={Object {}}
-          value="Paycheck"
-        />
+        >
+          <View
+            collapsable={false}
+            style={
+              Object {
+                "alignItems": "flex-end",
+                "flexDirection": "row",
+                "height": 73,
+                "paddingBottom": 8,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 16,
+              }
+            }
+          >
+            <View
+              pointerEvents="none"
+              style={
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "borderColor": "rgba(13, 33, 69, 1)",
+                    "borderStyle": "solid",
+                    "borderWidth": 1,
+                    "bottom": 0,
+                    "left": -3,
+                    "position": "absolute",
+                    "right": -3,
+                    "top": -3,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                Object {
+                  "alignSelf": "stretch",
+                  "flex": 1,
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "left": "-100%",
+                    "paddingLeft": "50%",
+                    "position": "absolute",
+                    "top": 0,
+                    "transform": Array [
+                      Object {
+                        "scale": 0.75,
+                      },
+                      Object {
+                        "translateY": 0,
+                      },
+                      Object {
+                        "translateX": 0,
+                      },
+                    ],
+                    "width": "200%",
+                  }
+                }
+              >
+                <Text
+                  collapsable={false}
+                  numberOfLines={1}
+                  style={
+                    Object {
+                      "color": "rgba(13, 33, 69, 1)",
+                      "fontSize": 20,
+                      "includeFontPadding": false,
+                      "lineHeight": 20,
+                      "textAlign": "left",
+                      "textAlignVertical": "top",
+                    }
+                  }
+                >
+                  Choose a sub-category
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "alignItems": "flex-end",
+                    "flex": 1,
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  disableFullscreenUI={true}
+                  editable={true}
+                  keyboardType="default"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onChangeText={[Function]}
+                  onContentSizeChange={[Function]}
+                  onFocus={[Function]}
+                  onSubmitEditing={[Function]}
+                  returnKeyType="done"
+                  selectionColor="#0E4B75"
+                  style={
+                    Array [
+                      Object {
+                        "flex": 1,
+                        "includeFontPadding": false,
+                        "margin": 0,
+                        "padding": 0,
+                        "paddingTop": 0,
+                        "textAlign": "left",
+                        "textAlignVertical": "top",
+                        "top": 2,
+                      },
+                      Object {
+                        "color": "#25292C",
+                        "fontSize": 20,
+                        "height": 30,
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                  value="Paycheck"
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "flex-start",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-end",
+                  "minHeight": 8,
+                },
+                Object {
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                },
+              ]
+            }
+          />
+        </View>
       </View>
-      <SubCategorySelect
-        bottomGap={0}
-        categories={
+      <RCTScrollView
+        contentContainerStyle={
+          Object {
+            "paddingBottom": 0,
+          }
+        }
+        data={
           Array [
-            "income",
-            "exchange",
-            "expense",
-            "transfer",
+            "Income:Paycheck",
+            "Exchange:Paycheck",
+            "Expense:Paycheck",
+            "Transfer:Paycheck",
           ]
         }
-        enteredSubcategory="Paycheck"
-        onPressFxn={[Function]}
-        subcategoriesList={
-          Array [
-            "Exchange:Buy Bitcoin",
-            "Exchange:Sell Bitcoin",
-            "Expense:Air Travel",
-            "Expense:Alcohol & Bars",
-          ]
+        getItem={[Function]}
+        getItemCount={[Function]}
+        initialNumToRender={12}
+        keyExtractor={[Function]}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        style={
+          Object {
+            "backgroundColor": "#FFFFFF",
+            "borderTopColor": "#D9E3ED",
+            "borderTopWidth": 1,
+            "flex": 1,
+          }
         }
-      />
+        viewabilityConfigCallbackPairs={Array []}
+      >
+        <View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Income:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Exchange:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Expense:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Transfer:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    Object {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
     </View>
-  </TouchableWithoutFeedback>
-</AirshipModal>
+  </View>,
+]
 `;
 
 exports[`CategoryModal should render with an empty subcategory 1`] = `
-<AirshipModal
-  bridge={
-    Object {
-      "on": [Function],
-      "onResult": [Function],
-      "reject": [Function],
-      "remove": [Function],
-      "resolve": [Function],
+Array [
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
-  }
-  onCancel={[Function]}
->
-  <TouchableWithoutFeedback
-    onPress={[Function]}
+  >
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>,
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "alignSelf": "flex-end",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": undefined,
+        "borderTopLeftRadius": 22.473239436619718,
+        "borderTopRightRadius": 22.473239436619718,
+        "borderWidth": 0,
+        "flexDirection": undefined,
+        "flexShrink": 1,
+        "justifyContent": undefined,
+        "marginBottom": -64,
+        "marginLeft": 0,
+        "marginRight": 0,
+        "marginTop": 45,
+        "maxHeight": undefined,
+        "overflow": "visible",
+        "paddingBottom": 64,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 0,
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 1,
+        "shadowRadius": 10,
+        "transform": Array [
+          Object {
+            "translateY": 1334,
+          },
+        ],
+        "width": 512,
+      }
+    }
   >
     <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         Object {
           "flex": 1,
@@ -255,17 +1071,32 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         }
       }
     >
-      <FormattedText
+      <Text
         style={
-          Object {
-            "alignSelf": "center",
-            "fontSize": 27,
-            "marginBottom": 22,
-          }
+          Array [
+            Array [
+              Object {
+                "fontFamily": "SourceSansPro-Black",
+              },
+              Object {
+                "alignSelf": "center",
+                "fontSize": 27,
+                "marginBottom": 22,
+              },
+            ],
+            Object {
+              "fontSize": 19.664084507042254,
+            },
+            Object {
+              "alignSelf": "center",
+              "fontSize": 27,
+              "marginBottom": 22,
+            },
+          ]
         }
       >
         Category
-      </FormattedText>
+      </Text>
       <View
         style={
           Object {
@@ -273,17 +1104,32 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           }
         }
       >
-        <FormattedText
+        <Text
           style={
-            Object {
-              "color": "#0E4B75",
-              "fontSize": 16,
-              "marginBottom": 7,
-            }
+            Array [
+              Array [
+                Object {
+                  "fontFamily": "SourceSansPro-Black",
+                },
+                Object {
+                  "color": "#0E4B75",
+                  "fontSize": 16,
+                  "marginBottom": 7,
+                },
+              ],
+              Object {
+                "fontSize": 19.664084507042254,
+              },
+              Object {
+                "color": "#0E4B75",
+                "fontSize": 16,
+                "marginBottom": 7,
+              },
+            ]
           }
         >
           Choose a Category:
-        </FormattedText>
+        </Text>
         <View
           style={
             Object {
@@ -292,115 +1138,191 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             }
           }
         >
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#A4C7DF",
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "backgroundColor": "#A4C7DF",
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
               }
-            >
-              <FormattedText
-                style={
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Exchange
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Exchange
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Expense
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Expense
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Transfer
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#A4C7DF",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginRight": 13,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 4,
-                }
+                  },
+                ]
               }
             >
-              <FormattedText
-                style={
+              Transfer
+            </Text>
+          </View>
+          <View
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "borderColor": "#A4C7DF",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginRight": 13,
+                "paddingHorizontal": 11,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "fontFamily": "SourceSansPro-Black",
+                    },
+                    Object {
+                      "color": "#0E4B75",
+                      "fontSize": 20,
+                    },
+                  ],
+                  Object {
+                    "fontSize": 19.664084507042254,
+                  },
                   Object {
                     "color": "#0E4B75",
                     "fontSize": 20,
-                  }
-                }
-              >
-                Income
-              </FormattedText>
-            </View>
-          </TouchableWithoutFeedback>
+                  },
+                ]
+              }
+            >
+              Income
+            </Text>
+          </View>
         </View>
       </View>
       <View
@@ -410,45 +1332,183 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           }
         }
       >
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoFocus={true}
-          baseColor="#0D2145"
-          containerStyle={
+        <View
+          onResponderRelease={[Function]}
+          onStartShouldSetResponder={[Function]}
+          pointerEvents="auto"
+          style={
             Object {
               "height": 77,
               "position": "relative",
               "width": "100%",
             }
           }
-          errorColor="#E85466"
-          fontSize={20}
-          keyboardType="default"
-          label="Choose a sub-category"
-          labelFontSize={15}
-          onChangeText={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="done"
-          textColor="#25292C"
-          tintColor="#0E4B75"
-          titleTextStyle={Object {}}
-          value=""
-        />
+        >
+          <View
+            collapsable={false}
+            style={
+              Object {
+                "alignItems": "flex-end",
+                "flexDirection": "row",
+                "height": 73,
+                "paddingBottom": 8,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 16,
+              }
+            }
+          >
+            <View
+              pointerEvents="none"
+              style={
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "borderColor": "rgba(13, 33, 69, 1)",
+                    "borderStyle": "solid",
+                    "borderWidth": 1,
+                    "bottom": 0,
+                    "left": -3,
+                    "position": "absolute",
+                    "right": -3,
+                    "top": -3,
+                  }
+                }
+              />
+            </View>
+            <View
+              style={
+                Object {
+                  "alignSelf": "stretch",
+                  "flex": 1,
+                }
+              }
+            >
+              <View
+                collapsable={false}
+                style={
+                  Object {
+                    "left": "-100%",
+                    "paddingLeft": "50%",
+                    "position": "absolute",
+                    "top": 0,
+                    "transform": Array [
+                      Object {
+                        "scale": 1,
+                      },
+                      Object {
+                        "translateY": 24,
+                      },
+                      Object {
+                        "translateX": 0,
+                      },
+                    ],
+                    "width": "200%",
+                  }
+                }
+              >
+                <Text
+                  collapsable={false}
+                  numberOfLines={1}
+                  style={
+                    Object {
+                      "color": "rgba(13, 33, 69, 1)",
+                      "fontSize": 20,
+                      "includeFontPadding": false,
+                      "lineHeight": 20,
+                      "textAlign": "left",
+                      "textAlignVertical": "top",
+                    }
+                  }
+                >
+                  Choose a sub-category
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "alignItems": "flex-end",
+                    "flex": 1,
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  disableFullscreenUI={true}
+                  editable={true}
+                  keyboardType="default"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onChangeText={[Function]}
+                  onContentSizeChange={[Function]}
+                  onFocus={[Function]}
+                  onSubmitEditing={[Function]}
+                  returnKeyType="done"
+                  selectionColor="#0E4B75"
+                  style={
+                    Array [
+                      Object {
+                        "flex": 1,
+                        "includeFontPadding": false,
+                        "margin": 0,
+                        "padding": 0,
+                        "paddingTop": 0,
+                        "textAlign": "left",
+                        "textAlignVertical": "top",
+                        "top": 2,
+                      },
+                      Object {
+                        "color": "#25292C",
+                        "fontSize": 20,
+                        "height": 30,
+                      },
+                      undefined,
+                    ]
+                  }
+                  underlineColorAndroid="transparent"
+                  value=""
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "flex-start",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-end",
+                  "minHeight": 8,
+                },
+                Object {
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                },
+              ]
+            }
+          />
+        </View>
       </View>
-      <SubCategorySelect
-        bottomGap={0}
-        categories={
-          Array [
-            "exchange",
-            "expense",
-            "transfer",
-            "income",
-          ]
+      <RCTScrollView
+        contentContainerStyle={
+          Object {
+            "paddingBottom": 0,
+          }
         }
-        enteredSubcategory=""
-        onPressFxn={[Function]}
-        subcategoriesList={
+        data={
           Array [
             "Exchange:Buy Bitcoin",
             "Exchange:Sell Bitcoin",
@@ -456,8 +1516,320 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "Expense:Alcohol & Bars",
           ]
         }
-      />
+        getItem={[Function]}
+        getItemCount={[Function]}
+        initialNumToRender={12}
+        keyExtractor={[Function]}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        style={
+          Object {
+            "backgroundColor": "#FFFFFF",
+            "borderTopColor": "#D9E3ED",
+            "borderTopWidth": 1,
+            "flex": 1,
+          }
+        }
+        viewabilityConfigCallbackPairs={Array []}
+      >
+        <View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Exchange:Buy Bitcoin
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Exchange:Sell Bitcoin
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Expense:Air Travel
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomWidth": 1,
+                  "borderColor": "#EEE",
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "height": 70,
+                  "justifyContent": "space-between",
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      Array [
+                        Array [
+                          Object {
+                            "fontFamily": "SourceSansPro-Black",
+                          },
+                          Object {
+                            "fontSize": 21,
+                          },
+                        ],
+                        Object {
+                          "fontSize": 19.664084507042254,
+                        },
+                        Object {
+                          "fontSize": 21,
+                        },
+                      ]
+                    }
+                  >
+                    Expense:Alcohol & Bars
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
     </View>
-  </TouchableWithoutFeedback>
-</AirshipModal>
+  </View>,
+]
 `;
