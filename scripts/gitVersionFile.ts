@@ -20,7 +20,8 @@
 
 import childProcess from 'child_process'
 import { Disklet, makeNodeDisklet } from 'disklet'
-import path from 'path'
+import fs from 'fs'
+import path, { join } from 'path'
 
 import { asVersionFile, VersionFile } from './cleaners'
 
@@ -39,29 +40,81 @@ const specialBranches: { [branch: string]: string } = {
   'test-paneer': '-paneer'
 }
 
+let _currentPath = __dirname
+const baseDir = join(_currentPath, '..')
+const versionFileName = 'release-version.json'
+
 async function main() {
   const cwd = path.join(__dirname, '..')
   const disklet = makeNodeDisklet(cwd)
   const [branch] = process.argv.slice(2)
 
-  // Determine the current build number:
-  const build = Math.max(pickBuildNumber(), 1 + (await readLastBuildNumber(disklet)))
-
   // Determine the current version:
   const packageJson = JSON.parse(await disklet.getText('package.json'))
   const version = `${packageJson.version}${pickVersionSuffix(branch)}`
 
-  // Write the vesion info file:
-  const versionFile = {
-    branch,
-    build,
-    version
-  }
+  const versionFile = getVersionFile(branch, version)
+  if (versionFile == null) throw new Error('Could not get version file')
+
   console.log(versionFile)
-  await disklet.setText('release-version.json', JSON.stringify(versionFile, null, 2))
 
   // Update the native project files:
   await Promise.all([updateAndroid(disklet, versionFile), updateIos(cwd, versionFile)])
+}
+
+function getVersionFile(branch: string, version: string): VersionFile | undefined {
+  const buildRepoUrl = process.env.BUILD_REPO_URL ?? 'git@github.com:EdgeApp/edge-build-server.git'
+  const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
+
+  // Determine the current build number:
+
+  const pathTemp = buildRepoUrl.split('/')
+  const repo = pathTemp[pathTemp.length - 1].replace('.git', '')
+  let versionFile: VersionFile | undefined
+  const repoPath = join(baseDir, repo)
+
+  let retries = 5
+  while (--retries > 0) {
+    if (fs.existsSync(repoPath)) {
+      call(`rm -rf ${repoPath}`)
+    }
+    // Clone repo
+    chdir(baseDir)
+    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${buildRepoUrl}`)
+    const newBuildNum = pickBuildNumber()
+    let build
+    // Rm edge-build-server
+    const versionFileDir = join(repoPath, 'versionFiles', branch)
+    const versionFilePath = join(versionFileDir, versionFileName)
+    if (fs.existsSync(versionFilePath)) {
+      const result = fs.readFileSync(versionFilePath, { encoding: 'utf8' })
+      const verFile = asVersionFile(result)
+      build = Math.max(verFile.build + 1, newBuildNum)
+    } else {
+      build = newBuildNum
+    }
+    const tryVersionFile: VersionFile = {
+      build,
+      version,
+      branch
+    }
+
+    call(`mkdir -p ${versionFileDir}`)
+    const versionFileString = JSON.stringify(tryVersionFile)
+    fs.writeFileSync(versionFilePath, versionFileString, { encoding: 'utf8' })
+    fs.writeFileSync(join(baseDir, versionFileName), versionFileString, { encoding: 'utf8' })
+    chdir(repoPath)
+    call(`git add ${versionFilePath}`)
+    call(`git commit -m "Update ${branch} to build ${build}"`)
+    try {
+      call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push`)
+      versionFile = tryVersionFile
+      break
+    } catch (e: any) {
+      console.log('Error pushing version file...')
+    }
+  }
+  return versionFile
 }
 
 /**
@@ -89,19 +142,6 @@ function pickVersionSuffix(branch?: string): string {
 }
 
 /**
- * Read the previous build number from release-version.json file.
- */
-async function readLastBuildNumber(disklet: Disklet): Promise<number> {
-  try {
-    const text = await disklet.getText('release-version.json')
-    const { build } = asVersionFile(text)
-    return build
-  } catch (e) {
-    return 0
-  }
-}
-
-/**
  * Inserts the build information into the Android project files.
  */
 async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promise<void> {
@@ -124,6 +164,22 @@ function updateIos(cwd: string, versionFile: VersionFile): void {
   childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, {
     cwd: path.join(cwd, 'ios'),
     stdio: 'inherit'
+  })
+}
+
+function chdir(path: string) {
+  console.log('chdir: ' + path)
+  _currentPath = path
+}
+
+function call(cmdstring: string) {
+  console.log('call: ' + cmdstring)
+  childProcess.execSync(cmdstring, {
+    encoding: 'utf8',
+    timeout: 3600000,
+    stdio: 'inherit',
+    cwd: _currentPath,
+    killSignal: 'SIGKILL'
   })
 }
 
