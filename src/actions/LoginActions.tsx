@@ -291,10 +291,14 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 
 // The `currencyCodes` are in the format "ETH:DAI",
 const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string[]): EdgeTokenId[] => {
-  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce((map: { [chainCode: string]: string }, pluginId) => {
-    map[account.currencyConfig[pluginId].currencyInfo.currencyCode] = pluginId
-    return map
-  }, {})
+  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
+    (map: { [chainCode: string]: string }, pluginId) => {
+      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+      if (map[chainCode] == null) map[chainCode] = pluginId
+      return map
+    },
+    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
+  )
 
   const edgeTokenIds: EdgeTokenId[] = []
 
