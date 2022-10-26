@@ -280,7 +280,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
       const level = action.data
       const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
-      // @ts-expect-error
       passwordRecoveryRemindersShown[level] = true
       return { ...state, passwordRecoveryRemindersShown }
     }

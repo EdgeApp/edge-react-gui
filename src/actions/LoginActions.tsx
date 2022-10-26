@@ -56,8 +56,8 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
   return async (dispatch, getState) => {
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await getSyncedSettings(account)
-    const { walletSort } = syncedSettings
-    dispatch({ type: 'LOGIN', data: { account, walletSort } })
+    const { walletsSort } = syncedSettings
+    dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
     Actions.push('edge', {})
 
     // Show a notice for deprecated electrum server settings
@@ -160,11 +160,6 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
       accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
       accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
-
-      if (newAccount) {
-        accountInitObject.defaultFiat = defaultFiat
-        accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
-      }
 
       const defaultDenominationSettings = state.ui.settings.denominationSettings
       const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}
