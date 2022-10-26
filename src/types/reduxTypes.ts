@@ -6,10 +6,14 @@ import { Action } from './reduxActions'
 export type { Action, RootState }
 
 export type GetState = () => RootState
-export type Dispatch = {
+
+export interface Dispatch {
   (action: Action): Action
-  <Return>(thunk: (dispatch: Dispatch, getState: GetState) => Return): Return
+  <Return>(thunk: ThunkAction<Return>): Return
 }
-export type Store = Redux.Store<RootState, Action>
+
+export interface Store extends Redux.Store<RootState, Action> {
+  dispatch: Dispatch
+}
 
 export type ThunkAction<Return> = (dispatch: Dispatch, getState: GetState) => Return
