@@ -155,12 +155,6 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
   displayAmount?: string
 }
 
-export interface SubcategorySearchResultData {
-  index: number
-  item: string
-  separators: object
-}
-
 export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }

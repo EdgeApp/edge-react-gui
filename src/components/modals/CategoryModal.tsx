@@ -1,156 +1,160 @@
 import * as React from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
-import { splitCategory } from '../../util/categories'
+import { useSelector } from '../../types/reactRedux'
+import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { scale } from '../../util/scaling'
 import { AirshipModal } from '../common/AirshipModal'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
-import { SubCategorySelect } from '../common/TransactionSubCategorySelect'
-
-export interface CategoryModalResult {
-  category: string
-  subCategory: string
-}
-
-type CategoriesType = Array<{
-  key: string
-  syntax: string
-}>
 
 interface Props {
-  bridge: AirshipBridge<CategoryModalResult | undefined>
-  categories: object
-  subCategories: string[]
-  category: string
-  subCategory: string
-  setNewSubcategory: (input: string, subCategories: string[]) => void
+  bridge: AirshipBridge<string | undefined>
+  initialCategory: string
 }
 
-interface State {
-  categories: CategoriesType
-  category: string
-  subCategory: string
+interface CategoryRow {
+  display: string // As localized for display, like 'Ingreso: Regalo'
+  raw: string // As saved on disk, like 'Income:Regalo'
+  new: boolean // To show the + icon
+  selected: boolean // True if the main category is selected
 }
 
-export class CategoryModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { category, subCategory } = props
-    const categories = this.formattedCategories(props.categories)
-    this.state = { categories, category, subCategory }
-  }
+/**
+ * Allows the user to select a transaction category.
+ * Returns a joined category string, such as "Expense:Food"
+ */
+export function CategoryModal(props: Props) {
+  const { bridge, initialCategory } = props
 
-  formattedCategories = (categories: object): CategoriesType => {
-    return Object.keys(categories).map(key => {
+  // We split the state into category and subcategory internally:
+  const split = splitCategory(initialCategory)
+  const [category, setCategory] = React.useState(split.category)
+  const [subcategory, setSubcategory] = React.useState(split.subcategory)
+
+  const categories = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
+
+  const sortedCategories = React.useMemo(() => {
+    // Transform the raw categories into row objects:
+    const rows = categories.map(raw => {
+      const split = splitCategory(raw)
       return {
-        // @ts-expect-error
-        key: categories[key].key,
-        // @ts-expect-error
-        syntax: categories[key].syntax
+        display: formatCategory(split),
+        raw,
+        new: false,
+        selected: split.category === category
       }
     })
-  }
 
-  onChangeCategory = (category: string) => {
-    this.setState({ category })
-  }
-
-  onChangeSubCategory = (subCategory: string) => {
-    this.setState({ subCategory })
-  }
-
-  onSelectSubCategory = (input: string) => {
-    const { bridge, subCategories, setNewSubcategory } = this.props
-    if (!subCategories.find(item => item === input)) {
-      setNewSubcategory(input, subCategories)
+    // If the user has entered text, append the text to each main category:
+    if (subcategory !== '') {
+      for (const mainCategory of categoryOrder) {
+        const split = { category: mainCategory, subcategory }
+        const raw = joinCategory(split)
+        if (categories.includes(raw)) continue
+        rows.push({
+          display: formatCategory(split),
+          raw,
+          new: true,
+          selected: split.category === category
+        })
+      }
     }
-    const { category, subcategory } = splitCategory(input)
-    bridge.resolve({ category, subCategory: subcategory })
-  }
 
-  render() {
-    const { bridge } = this.props
-    const { categories, category, subCategory } = this.state
-    return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(undefined)}>
-          <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
-            <View style={styles.inputCategoryMainContainter}>
-              <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
-              <View style={styles.inputCategoryRow}>
-                {categories.map(item => {
-                  const containterStyle = category === item.key ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter
-                  return (
-                    <TouchableWithoutFeedback onPress={() => this.onChangeCategory(item.key)} key={item.key}>
-                      <View style={containterStyle}>
-                        <FormattedText style={styles.inputCategoryText}>{item.syntax}</FormattedText>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  )
-                })}
-              </View>
+    // Filter and sort this new list:
+    const target = subcategory.toLocaleLowerCase()
+    return rows
+      .filter(row => row.display.toLocaleLowerCase().includes(target))
+      .sort((a, b) => {
+        if (a.new && !b.new) return 1
+        if (!a.new && b.new) return -1
+        if (a.selected && !b.selected) return -1
+        if (!a.selected && b.selected) return 1
+        return a.display.localeCompare(b.display)
+      })
+  }, [categories, category, subcategory])
+
+  const handleCancel = useHandler(() => {
+    bridge.resolve(undefined)
+  })
+
+  const handleSubmit = useHandler(() => {
+    bridge.resolve(joinCategory({ category, subcategory }))
+  })
+
+  const keyExtractor = useHandler((row: CategoryRow) => row.raw)
+
+  const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
+    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => bridge.resolve(item.raw)}>
+      <View style={styles.rowContent}>
+        <View style={styles.rowCategoryTextWrap}>
+          <FormattedText style={styles.rowCategoryText}>{item.display}</FormattedText>
+        </View>
+        {item.new ? (
+          <View style={styles.rowPlusWrap}>
+            <FormattedText style={styles.rowPlus}>+</FormattedText>
+          </View>
+        ) : null}
+      </View>
+    </TouchableHighlight>
+  ))
+
+  return (
+    <AirshipModal bridge={bridge} onCancel={handleCancel}>
+      <TouchableWithoutFeedback onPress={handleCancel}>
+        <View style={styles.airshipContainer}>
+          <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
+          <View style={styles.inputCategoryMainContainter}>
+            <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
+            <View style={styles.inputCategoryRow}>
+              {categoryOrder.map(item => (
+                <TouchableWithoutFeedback onPress={() => setCategory(item)} key={item}>
+                  <View style={category === item ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter}>
+                    <FormattedText style={styles.inputCategoryText}>{displayCategories[item]}</FormattedText>
+                  </View>
+                </TouchableWithoutFeedback>
+              ))}
             </View>
-            <View style={styles.inputSubCategoryContainter}>
-              <FormField
-                {...MaterialInputOnWhite}
-                containerStyle={{
-                  ...MaterialInputOnWhite.containerStyle,
-                  height: THEME.rem(3.44),
-                  width: '100%'
-                }}
-                autoFocus
-                returnKeyType="done"
-                autoCapitalize="none"
-                label={s.strings.transaction_details_choose_a_sub_category}
-                fontSize={THEME.rem(0.9)}
-                labelFontSize={THEME.rem(0.65)}
-                onChangeText={this.onChangeSubCategory}
-                onSubmitEditing={() => bridge.resolve({ category, subCategory })}
-                value={subCategory}
-              />
-            </View>
-            <SubCategorySelect
-              bottomGap={0}
-              onPressFxn={this.onSelectSubCategory}
-              enteredSubcategory={subCategory}
-              subcategoriesList={this.getSortedSubCategories()}
-              categories={this.getSortedCategories()}
+          </View>
+          <View style={styles.inputSubCategoryContainter}>
+            <FormField
+              {...MaterialInputOnWhite}
+              containerStyle={{
+                ...MaterialInputOnWhite.containerStyle,
+                height: THEME.rem(3.44),
+                width: '100%'
+              }}
+              autoFocus
+              returnKeyType="done"
+              autoCapitalize="none"
+              label={s.strings.transaction_details_choose_a_sub_category}
+              fontSize={THEME.rem(0.9)}
+              labelFontSize={THEME.rem(0.65)}
+              onChangeText={setSubcategory}
+              onSubmitEditing={handleSubmit}
+              value={subcategory}
             />
           </View>
-        </TouchableWithoutFeedback>
-      </AirshipModal>
-    )
-  }
-
-  getSortedCategories = (): string[] => {
-    const { categories, category } = this.state
-    const selectedCategories = categories.filter(item => item.key === category)
-    const filteredCategories = categories.filter(item => item.key !== category)
-    const sortedCategories = [...selectedCategories, ...filteredCategories]
-    return sortedCategories.map(category => category.key)
-  }
-
-  getSortedSubCategories = () => {
-    const { categories, subCategories } = this.props
-    const { category } = this.state
-
-    const selectedSubcategories = subCategories.filter(subCategory => {
-      const splittedSubCategory = subCategory.split(':')
-      // @ts-expect-error
-      return splittedSubCategory[0].toLowerCase() === categories[category].syntax.toLowerCase()
-    })
-    const filteredSubcategories = subCategories.filter(subCategory => {
-      const splittedSubCategory = subCategory.split(':')
-      // @ts-expect-error
-      return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
-    })
-    return [...selectedSubcategories, ...filteredSubcategories]
-  }
+          <FlatList
+            style={styles.resultList}
+            data={sortedCategories}
+            initialNumToRender={12}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={keyExtractor}
+            renderItem={renderRow}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </AirshipModal>
+  )
 }
+
+// This is the order we display the categories in:
+const categoryOrder: Category[] = ['exchange', 'expense', 'transfer', 'income']
 
 const styles = StyleSheet.create({
   airshipContainer: {
@@ -197,5 +201,41 @@ const styles = StyleSheet.create({
   },
   inputSubCategoryContainter: {
     marginTop: THEME.rem(0.8)
+  },
+
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
+  },
+  rowContainer: {
+    flex: 1,
+    height: THEME.rem(3.1),
+    paddingLeft: THEME.rem(0.6),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_4
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingRight: scale(20)
+  },
+  rowCategoryTextWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    marginRight: scale(5)
+  },
+  rowCategoryText: {
+    fontSize: THEME.rem(0.95)
+  },
+  rowPlusWrap: {
+    justifyContent: 'center'
+  },
+  rowPlus: {
+    fontSize: THEME.rem(0.95)
   }
 })

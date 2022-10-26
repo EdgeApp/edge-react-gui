@@ -21,7 +21,7 @@ import { formatCategory, joinCategory, splitCategory } from '../../util/categori
 import { autoCorrectDate, convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
-import { CategoryModal, CategoryModalResult } from '../modals/CategoryModal'
+import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -61,25 +61,6 @@ interface State {
   direction: string
   bizId: number
   category: string
-}
-
-const categories = {
-  exchange: {
-    syntax: s.strings.fragment_transaction_exchange,
-    key: 'exchange'
-  },
-  expense: {
-    syntax: s.strings.fragment_transaction_expense,
-    key: 'expense'
-  },
-  transfer: {
-    syntax: s.strings.fragment_transaction_transfer,
-    key: 'transfer'
-  },
-  income: {
-    syntax: s.strings.fragment_transaction_income,
-    key: 'income'
-  }
 }
 
 interface FiatCryptoAmountUI {
@@ -172,25 +153,12 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   openCategoryInput = () => {
     const { category } = this.state
-    const split = splitCategory(category)
-    Airship.show<CategoryModalResult | undefined>(bridge => (
-      <CategoryModal
-        bridge={bridge}
-        categories={categories}
-        subCategories={this.props.subcategoriesList}
-        category={split.category}
-        subCategory={split.subcategory}
-        setNewSubcategory={this.props.setNewSubcategory}
-      />
-    )).then(result => {
-      if (result == null) return
-
-      this.onSaveTxDetails({
-        category: joinCategory({
-          category: result.category as any,
-          subcategory: result.subCategory
-        })
-      })
+    Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />).then(async category => {
+      if (category == null) return
+      if (!this.props.subcategoriesList.includes(category)) {
+        this.props.setNewSubcategory(category)
+      }
+      this.onSaveTxDetails({ category })
     })
   }
 
