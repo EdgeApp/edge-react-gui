@@ -1,4 +1,4 @@
-export const categories = [
+export const defaultCategories = [
   'Exchange:Buy Bitcoin',
   'Exchange:Sell Bitcoin',
   'Expense:Air Travel',

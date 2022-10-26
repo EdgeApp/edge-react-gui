@@ -6,8 +6,8 @@ import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
 import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
+import { defaultCategories } from '../../../util/categories'
 import { logActivity } from '../../../util/logger'
-import { categories } from './subcategories'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
@@ -261,5 +261,5 @@ export const updateSettings = (currentSettings: any, newSettings: object) => {
 }
 
 export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  categories: categories
+  categories: defaultCategories
 }
