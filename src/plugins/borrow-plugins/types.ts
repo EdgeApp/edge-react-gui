@@ -38,7 +38,7 @@ export type DepositRequest = {
 // Withdraw collateral:
 export type WithdrawRequest = {
   tokenId?: string
-  nativeAmount?: string
+  nativeAmount: string
 
   // Optional destination for the funds
   toWallet?: EdgeCurrencyWallet

@@ -1,4 +1,4 @@
-import { gt } from 'biggystring'
+import { add, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
@@ -6,15 +6,16 @@ import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
-import { asTxInfo, CallInfo, makeApprovableCall, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
+import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
 import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowRequest, DepositRequest, RepayRequest, WithdrawRequest } from '../../types'
 import { AaveNetwork } from './AaveNetwork'
 export { ContractMethod, SwapSide } from 'paraswap-core'
 
+const BALANCE_RESYNC_INTERVAL = 10 * 60 * 1000
+const LTV_RESYNC_INTERVAL = 60 * 1000
 const PARASWAP_SLIPPAGE_PERCENT = 1
-export const MAX_AMOUNT = ethers.constants.MaxUint256
 
 export type BorrowEngineBlueprint = {
   aaveNetwork: AaveNetwork
@@ -48,6 +49,26 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         }
       }
     }
+    const adjustCollateral = (tokenId: string | undefined, amount: string) => {
+      if (instance.collaterals.length === 0) throw new Error(`Invalid execution time; too early invocation`)
+      const index = instance.collaterals.findIndex(collateral => collateral.tokenId === tokenId)
+      if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
+      // Update entry
+      const collateral = instance.collaterals[index]
+      collateral.nativeAmount = add(collateral.nativeAmount, amount)
+      // Update entries field to trigger change event
+      instance.collaterals = [...instance.collaterals]
+    }
+    const adjustDebt = (tokenId: string | undefined, amount: string) => {
+      if (instance.debts.length === 0) throw new Error(`Invalid execution time; too early invocation`)
+      const index = instance.debts.findIndex(debt => debt.tokenId === tokenId)
+      if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
+      // Update entry
+      const debt = instance.debts[index]
+      debt.nativeAmount = add(debt.nativeAmount, amount)
+      // Update entries field to trigger change event
+      instance.debts = [...instance.debts]
+    }
     const getToken = (tokenId?: string): EdgeToken => {
       if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
       const token = wallet.currencyConfig.allTokens[tokenId]
@@ -58,6 +79,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       const tokenAddress = asMaybe(asTokenContractAddress)(token)
       if (tokenAddress == null) throw new Error(`Unable to find contract address for ${token.displayName} (${token.currencyCode})`)
       return tokenAddress
+    }
+    const updateLtv = async () => {
+      const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
+      const { totalCollateralETH, totalDebtETH } = userData
+      const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+      instance.loanToValue = loanToValue
     }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)
@@ -88,42 +115,52 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
     // Network Synchronization
     //
 
+    const RESYNC_TIMES = {
+      LTV: 0,
+      BALANCE: 0
+    }
     const startNetworkSyncLoop = async (): Promise<void> => {
       if (!instance.isRunning) return
 
+      const now = Date.now()
+
       try {
-        // Collaterals and Debts:
-        const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
-        const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
-          return {
-            tokenId: addressToTokenId(address),
-            nativeAmount: aBalance.toString()
-          }
-        })
-        const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
-          return {
-            tokenId: addressToTokenId(address),
-            nativeAmount: vBalance.toString(),
-            apr: variableApr
-          }
-        })
+        if (now >= RESYNC_TIMES.LTV) {
+          // Loan to value:
+          await updateLtv()
+          RESYNC_TIMES.LTV = now + LTV_RESYNC_INTERVAL
+        }
 
-        // Loan to value:
-        const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
-        const { totalCollateralETH, totalDebtETH } = userData
-        const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
+        if (now >= RESYNC_TIMES.BALANCE) {
+          // Collaterals and Debts:
+          const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+          const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: aBalance.toString()
+            }
+          })
+          const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
+            return {
+              tokenId: addressToTokenId(address),
+              nativeAmount: vBalance.toString(),
+              apr: variableApr
+            }
+          })
+          instance.collaterals = collaterals
+          instance.debts = debts
+          instance.syncRatio = 1
 
-        instance.collaterals = collaterals
-        instance.debts = debts
-        instance.loanToValue = loanToValue
-        instance.syncRatio = 1
+          RESYNC_TIMES.BALANCE = now + BALANCE_RESYNC_INTERVAL
+        }
       } catch (error: any) {
         // TODO: Handle error cases such as rate limits
         console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
         console.error(error)
       } finally {
-        // Re-sync after delay
-        await snooze(15000)
+        // Loop delay
+        await snooze(1000)
+        // Restart loop
         await startNetworkSyncLoop()
       }
     }
@@ -211,11 +248,22 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const actions = await makeTxCalls(txCallInfos)
 
-        return composeApprovableActions(...actions)
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustCollateral(tokenId, nativeAmount)
+        })
+
+        return composeApprovableActions(...actions, mutateStateAction)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { nativeAmount, tokenId, toWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+        const { tokenId, toWallet = wallet } = request
+
+        const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
+        if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
+
+        // Let the debt total be the upper boundary for nativeAmount
+        const nativeAmount = min(request.nativeAmount, collateral.nativeAmount)
+
+        if (nativeAmount === '0') throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
 
         validateWalletParam(toWallet)
 
@@ -230,7 +278,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
 
         const withdrawTx = asGracefulTxInfo(await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, amount, to, { gasLimit: '800000', gasPrice }))
 
-        return await makeApprovableCall({
+        const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
           metadata: {
@@ -239,6 +287,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             notes: `Withdraw ${token.currencyCode} collateral`
           }
         })
+
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustCollateral(tokenId, mul('-1', nativeAmount))
+        })
+
+        return composeApprovableActions(withdrawAction, mutateStateAction)
       },
       async borrow(request: BorrowRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
@@ -260,7 +314,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           })
         )
 
-        return await makeApprovableCall({
+        const borrowAction = await makeApprovableCall({
           tx: borrowTx,
           wallet,
           metadata: {
@@ -269,10 +323,24 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             notes: `Borrow ${token.displayName} loan`
           }
         })
+
+        const mutateStateAction = makeSideEffectApprovableAction(async () => {
+          adjustDebt(tokenId, nativeAmount)
+        })
+
+        return composeApprovableActions(borrowAction, mutateStateAction)
       },
       async repay(request: RepayRequest): Promise<ApprovableAction> {
-        const { nativeAmount, fromTokenId, tokenId, fromWallet = wallet } = request
-        if (zeroString(nativeAmount)) throw new Error('BorrowEngine: repay request contains no nativeAmount.')
+        const { fromTokenId, tokenId, fromWallet = wallet } = request
+
+        const debt = instance.debts.find(debt => debt.tokenId === tokenId)
+        if (debt == null) throw new Error(`No debt to repay for ${tokenId}`)
+
+        // Let the debt total be the upper boundary for nativeAmount
+        const nativeAmount = min(request.nativeAmount, debt.nativeAmount)
+
+        // nativeAmount can't be zero
+        if (nativeAmount === '0') throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
         const fromAddress = (await fromWallet.getReceiveAddress()).publicAddress
 
@@ -289,17 +357,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             }
           })
         }
-        const debt = instance.debts.find(debt => debt.tokenId === tokenId)
-        if (debt == null) throw new Error(`No debts to repay for ${tokenId}`)
 
-        const amount = BigNumber.from(nativeAmount)
-        const amountToCover =
-          amount.eq(MAX_AMOUNT) || gt(debt.nativeAmount, nativeAmount)
-            ? BigNumber.from(instance.debts.find(debt => debt.tokenId === tokenId)?.nativeAmount ?? 0)
-            : amount
-
+        const amountToCover = BigNumber.from(nativeAmount)
         const gasPrice: BigNumberish = await aaveNetwork.provider.getGasPrice()
         const txCallInfos: CallInfo[] = []
+
+        const actions: ApprovableAction[] = []
 
         // Repay with collateral
         if (fromTokenId != null) {
@@ -382,8 +445,13 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             }
           })
 
-          const actions = await makeTxCalls(txCallInfos)
-          return composeApprovableActions(...actions)
+          actions.push(...(await makeTxCalls(txCallInfos)))
+
+          const mutateStateAction = makeSideEffectApprovableAction(async () => {
+            adjustCollateral(fromTokenId, mul('-1', priceRoute.srcAmount))
+            adjustDebt(tokenId, mul('-1', nativeAmount))
+          })
+          actions.push(mutateStateAction)
         } else {
           // Repay with wallet funds
           const tokenContract = await aaveNetwork.makeTokenContract(debtTokenAddress)
@@ -403,7 +471,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           }
 
           const repayTx = asGracefulTxInfo(
-            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amount, INTEREST_RATE_MODE, fromAddress, {
+            await aaveNetwork.lendingPool.populateTransaction.repay(debtTokenAddress, amountToCover, INTEREST_RATE_MODE, fromAddress, {
               gasLimit: '800000',
               gasPrice
             })
@@ -419,8 +487,15 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               notes: `Repay ${debtToken.displayName} loan`
             }
           })
+
+          actions.push(...(await makeTxCalls(txCallInfos)))
+
+          const mutateStateAction = makeSideEffectApprovableAction(async () => {
+            adjustDebt(tokenId, mul('-1', nativeAmount))
+          })
+          actions.push(mutateStateAction)
         }
-        const actions = await makeTxCalls(txCallInfos)
+
         return composeApprovableActions(...actions)
       }
     })
