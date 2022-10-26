@@ -24,7 +24,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
-import { ScamWarningCard } from '../cards/ScamWarningCard'
+import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../modals/FlipInputModal'
@@ -386,8 +386,13 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderScamWarning() {
     const { recipientAddress } = this.state
+    const points = [
+      s.strings.warning_scam_message_financial_advice,
+      s.strings.warning_scam_message_irreversibility,
+      s.strings.warning_scam_message_unknown_recipients
+    ]
     if (recipientAddress === '') {
-      return <ScamWarningCard marginRem={[1.5, 1]} />
+      return <WarningCard title={s.strings.warning_scam_title} points={points} footer={s.strings.warning_scam_footer} marginRem={[1.5, 1]} />
     }
     return null
   }
