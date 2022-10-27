@@ -3,7 +3,7 @@ import { Reducer } from 'redux'
 import { Action } from '../types/reduxTypes'
 import { GuiCurrencyInfo } from '../types/types'
 
-export type CryptoExchangeState = {
+export interface CryptoExchangeState {
   fromWalletId: string | null
   fromCurrencyCode: string | null
   fromNativeAmount: string

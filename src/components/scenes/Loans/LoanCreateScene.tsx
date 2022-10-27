@@ -38,7 +38,7 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
 
-type Props = {
+interface Props {
   route: RouteProp<'loanCreate'>
   navigation: NavigationProp<'loanCreate'>
 }

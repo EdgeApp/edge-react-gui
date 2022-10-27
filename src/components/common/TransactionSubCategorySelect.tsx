@@ -6,12 +6,12 @@ import { THEME } from '../../theme/variables/airbitz'
 import { SubcategorySearchResultData } from '../../types/types'
 import { scale } from '../../util/scaling'
 
-type State = {
+interface State {
   subcategories: string[]
   filteredSubcategories: string[]
   enteredSubcategory: string
 }
-type Props = {
+interface Props {
   bottomGap: number
   subcategoriesList: string[]
   enteredSubcategory: string

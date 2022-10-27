@@ -116,7 +116,7 @@ const asBanxaPaymentMethods = asObject({
   })
 })
 
-type BanxaPaymentMap = {
+interface BanxaPaymentMap {
   [fiatCode: string]: {
     [cryptoCode: string]: {
       [paymentType: string]: {

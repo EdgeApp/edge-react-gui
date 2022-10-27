@@ -28,7 +28,7 @@ export function getStakeProviderIcon(pluginId: string, providerId: string, theme
 /**
  * Currency Icons
  */
-export type CurrencyIcons = {
+export interface CurrencyIcons {
   symbolImage: string
   symbolImageDarkMono: string
 }

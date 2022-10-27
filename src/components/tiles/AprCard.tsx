@@ -8,7 +8,7 @@ import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   apr?: number
 }
 

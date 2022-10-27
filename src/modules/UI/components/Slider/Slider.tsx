@@ -11,7 +11,7 @@ import s from '../../../../locales/strings'
 
 const COMPLETE_POINT: number = 3
 
-type OwnProps = {
+interface OwnProps {
   onSlidingComplete: (reset: () => void) => unknown
   parentStyle?: any
   showSpinner?: boolean

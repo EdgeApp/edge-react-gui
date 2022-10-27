@@ -21,12 +21,12 @@ const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
 const SHOW_FLIP_INPUT_TESTER = false
 
-type Section = {
+interface Section {
   title: string
   data: TransactionListTx[]
 }
 
-type StateProps = {
+interface StateProps {
   numTransactions: number
   wallet: EdgeCurrencyWallet
   currencyCode: string
@@ -34,18 +34,18 @@ type StateProps = {
   transactions: TransactionListTx[]
 }
 
-type DispatchProps = {
+interface DispatchProps {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'transactionList'>
   route: RouteProp<'transactionList'>
 }
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-type State = {
+interface State {
   isTransactionListUnsupported: boolean
   reset: boolean
   searching: boolean

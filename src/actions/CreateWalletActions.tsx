@@ -19,7 +19,7 @@ import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
 
-export type CreateWalletOptions = {
+export interface CreateWalletOptions {
   walletName?: string
   walletType: string
   fiatCurrencyCode?: string

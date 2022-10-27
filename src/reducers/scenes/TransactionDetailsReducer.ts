@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../../types/reduxTypes'
 
-export type TransactionDetailsState = {
+export interface TransactionDetailsState {
   subcategories: string[]
 }
 

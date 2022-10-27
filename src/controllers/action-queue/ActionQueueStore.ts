@@ -18,7 +18,7 @@ export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 export const asStoreItem = asEither(asActionProgram, asActionProgramState)
 export type StoreItem = ReturnType<typeof asStoreItem>
 
-export type ActionQueueStore = {
+export interface ActionQueueStore {
   createActionQueueItem: (program: ActionProgram) => Promise<ActionProgramState>
   getActionQueueItem: (programId: string) => Promise<ActionQueueItem>
   updateActionQueueItem: (programState: ActionProgramState) => Promise<void>

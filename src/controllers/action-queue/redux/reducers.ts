@@ -4,7 +4,7 @@ import { Action } from '../../../types/reduxTypes'
 import { ActionQueueMap } from '../types'
 import { checkEffectIsDone } from '../util/checkEffectIsDone'
 
-export type ActionQueueState = {
+export interface ActionQueueState {
   readonly actionQueueMap: ActionQueueMap
   readonly activeProgramIds: string[]
 }

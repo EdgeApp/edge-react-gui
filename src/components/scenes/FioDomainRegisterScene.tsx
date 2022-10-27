@@ -19,7 +19,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
-type LocalState = {
+interface LocalState {
   selectedWallet: EdgeCurrencyWallet | null
   fioDomain: string
   isValid: boolean
@@ -30,16 +30,16 @@ type LocalState = {
   errorMessage: string
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioDomainRegister'>
 }
-type StateProps = {
+interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
   fioPlugin: EdgeCurrencyConfig
   isConnected: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 

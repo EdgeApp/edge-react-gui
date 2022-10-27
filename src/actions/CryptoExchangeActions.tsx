@@ -32,7 +32,7 @@ import { logEvent } from '../util/tracking'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
-export type SetNativeAmountInfo = {
+export interface SetNativeAmountInfo {
   whichWallet: 'from' | 'to'
   primaryNativeAmount: string
 }

@@ -8,13 +8,13 @@ export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iac
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
 
-export type FiatPluginGetMethodsResponse = {
+export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
   setPoweredBy: (params: EnterAmountPoweredBy) => void
   setValue1: (value: string) => void
   setValue2: (value: string) => void
 }
-export type FiatPluginEnterAmountParams = {
+export interface FiatPluginEnterAmountParams {
   headerTitle: string
   label1: string
   label2: string
@@ -25,16 +25,22 @@ export type FiatPluginEnterAmountParams = {
 }
 
 // export type FiatPluginListModalRow = { icon: string | number, name: string }
-export type FiatPluginListModalParams = {
+export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
   selected?: string // Must match one of the name param in the items array
 }
 
-export type FiatPluginEnterAmountResponse = { lastUsed: number; value1: string; value2: string }
-export type FiatPluginOpenWebViewParams = { url: string }
+export interface FiatPluginEnterAmountResponse {
+  lastUsed: number
+  value1: string
+  value2: string
+}
+export interface FiatPluginOpenWebViewParams {
+  url: string
+}
 
-export type FiatPluginUi = {
+export interface FiatPluginUi {
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<{
@@ -48,7 +54,7 @@ export type FiatPluginUi = {
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
-export type FiatPluginFactoryArgs = {
+export interface FiatPluginFactoryArgs {
   // TODO:
   // io: {
   //   log: EdgeLog, // scoped logs
@@ -57,15 +63,15 @@ export type FiatPluginFactoryArgs = {
   account: EdgeAccount
 }
 
-export type FiatPluginRegionCode = {
+export interface FiatPluginRegionCode {
   countryCode: string
   stateCode?: string
 }
-export type FiatPluginStartParams = {
+export interface FiatPluginStartParams {
   paymentTypes: FiatPaymentTypes
   regionCode: FiatPluginRegionCode
 }
-export type FiatPlugin = {
+export interface FiatPlugin {
   pluginId: string
   startPlugin: (params: FiatPluginStartParams) => Promise<void>
 }

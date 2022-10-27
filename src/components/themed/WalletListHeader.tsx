@@ -11,7 +11,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 
-type OwnProps = {
+interface OwnProps {
   sorting: boolean
   searching: boolean
   searchText: string

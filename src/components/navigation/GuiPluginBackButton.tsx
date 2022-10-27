@@ -4,7 +4,9 @@ import { Actions } from '../../types/routerTypes'
 import { BackButton } from './BackButton'
 
 // The scene holds a ref to the webview:
-type PluginScene = { goBack: () => boolean }
+interface PluginScene {
+  goBack: () => boolean
+}
 let currentPlugin: PluginScene | undefined
 
 export function setPluginScene(plugin: PluginScene | undefined) {

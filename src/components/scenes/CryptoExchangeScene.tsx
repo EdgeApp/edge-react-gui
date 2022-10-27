@@ -30,7 +30,7 @@ import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
 
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -66,7 +66,7 @@ type StateProps = {
   insufficient: boolean
   genericError: string | null
 }
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
   getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
   exchangeMax: () => Promise<void>
@@ -95,7 +95,7 @@ type ExchangeInfo = ReturnType<typeof asExchangeInfo>
 
 type Props = StateProps & DispatchProps & ThemeProps
 
-type State = {
+interface State {
   whichWalletFocus: 'from' | 'to' // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string
   forceUpdateGuiCounter: number

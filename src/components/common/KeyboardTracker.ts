@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Animated, Keyboard, KeyboardEvent, Platform } from 'react-native'
 
-type Props = {
+interface Props {
   children: (animation: Animated.Value, layout: number) => React.ReactNode
   downValue?: number
   upValue?: number | ((keyboardHeight: number) => number)

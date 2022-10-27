@@ -6,7 +6,7 @@ import { connect } from '../../types/reactRedux'
 import { GuiWallet, WalletListItem } from '../../types/types'
 import { showError } from './AirshipInstance'
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
   guiWallets: { [walletId: string]: GuiWallet }
@@ -17,7 +17,7 @@ type Props = StateProps
 /**
  * Tracks the state of a booting wallet.
  */
-type WalletBoot = {
+interface WalletBoot {
   close: () => void
   complete: boolean
   walletId: string

@@ -7,7 +7,7 @@ import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors
 import { Action } from '../../types/reduxTypes'
 import { GuiMakeSpendInfo } from '../../types/types'
 
-export type SendConfirmationState = {
+export interface SendConfirmationState {
   forceUpdateGuiCounter: number
   transactionMetadata: EdgeMetadata | null
   address: string

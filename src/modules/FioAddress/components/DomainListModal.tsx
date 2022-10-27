@@ -16,25 +16,25 @@ import { connect } from '../../../types/reactRedux'
 import { Actions } from '../../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../../types/types'
 
-type Item = {
+interface Item {
   label: string
   value: FioDomain
   isFree?: boolean
   createNew?: boolean
 }
 
-type StateProps = {
+interface StateProps {
   userDomains: FioDomain[]
   fioWallets: EdgeCurrencyWallet[]
   fioPlugin?: EdgeCurrencyConfig
 }
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<FioDomain | undefined>
   publicDomains: FioDomain[]
 }
 
-type State = {
+interface State {
   input: string
   domains: Item[]
   prevDomainsJson: string

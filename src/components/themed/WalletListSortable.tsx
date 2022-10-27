@@ -9,7 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { showError } from '../services/AirshipInstance'
 import { WalletListSortableRow } from './WalletListSortableRow'
 
-type Props = {}
+interface Props {}
 
 /**
  * A wallet list that can be dragged to sort the items inside.

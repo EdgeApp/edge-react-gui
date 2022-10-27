@@ -9,7 +9,7 @@ type BackgroundOptions =
   | 'body' // White content
   | 'tray' // Off-white tray area
 
-type Props = {
+interface Props {
   children: React.ReactNode
   background?: BackgroundOptions
 

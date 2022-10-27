@@ -36,7 +36,7 @@ import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   route: RouteProp<'loanDetails'>
   navigation: NavigationProp<'loanDetails'>
 }

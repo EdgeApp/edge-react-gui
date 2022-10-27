@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   showRate?: boolean
   token?: EdgeToken
   tokenId?: string

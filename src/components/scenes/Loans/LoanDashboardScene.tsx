@@ -28,7 +28,7 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanDashboard'>
 }
 

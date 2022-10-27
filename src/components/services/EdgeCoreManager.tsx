@@ -16,7 +16,7 @@ import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
 import { Services } from './Services'
 
-type Props = {}
+interface Props {}
 
 const contextOptions: EdgeContextOptions = {
   apiKey: ENV.AIRBITZ_API_KEY,

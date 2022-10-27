@@ -15,7 +15,7 @@ export type TweakSource =
 /**
  * A message, along with an ID that we can use to cancel it.
  */
-export type MessageSummary = {
+export interface MessageSummary {
   message: MessageTweak
   messageId: string
   messageSource: TweakSource
@@ -24,7 +24,7 @@ export type MessageSummary = {
 /**
  * Combined effects of serveral plugin tweaks.
  */
-export type PluginSummary = {
+export interface PluginSummary {
   preferredFiatPluginId: string | undefined
   preferredSwapPluginId: string | undefined
   disabled: { [pluginId: string]: true }

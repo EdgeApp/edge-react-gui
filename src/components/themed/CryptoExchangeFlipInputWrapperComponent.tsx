@@ -16,7 +16,7 @@ import { ExchangedFlipInput, ExchangedFlipInputAmounts } from './ExchangedFlipIn
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
 
-type OwnProps = {
+interface OwnProps {
   walletId: string
   buttonText: string
   headerText: string
@@ -37,12 +37,12 @@ type OwnProps = {
   children?: React.ReactNode
 }
 
-type StateProps = {
+interface StateProps {
   name?: string
   cryptoAmount?: string
 }
 
-type State = {
+interface State {
   errorMessage?: string
 }
 

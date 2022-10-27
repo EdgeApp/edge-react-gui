@@ -15,16 +15,16 @@ import { EdgeText } from '../themed/EdgeText'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-type StateProps = {
+interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioAddressDetails'>
   route: RouteProp<'fioAddressDetails'>
 }
 
-type LocalState = {
+interface LocalState {
   fioWalletLoading: boolean
   fioWallet: EdgeCurrencyWallet | null
 }

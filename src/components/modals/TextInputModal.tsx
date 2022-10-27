@@ -10,7 +10,7 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type Props = {
+interface Props {
   // Resolves to the entered string, or void if cancelled.
   bridge: AirshipBridge<string | undefined>
 

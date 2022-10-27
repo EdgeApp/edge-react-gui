@@ -14,15 +14,15 @@ import { checkLoanHasFunds } from '../util/checkLoanHasFunds'
 import { waitForBorrowEngineSync } from '../util/waitForLoanAccountSync'
 import { selectLoanAccount } from './selectors'
 
-type SetLoanAccountAction = {
+interface SetLoanAccountAction {
   type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT'
   loanAccount: LoanAccount
 }
-type DeleteLoanAccountAction = {
+interface DeleteLoanAccountAction {
   type: 'LOAN_MANAGER/DELETE_LOAN_ACCOUNT'
   id: string
 }
-type UpdateSyncRatio = {
+interface UpdateSyncRatio {
   type: 'LOAN_MANAGER/SET_SYNC_RATIO'
   syncRatio: number
 }

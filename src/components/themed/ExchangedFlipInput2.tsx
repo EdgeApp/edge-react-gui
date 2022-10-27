@@ -22,7 +22,7 @@ export interface ExchangedFlipInputRef {
   setAmount: (field: ExchangeFlipInputFields, value: string) => void
 }
 
-export type ExchangedFlipInputAmounts = {
+export interface ExchangedFlipInputAmounts {
   exchangeAmount: string
   nativeAmount: string
   fiatAmount: string

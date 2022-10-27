@@ -5,7 +5,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
 
-type Props = {
+interface Props {
   onPress: () => void
   title: string | React.ReactNode
   iconColor?: string

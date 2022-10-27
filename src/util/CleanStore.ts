@@ -4,12 +4,12 @@ import { EdgeAccount } from 'edge-core-js'
 
 import ENV from '../../env.json'
 
-type CleanStoreRecord<T> = {
+interface CleanStoreRecord<T> {
   update: (data: T) => Promise<void>
   data: T
 }
 
-type CleanStore = {
+interface CleanStore {
   initRecord: <T>(key: string, cleaner: Cleaner<T>) => Promise<CleanStoreRecord<T>>
   getRecord: <T>(key: string, cleaner: Cleaner<T>) => Promise<CleanStoreRecord<T> | undefined>
   setRecord: <T>(key: string, data: T, cleaner: Cleaner<T>) => Promise<void>

@@ -26,14 +26,14 @@ import { LoadingScene } from './LoadingScene'
 // @ts-expect-error
 global.ReactNativeBlurView = BlurView
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
   disklet: Disklet
   pendingDeepLink: DeepLink | null
   username: string
 }
-type DispatchProps = {
+interface DispatchProps {
   deepLinkHandled: () => void
   handleSendLogs: () => void
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void
@@ -41,7 +41,7 @@ type DispatchProps = {
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
-type State = {
+interface State {
   counter: number
   passwordRecoveryKey?: string
   backgroundImage: ImageSourcePropType | null

@@ -26,7 +26,7 @@ const XRP_DESTINATION_TAG_ERRORS = {
   UNIQUE_IDENTIFIER_FORMAT: s.strings.send_make_spend_xrp_dest_tag_format_error
 }
 
-export type FioSenderInfo = {
+export interface FioSenderInfo {
   fioAddress: string
   fioWallet: EdgeCurrencyWallet | null
   fioError: string

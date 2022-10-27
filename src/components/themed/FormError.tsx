@@ -5,7 +5,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type OwnProps = {
+interface OwnProps {
   isVisible: boolean
   children: React.ReactNode
   style?: ViewStyle

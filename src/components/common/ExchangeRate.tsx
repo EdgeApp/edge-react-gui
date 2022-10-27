@@ -12,11 +12,11 @@ import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 
-type StateProps = {
+interface StateProps {
   wallet: EdgeCurrencyWallet
 }
 
-type OwnProps = {
+interface OwnProps {
   primaryInfo: GuiCurrencyInfo
   primaryDisplayAmount?: string // defaults to '1'
   secondaryInfo: GuiCurrencyInfo

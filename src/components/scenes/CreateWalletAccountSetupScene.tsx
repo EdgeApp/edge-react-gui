@@ -24,23 +24,23 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField'
 
 const deviceWidth = PLATFORM.deviceWidth
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'createWalletAccountSetup'>
   route: RouteProp<'createWalletAccountSetup'>
 }
 
-type StateProps = {
+interface StateProps {
   handleAvailableStatus: HandleAvailableStatus
   isCheckingHandleAvailability: boolean
   currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
-type DispatchProps = {
+interface DispatchProps {
   checkHandleAvailability: (handle: string) => void
 }
 
 type Props = OwnProps & DispatchProps & StateProps
-type State = {
+interface State {
   accountHandle: string
 }
 

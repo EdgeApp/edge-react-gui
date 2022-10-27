@@ -7,7 +7,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   rightSide?: React.ReactNode
   walletName: string
 

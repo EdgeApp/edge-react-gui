@@ -4,7 +4,7 @@ export const initialState = {
   isConnected: true
 }
 
-export type NetworkState = {
+export interface NetworkState {
   isConnected: boolean
 }
 

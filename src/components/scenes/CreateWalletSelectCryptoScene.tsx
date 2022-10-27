@@ -21,7 +21,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'createWalletSelectCrypto'>
 }
 

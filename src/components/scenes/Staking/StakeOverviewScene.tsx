@@ -20,7 +20,7 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'stakeModify'>
   route: RouteProp<'stakeOverview'>
 }

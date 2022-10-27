@@ -39,10 +39,10 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'transactionDetails'>
 }
-type StateProps = {
+interface StateProps {
   contacts: GuiContact[]
   currencyCode: string
   currencyInfo?: EdgeCurrencyInfo
@@ -53,14 +53,14 @@ type StateProps = {
   subcategoriesList: string[]
   walletDefaultDenomProps: EdgeDenomination
 }
-type DispatchProps = {
+interface DispatchProps {
   getSubcategories: () => void
   setNewSubcategory: (newSubcategory: string) => void
   setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type State = {
+interface State {
   contactName: string // remove commenting once metaData in Redux
   thumbnailPath?: string
   notes: string
@@ -90,14 +90,14 @@ const categories = {
   }
 }
 
-type FiatCryptoAmountUI = {
+interface FiatCryptoAmountUI {
   amountString: string
   symbolString: string
   currencyName: string
   feeString: string
 }
 
-type FiatCurrentAmountUI = {
+interface FiatCurrentAmountUI {
   amount: string
   difference: string
   percentage: string

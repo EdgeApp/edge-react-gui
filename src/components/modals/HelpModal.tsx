@@ -33,7 +33,7 @@ export function showWebViewModal(uri: string, title: string): void {
   Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
 }
 

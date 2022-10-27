@@ -30,7 +30,9 @@ import { SortedWalletList } from './SortedWalletList'
 import { useTheme } from './ThemeContext'
 import { WalletLifecycle } from './WalletLifecycle'
 
-type Props = { context: EdgeContext }
+interface Props {
+  context: EdgeContext
+}
 
 /**
  * Provides various global services to the application,

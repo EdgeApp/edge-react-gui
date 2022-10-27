@@ -25,17 +25,17 @@ export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) 
   }
 }
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<void>
   tx: EdgeTransaction
   walletId?: string
 }
 
-type StateProps = {
+interface StateProps {
   message: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   selectWallet: (walletId: string, currencyCode: string) => void
 }
 

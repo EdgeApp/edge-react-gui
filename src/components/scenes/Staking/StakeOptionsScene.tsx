@@ -16,7 +16,7 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   route: RouteProp<'stakeOptions'>
   navigation: NavigationProp<'stakeOptions'>
 }

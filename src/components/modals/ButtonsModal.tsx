@@ -8,7 +8,7 @@ import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-export type ButtonInfo = {
+export interface ButtonInfo {
   label: string
   type?: 'primary' | 'secondary' | 'escape'
 

@@ -19,18 +19,18 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'defaultFiatSetting'>
 }
-type StateProps = {
+interface StateProps {
   supportedFiats: GuiFiatType[]
 }
-type DispatchProps = {
+interface DispatchProps {
   onSelectFiat: (selectedDefaultFiat: string) => void
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-type State = {
+interface State {
   supportedFiats: GuiFiatType[]
   selectedFiat: string
   searchTerm: string

@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated'
 
 import { useFadeAnimation } from '../../hooks/animations/useFadeAnimation'
 
-type Props = {
+interface Props {
   children: React.ReactNode
 
   // True to make the contents visible:

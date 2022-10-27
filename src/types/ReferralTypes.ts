@@ -3,7 +3,7 @@ import { MessageTweak, PluginTweak } from './TweakTypes'
 /**
  * Why was this app installed on the phone?
  */
-export type DeviceReferral = {
+export interface DeviceReferral {
   installerId?: string
   currencyCodes?: string[]
   messages: MessageTweak[]
@@ -11,7 +11,7 @@ export type DeviceReferral = {
 }
 
 // A promotion that can be activated by tapping a link.
-export type Promotion = {
+export interface Promotion {
   installerId: string
   hiddenMessages: { [messageId: string]: boolean }
   messages: MessageTweak[]
@@ -22,7 +22,7 @@ export type Promotion = {
  * Why was this account created?
  * Stored in the account.
  */
-export type AccountReferral = {
+export interface AccountReferral {
   creationDate?: Date
   installerId?: string
   currencyCodes?: string[]
@@ -38,7 +38,7 @@ export type AccountReferral = {
 /**
  * Refreshable referral information, stored locally on the phone.
  */
-export type ReferralCache = {
+export interface ReferralCache {
   accountMessages: MessageTweak[]
   accountPlugins: PluginTweak[]
 }

@@ -3,7 +3,7 @@
  * These are the supported payment options to the BitPay v2 protocol.
  */
 
-export type BpOption = {
+export interface BpOption {
   chain: string
   currency: string
   network: string
@@ -14,7 +14,7 @@ export type BpOption = {
   selected: boolean
 }
 
-export type BpOptionsResponse = {
+export interface BpOptionsResponse {
   time: Date
   expires: Date
   memo: string
@@ -29,13 +29,13 @@ export type BpOptionsResponse = {
  * fee requirements, etc.
  */
 
-export type BpInstructionOutput = {
+export interface BpInstructionOutput {
   amount: number
   address: string
   invoiceID?: string
 }
 
-export type BpInvoiceInstruction = {
+export interface BpInvoiceInstruction {
   type: string
   requiredFeeRate?: number
   outputs?: BpInstructionOutput[]
@@ -45,7 +45,7 @@ export type BpInvoiceInstruction = {
   gasPrice?: number
 }
 
-export type BpInvoiceResponse = {
+export interface BpInvoiceResponse {
   time: Date
   expires: Date
   memo: string
@@ -63,17 +63,17 @@ export type BpInvoiceResponse = {
  * will be accepted by them.
  */
 
-export type BpTransaction = {
+export interface BpTransaction {
   tx: string
 }
 
-export type BpVerificationPayment = {
+export interface BpVerificationPayment {
   currency: string
   chain: string
   transactions: BpTransaction[]
 }
 
-export type BpVerificationResponse = {
+export interface BpVerificationResponse {
   payment: BpVerificationPayment
   memo: string
 }

@@ -6,7 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Card } from './Card'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   disabled?: boolean
   onPress?: () => void

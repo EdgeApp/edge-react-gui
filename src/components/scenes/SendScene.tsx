@@ -43,7 +43,7 @@ import { Tile } from '../tiles/Tile'
 
 const PIN_MAX_LENGTH = 4
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   authRequired: 'pin' | 'none'
   defaultSelectedWalletId: string
@@ -61,7 +61,7 @@ type StateProps = {
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
 }
 
-type DispatchProps = {
+interface DispatchProps {
   reset: () => void
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void
   signBroadcastAndSave: (
@@ -76,13 +76,13 @@ type DispatchProps = {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'send'>
   route: RouteProp<'send'>
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type WalletStates = {
+interface WalletStates {
   selectedWalletId: string
   selectedCurrencyCode: string
   wallet: EdgeCurrencyWallet

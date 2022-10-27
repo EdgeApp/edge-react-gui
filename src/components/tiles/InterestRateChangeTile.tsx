@@ -9,7 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { mulToPrecision } from '../../util/utils'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
-type Props = {
+interface Props {
   borrowEngine: BorrowEngine
   newDebt: BorrowDebt
 }

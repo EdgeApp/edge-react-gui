@@ -7,7 +7,7 @@ import { showHelpModal } from '../modals/HelpModal'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   type: 'exit' | 'help'
   placement: 'left' | 'right'
 }

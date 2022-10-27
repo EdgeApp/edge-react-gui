@@ -37,10 +37,10 @@ import { SettingsLabelRow } from '../themed/SettingsLabelRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'settingsOverview'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
   autoLogoutTimeInSeconds: number
@@ -51,7 +51,7 @@ type StateProps = {
   supportsTouchId: boolean
   touchIdEnabled: boolean
 }
-type DispatchProps = {
+interface DispatchProps {
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => Promise<void>
   handleSendLogs: () => void
   lockSettings: () => void
@@ -64,7 +64,7 @@ type DispatchProps = {
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-type State = {
+interface State {
   touchIdText: string
   darkTheme: boolean
   defaultLogLevel: EdgeLogType | 'silent'

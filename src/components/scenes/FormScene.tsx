@@ -7,7 +7,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type OwnProps = {
+interface OwnProps {
   headerText: string
   children?: React.ReactNode
   onSliderComplete: (reset: () => void) => Promise<void>

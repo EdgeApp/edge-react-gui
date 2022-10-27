@@ -34,7 +34,7 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
 import { FormScene } from '../FormScene'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanCreateConfirmation'>
   route: RouteProp<'loanCreateConfirmation'>
 }

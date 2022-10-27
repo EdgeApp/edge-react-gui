@@ -25,7 +25,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'wcConnect'>
   route: RouteProp<'wcConnect'>
 }

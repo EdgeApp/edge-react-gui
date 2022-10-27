@@ -10,7 +10,7 @@ import { CryptoText } from '../../text/CryptoText'
 import { FiatText } from '../../text/FiatText'
 import { EdgeText } from '../../themed/EdgeText'
 
-type Props = {
+interface Props {
   marginRem?: number[] | number
   nativeAmount: string
   tokenId?: string

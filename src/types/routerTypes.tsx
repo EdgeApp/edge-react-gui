@@ -23,7 +23,7 @@ import {
 } from './types'
 import { UriQueryMap } from './WebTypes'
 
-type PluginViewParams = {
+interface PluginViewParams {
   // The GUI plugin we are showing the user:
   plugin: GuiPlugin
 
@@ -34,7 +34,7 @@ type PluginViewParams = {
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-export type ParamList = {
+export interface ParamList {
   // Top-level router:
   root: {}
   login: {}
@@ -337,7 +337,7 @@ type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 /**
  * The of the `navigation` prop passed to each scene.
  */
-export type NavigationProp<Name extends keyof ParamList> = {
+export interface NavigationProp<Name extends keyof ParamList> {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => () => void
   isFocused: () => boolean
@@ -365,7 +365,7 @@ export type NavigationProp<Name extends keyof ParamList> = {
 /**
  * The of the `route` prop passed to each scene.
  */
-export type RouteProp<Name extends keyof ParamList> = {
+export interface RouteProp<Name extends keyof ParamList> {
   name: Name
   params: ParamList[Name]
 }

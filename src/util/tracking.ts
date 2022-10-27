@@ -18,7 +18,7 @@ export type TrackingEvent =
   | 'AppStart'
   | 'LoadDeviceReferralFail'
 
-export type TrackingValues = {
+export interface TrackingValues {
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD

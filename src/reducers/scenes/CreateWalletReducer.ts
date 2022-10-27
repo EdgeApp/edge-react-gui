@@ -2,14 +2,14 @@ import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../../types/reduxActions'
 
-export type HandleActivationInfo = {
+export interface HandleActivationInfo {
   supportedCurrencies: { [key: string]: boolean }
   activationCost: string
 }
 
 export type HandleAvailableStatus = 'AVAILABLE' | 'INVALID' | 'UNAVAILABLE' | 'UNKNOWN_ERROR' | ''
 
-export type AccountActivationPaymentInfo = {
+export interface AccountActivationPaymentInfo {
   paymentAddress: string
   amount: string
   currencyCode: string
@@ -17,7 +17,7 @@ export type AccountActivationPaymentInfo = {
   expireTime: number
 }
 
-export type CreateWalletState = {
+export interface CreateWalletState {
   isCheckingHandleAvailability: boolean
   handleAvailableStatus: HandleAvailableStatus
   handleActivationInfo: HandleActivationInfo

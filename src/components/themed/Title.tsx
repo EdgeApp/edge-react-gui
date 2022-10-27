@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
   styleLeftIcon?: any

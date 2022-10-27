@@ -7,7 +7,7 @@ import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
 
   // Called when the user presses the button.

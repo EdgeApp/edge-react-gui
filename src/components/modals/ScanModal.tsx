@@ -21,7 +21,7 @@ import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<string | undefined>
   title: string
 }

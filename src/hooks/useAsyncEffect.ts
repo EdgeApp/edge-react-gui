@@ -5,7 +5,7 @@ import { showError } from '../components/services/AirshipInstance'
 type Cleanup = () => void
 type AsyncEffect = () => Promise<Cleanup | undefined> | Promise<void>
 
-type State = {
+interface State {
   closed: boolean
   dirty: boolean
   effect: AsyncEffect

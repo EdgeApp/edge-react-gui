@@ -23,13 +23,13 @@ import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
 import { IconTile } from '../tiles/IconTile'
 
-type WcRpcPayload = {
+interface WcRpcPayload {
   id: string | number
   method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction'
   params: any[]
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   walletId: string
   dApp: JsonObject

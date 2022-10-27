@@ -16,7 +16,7 @@ import { permissions, PermissionsState } from './PermissionsReducer'
 
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 
-export type RootState = {
+export interface RootState {
   readonly contacts: GuiContact[]
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates

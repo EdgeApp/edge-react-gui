@@ -13,7 +13,7 @@ import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { VectorIcon } from './VectorIcon'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'edge'>
 }
 

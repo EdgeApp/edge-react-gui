@@ -6,7 +6,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   currencyInfo: EdgeCurrencyInfo
 }
 

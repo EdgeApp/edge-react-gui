@@ -4,7 +4,7 @@ import { ActivityIndicator, Text, TextStyle, TouchableHighlight } from 'react-na
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
 
   // Show with a dim style when set. Defaults to false:

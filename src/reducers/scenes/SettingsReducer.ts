@@ -9,7 +9,7 @@ import { PasswordReminderState } from '../PasswordReminderReducer'
 import { spendingLimits } from '../SpendingLimitsReducer'
 
 // prettier-ignore
-export type PasswordReminderLevels = {
+export interface PasswordReminderLevels {
   '20': boolean,
   '200': boolean,
   '2000': boolean,
@@ -17,7 +17,7 @@ export type PasswordReminderLevels = {
   '200000': boolean
 }
 
-export type AccountInitPayload = {
+export interface AccountInitPayload {
   account: EdgeAccount
   autoLogoutTimeInSeconds: number
   countryCode: string
@@ -70,7 +70,7 @@ export const initialState = {
   }
 }
 
-export type SettingsState = {
+export interface SettingsState {
   denominationSettings: DenominationSettings
   autoLogoutTimeInSeconds: number
   changesLocked: any

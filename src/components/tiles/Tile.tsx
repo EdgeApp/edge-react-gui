@@ -15,7 +15,7 @@ const textHeights = {
   large: 0
 }
 
-type OwnProps = {
+interface OwnProps {
   body?: string
   children?: React.ReactNode
   error?: boolean

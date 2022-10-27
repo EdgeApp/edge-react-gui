@@ -25,7 +25,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanStatus'>
   route: RouteProp<'loanStatus'>
 }

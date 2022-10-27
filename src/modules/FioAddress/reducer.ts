@@ -3,7 +3,7 @@ import { Reducer } from 'redux'
 import { Action } from '../../types/reduxTypes'
 import { FioAddress, FioDomain } from '../../types/types'
 
-export type FioAddressSceneState = {
+export interface FioAddressSceneState {
   fioAddresses: FioAddress[]
   fioDomains: FioDomain[]
   fioAddressesLoading: boolean

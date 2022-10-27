@@ -3,7 +3,7 @@ import { BorrowPlugin } from '../borrow-plugins/types'
 
 export const borrowPlugins: BorrowPlugin[] = [makeAaveEthBorrowPlugin(), makeAaveKovBorrowPlugin(), makeAaveMaticBorrowPlugin()]
 
-type BorrowPluginQuery = {
+interface BorrowPluginQuery {
   borrowPluginId?: string
   currencyPluginId?: string
 }

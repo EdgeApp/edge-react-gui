@@ -12,7 +12,7 @@ import { zeroString } from './utils'
 //  create the ActionProgram.
 // -----------------------------------------------------------------------------
 
-export type LoanAsset = {
+export interface LoanAsset {
   wallet: EdgeCurrencyWallet
   nativeAmount: string
   paymentMethodId?: string

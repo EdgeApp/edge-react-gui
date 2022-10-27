@@ -134,7 +134,7 @@ export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: 
   })
 }
 
-export type SpendingLimits = {
+export interface SpendingLimits {
   transaction: {
     amount: number
     isEnabled: boolean
@@ -183,7 +183,9 @@ export async function setSyncedSettings(account: EdgeAccount, settings: object):
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
-export type CategoriesFile = { categories: string[] }
+export interface CategoriesFile {
+  categories: string[]
+}
 
 export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)

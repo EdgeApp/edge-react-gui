@@ -25,7 +25,7 @@ type ActionResult =
       bundledTxs: number
     }
   | any
-type OwnProps = {
+interface OwnProps {
   title?: string
   successMessage?: string
   onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>
@@ -38,7 +38,7 @@ type OwnProps = {
   showPaymentWalletPicker?: boolean
 }
 
-type State = {
+interface State {
   showSlider: boolean
   loading: boolean
   error: string
@@ -49,7 +49,7 @@ type State = {
   paymentWallet?: EdgeCurrencyWallet
 }
 
-type StateProps = {
+interface StateProps {
   denominationMultiplier: string
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
   fioWallets: EdgeCurrencyWallet[]

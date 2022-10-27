@@ -18,7 +18,10 @@ const asThemeCache = asObject({
 const wasThemeCache = uncleaner(asThemeCache)
 type ThemeCache = ReturnType<typeof asThemeCache>
 
-type ItemTimestamps = { start: Date; expiration: Date }
+interface ItemTimestamps {
+  start: Date
+  expiration: Date
+}
 
 async function getThemeCache(disklet: Disklet): Promise<ThemeCache> {
   const data = await disklet.getText(THEME_CACHE_FILE_NAME)

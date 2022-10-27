@@ -60,7 +60,7 @@ const asMoonpayCountry = asObject({
 
 const asMoonpayCountries = asArray(asMoonpayCountry)
 
-type MoonpayWidgetQueryParams = {
+interface MoonpayWidgetQueryParams {
   apiKey: string
   currencyCode: string
   baseCurrencyCode: string

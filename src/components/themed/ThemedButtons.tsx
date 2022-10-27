@@ -7,7 +7,7 @@ import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/si
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
   onPress?: () => void | Promise<void>
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-type State<T> = {
+interface State<T> {
   callback: T
   bouncer: T
 }
