@@ -987,6 +987,8 @@ const strings = {
   loan_new_loan: 'New Loan',
   loan_new_collateral: 'New Collateral',
   loan_new_principal: 'New Principal',
+  loan_payment_destination: 'Payment Destination',
+  loan_payment_source: 'Payment Source',
   loan_principal_value: 'Principal Value',
   loan_remaining_principal: 'Remaining Principal',
   loan_apr_s: 'APR: %1$s',

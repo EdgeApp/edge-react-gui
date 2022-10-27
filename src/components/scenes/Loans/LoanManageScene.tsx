@@ -46,26 +46,27 @@ import { FormScene } from '../FormScene'
 export type LoanManageActionOpType = 'loan-deposit' | 'loan-withdraw' | 'loan-borrow' | 'loan-repay'
 
 // User input display strings
-const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string } } = {
+const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCardPrimary: string; srcDestCardSecondary?: string } } = {
   'loan-deposit': {
     headerText: s.strings.loan_add_collateral,
     amountCard: s.strings.loan_fragment_deposit,
-    srcDestCard: s.strings.loan_fund_source
+    srcDestCardPrimary: s.strings.loan_fund_source
   },
   'loan-withdraw': {
     headerText: s.strings.loan_withdraw_collateral,
     amountCard: s.strings.loan_fragment_withdraw,
-    srcDestCard: s.strings.loan_fund_destination
+    srcDestCardPrimary: s.strings.loan_fund_destination
   },
   'loan-borrow': {
     headerText: s.strings.loan_borrow_more,
     amountCard: s.strings.loan_fragment_loan,
-    srcDestCard: s.strings.loan_fund_destination
+    srcDestCardPrimary: s.strings.loan_fund_destination
   },
   'loan-repay': {
     headerText: s.strings.loan_make_payment,
     amountCard: s.strings.loan_fragment_repay,
-    srcDestCard: s.strings.loan_fund_source
+    srcDestCardPrimary: s.strings.loan_payment_destination,
+    srcDestCardSecondary: s.strings.loan_payment_source
   }
 } as const
 
@@ -134,10 +135,10 @@ export const LoanManageScene = (props: Props) => {
   const [actionNativeAmount, setActionNativeAmount] = React.useState('0')
   const [newDebtApr, setNewDebtApr] = React.useState(0)
   const [actionProgram, setActionProgram] = React.useState<ActionProgram | undefined>(undefined)
-  const [selectedAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
+  const [selectedPrimaryAsset, setSelectedAsset] = React.useState<SelectableAsset>({ wallet: borrowEngineWallet, tokenId: defaultTokenId })
   const [pendingDebtOrCollateral, setPendingDebtOrCollateral] = React.useState<BorrowDebt | BorrowCollateral>({
     nativeAmount: '0',
-    tokenId: selectedAsset.tokenId,
+    tokenId: selectedPrimaryAsset.tokenId,
     apr: 0
   })
 
@@ -153,7 +154,7 @@ export const LoanManageScene = (props: Props) => {
   const actionAmountSign = amountChange === 'increase' ? '1' : '-1'
 
   // APR change
-  const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
+  const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedPrimaryAsset.tokenId, apr: newDebtApr }
 
   // LTV exceeded checks
   const pendingDebts = isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : debts
@@ -180,19 +181,19 @@ export const LoanManageScene = (props: Props) => {
     let availableNativeAmount: string | undefined
 
     if (actionOpType === 'loan-withdraw') {
-      availableNativeAmount = collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount
+      availableNativeAmount = collaterals.find(collateral => collateral.tokenId === selectedPrimaryAsset.tokenId)?.nativeAmount
     } else if (actionOpType === 'loan-repay') {
-      availableNativeAmount = debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount
+      availableNativeAmount = debts.find(debt => debt.tokenId === selectedPrimaryAsset.tokenId)?.nativeAmount
     } else {
       availableNativeAmount = undefined // Use uncapped actionNativeAmount
     }
 
     const cappedActionNativeAmount = availableNativeAmount != null && gt(actionNativeAmount, availableNativeAmount) ? availableNativeAmount : actionNativeAmount
 
-    setPendingDebtOrCollateral({ nativeAmount: mul(actionAmountSign, cappedActionNativeAmount), tokenId: selectedAsset.tokenId, apr: 0 })
+    setPendingDebtOrCollateral({ nativeAmount: mul(actionAmountSign, cappedActionNativeAmount), tokenId: selectedPrimaryAsset.tokenId, apr: 0 })
 
     return () => {}
-  }, [actionNativeAmount, selectedAsset.tokenId])
+  }, [actionNativeAmount, selectedPrimaryAsset.tokenId])
 
   // Build Action Program
   useAsyncEffect(async () => {
@@ -207,7 +208,7 @@ export const LoanManageScene = (props: Props) => {
             depositTokenId: hardAllowedCollateralAsset[0].tokenId,
             nativeAmount: actionNativeAmount,
             borrowEngineWallet: borrowEngineWallet,
-            srcTokenId: selectedAsset.tokenId,
+            srcTokenId: selectedPrimaryAsset.tokenId,
             srcWallet: borrowEngineWallet
           })
           break
@@ -215,10 +216,10 @@ export const LoanManageScene = (props: Props) => {
           {
             const destination: LoanAsset = {
               wallet: borrowEngineWallet,
-              tokenId: selectedAsset.tokenId,
+              tokenId: selectedPrimaryAsset.tokenId,
               nativeAmount: actionNativeAmount,
-              ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
-              ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
+              ...(selectedPrimaryAsset.paymentMethod != null ? { paymentMethodId: selectedPrimaryAsset.paymentMethod.id } : {}),
+              ...(selectedPrimaryAsset.tokenId != null ? { tokenId: selectedPrimaryAsset.tokenId } : {})
             }
             actionOp = await makeAaveBorrowAction({
               borrowEngineWallet,
@@ -236,7 +237,7 @@ export const LoanManageScene = (props: Props) => {
                 borrowPluginId,
                 nativeAmount: actionNativeAmount,
                 walletId: borrowEngineWallet.id,
-                tokenId: selectedAsset.tokenId
+                tokenId: selectedPrimaryAsset.tokenId
               }
             ]
           }
@@ -244,7 +245,7 @@ export const LoanManageScene = (props: Props) => {
       }
       setActionProgram(await makeActionProgram(actionOp))
     }
-  }, [actionNativeAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
+  }, [actionNativeAmount, actionOpType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedPrimaryAsset])
 
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
@@ -259,11 +260,11 @@ export const LoanManageScene = (props: Props) => {
   // APR
   useAsyncEffect(async () => {
     if (isShowAprChange) {
-      const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
+      const apr = await borrowEngine.getAprQuote(selectedPrimaryAsset.tokenId)
       setNewDebtApr(apr)
     }
     return () => {}
-  }, [borrowEngine, selectedAsset.tokenId, isShowAprChange])
+  }, [borrowEngine, selectedPrimaryAsset.tokenId, isShowAprChange])
 
   // #endregion Hooks
 
@@ -290,7 +291,7 @@ export const LoanManageScene = (props: Props) => {
     }
   })
 
-  const handleShowWalletPickerModal = useHandler(() => {
+  const handleShowPrimaryWalletPicker = useHandler(() => {
     if (bankAccountsMap == null) return
 
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
@@ -329,7 +330,9 @@ export const LoanManageScene = (props: Props) => {
 
   // #endregion Handlers
 
-  return (
+  return bankAccountsMap == null ? (
+    <FillLoader />
+  ) : (
     <FormScene headerText={actionOpStrings.headerText} onSliderComplete={handleSliderComplete} sliderDisabled={actionProgram == null}>
       <Space vertical around={0.5}>
         <FiatAmountInputCard
@@ -337,16 +340,18 @@ export const LoanManageScene = (props: Props) => {
           iconUri={iconUri}
           inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
           title={sprintf(s.strings.loan_enter_s_amount_s, actionOpStrings.amountCard, fiatCurrencyCode)}
-          tokenId={selectedAsset.tokenId}
+          tokenId={selectedPrimaryAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
         {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-        <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCard}</EdgeText>
-        {bankAccountsMap != null ? (
-          <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
-        ) : (
-          <FillLoader />
-        )}
+        <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCardPrimary}</EdgeText>
+        <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedPrimaryAsset} onPress={handleShowPrimaryWalletPicker} />
+        <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCardSecondary}</EdgeText>
+        <TappableAccountCard
+          emptyLabel={s.strings.loan_select_receiving_wallet}
+          selectedAsset={selectedSecondaryAsset}
+          onPress={handleShowSecondaryWalletPicker}
+        />
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile
@@ -371,7 +376,7 @@ export const LoanManageScene = (props: Props) => {
         {isShowAprChange ? <InterestRateChangeTile borrowEngine={borrowEngine} newDebt={newDebt} key="interestRate" /> : null}
         <LtvRatioTile
           borrowEngine={borrowEngine}
-          tokenId={selectedAsset.tokenId}
+          tokenId={selectedPrimaryAsset.tokenId}
           nativeAmount={actionNativeAmount}
           type={sceneType}
           direction={amountChange}

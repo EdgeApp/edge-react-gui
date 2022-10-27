@@ -1,11 +1,13 @@
-import { EdgeCurrencyWallet } from 'edge-core-js/types'
+import { div, mul } from 'biggystring'
+import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js/types'
 
 import { MAX_AMOUNT } from '../constants/valueConstants'
 import { ActionOp, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
 import { BorrowEngine } from '../plugins/borrow-plugins/types'
+import { RootState } from '../reducers/RootReducer'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
-import { zeroString } from './utils'
+import { DECIMAL_PRECISION, truncateDecimals, zeroString } from './utils'
 
 // -----------------------------------------------------------------------------
 //  Given the user inputs made in the AAVE UI, return the Actions needed to
@@ -17,6 +19,8 @@ export interface LoanAsset {
   nativeAmount: string
   paymentMethodId?: string
   tokenId?: string
+  edgeToken?: EdgeToken
+  fiatRate?: string
 }
 
 interface AaveCreateActionParams {
@@ -31,6 +35,14 @@ interface AaveBorrowActionParams {
   borrowEngineWallet: EdgeCurrencyWallet
   borrowPluginId: string
 
+  destination: LoanAsset
+}
+
+interface AaveRepayActionParams {
+  borrowEngineWallet: EdgeCurrencyWallet
+  borrowPluginId: string
+
+  source: LoanAsset
   destination: LoanAsset
 }
 
@@ -62,7 +74,7 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
       type: 'swap',
       fromTokenId: source.tokenId,
       fromWalletId: source.wallet.id,
-      nativeAmount: source.nativeAmount,
+      nativeAmount: source.nativeAmount, // Though nativeAmount from is given, this value is actually represents swap output amount in terms of toTokenId/toWalletId
       toTokenId: toTokenId,
       toWalletId: borrowEngineWallet.id,
       amountFor: 'to'
@@ -202,6 +214,56 @@ export const makeAaveDepositAction = async ({
     nativeAmount,
     tokenId,
     walletId: borrowEngineWallet.id
+  })
+
+  return actionOp
+}
+
+export const makeAaveRepayAction = async (params: AaveRepayActionParams): Promise<ActionOp> => {
+  const { borrowEngineWallet, borrowPluginId, source, destination } = params
+
+  const actionOp: ActionOp = {
+    type: 'seq',
+    actions: []
+  }
+
+  if (source.wallet.id !== borrowEngineWallet.id) {
+    const { edgeToken: sourceToken, fiatRate: sourceFiatRate } = source
+    const { edgeToken: destinationToken, fiatRate: destinationFiatRate } = destination
+    if (destinationToken == null) throw new Error('Repaying with swap requires destination EdgeToken')
+    if (destinationFiatRate == null || sourceFiatRate == null) throw new Error('Repaying with swap requires fiat rates')
+
+    // Calculate how much source asset we need:
+    const sourceDenoms = sourceToken != null ? sourceToken.denominations : source.wallet.currencyInfo.denominations
+    const sourceExchangeMultiplier = sourceDenoms == null ? '0' : sourceDenoms[0].multiplier
+    const destinationDenoms = destinationToken != null ? destinationToken.denominations : destination.wallet.currencyInfo.denominations
+    const destinationExchangeMultiplier = destinationDenoms == null ? '0' : destinationDenoms[0].multiplier
+
+    const destinationAmount = div(destination.nativeAmount, destinationExchangeMultiplier, DECIMAL_PRECISION)
+    const requiredFiat = mul(destinationAmount, destinationFiatRate)
+    const sourceNativeAmount = truncateDecimals(mul(sourceExchangeMultiplier, div(requiredFiat, sourceFiatRate, DECIMAL_PRECISION)), 0)
+
+    actionOp.actions.push({
+      type: 'swap',
+      fromTokenId: source.tokenId,
+      fromWalletId: source.wallet.id,
+      nativeAmount: sourceNativeAmount, // TODO: Can we just set source nativeamount instead?
+      toTokenId: destination.tokenId,
+      toWalletId: borrowEngineWallet.id,
+      amountFor: 'to'
+    })
+  } else if (source.wallet.id === borrowEngineWallet.id && source.tokenId !== destination.tokenId) {
+    throw new Error('Swapping to repay using a different token from the same wallet not yet supported')
+
+    // TODO: Handle repay with collateral after designing and implementing some way to select a collateral source from AAVE.
+  }
+
+  actionOp.actions.push({
+    type: 'loan-repay',
+    borrowPluginId,
+    nativeAmount: destination.nativeAmount,
+    walletId: borrowEngineWallet.id,
+    tokenId: destination.tokenId
   })
 
   return actionOp
