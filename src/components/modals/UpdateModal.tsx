@@ -11,7 +11,7 @@ import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   onSkip: () => void
 }

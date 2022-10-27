@@ -7,10 +7,10 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'securityAlerts'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
 }

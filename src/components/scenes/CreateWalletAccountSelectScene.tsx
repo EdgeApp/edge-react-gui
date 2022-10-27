@@ -27,7 +27,7 @@ import { logEvent } from '../../util/tracking'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { Airship } from '../services/AirshipInstance'
 
-export type AccountPaymentParams = {
+export interface AccountPaymentParams {
   requestedAccountName: string
   currencyCode: string
   ownerPublicKey: string
@@ -35,11 +35,11 @@ export type AccountPaymentParams = {
   requestedAccountCurrencyCode: string
 }
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'createWalletAccountSelect'>
 }
 
-type StateProps = {
+interface StateProps {
   wallets: { [walletId: string]: GuiWallet }
   paymentCurrencyCode: string
   amount: string
@@ -50,7 +50,7 @@ type StateProps = {
   walletAccountActivationQuoteError: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
   fetchAccountActivationInfo: (walletType: string) => void
   createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => void
@@ -60,7 +60,7 @@ type DispatchProps = {
 
 type Props = OwnProps & DispatchProps & StateProps
 
-type State = {
+interface State {
   isCreatingWallet: boolean
   walletName: string
   walletId: string

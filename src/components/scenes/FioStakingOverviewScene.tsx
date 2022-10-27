@@ -23,10 +23,10 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'fioStakingOverview'>
 }
-type StateProps = {
+interface StateProps {
   currencyWallet: EdgeCurrencyWallet
   stakingCryptoAmountFormat: string
   stakingFiatBalanceFormat: string
@@ -34,10 +34,10 @@ type StateProps = {
   fiatCurrencyCode: string
   fiatSymbol: string
 }
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
-type Lock = {
+interface Lock {
   id: string
   title: string
   amount: string

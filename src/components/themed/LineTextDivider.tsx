@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   title?: string
   children?: React.ReactNode
   lowerCased?: boolean

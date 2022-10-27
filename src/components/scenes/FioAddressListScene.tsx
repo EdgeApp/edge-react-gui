@@ -21,12 +21,12 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type LocalState = {
+interface LocalState {
   initLoading: boolean
   prevLoading: boolean
 }
 
-type StateProps = {
+interface StateProps {
   fioAddresses: FioAddress[]
   fioDomains: FioDomain[]
   fioWallets: EdgeCurrencyWallet[]
@@ -34,11 +34,11 @@ type StateProps = {
   isConnected: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioAddressList'>
 }
 

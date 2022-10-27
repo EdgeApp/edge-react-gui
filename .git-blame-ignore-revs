@@ -17,6 +17,9 @@
 #   git log --all -i --grep='yarn\sfix' --pretty=%H
 ##
 
+# 2022-10-26 (Enabling consistent-type-definitions rule)
+d3232bfa37fb2c30931614c48217a9b200da263d
+
 # 2022-10-19 (Re-indenting all Redux thunks)
 1b9f6fa659e303ff1b590a108ad9c90066d5d9e3
 

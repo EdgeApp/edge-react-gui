@@ -9,7 +9,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   // Main props - If non is specified, would just render an empty view
   walletId?: string // To allow showing the progress ratio sync circle
   pluginId?: string // Needed when walletId is not supplied and we still want to get an icon

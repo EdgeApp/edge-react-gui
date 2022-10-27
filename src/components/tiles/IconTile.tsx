@@ -4,7 +4,7 @@ import { Image, View } from 'react-native'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Tile } from './Tile'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   iconUri: string
   iconOverride?: React.ReactNode

@@ -24,7 +24,7 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
   return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
-export type PriceChangeNotificationSettings = {
+export interface PriceChangeNotificationSettings {
   ignorePriceChanges: boolean
   plugins: {
     [pluginId: string]: {

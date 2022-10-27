@@ -6,12 +6,12 @@ import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import s from '../../locales/strings'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
-export type Props = {
+export interface Props {
   bridge: AirshipBridge<Date>
   initialValue: Date
 }
 
-type State = {
+interface State {
   darkMode: boolean
   date: Date
 }

@@ -28,7 +28,7 @@ import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { IconTile } from '../../tiles/IconTile'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'stakeModify'>
   route: RouteProp<'stakeModify'>
 }

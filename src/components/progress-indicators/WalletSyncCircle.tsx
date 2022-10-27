@@ -12,7 +12,7 @@ const MAX_RATIO = 0.95
 const RESYNC_THRESHOLD = 0.05
 const DONE_THRESHOLD = 0.999
 
-type Props = {
+interface Props {
   // The diameter of the inner currency icon:
   size: number
   wallet: EdgeCurrencyWallet

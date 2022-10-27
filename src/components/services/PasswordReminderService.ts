@@ -5,11 +5,11 @@ import { connect } from '../../types/reactRedux'
 import { PasswordReminder } from '../../types/types'
 import { matchJson } from '../../util/matchJson'
 
-type StateProps = {
+interface StateProps {
   loginStatus: boolean | null
   passwordReminder: PasswordReminder
 }
-type DispatchProps = {
+interface DispatchProps {
   setPasswordReminder: (passwordReminder: PasswordReminder) => void
 }
 type Props = StateProps & DispatchProps

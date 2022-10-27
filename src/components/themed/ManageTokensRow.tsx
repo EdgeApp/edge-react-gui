@@ -14,7 +14,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-export type Props = {
+export interface Props {
   // Scene properties:
   navigation: NavigationProp<'manageTokens'>
   wallet: EdgeCurrencyWallet

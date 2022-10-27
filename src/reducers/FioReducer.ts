@@ -5,11 +5,11 @@ import { Action } from '../types/reduxActions'
 /**
  * { [fullCurrencyCode]: walletId }
  */
-export type CcWalletMap = {
+export interface CcWalletMap {
   [fullCurrencyCode: string]: string
 }
 
-export type FioState = {
+export interface FioState {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
   }

@@ -7,7 +7,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<string | undefined>
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files

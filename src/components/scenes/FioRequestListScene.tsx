@@ -25,7 +25,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 const SCROLL_THRESHOLD = 0.5
 
-type LocalState = {
+interface LocalState {
   loadingPending: boolean
   loadingSent: boolean
   fullScreenLoader: boolean
@@ -38,7 +38,7 @@ type LocalState = {
   sentRequestPaging: { [key: string]: number }
 }
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   wallets: { [walletId: string]: GuiWallet }
   fioAddresses: FioAddress[]
@@ -47,13 +47,13 @@ type StateProps = {
   isConnected: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
   refreshAllFioAddresses: () => void
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioRequestList'>
 }
 

@@ -14,7 +14,7 @@ import { makePeriodicTask } from '../../util/PeriodicTask'
 
 const EXECUTION_INTERVAL = 1000
 
-type ServiceProgramStates = {
+interface ServiceProgramStates {
   [programId: string]: {
     executing: boolean
   }

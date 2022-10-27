@@ -3,7 +3,7 @@ import { Platform, Text, TextStyle } from 'react-native'
 
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
-type OwnProps = {
+interface OwnProps {
   children: React.ReactNode
   ellipsizeMode?: string
   numberOfLines?: number

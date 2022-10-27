@@ -11,7 +11,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
-type Props = {
+interface Props {
   countryCode: string
   bridge: AirshipBridge<string>
 }

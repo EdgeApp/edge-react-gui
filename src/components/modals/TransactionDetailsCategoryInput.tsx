@@ -10,7 +10,7 @@ import { AirshipModal } from '../common/AirshipModal'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
 import { SubCategorySelect } from '../common/TransactionSubCategorySelect'
 
-export type CategoryModalResult = {
+export interface CategoryModalResult {
   category: string
   subCategory: string
 }
@@ -20,7 +20,7 @@ type CategoriesType = Array<{
   syntax: string
 }>
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<CategoryModalResult | undefined>
   categories: object
   subCategories: string[]
@@ -29,7 +29,7 @@ type Props = {
   setNewSubcategory: (input: string, subCategories: string[]) => void
 }
 
-type State = {
+interface State {
   categories: CategoriesType
   category: string
   subCategory: string

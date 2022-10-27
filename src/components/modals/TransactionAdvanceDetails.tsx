@@ -23,7 +23,7 @@ const feeString = {
   low: s.strings.mining_fee_low_label_choice
 }
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<void>
   transaction: EdgeTransaction
   url?: string

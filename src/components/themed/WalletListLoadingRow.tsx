@@ -3,7 +3,7 @@ import { ActivityIndicator, TouchableOpacity } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   onLongPress?: () => void
   onPress?: () => void
 }

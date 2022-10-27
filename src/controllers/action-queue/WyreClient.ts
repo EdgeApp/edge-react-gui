@@ -3,7 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 
 import ENV from '../../../env.json'
 
-export type PaymentMethod = {
+export interface PaymentMethod {
   id: string
   name: string
   defaultCurrency: string
@@ -13,15 +13,15 @@ export type PaymentMethod = {
   blockchains: { [key: string]: string }
 }
 
-export type PaymentMethodsMap = {
+export interface PaymentMethodsMap {
   [key: string]: PaymentMethod
 }
 
-type WyreClientOptions = {
+interface WyreClientOptions {
   account: EdgeAccount
 }
 
-type WyreClient = {
+interface WyreClient {
   readonly isAccountSetup: boolean
   getPaymentMethods: () => Promise<PaymentMethodsMap>
   getCryptoPaymentAddress: (wyreAccountId: string, walletId: string) => Promise<string>

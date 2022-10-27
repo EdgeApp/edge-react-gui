@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from 'redux'
 import { Action } from '../../types/reduxTypes'
 import { TransactionListTx } from '../../types/types'
 
-export type TransactionListState = {
+export interface TransactionListState {
   readonly currentCurrencyCode: string
   readonly currentEndIndex: number
   readonly currentWalletId: string

@@ -11,7 +11,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
-type OwnProps = {
+interface OwnProps {
   cryptoAmount: string
   denominationSymbol?: string
   fiatAmount: string

@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview'
 import { config } from '../../theme/appConfig'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-type Props = {}
+interface Props {}
 
 export class TermsOfServiceComponent extends React.Component<Props> {
   render() {

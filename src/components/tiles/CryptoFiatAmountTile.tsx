@@ -11,7 +11,7 @@ import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
-type Props = {
+interface Props {
   denomination: EdgeDenomination
   maxCryptoChars?: number
   nativeCryptoAmount: string

@@ -69,7 +69,7 @@ const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCar
   }
 } as const
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanManage'>
   route: RouteProp<'loanManage'>
 }

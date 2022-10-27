@@ -4,7 +4,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
 
   // Show with a dim style when set. Defaults to false:

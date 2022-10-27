@@ -15,7 +15,7 @@ import { sendLogs } from '../modules/Logs/api'
 import { ThunkAction } from '../types/reduxTypes'
 import { log, logWithType, readLogs } from '../util/logger'
 
-type LogOutput = {
+interface LogOutput {
   isoDate: string
   uniqueId: string
   userMessage: string
@@ -28,19 +28,19 @@ type LogOutput = {
   data: string
 }
 
-type Accounts = {
+interface Accounts {
   username: string
   userId: string // Not sure what this is used for, but adding the type anyway
 }
 
-type LoggedInUser = {
+interface LoggedInUser {
   userName: string
   userId: string
   wallets: WalletData[]
   actions: ActionData[]
 }
 
-type WalletData = {
+interface WalletData {
   currencyCode?: string
   imported?: boolean
   repoId?: string
@@ -49,7 +49,7 @@ type WalletData = {
 
 // Modeled from ActionQueueItem type but separate in order to avoid
 // be explicit about what information is shared.
-type ActionData = {
+interface ActionData {
   program: ActionProgram
   state: ActionProgramState
 }

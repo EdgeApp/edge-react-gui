@@ -13,19 +13,19 @@ import { connect } from '../../types/reactRedux'
 import { SpendingLimits } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-type StateProps = {
+interface StateProps {
   transactionSpendingLimit: {
     amount: number
     isEnabled: boolean
   }
   currencySymbol: string
 }
-type DispatchProps = {
+interface DispatchProps {
   onSubmit: (spendingLimits: SpendingLimits, password: string) => unknown
 }
 type Props = StateProps & DispatchProps
 
-type State = {
+interface State {
   password: string
   transactionAmount: number
   transactionIsEnabled: boolean

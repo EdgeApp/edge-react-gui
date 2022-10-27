@@ -14,7 +14,7 @@ import { StakePluginPolicy } from './types'
 
 const HOUR = 1000 * 60 * 60
 
-export type MasonryPolicyOptions = {
+export interface MasonryPolicyOptions {
   disableStake?: boolean
   disableUnstake?: boolean
   disableClaim?: boolean

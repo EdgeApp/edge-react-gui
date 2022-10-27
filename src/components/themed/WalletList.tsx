@@ -18,7 +18,7 @@ import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 import { WalletListSectionHeader } from './WalletListSectionHeader'
 
-type Props = {
+interface Props {
   // Filtering:
   allowedAssets?: EdgeTokenId[]
   excludeAssets?: EdgeTokenId[]
@@ -36,7 +36,7 @@ type Props = {
   onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
 }
 
-export type WalletCreateItem = {
+export interface WalletCreateItem {
   key: string
   currencyCode: string
   displayName: string
@@ -46,7 +46,7 @@ export type WalletCreateItem = {
   createWalletIds?: string[]
 }
 
-type Section = {
+interface Section {
   title: string
   data: Array<WalletListItem | WalletCreateItem>
 }
@@ -222,7 +222,7 @@ export function WalletList(props: Props) {
   )
 }
 
-type CreateWalletListOpts = {
+interface CreateWalletListOpts {
   filteredWalletList?: WalletListItem[]
   filterActivation?: boolean
   allowedAssets?: EdgeTokenId[]

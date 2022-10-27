@@ -200,7 +200,7 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
   }
 }
 
-export type ValidateFuncs = {
+export interface ValidateFuncs {
   getCountryCodeByIp: () => Promise<string>
   checkWyreHasLinkedBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
   getBuildNumber: () => string

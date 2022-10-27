@@ -14,11 +14,11 @@ import s from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 
-type Props = {
+interface Props {
   route: RouteProp<'guiPluginEnterAmount'>
 }
 
-export type EnterAmountPoweredBy = {
+export interface EnterAmountPoweredBy {
   poweredByIcon: string
   poweredByText: string
   poweredByOnClick: () => void

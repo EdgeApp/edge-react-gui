@@ -5,7 +5,7 @@ import { useTheme } from '../services/ThemeContext'
 
 const TIME_SCALE = 500
 
-type Props = {
+interface Props {
   minHeightRem: number
   maxHeightRem?: number
   duration?: number

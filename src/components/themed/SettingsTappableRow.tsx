@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
-type Props = {
+interface Props {
   // The icon to show on the right.
   // Defaults to navigate, which shows an arrow.
   action?: 'navigate' | 'add' | 'delete' | 'lock' | 'unlock'

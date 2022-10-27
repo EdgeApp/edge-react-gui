@@ -16,7 +16,7 @@ export const asTxInfo = asObject({
 })
 export type TxInfo = ReturnType<typeof asTxInfo>
 
-export type CallInfo = {
+export interface CallInfo {
   tx: TxInfo
   wallet: EdgeCurrencyWallet
   spendToken?: EdgeToken

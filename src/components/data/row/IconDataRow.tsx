@@ -5,7 +5,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
-type Props = {
+interface Props {
   icon: React.ReactNode
   leftText: string
   leftTextExtended?: string | React.ReactNode

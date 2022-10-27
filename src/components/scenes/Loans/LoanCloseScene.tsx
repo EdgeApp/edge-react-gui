@@ -29,7 +29,7 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 
-export type Props = {
+export interface Props {
   route: RouteProp<'loanClose'>
   navigation: NavigationProp<'loanClose'>
 }

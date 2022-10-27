@@ -13,12 +13,12 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonBox } from '../themed/ThemedButtons'
 
-type StateProps = {
+interface StateProps {
   accountMessages: MessageTweak[]
   accountReferral: AccountReferral
 }
 
-type DispatchProps = {
+interface DispatchProps {
   hideMessageTweak: (messageId: string, source: TweakSource) => void
   linkReferralWithCurrencies: (uri: string) => void
 }

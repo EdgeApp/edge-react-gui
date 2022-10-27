@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   warning?: boolean
   marginRem?: number[] | number

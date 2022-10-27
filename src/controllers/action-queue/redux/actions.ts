@@ -6,18 +6,18 @@ import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } fr
 import { getEffectPushEventIds } from '../util/getEffectPushEventIds'
 import { makeExecutionContext } from '../util/makeExecutionContext'
 
-type LoadActionQueueStateAction = {
+interface LoadActionQueueStateAction {
   type: 'ACTION_QUEUE/LOAD_QUEUE'
   data: ActionQueueMap
 }
 
-type ScheduleProgramAction = {
+interface ScheduleProgramAction {
   type: 'ACTION_QUEUE/QUEUE_ITEM'
   programId: string
   item: ActionQueueItem
 }
 
-type UpdateProgramStateAction = {
+interface UpdateProgramStateAction {
   type: 'ACTION_QUEUE/UPDATE_PROGRAM_STATE'
   state: ActionProgramState
 }

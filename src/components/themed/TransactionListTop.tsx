@@ -28,7 +28,7 @@ import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 
-type OwnProps = {
+interface OwnProps {
   walletId: string
   isEmpty: boolean
   navigation: NavigationProp<'transactionList'>
@@ -38,7 +38,7 @@ type OwnProps = {
   onSearchTransaction: (searchString: string) => void
 }
 
-type StateProps = {
+interface StateProps {
   cryptoAmount: string
   currencyCode: string
   pluginId: string
@@ -56,12 +56,12 @@ type StateProps = {
   }
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
   toggleBalanceVisibility: () => void
 }
 
-type State = {
+interface State {
   input: string
   stakePolicies: StakePolicy[] | null
 }

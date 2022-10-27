@@ -9,7 +9,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioAddressRegisterSuccess'>
   route: RouteProp<'fioAddressRegisterSuccess'>
 }

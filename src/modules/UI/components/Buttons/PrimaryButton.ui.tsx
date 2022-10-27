@@ -3,7 +3,7 @@ import { Text as RNText, TextStyle, TouchableHighlight, TouchableHighlightProps,
 
 import { primaryButtonUnderlay, styles } from './style'
 
-type TextProps = {
+interface TextProps {
   children: React.ReactNode
   style?: TextStyle
 }

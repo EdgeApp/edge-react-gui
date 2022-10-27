@@ -5,7 +5,7 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   onPress: () => void | Promise<void>
   onLongPress?: () => void | Promise<void>
   highlight?: boolean

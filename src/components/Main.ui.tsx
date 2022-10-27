@@ -109,7 +109,7 @@ const RouterWithRedux = connect<
   // @ts-expect-error
 )(Router)
 
-type DispatchProps = {
+interface DispatchProps {
   registerDevice: () => void
 
   // Navigation actions:

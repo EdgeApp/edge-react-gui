@@ -20,7 +20,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
-export type WalletListCreateRowProps = {
+export interface WalletListCreateRowProps {
   currencyCode: string
   currencyName: string
   createWalletIds?: string[]

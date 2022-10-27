@@ -27,12 +27,12 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../tiles/Tile'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'fioStakingChange'>
   navigation: NavigationProp<'fioStakingChange'>
 }
 
-type StateProps = {
+interface StateProps {
   stakingBalances: {
     [cCode: string]: {
       native: string
@@ -45,7 +45,7 @@ type StateProps = {
   currencyDenomination: EdgeDenomination
   fioAddresses: FioAddress[]
 }
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps

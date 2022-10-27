@@ -12,7 +12,7 @@ import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type TermsUri = {
+interface TermsUri {
   termsUri?: string
   privacyUri?: string
   kycUri?: string
@@ -53,7 +53,7 @@ export async function swapVerifyTerms(swapConfig: EdgeSwapConfig): Promise<boole
   return result
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<boolean>
   swapInfo: EdgeSwapInfo
   uris: TermsUri

@@ -21,7 +21,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'createWalletCompletion'>
   route: RouteProp<'createWalletCompletion'>
 }

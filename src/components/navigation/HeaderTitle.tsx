@@ -10,17 +10,17 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type OwnProps = {
+interface OwnProps {
   showWalletNameOnly?: boolean
   title?: string
 }
 
-type StateProps = {
+interface StateProps {
   selectedWalletName: string | null
   selectedWalletCurrencyCode: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 

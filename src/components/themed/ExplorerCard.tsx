@@ -15,7 +15,7 @@ const transactionListUnsupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).f
   pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported
 )
 
-type OwnProps = {
+interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId?: string
 }

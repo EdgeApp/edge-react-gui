@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
 
   // The `SwipeableRow` provides this animated value:

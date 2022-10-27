@@ -23,7 +23,7 @@ export const rpcProviderUrls = [
 // @ts-expect-error
 export const providers = rpcProviderUrls.map<ethers.Provider>(url => new ethers.providers.JsonRpcProvider(url))
 
-type ContractInfo = {
+interface ContractInfo {
   abi: unknown
   address: string
 }

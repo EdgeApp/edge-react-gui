@@ -19,7 +19,7 @@ export interface FlipInputRef {
 }
 
 export type FieldNum = 0 | 1
-export type FlipInputFieldInfo = {
+export interface FlipInputFieldInfo {
   currencyName: string
 
   // Maximum number of decimals to allow the user to enter. FlipInput will automatically truncate use input to this

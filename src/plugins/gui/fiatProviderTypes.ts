@@ -3,12 +3,12 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import { EdgeTokenId } from '../../types/types'
 import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
 
-export type FiatProviderApproveQuoteParams = {
+export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
   coreWallet: EdgeCurrencyWallet
 }
 
-export type FiatProviderQuote = {
+export interface FiatProviderQuote {
   readonly pluginId: string
   readonly partnerIcon: string
   readonly pluginDisplayName: string
@@ -52,12 +52,12 @@ export class FiatProviderError extends Error {
   }
 }
 
-export type FiatProviderAssetMap = {
+export interface FiatProviderAssetMap {
   crypto: { [pluginId: string]: { [tokenId: string]: boolean | any } }
   fiat: { [currencyCode: string]: boolean | any }
 }
 
-export type FiatProviderGetQuoteParams = {
+export interface FiatProviderGetQuoteParams {
   tokenId: EdgeTokenId
   exchangeAmount: string
   fiatCurrencyCode: string
@@ -67,14 +67,14 @@ export type FiatProviderGetQuoteParams = {
   paymentTypes: FiatPaymentTypes
 }
 
-export type FiatProviderStore = {
+export interface FiatProviderStore {
   readonly deleteItem: (itemId: string) => Promise<void>
   readonly listItemIds: () => Promise<string[]>
   readonly getItem: (itemId: string) => Promise<string>
   readonly setItem: (itemId: string, value: string) => Promise<void>
 }
 
-export type FiatProvider = {
+export interface FiatProvider {
   pluginId: string
   partnerIcon: string
   pluginDisplayName: string
@@ -82,12 +82,12 @@ export type FiatProvider = {
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 
-export type FiatProviderFactoryParams = {
+export interface FiatProviderFactoryParams {
   io: { store: FiatProviderStore }
   apiKeys?: unknown
 }
 
-export type FiatProviderFactory = {
+export interface FiatProviderFactory {
   pluginId: string
   storeId: string
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>

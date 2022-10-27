@@ -12,7 +12,7 @@ type BackgroundOptions =
   | 'body' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
 
-type Props = {
+interface Props {
   // The children can either be normal React elements,
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react

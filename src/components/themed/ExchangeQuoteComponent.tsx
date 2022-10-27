@@ -8,7 +8,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   isTop?: boolean | null
   cryptoAmount: string
   currency: string
@@ -21,7 +21,7 @@ type Props = {
   miningFee?: string | null
   showFeeWarning?: boolean | null
 }
-type State = {}
+interface State {}
 
 export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemeProps, State> {
   renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {

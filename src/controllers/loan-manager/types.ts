@@ -1,7 +1,7 @@
 import { BorrowEngine, BorrowPlugin } from '../../plugins/borrow-plugins/types'
 import { LoanProgramEdge } from './store'
 
-export type LoanAccount = {
+export interface LoanAccount {
   id: string
   borrowPlugin: BorrowPlugin
   borrowEngine: BorrowEngine
@@ -11,10 +11,10 @@ export type LoanAccount = {
   closed: boolean
 }
 
-export type LoanAccountMap = {
+export interface LoanAccountMap {
   [walletId: string]: LoanAccount
 }
 
-export type LoanManager = {
+export interface LoanManager {
   loanAccounts: LoanAccount[]
 }

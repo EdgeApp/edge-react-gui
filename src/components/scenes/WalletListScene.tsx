@@ -23,7 +23,7 @@ import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 import { WiredProgressBar } from '../themed/WiredProgressBar'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'walletList'>
 }
 

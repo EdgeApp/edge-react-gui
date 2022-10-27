@@ -12,7 +12,7 @@ import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting 
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
-type Props = {
+interface Props {
   route: RouteProp<'currencySettings'>
 }
 

@@ -21,7 +21,7 @@ export function handleOtpError(otpError: OtpError): ThunkAction<void> {
   }
 }
 
-type ValidatePasswordOptions = {
+interface ValidatePasswordOptions {
   message?: string
   submitLabel?: string
   title?: string

@@ -7,10 +7,10 @@ import { makeErrorLog, translateError } from '../../util/translateError'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 import { Airship, yellowText } from './AirshipInstance'
 
-type StateProps = {
+interface StateProps {
   context: EdgeContext
 }
-type DispatchProps = {
+interface DispatchProps {
   onOtpError: (otpError: OtpError) => void
 }
 

@@ -219,7 +219,7 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
-export type PrecisionAdjustParams = {
+export interface PrecisionAdjustParams {
   exchangeSecondaryToPrimaryRatio: string
   secondaryExchangeMultiplier: string
   primaryExchangeMultiplier: string
@@ -573,7 +573,7 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
   return out
 }
 
-export type MiniCurrencyConfig = {
+export interface MiniCurrencyConfig {
   allTokens: EdgeTokenMap
   currencyInfo: EdgeCurrencyInfo
 }

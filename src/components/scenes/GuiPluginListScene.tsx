@@ -63,12 +63,12 @@ const pluginPartnerLogos = {
   bitaccess: 'guiPluginLogoBitaccess'
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   route: RouteProp<'pluginListBuy'> | RouteProp<'pluginListSell'>
 }
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   accountPlugins: PluginTweak[]
   accountReferral: AccountReferral
@@ -77,12 +77,12 @@ type StateProps = {
   developerModeOn: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   updateCountryCode: (countryCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
-type State = {
+interface State {
   developerUri: string
   buySellPlugins: BuySellPlugins
   hasWyreAccountHack: boolean

@@ -17,7 +17,7 @@ const BALANCE_RESYNC_INTERVAL = 10 * 60 * 1000
 const LTV_RESYNC_INTERVAL = 60 * 1000
 const PARASWAP_SLIPPAGE_PERCENT = 1
 
-export type BorrowEngineBlueprint = {
+export interface BorrowEngineBlueprint {
   aaveNetwork: AaveNetwork
   // Cleans an EdgeToken to a contract address
   asTokenContractAddress: Cleaner<string>

@@ -4,7 +4,7 @@ import { TextField, TextFieldProps } from 'react-native-material-textfield'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
-type EdgeTextFieldProps = {
+interface EdgeTextFieldProps {
   marginRem?: number | number[]
 }
 

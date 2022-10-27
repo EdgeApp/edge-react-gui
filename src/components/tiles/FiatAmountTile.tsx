@@ -8,7 +8,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
 // Either Fiat OR Crypto amount props must be provided.
-type Props = {
+interface Props {
   title: string
 
   // Fiat amount props

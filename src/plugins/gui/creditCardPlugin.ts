@@ -20,7 +20,9 @@ import { simplexProvider } from './providers/simplexProvider'
 
 const asFiatPluginPriorities = asMap(asMap(asNumber))
 
-type FiatPluginPriority = { [pluginId: string]: number }
+interface FiatPluginPriority {
+  [pluginId: string]: number
+}
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 // TODO: Allow other fiat currency codes. Hard code USD for now

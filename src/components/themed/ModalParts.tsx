@@ -6,7 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
-type ModalTitleProps = {
+interface ModalTitleProps {
   children: React.ReactNode
   center?: boolean
   paddingRem?: number[] | number

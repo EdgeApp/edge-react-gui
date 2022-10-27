@@ -3,7 +3,7 @@ import { Platform, Text, TextStyle } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
   style?: TextStyle
 }

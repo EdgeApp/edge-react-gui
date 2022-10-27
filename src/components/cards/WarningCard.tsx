@@ -6,7 +6,7 @@ import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/si
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   title: string
   header?: string | null
   points?: string[] | null

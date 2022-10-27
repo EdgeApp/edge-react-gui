@@ -16,7 +16,7 @@ import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'editToken'>
   route: RouteProp<'editToken'>
 }

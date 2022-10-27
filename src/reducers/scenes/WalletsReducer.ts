@@ -6,7 +6,7 @@ import { Action } from '../../types/reduxTypes'
 import { GuiWallet } from '../../types/types'
 import { tokenIdsToCurrencyCodes } from '../../util/utils'
 
-export type WalletsState = {
+export interface WalletsState {
   byId: { [walletId: string]: GuiWallet }
   selectedWalletId: string
   selectedCurrencyCode: string

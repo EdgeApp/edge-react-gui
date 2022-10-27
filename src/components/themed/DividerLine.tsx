@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   // The gap around the line. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number | number[]

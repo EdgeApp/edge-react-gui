@@ -26,7 +26,7 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'manageTokens'>
   route: RouteProp<'manageTokens'>
 }

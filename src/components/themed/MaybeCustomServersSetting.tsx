@@ -13,7 +13,7 @@ import { SettingsHeaderRow } from './SettingsHeaderRow'
 import { SettingsSwitchRow } from './SettingsSwitchRow'
 import { SettingsTappableRow } from './SettingsTappableRow'
 
-type CustomServersSetting = {
+interface CustomServersSetting {
   enableCustomServers: boolean
   customServers: string[]
 }

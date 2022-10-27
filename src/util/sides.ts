@@ -3,14 +3,14 @@
  */
 export type SideList = [number, number, number, number]
 
-export type Margin = {
+export interface Margin {
   marginBottom: number
   marginLeft: number
   marginRight: number
   marginTop: number
 }
 
-export type Padding = {
+export interface Padding {
   paddingBottom: number
   paddingLeft: number
   paddingRight: number

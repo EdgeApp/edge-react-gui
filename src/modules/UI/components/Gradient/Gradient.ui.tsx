@@ -7,7 +7,7 @@ import { ThemeProps, withTheme } from '../../../../components/services/ThemeCont
 const UPPER_LEFT = { x: 0, y: 0 }
 const UPPER_RIGHT = { x: 1, y: 0 }
 
-type OwnProps = {
+interface OwnProps {
   children?: React.ReactNode
   style?: ViewStyle
 }

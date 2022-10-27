@@ -1,7 +1,9 @@
 import { EdgeAccount, EdgeTokenMap } from 'edge-core-js'
 import * as React from 'react'
 
-type EdgeTokenMaps = { [pluginId: string]: EdgeTokenMap }
+interface EdgeTokenMaps {
+  [pluginId: string]: EdgeTokenMap
+}
 
 /**
  * Subscribes to all the tokens across all plugins in an account.

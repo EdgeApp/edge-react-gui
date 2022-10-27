@@ -15,20 +15,20 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
-type LocalState = {
+interface LocalState {
   showAddBundledTxs: boolean
   showTransfer: boolean
 }
 
-type StateProps = {
+interface StateProps {
   isConnected: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioAddressSettings'>
   route: RouteProp<'fioAddressSettings'>
 }

@@ -5,7 +5,7 @@ import { cacheStyles } from 'react-native-patina'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   children?: React.ReactNode
 
   // Called when the user presses the button.

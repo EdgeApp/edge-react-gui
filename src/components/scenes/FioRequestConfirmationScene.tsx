@@ -22,7 +22,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Tile } from '../tiles/Tile'
 
-type StateProps = {
+interface StateProps {
   exchangeSecondaryToPrimaryRatio: string
   edgeWallet: EdgeCurrencyWallet
   chainCode: string
@@ -39,14 +39,14 @@ type StateProps = {
   }
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioRequestConfirmation'>
   route: RouteProp<'fioRequestConfirmation'>
 }
 
 type Props = StateProps & ThemeProps & OwnProps
 
-type State = {
+interface State {
   loading: boolean
   walletAddresses: Array<{ fioAddress: string; fioWallet: EdgeCurrencyWallet }>
   fioAddressFrom: string

@@ -10,7 +10,7 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
 import { UnderlinedNumInputCard } from './UnderlinedNumInputCard'
 
-type Props = {
+interface Props {
   wallet: EdgeCurrencyWallet
   iconUri: string
   inputModalMessage: string

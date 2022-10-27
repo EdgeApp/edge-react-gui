@@ -1,16 +1,16 @@
 /** Same as the TypeScript `ReturnType` utility. */
 
-type PeriodicTaskOptions = {
+interface PeriodicTaskOptions {
   // Handles any errors that the task throws or rejects with:
   onError?: (error: unknown) => void
 }
 
-type StartOptions = {
+interface StartOptions {
   // True to start in the waiting state, skipping the first run:
   wait?: boolean
 }
 
-export type PeriodicTask = {
+export interface PeriodicTask {
   start: (opts?: StartOptions) => void
   stop: () => void
 

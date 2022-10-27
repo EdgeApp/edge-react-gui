@@ -4,7 +4,7 @@ import { TextStyle } from 'react-native'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   style?: TextStyle
 }

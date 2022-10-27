@@ -2,11 +2,14 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-export type AssetId = { pluginId: string; currencyCode: string }
+export interface AssetId {
+  pluginId: string
+  currencyCode: string
+}
 
 // Defines what to display so that the user can identify the service provider
 // of the staking policy.
-export type StakeProviderInfo = {
+export interface StakeProviderInfo {
   // Card subtitle
   displayName: string
 
@@ -15,7 +18,7 @@ export type StakeProviderInfo = {
   stakeProviderId: string
 }
 
-export type StakePolicy = {
+export interface StakePolicy {
   // Internal policy id, unique across all stake policies offered by Edge
   stakePolicyId: string
 
@@ -36,7 +39,7 @@ export type StakePolicy = {
 // -----------------------------------------------------------------------------
 // Change Quote
 // -----------------------------------------------------------------------------
-export type ChangeQuoteRequest = {
+export interface ChangeQuoteRequest {
   action: 'stake' | 'unstake' | 'claim'
   stakePolicyId: string
   currencyCode: string
@@ -44,14 +47,14 @@ export type ChangeQuoteRequest = {
   signerSeed: string
 }
 
-export type QuoteAllocation = {
+export interface QuoteAllocation {
   allocationType: 'stake' | 'unstake' | 'claim' | 'fee'
   pluginId: string
   currencyCode: string
   nativeAmount: string
 }
 
-export type ChangeQuote = {
+export interface ChangeQuote {
   allocations: QuoteAllocation[]
   approve: () => Promise<void>
 }
@@ -60,12 +63,12 @@ export type ChangeQuote = {
 // Stake Position
 // -----------------------------------------------------------------------------
 
-export type StakePositionRequest = {
+export interface StakePositionRequest {
   stakePolicyId: string
   signerSeed: string
 }
 
-export type PositionAllocation = {
+export interface PositionAllocation {
   // The of asset for this allocation
   pluginId: string
   currencyCode: string
@@ -83,7 +86,7 @@ export type PositionAllocation = {
   locktime?: Date
 }
 
-export type StakePosition = {
+export interface StakePosition {
   allocations: PositionAllocation[]
   canStake: boolean
   canUnstake: boolean
@@ -94,7 +97,7 @@ export type StakePosition = {
 // Stake Plugin
 // -----------------------------------------------------------------------------
 
-export type StakePlugin = {
+export interface StakePlugin {
   getStakePolicies: () => Promise<StakePolicy[]>
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
@@ -104,6 +107,6 @@ export type StakePlugin = {
 // Info Server Response
 // -----------------------------------------------------------------------------
 
-export type InfoServerResponse = {
+export interface InfoServerResponse {
   policies: { [key: string]: number }
 }

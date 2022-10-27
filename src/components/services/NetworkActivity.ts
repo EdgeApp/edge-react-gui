@@ -5,7 +5,7 @@ import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { showError } from './AirshipInstance'
 
-type DispatchProps = {
+interface DispatchProps {
   changeConnectivity: (isConnected: boolean) => void
 }
 type Props = DispatchProps
