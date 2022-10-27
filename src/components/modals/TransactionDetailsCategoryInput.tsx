@@ -99,7 +99,6 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
             <View style={styles.inputSubCategoryContainter}>
               <FormField
                 {...MaterialInputOnWhite}
-                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   height: THEME.rem(3.44),
