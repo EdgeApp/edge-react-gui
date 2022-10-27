@@ -154,7 +154,7 @@ export function CategoryModal(props: Props) {
 }
 
 // This is the order we display the categories in:
-const categoryOrder: Category[] = ['exchange', 'expense', 'transfer', 'income']
+const categoryOrder: Category[] = ['income', 'expense', 'transfer', 'exchange']
 
 const styles = StyleSheet.create({
   airshipContainer: {

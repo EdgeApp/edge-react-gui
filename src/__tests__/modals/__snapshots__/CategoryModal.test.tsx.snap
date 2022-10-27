@@ -173,6 +173,7 @@ Array [
             onStartShouldSetResponder={[Function]}
             style={
               Object {
+                "backgroundColor": "#A4C7DF",
                 "borderColor": "#A4C7DF",
                 "borderRadius": 3,
                 "borderWidth": 1,
@@ -204,7 +205,7 @@ Array [
                 ]
               }
             >
-              Exchange
+              Income
             </Text>
           </View>
           <View
@@ -311,7 +312,6 @@ Array [
             onStartShouldSetResponder={[Function]}
             style={
               Object {
-                "backgroundColor": "#A4C7DF",
                 "borderColor": "#A4C7DF",
                 "borderRadius": 3,
                 "borderWidth": 1,
@@ -343,7 +343,7 @@ Array [
                 ]
               }
             >
-              Income
+              Exchange
             </Text>
           </View>
         </View>
@@ -1165,7 +1165,6 @@ Array [
             onStartShouldSetResponder={[Function]}
             style={
               Object {
-                "backgroundColor": "#A4C7DF",
                 "borderColor": "#A4C7DF",
                 "borderRadius": 3,
                 "borderWidth": 1,
@@ -1197,7 +1196,7 @@ Array [
                 ]
               }
             >
-              Exchange
+              Income
             </Text>
           </View>
           <View
@@ -1304,6 +1303,7 @@ Array [
             onStartShouldSetResponder={[Function]}
             style={
               Object {
+                "backgroundColor": "#A4C7DF",
                 "borderColor": "#A4C7DF",
                 "borderRadius": 3,
                 "borderWidth": 1,
@@ -1335,7 +1335,7 @@ Array [
                 ]
               }
             >
-              Income
+              Exchange
             </Text>
           </View>
         </View>
