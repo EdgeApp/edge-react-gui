@@ -97,6 +97,7 @@ describe('TransactionDetailsScene', () => {
                 wallet: fakeCoreWallet,
                 blockHeight: 0
               },
+              walletId: fakeCoreWallet.id,
               thumbnailPath: 'thumb/nail/path'
             }
           }}
@@ -129,6 +130,7 @@ describe('TransactionDetailsScene', () => {
                   amountFiat: -6392.93
                 }
               },
+              walletId: fakeCoreWallet.id,
               thumbnailPath: 'thumb/nail/path'
             }
           }}

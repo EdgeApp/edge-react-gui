@@ -276,6 +276,7 @@ export interface ParamList {
   testScene: {}
   transactionDetails: {
     edgeTransaction: EdgeTransaction
+    walletId: string
     amountFiat?: number
     thumbnailPath?: string
   }

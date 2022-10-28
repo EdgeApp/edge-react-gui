@@ -386,7 +386,8 @@ export function signBroadcastAndSave(
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
       } else {
         Actions.replace('transactionDetails', {
-          edgeTransaction: edgeSignedTransaction
+          edgeTransaction: edgeSignedTransaction,
+          walletId: wallet.id
         })
       }
     } catch (e: any) {
