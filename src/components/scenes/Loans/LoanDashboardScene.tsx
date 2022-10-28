@@ -33,8 +33,8 @@ interface Props {
 }
 
 // First-element is the default wallet plugin used to create new wallet
-const SUPPORTED_WALLET_PLUGIN_IDS = ['ethereum']
-if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('polygon')
+const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']
+if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('ethereum')
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
