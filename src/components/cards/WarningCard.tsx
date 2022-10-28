@@ -39,7 +39,7 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
 
   const renderBulletpoint = (message: string) => {
     return (
-      <View style={styles.bulletpointRow}>
+      <View style={styles.bulletpointRow} key={message}>
         <EdgeText style={styles.bulletpointText}>{'\u2022 '}</EdgeText>
         <EdgeText style={styles.bulletpointText} numberOfLines={0}>
           {message}
