@@ -8,7 +8,7 @@ import thunk from 'redux-thunk'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { rootReducer } from '../../reducers/RootReducer'
-import { GuiWallet } from '../../types/types'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -49,25 +49,8 @@ const fakeCoreWallet: any = {
   type: 'wallet:bitcoin'
 }
 
-const fakeGuiWallet: GuiWallet = {
-  blockHeight: 12345,
-  currencyNames: { BTC: 'Bitcoin' },
-  currencyCode: 'BTC',
-  enabledTokens: [],
-  fiatCurrencyCode: 'USD',
-  id: '123',
-  isoFiatCurrencyCode: 'iso:USD',
-  metaTokens: [],
-  name: 'wallet name',
-  nativeBalances: {},
-  pluginId: 'bitcoin',
-  primaryNativeBalance: '0',
-  type: 'wallet:bitcoin'
-}
-
 describe('TransactionDetailsScene', () => {
   const fakeState: any = {
-    ui: { wallets: { byId: { '123': fakeGuiWallet } } },
     core: {
       account: {
         currencyWallets: { '123': fakeCoreWallet },
@@ -82,6 +65,7 @@ describe('TransactionDetailsScene', () => {
     const actual = renderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
+          navigation={fakeNavigation}
           route={{
             name: 'transactionDetails',
             params: {
@@ -112,6 +96,7 @@ describe('TransactionDetailsScene', () => {
     const actual = renderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
+          navigation={fakeNavigation}
           route={{
             name: 'transactionDetails',
             params: {

@@ -1,5 +1,5 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -14,12 +14,13 @@ import { displayFiatAmount } from '../../hooks/useFiatText'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
@@ -27,22 +28,20 @@ import { ContactListModal, ContactModalResult } from '../modals/ContactListModal
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
   route: RouteProp<'transactionDetails'>
+  wallet: EdgeCurrencyWallet
 }
 interface StateProps {
   contacts: GuiContact[]
-  currencyCode: string
-  currencyInfo?: EdgeCurrencyInfo
   currentFiatAmount: string
   destinationDenomination?: EdgeDenomination
   destinationWallet?: GuiWallet
-  guiWallet: GuiWallet
   subcategoriesList: string[]
   walletDefaultDenomProps: EdgeDenomination
 }
@@ -66,7 +65,6 @@ interface State {
 interface FiatCryptoAmountUI {
   amountString: string
   symbolString: string
-  currencyName: string
   feeString: string
 }
 
@@ -125,9 +123,8 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openFiatInput = () => {
-    const {
-      guiWallet: { fiatCurrencyCode }
-    } = this.props
+    const { wallet } = this.props
+    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -185,23 +182,20 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAdvancedDetails = async () => {
-    const { currencyInfo, route } = this.props
+    const { wallet, route } = this.props
     const { edgeTransaction } = route.params
 
     Airship.show(bridge => (
-      <AdvancedDetailsModal
-        bridge={bridge}
-        transaction={edgeTransaction}
-        url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : undefined}
-      />
+      <AdvancedDetailsModal bridge={bridge} transaction={edgeTransaction} url={sprintf(wallet.currencyInfo.transactionExplorer, edgeTransaction.txid)} />
     ))
   }
 
   renderExchangeData = (symbolString: string) => {
-    const { destinationDenomination, destinationWallet, guiWallet, walletDefaultDenomProps, theme, route } = this.props
+    const { destinationDenomination, destinationWallet, wallet, walletDefaultDenomProps, theme, route } = this.props
     const { edgeTransaction } = route.params
     const { swapData, spendTargets } = edgeTransaction
     const styles = getStyles(theme)
+    const walletName = wallet.name ?? sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 
     if (!swapData || !spendTargets || !destinationDenomination) return null
 
@@ -220,7 +214,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
       return `${s.strings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${s.strings.transaction_details_exchange_order_id}: ${
         orderId || ''
-      }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${guiWallet.name}${newline}${
+      }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
         s.strings.fragment_send_from_label
       }: ${sourceAmount} ${symbolString}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
         s.strings.transaction_details_exchange_destination_wallet
@@ -316,34 +310,35 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Crypto Amount Logic
   getReceivedCryptoAmount(): FiatCryptoAmountUI {
-    const { walletDefaultDenomProps, guiWallet, route } = this.props
+    const { walletDefaultDenomProps, wallet, route } = this.props
     const { edgeTransaction } = route.params
+    const { currencyInfo } = wallet
     const { swapData } = edgeTransaction
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
     const symbolString =
-      guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
+      currencyInfo.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
         ? walletDefaultDenomProps.symbol
         : swapData?.payoutCurrencyCode ?? ''
 
     return {
       amountString: convertedAmount,
       symbolString,
-      currencyName,
       feeString: ''
     }
   }
 
   getSentCryptoAmount(): FiatCryptoAmountUI {
-    const { walletDefaultDenomProps, guiWallet, route } = this.props
+    const { walletDefaultDenomProps, wallet, route } = this.props
     const { edgeTransaction } = route.params
+    const { currencyInfo } = wallet
 
     const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const symbolString =
-      guiWallet.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : edgeTransaction.currencyCode
-    const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode] ?? edgeTransaction.currencyCode
+      currencyInfo.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
+        ? walletDefaultDenomProps.symbol
+        : edgeTransaction.currencyCode
 
     if (edgeTransaction.networkFee) {
       const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
@@ -357,14 +352,12 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       return {
         amountString: amountMinusFee,
         symbolString,
-        currencyName,
         feeString
       }
     } else {
       return {
         amountString: absoluteAmount,
         symbolString,
-        currencyName,
         feeString: ''
       }
     }
@@ -390,14 +383,15 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { currencyInfo, guiWallet, theme, route } = this.props
+    const { wallet, theme, route } = this.props
+    const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
     const { direction, amountFiat, contactName, thumbnailPath, notes, category } = this.state
-    const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
+    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
-    const fiatSymbol = getSymbolFromCurrency(guiWallet.fiatCurrencyCode)
+    const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
     const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
@@ -424,6 +418,13 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const categoriesText = formatCategory(splitCategory(category))
 
+    // Find the currency display name:
+    const { allTokens } = wallet.currencyConfig
+    let currencyName = edgeTransaction.currencyCode
+    if (edgeTransaction.currencyCode === currencyInfo.currencyCode) currencyName = currencyInfo.displayName
+    const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === edgeTransaction.currencyCode)
+    if (tokenId != null) currencyName = allTokens[tokenId].displayName
+
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -440,7 +441,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             <Tile
               type="static"
-              title={sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
+              title={sprintf(s.strings.transaction_details_crypto_amount, currencyName)}
               body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
             />
             <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
@@ -530,55 +531,52 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => {
-    const { edgeTransaction } = params
-    const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
-    const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
-    const { currencyInfo } = state.core.account.currencyWallets[walletId || state.ui.wallets.selectedWalletId]
-    const contacts = state.contacts
-    const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
-    const currencyCode = edgeTransaction.currencyCode
-    const walletDefaultDenomProps: EdgeDenomination =
-      wallet.currencyCode === edgeTransaction.currencyCode
-        ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-        : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+export const TransactionDetailsScene = withWallet((props: OwnProps) => {
+  const { route, wallet } = props
+  const { edgeTransaction } = route.params
+  const theme = useTheme()
+  const dispatch = useDispatch()
 
-    const nativeAmount = getAbsoluteAmount(edgeTransaction)
-    const exchangeDenom = getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-    const cryptoAmount = convertNativeToExchange(exchangeDenom.multiplier)(nativeAmount)
-    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  const contacts = useSelector(state => state.contacts)
+  const subcategoriesList = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
 
-    const { swapData } = edgeTransaction
-    if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
-      swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
-    }
+  const { currencyCode, swapData } = edgeTransaction
+  const { currencyInfo } = wallet
 
-    const currencyWallet = state.core.account.currencyWallets[swapData?.payoutWalletId || state.ui.wallets.selectedWalletId]
-    const destinationDenomination = swapData ? getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, swapData.payoutCurrencyCode) : undefined
-    const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
+  const nativeAmount = getAbsoluteAmount(edgeTransaction)
 
-    return {
-      contacts,
-      currencyCode,
-      currencyInfo,
-      currentFiatAmount,
-      destinationDenomination,
-      destinationWallet,
-      guiWallet: wallet,
-      subcategoriesList,
-      walletDefaultDenomProps
-    }
-  },
-  dispatch => ({
-    getSubcategories() {
-      dispatch(getSubcategories())
-    },
-    setNewSubcategory(newSubcategory: string) {
-      dispatch(setNewSubcategory(newSubcategory))
-    },
-    setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) {
-      dispatch(setTransactionDetails(transaction, edgeMetadata))
-    }
-  })
-)(withTheme(TransactionDetailsComponent))
+  const walletDefaultDenomProps: EdgeDenomination = useSelector(state =>
+    currencyInfo.currencyCode === edgeTransaction.currencyCode
+      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+  )
+
+  const exchangeDenom = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
+  const cryptoAmount = convertNativeToExchange(exchangeDenom.multiplier)(nativeAmount)
+  const currentFiatAmount = useSelector(state => convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.fiatCurrencyCode, cryptoAmount))
+
+  if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
+    swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
+  }
+  const destinationDenomination = useSelector(state =>
+    swapData ? getDisplayDenomination(state, wallet.currencyInfo.pluginId, swapData.payoutCurrencyCode) : undefined
+  )
+  const destinationWallet = useSelector(state => (swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined))
+
+  return (
+    <TransactionDetailsComponent
+      route={route}
+      contacts={contacts}
+      subcategoriesList={subcategoriesList}
+      currentFiatAmount={currentFiatAmount}
+      getSubcategories={() => dispatch(getSubcategories())}
+      setNewSubcategory={async newSubcategory => dispatch(setNewSubcategory(newSubcategory))}
+      setTransactionDetails={(transaction, edgeMetadata) => dispatch(setTransactionDetails(transaction, edgeMetadata))}
+      theme={theme}
+      wallet={wallet}
+      walletDefaultDenomProps={walletDefaultDenomProps}
+      destinationDenomination={destinationDenomination}
+      destinationWallet={destinationWallet}
+    />
+  )
+})
