@@ -1,5 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { ethers } from 'ethers'
 import * as React from 'react'
 import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -7,6 +8,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions'
 import { addressWarnings } from '../../actions/ScanActions'
+import { ENS_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
@@ -99,6 +101,20 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         }
       }
     }
+
+    // Try resolving address by ENS domain for ethereum wallets only
+    if (coreWallet.currencyInfo.pluginId === 'ethereum' && ENS_DOMAINS.some(domain => address.endsWith(domain))) {
+      const chainId = 1 // Hard-coded to Ethereum mainnet
+      const network = ethers.providers.getNetwork(chainId)
+      if (network.name !== 'unknown') {
+        try {
+          const ethersProvider = ethers.getDefaultProvider(network)
+          const resolvedAddress = await ethersProvider.resolveName(address)
+          if (resolvedAddress != null) address = resolvedAddress
+        } catch (_) {}
+      }
+    }
+
     try {
       const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await coreWallet.parseUri(address, currencyCode)
       this.setState({ loading: false })

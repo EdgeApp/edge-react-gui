@@ -48,7 +48,6 @@ describe('TransactionListRow', () => {
       currencyCode: 'BTC',
       transaction: {
         dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
-        key: 0,
         time: '22:53:08',
         unfilteredIndex: 0,
         currencyCode: 'BTC',

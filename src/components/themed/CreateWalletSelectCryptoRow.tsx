@@ -1,27 +1,27 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { useWatch } from '../../hooks/useWatch'
+import { useSelector } from '../../types/reactRedux'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 type Props = {
-  currencyCode: string
+  rightSide?: React.ReactNode
   walletName: string
 
   // Icon currency:
-  pluginId?: string
+  pluginId: string
   tokenId?: string
 
   // Callbacks:
-  onLongPress?: () => void
   onPress?: () => void
 }
 
 export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   const {
-    currencyCode,
+    rightSide,
     walletName,
 
     // Icon currency:
@@ -29,22 +29,23 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
     tokenId,
 
     // Callbacks:
-    onLongPress,
     onPress
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const currencyConfigs = useWatch(account, 'currencyConfig')
+  const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].builtinTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
+
   return (
-    <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
-      <CryptoIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+    <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={onPress}>
+      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
-      <View style={styles.childrenContainer}>
-        <IonIcon size={theme.rem(1.5)} color={theme.iconTappable} name="chevron-forward-outline" />
-      </View>
+      <View style={styles.childrenContainer}>{rightSide}</View>
     </TouchableOpacity>
   )
 }

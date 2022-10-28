@@ -384,8 +384,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
   `)
 }
 
-// @ts-expect-error
-const shownWalletGetCryptoModals = []
+const shownWalletGetCryptoModals: string[] = []
 
 export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
   try {
@@ -395,7 +394,6 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
     // check if balance is zero
     const balance = wallet.balances[currencyCode]
-    // @ts-expect-error
     if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal

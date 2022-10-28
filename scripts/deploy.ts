@@ -38,6 +38,7 @@ type BuildConfigFile = {
   hockeyAppTags: string
   hockeyAppToken: string
   productName: string
+  projectName: string
 }
 
 /**
@@ -50,6 +51,8 @@ interface BuildObj extends BuildConfigFile {
   platformType: string // 'android' | 'ios'
   repoBranch: string // 'develop' | 'master' | 'test'
   tmpDir: string
+  buildArchivesDir: string
+  bundleToolPath: string
 
   // Set in makeCommonPost:
   buildNum: string
@@ -78,7 +81,7 @@ function main() {
   const buildObj: BuildObj = {} as any
 
   makeCommonPre(argv, buildObj)
-  makeProject(argv[2], buildObj)
+  makeProject(buildObj)
   makeCommonPost(buildObj)
 
   // buildCommonPre()
@@ -94,11 +97,14 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = _rootProjectDir
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
+  buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
+  buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
-function makeProject(project: string, buildObj: BuildObj) {
+function makeProject(buildObj: BuildObj) {
+  const project = buildObj.projectName
   const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
 
   Object.assign(buildObj, config[project])
@@ -146,7 +152,10 @@ function makeCommonPost(buildObj: BuildObj) {
 function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
 
-  if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
+  const patchDir = getPatchDir(buildObj)
+  if (fs.existsSync(join(patchDir, 'GoogleService-Info.plist'))) {
+    call(`cp -a ${join(patchDir, 'GoogleService-Info.plist')} ios/edge/`)
+  } else if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
     call(`cp -a ${buildObj.guiDir}/GoogleService-Info.plist ${buildObj.guiPlatformDir}/edge/`)
   }
 
@@ -184,10 +193,10 @@ function buildIos(buildObj: BuildObj) {
   const archiveDirArray = archiveDir.split('\n')
   archiveDir = archiveDirArray[0]
 
-  buildObj.dSymFile = `${buildDir}/${archiveDir}/dSYMs/${buildObj.xcodeScheme}.app.dSYM`
+  buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.dSYM.zip`
-  buildObj.ipaFile = `${buildObj.tmpDir}/${buildObj.xcodeScheme}.ipa`
+  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.dSYM.zip`)
+  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.ipa`)
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
@@ -214,21 +223,38 @@ function buildIos(buildObj: BuildObj) {
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
-  cmdStr = `/usr/bin/zip -r "${buildObj.dSymZip}" "${buildObj.dSymFile}"`
+  cmdStr = `/usr/bin/zip -r ${buildObj.dSymZip} ${buildObj.dSymFile}`
   call(cmdStr)
 
-  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.xcodeScheme}.app/main.jsbundle" "${buildObj.guiPlatformDir}/"`
+  cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
   call(cmdStr)
 }
 
 function buildAndroid(buildObj: BuildObj) {
-  if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
+  const {
+    buildArchivesDir,
+    buildNum,
+    platformType,
+    repoBranch,
+    guiPlatformDir,
+    bundleToolPath,
+    androidKeyStore,
+    androidKeyStoreAlias,
+    androidKeyStorePassword
+  } = buildObj
+
+  const keyStoreFile = join('/', _rootProjectDir, 'keystores', androidKeyStore)
+  const patchDir = getPatchDir(buildObj)
+
+  if (fs.existsSync(join(patchDir, 'google-services.json'))) {
+    call(`cp -a ${join(patchDir, 'google-services.json')} android/app/`)
+  } else if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
     call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
   }
 
   chdir(buildObj.guiDir)
 
-  process.env.ORG_GRADLE_PROJECT_storeFile = sprintf('/%s/keystores/%s', _rootProjectDir, buildObj.androidKeyStore)
+  process.env.ORG_GRADLE_PROJECT_storeFile = keyStoreFile
   process.env.ORG_GRADLE_PROJECT_storePassword = buildObj.androidKeyStorePassword
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
   process.env.ORG_GRADLE_PROJECT_keyPassword = buildObj.androidKeyStorePassword
@@ -238,9 +264,20 @@ function buildAndroid(buildObj: BuildObj) {
   call('./gradlew signingReport')
   call(sprintf('./gradlew %s', buildObj.androidTask))
 
-  // Reset gradle file back
-  // call('git reset --hard origin/' + buildObj.repoBranch)
-  buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
+  // Process the AAB files created into APK format and place in archive directory
+  const archiveDir = join(buildArchivesDir, repoBranch, platformType, String(buildNum))
+  fs.mkdirSync(archiveDir, { recursive: true })
+  const aabPath = join(archiveDir, 'app-release.aab')
+  const apksPath = join(archiveDir, 'app-release.apks')
+  const apkPathDir = join(archiveDir, 'apk_container')
+  fs.copyFileSync(join(guiPlatformDir, '/app/build/outputs/bundle/release/app-release.aab'), aabPath)
+
+  call(
+    `java -jar ${bundleToolPath} build-apks --overwrite --mode=universal --bundle=${aabPath} --output=${apksPath} --ks=${keyStoreFile} --ks-key-alias=${androidKeyStoreAlias} --ks-pass=pass:${androidKeyStorePassword}`
+  )
+  call(`unzip ${apksPath} -d ${apkPathDir}`)
+
+  buildObj.ipaFile = join(apkPathDir, 'universal.apk')
 }
 
 function buildCommonPost(buildObj: BuildObj) {
@@ -274,9 +311,12 @@ function buildCommonPost(buildObj: BuildObj) {
     mylog('\n\nUploading to Bugsnag')
     mylog('*********************\n')
 
-    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
+    const cpa = `cp -a ${buildObj.dSymFile}/Contents/Resources/DWARF/${escapePath(buildObj.productName)} ${buildObj.tmpDir}/`
     call(cpa)
-    curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
+    curl =
+      '/usr/bin/curl https://upload.bugsnag.com/ ' +
+      `-F dsym=@${buildObj.tmpDir}/${escapePath(buildObj.productName)} ` +
+      `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
   }
 
@@ -329,4 +369,13 @@ function cmd(cmdstring: string) {
     killSignal: 'SIGKILL'
   })
   return r
+}
+
+function getPatchDir(buildObj: BuildObj): string {
+  const { projectName, guiDir, repoBranch } = buildObj
+  return join(guiDir, 'deployPatches', projectName, repoBranch)
+}
+
+function escapePath(path: string): string {
+  return path.replace(/(\s+)/g, '\\$1')
 }

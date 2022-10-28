@@ -30,7 +30,7 @@ async function main() {
     `react-native bundle \
   --platform ${platform} \
   --dev false \
-  --entry-file index.js \
+  --entry-file index.ts \
   --bundle-output ${bundle} \
   --sourcemap-output ${map}`,
     { cwd, stdio: 'inherit' }

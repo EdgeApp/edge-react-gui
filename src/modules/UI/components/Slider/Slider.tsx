@@ -28,12 +28,6 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-// @ts-expect-error
-const clamp = (value, lowerBound, upperBound) => {
-  'worklet'
-  return Math.min(Math.max(lowerBound, value), upperBound)
-}
-
 export const SliderComponent = (props: Props) => {
   const {
     disabledText,
@@ -134,6 +128,13 @@ export const SliderComponent = (props: Props) => {
       </View>
     </View>
   )
+}
+
+type Clamp = (value: number, lowerBound: number, upperBound: number) => number
+
+const clamp: Clamp = (value, lowerBound, upperBound) => {
+  'worklet'
+  return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

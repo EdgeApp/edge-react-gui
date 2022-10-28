@@ -255,7 +255,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     )
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
     // only included supported types of payment in WalletListModal
-    const supportedCurrenciesList = []
+    const supportedCurrenciesList: string[] = []
     for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         supportedCurrenciesList.push(currency)

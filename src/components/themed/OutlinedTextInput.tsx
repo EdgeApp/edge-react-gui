@@ -5,6 +5,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { NumericInput } from '../modals/NumericInput'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 type Props = {
@@ -12,6 +13,9 @@ type Props = {
   value: string
   error?: string
   label?: string
+  numeric?: boolean
+  minDecimals?: number
+  maxDecimals?: number
 
   // Appearance:
   clearIcon?: boolean // Defaults to 'true'
@@ -63,6 +67,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
     error,
     label,
     value,
+    numeric,
+    minDecimals,
+    maxDecimals,
 
     // Appearance:
     clearIcon = true,
@@ -302,23 +309,45 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
             </View>
           </TouchableWithoutFeedback>
         ) : null}
-        <TextInput
-          ref={inputRef}
-          {...inputProps}
-          autoFocus={autoFocus}
-          multiline={multiline}
-          editable={!showSpinner}
-          selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-          style={[textStyle, textInputStyle]}
-          textAlignVertical="top"
-          value={value}
-          secureTextEntry={hidePassword}
-          // Callbacks:
-          onBlur={handleBlur}
-          onChangeText={onChangeText}
-          onFocus={handleFocus}
-          maxLength={maxLength}
-        />
+        {numeric ? (
+          <NumericInput
+            ref={inputRef}
+            {...inputProps}
+            minDecimals={minDecimals}
+            maxDecimals={maxDecimals}
+            autoFocus={autoFocus}
+            multiline={multiline}
+            editable={!showSpinner}
+            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+            style={[textStyle, textInputStyle]}
+            textAlignVertical="top"
+            value={value}
+            secureTextEntry={hidePassword}
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            maxLength={maxLength}
+          />
+        ) : (
+          <TextInput
+            ref={inputRef}
+            {...inputProps}
+            autoFocus={autoFocus}
+            multiline={multiline}
+            editable={!showSpinner}
+            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+            style={[textStyle, textInputStyle]}
+            textAlignVertical="top"
+            value={value}
+            secureTextEntry={hidePassword}
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            maxLength={maxLength}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   )
@@ -479,9 +508,12 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-// @ts-expect-error
-const getIterpolatedColor = (fromColor, toColor, errorColor) => (errorValue, focusValue) => {
-  'worklet'
-  const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
-  return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+type ColorInterpolator = (errorValue: number, focusValue: number) => string
+
+function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string): ColorInterpolator {
+  return (errorValue, focusValue) => {
+    'worklet'
+    const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
+    return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+  }
 }

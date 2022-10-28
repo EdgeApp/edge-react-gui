@@ -7,7 +7,7 @@
     "paymentTypes": [
       "iach"
     ],
-    "title": "Instant ACH",
+    "title": "ACH Bank Transfer",
     "forCountries": [
       "US"
     ],
@@ -270,7 +270,7 @@
       "bank"
     ],
     "description": "Fee: 1-2%\nSettlement: 1 - 5 days",
-    "title": "ACH Bank Transfer",
+    "title": "ACH (deprecated)",
     "partnerIconPath": "wyre-logo-square-small.png",
     "forCountries": [
       "US"

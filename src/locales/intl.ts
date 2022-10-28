@@ -12,6 +12,8 @@ export type IntlLocaleType = {
 
 type IntlNumberFormatOptionsType = {
   toFixed?: number
+  maxDecimals?: number
+  minDecimals?: number
   noGrouping?: boolean
 }
 
@@ -37,7 +39,7 @@ setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
  * @returns {string}
  */
 export function formatNumberInput(input: string, options?: IntlNumberFormatOptionsType): string {
-  const _options = {}
+  const _options: IntlNumberFormatOptionsType = {}
 
   if (input.endsWith('.') || input.endsWith(',')) {
     return formatNumber(input.slice(0, -1)) + locale.decimalSeparator
@@ -45,7 +47,6 @@ export function formatNumberInput(input: string, options?: IntlNumberFormatOptio
   if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
     const decimalPart = input.split(NATIVE_DECIMAL_SEPARATOR)[1]
     if (decimalPart) {
-      // @ts-expect-error
       _options.toFixed = decimalPart.length
     }
   }
@@ -59,11 +60,16 @@ export function formatNumberInput(input: string, options?: IntlNumberFormatOptio
  * @param options
  * @return {string}
  */
-export function formatNumber(number: number | string, options?: IntlNumberFormatOptionsType): string {
+export function formatNumber(number: number | string, options: IntlNumberFormatOptionsType = {}): string {
   let i
   let intPart
   let stringify = String(number)
-  if (options && options.toFixed != null) {
+  const { toFixed: toFixedVal } = options
+  const { minDecimals = toFixedVal ?? 0, maxDecimals = toFixedVal ?? 99 } = options
+
+  if (options.minDecimals != null || options.maxDecimals != null) {
+    stringify = toFixed(stringify, minDecimals, maxDecimals)
+  } else if (options.toFixed != null) {
     stringify = toFixed(stringify, options.toFixed, options.toFixed)
   }
   const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)

@@ -5,8 +5,17 @@ import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { filterNull } from '../../util/safeFilters'
 import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
-import { asErrorResponse, asLoginPayload, LoginUpdatePayload, PushRequestBody, wasLoginUpdatePayload, wasPushRequestBody } from './types/pushApiTypes'
-import { BroadcastTx, NewPushEvent, PushEventState, PushEventStatus, PushMessage, PushTrigger } from './types/pushTypes'
+import {
+  asErrorResponse,
+  asLoginPayload,
+  LoginUpdatePayload,
+  NewPushEvent,
+  PushEventStatus,
+  PushRequestBody,
+  wasLoginUpdatePayload,
+  wasPushRequestBody
+} from './types/pushApiTypes'
+import { BroadcastTx, PushEventState, PushMessage, PushTrigger } from './types/pushTypes'
 import { base58 } from './util/encoding'
 
 export interface PushEventInfo {
@@ -225,7 +234,24 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
       return null
     }
     case 'par': {
-      return null
+      const checkedEffects = filterNull(effect.childEffects)
+      if (checkedEffects.length !== effect.childEffects.length) throw new Error(UNEXPECTED_NULL_EFFECT_ERROR_MESSAGE)
+
+      // Get an array of triggers for every child effect
+      const triggers: PushTrigger[] = []
+
+      for (const effect of checkedEffects) {
+        const trigger = await actionEffectToPushTrigger(context, effect)
+
+        if (trigger == null) return null
+
+        triggers.push(trigger)
+      }
+
+      return {
+        type: 'all',
+        triggers
+      }
     }
     // Would this cause infinite recursion? We may never want to add conversion support for this.
     case 'push-event': {

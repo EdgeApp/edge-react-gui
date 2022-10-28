@@ -21,7 +21,7 @@ const pluginDisplayName = 'Moonpay'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false, iach: true }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true, iach: true }
 
 const asMoonpayCurrency = asObject({
   type: asValue('crypto', 'fiat'),
@@ -122,7 +122,7 @@ export const moonpayProvider: FiatProviderFactory = {
         if (response == null || !response.ok) return allowedCurrencyCodes
 
         const result = await response.json()
-        let moonpayCurrencies = []
+        let moonpayCurrencies: MoonpayCurrency[] = []
         try {
           moonpayCurrencies = asMoonpayCurrencies(result)
         } catch (error: any) {

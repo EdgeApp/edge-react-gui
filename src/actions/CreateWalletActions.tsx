@@ -7,13 +7,16 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getPluginId } from '../constants/WalletAndCurrencyConstants'
+import { WalletCreateItem } from '../components/themed/WalletList'
+import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
+import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { Dispatch, GetState } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
+import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
 
 export type CreateWalletOptions = {
@@ -109,13 +112,12 @@ export const checkHandleAvailability = (walletType: string, accountName: string)
     }
   } catch (error: any) {
     console.log('checkHandleAvailability error: ', error)
-    let data = 'UNKNOWN_ERROR'
+    let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
     if (error.name === 'ErrorAccountUnavailable') {
       data = 'UNAVAILABLE'
     } else if (error.name === 'ErrorInvalidAccountName') {
       data = 'INVALID'
     }
-    // @ts-expect-error
     dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
 }
@@ -202,4 +204,73 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
     />
   ))
   Actions.pop()
+}
+
+export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
+export interface MainWalletCreateItem extends WalletCreateItem {
+  walletType: string
+}
+interface TokenWalletCreateItem extends WalletCreateItem {
+  tokenId: string
+  createWalletIds: string[]
+}
+
+export const splitCreateWalletItems = (createItems: WalletCreateItem[]): { newWalletItems: MainWalletCreateItem[]; newTokenItems: TokenWalletCreateItem[] } => {
+  const newWalletItems: MainWalletCreateItem[] = []
+  const newTokenItems: TokenWalletCreateItem[] = []
+  createItems.forEach(item => {
+    if (item.walletType != null) {
+      newWalletItems.push(item as MainWalletCreateItem)
+    } else if (item.tokenId != null) {
+      if (item.createWalletIds == null) item.createWalletIds = []
+      newTokenItems.push(item as TokenWalletCreateItem)
+    }
+  })
+  return { newWalletItems, newTokenItems }
+}
+
+export const enableTokensAcrossWallets = (newTokenItems: TokenWalletCreateItem[]) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { currencyWallets } = state.core.account
+
+  const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
+    const { createWalletIds, tokenId } = item
+
+    const walletId = createWalletIds[0]
+    if (map[walletId] == null) map[walletId] = []
+    map[walletId].push(tokenId)
+
+    return map
+  }, {})
+
+  // Create the enableToken promises to be promise.all'd later
+  const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
+    const wallet = currencyWallets[walletId]
+    if (wallet == null) return
+    return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
+  })
+
+  await Promise.all(promises)
+}
+
+export const getUniqueWalletName = (account: EdgeAccount, pluginId: string): string => {
+  const { currencyWallets, currencyConfig } = account
+  const { displayName } = currencyConfig[pluginId].currencyInfo
+  const defaultName = SPECIAL_CURRENCY_INFO[pluginId]?.initWalletName ?? sprintf(s.strings.my_crypto_wallet_name, displayName)
+
+  const existingWalletNames = Object.keys(currencyWallets)
+    .filter(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
+    .map(walletId => currencyWallets[walletId].name)
+  const filteredWalletNames = filterNull(existingWalletNames).filter((name: string) => name.startsWith(defaultName))
+
+  let newWalletName = defaultName
+  let count = 2
+
+  while (true) {
+    if (filteredWalletNames.includes(newWalletName)) {
+      newWalletName = `${defaultName} ${count++}`
+    } else {
+      return newWalletName
+    }
+  }
 }

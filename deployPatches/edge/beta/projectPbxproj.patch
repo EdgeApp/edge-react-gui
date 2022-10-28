@@ -1,0 +1,26 @@
+diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
+index 0ceb9106a..35a6f7095 100644
+--- a/ios/edge.xcodeproj/project.pbxproj
++++ b/ios/edge.xcodeproj/project.pbxproj
+@@ -483,8 +483,8 @@
+ 					"-ObjC",
+ 					"-lc++",
+ 				);
+-				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
+-				PRODUCT_NAME = Edge;
++				PRODUCT_BUNDLE_IDENTIFIER = app.edge.beta;
++				PRODUCT_NAME = "Edge Beta";
+ 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+ 				SWIFT_VERSION = 5.0;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+@@ -524,8 +524,8 @@
+ 					"-ObjC",
+ 					"-lc++",
+ 				);
+-				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
+-				PRODUCT_NAME = Edge;
++				PRODUCT_BUNDLE_IDENTIFIER = app.edge.beta;
++				PRODUCT_NAME = "Edge Beta";
+ 				SWIFT_VERSION = 5.0;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";

@@ -99,6 +99,17 @@ const asConfig = asObject({
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  ETHEREUM_POW_INIT: asCorePluginInit(
+    asObject({
+      alethioApiKey: asOptional(asString, ''),
+      amberdataApiKey: asOptional(asString, ''),
+      blockchairApiKey: asOptional(asString, ''),
+      evmScanApiKey: asOptional(asArray(asString), []),
+      gasStationApiKey: asOptional(asString, ''),
+      infuraProjectId: asOptional(asString, ''),
+      quiknodeApiKey: asOptional(asString, '')
+    }).withRest
+  ),
   EXOLIX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

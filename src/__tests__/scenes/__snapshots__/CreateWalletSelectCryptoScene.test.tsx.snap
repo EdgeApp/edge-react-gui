@@ -1,10 +1,1599 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
-<SceneWrapper
-  avoidKeyboard={true}
-  background="theme"
+<BVLinearGradient
+  colors={
+    Array [
+      4279050565,
+      4278994026,
+    ]
+  }
+  endPoint={
+    Object {
+      "x": 1,
+      "y": 0,
+    }
+  }
+  locations={null}
+  startPoint={
+    Object {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  style={
+    Object {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
+  }
 >
-  [Function]
-</SceneWrapper>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "position": "absolute",
+        },
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "padding": 0,
+          "right": 0,
+          "top": 64,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "flex": 1,
+          },
+          Object {
+            "marginBottom": -0,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "justifyContent": "center",
+              "marginLeft": 22,
+              "paddingBottom": 22,
+            },
+            Object {
+              "marginTop": 22,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
+          }
+        >
+          Choose Wallets to Add
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginBottom": 11,
+            "marginLeft": 22,
+          }
+        }
+      />
+      <View
+        accessible={true}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Array [
+            Object {
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "borderRadius": 11,
+              "justifyContent": "center",
+              "minHeight": 67,
+              "paddingHorizontal": 22,
+            },
+            Object {
+              "flexGrow": 0,
+              "marginBottom": 11,
+              "marginLeft": 22,
+              "marginRight": 22,
+              "marginTop": 0,
+              "paddingLeft": 65,
+              "paddingRight": 65,
+              "paddingVertical": 0,
+            },
+          ]
+        }
+      >
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "right": 11,
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 22,
+              "position": "absolute",
+              "right": 11,
+            }
+          }
+        />
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "borderBottomLeftRadius": 11,
+              "borderBottomWidth": 1,
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "borderLeftWidth": 1,
+              "borderRightWidth": 0,
+              "borderTopLeftRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": 22,
+            }
+          }
+        />
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "borderBottomRightRadius": 11,
+              "borderBottomWidth": 1,
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "borderLeftWidth": 0,
+              "borderRightWidth": 1,
+              "borderTopRightRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "width": 22,
+            }
+          }
+        />
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "left": 22,
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "borderColor": "rgba(164, 199, 223, 1)",
+              "borderTopWidth": 1,
+              "left": 22,
+              "position": "absolute",
+              "right": 22,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "height": 67,
+                "justifyContent": "center",
+                "left": 0,
+                "paddingHorizontal": 22,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              Object {
+                "paddingLeft": 65,
+                "paddingRight": 65,
+              },
+            ]
+          }
+        >
+          <Text
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "color": "rgba(164, 199, 223, 1)",
+                  "transform": Array [
+                    Object {
+                      "translateX": -0,
+                    },
+                    Object {
+                      "translateY": -0,
+                    },
+                    Object {
+                      "scale": 1,
+                    },
+                  ],
+                },
+              }
+            }
+            collapsable={false}
+            numberOfLines={1}
+            onLayout={[Function]}
+            style={
+              Object {
+                "alignSelf": "flex-start",
+                "color": "rgba(164, 199, 223, 1)",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+                "transform": Array [
+                  Object {
+                    "translateX": -0,
+                  },
+                  Object {
+                    "translateY": -0,
+                  },
+                  Object {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            Search Wallets
+          </Text>
+        </View>
+        <Text
+          animatedStyle={
+            Object {
+              "value": Object {
+                "opacity": 0,
+              },
+            }
+          }
+          collapsable={false}
+          numberOfLines={1}
+          style={
+            Object {
+              "bottom": -28,
+              "color": "#E85466",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "left": 28,
+              "opacity": 0,
+              "position": "absolute",
+            }
+          }
+        />
+        <Text
+          animatedStyle={
+            Object {
+              "value": Object {
+                "color": "rgba(164, 199, 223, 1)",
+                "opacity": 0,
+                "transform": Array [
+                  Object {
+                    "translateX": 6,
+                  },
+                  Object {
+                    "scale": 0,
+                  },
+                ],
+              },
+            }
+          }
+          collapsable={false}
+          numberOfLines={1}
+          onLayout={[Function]}
+          style={
+            Object {
+              "bottom": -10,
+              "color": "rgba(164, 199, 223, 1)",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "opacity": 0,
+              "position": "absolute",
+              "right": 28,
+              "transform": Array [
+                Object {
+                  "translateX": 6,
+                },
+                Object {
+                  "scale": 0,
+                },
+              ],
+            }
+          }
+        >
+          
+        </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": undefined,
+                "fontSize": 12,
+              },
+              Object {
+                "color": "rgba(255, 255, 255, .75)",
+                "fontSize": 22,
+                "left": 0,
+                "padding": 22,
+                "position": "absolute",
+                "top": 0,
+              },
+              Object {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+        <TextInput
+          autoCapitalize="words"
+          autoCorrect={false}
+          autoFocus={false}
+          editable={true}
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="next"
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
+          style={
+            Array [
+              Object {
+                "alignSelf": "stretch",
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+              },
+              Object {
+                "flexGrow": 0,
+              },
+            ]
+          }
+          textAlignVertical="top"
+          value=""
+        />
+      </View>
+      <RCTScrollView
+        automaticallyAdjustContentInsets={false}
+        contentContainerStyle={
+          Object {
+            "paddingBottom": 0,
+          }
+        }
+        data={
+          Array [
+            Object {
+              "currencyCode": "ETH",
+              "displayName": "Ethereum",
+              "key": "create-undefined-ethereum",
+              "pluginId": "ethereum",
+              "walletType": undefined,
+            },
+            Object {
+              "createWalletIds": Array [
+                "123SomeWalletId",
+              ],
+              "currencyCode": "REP",
+              "displayName": "Augur",
+              "key": "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862",
+              "pluginId": "ethereum",
+              "tokenId": "1985365e9f78359a9b6ad760e32412f4a445e862",
+            },
+            Object {
+              "createWalletIds": Array [
+                "123SomeWalletId",
+              ],
+              "currencyCode": "REPV2",
+              "displayName": "Augur v2",
+              "key": "create-ethereum-221657776846890989a759ba2973e427dff5c9bb",
+              "pluginId": "ethereum",
+              "tokenId": "221657776846890989a759ba2973e427dff5c9bb",
+            },
+            Object {
+              "createWalletIds": Array [
+                "123SomeWalletId",
+              ],
+              "currencyCode": "HERC",
+              "displayName": "Hercules",
+              "key": "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
+              "pluginId": "ethereum",
+              "tokenId": "2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
+            },
+            Object {
+              "createWalletIds": Array [
+                "123SomeWalletId",
+              ],
+              "currencyCode": "DAI",
+              "displayName": "Dai Stablecoin",
+              "key": "create-ethereum-6b175474e89094c44da98b954eedeac495271d0f",
+              "pluginId": "ethereum",
+              "tokenId": "6b175474e89094c44da98b954eedeac495271d0f",
+            },
+          ]
+        }
+        getItem={[Function]}
+        getItemCount={[Function]}
+        getItemLayout={[Function]}
+        initialNumToRender={12}
+        keyExtractor={[Function]}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        style={
+          Object {
+            "flex": 1,
+          }
+        }
+        viewabilityConfigCallbackPairs={Array []}
+      >
+        <View>
+          <View
+            style={null}
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 96,
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "height": 45,
+                    "marginBottom": 22,
+                    "marginLeft": 22,
+                    "marginRight": 22,
+                    "marginTop": 22,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "flexBasis": "auto",
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  ETH
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Ethereum
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "paddingRight": 11,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={false}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={null}
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 96,
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "height": 45,
+                    "marginBottom": 22,
+                    "marginLeft": 22,
+                    "marginRight": 22,
+                    "marginTop": 22,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/1985365e9f78359a9b6ad760e32412f4a445e862.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "height": "50%",
+                        "position": "absolute",
+                        "right": 0,
+                        "width": "50%",
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "flexBasis": "auto",
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  REP
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Augur
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "paddingRight": 11,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={false}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={null}
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 96,
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "height": 45,
+                    "marginBottom": 22,
+                    "marginLeft": 22,
+                    "marginRight": 22,
+                    "marginTop": 22,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/221657776846890989a759ba2973e427dff5c9bb.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "height": "50%",
+                        "position": "absolute",
+                        "right": 0,
+                        "width": "50%",
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "flexBasis": "auto",
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  REPV2
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Augur v2
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "paddingRight": 11,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={false}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={null}
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 96,
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "height": 45,
+                    "marginBottom": 22,
+                    "marginLeft": 22,
+                    "marginRight": 22,
+                    "marginTop": 22,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "height": "50%",
+                        "position": "absolute",
+                        "right": 0,
+                        "width": "50%",
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "flexBasis": "auto",
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  HERC
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Hercules
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "paddingRight": 11,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={false}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={null}
+          >
+            <View
+              accessibilityState={
+                Object {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "minHeight": 96,
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "height": 45,
+                    "marginBottom": 22,
+                    "marginLeft": 22,
+                    "marginRight": 22,
+                    "marginTop": 22,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/6b175474e89094c44da98b954eedeac495271d0f.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "height": "50%",
+                        "position": "absolute",
+                        "right": 0,
+                        "width": "50%",
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  Object {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "flexBasis": "auto",
+                        "flexShrink": 1,
+                        "fontFamily": "Quicksand-Medium",
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  DAI
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Dai Stablecoin
+                </Text>
+              </View>
+              <View
+                style={
+                  Object {
+                    "paddingRight": 11,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={false}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "opacity": 0,
+            },
+          }
+        }
+        collapsable={false}
+        pointerEvents="none"
+        style={
+          Object {
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignSelf": "center",
+              "bottom": "1%",
+              "position": "absolute",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              Object {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "elevation": 0,
+                "opacity": 1,
+                "shadowColor": "#000000",
+                "shadowOffset": Object {
+                  "height": 0,
+                  "width": 0,
+                },
+                "shadowOpacity": 0,
+                "shadowRadius": 0,
+              }
+            }
+          >
+            <BVLinearGradient
+              colors={
+                Array [
+                  4284935592,
+                  4284935592,
+                ]
+              }
+              endPoint={
+                Object {
+                  "x": 1,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                Object {
+                  "x": 0,
+                  "y": 0,
+                }
+              }
+              style={
+                Array [
+                  Object {
+                    "alignItems": "center",
+                    "borderColor": "rgba(255, 255, 255, 0)",
+                    "borderRadius": 6,
+                    "borderWidth": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "minHeight": 67,
+                    "minWidth": 202,
+                  },
+                  Object {
+                    "alignSelf": "center",
+                    "marginBottom": 11,
+                    "marginLeft": -11,
+                    "marginRight": -11,
+                    "marginTop": 11,
+                    "opacity": 1,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                  },
+                  Object {
+                    "borderRadius": 6,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.75}
+                numberOfLines={1}
+                style={
+                  Object {
+                    "color": "#0E4B75",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "marginHorizontal": 0,
+                    "paddingBottom": 11,
+                    "paddingLeft": 17,
+                    "paddingRight": 17,
+                    "paddingTop": 11,
+                    "textShadowColor": "#000000",
+                    "textShadowOffset": Object {
+                      "height": 0,
+                      "width": 0,
+                    },
+                    "textShadowRadius": 0,
+                  }
+                }
+              >
+                Next
+              </Text>
+            </BVLinearGradient>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</BVLinearGradient>
 `;

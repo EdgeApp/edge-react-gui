@@ -98,7 +98,6 @@ export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
     const wallet: GuiWallet = getSelectedWallet(state)
     return {
       exchangeRates: state.exchangeRates,
-      // @ts-expect-error
       fiatSymbol: FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode],
       isoFiatCurrencyCode: wallet.isoFiatCurrencyCode
     }

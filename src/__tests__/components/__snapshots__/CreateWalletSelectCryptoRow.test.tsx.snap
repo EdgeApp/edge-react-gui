@@ -1,23 +1,79 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListRow should render with loading props 1`] = `
-<TouchableOpacity
-  onLongPress={[Function]}
-  onPress={[Function]}
+<View
+  accessibilityState={
+    Object {
+      "disabled": false,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     Object {
       "alignItems": "center",
       "flexDirection": "row",
       "justifyContent": "center",
       "minHeight": 96,
+      "opacity": 1,
     }
   }
 >
-  <Memo(CryptoIconComponent)
-    currencyCode="BTC"
-    marginRem={1}
-    sizeRem={2}
-  />
+  <View
+    style={
+      Object {
+        "height": 45,
+        "marginBottom": 22,
+        "marginLeft": 22,
+        "marginRight": 22,
+        "marginTop": 22,
+        "width": 45,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
+      }
+    >
+      <FastImageView
+        resizeMode="cover"
+        source={
+          Object {
+            "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+          }
+        }
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
   <View
     style={
       Object {
@@ -28,27 +84,51 @@ exports[`WalletListRow should render with loading props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
       style={
-        Object {
-          "flexBasis": "auto",
-          "flexShrink": 1,
-          "fontFamily": "Quicksand-Medium",
-        }
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "flexBasis": "auto",
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Medium",
+          },
+          null,
+        ]
       }
     >
       BTC
-    </WithTheme(EdgeTextComponent)>
-    <WithTheme(EdgeTextComponent)
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
       style={
-        Object {
-          "color": "#A4C7DF",
-          "fontSize": 17,
-        }
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "color": "#A4C7DF",
+            "fontSize": 17,
+          },
+          null,
+        ]
       }
     >
       My bitcoin wallet
-    </WithTheme(EdgeTextComponent)>
+    </Text>
   </View>
   <View
     style={
@@ -57,12 +137,26 @@ exports[`WalletListRow should render with loading props 1`] = `
       }
     }
   >
-    <Icon
+    <Text
       allowFontScaling={false}
-      color="#66EDA8"
-      name="chevron-forward-outline"
-      size={34}
-    />
+      style={
+        Array [
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 26,
+          },
+          undefined,
+          Object {
+            "fontFamily": "Ionicons",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
   </View>
-</TouchableOpacity>
+</View>
 `;

@@ -37,8 +37,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     )
   }
 
-  // @ts-expect-error
-  const rowDataFilter = (searchText, country) => {
+  const rowDataFilter = (searchText: string, country: CountryData) => {
     const lowerCaseText = searchText.toLowerCase()
     const upperCaseText = searchText.toUpperCase()
     return (
@@ -48,18 +47,14 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     )
   }
 
-  const countryCodes = COUNTRY_CODES.reduce((countries, country) => {
-    // @ts-expect-error
-    if (country['alpha-2'] === countryCode) countries.unshift(country)
-    // @ts-expect-error
-    else countries.push(country)
-    return countries
-  }, [])
+  const countryCodes: CountryData[] = []
+  for (const country of COUNTRY_CODES) {
+    if (country['alpha-2'] === countryCode) countryCodes.unshift(country)
+    else countryCodes.push(country)
+  }
 
-  // @ts-expect-error
-  const handleSubmitEditing = newCountry => {
+  const handleSubmitEditing = (newCountry: string) => {
     const result = countryCodes.find(({ 'alpha-2': alpha, filename = alpha, name = alpha }) =>
-      // @ts-expect-error
       [alpha, name, filename].find(country => country.toLowerCase() === newCountry.toLowerCase())
     ) ?? { 'alpha-2': countryCode }
 

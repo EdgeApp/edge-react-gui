@@ -64,8 +64,12 @@ type StateProps = {
 type DispatchProps = {
   reset: () => void
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void
-  // @ts-expect-error
-  signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) => Promise<void>
+  signBroadcastAndSave: (
+    fioSender: FioSenderInfo | undefined,
+    selectedWalletId: string | undefined,
+    selectedCurrencyCode: string | undefined,
+    resetSlider: () => void
+  ) => Promise<void>
   onChangePin: (pin: string) => void
   selectWallet: (walletId: string, currencyCode: string) => void
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
@@ -657,8 +661,12 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged = false) {
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
-    // @ts-expect-error
-    async signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string, resetSlider: () => void) {
+    async signBroadcastAndSave(
+      fioSender: FioSenderInfo | undefined,
+      selectedWalletId: string | undefined,
+      selectedCurrencyCode: string | undefined,
+      resetSlider: () => void
+    ) {
       await dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode, resetSlider))
     },
     onChangePin(pin: string) {

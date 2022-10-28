@@ -66,8 +66,7 @@ export function TransactionListRow(props: Props) {
   }, [])
 
   // Thumbnail
-  // @ts-expect-error
-  let thumbnailPath
+  let thumbnailPath: string | undefined
   const contacts: GuiContact[] = useSelector(state => state.contacts) ?? []
   const transactionContactName = name != null ? normalizeForSearch(name) : null
   for (const contact of contacts) {
@@ -111,7 +110,6 @@ export function TransactionListRow(props: Props) {
     }
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
-      // @ts-expect-error
       thumbnailPath,
       amountFiat
     })

@@ -3,10 +3,10 @@ import * as React from 'react'
 import { useRef } from 'react'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
-import { mockActionProgram } from '../../controllers/action-queue/mock'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
-import { executeActionProgram } from '../../controllers/action-queue/runtime'
-import { ActionProgramState, ActionQueueMap, ExecutionContext, ExecutionResults } from '../../controllers/action-queue/types'
+import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
+import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
+import { makeExecutionContext } from '../../controllers/action-queue/util/makeExecutionContext'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -24,16 +24,9 @@ export const ActionQueueService = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
-  const queue: ActionQueueMap = useSelector(state => state.actionQueue.queue)
+  const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
+  const activeProgramIds = useSelector(state => state.actionQueue.activeProgramIds)
   const serviceProgramStatesRef = useRef<ServiceProgramStates>({})
-
-  const executionContext: ExecutionContext = React.useMemo(
-    () => ({
-      account,
-      clientId
-    }),
-    [account, clientId]
-  )
 
   const updateProgramState = useHandler(async (state: ActionProgramState, executing: boolean) => {
     const { programId } = state
@@ -70,16 +63,13 @@ export const ActionQueueService = () => {
   //
 
   React.useEffect(() => {
-    if (queue == null) return
     const serviceProgramStates = serviceProgramStatesRef.current
-
-    const { account, clientId } = executionContext
 
     // Loop function
     const task = async () => {
       // Programs that require immediate attention
-      const urgentProgramIds = Object.keys(queue).filter(programId => {
-        const { state } = queue[programId]
+      const urgentProgramIds = activeProgramIds.filter(programId => {
+        const { state } = actionQueueMap[programId]
         // Don't execute programs which are assigned to another client.
         // This predicate must come first to avoid the device/client from
         // impacting program heing handled by other clients.
@@ -107,17 +97,13 @@ export const ActionQueueService = () => {
       })
       // Act on urgent programs
       const promises = urgentProgramIds.map(async programId => {
-        const { program, state } = queue[programId]
+        const { program, state } = actionQueueMap[programId]
 
         // Set program state to executing
         await updateProgramState(state, true)
 
-        if (program.mockMode) {
-          const { nextState } = await mockActionProgram(account, program, state)
-          // Update program state
-          await updateProgramState(nextState, false)
-          return
-        }
+        // Use mock execution function if program is marked as mockMode
+        const executionContext = makeExecutionContext({ account, clientId }, program.mockMode)
 
         const { nextState } = await executeActionProgram(executionContext, program, state).catch((error: Error): ExecutionResults => {
           console.warn(new Error('Action Program Exception: ' + error.message))
@@ -151,7 +137,7 @@ export const ActionQueueService = () => {
 
     // Cleanup loop
     return () => periodicTask.stop()
-  }, [dispatch, executionContext, updateProgramState, queue])
+  }, [account, clientId, dispatch, updateProgramState, actionQueueMap, activeProgramIds])
 
   // Return no component/view
   return null

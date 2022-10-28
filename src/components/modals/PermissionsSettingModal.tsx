@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import s from '../../locales/strings'
+import { Permission, permissionNames } from '../../reducers/PermissionsReducer'
 import { showError } from '../services/AirshipInstance'
 import { checkIfDenied } from '../services/PermissionsManager'
 import { MainButton } from '../themed/MainButton'
@@ -14,25 +15,23 @@ import { ThemedModal } from '../themed/ThemedModal'
 
 export function PermissionsSettingModal(props: {
   bridge: AirshipBridge<boolean> // returns true if mandatory and denied
-  fullPermision: string
   mandatory: boolean
   name: string
-  permission: string
+  permission: Permission
 }) {
-  const { bridge, fullPermision, mandatory, name, permission } = props
+  const { bridge, mandatory, name, permission } = props
   const isAppForeground = useIsAppForeground()
 
   const message = mandatory
     ? sprintf(s.strings.contacts_permission_modal_enable_settings_mandatory, name, permission)
     : sprintf(s.strings.contacts_permission_modal_enable_settings, name, permission)
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (!isAppForeground || !mandatory) return
-    // @ts-expect-error
-    const status = await check(fullPermision)
+    const status = await check(permissionNames[permission])
     if (!checkIfDenied(status)) bridge.resolve(false)
-  }, [fullPermision, isAppForeground])
+    return () => {}
+  }, [permission, isAppForeground])
 
   const handlePress = () => {
     openSettings().catch(showError)

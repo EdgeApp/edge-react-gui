@@ -1,5 +1,30 @@
 # edge-react-gui
 
+## 2.25.0 (2022-10-28)
+
+- Add EthereumPoW (ETHW)
+- Create multiple wallets/assets at the same time
+- ETH: Add Origin (OGN) token
+- Dash: Add InstantSend detection
+- Fix ENS address detection
+- Add number formatting to credit card buy flow
+- Fix occasional metadata display issue in transaction history scene
+- Add unique wallet names for new wallets
+- Remove pluginId check from search results
+- Continue cleanup from Typescript conversion
+- Upgrade edge-currency-accountbased to v0.18.7
+  - EVM: Split up eth_getTransactionCount into separate evmscan and rpc methods
+  - ETH: Add Origin (OGN)
+  - EVM: Add RPC balance query
+  - EVM: Return empty transaction arrays if evmscan server list is empty
+- Upgrade edge-currency-plugins v1.2.2
+  - Dash: Add InstantSend detection
+- Upgrade edge-exchange-plugins v0.15.4
+  - fixed: Do not allow swaps to Tezos using Fox Exchange or Switchain, which rely on dummy addresses.
+  - Fix Godex API by updating cleaners
+- Upgrade edge-login-ui-rn v0.10.11
+  - Allow Powered By icon to be disabled by info server
+
 ## 2.24.0 (2022-10-17)
 
 - Thorchain: Enable AVAX swaps

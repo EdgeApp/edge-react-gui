@@ -1,4 +1,5 @@
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import { ethers } from 'ethers'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -104,7 +105,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   filterFioAddresses = (uri: string): void => {
     const { useUserFioAddressesOnly, userFioAddresses, isFioOnly } = this.props
     const { fioAddresses } = this.state
-    const fioAddressesArray = []
+    const fioAddressesArray: string[] = []
 
     if (useUserFioAddressesOnly) {
       for (const address of userFioAddresses) {
@@ -144,13 +145,13 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   checkIfEnsDomain = (name: string): boolean => ENS_DOMAINS.some(domain => name.endsWith(domain))
 
-  fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
+  fetchUnstoppableDomainAddress = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
-    if (!this.checkIfDomain(domain)) {
+    if (!this.checkIfUnstoppableDomain(domain)) {
       throw new ResolutionError('UnsupportedDomain', { domain })
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
-    const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`
+    const url = `${baseurl}/${domain}`
     const response = await global.fetch(url).then(async res => res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
@@ -163,11 +164,28 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return addresses[ticker]
   }
 
+  fetchEnsAddress = async (domain: string): Promise<string> => {
+    const chainId = 1 // Hard-coded to Ethereum mainnet
+    const network = ethers.providers.getNetwork(chainId)
+    if (network.name === 'unknown') {
+      throw new ResolutionError('UnsupportedDomain', { domain })
+    }
+    const ethersProvider = ethers.getDefaultProvider(network)
+    const address = await ethersProvider.resolveName(domain)
+    if (!address) throw new ResolutionError('UnregisteredDomain', { domain })
+    return address
+  }
+
   resolveAddress = async (domain: string, currencyTicker: string) => {
     if (!domain) return
     try {
       this.setStatusLabel(s.strings.resolving)
-      const addr = await this.fetchDomain(domain, currencyTicker)
+      let addr: string
+      if (this.checkIfUnstoppableDomain(domain)) addr = await this.fetchUnstoppableDomainAddress(domain, currencyTicker)
+      else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
+      else {
+        throw new ResolutionError('UnsupportedDomain', { domain })
+      }
       this.setStatusLabel(addr)
       this.setCryptoAddress(addr)
     } catch (err: any) {
