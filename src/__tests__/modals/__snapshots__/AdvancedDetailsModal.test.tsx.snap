@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionAdvanceDetailsComponent should render with loading props 1`] = `
+exports[`AdvancedDetailsModal should render with loading props 1`] = `
 <ThemedModal
   bridge={
     Object {

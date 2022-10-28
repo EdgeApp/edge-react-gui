@@ -21,11 +21,11 @@ import { formatCategory, joinCategory, splitCategory } from '../../util/categori
 import { autoCorrectDate, convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
+import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -193,7 +193,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     Airship.show(bridge => (
-      <TransactionAdvanceDetails
+      <AdvancedDetailsModal
         bridge={bridge}
         transaction={edgeTransaction}
         url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : undefined}

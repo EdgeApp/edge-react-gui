@@ -2,16 +2,16 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { TransactionAdvanceDetailsComponent } from '../../components/modals/TransactionAdvanceDetails'
+import { AdvancedDetailsModalComponent } from '../../components/modals/AdvancedDetailsModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
-describe('TransactionAdvanceDetailsComponent', () => {
+describe('AdvancedDetailsModal', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
-      <TransactionAdvanceDetailsComponent
+      <AdvancedDetailsModalComponent
         bridge={fakeAirshipBridge}
         transaction={{
           blockHeight: 0,
