@@ -1,31 +1,34 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
-import { AdvancedDetailsModalComponent } from '../../components/modals/AdvancedDetailsModal'
-import { getTheme } from '../../components/services/ThemeContext'
+import { AdvancedDetailsModal } from '../../components/modals/AdvancedDetailsModal'
+import { rootReducer } from '../../reducers/RootReducer'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
 describe('AdvancedDetailsModal', () => {
-  it('should render with loading props', () => {
-    const renderer = createRenderer()
+  const store = createStore(rootReducer)
 
-    const actual = renderer.render(
-      <AdvancedDetailsModalComponent
-        bridge={fakeAirshipBridge}
-        transaction={{
-          blockHeight: 0,
-          currencyCode: 'BCH',
-          date: 0,
-          nativeAmount: '-681',
-          networkFee: '681',
-          otherParams: {},
-          ourReceiveAddresses: ['123123123'],
-          signedTx: '',
-          txid: ''
-        }}
-        theme={getTheme()}
-      />
+  it('should render with loading props', () => {
+    const actual = renderer.create(
+      <Provider store={store}>
+        <AdvancedDetailsModal
+          bridge={fakeAirshipBridge}
+          transaction={{
+            blockHeight: 0,
+            currencyCode: 'BCH',
+            date: 0,
+            nativeAmount: '-681',
+            networkFee: '681',
+            otherParams: {},
+            ourReceiveAddresses: ['123123123'],
+            signedTx: '',
+            txid: ''
+          }}
+        />
+      </Provider>
     )
 
     expect(actual).toMatchSnapshot()
