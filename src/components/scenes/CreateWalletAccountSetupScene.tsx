@@ -132,7 +132,6 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <FormField
                 {...MaterialInputOnWhite}
-                // @ts-expect-error
                 containerStyle={{
                   ...MaterialInputOnWhite.containerStyle,
                   marginTop: scale(16),

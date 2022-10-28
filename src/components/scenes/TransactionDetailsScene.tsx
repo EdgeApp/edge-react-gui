@@ -17,22 +17,15 @@ import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelector
 import { connect } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
-import {
-  autoCorrectDate,
-  capitalize,
-  convertNativeToDisplay,
-  convertNativeToExchange,
-  isValidInput,
-  splitTransactionCategory,
-  truncateDecimals
-} from '../../util/utils'
+import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { autoCorrectDate, convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
+import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails'
-import { CategoryModalResult, TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -68,26 +61,6 @@ interface State {
   direction: string
   bizId: number
   category: string
-  subCategory: string
-}
-
-const categories = {
-  exchange: {
-    syntax: s.strings.fragment_transaction_exchange,
-    key: 'exchange'
-  },
-  expense: {
-    syntax: s.strings.fragment_transaction_expense,
-    key: 'expense'
-  },
-  transfer: {
-    syntax: s.strings.fragment_transaction_transfer,
-    key: 'transfer'
-  },
-  income: {
-    syntax: s.strings.fragment_transaction_income,
-    key: 'income'
-  }
 }
 
 interface FiatCryptoAmountUI {
@@ -118,37 +91,23 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { metadata } = edgeTransaction
     const { name: contactName = '', notes = '', amountFiat = 0 } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
-    const { category, subCategory } = this.initializeFormattedCategories(metadata, direction)
+    const category = joinCategory(
+      splitCategory(
+        metadata?.category,
+        // Pick the right default:
+        direction === 'receive' ? 'income' : 'expense'
+      )
+    )
 
     this.state = {
       amountFiat: displayFiatAmount(amountFiat),
       contactName,
       notes,
       category,
-      subCategory,
       thumbnailPath,
       direction,
       bizId: 0
     }
-  }
-
-  initializeFormattedCategories = (metadata: EdgeMetadata | undefined, direction: string) => {
-    const defaultCategory = direction === 'receive' ? categories.income.key : categories.expense.key
-    if (metadata) {
-      const fullCategory = metadata.category || ''
-      const colonOccurrence = fullCategory.indexOf(':')
-      if (fullCategory && colonOccurrence) {
-        const splittedFullCategory = splitTransactionCategory(fullCategory)
-        const { subCategory } = splittedFullCategory
-        const category = splittedFullCategory.category.toLowerCase()
-        return {
-          // @ts-expect-error
-          category: categories[category] ? categories[category].key : defaultCategory,
-          subCategory
-        }
-      }
-    }
-    return { category: defaultCategory, subCategory: '' }
   }
 
   componentDidMount() {
@@ -193,16 +152,14 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openCategoryInput = () => {
-    Airship.show<CategoryModalResult | undefined>(bridge => (
-      <TransactionDetailsCategoryInput
-        bridge={bridge}
-        categories={categories}
-        subCategories={this.props.subcategoriesList}
-        category={this.state.category}
-        subCategory={this.state.subCategory}
-        setNewSubcategory={this.props.setNewSubcategory}
-      />
-    )).then(categoryInfo => this.onSaveTxDetails(categoryInfo))
+    const { category } = this.state
+    Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />).then(async category => {
+      if (category == null) return
+      if (!this.props.subcategoriesList.includes(category)) {
+        this.props.setNewSubcategory(category)
+      }
+      this.onSaveTxDetails({ category })
+    })
   }
 
   openNotesInput = () => {
@@ -339,10 +296,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     if (newDetails == null) return
     const { route } = this.props
     // @ts-expect-error
-    const { contactName, notes, bizId, category, subCategory, amountFiat } = { ...this.state, ...newDetails }
+    const { contactName, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction } = route.params
     let finalAmountFiat
-    const fullCategory = category ? `${capitalize(category)}:${subCategory}` : undefined
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
     if (isNaN(decimalAmountFiat)) {
       // if invalid number set to previous saved amountFiat
@@ -353,7 +309,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
     edgeTransaction.metadata = {
       name: contactName,
-      category: fullCategory,
+      category,
       notes,
       amountFiat: finalAmountFiat,
       bizId
@@ -440,7 +396,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   render() {
     const { currencyInfo, guiWallet, theme, route } = this.props
     const { edgeTransaction } = route.params
-    const { direction, amountFiat, contactName, thumbnailPath, notes, category, subCategory } = this.state
+    const { direction, amountFiat, contactName, thumbnailPath, notes, category } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
 
@@ -470,8 +426,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       edgeTransaction.otherParams?.nonceUsed
     )
 
-    // @ts-expect-error
-    const categoriesText = categories[category].syntax + (subCategory !== '' ? ': ' + subCategory : '')
+    const categoriesText = formatCategory(splitCategory(category))
 
     return (
       <SceneWrapper background="theme">

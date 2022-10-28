@@ -1,4 +1,52 @@
-export const categories = [
+import s from '../locales/strings'
+
+export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
+
+export interface SplitCategory {
+  category: Category
+  subcategory: string
+}
+
+/**
+ * Splits a string into its category and subcategory strings.
+ * The category must fit our enum type, or we will use a fallback.
+ * The subcategory can be localized and freely edited.
+ */
+export function splitCategory(fullCategory: string = '', defaultCategory: Category = 'income'): SplitCategory {
+  for (const [category, test, n] of tests) {
+    if (test.test(fullCategory)) {
+      return {
+        category,
+        subcategory: fullCategory.slice(n)
+      }
+    }
+  }
+
+  // We can't guarantee that data on disk is correct,
+  // but this should usually never happen:
+  return {
+    category: defaultCategory,
+    subcategory: fullCategory.replace(/^[^:]:/, '')
+  }
+}
+
+/**
+ * Combine the category and subcategory into a single string,
+ * with the correct capitalization.
+ */
+export function joinCategory(split: SplitCategory): string {
+  return prefixes[split.category] + split.subcategory
+}
+
+/**
+ * Localizes a category string for display.
+ */
+export function formatCategory(split: SplitCategory): string {
+  if (split.subcategory === '') return displayCategories[split.category]
+  return `${displayCategories[split.category]}: ${split.subcategory}`
+}
+
+export const defaultCategories = [
   'Exchange:Buy Bitcoin',
   'Exchange:Sell Bitcoin',
   'Expense:Air Travel',
@@ -115,4 +163,31 @@ export const categories = [
   'Transfer:Multibit',
   'Transfer:Mycelium',
   'Transfer:Dark Wallet'
+]
+
+/**
+ * Use these strings to show categories in a user's language.
+ */
+export const displayCategories = {
+  transfer: s.strings.fragment_transaction_transfer,
+  exchange: s.strings.fragment_transaction_exchange,
+  expense: s.strings.fragment_transaction_expense,
+  income: s.strings.fragment_transaction_income
+}
+
+/**
+ * Internal prefixes used on disk.
+ */
+const prefixes = {
+  transfer: 'Transfer:',
+  exchange: 'Exchange:',
+  expense: 'Expense:',
+  income: 'Income:'
+}
+
+const tests: Array<[Category, RegExp, number]> = [
+  ['transfer', /^Transfer:/i, 9],
+  ['exchange', /^Exchange:/i, 9],
+  ['expense', /^Expense:/i, 8],
+  ['income', /^Income:/i, 7]
 ]

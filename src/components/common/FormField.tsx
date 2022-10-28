@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ViewStyle } from 'react-native'
 import { TextField, TextFieldProps } from 'react-native-material-textfield'
 
 import { THEME } from '../../theme/variables/airbitz'
@@ -30,12 +31,14 @@ export class FormField extends React.Component<Props> {
   }
 }
 
+const containerStyle: ViewStyle = {
+  position: 'relative',
+  width: PLATFORM.deviceWidth / 1.52,
+  height: 60
+}
+
 export const MaterialInputOnWhite = {
-  containerStyle: {
-    position: 'relative',
-    width: PLATFORM.deviceWidth / 1.52,
-    height: 60
-  },
+  containerStyle,
   baseColor: THEME.COLORS.PRIMARY,
   tintColor: THEME.COLORS.SECONDARY,
   errorColor: THEME.COLORS.ACCENT_RED,
