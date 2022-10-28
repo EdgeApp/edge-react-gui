@@ -80,7 +80,7 @@ const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
   edgeTransaction && edgeTransaction.nativeAmount ? abs(edgeTransaction.nativeAmount) : ''
 
 // Only exported for unit-testing purposes
-export class TransactionDetailsComponent extends React.Component<Props, State> {
+class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { thumbnailPath, edgeTransaction } = props.route.params

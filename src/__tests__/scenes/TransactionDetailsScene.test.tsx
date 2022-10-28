@@ -1,13 +1,53 @@
-import { describe, expect, it, jest } from '@jest/globals'
+import { describe, expect, it } from '@jest/globals'
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
-import { createStore } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
+import thunk from 'redux-thunk'
 
-import { TransactionDetailsComponent } from '../../components/scenes/TransactionDetailsScene'
-import { getTheme } from '../../components/services/ThemeContext'
+import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { rootReducer } from '../../reducers/RootReducer'
 import { GuiWallet } from '../../types/types'
+
+const currencyInfo: EdgeCurrencyInfo = {
+  pluginId: 'bitcoin',
+  currencyCode: 'BTC',
+  displayName: 'Bitcoin',
+  walletType: 'bitcoin',
+
+  addressExplorer: '',
+  transactionExplorer: '',
+
+  defaultSettings: {},
+  metaTokens: [],
+  denominations: [
+    {
+      name: 'BTC',
+      multiplier: '100000000',
+      symbol: '₿'
+    }
+  ]
+}
+
+const fakeCurrencyConfig: any = {
+  currencyInfo,
+  allTokens: {},
+  builtinTokens: {},
+  customTokens: {}
+}
+
+const fakeCoreWallet: any = {
+  balances: { BTC: '123123' },
+  blockHeight: 12345,
+  currencyConfig: fakeCurrencyConfig,
+  currencyInfo,
+  enabledTokenIds: [],
+  fiatCurrencyCode: 'USD',
+  id: '123',
+  name: 'wallet name',
+  type: 'wallet:bitcoin'
+}
 
 const fakeGuiWallet: GuiWallet = {
   blockHeight: 12345,
@@ -24,29 +64,24 @@ const fakeGuiWallet: GuiWallet = {
   primaryNativeBalance: '0',
   type: 'wallet:bitcoin'
 }
-const fakeCoreWallet: any = {
-  ...fakeGuiWallet,
-  balances: { BTC: '123123' }
-}
-
-const settings = {
-  [fakeGuiWallet.currencyCode]: {
-    denomination: '100000000',
-    denominations: {
-      name: 'BTC',
-      multiplier: '100000000',
-      symbol: '₿'
-    }
-  }
-}
 
 describe('TransactionDetailsScene', () => {
-  const store = createStore(rootReducer)
+  const fakeState: any = {
+    ui: { wallets: { byId: { '123': fakeGuiWallet } } },
+    core: {
+      account: {
+        currencyWallets: { '123': fakeCoreWallet },
+        currencyConfig: { bitcoin: fakeCurrencyConfig }
+      }
+    }
+  }
+
+  const store = createStore(rootReducer, fakeState, applyMiddleware(thunk))
 
   it('should render', () => {
     const actual = renderer.create(
       <Provider store={store}>
-        <TransactionDetailsComponent
+        <TransactionDetailsScene
           route={{
             name: 'transactionDetails',
             params: {
@@ -65,16 +100,6 @@ describe('TransactionDetailsScene', () => {
               thumbnailPath: 'thumb/nail/path'
             }
           }}
-          contacts={[]}
-          subcategoriesList={[]}
-          currencyCode="BTC"
-          guiWallet={fakeGuiWallet}
-          currentFiatAmount="120"
-          walletDefaultDenomProps={settings[fakeGuiWallet.currencyCode].denominations}
-          setNewSubcategory={jest.fn()}
-          setTransactionDetails={jest.fn()}
-          getSubcategories={jest.fn()}
-          theme={getTheme()}
         />
       </Provider>
     )
@@ -85,7 +110,7 @@ describe('TransactionDetailsScene', () => {
   it('should render with negative nativeAmount and fiatAmount', () => {
     const actual = renderer.create(
       <Provider store={store}>
-        <TransactionDetailsComponent
+        <TransactionDetailsScene
           route={{
             name: 'transactionDetails',
             params: {
@@ -107,16 +132,6 @@ describe('TransactionDetailsScene', () => {
               thumbnailPath: 'thumb/nail/path'
             }
           }}
-          contacts={[]}
-          subcategoriesList={[]}
-          currencyCode="BTC"
-          guiWallet={fakeGuiWallet}
-          currentFiatAmount="120"
-          walletDefaultDenomProps={settings[fakeGuiWallet.currencyCode].denominations}
-          setNewSubcategory={jest.fn()}
-          setTransactionDetails={jest.fn()}
-          getSubcategories={jest.fn()}
-          theme={getTheme()}
         />
       </Provider>
     )

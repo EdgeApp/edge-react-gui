@@ -597,7 +597,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       ]
                     }
                   >
-                    120.00
+                    0.00
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -1627,7 +1627,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    120.00
+                    0.00
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -1649,7 +1649,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    - 98.12%
+                    - 100%
                   </Text>
                 </View>
               </View>
