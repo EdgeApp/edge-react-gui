@@ -236,7 +236,7 @@ export const TransactionList = connect<StateProps, DispatchProps, OwnProps>(
     // getTransactions
     const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[walletId]
-    const tokenId = getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, currencyCode)
+    const tokenId = currencyWallet != null ? getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, currencyCode) : undefined
 
     return {
       numTransactions: state.ui.scenes.transactionList.numTransactions,
