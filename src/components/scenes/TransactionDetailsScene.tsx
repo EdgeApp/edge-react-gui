@@ -18,7 +18,7 @@ import { connect } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
-import { autoCorrectDate, convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
+import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AccelerateTxModel } from '../modals/AccelerateTxModel'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
@@ -83,11 +83,7 @@ const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
 export class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { thumbnailPath, edgeTransaction: edgeTx } = props.route.params
-    const edgeTransaction = {
-      ...edgeTx,
-      date: autoCorrectDate(edgeTx.date)
-    }
+    const { thumbnailPath, edgeTransaction } = props.route.params
     const { metadata } = edgeTransaction
     const { name: contactName = '', notes = '', amountFiat = 0 } = metadata ?? {}
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'

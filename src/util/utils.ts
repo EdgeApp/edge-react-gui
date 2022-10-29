@@ -338,24 +338,6 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   return total
 }
 
-export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {
-  const secondsPerDay = 86400
-  const daysPerMonth = 30
-  const monthInFuture = currentDateInSeconds + secondsPerDay * daysPerMonth
-  return dateInSeconds > monthInFuture
-}
-
-export const isTooFarBehind = (dateInSeconds: number) => {
-  const dateOfBitcoinGenesisInSeconds = 1230940800 // 2009-01-03T00:00:00.000Z
-  return dateInSeconds < dateOfBitcoinGenesisInSeconds
-}
-
-export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = Date.now() / 1000) => {
-  if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
-  if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
-  return dateInSeconds
-}
-
 export const getYesterdayDateRoundDownHour = () => {
   const date = new Date()
   date.setMinutes(0)
