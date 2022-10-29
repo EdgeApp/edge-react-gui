@@ -174,7 +174,7 @@ export const LoanCreateScene = (props: Props) => {
   const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
   const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
 
-  const isLtvExceeded = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
+  const isInsufficientCollateral = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
   const displayLtvLimit = React.useMemo(() => toPercentString(ltvRatio), [ltvRatio])
   // #endregion Required Collateral, LTV
 
@@ -259,7 +259,7 @@ export const LoanCreateScene = (props: Props) => {
   )
   const renderWarning = useHandler(() => {
     // User doesn't have required collateral wallet enabled or 0 balance
-    if (srcWallet != null && zeroString(srcBalance))
+    if (isUserInputComplete && isInsufficientCollateral)
       return (
         <Alert
           numberOfLines={0}
@@ -267,18 +267,6 @@ export const LoanCreateScene = (props: Props) => {
           title={s.strings.exchange_insufficient_funds_title}
           message={collateralWarningMsg}
           type="warning"
-        />
-      )
-    // User completed Borrow Amount entry before finishing the src/dest wallet
-    // destinations, and the combination of all inputs exceed LTV ratio.
-    else if (isUserInputComplete && isLtvExceeded)
-      return (
-        <Alert
-          numberOfLines={0}
-          marginRem={[0.5, 0.5, 0.5, 0.5]}
-          title={s.strings.exchange_insufficient_funds_title}
-          message={sprintf(s.strings.loan_amount_exceeds_s_collateral, displayLtvLimit)}
-          type="error"
         />
       )
     else return null
@@ -346,7 +334,7 @@ export const LoanCreateScene = (props: Props) => {
           {destWallet == null ? null : (
             <MainButton
               label={s.strings.string_next_capitalized}
-              disabled={isLtvExceeded || !isUserInputComplete}
+              disabled={isInsufficientCollateral || !isUserInputComplete}
               type="secondary"
               onPress={() => {
                 if (destTokenId == null || srcWallet == null) return
