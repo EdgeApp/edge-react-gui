@@ -1,4 +1,4 @@
-import { div, lt, mul } from 'biggystring'
+import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -155,7 +155,12 @@ export const LoanCreateScene = (props: Props) => {
   // #region Required Collateral, LTV
   const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
-  const requiredFiat = React.useMemo(() => div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION), [borrowAmountFiat, ltvRatio])
+  const requiredFiat = React.useMemo(() => {
+    const initRequiredFiat = div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION)
+
+    // HACK: Special case for handling new loans on polygon since minimums can easily be exceeded
+    return borrowPlugin.borrowInfo.currencyPluginId === 'polygon' ? max(initRequiredFiat, '105') : initRequiredFiat
+  }, [borrowAmountFiat, borrowPlugin.borrowInfo.currencyPluginId, ltvRatio])
 
   // Convert collateral in fiat -> collateral crypto
   const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
