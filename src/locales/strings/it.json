@@ -872,7 +872,7 @@
   "loan_fragment_withdraw": "Withdrawal",
   "loan_fund_source": "Fund Source",
   "loan_fund_destination": "Fund Destination",
-  "loan_insufficient_funds_warning": "Devi avere %1$s e fondi sufficienti nel portafoglio %2$s associato per poter procedere con il prestito. Se non hai %3$s, abilita questo token nel tuo portafoglio %2$s ed esegui uno scambio in %4$s.",
+  "loan_insufficient_funds_warning": "You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.",
   "loan_interest_rate": "Tasso di interesse",
   "loan_loading_loans": "Loading Loans...",
   "loan_loan_breakdown_title": "Esaurimento del prestito",
