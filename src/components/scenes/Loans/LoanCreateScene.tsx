@@ -159,7 +159,7 @@ export const LoanCreateScene = (props: Props) => {
     const initRequiredFiat = div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION)
 
     // HACK: Special case for handling new loans on polygon since minimums can easily be exceeded
-    return borrowPlugin.borrowInfo.currencyPluginId === 'polygon' ? max(initRequiredFiat, '105') : initRequiredFiat
+    return borrowPlugin.borrowInfo.currencyPluginId === 'polygon' ? max(initRequiredFiat, '110') : initRequiredFiat
   }, [borrowAmountFiat, borrowPlugin.borrowInfo.currencyPluginId, ltvRatio])
 
   // Convert collateral in fiat -> collateral crypto
