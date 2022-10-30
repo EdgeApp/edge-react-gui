@@ -1,7 +1,10 @@
 import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeDenomination, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
+import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { sprintf } from 'sprintf-js'
 
+import { playSendSound } from '../../actions/SoundActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -11,18 +14,20 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
+import { SafeSlider } from '../themed/SafeSlider'
 import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -36,6 +41,7 @@ interface Props {
 const SendComponent = (props: Props) => {
   const { route } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const flipInputModalRef = React.useRef<FlipInputModalRef>(null)
   const { walletId: initWalletId = '', tokenId: tokenIdProp, spendInfo: initSpendInfo, openCamera, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
@@ -308,6 +314,84 @@ const SendComponent = (props: Props) => {
     return null
   }
 
+  const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
+    // TODO:
+    // 1. FIO functionality
+    // 2. onBack
+    // 3. onDone
+    // 4. beforeTransaction
+    // 5. alternateBroadcast
+
+    if (edgeTransaction == null) return
+    try {
+      const signedTx = await coreWallet.signTx(edgeTransaction)
+      const broadcastedTx = await coreWallet.broadcastTx(signedTx)
+
+      const { name, type, id } = coreWallet
+      const {
+        currencyCode,
+        nativeAmount,
+        networkFee,
+        parentNetworkFee,
+        txid,
+        ourReceiveAddresses,
+        deviceDescription,
+        networkFeeOption,
+        requestedCustomFee,
+        feeRateUsed
+      } = signedTx
+
+      logActivity(`broadcastTx: ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
+      logActivity(`
+  currencyCode: ${currencyCode}
+  nativeAmount: ${nativeAmount}
+  txid: ${txid}
+  networkFee: ${networkFee}
+  parentNetworkFee: ${parentNetworkFee ?? ''}
+  deviceDescription: ${deviceDescription ?? ''}
+  networkFeeOption: ${networkFeeOption ?? ''}
+  requestedCustomFee: ${JSON.stringify(requestedCustomFee)}
+  feeRateUsed: ${JSON.stringify(feeRateUsed)}
+  spendTargets: ${JSON.stringify(spendInfo.spendTargets)}
+  ourReceiveAddresses: ${JSON.stringify(ourReceiveAddresses)}`)
+
+      await coreWallet.saveTx(broadcastedTx)
+      playSendSound().catch(error => console.log(error)) // Fail quietly
+      Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+        {
+          onPress() {},
+          style: 'default',
+          text: s.strings.string_ok
+        }
+      ])
+
+      Actions.replace('transactionDetails', {
+        edgeTransaction: signedTx,
+        walletId
+      })
+    } catch (e: any) {
+      resetSlider()
+      console.log(e)
+      let message = sprintf(s.strings.transaction_failure_message, e.message)
+      e.message = 'broadcastError'
+      if (e.name === 'ErrorEosInsufficientCpu') {
+        message = s.strings.send_confirmation_eos_error_cpu
+      } else if (e.name === 'ErrorEosInsufficientNet') {
+        message = s.strings.send_confirmation_eos_error_net
+      } else if (e.name === 'ErrorEosInsufficientRam') {
+        message = s.strings.send_confirmation_eos_error_ram
+      }
+
+      Alert.alert(s.strings.transaction_failure, message, [
+        {
+          onPress() {},
+          style: 'default',
+          text: s.strings.string_ok
+        }
+      ])
+    }
+  })
+
   // Calculate the transaction
   useAsyncEffect(async () => {
     try {
@@ -338,7 +422,9 @@ const SendComponent = (props: Props) => {
       flipInputModalRef.current?.setError(e.message)
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
     }
-  }, [spendInfo, maxSpendSetter])
+  }, [spendInfo, maxSpendSetter, walletId])
+
+  const showSlider = spendInfo.spendTargets[0].publicAddress != null
 
   return (
     <SceneWrapper background="theme">
@@ -348,9 +434,18 @@ const SendComponent = (props: Props) => {
         {renderAddAddress()}
         {renderError()}
         {renderFees()}
+        <View style={styles.footer}>{showSlider && <SafeSlider onSlidingComplete={handleSliderComplete} disabled={edgeTransaction == null} />}</View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
 }
 
 export const SendScene2 = React.memo(SendComponent)
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  footer: {
+    margin: theme.rem(2),
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+}))
