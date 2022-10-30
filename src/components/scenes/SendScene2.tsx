@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -23,6 +23,7 @@ import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { AddressTile, ChangeAddressResult } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
+import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
 type Props = {
@@ -49,6 +50,7 @@ const SendComponent = React.memo((props: Props) => {
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
+  const [error, setError] = useState<Error | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
   console.log(edgeTransaction?.currencyCode ?? '')
 
@@ -243,6 +245,13 @@ const SendComponent = React.memo((props: Props) => {
     }
   })
 
+  const renderError = useHandler(() => {
+    if (error && asMaybeNoAmountSpecifiedError(error) == null) {
+      return <ErrorTile message={error.message} />
+    }
+    return null
+  })
+
   useAsyncEffect(async () => {
     if (spendInfo.spendTargets[0].nativeAmount == null) {
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
@@ -257,7 +266,9 @@ const SendComponent = React.memo((props: Props) => {
       setFeeNativeAmount(feeNativeAmount)
       flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
       flipInputModalRef.current?.setError(null)
+      setError(undefined)
     } catch (e: any) {
+      setError(e)
       flipInputModalRef.current?.setError(e.message)
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
     }
@@ -269,6 +280,7 @@ const SendComponent = React.memo((props: Props) => {
         {renderSelectedWallet()}
         {renderAddressAmountPairs()}
         {renderAddAddress()}
+        {renderError()}
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
