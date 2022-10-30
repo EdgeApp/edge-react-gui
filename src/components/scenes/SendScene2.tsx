@@ -1,4 +1,4 @@
-import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeDenomination, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -15,11 +15,13 @@ import { RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { AddressTile, ChangeAddressResult } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
@@ -52,6 +54,9 @@ const SendComponent = React.memo((props: Props) => {
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [error, setError] = useState<Error | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
+
+  // 0 = no max spend. 1 and higher = the spendTarget that requested the max spend. 1 = 1st, 2 = 2nd ...
+  const [maxSpendSetter, setMaxSpendSetter] = useState<number>(0)
   console.log(edgeTransaction?.currencyCode ?? '')
 
   const account = useSelector<EdgeAccount>(state => state.core.account)
@@ -61,6 +66,8 @@ const SendComponent = React.memo((props: Props) => {
   const { pluginId } = currencyWallets[walletId].currencyInfo
   const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
   const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
+  const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
+  const parentExchangeDenom = useExchangeDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
   const coreWallet = currencyWallets[walletId]
 
   const tokenId = tokenIdProp ?? getTokenId(account, pluginId, currencyCode)
@@ -98,6 +105,12 @@ const SendComponent = React.memo((props: Props) => {
     )
   })
 
+  const handleResetSendTransaction = useHandler((spendTarget: EdgeSpendTarget) => () => {
+    spendTarget.publicAddress = undefined
+    spendTarget.nativeAmount = undefined
+    setSpendInfo({ ...spendInfo })
+  })
+
   const renderAddressTile = useHandler((index: number, spendTarget: EdgeSpendTarget) => {
     if (coreWallet != null && !hiddenTilesMap.address) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
@@ -110,11 +123,7 @@ const SendComponent = React.memo((props: Props) => {
           coreWallet={coreWallet}
           currencyCode={currencyCode}
           onChangeAddress={handleChangeAddress(spendTarget)}
-          resetSendTransaction={() => {
-            spendTarget.publicAddress = undefined
-            spendTarget.nativeAmount = undefined
-            setSpendInfo({ ...spendInfo })
-          }}
+          resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
           isCameraOpen={!!openCamera}
           ref={() => {}}
@@ -132,10 +141,28 @@ const SendComponent = React.memo((props: Props) => {
     // This works since the spendTarget object is guaranteed to be inside
     // the spendInfo object
     setSpendInfo({ ...spendInfo })
+    setMaxSpendSetter(0)
     setFieldChanged(newField)
   })
 
-  const handleFlipInputModal = useHandler((spendTarget: EdgeSpendTarget) => () => {
+  const handleSetMax = useHandler((index: number) => () => {
+    setMaxSpendSetter(index)
+  })
+
+  const handleFeesChange = useHandler(() => {
+    // if (coreWallet == null) return
+    // navigation.navigate('changeMiningFee2', {
+    //   spendInfo,
+    //   maxSpendSetter,
+    //   wallet: coreWallet,
+    //   onSubmit: (networkFeeOption, customNetworkFee) => {
+    //     setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
+    //     setMaxSpendSetter(false)
+    //   }
+    // })
+  })
+
+  const handleFlipInputModal = useHandler((index: number, spendTarget: EdgeSpendTarget) => () => {
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal2
         ref={flipInputModalRef}
@@ -143,8 +170,8 @@ const SendComponent = React.memo((props: Props) => {
         startNativeAmount={spendTarget.nativeAmount}
         forceField={fieldChanged}
         onAmountsChanged={handleAmountsChanged(spendTarget)}
-        onMaxSet={() => undefined}
-        onFeesChange={() => undefined}
+        onMaxSet={handleSetMax(index + 1)}
+        onFeesChange={handleFeesChange}
         walletId={walletId}
         tokenId={tokenId}
         feeNativeAmount={feeNativeAmount}
@@ -167,7 +194,7 @@ const SendComponent = React.memo((props: Props) => {
           displayDenomination={cryptoDisplayDenomination}
           lockInputs={lockTilesMap.amount ?? false}
           // TODO: Handle press
-          onPress={handleFlipInputModal(spendTarget)}
+          onPress={handleFlipInputModal(index, spendTarget)}
         />
       )
     }
@@ -252,12 +279,56 @@ const SendComponent = React.memo((props: Props) => {
     return null
   })
 
-  useAsyncEffect(async () => {
-    if (spendInfo.spendTargets[0].nativeAmount == null) {
-      flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
-      return
+  const renderFees = useHandler(() => {
+    if (edgeTransaction != null) {
+      const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
+      let feeDisplayDenomination: EdgeDenomination
+      let feeExchangeDenomination: EdgeDenomination
+      if (edgeTransaction.parentNetworkFee != null) {
+        feeDisplayDenomination = parentDisplayDenom
+        feeExchangeDenomination = parentExchangeDenom
+      } else {
+        feeDisplayDenomination = cryptoDisplayDenomination
+        feeExchangeDenomination = cryptoExchangeDenomination
+      }
+      const transactionFee = convertTransactionFeeToDisplayFee(coreWallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeExchangeDenomination)
+
+      const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
+      const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`
+      const feeSyntaxStyle = transactionFee.fiatStyle
+
+      return (
+        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={handleFeesChange}>
+          <EdgeText
+            style={{
+              // @ts-expect-error
+              color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+            }}
+          >
+            {feeSyntax}
+          </EdgeText>
+        </Tile>
+      )
     }
+
+    return null
+  })
+
+  // Calculate the transaction
+  useAsyncEffect(async () => {
     try {
+      if (spendInfo.spendTargets[0].publicAddress == null) {
+        setEdgeTransaction(null)
+        return
+      }
+      if (maxSpendSetter === 1) {
+        const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
+        spendInfo.spendTargets[0].nativeAmount = maxSpendable
+      }
+      if (spendInfo.spendTargets[0].nativeAmount == null) {
+        flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
+        return
+      }
       const edgeTx = await coreWallet.makeSpend(spendInfo)
       setEdgeTransaction(edgeTx)
       const { parentNetworkFee, networkFee } = edgeTx
@@ -269,10 +340,11 @@ const SendComponent = React.memo((props: Props) => {
       setError(undefined)
     } catch (e: any) {
       setError(e)
+      setEdgeTransaction(null)
       flipInputModalRef.current?.setError(e.message)
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
     }
-  }, [spendInfo])
+  }, [spendInfo, maxSpendSetter])
 
   return (
     <SceneWrapper background="theme">
@@ -281,6 +353,7 @@ const SendComponent = React.memo((props: Props) => {
         {renderAddressAmountPairs()}
         {renderAddAddress()}
         {renderError()}
+        {renderFees()}
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
