@@ -140,6 +140,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Xanpool',
     permissions: ['camera']
   },
+  // Partner whitelabel plugins
+  coinhub: {
+    pluginId: 'coinhub',
+    storeId: 'coinhub',
+    baseUri: 'https://coinhubatm.app',
+    displayName: 'Coinhub ATMs',
+    permissions: ['location']
+  },
   custom: {
     pluginId: 'custom',
     storeId: 'custom',
