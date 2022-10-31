@@ -54,6 +54,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   const clientId = useSelector(state => state.core.context.clientId)
   const executionContext = useExecutionContext()
   const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
+  const isCrossChainSrc = srcWallet.id !== borrowEngineWallet.id
 
   const existingLoanAccount = useSelector(state => selectLoanAccount(state, borrowEngineWallet.id))
   const [loanAccount, loanAccountError] = useAsyncValue(
@@ -65,7 +66,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   // TODO: Extend to dynamically grab minimums from providers for fee and collateral quotes
   const borrowPluginCurrencyPluginId = borrowPlugin.borrowInfo.currencyPluginId
   const minFeeSwapAmount = useSelector(state => {
-    return borrowPluginCurrencyPluginId === 'polygon'
+    return borrowPluginCurrencyPluginId === 'polygon' && isCrossChainSrc
       ? truncateDecimals(mul('5.05', convertCurrency(state, 'iso:USD', 'MATIC', destWallet.currencyInfo.denominations[0].multiplier)), 0)
       : '0'
   })
@@ -97,13 +98,12 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
 
     const mainNetworkFee = networkFeeMap[borrowEngineCurrencyCode]
-    const mainNetworkFeeAmount =
-      mainNetworkFee != null ? max(minFeeSwapAmount, mul(mainNetworkFee.nativeAmount, FEE_VOLATILITY_MULTIPLIER[borrowPluginCurrencyPluginId])) : '0'
+    const mainNetworkFeeAmount = mainNetworkFee != null ? mul(mainNetworkFee.nativeAmount, FEE_VOLATILITY_MULTIPLIER[borrowPluginCurrencyPluginId]) : '0'
 
     // Add an extra swap for BorrowEngine mainnet native currency to cover transaction fees.
     const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
     if (
-      srcWallet.id !== borrowEngineWallet.id && // Source of funds is not the same wallet as the "main-chain wallet"
+      isCrossChainSrc && // Source of funds is not the same wallet as the "main-chain wallet"
       mainNetworkFeeAmount != null && // Fees must exist in BorrowEngine's native currency
       gt(mainNetworkFeeAmount, borrowWalletNativeBalance) && // BorrowEngine wallet does not have enough balance to cover required fees
       seq != null // type assertion
@@ -149,9 +149,12 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     return [actionProgram, networkFeeMap] as const
   }, [destTokenId, nativeDestAmount, borrowEngine, borrowWalletNativeBalance, minFeeSwapAmount])
 
-  // TODO: Pass networkFeeMap to a component which can display fee total for NetworkFeeMap interfaces
-  const networkFeeAggregate = networkFeeMap[borrowEngineCurrencyCode]
-  const networkFeeAmountAggregate = networkFeeAggregate != null ? max(minFeeSwapAmount, networkFeeAggregate.nativeAmount) : '0'
+  // TODO: Pass networkFeeMap to a component which can display aggregated fee total for NetworkFeeMap interfaces
+  const networkFee = networkFeeMap[borrowEngineCurrencyCode]
+  let networkFeeAmount = networkFee != null ? mul(networkFee.nativeAmount, FEE_VOLATILITY_MULTIPLIER[borrowPluginCurrencyPluginId]) : '0'
+
+  // If we need to swap to cover fees, factor in the minimum swap amount for the fee display
+  networkFeeAmount = isCrossChainSrc && gt(networkFeeAmount, borrowWalletNativeBalance) ? max(minFeeSwapAmount, networkFeeAmount) : networkFeeAmount
 
   const handleSliderComplete = async (resetSlider: () => void) => {
     if (actionProgram != null && loanAccount != null) {
@@ -202,10 +205,12 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     return convertCurrency(state, srcCurrencyCode, srcIsoFiatCurrencyCode, cryptoAmount)
   })
   const feeFiatAmount = useSelector(state => {
-    const cryptoAmount = div(networkFeeAmountAggregate, feeDenom.multiplier, DECIMAL_PRECISION)
+    const cryptoAmount = div(networkFeeAmount, feeDenom.multiplier, DECIMAL_PRECISION)
     return convertCurrency(state, feeCurrencyCode, feeIsoFiatCurrencyCode, cryptoAmount)
   })
-  const isFeesExceedCollateral = gt(add(swapFiatAmount, feeFiatAmount), srcBalanceFiatAmount)
+  const isFeesExceedCollateral = isCrossChainSrc
+    ? gt(add(swapFiatAmount, feeFiatAmount), srcBalanceFiatAmount)
+    : gt(networkFeeAmount, borrowWalletNativeBalance)
 
   if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
@@ -240,7 +245,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         )}
       </Tile>
       {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
-      <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
+      <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmount} />
       {isFeesExceedCollateral ? <ErrorTile message={s.strings.loan_amount_fees_exceeds_collateral} /> : null}
     </FormScene>
   )
