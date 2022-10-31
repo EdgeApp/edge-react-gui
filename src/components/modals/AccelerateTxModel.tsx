@@ -127,7 +127,10 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
 
           showToast(s.strings.transaction_success_message)
 
-          Actions.replace('transactionDetails', { edgeTransaction: edgeSignedTransaction })
+          Actions.replace('transactionDetails', {
+            edgeTransaction: edgeSignedTransaction,
+            walletId: wallet.id
+          })
         } else {
           showWarning(s.strings.transaction_success_message)
         }

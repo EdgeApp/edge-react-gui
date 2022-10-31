@@ -31,7 +31,7 @@ interface OwnProps {
 
 type Props = OwnProps & ThemeProps
 
-export class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
+export class AdvancedDetailsModalComponent extends PureComponent<Props> {
   getRecipientAddress = () => (this.props.transaction.spendTargets ? this.props.transaction.spendTargets[0].publicAddress : '')
 
   openUrl = () => {
@@ -138,4 +138,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAdvanceDetails = withTheme(TransactionAdvanceDetailsComponent)
+export const AdvancedDetailsModal = withTheme(AdvancedDetailsModalComponent)

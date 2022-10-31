@@ -110,6 +110,7 @@ export function TransactionListRow(props: Props) {
     }
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
+      walletId,
       thumbnailPath,
       amountFiat
     })

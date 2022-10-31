@@ -15,7 +15,7 @@ import { FlashNotification } from './FlashNotification'
 
 let showing = false
 
-export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) {
+export function showTransactionDropdown(tx: EdgeTransaction, walletId: string) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
@@ -28,7 +28,7 @@ export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) 
 interface OwnProps {
   bridge: AirshipBridge<void>
   tx: EdgeTransaction
-  walletId?: string
+  walletId: string
 }
 
 interface StateProps {
@@ -51,7 +51,8 @@ export function TransactionDropdown(props: Props) {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
         Actions.push('transactionDetails', {
-          edgeTransaction: tx
+          edgeTransaction: tx,
+          walletId
         })
       }}
       message={message}
