@@ -208,7 +208,7 @@ export const LoanManageScene = (props: Props) => {
             nativeAmount: actionNativeAmount,
             borrowEngineWallet: borrowEngineWallet,
             srcTokenId: selectedAsset.tokenId,
-            srcWallet: borrowEngineWallet
+            srcWallet: selectedAsset.wallet ?? borrowEngineWallet
           })
           break
         case 'loan-borrow':
