@@ -46,7 +46,8 @@ const fakeCoreWallet: any = {
   fiatCurrencyCode: 'USD',
   id: '123',
   name: 'wallet name',
-  type: 'wallet:bitcoin'
+  type: 'wallet:bitcoin',
+  watch() {}
 }
 
 describe('TransactionDetailsScene', () => {

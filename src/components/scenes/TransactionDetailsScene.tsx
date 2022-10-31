@@ -11,6 +11,7 @@ import { sprintf } from 'sprintf-js'
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
+import { useWalletName } from '../../hooks/useWalletName'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
@@ -43,6 +44,7 @@ interface StateProps {
   destinationDenomination?: EdgeDenomination
   destinationWallet?: GuiWallet
   subcategoriesList: string[]
+  walletName: string
   walletDefaultDenomProps: EdgeDenomination
 }
 interface DispatchProps {
@@ -191,11 +193,10 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   renderExchangeData = (symbolString: string) => {
-    const { destinationDenomination, destinationWallet, wallet, walletDefaultDenomProps, theme, route } = this.props
+    const { destinationDenomination, destinationWallet, walletName, walletDefaultDenomProps, theme, route } = this.props
     const { edgeTransaction } = route.params
     const { swapData, spendTargets } = edgeTransaction
     const styles = getStyles(theme)
-    const walletName = wallet.name ?? sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 
     if (!swapData || !spendTargets || !destinationDenomination) return null
 
@@ -537,6 +538,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
+  const walletName = useWalletName(wallet)
   const contacts = useSelector(state => state.contacts)
   const subcategoriesList = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
 
@@ -574,6 +576,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       setTransactionDetails={(transaction, edgeMetadata) => dispatch(setTransactionDetails(transaction, edgeMetadata))}
       theme={theme}
       wallet={wallet}
+      walletName={walletName}
       walletDefaultDenomProps={walletDefaultDenomProps}
       destinationDenomination={destinationDenomination}
       destinationWallet={destinationWallet}
