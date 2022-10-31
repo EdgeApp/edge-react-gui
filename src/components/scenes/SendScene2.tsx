@@ -314,6 +314,17 @@ const SendComponent = (props: Props) => {
     return null
   }
 
+  const renderMetadataNotes = () => {
+    const notes = edgeTransaction?.metadata?.notes
+    if (notes != null) {
+      return (
+        <Tile type="static" title={s.strings.send_scene_metadata_name_title}>
+          <EdgeText>{notes}</EdgeText>
+        </Tile>
+      )
+    }
+  }
+
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
     // TODO:
     // 1. FIO functionality
@@ -434,6 +445,7 @@ const SendComponent = (props: Props) => {
         {renderAddAddress()}
         {renderError()}
         {renderFees()}
+        {renderMetadataNotes()}
         <View style={styles.footer}>{showSlider && <SafeSlider onSlidingComplete={handleSliderComplete} disabled={edgeTransaction == null} />}</View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
