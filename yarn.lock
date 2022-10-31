@@ -6473,10 +6473,10 @@ edge-currency-plugins@^1.2.2:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.0.tgz#7912cd3b08044768db8fa55ac5df62d230686410"
-  integrity sha512-ZSG8KEWh5+as2plDgdtXZBUZy15feZErvXhnfrJYqYFMi1+ALEKvgJo0mMYnSVGRGIaJoRbjFHWyOweTyEKzCg==
+edge-exchange-plugins@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.1.tgz#71ee83599e667249bb3f8767455b78d9a53b6a47"
+  integrity sha512-gEAp5VfpPwkpGcwku4yaWfCA2Ni52yOfruE2gemWsixLUDrOlCSC6iKVPUGkRj40Nv/45lmlm9oVeSusDFP0IQ==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
