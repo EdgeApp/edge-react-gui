@@ -6444,10 +6444,10 @@ edge-currency-monero@^0.5.3:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.2.2.tgz#cc9b4a7d32071ee16faf1d737aa028a8c20fa13d"
-  integrity sha512-PyMyw+dvRbYu2Ouraz24FQ6LBWHjeZeE1UsVji9tF1GqKylcxq5nrLDDVsIH8Lus1COfXiASRMmnWsLEAwp4jg==
+edge-currency-plugins@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.2.3.tgz#beeafb9a8628a241197ce0d1850b212ecd4be703"
+  integrity sha512-psaVViMEYeyFwaTULdkrkt/tN6iiTuaJMVR6WXrCVq3Qs3Vg50AlD8IpbwSTEKyOpKZoUeYAeGL0vax4SszIsw==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -12622,7 +12622,7 @@ react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
