@@ -157,6 +157,7 @@ export class MainComponent extends React.Component<Props> {
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
+            <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
             {this.renderTransactionDetailsView()}
             {this.renderTabView()}
           </Stack>

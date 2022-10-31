@@ -17,6 +17,8 @@ export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '200000': false
 }
 
+export type PasswordReminderTime = keyof typeof PASSWORD_RECOVERY_REMINDERS_SHOWN
+
 export const asCurrencyCodeDenom = asObject({
   name: asString,
   multiplier: asString,
@@ -149,7 +151,7 @@ export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: Sp
     return out
   })
 }
-export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
+export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: PasswordReminderTime) {
   const settings = await getSyncedSettings(account)
   const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
   passwordRecoveryRemindersShown[level] = true
@@ -165,7 +167,7 @@ export const setDenominationKeyRequest = async (account: EdgeAccount, pluginId: 
   })
 
 // Helper Functions
-export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
+export async function getSyncedSettings(account: EdgeAccount): Promise<ReturnType<typeof asSyncedAccountSettings>> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)

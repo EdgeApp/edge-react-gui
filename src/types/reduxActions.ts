@@ -15,6 +15,7 @@ import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
+import { PasswordReminderTime } from '../modules/Core/Account/settings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
 import { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
@@ -172,7 +173,7 @@ export type Action =
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | { type: 'UPDATE_SWAP_QUOTE'; data: GuiSwapInfo }
-  | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: number }
+  | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS'; data: { walletId: string; addressLoadingProgress: number } }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR'; data: string }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }
