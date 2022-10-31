@@ -1,5 +1,7 @@
 import { abs, div, log10 } from 'biggystring'
 import * as React from 'react'
+import Share from 'react-native-share'
+import { sprintf } from 'sprintf-js'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -116,6 +118,14 @@ export function TransactionListRow(props: Props) {
     })
   })
 
+  const handleLongPress = useHandler(() => {
+    const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
+    const shareOptions = {
+      url
+    }
+    Share.open(shareOptions).catch(e => showError(e))
+  })
+
   return (
     <TransactionRow
       cryptoAmount={cryptoAmountFormat}
@@ -123,6 +133,7 @@ export function TransactionListRow(props: Props) {
       fiatAmount={displayFiatAmount(amountFiat)}
       fiatSymbol={getSymbolFromCurrency(nonIsoFiatCurrencyCode)}
       onPress={handlePress}
+      onLongPress={handleLongPress}
       isSentTransaction={isSentTransaction(transaction)}
       requiredConfirmations={requiredConfirmations}
       selectedCurrencyName={currencyName || currencyCode}
