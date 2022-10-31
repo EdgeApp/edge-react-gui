@@ -1,9 +1,18 @@
-import { asMaybeNoAmountSpecifiedError, EdgeAccount, EdgeDenomination, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  asMaybeNoAmountSpecifiedError,
+  EdgeAccount,
+  EdgeDenomination,
+  EdgeSpendInfo,
+  EdgeSpendTarget,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -13,14 +22,15 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
-import { useSelector } from '../../types/reactRedux'
-import { Actions, RouteProp } from '../../types/routerTypes'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, roundedFee } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
@@ -34,12 +44,13 @@ import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
 interface Props {
-  // navigation: NavigationProp<'send2'>
+  navigation: NavigationProp<'send2'>
   route: RouteProp<'send2'>
 }
 
 const SendComponent = (props: Props) => {
-  const { route } = props
+  const { route, navigation } = props
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -175,7 +186,39 @@ const SendComponent = (props: Props) => {
         tokenId={tokenId}
         feeNativeAmount={feeNativeAmount}
       />
-    )).catch(error => console.log(error))
+    ))
+      .then(async () => {
+        if (error == null) return
+        console.log(error)
+        const insufficientFunds = asMaybeInsufficientFundsError(error)
+        if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
+          const { currencyCode, networkFee = '' } = insufficientFunds
+          const multiplier = cryptoDisplayDenomination.multiplier
+          const amountString = roundedFee(networkFee, 2, multiplier)
+          const result = await Airship.show<'buy' | 'exchange' | 'cancel' | undefined>(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={s.strings.buy_crypto_modal_title}
+              message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
+              buttons={{
+                buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+                exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
+                cancel: { label: s.strings.buy_crypto_decline }
+              }}
+            />
+          ))
+          switch (result) {
+            case 'buy':
+              navigation.navigate('pluginListBuy', { direction: 'buy' })
+              return
+            case 'exchange':
+              dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
+              navigation.navigate('exchangeScene', {})
+              break
+          }
+        }
+      })
+      .catch(error => console.log(error))
   }
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
