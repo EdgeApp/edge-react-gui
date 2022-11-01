@@ -24,7 +24,7 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, RouteProp } from '../../types/routerTypes'
+import { Actions, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -47,7 +47,7 @@ import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
 type Props = {
-  // navigation: NavigationProp<'send2'>
+  navigation: NavigationProp<'send2'>
   route: RouteProp<'send2'>
 }
 
@@ -55,7 +55,7 @@ const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
 const SendComponent = React.memo((props: Props) => {
-  const { route } = props
+  const { route, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -181,16 +181,18 @@ const SendComponent = React.memo((props: Props) => {
   })
 
   const handleFeesChange = useHandler(() => {
-    // if (coreWallet == null) return
-    // navigation.navigate('changeMiningFee2', {
-    //   spendInfo,
-    //   maxSpendSetter,
-    //   wallet: coreWallet,
-    //   onSubmit: (networkFeeOption, customNetworkFee) => {
-    //     setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
-    //     setMaxSpendSetter(false)
-    //   }
-    // })
+    if (coreWallet == null) return
+
+    navigation.navigate('changeMiningFee2', {
+      spendInfo,
+      maxSpendSet: maxSpendSetter > 0,
+      wallet: coreWallet,
+      onSubmit: (networkFeeOption, customNetworkFee) => {
+        setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
+        setMaxSpendSetter(0)
+        setPinValue(undefined)
+      }
+    })
   })
 
   const handleFlipInputModal = useHandler((index: number, spendTarget: EdgeSpendTarget) => () => {
