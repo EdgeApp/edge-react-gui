@@ -5,7 +5,7 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { truncateDecimals } from '../../locales/intl'
-import { DECIMAL_PRECISION } from '../../util/utils'
+import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
 import { UnderlinedNumInputCard } from './UnderlinedNumInputCard'
@@ -42,17 +42,16 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     0
   )
 
-  onAmountChanged(fiatAmount, nativeCryptoAmount)
-
   const handleEditActionfiatAmount = React.useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
       inputAmount => {
-        if (inputAmount != null) {
+        if (inputAmount != null && !zeroString(inputAmount)) {
           setFiatAmount(inputAmount)
+          onAmountChanged(fiatAmount, nativeCryptoAmount)
         }
       }
     )
-  }, [inputModalMessage, title])
+  }, [fiatAmount, inputModalMessage, nativeCryptoAmount, onAmountChanged, title])
 
   const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
 
