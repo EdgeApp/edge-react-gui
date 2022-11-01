@@ -26,7 +26,6 @@ const title = {
   pluginListBuy: s.strings.title_buy,
   pluginListSell: s.strings.title_sell,
   exchange: s.strings.title_exchange,
-  // @ts-expect-error
   extraTab: s.strings[extraTabString]
 }
 

@@ -18,7 +18,7 @@ export const NumericInput = forwardRef<TextInput, Props>((props: Props, ref) => 
     const propVal = props.value ?? ''
     const displayNum = propVal === '' ? '' : formatNumberInput(propVal, { minDecimals, maxDecimals })
     setInnerValue(displayNum)
-  }, [props.value])
+  }, [maxDecimals, minDecimals, props.value])
 
   const onChangeTextInner = useHandler(text => {
     if (isValidInput(text)) {
