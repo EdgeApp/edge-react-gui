@@ -1,7 +1,6 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import * as React from 'react'
 
-import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -16,7 +15,7 @@ import s from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
-import { LoanAsset, makeAaveCreateAction } from '../../../util/ActionProgramUtils'
+import { LoanAsset, makeAaveCreateActionProgram } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
@@ -80,14 +79,13 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       ...(paymentMethod != null ? { paymentMethodId: paymentMethod.id } : {}),
       ...(destTokenId != null ? { tokenId: destTokenId } : {})
     }
-    const actionOp = await makeAaveCreateAction({
+    const actionProgram = await makeAaveCreateActionProgram({
       borrowEngineWallet,
       borrowPluginId,
       source,
       destination
     })
 
-    const actionProgram = await makeActionProgram(actionOp)
     const executionOutputs = await dryrunActionProgram(executionContext, actionProgram, makeInitialProgramState(clientId, actionProgram.programId), false)
 
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
@@ -134,7 +132,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       seq.actions = [
         {
           type: 'par',
-          actions: swapActions
+          actions: swapActions,
+          displayKey: 'swap-deposit-fees'
         },
         ...otherActions
       ]

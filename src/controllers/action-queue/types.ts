@@ -5,38 +5,33 @@ import { Dispatch, GetState } from '../../types/reduxTypes'
 //
 // Action Operations
 //
-export type ActionOpTypes =
-  | 'seq'
-  | 'par'
-  | 'wyre-buy'
-  | 'wyre-sell'
-  | 'loan-borrow'
-  | 'loan-deposit'
-  | 'loan-repay'
-  | 'loan-withdraw'
-  | 'swap'
-  | 'toast'
-  | 'delay'
+export type ActionOpTypes = ActionOp['type']
 
 export interface SeqActionOp {
   type: 'seq'
   actions: ActionOp[]
 }
+
 export interface ParActionOp {
   type: 'par'
   actions: ActionOp[]
+  displayKey?: ParActionOpDisplayKey
 }
+export type ParActionOpDisplayKey = 'create' | 'swap-deposit-fees'
+
 export interface BroadcastTxActionOp {
   type: 'broadcast-tx'
   pluginId: string
   rawTx: Uint8Array
 }
+
 export interface WyreBuyActionOp {
   type: 'wyre-buy'
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
+
 export interface WyreSellActionOp {
   type: 'wyre-sell'
   wyreAccountId: string
@@ -44,6 +39,7 @@ export interface WyreSellActionOp {
   walletId: string
   tokenId?: string
 }
+
 export interface LoanBorrowActionOp {
   type: 'loan-borrow'
   borrowPluginId: string
@@ -51,6 +47,7 @@ export interface LoanBorrowActionOp {
   walletId: string
   tokenId?: string
 }
+
 export interface LoanDepositActionOp {
   type: 'loan-deposit'
   borrowPluginId: string
@@ -58,6 +55,7 @@ export interface LoanDepositActionOp {
   walletId: string
   tokenId?: string
 }
+
 export interface LoanRepayActionOp {
   type: 'loan-repay'
   borrowPluginId: string
@@ -66,6 +64,7 @@ export interface LoanRepayActionOp {
   tokenId?: string
   fromTokenId?: string
 }
+
 export interface LoanWithdrawActionOp {
   type: 'loan-withdraw'
   borrowPluginId: string
@@ -73,6 +72,7 @@ export interface LoanWithdrawActionOp {
   walletId: string
   tokenId?: string
 }
+
 export interface SwapActionOp {
   type: 'swap'
   amountFor: 'from' | 'to'
@@ -81,10 +81,13 @@ export interface SwapActionOp {
   nativeAmount: string
   toTokenId?: string
   toWalletId: string
+  displayKey?: SwapActionOpDisplayKey
 }
-export type ActionOp =
-  | SeqActionOp
-  | ParActionOp
+export type SwapActionOpDisplayKey = 'swap-deposit'
+
+export type NodeActionOp = SeqActionOp | ParActionOp
+
+export type LeafActionOp =
   | BroadcastTxActionOp
   | WyreBuyActionOp
   | WyreSellActionOp
@@ -93,6 +96,12 @@ export type ActionOp =
   | LoanRepayActionOp
   | LoanWithdrawActionOp
   | SwapActionOp
+
+export type ActionOp = NodeActionOp | LeafActionOp
+
+// Special display handling is implemented for ActionOps that have
+// ActionOpDisplayKeys set
+export type ActionOpDisplayKey = SwapActionOpDisplayKey | ParActionOpDisplayKey
 
 //
 // Action (After) Effects
@@ -145,11 +154,23 @@ export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEv
 //
 
 // Storage:
+
+export interface ActionProgramCompleteMessage {
+  title: string
+  message: string
+}
+
 export interface ActionProgram {
   programId: string
   actionOp: ActionOp
   // Development mode flag
   mockMode?: boolean
+
+  // TODO: Currently, the program creation stage does not have context about the
+  // rest of the steps without inferring from parsing the steps. Store the raw
+  // strings in the ActionProgram for now...
+  // programDisplayKey: ActionProgramDisplayKey
+  completeMessage?: ActionProgramCompleteMessage // Optional for backwards compatibility
 }
 export interface ActionProgramState {
   clientId: string
@@ -219,6 +240,7 @@ export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
 export interface ActionDisplayInfo {
   title: string
   message: string
+  completeMessage?: ActionProgramCompleteMessage
   status: ActionDisplayStatus
   steps: ActionDisplayInfo[]
 }

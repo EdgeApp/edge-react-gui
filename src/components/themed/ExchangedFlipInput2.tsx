@@ -171,7 +171,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     const initFiat = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
     setRenderDisplayAmount(displayAmount)
     setRenderFiatAmount(initFiat)
-  }, [])
+  }, [convertCurrency, convertFromCryptoNative, cryptoCurrencyCode, fiatCurrencyCode, startNativeAmount])
 
   React.useImperativeHandle(ref, () => ({
     setAmount: (field, value) => {
@@ -186,7 +186,10 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     }
   }))
 
-  const overrideForceField = useMemo(() => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField), [exchangeRates])
+  const overrideForceField = useMemo(
+    () => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField),
+    [convertCurrency, cryptoCurrencyCode, fiatCurrencyCode, forceField]
+  )
 
   return (
     <>
