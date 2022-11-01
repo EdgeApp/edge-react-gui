@@ -174,16 +174,18 @@ const SendComponent = (props: Props) => {
   }
 
   const handleFeesChange = useHandler(() => {
-    // if (coreWallet == null) return
-    // navigation.navigate('changeMiningFee2', {
-    //   spendInfo,
-    //   maxSpendSetter,
-    //   wallet: coreWallet,
-    //   onSubmit: (networkFeeOption, customNetworkFee) => {
-    //     setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
-    //     setMaxSpendSetter(false)
-    //   }
-    // })
+    if (coreWallet == null) return
+
+    navigation.navigate('changeMiningFee2', {
+      spendInfo,
+      maxSpendSet: maxSpendSetter > 0,
+      wallet: coreWallet,
+      onSubmit: (networkFeeOption, customNetworkFee) => {
+        setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
+        setMaxSpendSetter(0)
+        setPinValue(undefined)
+      }
+    })
   })
 
   const handleFlipInputModal = (index: number, spendTarget: EdgeSpendTarget) => () => {
