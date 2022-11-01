@@ -657,6 +657,7 @@ const strings = {
   save: 'Save',
   four_digit_pin: '4 Digit PIN',
   pin: 'PIN',
+  spending_limits_enter_pin: 'Enter PIN',
 
   hang_tight: 'Hang tight',
   trying_to_find: 'Searching for the best exchange rate...',

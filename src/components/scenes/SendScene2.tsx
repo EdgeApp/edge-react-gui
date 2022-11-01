@@ -1,3 +1,4 @@
+import { add, div, gte, mul } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
@@ -8,7 +9,7 @@ import {
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -28,16 +29,17 @@ import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, roundedFee } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, roundedFee } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
+import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { AddressTile, ChangeAddressResult } from '../tiles/AddressTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
@@ -49,12 +51,16 @@ type Props = {
   route: RouteProp<'send2'>
 }
 
+const PIN_MAX_LENGTH = 4
+const INFINITY_STRING = '999999999999999999999999999999999999999'
+
 const SendComponent = React.memo((props: Props) => {
   const { route } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const pinInputRef = React.useRef<TextInput>(null)
   const flipInputModalRef = React.useRef<FlipInputModalRef>(null)
   const {
     walletId: initWalletId = '',
@@ -72,6 +78,8 @@ const SendComponent = React.memo((props: Props) => {
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [error, setError] = useState<Error | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
+  const [pinValue, setPinValue] = useState<string | undefined>(undefined)
+  const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
 
   // 0 = no max spend. 1 and higher = the spendTarget that requested the max spend. 1 = 1st, 2 = 2nd ...
   const [maxSpendSetter, setMaxSpendSetter] = useState<number>(0)
@@ -79,6 +87,9 @@ const SendComponent = React.memo((props: Props) => {
 
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
+  const pinSpendingLimitsEnabled = useSelector<boolean>(state => state.ui.settings.spendingLimits.transaction.isEnabled)
+  const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount)
+  const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const [currencyCode, setCurrencyCode] = useState<string>(spendInfo?.currencyCode ?? currencyWallets[walletId].currencyInfo.currencyCode)
   const { pluginId } = currencyWallets[walletId].currencyInfo
@@ -127,6 +138,7 @@ const SendComponent = React.memo((props: Props) => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
     spendTarget.memo = spendTarget.uniqueIdentifier = undefined
+    setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
   })
 
@@ -415,6 +427,43 @@ const SendComponent = React.memo((props: Props) => {
     return null
   })
 
+  const handleFocusPin = useHandler(() => {
+    pinInputRef.current?.focus()
+  })
+
+  const handleChangePin = useHandler((pin: string) => {
+    setPinValue(pin)
+    if (pin.length >= PIN_MAX_LENGTH && pinInputRef.current != null && pinInputRef.current.blur != null) {
+      pinInputRef.current.blur()
+    }
+  })
+
+  const renderAuthentication = useHandler(() => {
+    if (!pinSpendingLimitsEnabled) return
+    if (!spendingLimitExceeded) return
+
+    const pinLength = pinValue?.length ?? 0
+    return (
+      <Tile type="touchable" title={s.strings.four_digit_pin} onPress={handleFocusPin}>
+        <View style={styles.pinContainer}>
+          <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
+        </View>
+        <TextInput
+          ref={pinInputRef}
+          maxLength={PIN_MAX_LENGTH}
+          onChangeText={handleChangePin}
+          keyboardType="numeric"
+          returnKeyType="done"
+          placeholder={s.strings.spending_limits_enter_pin}
+          placeholderTextColor={theme.textLink}
+          style={styles.pinInput}
+          value={pinValue}
+          secureTextEntry
+        />
+      </Tile>
+    )
+  })
+
   const handleSliderComplete = async (resetSlider: () => void) => {
     // TODO:
     // 1. FIO functionality
@@ -424,6 +473,15 @@ const SendComponent = React.memo((props: Props) => {
     // 5. alternateBroadcast
 
     if (edgeTransaction == null) return
+    if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
+      const isAuthorized = await account.checkPin(pinValue ?? '')
+      if (!isAuthorized) {
+        resetSlider()
+        setPinValue('')
+        showError(new Error(s.strings.incorrect_pin))
+        return
+      }
+    }
     try {
       const signedTx = await coreWallet.signTx(edgeTransaction)
       const broadcastedTx = await coreWallet.broadcastTx(signedTx)
@@ -495,6 +553,15 @@ const SendComponent = React.memo((props: Props) => {
   // Calculate the transaction
   useAsyncEffect(async () => {
     try {
+      if (pinSpendingLimitsEnabled) {
+        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
+        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
+        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+        const fiatAmount = mul(totalExchangeAmount, rate)
+        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
+        setSpendingLimitExceeded(exceeded)
+      }
+
       if (spendInfo.spendTargets[0].publicAddress == null) {
         setEdgeTransaction(null)
         return
@@ -522,10 +589,18 @@ const SendComponent = React.memo((props: Props) => {
       flipInputModalRef.current?.setError(e.message)
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
     }
-  }, [spendInfo, maxSpendSetter, walletId])
+  }, [spendInfo, maxSpendSetter, walletId, pinSpendingLimitsEnabled, pinValue])
 
   const showSlider = spendInfo.spendTargets[0].publicAddress != null
+  let disableSlider = false
+  let disabledText: string | undefined
 
+  if (edgeTransaction == null) {
+    disableSlider = true
+  } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
+    disableSlider = true
+    disabledText = s.strings.spending_limits_enter_pin
+  }
   return (
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
@@ -536,8 +611,10 @@ const SendComponent = React.memo((props: Props) => {
         {renderFees()}
         {renderMetadataNotes()}
         {renderUniqueIdentifier()}
-
-        <View style={styles.footer}>{showSlider && <SafeSlider onSlidingComplete={handleSliderComplete} disabled={edgeTransaction == null} />}</View>
+        {renderAuthentication()}
+        <View style={styles.footer}>
+          {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+        </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
@@ -550,5 +627,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(2),
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  pinContainer: {
+    marginTop: theme.rem(0.25)
+  },
+  pinInput: {
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    position: 'absolute',
+    width: 0,
+    height: 0
   }
 }))
