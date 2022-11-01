@@ -1,23 +1,6 @@
-// Stricter typing for feature-specific strings
+export type LocaleStringKey = keyof typeof strings
 
-export interface ActionDisplayStrings {
-  [`action_display_title_create`]: string
-  [`action_display_title_swap`]: string
-
-  [`action_display_title_complete_default`]: string
-
-  [`action_display_message_create_3s`]: string
-  [`action_display_message_swap_4s`]: string
-  [`action_display_message_swap_fees_5s`]: string
-
-  [`action_display_message_complete_default`]: string
-  [`action_display_message_complete_wallet_2s`]: string
-  [`action_display_message_complete_bank`]: string
-}
-
-const strings: ActionDisplayStrings & {
-  [key: string]: string
-} = {
+const strings = {
   // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -884,6 +867,7 @@ const strings: ActionDisplayStrings & {
   UnspecifiedCurrency: 'Domain %1$s has no %2$s address attached to it',
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
+  IncorrectResolverInterface: 'Unable to resolve domain %1$s',
   RecordNotFound: 'No %2%s record found for %1$s',
   invalid_character_error: 'Invalid input characters',
 
