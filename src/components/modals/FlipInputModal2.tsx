@@ -154,7 +154,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderBalance = useHandler(() => {
     const { multiplier, name } = displayDenom
-    const balanceCrypto = balances[currencyCode]
+    const balanceCrypto = balances[currencyCode] ?? '0'
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
     return (
       <View style={styles.rateBalanceContainer}>
