@@ -9,7 +9,6 @@ import s from '../../locales/strings'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
@@ -18,8 +17,8 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
 type OwnProps = {
-  navigation: NavigationProp<'changeMiningFee'>
-  route: RouteProp<'changeMiningFee'>
+  navigation: NavigationProp<'changeMiningFee2'>
+  route: RouteProp<'changeMiningFee2'>
 }
 
 type Props = OwnProps & ThemeProps
@@ -47,7 +46,7 @@ const feeOptions = {
 export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.guiMakeSpendInfo
+    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.spendInfo
     const customFormat = this.getCustomFormat()
 
     if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
@@ -74,28 +73,8 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     const { navigation, route } = this.props
-    const { guiMakeSpendInfo, wallet, maxSpendSet } = route.params
-    const { currencyCode, spendTargets = [] } = guiMakeSpendInfo
-    const testSpendInfo = {
-      spendTargets: spendTargets.map(spendTarget => ({
-        ...spendTarget,
-        nativeAmount: maxSpendSet || spendTarget.nativeAmount === '' ? '0' : spendTarget.nativeAmount
-      })),
-      networkFeeOption,
-      customNetworkFee,
-      currencyCode
-    }
-    wallet
-      .makeSpend(testSpendInfo)
-      .then(() => {
-        this.props.route.params.onSubmit(networkFeeOption, customNetworkFee)
-        navigation.goBack()
-      })
-      .catch(e => {
-        let message = e.message
-        if (e.name === 'ErrorBelowMinimumFee') message = `${s.strings.invalid_custom_fee} ${e.message}`
-        showError(message)
-      })
+    route.params.onSubmit(networkFeeOption, customNetworkFee)
+    navigation.goBack()
   }
 
   render() {
@@ -210,4 +189,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const ChangeMiningFeeScene = withTheme(ChangeMiningFeeComponent)
+export const ChangeMiningFeeScene2 = withTheme(ChangeMiningFeeComponent)

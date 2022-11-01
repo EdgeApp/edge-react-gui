@@ -49,6 +49,7 @@ import { HeaderTitle } from './navigation/HeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
+import { ChangeMiningFeeScene2 } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
@@ -539,6 +540,15 @@ export class MainComponent extends React.Component<Props> {
               onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene
+              key="changeMiningFee2"
+              component={withNavigation(ifLoggedIn(ChangeMiningFeeScene2))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              // @ts-expect-error
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
           </Stack>
 
