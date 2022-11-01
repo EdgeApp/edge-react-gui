@@ -32,6 +32,7 @@ import { convertTransactionFeeToDisplayFee, roundedFee } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
+import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -125,6 +126,7 @@ const SendComponent = React.memo((props: Props) => {
   const handleResetSendTransaction = useHandler((spendTarget: EdgeSpendTarget) => () => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
+    spendTarget.memo = spendTarget.uniqueIdentifier = undefined
     setSpendInfo({ ...spendInfo })
   })
 
@@ -374,6 +376,45 @@ const SendComponent = React.memo((props: Props) => {
     }
   })
 
+  // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
+  const renderUniqueIdentifier = useHandler(() => {
+    const spendTarget = spendInfo.spendTargets[0]
+    const uniqueIdentifier = spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(coreWallet.currencyInfo.pluginId)
+
+    if (uniqueIdentifierInfo != null && spendTarget.publicAddress != null) {
+      const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
+
+      const handleUniqueIdentifier = () => {
+        Airship.show<string | undefined>(bridge => (
+          <TextInputModal
+            bridge={bridge}
+            inputLabel={identifierName}
+            initialValue={uniqueIdentifier}
+            keyboardType={keyboardType}
+            message={sprintf(s.strings.unique_identifier_modal_description, identifierName)}
+            submitLabel={s.strings.unique_identifier_modal_confirm}
+            title={identifierName}
+            maxLength={coreWallet?.currencyInfo?.memoMaxLength}
+          />
+        )).then(newUniqueIdentifier => {
+          if (newUniqueIdentifier == null) return
+          // XXX Ugly hack. Put the uniqueIdentifier in the first spendTarget
+          spendTarget.memo = spendTarget.uniqueIdentifier = newUniqueIdentifier
+          setSpendInfo({ ...spendInfo })
+        })
+      }
+
+      return (
+        <Tile type="touchable" title={identifierName} onPress={handleUniqueIdentifier}>
+          <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
+        </Tile>
+      )
+    }
+
+    return null
+  })
+
   const handleSliderComplete = async (resetSlider: () => void) => {
     // TODO:
     // 1. FIO functionality
@@ -494,6 +535,8 @@ const SendComponent = React.memo((props: Props) => {
         {renderError()}
         {renderFees()}
         {renderMetadataNotes()}
+        {renderUniqueIdentifier()}
+
         <View style={styles.footer}>{showSlider && <SafeSlider onSlidingComplete={handleSliderComplete} disabled={edgeTransaction == null} />}</View>
       </KeyboardAwareScrollView>
     </SceneWrapper>
