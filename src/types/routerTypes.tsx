@@ -47,6 +47,12 @@ export type ParamList = {
     onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
     wallet: EdgeCurrencyWallet
   }
+  changeMiningFee2: {
+    spendInfo: EdgeSpendInfo
+    maxSpendSet: boolean
+    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
+    wallet: EdgeCurrencyWallet
+  }
   changePassword: {}
   changePin: {}
   controlPanel: {}
