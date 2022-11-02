@@ -96,11 +96,23 @@ const SendComponent = (props: Props) => {
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
-      spendTarget.publicAddress = changeAddressResult.parsedUri?.publicAddress ?? ''
+      const { parsedUri, fioAddress } = changeAddressResult
 
-      // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
-      // should properly re-render with new spendTargets
-      setSpendInfo({ ...spendInfo })
+      if (parsedUri) {
+        if (parsedUri.metadata != null) {
+          spendInfo.metadata = parsedUri.metadata
+        }
+        spendTarget.uniqueIdentifier = parsedUri?.uniqueIdentifier
+        spendTarget.publicAddress = parsedUri?.publicAddress
+        spendTarget.nativeAmount = parsedUri?.nativeAmount
+        spendTarget.otherParams = {
+          fioAddress
+        }
+
+        // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
+        // should properly re-render with new spendTargets
+        setSpendInfo({ ...spendInfo })
+      }
     }
 
   const handleAddressAmountPress = (index: number) => () => {
