@@ -99,6 +99,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       tokenContract: ethers.Contract,
       overrides?: Overrides
     ): Promise<TxInfo | null> => {
+      if (overrides?.gasPrice == null) {
+        const gasPrice = await aaveNetwork.provider.getGasPrice()
+        overrides = { ...overrides, gasPrice }
+        console.warn(`getApproveAllowanceTx was called without a gasPrice overrides parameter. The caller should pass the gasPrice instead.`)
+      }
       const allowance = await tokenContract.allowance(ownerAddress, spenderAddress)
       if (!allowance.sub(allowanceAmount).gte(0)) {
         return asGracefulTxInfo(
