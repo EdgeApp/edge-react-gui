@@ -6,10 +6,9 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
-import { FioAddress, FioRequest, GuiWallet } from '../../types/types'
+import { FioAddress, FioRequest } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -26,13 +25,13 @@ type OwnProps = {
   onMemoChange: (memo: string, memoError: string) => void
   fioRequest?: FioRequest
   isSendUsingFioAddress?: boolean
+  currencyCode: string
+  coreWallet: EdgeCurrencyWallet
 }
 
 type StateProps = {
   fioAddresses: FioAddress[]
   fioWallets: EdgeCurrencyWallet[]
-  selectedWallet: GuiWallet
-  currencyCode: string
 }
 
 type DispatchProps = {
@@ -114,9 +113,9 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 
   selectAddress = () => {
-    const { currencyCode, selectedWallet } = this.props
+    const { currencyCode, coreWallet } = this.props
     Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={coreWallet.id} useUserFioAddressesOnly />
     )).then(response => {
       if (response) {
         this.setFioAddress(response)
@@ -262,17 +261,11 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 }
 
-export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
+export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const guiWallet: GuiWallet = getSelectedWallet(state)
-    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-
     return {
-      loading: !guiWallet || !currencyCode,
       fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-      fioWallets: state.ui.wallets.fioWallets,
-      currencyCode,
-      selectedWallet: guiWallet
+      fioWallets: state.ui.wallets.fioWallets
     }
   },
   dispatch => ({
