@@ -123,20 +123,16 @@ export const LoanCloseScene = (props: Props) => {
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <Tile title={s.strings.loan_remaining_principal} type="static">
+          <Tile title={s.strings.loan_remaining_principal} type="static" contentPadding={false}>
             {debts.map(debt => (
-              <Space key={debt.tokenId} vertical={0.5}>
-                <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} />
-              </Space>
+              <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
           </Tile>
         ) : null}
         {collaterals.length > 0 ? (
-          <Tile title={s.strings.loan_collateral_amount} type="static">
+          <Tile title={s.strings.loan_collateral_amount} type="static" contentPadding={false}>
             {collaterals.map(collateral => (
-              <Space key={collateral.tokenId} vertical={0.5}>
-                <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} />
-              </Space>
+              <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
           </Tile>
         ) : null}
