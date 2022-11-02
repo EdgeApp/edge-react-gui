@@ -1,4 +1,4 @@
-import { add } from 'biggystring'
+import { add, mul } from 'biggystring'
 
 import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
@@ -314,8 +314,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         const aboveAmount = add(currentAddressBalance, swapData.payoutNativeAmount)
         */
 
+        // Add a buffer for margin of error when requesting 'from' quotes since
+        // the swap payout amount is not guaranteed
+        const swapPayoutNativeAmount = amountFor === 'from' ? mul(swapData.payoutNativeAmount, '0.9') : swapData.payoutNativeAmount
         const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
-        const aboveAmount = add(walletBalance, swapData.payoutNativeAmount)
+        const aboveAmount = add(walletBalance, swapPayoutNativeAmount)
 
         const broadcastTxs: BroadcastTx[] = [
           {

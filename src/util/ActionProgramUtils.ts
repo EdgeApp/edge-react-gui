@@ -61,6 +61,8 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   const toTokenId = source.tokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
+
+  // Only from quotes supported for Polygon
   if (source.wallet.id !== borrowEngineWallet.id) {
     sequenceActions.push({
       type: 'swap',
