@@ -33,6 +33,11 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
 import { FormScene } from '../FormScene'
 
+const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
+  ethereum: '2',
+  polygon: '1.5'
+}
+
 interface Props {
   navigation: NavigationProp<'loanCreateConfirmation'>
   route: RouteProp<'loanCreateConfirmation'>
@@ -58,8 +63,9 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   // HACK: Special handling to satisfy minimum swap amounts for MATIC fees.
   // TODO: Extend to dynamically grab minimums from providers for fee and collateral quotes
+  const borrowPluginCurrencyPluginId = borrowPlugin.borrowInfo.currencyPluginId
   const minFeeSwapAmount = useSelector(state => {
-    return borrowPlugin.borrowInfo.currencyPluginId === 'polygon'
+    return borrowPluginCurrencyPluginId === 'polygon'
       ? truncateDecimals(mul('5.05', convertCurrency(state, 'iso:USD', 'MATIC', destWallet.currencyInfo.denominations[0].multiplier)), 0)
       : '0'
   })
@@ -91,7 +97,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     const networkFeeMap = getExecutionNetworkFees(executionOutputs)
 
     const mainNetworkFee = networkFeeMap[borrowEngineCurrencyCode]
-    const mainNetworkFeeAmount = mainNetworkFee != null ? max(minFeeSwapAmount, mainNetworkFee.nativeAmount) : '0'
+    const mainNetworkFeeAmount =
+      mainNetworkFee != null ? max(minFeeSwapAmount, mul(mainNetworkFee.nativeAmount, FEE_VOLATILITY_MULTIPLIER[borrowPluginCurrencyPluginId])) : '0'
 
     // Add an extra swap for BorrowEngine mainnet native currency to cover transaction fees.
     const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
@@ -114,7 +121,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
       // Target mainnet native balance should be double the fees estimate to be
       // extra generous when accounting for fee volatility.
-      const feeNativeAmount = sub(mul(mainNetworkFeeAmount, '2'), borrowWalletNativeBalance)
+      const feeNativeAmount = max(minFeeSwapAmount, sub(mainNetworkFeeAmount, borrowWalletNativeBalance))
 
       // Create a new fee swap action for mainnet fees
       const feesSwap: SwapActionOp = {
