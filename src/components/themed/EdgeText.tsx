@@ -5,7 +5,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 
 interface OwnProps {
   children: React.ReactNode
-  ellipsizeMode?: string
+  ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip' | undefined
   numberOfLines?: number
   style?: TextStyle
   disableFontScaling?: boolean
