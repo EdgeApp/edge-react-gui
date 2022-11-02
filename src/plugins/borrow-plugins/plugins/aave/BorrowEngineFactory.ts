@@ -402,7 +402,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           // Approve the AAVE aToken
           const aCollateralContract = (await aaveNetwork.getReserveTokenContracts(collateralTokenAddress)).aToken
           const { paraSwapRepayAdapter } = aaveNetwork
-          const approveTx = await getApproveAllowanceTx(amountToSwap.toString(), fromAddress, paraSwapRepayAdapter.address, aCollateralContract)
+          const approveTx = await getApproveAllowanceTx(amountToSwap.toString(), fromAddress, paraSwapRepayAdapter.address, aCollateralContract, { gasPrice })
           if (approveTx != null) {
             txCallInfos.push({
               tx: approveTx,
