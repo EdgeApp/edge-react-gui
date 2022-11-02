@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { formatDate } from '../../locales/intl'
 import s from '../../locales/strings'
-import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
@@ -316,18 +316,20 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { wallets = {}, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string; currencyCode: string }> = []
     for (const walletKey of Object.keys(wallets)) {
-      if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
-        availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
+      const { chainCode, tokenCode } = convertFIOToEdgeCodes(
+        wallets[walletKey].pluginId,
+        fioRequest.content.chain_code.toUpperCase(),
+        fioRequest.content.token_code.toUpperCase()
+      )
+      if (wallets[walletKey].currencyCode.toUpperCase() === tokenCode) {
+        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
         }
       }
-      if (
-        wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase() &&
-        wallets[walletKey].enabledTokens.includes(fioRequest.content.token_code.toUpperCase())
-      ) {
-        availableWallets.push({ id: wallets[walletKey].id, currencyCode: fioRequest.content.token_code.toUpperCase() })
+      if (wallets[walletKey].currencyCode.toUpperCase() === chainCode && wallets[walletKey].enabledTokens.includes(tokenCode)) {
+        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
