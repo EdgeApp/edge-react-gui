@@ -16,13 +16,14 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
+import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -542,6 +543,55 @@ const SendComponent = React.memo((props: Props) => {
     )
   })
 
+  const recordFioObtData = useHandler(async (spendTarget: EdgeSpendTarget, currencyCode: string, txid: string) => {
+    const { nativeAmount, publicAddress: payeePublicAddress = '', otherParams = {} } = spendTarget
+    const { fioAddress: payeeFioAddress } = otherParams
+    if (fioSender != null) {
+      const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
+      if (payeeFioAddress != null && payerFioAddress != null && fioWallet != null) {
+        // if (guiMakeSpendInfo.fioPendingRequest != null) {
+        // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
+        // try {
+        //   await recordSend(fioWallet, fioAddress, {
+        //     fioRequestId: pendingRequest.fio_request_id,
+        //     payeeFioAddress: pendingRequest.payee_fio_address,
+        //     payerPublicAddress: pendingRequest.payer_fio_public_key,
+        //     payeePublicAddress: pendingRequest.content.payee_public_address,
+        //     amount: pendingRequest.content.amount,
+        //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
+        //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
+        //     txid: edgeSignedTransaction.txid,
+        //     memo
+        //   })
+        // } catch (e: any) {
+        //   const message = e?.message ?? ''
+        //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(s.strings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+        // }
+        // } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
+        if (!skipRecord) {
+          const { publicAddress: payerPublicAddress } = await coreWallet.getReceiveAddress()
+          const amount = nativeAmount ?? '0'
+          const chainCode = coreWallet.currencyInfo.currencyCode
+
+          try {
+            recordSend(fioWallet, payerFioAddress, {
+              payeeFioAddress,
+              payerPublicAddress,
+              payeePublicAddress,
+              amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
+              currencyCode: currencyCode,
+              chainCode,
+              txid,
+              memo
+            })
+          } catch (e: any) {
+            showError(e)
+          }
+        }
+      }
+    }
+  })
+
   const handleSliderComplete = async (resetSlider: () => void) => {
     // TODO:
     // 1. FIO functionality
@@ -561,8 +611,46 @@ const SendComponent = React.memo((props: Props) => {
       }
     }
     try {
+      if (fioSender?.fioWallet != null && fioSender?.fioAddress != null) {
+        await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+      }
+
       const signedTx = await coreWallet.signTx(edgeTransaction)
       const broadcastedTx = await coreWallet.broadcastTx(signedTx)
+
+      // Figure out metadata
+      let payeeName: string | undefined
+      const notes: string[] = []
+      const payeeFioAddresses: string[] = []
+      for (const target of spendInfo.spendTargets) {
+        const { fioAddress } = target.otherParams ?? {}
+        if (fioAddress != null) {
+          const displayAmount = div(target.nativeAmount ?? '', cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+          const { name } = cryptoDisplayDenomination
+          notes.push(`To ${fioAddress} <- ${displayAmount} ${name} \n`)
+          payeeFioAddresses.push(fioAddress)
+          if (payeeName == null) {
+            payeeName = fioAddress
+          } else {
+            payeeName = `Multiple FIO Addresses (${notes.length.toString()})`
+          }
+        }
+      }
+      addToFioAddressCache(account, payeeFioAddresses)
+
+      if (broadcastedTx.metadata == null) {
+        broadcastedTx.metadata = {}
+      }
+      broadcastedTx.metadata.name = payeeName
+
+      if (payeeName != null && fioSender != null) {
+        let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}\n`
+        fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}\n` : ''
+        if (notes.length > 1) {
+          fioNotes += notes.join('\n')
+        }
+        broadcastedTx.metadata.notes = `${fioNotes}\n${broadcastedTx.metadata?.notes ?? ''}`
+      }
 
       const { name, type, id } = coreWallet
       const {
@@ -593,6 +681,12 @@ const SendComponent = React.memo((props: Props) => {
   ourReceiveAddresses: ${JSON.stringify(ourReceiveAddresses)}`)
 
       await coreWallet.saveTx(broadcastedTx)
+
+      for (const target of spendInfo.spendTargets) {
+        // Write FIO OBT per spendTarget
+        await recordFioObtData(target, currencyCode, broadcastedTx.txid)
+      }
+
       playSendSound().catch(error => console.log(error)) // Fail quietly
       Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
         {
@@ -603,7 +697,7 @@ const SendComponent = React.memo((props: Props) => {
       ])
 
       Actions.replace('transactionDetails', {
-        edgeTransaction: signedTx
+        edgeTransaction: broadcastedTx
       })
     } catch (e: any) {
       resetSlider()
@@ -616,6 +710,24 @@ const SendComponent = React.memo((props: Props) => {
         message = s.strings.send_confirmation_eos_error_net
       } else if (e.name === 'ErrorEosInsufficientRam') {
         message = s.strings.send_confirmation_eos_error_ram
+      } else if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
+        const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.fio_no_bundled_err_msg}
+            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`}
+            buttons={{
+              ok: { label: s.strings.legacy_address_modal_continue },
+              cancel: { label: s.strings.string_cancel_cap }
+            }}
+          />
+        ))
+        if (answer === 'ok') {
+          // Retry the spend w/o FIO OBT data
+          fioSender.skipRecord = true
+          await handleSliderComplete(resetSlider)
+          return
+        }
       }
 
       Alert.alert(s.strings.transaction_failure, message, [
