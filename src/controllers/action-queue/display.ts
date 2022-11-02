@@ -12,7 +12,7 @@ import {
   ParActionOp,
   SwapActionOp
 } from '../../controllers/action-queue/types'
-import { ActionDisplayStrings } from '../../locales/en_US'
+import { LocaleStringKey } from '../../locales/en_US'
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
@@ -217,8 +217,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 }
 
 async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParActionOp | SwapActionOp): Promise<{ title?: string; message?: string }> {
-  let titleData: { stringKey: keyof ActionDisplayStrings; wildcards?: string[] }
-  let messageData: { stringKey: keyof ActionDisplayStrings; wildcards?: string[] }
+  let titleData: { stringKey: LocaleStringKey; wildcards?: string[] }
+  let messageData: { stringKey: LocaleStringKey; wildcards?: string[] }
 
   switch (actionOp.displayKey) {
     case 'create':

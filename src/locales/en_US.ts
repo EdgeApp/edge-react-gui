@@ -1,23 +1,6 @@
-// Stricter typing for feature-specific strings
+export type LocaleStringKey = keyof typeof strings
 
-export interface ActionDisplayStrings {
-  [`action_display_title_create`]: string
-  [`action_display_title_swap`]: string
-
-  [`action_display_title_complete_default`]: string
-
-  [`action_display_message_create_3s`]: string
-  [`action_display_message_swap_4s`]: string
-  [`action_display_message_swap_fees_5s`]: string
-
-  [`action_display_message_complete_default`]: string
-  [`action_display_message_complete_wallet_2s`]: string
-  [`action_display_message_complete_bank`]: string
-}
-
-const strings: ActionDisplayStrings & {
-  [key: string]: string
-} = {
+const strings = {
   // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -422,17 +405,17 @@ const strings: ActionDisplayStrings & {
   staking_change_unlock_explainer2: 'These continue to be locked and unusable for 7 days after you unstake the funds.',
   staking_overview_header: 'Stake %s',
   staking_overview_explainer: 'You have the following funds staked:',
-  staking_locked_title: 'Unstaked and locked until %1s',
+  staking_locked_title: 'Unstaked and locked until %1$s',
   staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
-  staking_status: '%1s locked (%2s)',
+  staking_status: '%1$s locked (%2$s)',
   staking_success: 'Successfully staked',
   staking_unstake_success: 'Successfully unstaked',
   staking_estimated_rewards: 'Estimated Rewards',
-  staking_estimated_return: 'Estimated Return: %1s APY',
-  staking_estimated_return_up_to: 'Estimated Return: up to %1s APY',
+  staking_estimated_return: 'Estimated Return: %1$s APY',
+  staking_estimated_return_up_to: 'Estimated Return: up to %1$s APY',
   staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
-  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1',
+  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1$s',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
@@ -610,8 +593,8 @@ const strings: ActionDisplayStrings & {
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
-  fragment_tx_detail_mining_fee_with_symbol: '+ %1s fee',
-  fragment_tx_detail_mining_fee_with_denom: '+ %1f %2s fee',
+  fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
+  fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
   // OTP settings scene:
@@ -884,6 +867,7 @@ const strings: ActionDisplayStrings & {
   UnspecifiedCurrency: 'Domain %1$s has no %2$s address attached to it',
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
+  IncorrectResolverInterface: 'Unable to resolve domain %1$s',
   RecordNotFound: 'No %2%s record found for %1$s',
   invalid_character_error: 'Invalid input characters',
 
@@ -1111,7 +1095,7 @@ const strings: ActionDisplayStrings & {
   stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
-  stake_x_to_earn_y: 'Stake %1s to earn %2s',
+  stake_x_to_earn_y: 'Stake %1$s to earn %2$s',
   stake_amount_s_stake: 'Amount of %s to Stake',
   stake_amount_claim: 'Amount of Reward to Claim',
   stake_amount_s_unstake: 'Amount of %s to Unstake',

@@ -12,6 +12,7 @@ import {
   JsonObject
 } from 'edge-core-js/types'
 
+import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
 
@@ -338,7 +339,7 @@ export interface AppConfig {
   website: string
   extraTab?: {
     webviewUrl: string
-    tabTitleKey: string
+    tabTitleKey: LocaleStringKey
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }

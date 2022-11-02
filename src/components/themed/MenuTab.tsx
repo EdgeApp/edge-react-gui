@@ -5,6 +5,7 @@ import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
+import { LocaleStringKey } from '../../locales/en_US'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { NavigationProp } from '../../types/routerTypes'
@@ -19,7 +20,7 @@ interface OwnProps {
 
 type Props = OwnProps & ThemeProps
 
-const extraTabString = config.extraTab?.tabTitleKey ?? 'title_map'
+const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 const title = {
   walletList: s.strings.title_wallets,
