@@ -62,7 +62,9 @@ export class TileComponent extends React.PureComponent<Props> {
               {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
               {type === 'delete' && <FontAwesomeIcon name="times" style={styles.editIcon} />}
               {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
-              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+              <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+                {title}
+              </EdgeText>
               {typeof body === 'string' && (
                 <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
                   {body}
@@ -110,7 +112,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingBottom: theme.rem(0.25),
+    paddingRight: theme.rem(1)
   },
   textHeaderError: {
     color: theme.dangerText,
