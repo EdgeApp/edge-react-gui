@@ -30,12 +30,12 @@ import { ExchangedFlipInput, ExchangedFlipInputAmounts } from '../themed/Exchang
 import { MiniButton } from '../themed/MiniButton'
 import { ThemedModal } from '../themed/ThemedModal'
 
-export type FlipInputModalResult = {
+export interface FlipInputModalResult {
   nativeAmount: string
   exchangeAmount: string
 }
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<FlipInputModalResult>
   walletId: string
   currencyCode: string
@@ -47,7 +47,7 @@ type OwnProps = {
   hideMaxButton?: boolean
 }
 
-type StateProps = {
+interface StateProps {
   // Balance
   balanceCrypto: string
 
@@ -71,12 +71,12 @@ type StateProps = {
   errorMessage?: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   updateMaxSpend: (walletId: string, currencyCode: string) => void
   updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
 }
 
-type State = {
+interface State {
   nativeAmount: string
   exchangeAmount: string
 

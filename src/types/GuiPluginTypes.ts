@@ -13,7 +13,7 @@ import { UriQueryMap } from './WebTypes'
  * The plugin list uses additional information for its sorting & filtering,
  * which lives in other data structures.
  */
-export type GuiPlugin = {
+export interface GuiPlugin {
   // This pluginId should be short and use dashes to separate words,
   // since it appears in deep links like `edge://plugin/moonpay-buy`:
   pluginId: string
@@ -59,7 +59,7 @@ export type GuiPlugin = {
 /**
  * A row in the plugin list scene, after being distilled down from JSON.
  */
-export type GuiPluginRow = {
+export interface GuiPluginRow {
   pluginId: string
   deepPath: string
   deepQuery: UriQueryMap

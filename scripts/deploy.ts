@@ -13,7 +13,7 @@ let _currentPath = __dirname
 /**
  * Things we expect to be set in the config file:
  */
-type BuildConfigFile = {
+interface BuildConfigFile {
   // Common build options:
   envJson: { [repoBranch: string]: object }
 

@@ -23,12 +23,11 @@ describe('WalletListModal', () => {
   })
 
   it("Should upgrade currency codes to token ID's", () => {
-    const data = {
+    const data: { [code: string]: EdgeTokenId[] } = {
       ETH: [{ pluginId: 'ethereum' }],
       BNB: [{ pluginId: 'binance' }, { pluginId: 'ethereum', tokenId: '1234abcd' }]
     }
     function lookup(currencyCode: string): EdgeTokenId[] {
-      // @ts-expect-error
       return data[currencyCode.toUpperCase()] ?? []
     }
 

@@ -8,7 +8,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { TransactionListTop } from '../themed/TransactionListTop'
 
-type Props = {
+interface Props {
   walletId: string
   isEmpty: boolean
   searching: boolean

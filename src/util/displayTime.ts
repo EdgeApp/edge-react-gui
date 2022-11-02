@@ -1,4 +1,4 @@
-export type DisplayTime = {
+export interface DisplayTime {
   value: number
   measurement: 'seconds' | 'minutes' | 'hours' | 'days'
 }

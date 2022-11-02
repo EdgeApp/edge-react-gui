@@ -24,7 +24,7 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
   secondaryInfo={
     Object {
       "currencyCode": "BTC",
-      "currencyName": "Bitcoin",
+      "currencyName": "BTC",
       "currencySymbol": "₿",
       "maxConversionDecimals": 10,
       "maxEntryDecimals": 10,

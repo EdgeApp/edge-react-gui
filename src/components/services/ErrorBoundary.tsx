@@ -1,12 +1,12 @@
 import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   FallbackComponent: React.ComponentType<{}>
   onError?: (error: { originalError: unknown }) => void
 }
-type State = {
+interface State {
   hasError: boolean
 }
 

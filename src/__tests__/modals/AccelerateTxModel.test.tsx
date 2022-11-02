@@ -10,43 +10,41 @@ describe('AccelerateTxModelComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      bridge: fakeAirshipBridge,
-      edgeTransaction: {
-        blockHeight: 0,
-        currencyCode: 'BTC',
-        date: 0,
-        nativeAmount: '-681',
-        networkFee: '681',
-        otherParams: {},
-        ourReceiveAddresses: ['123123123'],
-        signedTx: '',
-        txid: ''
-      },
-
-      wallet: {
-        fiatCurrencyCode: 'iso:USD',
-        addCustomToken: 'shib',
-        currencyInfo: {
-          currencyCode: 'SHIB'
-        },
-        // @ts-expect-error
-        parseUri: (address, currencyCode) => {}
-      },
-      exchangeRates: [''],
-      // @ts-expect-error
-      getDisplayDenomination: (pluginId, currencyCode) => ({
-        multiplier: '1000000',
-        name: 'BTC'
-      }),
-      // @ts-expect-error
-      getExchangeDenomination: (pluginIdg, currencyCode) => ({
-        multiplier: '1000000',
-        name: 'BTC'
-      }),
-      theme: getTheme()
+    const fakeWallet: any = {
+      fiatCurrencyCode: 'iso:USD',
+      addCustomToken: 'shib',
+      currencyInfo: {
+        currencyCode: 'SHIB'
+      }
     }
-    const actual = renderer.render(<AccelerateTxModelComponent {...props} />)
+
+    const actual = renderer.render(
+      <AccelerateTxModelComponent
+        bridge={fakeAirshipBridge}
+        edgeTransaction={{
+          blockHeight: 0,
+          currencyCode: 'BTC',
+          date: 0,
+          nativeAmount: '-681',
+          networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }}
+        wallet={fakeWallet}
+        exchangeRates={{}}
+        getDisplayDenomination={(pluginId, currencyCode) => ({
+          multiplier: '1000000',
+          name: 'BTC'
+        })}
+        getExchangeDenomination={(pluginIdg, currencyCode) => ({
+          multiplier: '1000000',
+          name: 'BTC'
+        })}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

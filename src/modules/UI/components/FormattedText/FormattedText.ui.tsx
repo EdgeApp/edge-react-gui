@@ -5,7 +5,7 @@ import { scale } from '../../../../util/scaling'
 import { getObjectDiff } from '../../../../util/utils'
 import { styles } from './style'
 
-type Props = {
+interface Props {
   children: React.ReactNode
   fontSize?: number
   isBold?: boolean

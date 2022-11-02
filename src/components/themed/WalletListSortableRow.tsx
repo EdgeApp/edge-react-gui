@@ -16,18 +16,18 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type OwnProps = {
+interface OwnProps {
   wallet?: EdgeCurrencyWallet
 }
 
-type StateProps = {
+interface StateProps {
   exchangeRates: GuiExchangeRates
   showBalance: boolean
   walletFiatSymbol: string | null
   exchangeDenomination: EdgeDenomination | null
 }
 
-type DispatchProps = {
+interface DispatchProps {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 

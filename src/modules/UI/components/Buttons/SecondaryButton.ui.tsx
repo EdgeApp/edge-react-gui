@@ -3,7 +3,7 @@ import { Text as RNText, TextStyle, TouchableHighlight, View } from 'react-nativ
 
 import { secondaryButtonUnderlay, styles } from './style'
 
-export type TextProps = {
+export interface TextProps {
   children: React.ReactNode
   style?: TextStyle
 }
@@ -18,7 +18,7 @@ class Text extends React.Component<TextProps> {
   }
 }
 
-export type Props = {
+export interface Props {
   children: React.ReactNode
   style?: TextStyle
   onPress: () => void

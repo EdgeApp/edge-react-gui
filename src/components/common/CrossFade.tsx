@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 
-type Props = {
+interface Props {
   // The props.key of the visible child, or undefined to hide everything:
   activeKey: string | null | undefined
 
@@ -12,11 +12,11 @@ type Props = {
   duration?: number
 }
 
-type State = {
+interface State {
   [key: string]: boolean // True to render the component
 }
 
-type Opacities = {
+interface Opacities {
   [key: string]: {
     value: Animated.Value
     mode: 'rise' | 'fall'

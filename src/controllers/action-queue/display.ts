@@ -1,7 +1,18 @@
 import { EdgeAccount } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { ActionDisplayInfo, ActionDisplayStatus, ActionEffect, ActionOp, ActionProgram, ActionProgramState } from '../../controllers/action-queue/types'
+import {
+  ActionDisplayInfo,
+  ActionDisplayStatus,
+  ActionEffect,
+  ActionOp,
+  ActionProgram,
+  ActionProgramState,
+  LoanDepositActionOp,
+  ParActionOp,
+  SwapActionOp
+} from '../../controllers/action-queue/types'
+import { LocaleStringKey } from '../../locales/en_US'
 import s from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
@@ -11,7 +22,17 @@ import { checkEffectIsDone } from './util/checkEffectIsDone'
 import { getEffectErrors } from './util/getEffectErrors'
 
 export async function getActionProgramDisplayInfo(account: EdgeAccount, program: ActionProgram, programState: ActionProgramState): Promise<ActionDisplayInfo> {
-  return await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
+  // Assume that ActionPrograms always have a NodeActionOp at top level, for purposes of retreiving title and message as the completion strings
+  const programType = program.actionOp.type
+  if (programType !== 'seq' && programType !== 'par') throw new Error('getActionProgramDisplayInfo only supports NodeActionOps as root program type')
+
+  const displayInfo = await getActionOpDisplayInfo(account, program.actionOp, programState.effect)
+
+  // HACK: Grab the complete message directly from the ActionProgram
+  // TODO: To be updated in further redesigns when ActionOp creation is fully handled at ActionProgram creation, instead of in the scenes and utility methods.
+  displayInfo.completeMessage = program.completeMessage
+
+  return displayInfo
 }
 
 async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, effect?: ActionEffect): Promise<ActionDisplayInfo> {
@@ -57,9 +78,12 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       }
     }
     case 'par': {
+      // Override current implementation if custom ActionOpDisplayKey handling is defined
+      const { title, message } = await getActionOpDisplayKeyMessage(account, actionOp)
+
       return {
-        title: s.strings.action_queue_display_par_title,
-        message: s.strings.action_queue_display_par_message,
+        title: title ?? s.strings.action_queue_display_par_title,
+        message: message ?? s.strings.action_queue_display_par_message,
         ...baseDisplayInfo,
         steps: await Promise.all(
           actionOp.actions.map(async (op, index) => {
@@ -99,7 +123,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_swap_title, fromCurrencyCode, toCurrencyCode),
+        title: s.strings.action_display_title_swap,
         message: sprintf(
           s.strings.action_queue_display_swap_message,
           fromCurrencyCode,
@@ -189,6 +213,82 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         ...baseDisplayInfo
       }
     }
+  }
+}
+
+async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParActionOp | SwapActionOp): Promise<{ title?: string; message?: string }> {
+  let titleData: { stringKey: LocaleStringKey; wildcards?: string[] }
+  let messageData: { stringKey: LocaleStringKey; wildcards?: string[] }
+
+  switch (actionOp.displayKey) {
+    case 'create':
+      {
+        // Loan created with sufficient existing fees
+        const { actions: parActions } = actionOp
+        const depositActionOp = parActions[0] as LoanDepositActionOp
+
+        const { borrowPluginId, tokenId, walletId } = depositActionOp
+        const wallet = await account.waitForCurrencyWallet(walletId)
+        const collateralCurrencyCode = getCurrencyCode(wallet, tokenId)
+        const [borrowPlugin] = queryBorrowPlugins({ borrowPluginId })
+        const borrowPluginDisplayName = borrowPlugin.borrowInfo.displayName
+
+        titleData = { stringKey: `action_display_title_create` }
+        messageData = { stringKey: `action_display_message_create_3s`, wildcards: [config.appName, borrowPluginDisplayName, collateralCurrencyCode] }
+      }
+      break
+    case 'swap-deposit':
+      {
+        const { fromWalletId, fromTokenId, toWalletId, toTokenId } = actionOp
+
+        const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
+        if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
+
+        const toWallet = await account.waitForCurrencyWallet(toWalletId)
+        if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
+
+        const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+        const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+
+        titleData = { stringKey: `action_display_title_swap` }
+        messageData = {
+          stringKey: `action_display_message_swap_4s`,
+          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, s.strings.loan_aave_fragment]
+        }
+      }
+      break
+    case 'swap-deposit-fees':
+      {
+        const { actions: parActions } = actionOp
+        const { fromWalletId, fromTokenId, toWalletId, toTokenId } = parActions[0] as SwapActionOp
+
+        const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
+        if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)
+
+        const toWallet = await account.waitForCurrencyWallet(toWalletId)
+        if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
+
+        const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+        const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+        const feeCurrencyCode = getCurrencyCode(toWallet)
+
+        titleData = { stringKey: `action_display_title_swap` }
+        messageData = {
+          stringKey: `action_display_message_swap_fees_5s`,
+          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, feeCurrencyCode, s.strings.loan_aave_fragment]
+        }
+      }
+      break
+    default: {
+      // Fallback to default display implementation
+      return { title: undefined, message: undefined }
+    }
+  }
+
+  // Retrieve the strings. Populate wildcards, if applicable
+  return {
+    title: titleData.wildcards == null ? s.strings[titleData.stringKey] : sprintf(s.strings[titleData.stringKey], ...titleData.wildcards),
+    message: messageData.wildcards == null ? s.strings[messageData.stringKey] : sprintf(s.strings[messageData.stringKey], ...messageData.wildcards)
   }
 }
 

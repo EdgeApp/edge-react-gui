@@ -18,11 +18,11 @@ const asRatesResponse = asObject({
   )
 })
 
-type RateMap = {
+interface RateMap {
   [pair_date: string]: number | null
 }
 
-type RateQueueEntry = {
+interface RateQueueEntry {
   currency_pair: string
   date: string
 }

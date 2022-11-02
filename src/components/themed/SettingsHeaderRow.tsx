@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   icon?: React.ReactNode
 
   // Insert a text node after the other children when set:

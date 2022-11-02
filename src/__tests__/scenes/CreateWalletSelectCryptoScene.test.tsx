@@ -6,6 +6,7 @@ import { createStore } from 'redux'
 
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
 import { rootReducer } from '../../reducers/RootReducer'
+import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CreateWalletSelectCrypto', () => {
@@ -63,10 +64,14 @@ describe('CreateWalletSelectCrypto', () => {
 
   it('should render with loading props', () => {
     const navigation = fakeNavigation
+    const route: RouteProp<'createWalletSelectCrypto'> = {
+      name: 'createWalletSelectCrypto',
+      params: {}
+    }
 
     const actual = renderer.create(
       <Provider store={store}>
-        <CreateWalletSelectCryptoScene navigation={navigation} />
+        <CreateWalletSelectCryptoScene navigation={navigation} route={route} />
       </Provider>
     )
 

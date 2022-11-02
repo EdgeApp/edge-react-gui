@@ -6,7 +6,7 @@ import URL from 'url-parse'
 // Payloads to be added to the PushMessages
 //
 
-export type PriceChangePayload = {
+export interface PriceChangePayload {
   type: 'price-change'
   pluginId: string
   body: string

@@ -14,7 +14,7 @@ import { ButtonBox } from './ThemedButtons'
 
 const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
 
-type OwnProps = {
+interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId?: string
 }

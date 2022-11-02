@@ -11,7 +11,7 @@ export type ResolutionErrorCode =
 /**
  * Options passed to the ResolutionError constructor
  */
-type ResolutionErrorOptions = {
+interface ResolutionErrorOptions {
   domain: string
   method?: string
   currencyTicker?: string

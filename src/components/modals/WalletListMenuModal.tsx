@@ -17,12 +17,12 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type Option = {
+interface Option {
   value: WalletListMenuKey
   label: string
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
 

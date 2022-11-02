@@ -7,7 +7,7 @@ import Svg, { Path } from 'react-native-svg'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   data?: string // Nothing will show if undefined
   cellsPadding?: number // In QR cells
   marginRem?: number[] | number

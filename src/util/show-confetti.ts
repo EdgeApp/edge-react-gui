@@ -2,7 +2,7 @@ import { Disklet } from 'disklet'
 
 const CONFETTI_SHOWN = 'confetti_shown.json'
 
-export type ConfettiShownTimes = {
+export interface ConfettiShownTimes {
   doneAmount: number
   showNext: boolean
   randomShown: boolean

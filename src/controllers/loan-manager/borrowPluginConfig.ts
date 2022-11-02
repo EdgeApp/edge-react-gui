@@ -3,7 +3,9 @@ import { EdgeCorePluginOptions } from 'edge-core-js'
 import { makeAaveEthBorrowPlugin, makeAaveKovBorrowPlugin, makeAaveMaticBorrowPlugin } from '../../plugins/borrow-plugins/plugins/aave'
 import { BorrowPlugin } from '../../plugins/borrow-plugins/types'
 
-export type BorrowPluginMap = { [pluginId: string]: BorrowPlugin }
+export interface BorrowPluginMap {
+  [pluginId: string]: BorrowPlugin
+}
 
 const allPlugins = {
   aavePolygon: makeAaveMaticBorrowPlugin,

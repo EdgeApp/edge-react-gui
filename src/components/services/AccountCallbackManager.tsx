@@ -14,12 +14,12 @@ import { isReceivedTransaction, snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
-type Props = {
+interface Props {
   account: EdgeAccount
 }
 
 // Tracks items that need a refresh:
-type DirtyList = {
+interface DirtyList {
   rates: boolean
   walletList: boolean
   wallets: { [walletId: string]: EdgeCurrencyWallet }
@@ -123,7 +123,6 @@ export function AccountCallbackManager(props: Props) {
   })
 
   // Do the expensive work with rate limiting:
-  // @ts-expect-error
   useAsyncEffect(async () => {
     setDirty(notDirty)
 

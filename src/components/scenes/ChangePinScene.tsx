@@ -7,10 +7,10 @@ import { NavigationProp } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'changePin'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
 }

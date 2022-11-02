@@ -15,16 +15,16 @@ import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'edgeLogin'>
 }
-type StateProps = {
+interface StateProps {
   error: string | null
   isProcessing: boolean
   lobby: EdgeLobby | null
 }
 
-type DispatchProps = {
+interface DispatchProps {
   accept: () => void
 }
 

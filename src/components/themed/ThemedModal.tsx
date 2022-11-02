@@ -6,7 +6,7 @@ import { BlurView } from 'rn-id-blurview'
 import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
 
-type Props<T> = {
+interface Props<T> {
   bridge: AirshipBridge<T>
   children?: React.ReactNode
   onCancel: () => void

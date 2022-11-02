@@ -1,5 +1,7 @@
+export type LocaleStringKey = keyof typeof strings
+
 const strings = {
-  // Action Queue Display Info
+  // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
@@ -37,6 +39,27 @@ const strings = {
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
   action_queue_push_notification_body: `Edge has completed processing your loan operation.`,
+
+  // #endregion
+
+  // #region ActionDisplay v2:
+
+  // Action Step Display Strings
+  action_display_title_create: 'Creating Loan',
+  action_display_title_swap: 'Swapping Funds',
+
+  action_display_message_create_3s: '%1$s is creating your loan on %2$s using your %3$s as collateral',
+  action_display_message_swap_4s: '%1$s is swapping your %2$s into %3$s for deposit into %4$s. This may take a few mins to several hours…',
+  action_display_message_swap_fees_5s:
+    '%1$s is swapping your %2$s into %3$s and %4$s (to pay fees) for deposit into %5$s. This may take a few mins to several hours…',
+
+  // Complete Display Strings
+  action_display_title_complete_default: 'Congratulations!',
+  action_display_message_complete_default: 'Your transactions completed successfully!\nPlease allow time for your accounts to update.',
+  action_display_message_complete_wallet_2s: 'Your loan is complete! \nYou should see %1$s in your %2$s account',
+  action_display_message_complete_bank: 'Your loan is complete! \nYou should see funds in your bank account in 1-4 days',
+
+  // #endregion
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
@@ -78,6 +101,7 @@ const strings = {
   warning_low_or_custom_fee:
     'Using a low fee may increase the amount of time it takes for your transaction to confirm. In rare instances your transaction can fail.',
   warning_alphanumeric: 'Only letters and numbers can be used',
+  warning_please_wait_title: 'Please Wait',
 
   warning_scam_title: 'Scam Warning',
   warning_scam_message_financial_advice: 'Edge will not give financial advice.',
@@ -381,17 +405,17 @@ const strings = {
   staking_change_unlock_explainer2: 'These continue to be locked and unusable for 7 days after you unstake the funds.',
   staking_overview_header: 'Stake %s',
   staking_overview_explainer: 'You have the following funds staked:',
-  staking_locked_title: 'Unstaked and locked until %1s',
+  staking_locked_title: 'Unstaked and locked until %1$s',
   staking_stake_funds_button: 'Stake More Funds',
   staking_unstake_funds_button: 'Unstake',
-  staking_status: '%1s locked (%2s)',
+  staking_status: '%1$s locked (%2$s)',
   staking_success: 'Successfully staked',
   staking_unstake_success: 'Successfully unstaked',
   staking_estimated_rewards: 'Estimated Rewards',
-  staking_estimated_return: 'Estimated Return: %1s APY',
-  staking_estimated_return_up_to: 'Estimated Return: up to %1s APY',
+  staking_estimated_return: 'Estimated Return: %1$s APY',
+  staking_estimated_return_up_to: 'Estimated Return: up to %1$s APY',
   staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
-  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1',
+  staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1$s',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
@@ -569,8 +593,8 @@ const strings = {
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
-  fragment_tx_detail_mining_fee_with_symbol: '+ %1s fee',
-  fragment_tx_detail_mining_fee_with_denom: '+ %1f %2s fee',
+  fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
+  fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
   // OTP settings scene:
@@ -843,6 +867,7 @@ const strings = {
   UnspecifiedCurrency: 'Domain %1$s has no %2$s address attached to it',
   NamingServiceDown: '%3$s naming service is down at the moment',
   UnsupportedCurrency: '%2$s is not supported for %1%s',
+  IncorrectResolverInterface: 'Unable to resolve domain %1$s',
   RecordNotFound: 'No %2%s record found for %1$s',
   invalid_character_error: 'Invalid input characters',
 
@@ -929,6 +954,7 @@ const strings = {
   // Loan
   loan_action_add_collateral: 'Add Collateral',
   loan_action_close_loan: 'Close Loan',
+  loan_action_program_running: 'Loan operations in progress, please wait.',
   loan_action_withdraw_collateral: 'Withdraw Collateral',
   loan_actions_title: 'Actions',
   loan_active_loans_title: 'Active Loans',
@@ -973,8 +999,7 @@ const strings = {
   loan_fragment_withdraw: 'Withdrawal',
   loan_fund_source: 'Fund Source',
   loan_fund_destination: 'Fund Destination',
-  loan_insufficient_funds_warning:
-    'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan. If you do not have %3$s, enable this token in your %2$s wallet and perform an exchange in %4$s.',
+  loan_insufficient_funds_warning: 'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.',
   loan_interest_rate: 'Interest Rate',
   loan_loading_loans: 'Loading Loans...',
   loan_loan_breakdown_title: 'Loan Breakdown',
@@ -997,7 +1022,6 @@ const strings = {
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
-  loan_status_complete: 'Your loan has completed successfully!\nPlease allow time for your account to be credited.',
   loan_status_title: 'Loan Status',
   loan_status_failed_title: 'Failed to process actions',
 
@@ -1071,7 +1095,7 @@ const strings = {
   stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
-  stake_x_to_earn_y: 'Stake %1s to earn %2s',
+  stake_x_to_earn_y: 'Stake %1$s to earn %2$s',
   stake_amount_s_stake: 'Amount of %s to Stake',
   stake_amount_claim: 'Amount of Reward to Claim',
   stake_amount_s_unstake: 'Amount of %s to Unstake',

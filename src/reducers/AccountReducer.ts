@@ -6,7 +6,7 @@ import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralType
 /**
  * App state tied to the core account object.
  */
-export type AccountState = {
+export interface AccountState {
   readonly accountReferral: AccountReferral
   readonly accountReferralLoaded: boolean
   readonly referralCache: ReferralCache

@@ -36,38 +36,38 @@
 import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
 import { ParamList } from './routerTypes'
 
-export type AztecoLink = {
+export interface AztecoLink {
   type: 'azteco'
   uri: string
 }
 
-export type BitPayLink = {
+export interface BitPayLink {
   type: 'bitPay'
   uri: string
 }
 
-export type EdgeLoginLink = {
+export interface EdgeLoginLink {
   type: 'edgeLogin'
   lobbyId: string
 }
 
-export type PasswordRecoveryLink = {
+export interface PasswordRecoveryLink {
   type: 'passwordRecovery'
   passwordRecoveryKey: string
 }
 
-export type PluginLink = {
+export interface PluginLink {
   type: 'plugin'
   pluginId: string
   path: string
   query: { [key: string]: string | null }
 }
 
-export type PromotionLink = {
+export interface PromotionLink {
   type: 'promotion'
   installerId?: string
 }
-export type RequestAddressLink = {
+export interface RequestAddressLink {
   type: 'requestAddress'
   assets: Array<{ nativeCode: string; tokenCode: string }>
   post?: string // Either post or redir must be specified
@@ -75,18 +75,18 @@ export type RequestAddressLink = {
   payer?: string
 }
 
-export type SwapLink = {
+export interface SwapLink {
   type: 'swap'
   // We may eventually add query parameters to pre-populate currencies.
 }
 
-export type WalletConnectLink = {
+export interface WalletConnectLink {
   type: 'walletConnect'
   isSigning: boolean
   uri: string
 }
 
-export type DevLink = {
+export interface DevLink {
   type: 'dev'
   sceneName: keyof ParamList
 }

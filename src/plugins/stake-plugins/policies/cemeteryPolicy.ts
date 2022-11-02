@@ -16,7 +16,7 @@ import { makeBuilder } from '../util/builder'
 import { fromHex } from '../util/hex'
 import { StakePluginPolicy } from './types'
 
-export type CemeteryPolicyOptions = {
+export interface CemeteryPolicyOptions {
   disableStake?: boolean
   disableUnstake?: boolean
   disableClaim?: boolean

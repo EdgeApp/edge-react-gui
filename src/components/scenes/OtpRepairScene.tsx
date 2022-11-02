@@ -8,11 +8,11 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'otpRepair'>
   route: RouteProp<'otpRepair'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
 }

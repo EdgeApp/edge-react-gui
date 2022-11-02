@@ -28,7 +28,7 @@ import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 
-type OwnProps = {
+interface OwnProps {
   walletId: string
   isEmpty: boolean
   navigation: NavigationProp<'transactionList'>
@@ -38,7 +38,7 @@ type OwnProps = {
   onSearchTransaction: (searchString: string) => void
 }
 
-type StateProps = {
+interface StateProps {
   cryptoAmount: string
   currencyCode: string
   pluginId: string
@@ -56,12 +56,12 @@ type StateProps = {
   }
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
   toggleBalanceVisibility: () => void
 }
 
-type State = {
+interface State {
   input: string
   stakePolicies: StakePolicy[] | null
 }
@@ -86,13 +86,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidMount() {
-    stakePlugin.getStakePolicies().then(stakePolicies => {
-      const { currencyCode, pluginId } = this.props
-      const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
-        return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+    const { currencyCode, pluginId } = this.props
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
+      stakePlugin.getStakePolicies().then(stakePolicies => {
+        const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
+          return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+        })
+        this.setState({ stakePolicies: filteredStatePolicies })
       })
-      this.setState({ stakePolicies: filteredStatePolicies })
-    })
+    } else {
+      this.setState({ stakePolicies: [] })
+    }
   }
 
   handleOpenWalletListModal = () => {

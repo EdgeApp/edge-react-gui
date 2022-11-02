@@ -13,7 +13,7 @@ import { base58 } from '../controllers/action-queue/util/encoding'
 import s from '../locales/strings'
 import { notif1 } from '../modules/notifServer'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { fetchPush } from '../util/network'
 import { getDenomFromIsoCode } from '../util/utils'
 
@@ -24,7 +24,7 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
   return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
-export type PriceChangeNotificationSettings = {
+export interface PriceChangeNotificationSettings {
   ignorePriceChanges: boolean
   plugins: {
     [pluginId: string]: {
@@ -36,9 +36,8 @@ export type PriceChangeNotificationSettings = {
   }
 }
 
-export const registerNotificationsV2 =
-  (changeFiat: boolean = false) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function registerNotificationsV2(changeFiat: boolean = false): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings
     let v2Settings: ReturnType<typeof asDevicePayload> = {
@@ -143,6 +142,7 @@ export const registerNotificationsV2 =
       data: serverSettingsToState(v2Settings)
     })
   }
+}
 
 export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
   const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges, plugins: {} }
@@ -163,9 +163,8 @@ export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayloa
   return data
 }
 
-export const setDeviceSettings =
-  (data: DeviceUpdatePayload) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<ReturnType<typeof asDevicePayload>> => {
+export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<ReturnType<typeof asDevicePayload>>> {
+  return async (dispatch, getState) => {
     const state = getState()
 
     const deviceToken = await messaging().getToken()
@@ -188,6 +187,7 @@ export const setDeviceSettings =
 
     return asDevicePayload(await response.json())
   }
+}
 
 export const newPriceChangeEvent = (
   currencyInfo: EdgeCurrencyInfo,

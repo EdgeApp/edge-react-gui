@@ -6,7 +6,7 @@ import s from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type Props = {
+export interface Props {
   copyToClipboard: () => void
   fioAddressModal: () => void
   shareViaShare: () => void

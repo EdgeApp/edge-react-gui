@@ -1,8 +1,12 @@
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
+import { sprintf } from 'sprintf-js'
 
-import { ActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import { MAX_AMOUNT } from '../constants/valueConstants'
+import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
+import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
+import s from '../locales/strings'
 import { BorrowEngine } from '../plugins/borrow-plugins/types'
-import { MAX_AMOUNT } from './../plugins/borrow-plugins/plugins/aave/BorrowEngineFactory'
+import { config } from '../theme/appConfig'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 import { zeroString } from './utils'
@@ -12,7 +16,7 @@ import { zeroString } from './utils'
 //  create the ActionProgram.
 // -----------------------------------------------------------------------------
 
-export type LoanAsset = {
+export interface LoanAsset {
   wallet: EdgeCurrencyWallet
   nativeAmount: string
   paymentMethodId?: string
@@ -27,7 +31,14 @@ interface AaveCreateActionParams {
   destination: LoanAsset
 }
 
-export const makeAaveCreateAction = async (params: AaveCreateActionParams): Promise<ActionOp> => {
+interface AaveBorrowActionParams {
+  borrowEngineWallet: EdgeCurrencyWallet
+  borrowPluginId: string
+
+  destination: LoanAsset
+}
+
+export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams): Promise<ActionProgram> => {
   const { borrowEngineWallet, borrowPluginId, source, destination } = params
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
 
@@ -58,14 +69,16 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
       nativeAmount: source.nativeAmount,
       toTokenId: toTokenId,
       toWalletId: borrowEngineWallet.id,
-      amountFor: 'to'
+      amountFor: 'to',
+      displayKey: 'swap-deposit'
     })
   }
 
   const loanParallelActions: ActionOp[] = []
   sequenceActions.push({
     type: 'par',
-    actions: loanParallelActions
+    actions: loanParallelActions,
+    displayKey: 'create'
   })
 
   // Construct the deposit action
@@ -80,6 +93,39 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
   //
   // Borrow and ACH steps
   //
+  // HACK: par as top level ActionOp type not supported
+  const borrowAction = ((await makeAaveBorrowAction({ borrowEngineWallet, borrowPluginId, destination })) as SeqActionOp).actions[0] as ParActionOp
+  if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
+
+  // Special complete message for withdraw to bank
+  return makeActionProgram(actionOp, {
+    title: s.strings.action_display_title_complete_default,
+    message:
+      destination.paymentMethodId != null
+        ? s.strings.action_display_message_complete_bank
+        : sprintf(s.strings.action_display_message_complete_wallet_2s, getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ?? 'NA', config.appName)
+  })
+}
+
+export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Promise<ActionOp> => {
+  const { borrowEngineWallet, borrowPluginId, destination } = params
+  const allTokens = borrowEngineWallet.currencyConfig.allTokens
+
+  //
+  // Borrow and ACH steps
+  //
+
+  // HACK: par as top level ActionOp type not supported, so wrapping them in seq
+  const sequenceActions: ActionOp[] = []
+  const actionOp: ActionOp = {
+    type: 'seq',
+    actions: sequenceActions
+  }
+  const loanParallelActions: ActionOp[] = []
+  sequenceActions.push({
+    type: 'par',
+    actions: loanParallelActions
+  })
 
   const borrowToken = getToken(borrowEngineWallet, destination.tokenId)
 
@@ -119,58 +165,6 @@ export const makeAaveCreateAction = async (params: AaveCreateActionParams): Prom
   return actionOp
 }
 
-export const makeAaveBorrowAction = async ({
-  borrowEngineWallet,
-  borrowPluginId,
-  borrowTokenId,
-  destBankId,
-  nativeAmount
-}: {
-  borrowEngineWallet: EdgeCurrencyWallet
-  borrowPluginId: string
-  borrowTokenId?: string
-  destBankId?: string
-  nativeAmount: string
-}): Promise<ActionOp[]> => {
-  const out: ActionOp[] = []
-  const borrowToken = getToken(borrowEngineWallet, borrowTokenId)
-
-  // If no borrow token specified (withdraw to bank), default to USDC for intermediate borrow step prior to withdrawing to bank
-  const borrowTokenCc = borrowToken == null ? 'USDC' : borrowToken.currencyCode
-  await enableToken(borrowTokenCc, borrowEngineWallet)
-  const allTokens = borrowEngineWallet.currencyConfig.allTokens
-  const defaultTokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === borrowTokenCc)
-  if (defaultTokenId == null) throw new Error(`Could not find default token ${borrowTokenCc} for borrow request`)
-
-  // TODO: ASSUMPTION: The only borrow destinations are:
-  // 1. USDC
-  // 2. Bank (sell/fiat off-ramp), to be handled in a separate method
-  if (borrowTokenCc !== 'USDC') throw new Error('Non-USDC token borrowing not yet implemented') // Should not happen...
-
-  // Construct the borrow action
-  if (borrowTokenId != null || defaultTokenId != null)
-    out.push({
-      type: 'loan-borrow',
-      borrowPluginId,
-      nativeAmount,
-      tokenId: borrowTokenId ?? defaultTokenId,
-      walletId: borrowEngineWallet.id
-    })
-
-  // Construct the Withdraw to Bank action
-  if (destBankId != null) {
-    out.push({
-      type: 'wyre-sell',
-      wyreAccountId: destBankId,
-      nativeAmount,
-      tokenId: borrowTokenId ?? defaultTokenId,
-      walletId: borrowEngineWallet.id
-    })
-  }
-
-  return out
-}
-
 export const makeAaveDepositAction = async ({
   borrowEngineWallet,
   borrowPluginId,
@@ -185,8 +179,12 @@ export const makeAaveDepositAction = async ({
   nativeAmount: string
   srcTokenId?: string
   srcWallet: EdgeCurrencyWallet
-}): Promise<ActionOp[]> => {
-  const out: ActionOp[] = []
+}): Promise<ActionOp> => {
+  const sequenceActions: ActionOp[] = []
+  const actionOp: ActionOp = {
+    type: 'seq',
+    actions: sequenceActions
+  }
   // TODO: Handle buy from fiat onramp in a separate method
 
   const depositToken = getToken(borrowEngineWallet, depositTokenId)
@@ -199,19 +197,20 @@ export const makeAaveDepositAction = async ({
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
   if (srcWallet.id !== borrowEngineWallet.id) {
-    out.push({
+    sequenceActions.push({
       type: 'swap',
       fromTokenId: srcTokenId,
       fromWalletId: srcWallet.id,
       nativeAmount,
       toTokenId: tokenId,
       toWalletId: borrowEngineWallet.id,
-      amountFor: 'to'
+      amountFor: 'to',
+      displayKey: 'swap-deposit'
     })
   }
 
   // Construct the deposit action
-  out.push({
+  sequenceActions.push({
     type: 'loan-deposit',
     borrowPluginId,
     nativeAmount,
@@ -219,7 +218,7 @@ export const makeAaveDepositAction = async ({
     walletId: borrowEngineWallet.id
   })
 
-  return out
+  return actionOp
 }
 
 export const makeAaveCloseAction = async ({

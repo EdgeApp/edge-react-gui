@@ -4,31 +4,32 @@ import * as React from 'react'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 
-export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account, otpErrorShown } = state.core
+export function handleOtpError(otpError: OtpError): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account, otpErrorShown } = state.core
 
-  if (account.loggedIn && !otpErrorShown) {
-    dispatch({ type: 'OTP_ERROR_SHOWN' })
-    Actions.push('otpRepair', {
-      otpError
-    })
+    if (account.loggedIn && !otpErrorShown) {
+      dispatch({ type: 'OTP_ERROR_SHOWN' })
+      Actions.push('otpRepair', {
+        otpError
+      })
+    }
   }
 }
 
-type ValidatePasswordOptions = {
+interface ValidatePasswordOptions {
   message?: string
   submitLabel?: string
   title?: string
   warningMessage?: string
 }
 
-export const validatePassword =
-  (opts: ValidatePasswordOptions = {}) =>
-  async (dispatch: Dispatch, getState: GetState): Promise<boolean> => {
+export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkAction<Promise<boolean>> {
+  return async (dispatch, getState) => {
     const { message, submitLabel, title = s.strings.confirm_password_text, warningMessage } = opts
     const state = getState()
     const { account } = state.core
@@ -55,8 +56,11 @@ export const validatePassword =
 
     return password != null
   }
+}
 
-export const deleteLocalAccount = (username: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  return state.core.context.deleteLocalAccount(username).catch(showError)
+export function deleteLocalAccount(username: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    return state.core.context.deleteLocalAccount(username).catch(showError)
+  }
 }

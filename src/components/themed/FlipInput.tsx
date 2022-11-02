@@ -15,7 +15,7 @@ import { cacheStyles, Theme, ThemeProps, useTheme, withTheme } from '../services
 import { EdgeText } from './EdgeText'
 import { ButtonBox, RightChevronButton } from './ThemedButtons'
 
-export type FlipInputFieldInfo = {
+export interface FlipInputFieldInfo {
   currencyName: string
   currencySymbol: string // currency symbol of field
   currencyCode: string // 3-5 digit currency code
@@ -31,7 +31,7 @@ export type FlipInputFieldInfo = {
   maxConversionDecimals: number
 }
 
-type State = {
+interface State {
   isToggled: boolean
   textInputFrontFocus: boolean
   textInputBackFocus: boolean
@@ -44,7 +44,7 @@ type State = {
   rerenderCounter: number
 }
 
-export type FlipInputOwnProps = {
+export interface FlipInputOwnProps {
   // Override value of the primary field. This will be the initial value of the primary field. Only changes to this value will
   // cause changes to the primary field
   overridePrimaryDecimalAmount: string
@@ -78,7 +78,7 @@ export type FlipInputOwnProps = {
 
 type Props = FlipInputOwnProps & ThemeProps
 
-type Amounts = {
+interface Amounts {
   primaryDecimalAmount: string
   primaryDisplayAmount: string
   secondaryDecimalAmount: string

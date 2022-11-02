@@ -4,14 +4,13 @@ import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
-import { applyMiddleware, createStore, Middleware } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { rootReducer } from '../../reducers/RootReducer'
-import { Action } from '../../types/reduxActions'
-import { Dispatch, RootState } from '../../types/reduxTypes'
+import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { errorAlert } from '../../util/middleware/errorAlert'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
@@ -31,7 +30,9 @@ import { SortedWalletList } from './SortedWalletList'
 import { useTheme } from './ThemeContext'
 import { WalletLifecycle } from './WalletLifecycle'
 
-type Props = { context: EdgeContext }
+interface Props {
+  context: EdgeContext
+}
 
 /**
  * Provides various global services to the application,
@@ -45,18 +46,17 @@ export function Services(props: Props) {
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.
   // The `useState` hook lets us pass an initializer that only runs once:
-  const [store] = React.useState(() => {
-    const middleware: Array<Middleware<RootState, Action>> = [errorAlert, loginStatusChecker, thunk]
+  const [store] = React.useState<Store>(() => {
+    const middleware = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
-    // @ts-expect-error
-    if (global.__DEV__) {
+    if (__DEV__) {
       const createDebugger = require('redux-flipper').default
       middleware.push(createDebugger())
     }
 
-    // @ts-expect-error
-    const store = createStore<RootState, Action, Dispatch>(rootReducer, undefined, applyMiddleware(...middleware))
+    const enhancer = applyMiddleware<Dispatch, RootState>(...middleware)
+    const store = createStore(rootReducer, undefined, enhancer)
 
     // Put the context into Redux:
     const disklet = makeReactNativeDisklet()
@@ -76,9 +76,8 @@ export function Services(props: Props) {
     return store
   })
 
-  // Actions to perform at first login:
+  // Actions to perform at startup:
   React.useEffect(() => {
-    // @ts-expect-error
     store.dispatch(loadDeviceReferral())
   }, [store])
 

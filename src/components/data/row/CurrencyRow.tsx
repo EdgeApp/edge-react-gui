@@ -10,7 +10,7 @@ import { FiatText } from '../../text/FiatText'
 import { TickerText } from '../../text/TickerText'
 import { IconDataRow } from './IconDataRow'
 
-type Props = {
+interface Props {
   marginRem?: number[] | number
   showRate?: boolean
   token?: EdgeToken

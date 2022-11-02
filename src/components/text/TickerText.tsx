@@ -10,7 +10,7 @@ import { Theme } from '../../types/Theme'
 import { zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   wallet: EdgeCurrencyWallet
   tokenId?: string
 }

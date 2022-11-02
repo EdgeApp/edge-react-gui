@@ -1,14 +1,13 @@
 import { Subscriber } from 'yaob'
 import { Events, makeEvents } from 'yavent'
 
-type WatchableProps<T> = {
-  // @ts-expect-error
+type Watchable<T extends object> = {
   watch: Subscriber<T>
 } & T
 
-export function withWatchableProps<T extends object>(original: T): WatchableProps<T> {
+export function withWatchableProps<T extends Watchable<any>>(original: Omit<T, 'watch'>): T {
   const [watch, emit]: Events<T> = makeEvents<T>()
-  const out = { ...original, watch }
+  const out: T = { ...original, watch } as any
 
   for (const key of Object.keys(original)) {
     Object.defineProperty(out, key, {

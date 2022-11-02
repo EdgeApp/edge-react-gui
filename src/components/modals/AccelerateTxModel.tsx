@@ -19,21 +19,21 @@ import { Tile } from '../tiles/Tile'
 
 type Status = 'confirming' | 'sending' | 'sent'
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<void>
   edgeTransaction: EdgeTransaction
   wallet: EdgeCurrencyWallet
 }
-type StateProps = {
+interface StateProps {
   exchangeRates: GuiExchangeRates
 }
-type DispatchProps = {
+interface DispatchProps {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
-type State = {
+interface State {
   edgeUnsignedTransaction?: EdgeTransaction
   error?: Error
   status: Status
@@ -127,7 +127,10 @@ export class AccelerateTxModelComponent extends PureComponent<Props, State> {
 
           showToast(s.strings.transaction_success_message)
 
-          Actions.replace('transactionDetails', { edgeTransaction: edgeSignedTransaction })
+          Actions.replace('transactionDetails', {
+            edgeTransaction: edgeSignedTransaction,
+            walletId: wallet.id
+          })
         } else {
           showWarning(s.strings.transaction_success_message)
         }

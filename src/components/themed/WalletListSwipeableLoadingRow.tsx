@@ -12,7 +12,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'walletList'>
   walletId: string
 }

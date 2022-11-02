@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 import { PendingTxMap } from '../../../controllers/action-queue/types'
 import { ApprovableAction } from '../types'
 import { asBigNumber } from './cleaners/asBigNumber'
+import { SIDE_EFFECT_CURRENCY_CODE } from './constants'
 
 export const asTxInfo = asObject({
   data: asString,
@@ -15,7 +16,7 @@ export const asTxInfo = asObject({
 })
 export type TxInfo = ReturnType<typeof asTxInfo>
 
-export type CallInfo = {
+export interface CallInfo {
   tx: TxInfo
   wallet: EdgeCurrencyWallet
   spendToken?: EdgeToken
@@ -84,4 +85,19 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
 
 export const makeTxCalls = async (actionInfos: CallInfo[]): Promise<ApprovableAction[]> => {
   return await Promise.all(actionInfos.map(makeApprovableCall))
+}
+
+export const makeSideEffectApprovableAction = (approve: () => Promise<void>): ApprovableAction => {
+  return {
+    unsignedTxs: [],
+    networkFee: {
+      currencyCode: SIDE_EFFECT_CURRENCY_CODE,
+      nativeAmount: ''
+    },
+    dryrun: async () => [],
+    async approve() {
+      await approve()
+      return []
+    }
+  }
 }

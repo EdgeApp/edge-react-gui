@@ -4,36 +4,34 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioDomainRegister } from '../../components/scenes/FioDomainRegisterScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('FioDomainRegister', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      navigation: undefined,
-      fioWallets: [
-        {
-          fiatCurrencyCode: 'iso:USD',
-          addCustomToken: 'shib',
-          currencyInfo: {
-            currencyCode: 'SHIB'
-          }
-        }
-      ],
-      fioPlugin: {
-        currencyInfo: 'FIO plugin'
-      },
-      isConnected: true,
-      createFioWallet: async () => ({
-        fiatCurrencyCode: 'iso:USD',
-        addCustomToken: 'shib',
-        currencyInfo: {
-          currencyCode: 'SHIB'
-        }
-      }),
-      theme: getTheme()
+    const fakeWallet: any = {
+      fiatCurrencyCode: 'iso:USD',
+      addCustomToken: 'shib',
+      currencyInfo: {
+        currencyCode: 'SHIB'
+      }
     }
-    const actual = renderer.render(<FioDomainRegister {...props} />)
+
+    const actual = renderer.render(
+      <FioDomainRegister
+        navigation={fakeNavigation}
+        fioWallets={[fakeWallet]}
+        fioPlugin={
+          {
+            currencyInfo: 'FIO plugin'
+          } as any
+        }
+        isConnected
+        createFioWallet={async () => fakeWallet}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

@@ -11,12 +11,12 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
-export type ContactModalResult = {
+export interface ContactModalResult {
   contactName: string
   thumbnailPath?: string | null
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<ContactModalResult | undefined>
   contactType: string
   contactName: string

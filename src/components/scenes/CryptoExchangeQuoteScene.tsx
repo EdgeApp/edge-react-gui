@@ -24,10 +24,10 @@ import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'exchangeQuote'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   fromDenomination: string
   fromWalletCurrencyName: string
@@ -35,13 +35,13 @@ type StateProps = {
   toDenomination: string
   toWalletCurrencyName: string
 }
-type DispatchProps = {
+interface DispatchProps {
   shift: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
   timeExpired: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-type State = {}
+interface State {}
 
 export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   // @ts-expect-error

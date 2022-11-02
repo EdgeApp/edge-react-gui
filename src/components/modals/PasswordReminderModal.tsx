@@ -13,21 +13,21 @@ import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<void>
 }
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSuccess: () => void
   onPostpone: () => void
   onRequestChangePassword: () => void
 }
 
-type State = {
+interface State {
   errorMessage?: string
   password: string
   spinning: boolean

@@ -6,7 +6,7 @@ import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
 import { DeepLink } from '../types/DeepLinkTypes'
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { activatePromotion } from './AccountReferralActions'
 import { launchBitPay } from './BitPayActions'
@@ -18,14 +18,16 @@ import { selectWallet } from './WalletActions'
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+export function launchDeepLink(link: DeepLink): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
 
-  const handled = handleLink(dispatch, state, link)
+    const handled = handleLink(dispatch, state, link)
 
-  // If we couldn't handle the link, save it for later:
-  if (!handled) {
-    dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
+    // If we couldn't handle the link, save it for later:
+    if (!handled) {
+      dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
+    }
   }
 }
 
@@ -34,16 +36,18 @@ export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState:
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { pendingDeepLink } = state
-  if (pendingDeepLink == null) return
+export function retryPendingDeepLink(): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { pendingDeepLink } = state
+    if (pendingDeepLink == null) return
 
-  const handled = handleLink(dispatch, state, pendingDeepLink)
+    const handled = handleLink(dispatch, state, pendingDeepLink)
 
-  // If we handled the link, clear it:
-  if (handled) {
-    dispatch({ type: 'DEEP_LINK_HANDLED' })
+    // If we handled the link, clear it:
+    if (handled) {
+      dispatch({ type: 'DEEP_LINK_HANDLED' })
+    }
   }
 }
 

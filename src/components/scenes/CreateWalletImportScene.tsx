@@ -20,7 +20,7 @@ import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextI
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'createWalletImport'>
   route: RouteProp<'createWalletImport'>
 }

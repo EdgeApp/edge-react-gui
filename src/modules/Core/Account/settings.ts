@@ -6,8 +6,8 @@ import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
 import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
+import { defaultCategories } from '../../../util/categories'
 import { logActivity } from '../../../util/logger'
-import { categories } from './subcategories'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
@@ -16,6 +16,8 @@ export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20000': false,
   '200000': false
 }
+
+export type PasswordReminderTime = keyof typeof PASSWORD_RECOVERY_REMINDERS_SHOWN
 
 export const asCurrencyCodeDenom = asObject({
   name: asString,
@@ -134,7 +136,7 @@ export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: 
   })
 }
 
-export type SpendingLimits = {
+export interface SpendingLimits {
   transaction: {
     amount: number
     isEnabled: boolean
@@ -149,7 +151,7 @@ export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: Sp
     return out
   })
 }
-export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
+export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: PasswordReminderTime) {
   const settings = await getSyncedSettings(account)
   const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
   passwordRecoveryRemindersShown[level] = true
@@ -165,7 +167,7 @@ export const setDenominationKeyRequest = async (account: EdgeAccount, pluginId: 
   })
 
 // Helper Functions
-export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
+export async function getSyncedSettings(account: EdgeAccount): Promise<ReturnType<typeof asSyncedAccountSettings>> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
@@ -183,7 +185,9 @@ export async function setSyncedSettings(account: EdgeAccount, settings: object):
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
-export type CategoriesFile = { categories: string[] }
+export interface CategoriesFile {
+  categories: string[]
+}
 
 export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
@@ -259,5 +263,5 @@ export const updateSettings = (currentSettings: any, newSettings: object) => {
 }
 
 export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  categories: categories
+  categories: defaultCategories
 }

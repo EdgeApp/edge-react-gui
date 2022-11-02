@@ -8,7 +8,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { NumericInput } from '../modals/NumericInput'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   // Contents:
   value: string
   error?: string

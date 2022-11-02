@@ -5,12 +5,12 @@ import { GuiCurrencyInfo } from '../../types/types'
 import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils'
 import { FlipInput, FlipInputFieldInfo } from './FlipInput'
 
-export type ExchangedFlipInputAmounts = {
+export interface ExchangedFlipInputAmounts {
   exchangeAmount: string
   nativeAmount: string
 }
 
-export type ExchangedFlipInputOwnProps = {
+export interface ExchangedFlipInputOwnProps {
   // Initial amount of the primary field in `exchangeAmount` denomination. This is converted to a `decimalAmount`
   // in the proper display denomination to be passed into FlipInput
   overridePrimaryExchangeAmount: string
@@ -42,7 +42,7 @@ export type ExchangedFlipInputOwnProps = {
 
 type Props = ExchangedFlipInputOwnProps
 
-type State = {
+interface State {
   overridePrimaryDecimalAmount: string // This should be a decimal amount in display denomination (ie. mBTC)
   exchangeSecondaryToPrimaryRatio: string
   primaryInfo: FlipInputFieldInfo

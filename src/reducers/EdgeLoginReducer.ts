@@ -3,7 +3,7 @@ import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
 
-export type EdgeLoginState = {
+export interface EdgeLoginState {
   lobby: EdgeLobby | null
   error: string | null
   isProcessing: boolean

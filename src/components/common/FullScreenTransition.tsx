@@ -5,11 +5,11 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 
-type FullScreenTransitionState = {
+interface FullScreenTransitionState {
   opacity: Animated.Value
 }
 
-type FullScreenTransitionProps = {
+interface FullScreenTransitionProps {
   image: React.ReactNode
   text: React.ReactNode
   onDone: () => void

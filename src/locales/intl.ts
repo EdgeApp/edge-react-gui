@@ -4,13 +4,13 @@ import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
 import { locales } from './dateLocales'
 
-export type IntlLocaleType = {
+export interface IntlLocaleType {
   localeIdentifier: string // Like en_US or en-US
   decimalSeparator: string
   groupingSeparator: string
 }
 
-type IntlNumberFormatOptionsType = {
+interface IntlNumberFormatOptionsType {
   toFixed?: number
   maxDecimals?: number
   minDecimals?: number

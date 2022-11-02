@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-type Props = {
+interface Props {
   expiration: Date
   timeExpired: () => void
 }

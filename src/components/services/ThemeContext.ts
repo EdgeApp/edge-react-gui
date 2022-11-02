@@ -9,7 +9,7 @@ export { cacheStyles }
 /**
  * Utility for declaring `withTheme` components.
  */
-export type ThemeProps = {
+export interface ThemeProps {
   theme: Theme
 }
 

@@ -12,7 +12,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 export type ContactsPermissionResult = 'allow' | 'deny'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<ContactsPermissionResult | undefined>
 }
 

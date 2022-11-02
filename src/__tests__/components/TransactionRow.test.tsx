@@ -1,5 +1,4 @@
 import { describe, expect, it } from '@jest/globals'
-import { EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
@@ -7,6 +6,7 @@ import { createStore } from 'redux'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
 import { rootReducer } from '../../reducers/RootReducer'
+import { TransactionListTx } from '../../types/types'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -47,7 +47,7 @@ describe('Transaction List Row', () => {
     const amountFiat = 4424808418353299.5
 
     const wallet: any = { id: 'qrstuv', type: 'wallet:monero' }
-    const transaction: EdgeTransaction = {
+    const transaction: TransactionListTx = {
       blockHeight: 1683022,
       date: 1539555412.068,
       ourReceiveAddresses: [],
@@ -66,16 +66,11 @@ describe('Transaction List Row', () => {
       key: 0,
       metadata: { amountFiat }
     }
-    const props: any = {
-      walletId: 'lmnop',
-      currencyCode: 'BTC',
-      transaction: transaction
-    }
 
     // TODO: Test TransactionRow component
     const actual = renderer.create(
       <Provider store={store}>
-        <TransactionListRow {...props} />
+        <TransactionListRow walletId="lmnop" currencyCode="BTC" transaction={transaction} />
       </Provider>
     )
 

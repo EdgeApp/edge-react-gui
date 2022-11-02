@@ -12,7 +12,7 @@ import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { IconDataRow } from './IconDataRow'
 
-type Props = {
+interface Props {
   marginRem?: number[] | number
   paymentMethod: PaymentMethod
   pluginId: string

@@ -6,10 +6,10 @@ import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'passwordRecovery'>
 }
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
 }

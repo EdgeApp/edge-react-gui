@@ -35,13 +35,6 @@ export const DEFAULT_TRUNCATE_PRECISION = 6
 
 export const normalizeForSearch = (str: string, delimiter: string = '') => str.replace(/\s/g, delimiter).toLowerCase()
 
-export function capitalize(string: string): string {
-  if (!string) return ''
-  const firstLetter = string.charAt(0).toUpperCase()
-  const otherLetters = string.slice(1)
-  return `${firstLetter}${otherLetters}`
-}
-
 // Replaces extra chars with '...' either in the middle or end of the input string
 export const truncateString = (input: string | number, maxLength: number, isMidTrunc: boolean = false) => {
   const inputStr = typeof input !== 'string' ? String(input) : input
@@ -219,7 +212,7 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
-export type PrecisionAdjustParams = {
+export interface PrecisionAdjustParams {
   exchangeSecondaryToPrimaryRatio: string
   secondaryExchangeMultiplier: string
   primaryExchangeMultiplier: string
@@ -345,24 +338,6 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   return total
 }
 
-export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {
-  const secondsPerDay = 86400
-  const daysPerMonth = 30
-  const monthInFuture = currentDateInSeconds + secondsPerDay * daysPerMonth
-  return dateInSeconds > monthInFuture
-}
-
-export const isTooFarBehind = (dateInSeconds: number) => {
-  const dateOfBitcoinGenesisInSeconds = 1230940800 // 2009-01-03T00:00:00.000Z
-  return dateInSeconds < dateOfBitcoinGenesisInSeconds
-}
-
-export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = Date.now() / 1000) => {
-  if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
-  if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
-  return dateInSeconds
-}
-
 export const getYesterdayDateRoundDownHour = () => {
   const date = new Date()
   date.setMinutes(0)
@@ -370,18 +345,6 @@ export const getYesterdayDateRoundDownHour = () => {
   date.setMilliseconds(0)
   const yesterday = date.setDate(date.getDate() - 1)
   return new Date(yesterday).toISOString()
-}
-
-export function splitTransactionCategory(fullCategory: string): {
-  category: string
-  subCategory: string
-} {
-  const splittedCategory = fullCategory.split(':')
-  const categoryArray = splittedCategory.shift()
-  return {
-    category: categoryArray ?? '',
-    subCategory: splittedCategory.length > 0 ? splittedCategory.join(':') : ''
-  }
 }
 
 type AsyncFunction = () => Promise<any>
@@ -573,7 +536,7 @@ export function tokenIdsToCurrencyCodes(currencyConfig: EdgeCurrencyConfig, toke
   return out
 }
 
-export type MiniCurrencyConfig = {
+export interface MiniCurrencyConfig {
   allTokens: EdgeTokenMap
   currencyInfo: EdgeCurrencyInfo
 }

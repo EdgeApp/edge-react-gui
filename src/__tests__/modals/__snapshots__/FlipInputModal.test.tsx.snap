@@ -143,6 +143,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             (
             <FiatText
               nativeCryptoAmount="1"
+              wallet={Object {}}
             />
             )
           </WithTheme(EdgeTextComponent)>
@@ -232,6 +233,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             (
             <FiatText
               nativeCryptoAmount="10000"
+              wallet={Object {}}
             />
             )
           </WithTheme(EdgeTextComponent)>

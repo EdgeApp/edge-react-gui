@@ -18,7 +18,7 @@ import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from '../tiles/Tile'
 
-type OwnProps = {
+interface OwnProps {
   selected: string
   memo: string
   memoError: string
@@ -28,20 +28,20 @@ type OwnProps = {
   isSendUsingFioAddress?: boolean
 }
 
-type StateProps = {
+interface StateProps {
   fioAddresses: FioAddress[]
   fioWallets: EdgeCurrencyWallet[]
   selectedWallet: GuiWallet
   currencyCode: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type LocalState = {
+interface LocalState {
   loading: boolean
   bundledTxsUpdated: boolean
   prevFioAddresses: FioAddress[]

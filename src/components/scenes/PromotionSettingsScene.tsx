@@ -13,11 +13,11 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-type StateProps = {
+interface StateProps {
   accountReferral: AccountReferral
   deviceReferral: DeviceReferral
 }
-type DispatchProps = {
+interface DispatchProps {
   activatePromotion: (installerId: string) => Promise<void>
   removePromotion: (installerId: string) => Promise<void>
 }

@@ -19,7 +19,7 @@ import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
-type OwnProps = {
+interface OwnProps {
   // The request:
   fioRequest: FioRequest
   isSent: boolean
@@ -28,7 +28,7 @@ type OwnProps = {
   onSwipe: (request: FioRequest) => Promise<void>
 }
 
-type StateProps = {
+interface StateProps {
   fiatSymbol: string
   fiatAmount: string
   displayDenomination: EdgeDenomination

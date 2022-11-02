@@ -8,7 +8,7 @@ import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
 import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
 import VARIABLE_DEBT_TOKEN_ABI from './abi/VARIABLE_DEBT_TOKEN_ABI.json'
 
-export type AaveNetworkBlueprint = {
+export interface AaveNetworkBlueprint {
   // @ts-expect-error
   provider: ethers.Provider
 
@@ -21,7 +21,7 @@ export type AaveNetworkBlueprint = {
   enabledTokens: { [currencyCode: string]: boolean }
 }
 
-export type AaveNetwork = {
+export interface AaveNetwork {
   // @ts-expect-error
   provider: ethers.Provider
 
@@ -37,7 +37,7 @@ export type AaveNetwork = {
     sToken: any
     vToken: any
   }>
-  getReserveTokenBalances: (address: string) => Promise<Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: BigNumber }>>
+  getReserveTokenBalances: (address: string) => Promise<Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }>>
   getReserveTokenRates: (tokenAddress: string) => Promise<{
     variableApr: number
     stableApr: number
@@ -91,8 +91,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
 
         return { address: token.address, aBalance, vBalance, variableApr }
       })
-      // @ts-expect-error
-      const reserveTokenBalances: Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: BigNumber }> = await Promise.all(
+      const reserveTokenBalances: Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }> = await Promise.all(
         whenReserveTokenBalances
       )
       return reserveTokenBalances

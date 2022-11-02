@@ -19,7 +19,7 @@ import { requestPermissionOnSettings } from '../services/PermissionsManager'
 
 // WebView bridge managemer --------------------------------------------
 
-type WebViewCallbacks = {
+interface WebViewCallbacks {
   onMessage: (event: any) => void
   setRef: (webView: WebView | null) => void
 }
@@ -114,19 +114,23 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 
 // Plugin scene --------------------------------------------------------
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'pluginView'>
 }
 
-type DispatchProps = { dispatch: Dispatch }
-type StateProps = { state: RootState }
+interface DispatchProps {
+  dispatch: Dispatch
+}
+interface StateProps {
+  state: RootState
+}
 type Props = DispatchProps & StateProps & OwnProps
 
-type State = {
+interface State {
   webViewKey: number
 }
 
-type PluginWorkerApi = {
+interface PluginWorkerApi {
   setEdgeProvider: (provider: EdgeProvider) => Promise<unknown>
 }
 

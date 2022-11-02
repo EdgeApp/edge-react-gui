@@ -8,7 +8,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 type AlerType = 'info' | 'warning' | 'error' | 'success'
 
-type Props = {
+interface Props {
   type: AlerType
   title: string
   message?: string
@@ -19,7 +19,9 @@ type Props = {
   onPress?: () => void
 }
 
-type StylesOptions = { typeColor: string }
+interface StylesOptions {
+  typeColor: string
+}
 
 // TODO: Implement alert colors such as info and others
 export const useAlertTypeColor = (type: AlerType) => {

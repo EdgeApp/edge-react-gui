@@ -27,7 +27,7 @@ import {
 import { showError } from '../services/AirshipInstance'
 import { TransactionRow } from './TransactionRow'
 
-export type Props = {
+interface Props {
   walletId: string
   currencyCode: string
   transaction: TransactionListTx
@@ -110,6 +110,7 @@ export function TransactionListRow(props: Props) {
     }
     Actions.push('transactionDetails', {
       edgeTransaction: transaction,
+      walletId,
       thumbnailPath,
       amountFiat
     })

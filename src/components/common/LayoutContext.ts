@@ -4,19 +4,19 @@ import { getInset } from 'react-native-safe-area-view'
 
 import { useWindowSize } from '../../hooks/useWindowSize'
 
-export type SafeAreaGap = {
+export interface SafeAreaGap {
   bottom: number
   left: number
   right: number
   top: number
 }
 
-export type LayoutMetrics = {
+export interface LayoutMetrics {
   layout: { height: number; width: number }
   safeAreaInsets: SafeAreaGap
 }
 
-type Props = {
+interface Props {
   // Expects a single child, which is a function
   // that accepts the current layout and returns an element.
   children: (layout: LayoutMetrics) => React.ReactElement

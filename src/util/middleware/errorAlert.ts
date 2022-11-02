@@ -1,9 +1,9 @@
 import { Middleware } from 'redux'
 
 import { showError } from '../../components/services/AirshipInstance'
-import { Action, RootState } from '../../types/reduxTypes'
+import { Dispatch, RootState } from '../../types/reduxTypes'
 
-export const errorAlert: Middleware<RootState, Action> = store => next => action => {
+export const errorAlert: Middleware<{}, RootState, Dispatch> = store => next => action => {
   try {
     const out: any = next(action)
     if (out != null && typeof out.then === 'function') {

@@ -8,7 +8,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatDate } from '../../../locales/intl'
 import s from '../../../locales/strings'
 
-type FioNameProps = {
+interface FioNameProps {
   name: string
   expiration?: string
   bundledTxs?: string

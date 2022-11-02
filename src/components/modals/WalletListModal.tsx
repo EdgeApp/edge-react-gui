@@ -26,7 +26,7 @@ import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
 import { ButtonsModal } from './ButtonsModal'
 
-export type WalletListResult = {
+export interface WalletListResult {
   walletId?: string
   currencyCode?: string
   tokenId?: string
@@ -36,7 +36,7 @@ export type WalletListResult = {
   wyreAccountId?: string
 }
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<WalletListResult>
 
   // Filtering:

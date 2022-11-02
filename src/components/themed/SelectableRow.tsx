@@ -6,7 +6,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   onPress: () => void | Promise<void>
   title: string | React.ReactNode
 

@@ -1,62 +1,62 @@
 import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
+import { Dispatch, GetState } from '../../types/reduxTypes'
+
 //
 // Action Operations
 //
-export type ActionOpTypes =
-  | 'seq'
-  | 'par'
-  | 'wyre-buy'
-  | 'wyre-sell'
-  | 'loan-borrow'
-  | 'loan-deposit'
-  | 'loan-repay'
-  | 'loan-withdraw'
-  | 'swap'
-  | 'toast'
-  | 'delay'
+export type ActionOpTypes = ActionOp['type']
 
-export type SeqActionOp = {
+export interface SeqActionOp {
   type: 'seq'
   actions: ActionOp[]
 }
-export type ParActionOp = {
+
+export interface ParActionOp {
   type: 'par'
   actions: ActionOp[]
+  displayKey?: ParActionOpDisplayKey
 }
-export type BroadcastTxActionOp = {
+export type ParActionOpDisplayKey = 'create' | 'swap-deposit-fees'
+
+export interface BroadcastTxActionOp {
   type: 'broadcast-tx'
   pluginId: string
   rawTx: Uint8Array
 }
-export type WyreBuyActionOp = {
+
+export interface WyreBuyActionOp {
   type: 'wyre-buy'
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
-export type WyreSellActionOp = {
+
+export interface WyreSellActionOp {
   type: 'wyre-sell'
   wyreAccountId: string
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
-export type LoanBorrowActionOp = {
+
+export interface LoanBorrowActionOp {
   type: 'loan-borrow'
   borrowPluginId: string
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
-export type LoanDepositActionOp = {
+
+export interface LoanDepositActionOp {
   type: 'loan-deposit'
   borrowPluginId: string
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
-export type LoanRepayActionOp = {
+
+export interface LoanRepayActionOp {
   type: 'loan-repay'
   borrowPluginId: string
   nativeAmount: string
@@ -64,14 +64,16 @@ export type LoanRepayActionOp = {
   tokenId?: string
   fromTokenId?: string
 }
-export type LoanWithdrawActionOp = {
+
+export interface LoanWithdrawActionOp {
   type: 'loan-withdraw'
   borrowPluginId: string
   nativeAmount: string
   walletId: string
   tokenId?: string
 }
-export type SwapActionOp = {
+
+export interface SwapActionOp {
   type: 'swap'
   amountFor: 'from' | 'to'
   fromTokenId?: string
@@ -79,10 +81,13 @@ export type SwapActionOp = {
   nativeAmount: string
   toTokenId?: string
   toWalletId: string
+  displayKey?: SwapActionOpDisplayKey
 }
-export type ActionOp =
-  | SeqActionOp
-  | ParActionOp
+export type SwapActionOpDisplayKey = 'swap-deposit'
+
+export type NodeActionOp = SeqActionOp | ParActionOp
+
+export type LeafActionOp =
   | BroadcastTxActionOp
   | WyreBuyActionOp
   | WyreSellActionOp
@@ -92,20 +97,26 @@ export type ActionOp =
   | LoanWithdrawActionOp
   | SwapActionOp
 
+export type ActionOp = NodeActionOp | LeafActionOp
+
+// Special display handling is implemented for ActionOps that have
+// ActionOpDisplayKeys set
+export type ActionOpDisplayKey = SwapActionOpDisplayKey | ParActionOpDisplayKey
+
 //
 // Action (After) Effects
 //
 
-export type SeqEffect = {
+export interface SeqEffect {
   type: 'seq'
   opIndex: number
   childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
-export type ParEffect = {
+export interface ParEffect {
   type: 'par'
   childEffects: Array<ActionEffect | null> // null is only for dryrun
 }
-export type AddressBalanceEffect = {
+export interface AddressBalanceEffect {
   type: 'address-balance'
   address: string
   aboveAmount?: string
@@ -113,24 +124,24 @@ export type AddressBalanceEffect = {
   walletId: string
   tokenId?: string
 }
-export type PushEventEffect = {
+export interface PushEventEffect {
   type: 'push-event'
   eventId: string
   effect?: ActionEffect
 }
-export type PriceLevelEffect = {
+export interface PriceLevelEffect {
   type: 'price-level'
   currencyPair: string
   aboveRate?: number
   belowRate?: number
 }
-export type TxConfsEffect = {
+export interface TxConfsEffect {
   type: 'tx-confs'
   txId: string
   walletId: string
   confirmations: number
 }
-export type DoneEffect = {
+export interface DoneEffect {
   type: 'done'
   error?: Error
   cancelled?: boolean
@@ -143,13 +154,25 @@ export type ActionEffect = SeqEffect | ParEffect | AddressBalanceEffect | PushEv
 //
 
 // Storage:
-export type ActionProgram = {
+
+export interface ActionProgramCompleteMessage {
+  title: string
+  message: string
+}
+
+export interface ActionProgram {
   programId: string
   actionOp: ActionOp
   // Development mode flag
   mockMode?: boolean
+
+  // TODO: Currently, the program creation stage does not have context about the
+  // rest of the steps without inferring from parsing the steps. Store the raw
+  // strings in the ActionProgram for now...
+  // programDisplayKey: ActionProgramDisplayKey
+  completeMessage?: ActionProgramCompleteMessage // Optional for backwards compatibility
 }
-export type ActionProgramState = {
+export interface ActionProgramState {
   clientId: string
   programId: string
   effect?: ActionEffect
@@ -162,45 +185,49 @@ export type ActionProgramState = {
   nextExecutionTime: number // The next time when the effect should be checked again
 }
 
-export type ActionQueueItem = {
+export interface ActionQueueItem {
   program: ActionProgram
   state: ActionProgramState
 }
-export type ActionQueueMap = {
+export interface ActionQueueMap {
   [id: string]: ActionQueueItem
 }
 
 // Runtime:
-export type BroadcastTx = {
+export interface BroadcastTx {
   walletId: string
   networkFee: EdgeNetworkFee
   tx: EdgeTransaction
 }
-export type EffectCheckResult = {
+export interface EffectCheckResult {
   delay: number
   isEffective: boolean
   updatedEffect?: ActionEffect
 }
-export type ExecutableAction = {
+export interface ExecutableAction {
   dryrun: (pendingTxMap: Readonly<PendingTxMap>) => Promise<ExecutionOutput | null>
   execute: () => Promise<ExecutionOutput>
 }
-export type ExecutionContext = {
+export interface ExecutionContext {
   account: EdgeAccount
   clientId: string
 
   // Methods
   evaluateAction: (program: ActionProgram, state: ActionProgramState) => Promise<ExecutableAction>
   checkActionEffect: (effect: ActionEffect) => Promise<EffectCheckResult>
+
+  // Redux Methods
+  dispatch: Dispatch
+  getState: GetState
 }
-export type ExecutionOutput = {
+export interface ExecutionOutput {
   effect: ActionEffect
   broadcastTxs: BroadcastTx[]
 }
-export type ExecutionResults = {
+export interface ExecutionResults {
   nextState: ActionProgramState
 }
-export type PendingTxMap = {
+export interface PendingTxMap {
   [walletId: string]: EdgeTransaction[] | undefined
 }
 
@@ -210,9 +237,10 @@ export type PendingTxMap = {
 
 export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
 
-export type ActionDisplayInfo = {
+export interface ActionDisplayInfo {
   title: string
   message: string
+  completeMessage?: ActionProgramCompleteMessage
   status: ActionDisplayStatus
   steps: ActionDisplayInfo[]
 }

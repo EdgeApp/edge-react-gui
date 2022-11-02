@@ -5,7 +5,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { THEME } from '../../../../theme/variables/airbitz'
 import { Gradient } from '../../components/Gradient/Gradient.ui'
 
-type props = {
+interface props {
   style?: ViewStyle
   children: React.ReactNode
 }

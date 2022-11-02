@@ -32,10 +32,11 @@ import { Space } from '../../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { SectionHeading } from '../../text/SectionHeading'
+import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   route: RouteProp<'loanDetails'>
   navigation: NavigationProp<'loanDetails'>
 }
@@ -56,15 +57,14 @@ export const LoanDetailsScene = (props: Props) => {
 
   // Derive state from borrowEngine:
   const { currencyWallet: wallet } = borrowEngine
+  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const loanToValue = useWatch(borrowEngine, 'loanToValue')
 
-  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   // Calculate fiat totals
   const collateralTotal = useFiatTotal(wallet, collaterals)
-
   const debtTotal = useFiatTotal(wallet, debts)
   const availableEquity = sub(collateralTotal, debtTotal)
 
@@ -75,8 +75,8 @@ export const LoanDetailsScene = (props: Props) => {
   })
   const runningActionQueueItem = runningProgramEdge != null ? actionQueueMap[runningProgramEdge.programId] : null
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
+  const isActionProgramRunning = runningProgramMessage != null
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (runningActionQueueItem != null) {
       const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
@@ -85,6 +85,8 @@ export const LoanDetailsScene = (props: Props) => {
     } else {
       setRunningProgramMessage(undefined)
     }
+
+    return () => {}
   }, [account, runningActionQueueItem])
 
   const summaryDetails = [
@@ -96,25 +98,10 @@ export const LoanDetailsScene = (props: Props) => {
     }
   ]
 
-  const handleAddCollateralPress = () => {
-    navigation.navigate('loanDeposit', { loanAccountId })
-  }
-  const handleWithdrawCollateralPress = () => {
-    navigation.navigate('loanWithdraw', { loanAccountId })
-  }
-  const handleLoanClosePress = () => {
-    navigation.navigate('loanClose', { loanAccountId })
-  }
-  const handleBorrowMorePress = () => {
-    navigation.navigate('loanBorrow', { loanAccountId })
-  }
-  const handleRepayPress = () => {
-    navigation.navigate('loanRepay', { loanAccountId })
-  }
-
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
   }
+
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
@@ -129,6 +116,90 @@ export const LoanDetailsScene = (props: Props) => {
       )
     } else return null
   }
+
+  // #region Loan Action Cards
+
+  const collateralPositions = React.useMemo(() => collaterals.filter(collateral => !zeroString(collateral.nativeAmount)), [collaterals])
+  const debtPositions = React.useMemo(() => debts.filter(debt => !zeroString(debt.nativeAmount)), [debts])
+
+  const actionCards = React.useMemo(() => {
+    const isOpenCollaterals = collateralPositions.length > 0
+    const isOpenDebts = debtPositions.length > 0
+    const actionCardConfigs: Array<{
+      title: string
+      iconName: string
+      handlePress: () => void
+      isDisabled: boolean
+    }> = [
+      {
+        title: s.strings.loan_action_add_collateral,
+        iconName: 'add-collateral',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-deposit', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning
+      },
+      {
+        title: s.strings.loan_action_withdraw_collateral,
+        iconName: 'withdraw-collateral',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-withdraw', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenCollaterals
+      },
+      {
+        title: s.strings.loan_borrow_more,
+        iconName: 'borrow-more',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-borrow', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenCollaterals
+      },
+      {
+        title: s.strings.loan_make_payment,
+        iconName: 'make-payment',
+        handlePress: () => {
+          navigation.navigate('loanManage', { actionOpType: 'loan-repay', loanAccountId })
+        },
+        isDisabled: isActionProgramRunning || !isOpenDebts
+      },
+      {
+        title: s.strings.loan_action_close_loan,
+        iconName: 'close-loan',
+        handlePress: () => {
+          navigation.navigate('loanClose', { loanAccountId })
+        },
+        isDisabled: isActionProgramRunning
+      }
+    ]
+
+    return (
+      <>
+        {actionCardConfigs.map(actionCardConfigData => {
+          const { title, iconName, handlePress, isDisabled } = actionCardConfigData
+          return (
+            <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
+              <Space right>
+                <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
+              </Space>
+              <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
+            </TappableCard>
+          )
+        })}
+      </>
+    )
+  }, [
+    isActionProgramRunning,
+    loanAccountId,
+    navigation,
+    collateralPositions.length,
+    debtPositions.length,
+    styles.actionLabel,
+    styles.actionLabelDisabled,
+    theme
+  ])
+
+  // #endregion
 
   return (
     <SceneWrapper>
@@ -174,37 +245,11 @@ export const LoanDetailsScene = (props: Props) => {
         <Space horizontal>
           <Space bottom>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
+            {isActionProgramRunning ? (
+              <Alert type="warning" title={s.strings.warning_please_wait_title} message={s.strings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
+            ) : null}
           </Space>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleAddCollateralPress}>
-            <Space right>
-              <Fontello name="add-collateral" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_add_collateral}</EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleWithdrawCollateralPress}>
-            <Space right>
-              <Fontello name="withdraw-collateral" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_withdraw_collateral}</EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleBorrowMorePress}>
-            <Space right>
-              <Fontello name="borrow-more" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_borrow_more}</EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleRepayPress}>
-            <Space right>
-              <Fontello name="make-payment" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_make_payment}</EdgeText>
-          </TappableCard>
-          <TappableCard marginRem={[0, 0, 1, 0]} onPress={handleLoanClosePress}>
-            <Space right>
-              <Fontello name="close-loan" size={theme.rem(2)} color={theme.iconTappable} />
-            </Space>
-            <EdgeText style={styles.actionLabel}>{s.strings.loan_action_close_loan}</EdgeText>
-          </TappableCard>
+          {actionCards}
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
@@ -219,6 +264,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1)
   },
   actionLabel: {
+    fontFamily: theme.fontFaceMedium,
+    alignSelf: 'center'
+  },
+  actionLabelDisabled: {
+    color: theme.deactivatedText,
     fontFamily: theme.fontFaceMedium,
     alignSelf: 'center'
   },

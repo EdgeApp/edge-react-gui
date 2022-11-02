@@ -12,15 +12,24 @@ import {
   JsonObject
 } from 'edge-core-js/types'
 
+import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
 
-export type BooleanMap = { [key: string]: boolean }
-export type NumberMap = { [key: string]: number }
-export type StringMap = { [key: string]: string }
-export type MapObject<T> = { [key: string]: T }
+export interface BooleanMap {
+  [key: string]: boolean
+}
+export interface NumberMap {
+  [key: string]: number
+}
+export interface StringMap {
+  [key: string]: string
+}
+export interface MapObject<T> {
+  [key: string]: T
+}
 
-export type GuiWallet = {
+export interface GuiWallet {
   id: string
   type: string
   name: string
@@ -51,7 +60,7 @@ export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
 })
 
 export type GuiDenomination = EdgeDenomination
-export type GuiCurrencyInfo = {
+export interface GuiCurrencyInfo {
   walletId: string
   pluginId?: string
   tokenId?: string
@@ -61,7 +70,7 @@ export type GuiCurrencyInfo = {
   exchangeDenomination: GuiDenomination
 }
 
-export type GuiContact = {
+export interface GuiContact {
   hasThumbnail: boolean
   emailAddresses: string[]
   postalAddresses: string[]
@@ -77,7 +86,7 @@ export type GuiContact = {
 /**
  * An EdgeSwapQuote, but with amounts pretty-printed.
  */
-export type GuiSwapInfo = {
+export interface GuiSwapInfo {
   quote: EdgeSwapQuote
   request: EdgeSwapRequest
 
@@ -90,26 +99,26 @@ export type GuiSwapInfo = {
   toFiat: string
 }
 
-export type ExchangeData = {
+export interface ExchangeData {
   primaryDisplayAmount: string
   primaryDisplayName: string
   secondaryDisplayAmount: string
   secondaryCurrencyCode: string
 }
 
-export type CreateWalletType = {
+export interface CreateWalletType {
   currencyName: string
   walletType: string
   pluginId: string
   currencyCode: string
 }
 
-export type CustomNodeSetting = {
+export interface CustomNodeSetting {
   isEnabled: boolean
   nodesList: string[]
 }
 
-export type GuiFiatType = {
+export interface GuiFiatType {
   label: string
   value: string
 }
@@ -120,21 +129,21 @@ export type TransactionListTx = EdgeTransaction & {
   unfilteredIndex: number
 }
 
-export type FlatListItem<T> = {
+export interface FlatListItem<T> {
   index: number
   item: T
 }
 
-export type DeviceDimensions = {
+export interface DeviceDimensions {
   keyboardHeight: number
 }
 
-export type GuiTouchIdInfo = {
+export interface GuiTouchIdInfo {
   isTouchEnabled: boolean
   isTouchSupported: boolean
 }
 
-export type GuiReceiveAddress = {
+export interface GuiReceiveAddress {
   metadata: EdgeMetadata
   publicAddress: string
   legacyAddress?: string
@@ -147,13 +156,7 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
   displayAmount?: string
 }
 
-export type SubcategorySearchResultData = {
-  index: number
-  item: string
-  separators: object
-}
-
-export type CurrencyConverter = {
+export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
 
@@ -173,7 +176,7 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
   exchangeDenomination: emptyGuiDenomination
 }
 
-export type PasswordReminder = {
+export interface PasswordReminder {
   needsPasswordCheck: boolean
   lastPasswordUseDate: number
   passwordUseCount: number
@@ -182,7 +185,7 @@ export type PasswordReminder = {
   nonPasswordLoginsLimit: number
 }
 
-export type SpendingLimits = {
+export interface SpendingLimits {
   transaction: {
     isEnabled: boolean
     amount: number
@@ -191,11 +194,11 @@ export type SpendingLimits = {
 
 export type SpendAuthType = 'pin' | 'none'
 
-export type GuiExchangeRates = {
+export interface GuiExchangeRates {
   [pair: string]: string
 }
 
-export type CountryData = {
+export interface CountryData {
   name: string
   'alpha-2': string
   filename?: string
@@ -208,13 +211,13 @@ export const asMostRecentWallet = asObject({
 
 export type MostRecentWallet = ReturnType<typeof asMostRecentWallet>
 
-export type FioAddress = {
+export interface FioAddress {
   name: string
   bundledTxs: number
   walletId: string
 }
 
-export type FioDomain = {
+export interface FioDomain {
   name: string
   expiration: string
   isPublic: boolean
@@ -222,12 +225,12 @@ export type FioDomain = {
   isFree?: boolean
 }
 
-export type FioPublicDomain = {
+export interface FioPublicDomain {
   domain: string
   free: boolean
 }
 
-export type FioRequest = {
+export interface FioRequest {
   fio_request_id: string
   content: {
     payee_public_address: string
@@ -244,7 +247,7 @@ export type FioRequest = {
   fioWalletId?: string
 }
 
-export type FioConnectionWalletItem = {
+export interface FioConnectionWalletItem {
   key: string
   id: string
   edgeWallet: EdgeCurrencyWallet
@@ -256,7 +259,7 @@ export type FioConnectionWalletItem = {
   isConnected: boolean
 }
 
-export type FioObtRecord = {
+export interface FioObtRecord {
   payer_fio_address: string
   payee_fio_address: string
   payer_fio_public_key: string
@@ -272,7 +275,7 @@ export type FioObtRecord = {
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
-export type GuiMakeSpendInfo = {
+export interface GuiMakeSpendInfo {
   currencyCode?: string
   metadata?: any
   nativeAmount?: string
@@ -293,7 +296,7 @@ export type GuiMakeSpendInfo = {
   alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
 }
 
-export type WcConnectionInfo = {
+export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
   timeConnected: string
@@ -302,7 +305,7 @@ export type WcConnectionInfo = {
   uri: string
   icon: string
 }
-export type wcGetConnection = {
+export interface wcGetConnection {
   chainId: number
   language?: string
   peerId: string
@@ -316,7 +319,7 @@ export type wcGetConnection = {
   uri: string
   timeConnected: number
 }
-export type AppConfig = {
+export interface AppConfig {
   appId?: string
   appName: string
   appNameShort: string
@@ -336,7 +339,7 @@ export type AppConfig = {
   website: string
   extraTab?: {
     webviewUrl: string
-    tabTitleKey: string
+    tabTitleKey: LocaleStringKey
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
@@ -346,7 +349,7 @@ export type AppConfig = {
  * We maintain a sorted wallet list in redux,
  * since it's quite expensive to calculate.
  */
-export type WalletListItem = {
+export interface WalletListItem {
   key: string
 
   // These will be set for token rows:
@@ -358,12 +361,12 @@ export type WalletListItem = {
   walletId: string
 }
 
-export type EdgeTokenId = {
+export interface EdgeTokenId {
   pluginId: string
   tokenId?: string
 }
 
-export type TempActionDisplayInfo = {
+export interface TempActionDisplayInfo {
   title: string
   message: string
   complete: boolean

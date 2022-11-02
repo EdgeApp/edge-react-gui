@@ -7,7 +7,7 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type Props<T> = {
+interface Props<T> {
   bridge: AirshipBridge<any>
   // Header Props
   title?: string

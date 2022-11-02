@@ -20,13 +20,13 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-type DispatchProps = {
+interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void
   ignoreAccountSwap: () => void
   removePromotion: (installerId: string) => Promise<void>
 }
 
-type StateProps = {
+interface StateProps {
   accountPlugins: PluginTweak[]
   accountReferral: AccountReferral
   exchanges: EdgePluginMap<EdgeSwapConfig>
@@ -35,7 +35,7 @@ type StateProps = {
 
 type Props = StateProps & DispatchProps & ThemeProps
 
-type State = {
+interface State {
   enabled: { [pluginId: string]: boolean }
 }
 

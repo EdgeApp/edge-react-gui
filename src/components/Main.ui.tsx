@@ -66,16 +66,13 @@ import { FioStakingChangeScene } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene } from './scenes/FioStakingOverviewScene'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene'
-import { LoanAddCollateralScene } from './scenes/Loans/LoanAddCollateralScene'
-import { LoanBorrowMoreScene } from './scenes/Loans/LoanBorrowMoreScene'
 import { LoanCloseScene } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene } from './scenes/Loans/LoanCreateScene'
 import { LoanDashboardScene } from './scenes/Loans/LoanDashboardScene'
 import { LoanDetailsScene } from './scenes/Loans/LoanDetailsScene'
-import { LoanMakeLoanPaymentScene } from './scenes/Loans/LoanRepayScene'
+import { LoanManageScene } from './scenes/Loans/LoanManageScene'
 import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
-import { LoanWithdrawCollateralScene } from './scenes/Loans/LoanWithdrawCollateralScene'
 import { LoginScene } from './scenes/LoginScene'
 import { ManageTokensScene } from './scenes/ManageTokensScene'
 import { NotificationScene } from './scenes/NotificationScene'
@@ -112,7 +109,7 @@ const RouterWithRedux = connect<
   // @ts-expect-error
 )(Router)
 
-type DispatchProps = {
+interface DispatchProps {
   registerDevice: () => void
 
   // Navigation actions:
@@ -160,6 +157,7 @@ export class MainComponent extends React.Component<Props> {
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
+            <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
             {this.renderTransactionDetailsView()}
             {this.renderTabView()}
           </Stack>
@@ -1015,41 +1013,8 @@ export class MainComponent extends React.Component<Props> {
               onLeft={Actions.pop}
             />
             <Scene
-              key="loanDeposit"
-              component={withNavigation(ifLoggedIn(LoanAddCollateralScene))}
-              navTransparent
-              // @ts-expect-error
-              renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-            <Scene
-              key="loanWithdraw"
-              component={withNavigation(ifLoggedIn(LoanWithdrawCollateralScene))}
-              navTransparent
-              // @ts-expect-error
-              renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-            <Scene
-              key="loanRepay"
-              component={withNavigation(ifLoggedIn(LoanMakeLoanPaymentScene))}
-              navTransparent
-              // @ts-expect-error
-              renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-            <Scene
-              key="loanBorrow"
-              component={withNavigation(ifLoggedIn(LoanBorrowMoreScene))}
+              key="loanManage"
+              component={withNavigation(ifLoggedIn(LoanManageScene))}
               navTransparent
               // @ts-expect-error
               renderTitle={<EdgeLogoHeader />}

@@ -16,7 +16,7 @@ import { IconCircle } from '../common/IconCircle'
 import { LadderLayout } from '../common/LadderLayout'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<number | undefined>
   autoLogoutTimeInSeconds: number
 }

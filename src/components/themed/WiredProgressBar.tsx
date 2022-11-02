@@ -4,11 +4,11 @@ import { Animated, Easing, View } from 'react-native'
 import { connect } from '../../types/reactRedux'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
-type StateProps = {
+interface StateProps {
   progress: number
 }
 
-type State = {
+interface State {
   isWalletProgressVisible: boolean
 }
 

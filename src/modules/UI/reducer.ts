@@ -7,7 +7,7 @@ import { settings, SettingsState } from '../../reducers/scenes/SettingsReducer'
 import { wallets, WalletsState } from '../../reducers/scenes/WalletsReducer'
 import { Action } from '../../types/reduxTypes'
 
-export type UiState = {
+export interface UiState {
   readonly fio: FioState
   readonly passwordReminder: PasswordReminderState
   readonly scenes: ScenesState

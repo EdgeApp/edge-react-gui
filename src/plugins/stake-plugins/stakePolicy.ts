@@ -1,7 +1,7 @@
 import { StakePluginPolicy } from './policies/types'
 import { AssetId, InfoServerResponse, StakePolicy, StakeProviderInfo } from './types'
 
-export type StakePolicyInfo = {
+export interface StakePolicyInfo {
   stakePolicyId: string
   stakeProviderInfo?: StakeProviderInfo
   parentPluginId: string

@@ -13,13 +13,13 @@ import s from '../locales/strings'
 import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
 
-export type CreateWalletOptions = {
+export interface CreateWalletOptions {
   walletName?: string
   walletType: string
   fiatCurrencyCode?: string
@@ -40,38 +40,46 @@ export const createWallet = async (account: EdgeAccount, { walletType, walletNam
   return out
 }
 
-export const createCurrencyWallet =
-  (walletName: string, walletType: string, fiatCurrencyCode?: string, importText?: string) => async (dispatch: Dispatch, getState: GetState) => {
+export function createCurrencyWallet(
+  walletName: string,
+  walletType: string,
+  fiatCurrencyCode?: string,
+  importText?: string
+): ThunkAction<Promise<EdgeCurrencyWallet>> {
+  return async (dispatch, getState) => {
     const state = getState()
     fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
     return createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
   }
+}
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export const fetchAccountActivationInfo = (walletType: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const currencyPluginName = getPluginId(walletType)
-  const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
-  try {
-    const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-    const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
-    const activationInfo = await Promise.all([supportedCurrencies, activationCost])
-    const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
-    dispatch({
-      type: 'ACCOUNT_ACTIVATION_INFO',
-      data: {
-        supportedCurrencies: modifiedSupportedCurrencies,
-        activationCost: activationInfo[1]
-      }
-    })
-  } catch (error: any) {
-    showError(error)
+export function fetchAccountActivationInfo(walletType: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    const currencyPluginName = getPluginId(walletType)
+    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
+    try {
+      const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
+      const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
+      const activationInfo = await Promise.all([supportedCurrencies, activationCost])
+      const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
+      dispatch({
+        type: 'ACCOUNT_ACTIVATION_INFO',
+        data: {
+          supportedCurrencies: modifiedSupportedCurrencies,
+          activationCost: activationInfo[1]
+        }
+      })
+    } catch (error: any) {
+      showError(error)
+    }
   }
 }
 
-export const fetchWalletAccountActivationPaymentInfo =
-  (paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
+export function fetchWalletAccountActivationPaymentInfo(paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
+  return (dispatch, getState) => {
     try {
       const networkTimeout = setTimeout(() => {
         showError('Network Timeout')
@@ -98,32 +106,35 @@ export const fetchWalletAccountActivationPaymentInfo =
       showError(error)
     }
   }
+}
 
-export const checkHandleAvailability = (walletType: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
-  const state = getState()
-  const { account } = state.core
-  const currencyPluginName = getPluginId(walletType)
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-    if (data.result === 'AccountAvailable') {
-      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
+export function checkHandleAvailability(walletType: string, accountName: string): ThunkAction<void> {
+  return async (dispatch, getState) => {
+    dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+    const state = getState()
+    const { account } = state.core
+    const currencyPluginName = getPluginId(walletType)
+    const currencyPlugin = account.currencyConfig[currencyPluginName]
+    try {
+      const data = await currencyPlugin.otherMethods.validateAccount(accountName)
+      if (data.result === 'AccountAvailable') {
+        dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
+      }
+    } catch (error: any) {
+      console.log('checkHandleAvailability error: ', error)
+      let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
+      if (error.name === 'ErrorAccountUnavailable') {
+        data = 'UNAVAILABLE'
+      } else if (error.name === 'ErrorInvalidAccountName') {
+        data = 'INVALID'
+      }
+      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
     }
-  } catch (error: any) {
-    console.log('checkHandleAvailability error: ', error)
-    let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
-    if (error.name === 'ErrorAccountUnavailable') {
-      data = 'UNAVAILABLE'
-    } else if (error.name === 'ErrorInvalidAccountName') {
-      data = 'INVALID'
-    }
-    dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
 }
 
-export const createAccountTransaction =
-  (createdWalletId: string, accountName: string, paymentWalletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+export function createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     // check available funds
     const state = getState()
     const { account } = state.core
@@ -186,24 +197,27 @@ export const createAccountTransaction =
       dispatch(createHandleUnavailableModal(createdWalletId, accountName))
     }
   }
+}
 
-export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  account.changeWalletStates({
-    [newWalletId]: {
-      deleted: true
-    }
-  })
-  await Airship.show<'ok' | undefined>(bridge => (
-    <ButtonsModal
-      bridge={bridge}
-      title={s.strings.create_wallet_account_handle_unavailable_modal_title}
-      message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
-      buttons={{ ok: { label: s.strings.string_ok } }}
-    />
-  ))
-  Actions.pop()
+export function createHandleUnavailableModal(newWalletId: string, accountName: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    account.changeWalletStates({
+      [newWalletId]: {
+        deleted: true
+      }
+    })
+    await Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.create_wallet_account_handle_unavailable_modal_title}
+        message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
+    Actions.pop()
+  }
 }
 
 export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
@@ -229,28 +243,30 @@ export const splitCreateWalletItems = (createItems: WalletCreateItem[]): { newWa
   return { newWalletItems, newTokenItems }
 }
 
-export const enableTokensAcrossWallets = (newTokenItems: TokenWalletCreateItem[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
+export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { currencyWallets } = state.core.account
 
-  const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
-    const { createWalletIds, tokenId } = item
+    const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
+      const { createWalletIds, tokenId } = item
 
-    const walletId = createWalletIds[0]
-    if (map[walletId] == null) map[walletId] = []
-    map[walletId].push(tokenId)
+      const walletId = createWalletIds[0]
+      if (map[walletId] == null) map[walletId] = []
+      map[walletId].push(tokenId)
 
-    return map
-  }, {})
+      return map
+    }, {})
 
-  // Create the enableToken promises to be promise.all'd later
-  const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
-    const wallet = currencyWallets[walletId]
-    if (wallet == null) return
-    return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
-  })
+    // Create the enableToken promises to be promise.all'd later
+    const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
+      const wallet = currencyWallets[walletId]
+      if (wallet == null) return
+      return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
+    })
 
-  await Promise.all(promises)
+    await Promise.all(promises)
+  }
 }
 
 export const getUniqueWalletName = (account: EdgeAccount, pluginId: string): string => {

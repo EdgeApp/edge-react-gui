@@ -25,7 +25,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanStatus'>
   route: RouteProp<'loanStatus'>
 }
@@ -41,21 +41,22 @@ export const LoanStatusScene = (props: Props) => {
   const buttonMargin = [2, 1, 2, 1]
 
   const actionQueueMap: ActionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
-  const [steps] = useAsyncValue(async () => {
+  const [displayInfo] = useAsyncValue<ActionDisplayInfo>(async () => {
     const actionQueueItem = actionQueueMap[actionQueueId]
 
     // 2. The first step of a seq does not get set to 'active'
     const { program, state } = actionQueueItem
     const displayInfo = await getActionProgramDisplayInfo(account, program, state)
 
-    if (displayInfo.status instanceof Error) return [displayInfo]
+    if (displayInfo != null && displayInfo.status instanceof Error) return displayInfo
 
-    // Flatten steps
-    const steps = [...displayInfo.steps].reduce((steps: ActionDisplayInfo[], step) => [...steps, ...(step.steps.length > 0 ? step.steps : [step])], [])
-
-    return steps
+    return displayInfo
   }, [actionQueueMap])
 
+  // All values derived from displayInfo while it's null are hidden by FillLoader
+  const steps = displayInfo != null ? displayInfo.steps : []
+  const completeMessage = displayInfo != null ? displayInfo.completeMessage : undefined
+  const { title: completeTitle, message: completeBody } = completeMessage ?? { title: '', message: '' }
   // Show a confirmation modal before aborting the ActionQueue
   const handleCancelPress = useHandler(async () => {
     const approve = await Airship.show<boolean>(bridge => (
@@ -78,12 +79,12 @@ export const LoanStatusScene = (props: Props) => {
     else navigation.navigate('loanDashboard', {})
   })
 
-  const isProgramDone = steps != null && steps[steps.length - 1].status === 'done'
+  const isProgramDone = steps.length > 0 && steps[steps.length - 1].status === 'done'
 
   return (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
       <SceneHeader underline title={s.strings.loan_status_title} />
-      {steps == null ? (
+      {displayInfo == null ? (
         <FillLoader />
       ) : (
         <View style={{ flex: 1 }}>
@@ -93,8 +94,8 @@ export const LoanStatusScene = (props: Props) => {
           <View style={styles.footerContainer}>
             {isProgramDone ? (
               <>
-                <EdgeText style={styles.textCompleteTitle}>{s.strings.exchange_congratulations}</EdgeText>
-                <EdgeText style={styles.textCompleteInfo}>{s.strings.loan_status_complete}</EdgeText>
+                <EdgeText style={styles.textCompleteTitle}>{completeTitle}</EdgeText>
+                <EdgeText style={styles.textCompleteInfo}>{completeBody}</EdgeText>
               </>
             ) : null}
           </View>

@@ -8,51 +8,57 @@ import { SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings'
-import { Dispatch, GetState } from '../types/reduxTypes'
+import { GetState, ThunkAction } from '../types/reduxTypes'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 
-export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
-  setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
-    .then(() => {
-      dispatch({
-        type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
-        data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+export function toggleAccountBalanceVisibility(): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
+    setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
+      .then(() => {
+        dispatch({
+          type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+          data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+        })
       })
+      .catch(showError)
+  }
+}
+
+export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    // For speed efficiency, dispatch is independent of persistence
+    dispatch({
+      type: 'UI/SETTINGS/SET_WALLETS_SORT',
+      data: { walletsSort }
     })
-    .catch(showError)
+    setWalletsSort(account, walletsSort).catch(showError)
+  }
 }
 
-export const updateWalletsSort = (walletsSort: SortOption) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  // For speed efficiency, dispatch is independent of persistence
-  dispatch({
-    type: 'UI/SETTINGS/SET_WALLETS_SORT',
-    data: { walletsSort }
-  })
-  setWalletsSort(account, walletsSort).catch(showError)
-}
-
-export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
-  if (currencyCodeMatches) {
-    try {
-      for (const match of currencyCodeMatches) {
-        const currencyCode = match.toUpperCase().replace(/%/g, '')
-        const address = await getFirstCurrencyAddress(currencyCode, getState)
-        if (!address) continue
-        uri = uri.replace(match, address)
+export function linkReferralWithCurrencies(uri: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
+    if (currencyCodeMatches) {
+      try {
+        for (const match of currencyCodeMatches) {
+          const currencyCode = match.toUpperCase().replace(/%/g, '')
+          const address = await getFirstCurrencyAddress(currencyCode, getState)
+          if (!address) continue
+          uri = uri.replace(match, address)
+        }
+        Linking.openURL(uri)
+      } catch (error: any) {
+        showError(error)
       }
+    } else {
       Linking.openURL(uri)
-    } catch (error: any) {
-      showError(error)
     }
-  } else {
-    Linking.openURL(uri)
   }
 }
 

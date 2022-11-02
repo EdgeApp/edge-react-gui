@@ -1,8 +1,10 @@
 import { add } from 'biggystring'
 
-import { ApprovableAction } from '../../../plugins/borrow-plugins/types'
+import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
+import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
 import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
 import { makeWyreClient } from '../WyreClient'
 
@@ -21,7 +23,7 @@ import { makeWyreClient } from '../WyreClient'
  * developer (via comments).
  */
 export async function evaluateAction(context: ExecutionContext, program: ActionProgram, state: ActionProgramState): Promise<ExecutableAction> {
-  const { account } = context
+  const { account, dispatch } = context
   const { actionOp } = program
   const { effect } = state
 
@@ -198,18 +200,15 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
       const approvableAction = await borrowEngine.borrow({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-deposit': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -217,18 +216,15 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
       const approvableAction = await borrowEngine.deposit({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-repay': {
       const { borrowPluginId, nativeAmount, walletId, tokenId, fromTokenId } = actionOp
@@ -236,18 +232,15 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
       const approvableAction = await borrowEngine.repay({ nativeAmount, tokenId, fromTokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'loan-withdraw': {
       const { borrowPluginId, nativeAmount, walletId, tokenId } = actionOp
@@ -255,18 +248,15 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const wallet = await account.waitForCurrencyWallet(walletId)
       if (wallet == null) throw new Error(`Wallet '${walletId}' not found`)
 
-      // Get the borrow-plugin
-      const borrowPlugin = queryBorrowPlugins({ borrowPluginId })[0]
-
+      const borrowPlugin: BorrowPlugin | undefined = queryBorrowPlugins({ borrowPluginId })[0]
       if (borrowPlugin == null) throw new Error(`Borrow plugin '${borrowPluginId}' not found`)
 
-      // Make borrow engine for wallet
-      const borrowEngine = await borrowPlugin.makeBorrowEngine(wallet)
+      const { borrowEngine } = await dispatch(getOrCreateLoanAccount(borrowPlugin, wallet))
 
       // Do the thing
       const approvableAction = await borrowEngine.withdraw({ nativeAmount, tokenId })
 
-      return await approvableActionToExecutableAction(approvableAction)
+      return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'swap': {
       const { fromTokenId, fromWalletId, nativeAmount, toTokenId, toWalletId, amountFor } = actionOp
@@ -361,9 +351,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
   }
 }
 
-async function approvableActionToExecutableAction(approvableAction: ApprovableAction): Promise<ExecutableAction> {
+async function approvableActionToExecutableAction(borrowEngine: BorrowEngine, approvableAction: ApprovableAction): Promise<ExecutableAction> {
   // Execute:
   const execute = async (): Promise<ExecutionOutput> => {
+    await waitForBorrowEngineSync(borrowEngine)
+
     const broadcastTxs = await approvableAction.approve()
     const broadcastTx = broadcastTxs[broadcastTxs.length - 1]
     return {

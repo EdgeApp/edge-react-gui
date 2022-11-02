@@ -4,11 +4,26 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { GuiSwapInfo } from '../../types/types'
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
-    const swapInfo = {
+
+    const fakeAccount: any = {
+      swapConfig: {
+        ChangeNow: {
+          swapInfo: {
+            pluginId: 'ChangeNow',
+            displayName: 'ChangeNow',
+            orderUri: 'ChangeNow.ChangeNow',
+            supportEmail: 'ChangeNow@ChangeNow'
+          }
+        }
+      }
+    }
+
+    const swapInfo: GuiSwapInfo = {
       quote: {
         isEstimate: true,
         fromNativeAmount: '10000',
@@ -18,26 +33,9 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
           nativeAmount: '1'
         },
         pluginId: 'ChangeNow',
-        approve: async () => [
-          {
-            txid: 'txid1',
-            date: 1524476980,
-            currencyCode: 'BTC',
-            blockHeight: 500000,
-            nativeAmount: '123000000',
-            networkFee: '1000',
-            ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
-            signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
-            parentNetworkFee: '10002',
-            metadata: {
-              name: 'Crazy Person',
-              category: 'Income: Mo Money',
-              notes: 'Hell yeah! Thanks for the fish <<&&>>',
-              amountFiat: 12000.45
-            },
-            deviceDescription: 'iphone12'
-          },
-          {
+        approve: async () => ({
+          orderId: 'demo',
+          transaction: {
             txid: 'txid2',
             date: 1524486980,
             currencyCode: 'BTC',
@@ -55,7 +53,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
             },
             deviceDescription: 'iphone12'
           }
-        ],
+        }),
         close: async () => undefined
       },
       request: {
@@ -64,44 +62,33 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         },
         toWallet: {
           fiatCurrencyCode: 'USD'
-        },
-        fee: '1',
-        fromDisplayAmount: '1',
-        fromFiat: '1',
-        fromTotalFiat: '1',
-        toDisplayAmount: '1',
-        toFiat: '1'
-      }
-    }
-    const props: any = {
-      route: {
-        params: { swapInfo, onApprove: () => undefined }
-      },
-      account: {
-        swapConfig: {
-          ChangeNow: {
-            swapInfo: {
-              pluginId: 'ChangeNow',
-              displayName: 'ChangeNow',
-              orderUri: 'ChangeNow.ChangeNow',
-              supportEmail: 'ChangeNow@ChangeNow'
-            }
-          }
         }
-      },
-      fromDenomination: 'BTC',
-      fromWalletCurrencyName: { fromDenomination: '' },
-      pending: true,
-      toDenomination: 'ETH',
-      toWalletCurrencyName: { fromDenomination: '' },
-
-      // @ts-expect-error
-      shift: (swapInfo, onApprove) => undefined,
-      // @ts-expect-error
-      timeExpired: (swapInfo, onApprove) => undefined,
-      theme: getTheme()
+      } as any,
+      fee: '1',
+      fromDisplayAmount: '1',
+      fromFiat: '1',
+      fromTotalFiat: '1',
+      toDisplayAmount: '1',
+      toFiat: '1'
     }
-    const actual = renderer.render(<CryptoExchangeQuoteScreenComponent {...props} />)
+
+    const actual = renderer.render(
+      <CryptoExchangeQuoteScreenComponent
+        route={{
+          name: 'exchangeQuote',
+          params: { swapInfo, onApprove: () => undefined }
+        }}
+        account={fakeAccount}
+        fromDenomination="BTC"
+        fromWalletCurrencyName={{ fromDenomination: '' } as any}
+        pending
+        toDenomination="ETH"
+        toWalletCurrencyName={{ fromDenomination: '' } as any}
+        shift={(swapInfo, onApprove) => undefined}
+        timeExpired={(swapInfo, onApprove) => undefined}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

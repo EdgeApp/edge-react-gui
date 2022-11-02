@@ -13,7 +13,7 @@ import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'notificationSettings'>
 }
 

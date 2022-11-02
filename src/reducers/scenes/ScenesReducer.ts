@@ -8,7 +8,7 @@ import { sendConfirmation, SendConfirmationState } from './SendConfirmationReduc
 import { transactionDetails, TransactionDetailsState } from './TransactionDetailsReducer'
 import { transactionList, TransactionListState } from './TransactionListReducer'
 
-export type ScenesState = {
+export interface ScenesState {
   readonly createWallet: CreateWalletState
   readonly fioAddress: FioAddressSceneState
   readonly requestType: RequestTypeState

@@ -17,14 +17,14 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'changeMiningFee'>
   route: RouteProp<'changeMiningFee'>
 }
 
 type Props = OwnProps & ThemeProps
 
-type State = {
+interface State {
   networkFeeOption: FeeOption
   customNetworkFee: JsonObject
 }

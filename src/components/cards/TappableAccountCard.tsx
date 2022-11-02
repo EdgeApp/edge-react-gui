@@ -10,7 +10,7 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { TappableCard } from './TappableCard'
 
-type TappableAccountCardProps = {
+interface TappableAccountCardProps {
   emptyLabel: string
   onPress: () => void
   selectedAsset: SelectableAsset
