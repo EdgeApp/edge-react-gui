@@ -41,7 +41,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
-import { AddressTile, ChangeAddressResult } from '../tiles/AddressTile'
+import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
@@ -128,10 +128,17 @@ const SendComponent = React.memo((props: Props) => {
   })
 
   const renderAddressAmountTile = useHandler((index: number, spendTarget: EdgeSpendTarget) => {
-    const { publicAddress, nativeAmount } = spendTarget
+    const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
+    const { fioAddress } = otherParams
+    let title = ''
+    if (fioAddress != null) {
+      title = `Send To (${fioAddress}) ${publicAddress}`
+    } else {
+      title = `Send To ${publicAddress}`
+    }
     return (
       <EditableAmountTile
-        title={`Send To ${publicAddress}`}
+        title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
         wallet={coreWallet}
@@ -157,10 +164,11 @@ const SendComponent = React.memo((props: Props) => {
   const renderAddressTile = useHandler((index: number, spendTarget: EdgeSpendTarget) => {
     if (coreWallet != null && !hiddenTilesMap.address) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
-      const { publicAddress = '' } = spendTarget
+      const { publicAddress = '', otherParams = {} } = spendTarget
+      const { fioAddress } = otherParams
       const title = s.strings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
-        <AddressTile
+        <AddressTile2
           title={title}
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
@@ -169,6 +177,7 @@ const SendComponent = React.memo((props: Props) => {
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
           isCameraOpen={!!openCamera}
+          fioToAddress={fioAddress}
           ref={() => {}}
         />
       )
