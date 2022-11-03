@@ -66,7 +66,8 @@ export function CategoryModal(props: Props) {
     }
 
     // Filter and sort this new list:
-    const target = subcategory.toLocaleLowerCase()
+    // The `toLocaleLowerCase` method fails for blank strings on Android:
+    const target = subcategory === '' ? '' : subcategory.toLocaleLowerCase()
     return rows
       .filter(row => row.display.toLocaleLowerCase().includes(target))
       .sort((a, b) => {
