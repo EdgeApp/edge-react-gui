@@ -560,10 +560,10 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
     swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
   }
+  const destinationWallet = useSelector(state => (swapData != null ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined))
   const destinationDenomination = useSelector(state =>
-    swapData ? getDisplayDenomination(state, wallet.currencyInfo.pluginId, swapData.payoutCurrencyCode) : undefined
+    swapData != null && destinationWallet != null ? getDisplayDenomination(state, destinationWallet.pluginId, swapData.payoutCurrencyCode) : undefined
   )
-  const destinationWallet = useSelector(state => (swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined))
 
   return (
     <TransactionDetailsComponent
