@@ -410,12 +410,12 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
 
     // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
-    const isAcceleratable = !!(
-      edgeTransaction.spendTargets?.length &&
-      currencyInfo?.canReplaceByFee === true &&
-      edgeTransaction.confirmations === 'unconfirmed' &&
-      edgeTransaction.otherParams?.nonceUsed
-    )
+    // Disabled until we fix a bug:
+    const isAcceleratable = false
+    // edgeTransaction.spendTargets?.length &&
+    // currencyInfo?.canReplaceByFee === true &&
+    // edgeTransaction.confirmations === 'unconfirmed' &&
+    // edgeTransaction.otherParams?.nonceUsed != null
 
     const categoriesText = formatCategory(splitCategory(category))
 
