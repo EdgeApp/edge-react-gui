@@ -1,11 +1,13 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue/WyreClient'
@@ -13,6 +15,7 @@ import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useCurrencyFiatRate } from '../../../hooks/useTokenDisplayData'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
@@ -235,6 +238,8 @@ export const LoanCreateScene = (props: Props) => {
   // #region Handlers
   // -----------------------------------------------------------------------------
 
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-with-aave'))
+
   /**
    * Show a wallet picker modal filtered by the allowed assets defined by the
    * "Source of Collateral" or "Fund Destination" inputs
@@ -327,7 +332,16 @@ export const LoanCreateScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_create_title} />
+      <SceneHeader
+        underline
+        title={s.strings.loan_create_title}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <View style={styles.sceneContainer}>
           {/* Amount  to borrow */}

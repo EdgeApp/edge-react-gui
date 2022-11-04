@@ -2,11 +2,14 @@ import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { createWallet } from '../../../actions/CreateWalletActions'
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
 import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useHandler } from '../../../hooks/useHandler'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
@@ -121,6 +124,7 @@ export const LoanDashboardScene = (props: Props) => {
         .finally(() => setIsNewLoanLoading(false))
     }
   })
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-dashboard'))
 
   //
   // Render
@@ -169,7 +173,16 @@ export const LoanDashboardScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.loan_dashboard_title} />
+      <SceneHeader
+        underline
+        title={s.strings.loan_dashboard_title}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
