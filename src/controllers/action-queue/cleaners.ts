@@ -213,12 +213,12 @@ export const asActionEffect: Cleaner<ActionEffect> = asEither(
 // Action Program
 //
 
-const asActionProgramCompleteMessage = asObject<ActionProgramCompleteMessage>({ title: asString, message: asString })
+export const asActionProgramCompleteMessage = asObject<ActionProgramCompleteMessage>({ title: asString, message: asString })
 export const asActionProgram = asObject<ActionProgram>({
   programId: asString,
   actionOp: asActionOp,
   mockMode: asOptional(asBoolean),
-  completeMessage: asActionProgramCompleteMessage
+  completeMessage: asOptional(asActionProgramCompleteMessage)
 })
 
 export const asActionProgramState = asObject<ActionProgramState>({
