@@ -1,0 +1,16 @@
+diff --git a/ios/edge/edge.entitlements b/ios/edge/edge.entitlements
+index 3e39d92d5..f68c2be20 100644
+--- a/ios/edge/edge.entitlements
++++ b/ios/edge/edge.entitlements
+@@ -6,9 +6,8 @@
+ 	<string>development</string>
+ 	<key>com.apple.developer.associated-domains</key>
+ 	<array>
+-		<string>applinks:www.edge.app</string>
+-		<string>applinks:dl.edge.app</string>
+-		<string>applinks:deep.edge.app</string>
++		<string>applinks:dl.coinhubatm.com</string>
++		<string>applinks:dl.coinhubatm.app</string>
+ 	</array>
+ </dict>
+ </plist>

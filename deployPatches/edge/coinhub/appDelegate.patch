@@ -1,0 +1,13 @@
+diff --git a/ios/edge/AppDelegate.m b/ios/edge/AppDelegate.m
+index e63c1fc5b..2b9c3632a 100644
+--- a/ios/edge/AppDelegate.m
++++ b/ios/edge/AppDelegate.m
+@@ -72,7 +72,7 @@ - (BOOL)application:(UIApplication *)application
+                                                    moduleName:@"edge"
+                                             initialProperties:nil];
+ 
+-  [RCTSplashScreen open:rootView withImageNamed:@"splash"];
++  [RCTSplashScreen open:rootView withImageNamed:@"splash-coinhub"];
+   if (@available(iOS 13.0, *)) {
+       rootView.backgroundColor = [UIColor systemBackgroundColor];
+   } else {
