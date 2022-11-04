@@ -1,4 +1,4 @@
-import { eq, mul, toFixed } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
@@ -10,15 +10,15 @@ import { Tile } from './Tile'
 interface Props {
   title: string
   currentValue: string
+  currentValueColor?: string
   futureValue: string
+  futureValueColor?: string
 }
 
 const PercentageChangeArrowTileComponent = (props: Props) => {
-  const { title, currentValue, futureValue } = props
   const theme = useTheme()
+  const { title, currentValue, currentValueColor = theme.primaryText, futureValue, futureValueColor = theme.primaryText } = props
   const styles = getStyles(theme)
-
-  const futureValuecolor = eq(currentValue, futureValue) ? theme.primaryText : theme.positiveText
 
   const currentValueString = `${toFixed(mul(currentValue, '100'), 1, 1)}%`
   const futureValueString = `${toFixed(mul(futureValue, '100'), 1, 1)}%`
@@ -37,9 +37,9 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
     <Tile type="static" title={title}>
       <Card marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
         <View style={styles.container}>
-          <EdgeText>{currentValueString}</EdgeText>
+          <EdgeText style={{ color: currentValueColor }}>{currentValueString}</EdgeText>
           {renderArrow()}
-          <EdgeText style={{ color: futureValuecolor }}>{futureValueString}</EdgeText>
+          <EdgeText style={{ color: futureValueColor }}>{futureValueString}</EdgeText>
         </View>
       </Card>
     </Tile>
