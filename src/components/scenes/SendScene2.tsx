@@ -78,7 +78,7 @@ const SendComponent = React.memo((props: Props) => {
     walletId: initWalletId = '',
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
-    openCamera,
+    openCamera = false,
     infoTiles,
     allowedCurrencyCodes,
     lockTilesMap = {},
@@ -200,7 +200,7 @@ const SendComponent = React.memo((props: Props) => {
           onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
-          isCameraOpen={!!openCamera}
+          isCameraOpen={openCamera}
           fioToAddress={fioAddress}
           ref={() => {}}
         />
