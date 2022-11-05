@@ -27,7 +27,7 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, reco
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../types/routerTypes'
-import { GuiExchangeRates } from '../../types/types'
+import { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
@@ -52,6 +52,33 @@ import { Tile } from '../tiles/Tile'
 type Props = {
   navigation: NavigationProp<'send2'>
   route: RouteProp<'send2'>
+}
+
+export type SendScene2Params = {
+  walletId: string
+  tokenId?: string
+  allowedCurrencyCodes?: string[]
+  spendInfo?: EdgeSpendInfo
+  openCamera?: boolean
+  lockTilesMap?: {
+    address?: boolean
+    wallet?: boolean
+    amount?: boolean
+  }
+  hiddenTilesMap?: {
+    address?: boolean
+    amount?: boolean
+    fioAddressSelect?: boolean
+  }
+  infoTiles?: Array<{ label: string; value: string }>
+  dismissAlert?: boolean
+  fioAddress?: string
+  fioPendingRequest?: FioRequest
+  isSendUsingFioAddress?: boolean
+  onBack?: () => void
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  beforeTransaction?: () => Promise<void>
+  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
 }
 
 interface FioSenderInfo {

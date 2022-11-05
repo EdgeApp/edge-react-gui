@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import { LoanManageActionOpType } from '../components/scenes/Loans/LoanManageScene'
+import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
@@ -262,32 +263,7 @@ export type ParamList = {
     }
     infoTiles?: Array<{ label: string; value: string }>
   }
-  send2: {
-    walletId: string
-    tokenId?: string
-    allowedCurrencyCodes?: string[]
-    spendInfo?: EdgeSpendInfo
-    openCamera?: boolean
-    lockTilesMap?: {
-      address?: boolean
-      wallet?: boolean
-      amount?: boolean
-    }
-    hiddenTilesMap?: {
-      address?: boolean
-      amount?: boolean
-      fioAddressSelect?: boolean
-    }
-    infoTiles?: Array<{ label: string; value: string }>
-    dismissAlert?: boolean
-    fioAddress?: string
-    fioPendingRequest?: FioRequest
-    isSendUsingFioAddress?: boolean
-    onBack?: () => void
-    onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
-    beforeTransaction?: () => Promise<void>
-    alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
-  }
+  send2: SendScene2Params
   settingsOverview: {}
   settingsOverviewTab: {}
   spendingLimits: {}
