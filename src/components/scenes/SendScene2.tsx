@@ -78,7 +78,7 @@ const SendComponent = (props: Props) => {
     walletId: initWalletId = '',
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
-    openCamera,
+    openCamera = false,
     infoTiles,
     lockTilesMap = {},
     hiddenTilesMap = {},
@@ -201,7 +201,7 @@ const SendComponent = (props: Props) => {
           onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
-          isCameraOpen={!!openCamera}
+          isCameraOpen={openCamera}
           fioToAddress={fioAddress}
         />
       )

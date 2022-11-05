@@ -91,10 +91,10 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const handleSend = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
-    navigation.navigate('send', {
-      selectedWalletId: wallet.id,
-      selectedCurrencyCode: currencyCode,
-      isCameraOpen: true
+    navigation.navigate('send2', {
+      walletId: wallet.id,
+      tokenId,
+      openCamera: true
     })
   })
 
