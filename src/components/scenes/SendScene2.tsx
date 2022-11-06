@@ -79,9 +79,14 @@ const SendComponent = React.memo((props: Props) => {
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
     openCamera,
+    infoTiles,
     allowedCurrencyCodes,
     lockTilesMap = {},
-    hiddenTilesMap = {}
+    hiddenTilesMap = {},
+    onDone,
+    onBack,
+    beforeTransaction,
+    alternateBroadcast
   } = route.params
 
   const [walletId, setWalletId] = useState<string>(initWalletId)
@@ -517,6 +522,11 @@ const SendComponent = React.memo((props: Props) => {
     }
   })
 
+  const renderInfoTiles = useHandler(() => {
+    if (!infoTiles || !infoTiles.length) return null
+    return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
+  })
+
   const renderAuthentication = useHandler(() => {
     if (!pinSpendingLimitsEnabled) return
     if (!spendingLimitExceeded) return
@@ -595,10 +605,6 @@ const SendComponent = React.memo((props: Props) => {
   const handleSliderComplete = async (resetSlider: () => void) => {
     // TODO:
     // 1. FIO functionality
-    // 2. onBack
-    // 3. onDone
-    // 4. beforeTransaction
-    // 5. alternateBroadcast
 
     if (edgeTransaction == null) return
     if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
@@ -610,13 +616,25 @@ const SendComponent = React.memo((props: Props) => {
         return
       }
     }
+
+    try {
+      if (beforeTransaction != null) await beforeTransaction()
+    } catch (e: any) {
+      return
+    }
+
     try {
       if (fioSender?.fioWallet != null && fioSender?.fioAddress != null) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
 
       const signedTx = await coreWallet.signTx(edgeTransaction)
-      const broadcastedTx = await coreWallet.broadcastTx(signedTx)
+      let broadcastedTx: EdgeTransaction
+      if (alternateBroadcast != null) {
+        broadcastedTx = await alternateBroadcast(signedTx)
+      } else {
+        broadcastedTx = await coreWallet.broadcastTx(signedTx)
+      }
 
       // Figure out metadata
       let payeeName: string | undefined
@@ -688,6 +706,14 @@ const SendComponent = React.memo((props: Props) => {
       }
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
+
+      if (onDone) {
+        onDone(null, broadcastedTx)
+      } else {
+        Actions.replace('transactionDetails', {
+          edgeTransaction: broadcastedTx
+        })
+      }
       Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
         {
           onPress() {},
@@ -695,10 +721,6 @@ const SendComponent = React.memo((props: Props) => {
           text: s.strings.string_ok
         }
       ])
-
-      Actions.replace('transactionDetails', {
-        edgeTransaction: broadcastedTx
-      })
     } catch (e: any) {
       resetSlider()
       console.log(e)
@@ -739,6 +761,12 @@ const SendComponent = React.memo((props: Props) => {
       ])
     }
   }
+
+  React.useEffect(() => {
+    return () => {
+      onBack && onBack()
+    }
+  }, [])
 
   // Calculate the transaction
   useAsyncEffect(async () => {
@@ -802,6 +830,7 @@ const SendComponent = React.memo((props: Props) => {
         {renderMetadataNotes()}
         {renderSelectFioAddress()}
         {renderUniqueIdentifier()}
+        {renderInfoTiles()}
         {renderAuthentication()}
         <View style={styles.footer}>
           {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
