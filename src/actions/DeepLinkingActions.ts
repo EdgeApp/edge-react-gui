@@ -55,7 +55,8 @@ export function retryPendingDeepLink(): ThunkAction<void> {
  * Launches a link if it app is able to do so.
  */
 function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
-  const { activeWalletIds, currencyWallets, username } = state.core.account
+  const { account } = state.core
+  const { activeWalletIds, currencyWallets, username } = account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
 
@@ -130,7 +131,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     }
 
     case 'bitPay': {
-      launchBitPay(link.uri, { currencyWallets }).catch(showError)
+      launchBitPay(account, link.uri, { currencyWallets }).catch(showError)
       return true
     }
 
