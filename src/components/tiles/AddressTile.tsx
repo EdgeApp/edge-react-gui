@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
 import { AppState, TouchableOpacity, View } from 'react-native'
@@ -38,6 +38,7 @@ type OwnProps = {
   fioToAddress?: string
 }
 type StateProps = {
+  account: EdgeAccount
   fioPlugin?: EdgeCurrencyConfig
 }
 type State = {
@@ -129,7 +130,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchBitPay(parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
+        await launchBitPay(this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
 
         return
       }
@@ -148,7 +149,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          await launchBitPay(this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
@@ -278,6 +279,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
+    account: state.core.account,
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
