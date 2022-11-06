@@ -7,7 +7,6 @@ import URL from 'url-parse'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
-import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived'
 import { upgradeCurrencyCodes, WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
@@ -252,21 +251,6 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
         return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
-      }
-
-      if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
-        // BIP70 URI
-        const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, edgeWallet)
-
-        if (guiMakeSpendInfo != null) {
-          Actions.push('send', {
-            guiMakeSpendInfo,
-            selectedWalletId,
-            selectedCurrencyCode: currencyCode
-          })
-        }
-
-        return
       }
 
       // PUBLIC ADDRESS URI
