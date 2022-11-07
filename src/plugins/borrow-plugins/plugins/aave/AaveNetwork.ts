@@ -9,8 +9,7 @@ import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
 import VARIABLE_DEBT_TOKEN_ABI from './abi/VARIABLE_DEBT_TOKEN_ABI.json'
 
 export interface AaveNetworkBlueprint {
-  // @ts-expect-error
-  provider: ethers.Provider
+  provider: ethers.providers.Provider
 
   // Addresses
   contractAddresses: {
@@ -22,8 +21,7 @@ export interface AaveNetworkBlueprint {
 }
 
 export interface AaveNetwork {
-  // @ts-expect-error
-  provider: ethers.Provider
+  provider: ethers.providers.Provider
 
   // Contracts
   lendingPool: ethers.Contract
@@ -33,16 +31,16 @@ export interface AaveNetwork {
   // Helpers
   getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
   getReserveTokenContracts: (address: string) => Promise<{
-    aToken: any
-    sToken: any
-    vToken: any
+    aToken: ethers.Contract
+    sToken: ethers.Contract
+    vToken: ethers.Contract
   }>
   getReserveTokenBalances: (address: string) => Promise<Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }>>
   getReserveTokenRates: (tokenAddress: string) => Promise<{
     variableApr: number
     stableApr: number
   }>
-  makeTokenContract: (tokenAddress: string) => ethers.Contract
+  makeTokenContract: (tokenAddress: string) => Promise<ethers.Contract>
 }
 
 const RAY = BigNumber.from('10').pow('27')
@@ -108,7 +106,6 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         stableApr
       }
     },
-    // @ts-expect-error
     async makeTokenContract(tokenAddress) {
       return new ethers.Contract(tokenAddress, ERC20_ABI, provider)
     }
