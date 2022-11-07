@@ -440,6 +440,8 @@ PODS:
     - React-Core
   - react-native-safari-view (1.0.0):
     - React
+  - react-native-smart-splash-screen (2.3.5):
+    - React
   - react-native-tcp-socket (5.6.1):
     - CocoaAsyncSocket
     - React-Core
@@ -753,6 +755,7 @@ DEPENDENCIES:
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
+  - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
@@ -926,6 +929,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
+  react-native-smart-splash-screen:
+    :path: "../node_modules/react-native-smart-splash-screen"
   react-native-tcp-socket:
     :path: "../node_modules/react-native-tcp-socket"
   react-native-webview:
@@ -1085,6 +1090,7 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 74240a44d33d95eff85d2aecba2dfaf969682566
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
+  react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
   react-native-zcash: f95f29b89c7c8e0ba0daa631584b3afb447c0dc9
