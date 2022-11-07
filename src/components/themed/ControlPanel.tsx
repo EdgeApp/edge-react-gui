@@ -86,14 +86,13 @@ export function ControlPanel(props: Props) {
   const handleDeleteAccount = (username: string) => () => {
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
         bridge={bridge}
         title={s.strings.forget_account_title}
         message={sprintf(s.strings.forget_account_message_common, username)}
         buttons={{
           ok: {
             label: s.strings.string_forget,
-            async onPress() {
+            onPress: async () => {
               await dispatch(deleteLocalAccount(username))
               return true
             },
@@ -147,8 +146,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
-    // @ts-expect-error
-    handleGoToScene('loanDashboard')
+    handleGoToScene('loanDashboard', {})
   }
 
   const handleLoginQr = () => {
@@ -230,22 +228,19 @@ export function ControlPanel(props: Props) {
 
   /// ---- Row Data ----
 
-  const rowDatas: any[] = [
+  const rowDatas = [
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('fioAddressList'),
+      pressHandler: () => handleGoToScene('fioAddressList', {}),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('fioRequestList'),
+      pressHandler: () => handleGoToScene('fioRequestList', {}),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('wcConnections'),
+      pressHandler: () => handleGoToScene('wcConnections', {}),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
@@ -257,15 +252,13 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('termsOfService'),
+      pressHandler: () => handleGoToScene('termsOfService', {}),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('settingsOverviewTab'),
+      pressHandler: () => handleGoToScene('settingsOverviewTab', {}),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
@@ -284,12 +277,7 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
           {selectedWallet == null || selectedDenomination == null ? (
-            <TitleText
-              // @ts-expect-error
-              style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}
-            >
-              {s.strings.exchange_rate_loading_singular}
-            </TitleText>
+            <TitleText style={{ ...styles.text, marginLeft: theme.rem(1), marginRight: theme.rem(1) }}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>
