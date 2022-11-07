@@ -79,6 +79,7 @@ export interface SwapActionOp {
   fromTokenId?: string
   fromWalletId: string
   nativeAmount: string
+  payoutNativeAmount?: string
   toTokenId?: string
   toWalletId: string
   displayKey?: SwapActionOpDisplayKey

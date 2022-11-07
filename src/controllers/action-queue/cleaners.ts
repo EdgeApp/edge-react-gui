@@ -137,6 +137,7 @@ const asSwapActionOp = asObject<SwapActionOp>({
   fromTokenId: asOptional(asString),
   fromWalletId: asString,
   nativeAmount: asString,
+  payoutNativeAmount: asOptional(asString),
   toTokenId: asOptional(asString),
   toWalletId: asString,
   displayKey: (raw: unknown) => asOptional(asSwapActionOpDisplayKey)(raw)
