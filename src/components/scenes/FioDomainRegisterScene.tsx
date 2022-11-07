@@ -48,7 +48,7 @@ type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   fioCheckQueue: number = 0
 
-  state = {
+  state: LocalState = {
     selectedWallet: null,
     fioDomain: '',
     errorMessage: '',
@@ -233,7 +233,6 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           type="touchable"
           title={s.strings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
-          // @ts-expect-error
           body={selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}
         />
       )

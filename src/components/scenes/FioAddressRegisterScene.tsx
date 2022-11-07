@@ -59,7 +59,7 @@ type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 export class FioAddressRegister extends React.Component<Props, State> {
   fioCheckQueue: number = 0
 
-  state = {
+  state: State = {
     selectedWallet: null,
     selectedDomain: FIO_DOMAIN_DEFAULT,
     publicDomains: [],
@@ -148,7 +148,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
     if (!fioPlugin) return
     if (!fioWallets.length) return
     if (!selectedWallet) return
-    // @ts-expect-error
     const publicKey = selectedWallet.publicWalletInfo.keys.publicKey
     const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
     try {
@@ -165,13 +164,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
-        // @ts-expect-error
         if (selectedDomain.isFree) {
           navigation.navigate('fioNameConfirm', {
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
-            // @ts-expect-error
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
@@ -356,7 +353,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { selectedWallet } = this.state
 
     if (fioWallets && fioWallets.length > 1) {
-      // @ts-expect-error
       const title = `${selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}`
       return <Tile type="touchable" title={`${s.strings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
