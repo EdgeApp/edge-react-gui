@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
+import { base58 } from '../../util/encoding'
 import { filterNull } from '../../util/safeFilters'
 import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
 import {
@@ -16,7 +17,6 @@ import {
   wasPushRequestBody
 } from './types/pushApiTypes'
 import { BroadcastTx, PushEventState, PushMessage, PushTrigger } from './types/pushTypes'
-import { base58 } from './util/encoding'
 
 export interface PushEventInfo {
   newPushEvent: NewPushEvent
