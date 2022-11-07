@@ -14,8 +14,10 @@ import { useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
@@ -28,19 +30,22 @@ interface Props {
   route: RouteProp<'send2'>
 }
 
-const blankSpendInfo: EdgeSpendInfo = {
-  spendTargets: [{}]
-}
-
 const SendComponent = (props: Props) => {
   const { route } = props
   const theme = useTheme()
 
   const flipInputModalRef = React.useRef<FlipInputModalRef>(null)
-  const { walletId: initWalletId = '', tokenId: tokenIdProp, spendInfo: initSpendInfo, openCamera } = route.params
+  const {
+    walletId: initWalletId = '',
+    tokenId: tokenIdProp,
+    spendInfo: initSpendInfo,
+    openCamera,
+    lockTilesMap = {},
+    hiddenTilesMap = {}
+  } = route.params
 
-  const [walletId] = useState<string>(initWalletId)
-  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? blankSpendInfo)
+  const [walletId, setWalletId] = useState<string>(initWalletId)
+  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
@@ -48,13 +53,12 @@ const SendComponent = (props: Props) => {
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const currencyCode = spendInfo?.currencyCode ?? currencyWallets[walletId].currencyInfo.currencyCode
+  const [currencyCode, setCurrencyCode] = useState<string>(spendInfo?.currencyCode ?? currencyWallets[walletId].currencyInfo.currencyCode)
   const { pluginId } = currencyWallets[walletId].currencyInfo
   const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
   const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
   const coreWallet = currencyWallets[walletId]
 
-  const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
   const tokenId = tokenIdProp ?? getTokenId(account, pluginId, currencyCode)
   spendInfo.currencyCode = getCurrencyCode(coreWallet, tokenId)
 
@@ -186,6 +190,40 @@ const SendComponent = (props: Props) => {
     return out
   }
 
+  const handleWalletPress = useHandler(() => {
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} />
+    ))
+      .then((result: WalletListResult) => {
+        if (result.walletId == null || result.currencyCode == null) {
+          return
+        }
+        setWalletId(result.walletId)
+        const { pluginId: newPluginId } = currencyWallets[result.walletId].currencyInfo
+        if (pluginId !== newPluginId || currencyCode !== result.currencyCode) {
+          setCurrencyCode(result.currencyCode)
+          setSpendInfo({ spendTargets: [{}] })
+        }
+      })
+      .catch(error => {
+        showError(error)
+        console.error(error)
+      })
+  })
+
+  const renderSelectedWallet = () => {
+    const name = coreWallet == null ? '' : getWalletName(coreWallet)
+
+    return (
+      <Tile
+        type={lockTilesMap.wallet ? 'static' : 'editable'}
+        title={s.strings.send_scene_send_from_wallet}
+        onPress={lockTilesMap.wallet ? undefined : handleWalletPress}
+        body={`${name} (${currencyCode})`}
+      />
+    )
+  }
+
   const handleAddAddress = useHandler(() => {
     spendInfo.spendTargets.push({})
     setSpendInfo({ ...spendInfo })
@@ -230,6 +268,7 @@ const SendComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+        {renderSelectedWallet()}
         {renderAddressAmountPairs()}
         {renderAddAddress()}
       </KeyboardAwareScrollView>
