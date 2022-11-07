@@ -132,6 +132,13 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
   },
+  ionia: {
+    pluginId: 'ionia',
+    storeId: 'ioniarewards',
+    baseUri: 'https://ioniaedge.web.app',
+    displayName: 'Ionia',
+    permissions: [] // TODO: need permissions?
+  },
   xanpool: {
     pluginId: 'xanpool',
     storeId: 'xanpool',

@@ -597,6 +597,9 @@ const strings = {
   fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
+  // Rewards
+  side_menu_rewards_button_1s: '"Spend %1$s -> Earn Crypto',
+
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',

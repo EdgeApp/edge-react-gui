@@ -6,6 +6,7 @@ import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from '
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
@@ -17,11 +18,13 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
@@ -55,6 +58,7 @@ export function ControlPanel(props: Props) {
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -228,7 +232,17 @@ export function ControlPanel(props: Props) {
 
   /// ---- Row Data ----
 
-  const rowDatas = [
+  const rowDatas: Array<{
+    pressHandler: () => void
+    iconName?: string // Fontello
+    iconNameFontAwesome?: string
+    title: string
+  }> = [
+    {
+      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      iconNameFontAwesome: 'hand-holding-usd',
+      title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
+    },
     {
       pressHandler: () => handleGoToScene('fioAddressList', {}),
       iconName: 'control-panel-fio-names',
@@ -346,7 +360,10 @@ export function ControlPanel(props: Props) {
             {rowDatas.map(rowData => (
               <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
-                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
+                  {rowData.iconNameFontAwesome != null ? (
+                    <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  ) : null}
                 </View>
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>

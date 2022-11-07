@@ -537,6 +537,7 @@
   "fragment_tx_detail_mining_fee_with_symbol": "+ %1$s fee",
   "fragment_tx_detail_mining_fee_with_denom": "+ %1$f %2$s fee",
   "confirm_password_text": "Confirm Password",
+  "side_menu_rewards_button_1s": "\"Spend %1$s -> Earn Crypto",
   "title_otp_enabled": "2FA is enabled",
   "title_otp_disabled": "Protect your account with 2FA",
   "otp_description": "Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.",
