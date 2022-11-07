@@ -10,6 +10,7 @@ export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 export const MAX_ADDRESS_CHARACTERS = 17 // for displaying a truncated wallet address
 export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fractional characters
 export const FIAT_PRECISION = 2
+const UTXO_MAX_SPEND_TARGETS = 32
 
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
@@ -137,6 +138,7 @@ type SpecialCurrencyInfo = {
   stakeActions?: { [stakeActionKey: string]: string }
   stakeLockPeriod?: number
   stakeMaxApy?: number
+  maxSpendTargets?: number
 }
 
 /*
@@ -159,6 +161,7 @@ export const SPECIAL_CURRENCY_INFO: {
   [pluginId: string]: SpecialCurrencyInfo
 } = {
   bitcoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
@@ -170,6 +173,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   bitcointestnet: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
@@ -181,6 +185,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   bitcoincash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoincash_wallet_name,
     chainCode: 'BCH',
     displayBuyCrypto: true,
@@ -192,6 +197,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   bitcoinsv: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
     isImportKeySupported: {
@@ -202,6 +208,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   digibyte: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_digibyte_wallet_name,
     chainCode: 'DGB',
     displayBuyCrypto: true,
@@ -213,6 +220,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   litecoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
     displayBuyCrypto: true,
@@ -469,6 +477,7 @@ export const SPECIAL_CURRENCY_INFO: {
     stakeMaxApy: 450
   },
   dash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_dash_wallet_name,
     chainCode: 'DASH',
     isImportKeySupported: {
@@ -479,6 +488,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   ravencoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
     isImportKeySupported: {
@@ -489,6 +499,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   dogecoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
     isImportKeySupported: {
@@ -499,6 +510,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   zcoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
     isImportKeySupported: {
@@ -509,6 +521,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   smartcash: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
     isImportKeySupported: {
@@ -520,6 +533,7 @@ export const SPECIAL_CURRENCY_INFO: {
     keysOnlyMode: true
   },
   vertcoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
     isImportKeySupported: {
@@ -530,6 +544,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   bitcoingold: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
     isImportKeySupported: {
@@ -541,6 +556,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   feathercoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
     isImportKeySupported: {
@@ -551,6 +567,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   groestlcoin: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
     isImportKeySupported: {
@@ -561,6 +578,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   qtum: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
     isImportKeySupported: {
@@ -571,6 +589,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   eboost: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_eboost_wallet_name,
     chainCode: 'EBST',
     isImportKeySupported: {
@@ -581,6 +600,7 @@ export const SPECIAL_CURRENCY_INFO: {
     keysOnlyMode: true
   },
   ufo: {
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_ufo_wallet_name,
     chainCode: 'ufo',
     isImportKeySupported: {

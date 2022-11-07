@@ -224,7 +224,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
-    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'touchable' : 'static'
+    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
     return (
       <View>
         <Tile type={tileType} title={title} onPress={this.handleTilePress}>

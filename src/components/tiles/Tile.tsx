@@ -21,7 +21,7 @@ type OwnProps = {
   error?: boolean
   onPress?: () => void
   title: string
-  type: 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable'
+  type: 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable' | 'delete'
   contentPadding?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
 }
@@ -60,6 +60,7 @@ export class TileComponent extends React.PureComponent<Props> {
             <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
               {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
               {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+              {type === 'delete' && <FontAwesomeIcon name="times" style={styles.editIcon} />}
               {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
               <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
               {typeof body === 'string' && (
