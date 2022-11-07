@@ -1,8 +1,8 @@
 import { ethers } from 'ethers'
 
 import { BorrowPluginBlueprint, makeBorrowPluginFactory } from '../../common/BorrowPluginFactory'
+import { makeAaveBorrowEngineFactory } from './AaveBorrowEngineFactory'
 import { makeAaveNetworkFactory } from './AaveNetwork'
-import { makeBorrowEngineFactory } from './BorrowEngineFactory'
 import { asEthTokenContractAddress } from './cleaners/asEthTokenContractAddress'
 
 // -----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ const aaveMaticBlueprint: BorrowPluginBlueprint = {
     displayTokenId: 'd6df932a45c0f255f85145f286ea0b292b21c90b',
     maxLtvRatio: 0.5
   },
-  makeBorrowEngine: makeBorrowEngineFactory({
+  makeBorrowEngine: makeAaveBorrowEngineFactory({
     aaveNetwork: aaveMaticNetwork,
     asTokenContractAddress: asEthTokenContractAddress
   })
@@ -72,7 +72,7 @@ const aaveEthBlueprint: BorrowPluginBlueprint = {
     displayTokenId: '7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
     maxLtvRatio: 0.5
   },
-  makeBorrowEngine: makeBorrowEngineFactory({
+  makeBorrowEngine: makeAaveBorrowEngineFactory({
     aaveNetwork: aaveEthNetwork,
     asTokenContractAddress: asEthTokenContractAddress
   })
@@ -124,7 +124,7 @@ const aaveKovBlueprint: BorrowPluginBlueprint = {
     displayTokenId: 'b597cd8d3217ea6477232f9217fa70837ff667af',
     maxLtvRatio: 0.5
   },
-  makeBorrowEngine: makeBorrowEngineFactory({
+  makeBorrowEngine: makeAaveBorrowEngineFactory({
     aaveNetwork: aaveKovanNetwork,
     asTokenContractAddress: asEthTokenContractAddress,
     // @ts-expect-error

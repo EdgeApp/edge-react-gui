@@ -23,7 +23,7 @@ export interface BorrowEngineBlueprint {
   asTokenContractAddress: Cleaner<string>
 }
 
-export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
+export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
   return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
     const { aaveNetwork, asTokenContractAddress } = blueprint
     const walletAddress = (await wallet.getReceiveAddress()).publicAddress
