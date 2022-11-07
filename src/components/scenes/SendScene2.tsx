@@ -3,6 +3,7 @@ import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
   EdgeAccount,
+  EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeSpendInfo,
   EdgeSpendTarget,
@@ -41,6 +42,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
+import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
 import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
@@ -49,6 +51,15 @@ import { Tile } from '../tiles/Tile'
 type Props = {
   navigation: NavigationProp<'send2'>
   route: RouteProp<'send2'>
+}
+
+interface FioSenderInfo {
+  fioAddress: string
+  fioWallet: EdgeCurrencyWallet | null
+  fioError: string
+  memo: string
+  memoError: string
+  skipRecord?: boolean
 }
 
 const PIN_MAX_LENGTH = 4
@@ -80,6 +91,13 @@ const SendComponent = React.memo((props: Props) => {
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
   const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
+  const [fioSender, setFioSender] = useState<FioSenderInfo>({
+    fioAddress: '',
+    fioWallet: null,
+    fioError: '',
+    memo: '',
+    memoError: ''
+  })
 
   // 0 = no max spend. 1 and higher = the spendTarget that requested the max spend. 1 = 1st, 2 = 2nd ...
   const [maxSpendSetter, setMaxSpendSetter] = useState<number>(0)
@@ -411,6 +429,43 @@ const SendComponent = React.memo((props: Props) => {
     }
   })
 
+  const handleFioAddressSelect = useHandler((fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
+    setFioSender({
+      ...fioSender,
+      fioAddress,
+      fioWallet,
+      fioError
+    })
+  })
+
+  const handleMemoChange = useHandler((memo: string, memoError: string) => {
+    setFioSender({
+      ...fioSender,
+      memo,
+      memoError
+    })
+  })
+
+  const renderSelectFioAddress = useHandler(() => {
+    if (hiddenTilesMap.fioAddressSelect) return null
+    const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
+    return (
+      <View>
+        <SelectFioAddress2
+          selected={fioSender.fioAddress}
+          memo={fioSender.memo}
+          memoError={fioSender.memoError}
+          onSelect={handleFioAddressSelect}
+          onMemoChange={handleMemoChange}
+          coreWallet={coreWallet}
+          currencyCode={currencyCode}
+          // fioRequest={fioPendingRequest}
+          isSendUsingFioAddress={fioTarget}
+        />
+      </View>
+    )
+  })
+
   // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
   const renderUniqueIdentifier = useHandler(() => {
     const spendTarget = spendInfo.spendTargets[0]
@@ -633,6 +688,7 @@ const SendComponent = React.memo((props: Props) => {
         {renderError()}
         {renderFees()}
         {renderMetadataNotes()}
+        {renderSelectFioAddress()}
         {renderUniqueIdentifier()}
         {renderAuthentication()}
         <View style={styles.footer}>
