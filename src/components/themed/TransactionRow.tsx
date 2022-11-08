@@ -83,7 +83,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     // Transaction Category
     let categoryText: string | undefined
     const category = transaction.metadata?.category
-    if (category != null) {
+    if (category != null && category !== '') {
       categoryText = formatCategory(splitCategory(category))
     }
 
