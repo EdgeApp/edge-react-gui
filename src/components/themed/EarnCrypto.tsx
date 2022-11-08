@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
+import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
@@ -29,13 +29,16 @@ export const EarnCrypto = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-
   const handlePress = useHandler(() => {
     Actions.push('pluginView', {
       plugin: guiPlugins.ionia
     })
   })
+
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+  if (!IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+    return null
+  }
 
   const { pluginId } = wallet.currencyInfo
   const icon = getCurrencyIconUris(pluginId, tokenId)

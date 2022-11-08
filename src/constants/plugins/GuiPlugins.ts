@@ -164,6 +164,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   }
 }
 
+export const IONIA_SUPPORTED_FIATS = ['USD']
+
 export const customPluginRow: GuiPluginRow = {
   pluginId: 'custom',
   deepPath: '',

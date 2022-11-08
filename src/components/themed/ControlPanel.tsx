@@ -18,7 +18,7 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
+import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -239,11 +239,6 @@ export function ControlPanel(props: Props) {
     title: string
   }> = [
     {
-      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
-      iconNameFontAwesome: 'hand-holding-usd',
-      title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
-    },
-    {
       pressHandler: () => handleGoToScene('fioAddressList', {}),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
@@ -282,6 +277,14 @@ export function ControlPanel(props: Props) {
       title: s.strings.settings_button_logout
     }
   ]
+
+  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+    rowDatas.unshift({
+      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      iconNameFontAwesome: 'hand-holding-usd',
+      title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
+    })
+  }
 
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} background="none">

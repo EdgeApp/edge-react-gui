@@ -1,19 +1,33 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
+import { createStore } from 'redux'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
+import { rootReducer } from '../../reducers/RootReducer'
 
 describe('BuyCrypto', () => {
-  it('should render with some props', () => {
-    const renderer = createRenderer()
+  const mockState: any = {
+    ui: {
+      settings: {
+        defaultIsoFiat: 'iso:DOLLA'
+      }
+    }
+  }
+  const store = createStore(rootReducer, mockState)
 
+  it('should render with some props', () => {
     const fakeWallet: any = {
       id: 'my wallet',
       currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' }
     }
 
-    const actual = renderer.render(<BuyCrypto wallet={fakeWallet} tokenId={undefined} />)
+    const actual = renderer.create(
+      <Provider store={store}>
+        <BuyCrypto wallet={fakeWallet} tokenId={undefined} />
+      </Provider>
+    )
 
     expect(actual).toMatchSnapshot()
   })
