@@ -6,6 +6,7 @@ import { useWatch } from './useWatch'
 
 /**
  * Subscribes to a wallet's name.
+ * See `getWalletName` for a non-hook version of this.
  */
 export function useWalletName(wallet: EdgeCurrencyWallet): string {
   const name = useWatch(wallet, 'name')

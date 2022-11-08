@@ -12,6 +12,7 @@ import { checkIsDomainPublic } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FioDomain, FioPublicDomain } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -353,7 +354,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { selectedWallet } = this.state
 
     if (fioWallets && fioWallets.length > 1) {
-      const title = `${selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}`
+      const title = `${selectedWallet == null ? s.strings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}`
       return <Tile type="touchable" title={`${s.strings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }

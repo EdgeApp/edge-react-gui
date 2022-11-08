@@ -4,6 +4,7 @@ import { combineReducers, Reducer } from 'redux'
 import { FIO_WALLET_TYPE, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { Action } from '../../types/reduxTypes'
 import { GuiWallet } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { tokenIdsToCurrencyCodes } from '../../util/utils'
 
 export interface WalletsState {
@@ -125,7 +126,7 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
 function schema(wallet: EdgeCurrencyWallet): GuiWallet {
   const { blockHeight, currencyInfo, id, type } = wallet
   const { currencyCode, metaTokens, pluginId } = currencyInfo
-  const name: string = wallet.name || 'no wallet name'
+  const name: string = getWalletName(wallet)
 
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode

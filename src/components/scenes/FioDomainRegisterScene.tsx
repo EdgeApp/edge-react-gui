@@ -8,6 +8,7 @@ import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -233,7 +234,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           type="touchable"
           title={s.strings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
-          body={selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}
+          body={selectedWallet == null ? s.strings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}
         />
       )
     }

@@ -58,10 +58,12 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       },
       request: {
         fromWallet: {
-          fiatCurrencyCode: 'USD'
+          fiatCurrencyCode: 'USD',
+          name: ''
         },
         toWallet: {
-          fiatCurrencyCode: 'USD'
+          fiatCurrencyCode: 'USD',
+          name: ''
         }
       } as any,
       fee: '1',

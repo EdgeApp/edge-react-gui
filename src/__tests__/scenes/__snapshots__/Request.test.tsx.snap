@@ -74,6 +74,7 @@ exports[`Request should render with loaded props 1`] = `
                 "BTC": "1234",
               },
               "currencyInfo": Object {
+                "displayName": "Bitcoin",
                 "pluginId": "bitcoin",
               },
             }
@@ -86,7 +87,7 @@ exports[`Request should render with loaded props 1`] = `
         exchangeSecondaryToPrimaryRatio={Object {}}
         forceUpdateGuiCounter={0}
         headerCallback={[Function]}
-        headerText="Receive to No name"
+        headerText="Receive to My Bitcoin"
         isEditable={true}
         isFiatOnTop={true}
         isFocus={false}

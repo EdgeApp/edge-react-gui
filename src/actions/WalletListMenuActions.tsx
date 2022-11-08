@@ -12,6 +12,7 @@ import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
@@ -229,7 +230,7 @@ export function walletListMenuAction(
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const walletName = wallet.name ?? ''
+        const walletName = getWalletName(wallet)
 
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal

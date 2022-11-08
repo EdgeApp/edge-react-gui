@@ -32,7 +32,10 @@ describe('Request', () => {
   it('should render with loaded props', () => {
     const renderer = createRenderer()
 
-    const fakeWallet: any = { currencyInfo: { pluginId: 'bitcoin' }, balances: { BTC: '1234' } }
+    const fakeWallet: any = {
+      currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' },
+      balances: { BTC: '1234' }
+    }
 
     const actual = renderer.render(
       <RequestComponent
