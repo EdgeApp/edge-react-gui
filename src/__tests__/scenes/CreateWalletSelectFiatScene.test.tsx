@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { CreateWalletSelectFiatScene } from '../../components/scenes/CreateWalletSelectFiatScene'
@@ -73,12 +73,12 @@ describe('CreateWalletSelectFiatComponent', () => {
         ]
       }
     }
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <CreateWalletSelectFiatScene navigation={navigation} route={route} />
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })
