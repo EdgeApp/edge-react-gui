@@ -259,7 +259,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       return await approvableActionToExecutableAction(borrowEngine, approvableAction)
     }
     case 'swap': {
-      const { fromTokenId, fromWalletId, nativeAmount, payoutNativeAmount, toTokenId, toWalletId, amountFor } = actionOp
+      const { fromTokenId, fromWalletId, nativeAmount, expectedPayoutNativeAmount: payoutNativeAmount, toTokenId, toWalletId, amountFor } = actionOp
 
       const fromWallet = await account.waitForCurrencyWallet(fromWalletId)
       if (fromWallet == null) throw new Error(`Wallet '${fromWalletId}' not found for fromWalletId`)

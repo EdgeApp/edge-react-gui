@@ -79,10 +79,16 @@ export interface SwapActionOp {
   fromTokenId?: string
   fromWalletId: string
   nativeAmount: string
-  payoutNativeAmount?: string
   toTokenId?: string
   toWalletId: string
   displayKey?: SwapActionOpDisplayKey
+
+  // Optional parameter for special handling, for example when swap providers
+  // are not giving accurate quotes or we want to control the payout trigger
+  // amount for a 'from' quote.
+  // May be deprecated when ops are exclusively managed during the ActionProgram
+  // generation phase when fully implemented.
+  expectedPayoutNativeAmount?: string
 }
 export type SwapActionOpDisplayKey = 'swap-deposit'
 

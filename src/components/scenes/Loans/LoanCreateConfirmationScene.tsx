@@ -131,7 +131,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         fromTokenId: srcTokenId,
         toWalletId: borrowEngineWallet.id,
         nativeAmount: feeNativeAmount,
-        payoutNativeAmount: feeDeficitNativeAmount,
+        expectedPayoutNativeAmount: feeDeficitNativeAmount,
         amountFor: 'to'
       }
       // Include new fee swap action in swapActions
