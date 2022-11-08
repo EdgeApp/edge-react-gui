@@ -7,11 +7,18 @@ import { TransactionListTopComponent } from '../../components/themed/Transaction
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('TransactionListTop', () => {
+  const fakeWallet: any = {
+    currencyInfo: {
+      currencyCode: 'CODE'
+    }
+  }
+
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
       <TransactionListTopComponent
+        currencyWallet={fakeWallet}
         cryptoAmount="string"
         currencyCode="string"
         pluginId="string"

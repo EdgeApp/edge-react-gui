@@ -191,6 +191,7 @@ const strings = {
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
+  transaction_list_buy_and_earn_crypto_message: 'Buy or Earn %s',
   transaction_list_no_tx_yet: 'No transactions yet',
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
@@ -598,7 +599,8 @@ const strings = {
   confirm_password_text: 'Confirm Password',
 
   // Rewards
-  side_menu_rewards_button_1s: '"Spend %1$s -> Earn Crypto',
+  side_menu_rewards_button_1s: 'Spend %1$s -> Earn Crypto',
+  side_menu_rewards_tx_list_button_2s: 'Spend %1$s -> Earn %2$s',
 
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',

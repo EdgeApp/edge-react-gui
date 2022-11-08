@@ -9,6 +9,7 @@ import s from '../../locales/strings'
 import { Actions } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { ioniaPluginIds } from './EarnCrypto'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
@@ -32,6 +33,11 @@ export const BuyCrypto = (props: Props) => {
 
   const { displayName, pluginId } = wallet.currencyInfo
 
+  let message = s.strings.transaction_list_buy_crypto_message
+  if (ioniaPluginIds.includes(pluginId)) {
+    message = s.strings.transaction_list_buy_and_earn_crypto_message
+  }
+
   return (
     <>
       {allowedPluginIds.includes(pluginId) && tokenId == null && (
@@ -40,7 +46,7 @@ export const BuyCrypto = (props: Props) => {
             <View style={styles.buyCrypto}>
               <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-              <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>{sprintf(message, displayName)}</EdgeText>
             </View>
           </View>
         </ButtonBox>

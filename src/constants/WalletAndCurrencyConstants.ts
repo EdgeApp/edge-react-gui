@@ -98,6 +98,7 @@ interface SpecialCurrencyInfo {
 
   // Marketing:
   displayBuyCrypto?: boolean
+  displayIoniaRewards?: boolean
 
   // Localized GUI text:
   dummyPublicAddress?: string
@@ -162,6 +163,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -184,6 +186,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_bitcoincash_wallet_name,
     chainCode: 'BCH',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -216,6 +219,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -471,6 +475,7 @@ export const SPECIAL_CURRENCY_INFO: {
   dash: {
     initWalletName: s.strings.string_first_dash_wallet_name,
     chainCode: 'DASH',
+    displayIoniaRewards: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -491,6 +496,7 @@ export const SPECIAL_CURRENCY_INFO: {
   dogecoin: {
     initWalletName: s.strings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
+    displayIoniaRewards: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions

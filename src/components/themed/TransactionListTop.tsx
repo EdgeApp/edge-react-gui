@@ -1,4 +1,5 @@
 import { add, gt } from 'biggystring'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -24,6 +25,7 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { EarnCrypto } from './EarnCrypto'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
@@ -39,6 +41,7 @@ interface OwnProps {
 }
 
 interface StateProps {
+  currencyWallet: EdgeCurrencyWallet
   cryptoAmount: string
   currencyCode: string
   pluginId: string
@@ -231,7 +234,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   render() {
-    const { isEmpty, searching, theme } = this.props
+    const { currencyWallet, isEmpty, searching, theme, tokenId } = this.props
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
@@ -289,6 +292,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
+          {!isEmpty && !searching && <EarnCrypto wallet={currencyWallet} tokenId={tokenId} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
@@ -402,7 +406,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
-    const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]
+    const currencyWallet = state.core.account.currencyWallets[selectedWalletId]
+    const { currencyInfo } = currencyWallet
     const { pluginId } = currencyInfo
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
@@ -440,6 +445,7 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     return {
+      currencyWallet,
       currencyCode: selectedCurrencyCode,
       pluginId,
       cryptoAmount: cryptoAmountFormat,
