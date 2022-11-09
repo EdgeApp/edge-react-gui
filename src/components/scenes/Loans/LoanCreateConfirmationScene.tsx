@@ -121,7 +121,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
       // Target mainnet native balance should be double the fees estimate to be
       // extra generous when accounting for fee volatility.
-      const feeNativeAmount = max(minFeeSwapAmount, sub(mainNetworkFeeAmount, borrowWalletNativeBalance))
+      const feeDeficitNativeAmount = sub(mainNetworkFeeAmount, borrowWalletNativeBalance)
+      const feeNativeAmount = max(minFeeSwapAmount, feeDeficitNativeAmount)
 
       // Create a new fee swap action for mainnet fees
       const feesSwap: SwapActionOp = {
@@ -130,6 +131,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         fromTokenId: srcTokenId,
         toWalletId: borrowEngineWallet.id,
         nativeAmount: feeNativeAmount,
+        expectedPayoutNativeAmount: feeDeficitNativeAmount,
         amountFor: 'to'
       }
       // Include new fee swap action in swapActions
