@@ -5,6 +5,7 @@ import s from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
+import { getLtvColorValue } from '../tiles/LtvRatioTile'
 import { Card } from './Card'
 
 interface SummaryDetail {
@@ -52,7 +53,7 @@ export const LoanDetailsSummaryCard = (props: Props) => {
         {ltv != null ? (
           <View style={styles.ltvContainer}>
             <EdgeText style={styles.detailLabel}>{s.strings.loan_loan_to_value_ratio}</EdgeText>
-            <Thermostat ratio={ltv} />
+            <Thermostat ratio={ltv} textColor={getLtvColorValue(ltv.toString(), theme)} />
           </View>
         ) : null}
       </View>
