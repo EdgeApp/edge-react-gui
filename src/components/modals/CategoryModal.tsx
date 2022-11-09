@@ -231,12 +231,14 @@ const styles = StyleSheet.create({
     marginRight: scale(5)
   },
   rowCategoryText: {
+    color: THEME.COLORS.SECONDARY,
     fontSize: THEME.rem(0.95)
   },
   rowPlusWrap: {
     justifyContent: 'center'
   },
   rowPlus: {
+    color: THEME.COLORS.SECONDARY,
     fontSize: THEME.rem(0.95)
   }
 })
