@@ -9,6 +9,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface OwnProps {
   headerText: string
+  headerTertiary?: React.ReactNode
   children?: React.ReactNode
   onSliderComplete: (reset: () => void) => Promise<void>
   sliderDisabled: boolean
@@ -17,15 +18,13 @@ interface OwnProps {
 type Props = OwnProps
 
 export const FormScene = (props: Props) => {
-  const { headerText, children, onSliderComplete, sliderDisabled } = props
+  const { headerText, headerTertiary, children, onSliderComplete, sliderDisabled } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const sceneHeader = React.useMemo(() => <SceneHeader style={styles.sceneHeader} title={headerText} underline />, [headerText, styles.sceneHeader])
-
   return (
     <SceneWrapper background="theme">
-      {sceneHeader}
+      <SceneHeader style={styles.sceneHeader} title={headerText} tertiary={headerTertiary} withTopMargin underline />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
@@ -39,7 +38,6 @@ export const FormScene = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     alignItems: 'center'
   },
   footer: {
