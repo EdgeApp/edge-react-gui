@@ -1,7 +1,10 @@
 import * as React from 'react'
+import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -9,6 +12,7 @@ import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -95,7 +99,12 @@ export const LoanCloseScene = (props: Props) => {
   const networkFeeAggregate = (networkFeeMap ?? {})[borrowEngineWallet.currencyInfo.currencyCode]
   const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
 
-  // Handlers:
+  //
+  // Handlers
+  //
+
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'close-loan'))
+
   const handleSliderComplete = useHandler(async (reset: () => void) => {
     // Still loading action program
     if (actionProgram === undefined) return
@@ -114,11 +123,17 @@ export const LoanCloseScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_close_loan_title} style={styles.sceneHeader}>
-        <Space right>
-          <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </Space>
-      </SceneHeader>
+      <SceneHeader
+        underline
+        title={s.strings.loan_close_loan_title}
+        style={styles.sceneHeader}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />

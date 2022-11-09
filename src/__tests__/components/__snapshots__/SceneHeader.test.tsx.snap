@@ -6,7 +6,9 @@ exports[`SceneHeader should render with loading props 1`] = `
     style={
       Array [
         Object {
-          "justifyContent": "center",
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
           "marginLeft": 22,
           "paddingBottom": 22,
         },
