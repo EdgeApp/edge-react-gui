@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
@@ -63,7 +63,7 @@ describe('TransactionDetailsScene', () => {
   const store = createStore(rootReducer, fakeState, applyMiddleware(thunk))
 
   it('should render', () => {
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
@@ -90,11 +90,11 @@ describe('TransactionDetailsScene', () => {
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
@@ -124,6 +124,6 @@ describe('TransactionDetailsScene', () => {
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })

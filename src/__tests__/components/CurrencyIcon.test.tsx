@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
@@ -23,12 +23,12 @@ describe('CryptoIcon', () => {
   const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <CryptoIcon pluginId="bitcoin" tokenId="bitcoin" walletId="332s0ds39f" marginRem={1} />
       </Provider>
     )
 
-    expect(actual.toJSON()).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })

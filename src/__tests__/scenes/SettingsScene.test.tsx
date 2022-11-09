@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 
 import { SettingsSceneComponent } from '../../components/scenes/SettingsScene'
 import { config } from '../../theme/appConfig'
@@ -18,7 +18,7 @@ const context: EdgeContext = typeHack
 
 describe('MyComponent', () => {
   it('should render UnLocked SettingsOverview', () => {
-    const element = (
+    const renderer = TestRenderer.create(
       <SettingsSceneComponent
         theme={config.darkTheme}
         navigation={fakeNavigation}
@@ -45,11 +45,11 @@ describe('MyComponent', () => {
       />
     )
 
-    expect(renderer.create(element).toJSON()).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 
   it('should render Locked SettingsOverview', () => {
-    const element = (
+    const renderer = TestRenderer.create(
       <SettingsSceneComponent
         theme={config.darkTheme}
         navigation={fakeNavigation}
@@ -76,6 +76,6 @@ describe('MyComponent', () => {
       />
     )
 
-    expect(renderer.create(element).toJSON()).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })
