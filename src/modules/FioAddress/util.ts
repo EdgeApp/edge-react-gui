@@ -3,7 +3,7 @@ import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { CcWalletMap } from '../../reducers/FioReducer'
 import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../../types/types'
@@ -944,4 +944,18 @@ export const refreshFioNames = async (
   }
 
   return { fioAddresses, fioDomains, fioWalletsById }
+}
+
+export const convertFIOToEdgeCodes = (pluginId: string, fioChainCode: string, fioTokenCode: string) => {
+  const chainCode = fioChainCode === SPECIAL_CURRENCY_INFO[pluginId].fioChainCode ? SPECIAL_CURRENCY_INFO[pluginId].chainCode : fioChainCode
+  const tokenCode = fioTokenCode === fioChainCode ? chainCode : fioTokenCode
+
+  return { chainCode, tokenCode }
+}
+
+export const convertEdgeToFIOCodes = (pluginId: string, edgeChainCode: string, edgeTokenCode: string) => {
+  const fioChainCode = SPECIAL_CURRENCY_INFO[pluginId].fioChainCode ?? edgeChainCode
+  const fioTokenCode = edgeTokenCode === edgeChainCode ? fioChainCode : edgeTokenCode
+
+  return { fioChainCode, fioTokenCode }
 }
