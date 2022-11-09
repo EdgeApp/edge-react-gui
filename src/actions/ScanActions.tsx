@@ -219,7 +219,6 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
     // Coin operations
     try {
       const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
-      dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
       // Check if the URI requires a warning to the user
       const approved = await addressWarnings(parsedUri, currencyCode)

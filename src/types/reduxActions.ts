@@ -1,15 +1,5 @@
 import { Disklet } from 'disklet'
-import {
-  EdgeAccount,
-  EdgeContext,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeLobby,
-  EdgeParsedUri,
-  EdgeReceiveAddress,
-  EdgeSpendInfo,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
@@ -26,7 +16,6 @@ import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './Ref
 import {
   FioAddress,
   FioDomain,
-  FioObtRecord,
   GuiContact,
   GuiCurrencyInfo,
   GuiExchangeRates,
@@ -41,7 +30,6 @@ import {
 
 // Actions with no payload:
 type NoDataActionName =
-  | 'CLOSE_SELECT_USER'
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
@@ -52,7 +40,6 @@ type NoDataActionName =
   | 'ENABLE_SCAN'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'INVALIDATE_EDGE_LOBBY'
-  | 'OPEN_SELECT_USER'
   | 'OTP_ERROR_SHOWN'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
@@ -116,7 +103,6 @@ export type Action =
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR'; data: string }
   | { type: 'NEW_RECEIVE_ADDRESS'; data: { receiveAddress: EdgeReceiveAddress } }
-  | { type: 'PARSE_URI_SUCCEEDED'; data: { parsedUri: EdgeParsedUri } }
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY'; data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR'; data: string }
@@ -178,9 +164,7 @@ export type Action =
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR'; data: string }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES'; data: { fioAddresses: FioAddress[] } }
-  | { type: 'FIO/UPDATE_CONNECTED_WALLETS'; data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS'; data: { fioAddress: string; ccWalletMap: CcWalletMap } }
-  | { type: 'FIO/SET_OBT_DATA'; data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS'; data: { fioDomains: FioDomain[] } }
   | { type: 'FIO/SET_LAST_EXPIRED_CHECKS'; data: { [fioName: string]: Date } }
   | { type: 'FIO/CHECKING_EXPIRED'; data: boolean }
