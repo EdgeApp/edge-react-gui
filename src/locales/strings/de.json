@@ -731,6 +731,7 @@
   "fio_request_renew_domain_ok_text": "Ihre Domain wurde erfolgreich erneuert",
   "fio_request_sent_details_to": "Anfrage gesendet an",
   "fio_request_sent_details_from": "Anfrage gesendet von",
+  "fio_request_unknown_chain_code": "Unknown chain code: %s",
   "fio_get_requests_error": "Es gab ein Problem beim Abrufen von Anfragen",
   "fio_confirm_request_error": "Während der Anfrage gab es ein Problem",
   "fio_reject_request_error": "Es gab ein Problem während der Ablehnung der Anfrage",
