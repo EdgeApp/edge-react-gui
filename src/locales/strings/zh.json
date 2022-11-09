@@ -731,6 +731,7 @@
   "fio_request_renew_domain_ok_text": "Your domain has been successfully renewed",
   "fio_request_sent_details_to": "Request sent to",
   "fio_request_sent_details_from": "Request sent from",
+  "fio_request_unknown_chain_code": "Unknown chain code: %s",
   "fio_get_requests_error": "There was an issue fetching requests",
   "fio_confirm_request_error": "There was an issue during request send",
   "fio_reject_request_error": "There was an issue during request rejection",
