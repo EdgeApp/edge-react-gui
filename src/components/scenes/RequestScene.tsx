@@ -20,7 +20,7 @@ import { NavigationProp } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
-import { convertNativeToDenomination, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils'
+import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -115,20 +115,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   componentWillUnmount() {
     if (this.unsubscribeAddressChanged != null) this.unsubscribeAddressChanged()
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    let diffElement2: string = ''
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryCurrencyInfo: true,
-      secondaryCurrencyInfo: true,
-      displayDenomination: true,
-      exchangeDenomination: true
-    })
-    if (!diffElement) {
-      diffElement2 = getObjectDiff(this.state, nextState)
-    }
-    return !!diffElement || !!diffElement2
   }
 
   async getAddressItems() {

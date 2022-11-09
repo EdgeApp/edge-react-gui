@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Text, TextStyle } from 'react-native'
 
 import { scale } from '../../../../util/scaling'
-import { getObjectDiff } from '../../../../util/utils'
 import { styles } from './style'
 
 interface Props {
@@ -15,11 +14,6 @@ interface Props {
 export class FormattedText extends React.Component<Props> {
   style: TextStyle | undefined
   nativeForward: any
-
-  shouldComponentUpdate(nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
-    return !!diffElement
-  }
 
   constructor(props: Props) {
     super(props)

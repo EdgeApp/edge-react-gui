@@ -7,7 +7,7 @@ import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
-import { DECIMAL_PRECISION, getObjectDiff } from '../../util/utils'
+import { DECIMAL_PRECISION } from '../../util/utils'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
@@ -25,16 +25,6 @@ interface OwnProps {
 }
 
 class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & StateProps> {
-  shouldComponentUpdate(nextProps: OwnProps) {
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryInfo: true,
-      secondaryInfo: true,
-      displayDenomination: true,
-      exchangeDenomination: true
-    })
-    return !!diffElement
-  }
-
   render() {
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount, style, wallet } = this.props
 

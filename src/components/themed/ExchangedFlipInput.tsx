@@ -2,7 +2,7 @@ import { div, log10, mul } from 'biggystring'
 import * as React from 'react'
 
 import { GuiCurrencyInfo } from '../../types/types'
-import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, precisionAdjust, zeroString } from '../../util/utils'
 import { FlipInput, FlipInputFieldInfo } from './FlipInput'
 
 export interface ExchangedFlipInputAmounts {
@@ -128,21 +128,6 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setState(propsToState(nextProps))
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    let diffElement2: string = ''
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryCurrencyInfo: true,
-      secondaryCurrencyInfo: true
-    })
-    if (!diffElement) {
-      diffElement2 = getObjectDiff(this.state, nextState, {
-        primaryInfo: true,
-        secondaryInfo: true
-      })
-    }
-    return !!diffElement || !!diffElement2
   }
 
   onAmountChanged = (decimalAmount: string): void => {
