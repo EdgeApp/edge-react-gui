@@ -12,7 +12,7 @@ import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
-import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
+import { useCurrencyFiatRate } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
@@ -179,12 +179,13 @@ export const LoanCreateScene = (props: Props) => {
   const totalRequiredCollateralFiat = div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION)
 
   // Convert required collateral in fiat -> required collateral in crypto
-  const { assetToFiatRate: collateralToFiatRate } = useTokenDisplayData({
-    tokenId: collateralTokenId,
-    wallet: borrowEngineWallet
-  })
+  // We want to use the same isoFiatCurrencyCode throughout the scene,
+  // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
+  // conversions have the same quote asset.
+  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode })
 
-  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
+  const isUserInputComplete =
+    srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
   let totalRequiredCollateralNativeAmount = !isUserInputComplete
     ? '0'
     : truncateDecimals(mul(collateralExchangeMultiplier, div(totalRequiredCollateralFiat, collateralToFiatRate, DECIMAL_PRECISION)), 0)
