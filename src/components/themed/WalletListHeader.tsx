@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
+import { LAYOUT_ANIMATION, WALLET_LIST_HEADER_ENTER_ANIMATION } from '../../constants/animationConstants'
 import s from '../../locales/strings'
 import { Actions } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
@@ -71,7 +73,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
         </View>
         {!searching && <WiredBalanceBox />}
         {!sorting && !searching && (
-          <View style={styles.headerContainer}>
+          <Animated.View style={styles.headerContainer} layout={LAYOUT_ANIMATION} entering={WALLET_LIST_HEADER_ENTER_ANIMATION}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={() => Actions.push('createWalletSelectCrypto', {})}>
@@ -81,7 +83,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
                 <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
             </View>
-          </View>
+          </Animated.View>
         )}
         {!searching && <PromoCard />}
       </>

@@ -1,6 +1,14 @@
 import * as React from 'react'
 import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import {
+  ENTER_ANIMATION,
+  RIGHT_BALANCE_ENTER_ANIMATION,
+  RIGHT_BALANCE_EXIT_ANIMATION,
+  RIGHT_BALANCE_LAYOUT_ANIMATION,
+  WALLET_ENTER_ANIMATION
+} from '../../../constants/animationConstants'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -16,6 +24,7 @@ interface Props {
   marginRem?: number[] | number
 }
 
+let keyNum = 0
 // -----------------------------------------------------------------------------
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
@@ -24,9 +33,12 @@ const IconDataRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
+  const hideRight = rightText == null && rightSubText == null && rightSubTextExtended == null
+  keyNum++
+  if (keyNum > 10) keyNum = 0
 
   return (
-    <View style={[styles.container, margin]}>
+    <Animated.View style={[styles.container, margin]} entering={WALLET_ENTER_ANIMATION(keyNum * 20)}>
       {icon}
       <View style={styles.leftColumn}>
         <View style={styles.row}>
@@ -35,14 +47,22 @@ const IconDataRowComponent = (props: Props) => {
         </View>
         <EdgeText style={styles.leftSubtext}>{leftSubtext}</EdgeText>
       </View>
-      <View style={styles.rightColumn}>
-        {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
-        <View style={styles.row}>
-          {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
-          {rightSubTextExtended}
-        </View>
-      </View>
-    </View>
+      {!hideRight ? (
+        <Animated.View
+          key={keyNum.toString()}
+          style={styles.rightColumn}
+          layout={RIGHT_BALANCE_LAYOUT_ANIMATION}
+          entering={RIGHT_BALANCE_ENTER_ANIMATION(keyNum * 10)}
+          exiting={RIGHT_BALANCE_EXIT_ANIMATION(keyNum * 10)}
+        >
+          {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
+          <View style={styles.row}>
+            {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
+            {rightSubTextExtended}
+          </View>
+        </Animated.View>
+      ) : null}
+    </Animated.View>
   )
 }
 
