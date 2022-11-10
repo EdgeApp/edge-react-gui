@@ -808,7 +808,6 @@
   "export_transaction_quickbooks_qbo": "Quickbooks QBO",
   "export_transaction_csv": "CSV",
   "string_export": "Esporta",
-  "string_no_wallet_name": "Nessun nome portafoglio",
   "string_status": "Stato",
   "string_fee": "Commissione",
   "string_total_amount": "Importo totale",
