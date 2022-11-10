@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TransactionListTop should render with loading props 1`] = `
-<React.Fragment>
+exports[`TransactionListTop should render 1`] = `
+Array [
   <View
     style={
       Object {
@@ -28,224 +28,861 @@ exports[`TransactionListTop should render with loading props 1`] = `
           }
         }
       >
-        <ForwardRef
-          label="Search Transactions"
-          marginRem={0}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          returnKeyType="search"
-          searchIcon={true}
-          value=""
-        />
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Array [
+              Object {
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "borderRadius": 11,
+                "justifyContent": "center",
+                "minHeight": 67,
+                "paddingHorizontal": 22,
+              },
+              Object {
+                "flexGrow": 0,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+                "paddingLeft": 65,
+                "paddingRight": 65,
+                "paddingVertical": 0,
+              },
+            ]
+          }
+        >
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "borderColor": "rgba(164, 199, 223, 1)",
+                  "right": 11,
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "borderTopWidth": 1,
+                "bottom": 0,
+                "left": 22,
+                "position": "absolute",
+                "right": 11,
+              }
+            }
+          />
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "borderColor": "rgba(164, 199, 223, 1)",
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "borderBottomLeftRadius": 11,
+                "borderBottomWidth": 1,
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "borderLeftWidth": 1,
+                "borderRightWidth": 0,
+                "borderTopLeftRadius": 11,
+                "borderTopWidth": 1,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "top": 0,
+                "width": 22,
+              }
+            }
+          />
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "borderColor": "rgba(164, 199, 223, 1)",
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "borderBottomRightRadius": 11,
+                "borderBottomWidth": 1,
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "borderLeftWidth": 0,
+                "borderRightWidth": 1,
+                "borderTopRightRadius": 11,
+                "borderTopWidth": 1,
+                "bottom": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "width": 22,
+              }
+            }
+          />
+          <View
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "borderColor": "rgba(164, 199, 223, 1)",
+                  "left": 22,
+                },
+              }
+            }
+            collapsable={false}
+            style={
+              Object {
+                "borderColor": "rgba(164, 199, 223, 1)",
+                "borderTopWidth": 1,
+                "left": 22,
+                "position": "absolute",
+                "right": 22,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "height": 67,
+                  "justifyContent": "center",
+                  "left": 0,
+                  "paddingHorizontal": 22,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "paddingLeft": 65,
+                  "paddingRight": 65,
+                },
+              ]
+            }
+          >
+            <Text
+              animatedStyle={
+                Object {
+                  "value": Object {
+                    "color": "rgba(164, 199, 223, 1)",
+                    "transform": Array [
+                      Object {
+                        "translateX": -0,
+                      },
+                      Object {
+                        "translateY": -0,
+                      },
+                      Object {
+                        "scale": 1,
+                      },
+                    ],
+                  },
+                }
+              }
+              collapsable={false}
+              numberOfLines={1}
+              onLayout={[Function]}
+              style={
+                Object {
+                  "alignSelf": "flex-start",
+                  "color": "rgba(164, 199, 223, 1)",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "padding": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": -0,
+                    },
+                    Object {
+                      "translateY": -0,
+                    },
+                    Object {
+                      "scale": 1,
+                    },
+                  ],
+                }
+              }
+            >
+              Search Transactions
+            </Text>
+          </View>
+          <Text
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "opacity": 0,
+                },
+              }
+            }
+            collapsable={false}
+            numberOfLines={1}
+            style={
+              Object {
+                "bottom": -28,
+                "color": "#E85466",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "left": 28,
+                "opacity": 0,
+                "position": "absolute",
+              }
+            }
+          />
+          <Text
+            animatedStyle={
+              Object {
+                "value": Object {
+                  "color": "rgba(164, 199, 223, 1)",
+                  "opacity": 0,
+                  "transform": Array [
+                    Object {
+                      "translateX": 6,
+                    },
+                    Object {
+                      "scale": 0,
+                    },
+                  ],
+                },
+              }
+            }
+            collapsable={false}
+            numberOfLines={1}
+            onLayout={[Function]}
+            style={
+              Object {
+                "bottom": -10,
+                "color": "rgba(164, 199, 223, 1)",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "opacity": 0,
+                "position": "absolute",
+                "right": 28,
+                "transform": Array [
+                  Object {
+                    "translateX": 6,
+                  },
+                  Object {
+                    "scale": 0,
+                  },
+                ],
+              }
+            }
+          >
+            
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                Object {
+                  "color": "rgba(255, 255, 255, .75)",
+                  "fontSize": 22,
+                  "left": 0,
+                  "padding": 22,
+                  "position": "absolute",
+                  "top": 0,
+                },
+                Object {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+          <TextInput
+            autoFocus={false}
+            editable={true}
+            multiline={false}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            returnKeyType="search"
+            secureTextEntry={false}
+            selectionColor="#FFFFFF"
+            style={
+              Array [
+                Object {
+                  "alignSelf": "stretch",
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "padding": 0,
+                },
+                Object {
+                  "flexGrow": 0,
+                },
+              ]
+            }
+            textAlignVertical="top"
+            value=""
+          />
+        </View>
       </View>
     </View>
-    <React.Fragment>
+    <View
+      style={
+        Object {
+          "marginTop": 34,
+        }
+      }
+    >
       <View
         style={
           Object {
-            "marginTop": 34,
+            "flexDirection": "row",
           }
         }
       >
         <View
           style={
             Object {
-              "flexDirection": "row",
+              "flex": 1,
             }
           }
         >
           <View
             style={
               Object {
-                "flex": 1,
+                "flexDirection": "row",
+                "justifyContent": "space-between",
               }
             }
           >
             <View
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 Object {
+                  "alignItems": "center",
                   "flexDirection": "row",
-                  "justifyContent": "space-between",
+                  "flexShrink": 1,
+                  "marginRight": 11,
+                  "opacity": 1,
                 }
               }
             >
-              <TouchableOpacity
-                onPress={[Function]}
+              <View
                 style={
                   Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "flexShrink": 1,
-                    "marginRight": 11,
+                    "height": 34,
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                    "width": 34,
                   }
                 }
               >
-                <Memo(CryptoIconComponent)
-                  currencyCode="string"
-                  sizeRem={1.5}
-                  walletId="string"
-                />
-                <WithTheme(EdgeTextComponent)
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight={50}
+                  bbWidth={50}
+                  focusable={false}
+                  height={50}
+                  meetOrSlice={0}
+                  minX={-8}
+                  minY={-8}
                   style={
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
+                      Object {
+                        "left": -8,
+                        "position": "absolute",
+                        "top": -8,
+                        "transform": Array [
+                          Object {
+                            "rotateZ": "-90deg",
+                          },
+                        ],
+                      },
+                      Object {
+                        "flex": 0,
+                        "height": 50,
+                        "width": 50,
+                      },
+                    ]
+                  }
+                  vbHeight={50}
+                  vbWidth={50}
+                  width={50}
+                >
+                  <RNSVGGroup
+                    matrix={
+                      Array [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                      ]
+                    }
+                  >
+                    <RNSVGCircle
+                      cx={17}
+                      cy={17}
+                      opacity={1}
+                      propList={
+                        Array [
+                          "stroke",
+                          "strokeWidth",
+                          "strokeDasharray",
+                          "strokeDashoffset",
+                          "strokeLinecap",
+                        ]
+                      }
+                      r={19}
+                      stroke={4284935592}
+                      strokeDasharray={
+                        Array [
+                          119.38052083641213,
+                          119.38052083641213,
+                        ]
+                      }
+                      strokeDashoffset={null}
+                      strokeLinecap={1}
+                      strokeWidth={4}
+                    />
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "overflow": "hidden",
+                      },
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      Object {
+                        "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+                      }
+                    }
+                    style={
+                      Object {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
                     Object {
                       "flexShrink": 1,
                       "fontSize": 28,
                       "marginLeft": 11,
                       "marginRight": 6,
-                    }
-                  }
-                >
-                  string
-                </WithTheme(EdgeTextComponent)>
-                <Icon
-                  allowFontScaling={false}
-                  color="#66EDA8"
-                  name="chevron-forward"
-                  size={34}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={[Function]}
-                style={
-                  Object {
-                    "alignSelf": "center",
-                  }
+                    },
+                    null,
+                  ]
                 }
               >
-                <Icon
-                  allowFontScaling={false}
-                  color="#66EDA8"
-                  name="control-panel-settings"
-                  size={34}
-                />
-              </TouchableOpacity>
+                wallet name
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": "#66EDA8",
+                      "fontSize": 34,
+                    },
+                    undefined,
+                    Object {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
-            <TouchableOpacity
-              onPress={[Function]}
+            <View
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                Object {
+                  "alignSelf": "center",
+                  "opacity": 1,
+                }
+              }
             >
-              <React.Fragment>
-                <WithTheme(EdgeTextComponent)
-                  minimumFontScale={0.3}
-                  style={
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
                     Object {
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 45,
-                    }
-                  }
-                >
-                  string string
-                </WithTheme(EdgeTextComponent)>
-                <WithTheme(EdgeTextComponent)
-                  style={
+                      "color": "#66EDA8",
+                      "fontSize": 34,
+                    },
+                    undefined,
                     Object {
-                      "fontSize": 28,
-                    }
-                  }
-                >
-                  stringstring string
-                </WithTheme(EdgeTextComponent)>
-              </React.Fragment>
-            </TouchableOpacity>
+                      "fontFamily": "custom",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.3}
+              numberOfLines={1}
+              style={
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  Object {
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 45,
+                  },
+                  null,
+                ]
+              }
+            >
+              0.00123123 BTC
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                Array [
+                  Object {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  Object {
+                    "fontSize": 28,
+                  },
+                  null,
+                ]
+              }
+            >
+              $0.00 USD
+            </Text>
           </View>
         </View>
       </View>
-      <View
-        style={
-          Object {
-            "flexDirection": "row",
-            "marginTop": 22,
-          }
-        }
-      >
-        <TouchableOpacity
-          onPress={[Function]}
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexShrink": 1,
-              "justifyContent": "flex-start",
-              "paddingRight": 34,
-            }
-          }
-        >
-          <Icon
-            allowFontScaling={false}
-            color="#66EDA8"
-            name="arrowdown"
-            size={22}
-          />
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#66EDA8",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "marginLeft": 6,
-              }
-            }
-          >
-            Request
-          </WithTheme(EdgeTextComponent)>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={[Function]}
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "flexShrink": 1,
-              "justifyContent": "flex-start",
-              "paddingRight": 34,
-            }
-          }
-        >
-          <Icon
-            allowFontScaling={false}
-            color="#66EDA8"
-            name="arrowup"
-            size={22}
-          />
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#66EDA8",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "marginLeft": 6,
-              }
-            }
-          >
-            Send
-          </WithTheme(EdgeTextComponent)>
-        </TouchableOpacity>
-        <ActivityIndicator
-          color="#66EDA8"
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "paddingRight": 22,
-            }
-          }
-        />
-      </View>
-    </React.Fragment>
-  </View>
-  <Memo(SceneHeaderComponent)
-    underline={true}
-  >
-    <WithTheme(EdgeTextComponent)
+    </View>
+    <View
       style={
         Object {
-          "fontFamily": "Quicksand-Medium",
+          "flexDirection": "row",
+          "marginTop": 22,
         }
       }
     >
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexShrink": 1,
+            "justifyContent": "flex-start",
+            "opacity": 1,
+            "paddingRight": 34,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": "#66EDA8",
+                "fontSize": 22,
+              },
+              undefined,
+              Object {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "marginLeft": 6,
+              },
+              null,
+            ]
+          }
+        >
+          Request
+        </Text>
+      </View>
+      <View
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexShrink": 1,
+            "justifyContent": "flex-start",
+            "opacity": 1,
+            "paddingRight": 34,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": "#66EDA8",
+                "fontSize": 22,
+              },
+              undefined,
+              Object {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "color": "#66EDA8",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "marginLeft": 6,
+              },
+              null,
+            ]
+          }
+        >
+          Send
+        </Text>
+      </View>
+    </View>
+  </View>,
+  <View
+    style={
+      Array [
+        Object {
+          "justifyContent": "center",
+          "marginLeft": 22,
+          "paddingBottom": 22,
+        },
+        null,
+        undefined,
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "fontFamily": "Quicksand-Medium",
+          },
+          null,
+        ]
+      }
+    >
       Transactions
-    </WithTheme(EdgeTextComponent)>
-  </Memo(SceneHeaderComponent)>
-</React.Fragment>
+    </Text>
+  </View>,
+  <View
+    style={
+      Object {
+        "marginBottom": 11,
+        "marginLeft": 22,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        Array [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        Object {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        Object {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        Array [
+          Object {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          Object {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": -22,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
+  </View>,
+]
 `;
