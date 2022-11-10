@@ -45,7 +45,6 @@ export const LoanDetailsSummaryCard = (props: Props) => {
                   <EdgeText style={styles.detailLabel}>{detail.label}</EdgeText>
                   <EdgeText style={styles.detailValue}>{detail.value}</EdgeText>
                 </View>
-                <View style={styles.detailIconContainer}>{detail.icon}</View>
               </View>
             )
           })}
