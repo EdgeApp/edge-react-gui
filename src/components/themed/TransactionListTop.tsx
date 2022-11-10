@@ -69,7 +69,7 @@ interface State {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
+  textInput = React.createRef<OutlinedTextInputRef>()
 
   constructor(props: Props) {
     super(props)
