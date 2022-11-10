@@ -71,7 +71,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
-                walletId: '',
+                walletId: fakeCoreWallet.id,
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
@@ -80,7 +80,6 @@ describe('TransactionDetailsScene', () => {
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
                 otherParams: {},
-                wallet: fakeCoreWallet,
                 blockHeight: 0
               },
               walletId: fakeCoreWallet.id,
@@ -103,7 +102,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
-                walletId: '',
+                walletId: fakeCoreWallet.id,
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
@@ -112,7 +111,6 @@ describe('TransactionDetailsScene', () => {
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
                 otherParams: {},
-                wallet: fakeCoreWallet,
                 blockHeight: 0,
                 metadata: {
                   amountFiat: -6392.93

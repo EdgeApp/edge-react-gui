@@ -15,11 +15,11 @@ import { FlashNotification } from './FlashNotification'
 
 let showing = false
 
-export function showTransactionDropdown(tx: EdgeTransaction, walletId: string) {
+export function showTransactionDropdown(tx: EdgeTransaction) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
-    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} walletId={walletId} />).then(() => {
+    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} />).then(() => {
       showing = false
     })
   }
@@ -28,7 +28,6 @@ export function showTransactionDropdown(tx: EdgeTransaction, walletId: string) {
 interface OwnProps {
   bridge: AirshipBridge<void>
   tx: EdgeTransaction
-  walletId: string
 }
 
 interface StateProps {
@@ -42,17 +41,17 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
-  const { bridge, message, tx, walletId, selectWallet } = props
+  const { bridge, message, tx, selectWallet } = props
 
   return (
     <FlashNotification
       bridge={bridge}
       onPress={() => {
         bridge.resolve()
-        walletId && selectWallet(walletId, tx.currencyCode)
+        selectWallet(tx.walletId, tx.currencyCode)
         Actions.push('transactionDetails', {
           edgeTransaction: tx,
-          walletId
+          walletId: tx.walletId
         })
       }}
       message={message}
@@ -62,14 +61,14 @@ export function TransactionDropdown(props: Props) {
 
 const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
-    const { tx, walletId } = ownProps
+    const { tx } = ownProps
 
     if (!state.ui.settings.loginStatus) {
       return { message: '' }
     }
 
     const { nativeAmount, currencyCode } = tx
-    const wallet = tx.wallet ?? (walletId != null ? state.core.account.currencyWallets[walletId] : undefined)
+    const wallet = state.core.account.currencyWallets[tx.walletId]
     // wallet and walletId are both optional and if neither are present we can't show an amount with a denomination.
     // In that case we can still show a message with the currency code
     if (wallet != null) {
