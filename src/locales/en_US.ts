@@ -912,7 +912,6 @@ const strings = {
   export_transaction_quickbooks_qbo: 'Quickbooks QBO',
   export_transaction_csv: 'CSV',
   string_export: 'Export',
-  string_no_wallet_name: 'No Wallet Name',
   string_status: 'Status',
   string_fee: 'Fee',
   string_total_amount: 'Total Amount',

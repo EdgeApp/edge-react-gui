@@ -13,7 +13,7 @@ import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
-import { getAvailableBalance } from '../../../util/CurrencyWalletHelpers'
+import { getAvailableBalance, getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
 
@@ -210,12 +210,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {showPaymentWalletPicker && fioWallets.length > 1 ? (
-          <Tile
-            type="editable"
-            title={s.strings.select_wallet}
-            onPress={this.handleWalletPress}
-            body={paymentWallet && paymentWallet.name ? paymentWallet.name : ''}
-          />
+          <Tile type="editable" title={s.strings.select_wallet} onPress={this.handleWalletPress} body={paymentWallet ? getWalletName(paymentWallet) : ''} />
         ) : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />

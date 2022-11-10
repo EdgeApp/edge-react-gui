@@ -26,6 +26,7 @@ import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -335,7 +336,7 @@ export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void
 
       // Build the category string:
       const isTransfer = pluginId === 'transfer'
-      const toWalletName = toWallet.name ?? ''
+      const toWalletName = getWalletName(toWallet)
       const name = isTransfer ? toWalletName : swapInfo.displayName
       const swapType = isTransfer ? 'transfer' : 'exchange'
       const swapTarget = isTransfer ? toWalletName : toCurrencyCode

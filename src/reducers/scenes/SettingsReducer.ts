@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyInfo } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 
 import ENV from '../../../env.json'
 import { SortOption } from '../../components/modals/WalletListSortModal'
@@ -42,10 +42,6 @@ export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   changesLocked: true,
-  plugins: {
-    allCurrencyInfos: [],
-    supportedWalletTypes: []
-  },
   pinLoginEnabled: false,
   loginStatus: null,
   isTouchSupported: false,
@@ -82,13 +78,6 @@ export interface SettingsState {
   loginStatus: boolean | null
   preferredSwapPluginId: string | undefined
   pinLoginEnabled: boolean
-  plugins: {
-    [pluginId: string]: EdgeCurrencyInfo
-    // @ts-expect-error
-    allCurrencyInfos: EdgeCurrencyInfo[]
-    // @ts-expect-error
-    supportedWalletTypes: string[]
-  }
   isAccountBalanceVisible: boolean
   walletsSort: SortOption
   mostRecentWallets: MostRecentWallet[]
@@ -100,23 +89,6 @@ export interface SettingsState {
   }
   developerModeOn: boolean
   passwordRecoveryRemindersShown: PasswordReminderLevels
-}
-
-function currencyPluginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
-  const { plugins } = state
-  const { allCurrencyInfos, supportedWalletTypes } = plugins
-  const { pluginId, walletType } = currencyInfo
-
-  return {
-    ...state,
-    // @ts-expect-error
-    plugins: {
-      ...plugins,
-      [pluginId]: currencyInfo,
-      allCurrencyInfos: [...allCurrencyInfos, currencyInfo],
-      supportedWalletTypes: [...supportedWalletTypes, walletType]
-    }
-  }
 }
 
 // @ts-expect-error
@@ -146,7 +118,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
-      const account: EdgeAccount = action.data.account
       const {
         touchIdInfo,
         autoLogoutTimeInSeconds,
@@ -162,7 +133,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         passwordRecoveryRemindersShown,
         developerModeOn
       } = action.data
-      let newState: SettingsState = {
+      const newState: SettingsState = {
         ...state,
         loginStatus: true,
         autoLogoutTimeInSeconds,
@@ -181,9 +152,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         developerModeOn
       }
       if (developerModeOn && ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
-      for (const pluginId of Object.keys(account.currencyConfig)) {
-        newState = currencyPluginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
-      }
       return newState
     }
     case 'DEVELOPER_MODE_ON': {

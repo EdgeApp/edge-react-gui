@@ -7,6 +7,7 @@ import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../co
 import s from '../../locales/strings'
 import { CcWalletMap } from '../../reducers/FioReducer'
 import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -395,7 +396,7 @@ export const makeConnectWallets = (
     // Look for unique FIO network chain code
     const info = getSpecialCurrencyInfo(pluginId)
     const currencyCode = info.fioChainCode ?? cCode
-    const walletName = wallet.name ?? info.initWalletName
+    const walletName = getWalletName(wallet)
     const fullCurrencyCode = `${currencyCode}:${currencyCode}`
     walletItems[`${wallet.id}-${currencyCode}`] = {
       key: `${wallet.id}-${currencyCode}`,
