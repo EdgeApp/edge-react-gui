@@ -1,5 +1,41 @@
 # edge-react-gui
 
+## 2.26.0 (2022-11-10)
+
+- Add swap provider Swapuz
+- Add wallet selection scene to new account flow
+- Deprecate REPv1 trading for REPv2
+- FIO: Fix crash when user has no remaining bundled transactions
+- Introduce withWallet to prevent crashes on some scenes
+- Android: Fix broken category picker
+- Show scam warning on first visit to Send Scene
+- Redux type cleanups
+- Various code cleanups
+- Cleanup unit tests and make them more maintainable
+- Upgrade react-native to v0.67.5
+- Upgrade edge-currency-accountbased to v0.18.8
+  - ZEC: Throw error when attempting to send before wallet is synced
+  - ZEC: Update checkpoints
+- Upgrade edge-currency-plugins to v1.2.3
+  - Rewrite wallet balance update algorithm
+  - Change ADDRESS_BALANCE_CHANGED event to take an array of balances
+  - Emit address balance update event after initializing addresses
+  - Add metadataState to dumpData
+- Upgrade edge-exchange-plugins to v0.16.6
+  - Implement Swapuz
+  - Thorchain: Use Midgard API to calculate Thorchain network fees
+  - Thorchain: Fix minimum quotes
+  - Thorchain: Remove minAmount support
+  - Swapuz: Implement TO quotes for like-kind assets
+  - ChangeHero: Reimplement restricted currency codes
+  - Sideshift: Replace safeCurrencyCodes helper function with getCodesWithTranscription
+  - Block REPv1 trading across all partners
+  - Change helper function name and expand ability to accept currency code transcription map
+  - Fix missing 'to' identifiers on min/max errors
+  - Turn on remaining linting rules and fix issues
+- Upgrade edge-login-ui-rn to v0.10.12
+  - Increase touch area of password login screen dropdown button
+
 ## 2.25.0 (2022-10-28)
 
 - Add EthereumPoW (ETHW)
