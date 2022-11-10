@@ -13,6 +13,7 @@ import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/d
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
+import ENV from '../../../env.json'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
@@ -209,7 +210,7 @@ export const LoanDetailsScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         underline
-        title={s.strings.loan_details_title}
+        title={`${s.strings.loan_details_title}${ENV.YOLO_FEATURES ? ` (${wallet.name})` : null}`}
         withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>

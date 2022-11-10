@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
+import ENV from '../../../env.json'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useWatch } from '../../hooks/useWatch'
@@ -66,6 +67,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
                   <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
                   <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
                 </View>
+                {ENV.YOLO_FEATURES ? <EdgeText>{`${currencyWallet.name}`}</EdgeText> : null}
                 <View style={styles.column}>
                   <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
                   <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
