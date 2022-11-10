@@ -808,7 +808,6 @@
   "export_transaction_quickbooks_qbo": "QBO Quickbooks",
   "export_transaction_csv": "CSV",
   "string_export": "Экспорт",
-  "string_no_wallet_name": "Нет имени кошелька",
   "string_status": "Status",
   "string_fee": "Fee",
   "string_total_amount": "Total Amount",
