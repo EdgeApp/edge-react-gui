@@ -8,7 +8,6 @@ import thunk from 'redux-thunk'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
 import { rootReducer } from '../../reducers/RootReducer'
-import { makeGuiWallet } from '../../reducers/scenes/WalletsReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('TransactionListTop', () => {
@@ -58,13 +57,6 @@ describe('TransactionListTop', () => {
         currencyWallets: { '123': fakeWallet },
         currencyConfig: { bitcoin: fakeCurrencyConfig }
       }
-    },
-    ui: {
-      wallets: {
-        byId: { '123': makeGuiWallet(fakeWallet) },
-        selectedWalletId: '123',
-        selectedCurrencyCode: 'BTC'
-      }
     }
   }
 
@@ -74,10 +66,11 @@ describe('TransactionListTop', () => {
     const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionListTop
+          currencyCode="BTC"
           isEmpty={false}
           navigation={fakeNavigation}
           searching={false}
-          walletId="123"
+          wallet={fakeWallet}
           onChangeSortingState={() => undefined}
           onSearchTransaction={() => undefined}
         />

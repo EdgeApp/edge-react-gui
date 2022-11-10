@@ -16,8 +16,9 @@ import { withWallet } from '../hoc/withWallet'
 import { ThemeProps, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
-import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents'
+import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
+import { TransactionListTop } from '../themed/TransactionListTop'
 import { ExchangedFlipInputTester } from './ExchangedFlipInputTester'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -176,15 +177,17 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { wallet } = this.props
+    const { currencyCode, navigation, tokenId, wallet } = this.props
+    const { searching } = this.state
 
     return (
-      <Top
-        walletId={wallet.id}
+      <TransactionListTop
+        navigation={navigation}
+        currencyCode={currencyCode}
         isEmpty={this.isUnsupported() || this.props.transactions.length < 1}
-        searching={this.state.searching}
-        navigation={this.props.navigation}
-        tokenId={this.props.tokenId}
+        searching={searching}
+        tokenId={tokenId}
+        wallet={wallet}
         onChangeSortingState={this.handleChangeSortingState}
         onSearchTransaction={this.handleSearchTransaction}
       />
@@ -193,7 +196,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   keyExtractor = (item: TransactionListTx) => item.txid
 
-  getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
+  getItemLayout = (data: unknown, index: number) => ({
+    length: this.props.theme.rem(4.25),
+    offset: this.props.theme.rem(4.25) * index,
+    index
+  })
 
   render() {
     const { filteredTransactions, loading, reset, searching } = this.state
