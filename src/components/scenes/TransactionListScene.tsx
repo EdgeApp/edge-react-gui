@@ -50,7 +50,6 @@ interface OwnProps {
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 interface State {
-  isTransactionListUnsupported: boolean
   reset: boolean
   searching: boolean
   filteredTransactions: TransactionListTx[]
@@ -61,7 +60,6 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      isTransactionListUnsupported: false,
       reset: true,
       searching: false,
       filteredTransactions: [],
@@ -73,10 +71,6 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     this.props.fetchMoreTransactions(this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
-    }
-
-    if (this.props.wallet != null && !!SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported) {
-      this.setState({ isTransactionListUnsupported: true })
     }
   }
 
@@ -91,6 +85,10 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
         this.setState({ reset: false })
       }
     }
+  }
+
+  isUnsupported(): boolean {
+    return SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported === true
   }
 
   handleScrollEnd = () => {
@@ -153,9 +151,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderEmptyComponent = () => {
     const { tokenId, numTransactions, wallet } = this.props
-    const { isTransactionListUnsupported } = this.state
 
-    if (isTransactionListUnsupported) {
+    if (this.isUnsupported()) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
     } else if (numTransactions > 0) {
       return <EmptyLoader />
@@ -180,12 +177,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderTop = () => {
     const { wallet } = this.props
-    const { isTransactionListUnsupported } = this.state
 
     return (
       <Top
         walletId={wallet.id}
-        isEmpty={isTransactionListUnsupported || this.props.transactions.length < 1}
+        isEmpty={this.isUnsupported() || this.props.transactions.length < 1}
         searching={this.state.searching}
         navigation={this.props.navigation}
         tokenId={this.props.tokenId}
@@ -200,8 +196,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
 
   render() {
-    const { filteredTransactions, loading, reset, searching, isTransactionListUnsupported } = this.state
-    const transactions = isTransactionListUnsupported || reset ? [] : searching ? filteredTransactions : this.props.transactions
+    const { filteredTransactions, loading, reset, searching } = this.state
+    const transactions = this.isUnsupported() || reset ? [] : searching ? filteredTransactions : this.props.transactions
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
