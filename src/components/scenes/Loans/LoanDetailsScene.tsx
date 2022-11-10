@@ -25,6 +25,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
+import { yoloRefreshBorrowEngine } from '../../../util/yoloFeatures'
 import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
@@ -102,6 +103,10 @@ export const LoanDetailsScene = (props: Props) => {
   ]
 
   const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details'))
+
+  const handleRefreshButtonPress = () => {
+    yoloRefreshBorrowEngine(loanAccount).then(() => console.log(`Account ${loanAccount.id} refreshed`))
+  }
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
@@ -213,9 +218,16 @@ export const LoanDetailsScene = (props: Props) => {
         title={`${s.strings.loan_details_title}${ENV.YOLO_FEATURES ? ` (${wallet.name})` : null}`}
         withTopMargin
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
-            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          <Space isSideways>
+            <TouchableOpacity onPress={handleInfoIconPress}>
+              <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+            </TouchableOpacity>
+            {ENV.YOLO_FEATURES ? (
+              <TouchableOpacity onPress={handleRefreshButtonPress}>
+                <Ionicon name="refresh-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+              </TouchableOpacity>
+            ) : null}
+          </Space>
         }
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
