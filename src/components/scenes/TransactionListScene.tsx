@@ -1,16 +1,19 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { withWallet } from '../hoc/withWallet'
+import { ThemeProps, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents'
@@ -35,12 +38,13 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
+  fetchMoreTransactions: (reset: boolean) => void
 }
 
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
   route: RouteProp<'transactionList'>
+  wallet: EdgeCurrencyWallet
 }
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
@@ -66,7 +70,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount = () => {
-    this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
     }
@@ -81,7 +85,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     const currencyCodeChanged = prevProps.currencyCode !== this.props.currencyCode
 
     if (walletIdChanged || currencyCodeChanged) {
-      this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+      this.props.fetchMoreTransactions(this.state.reset)
       if (this.state.reset) {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ reset: false })
@@ -90,7 +94,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   handleScrollEnd = () => {
-    this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
     }
@@ -229,26 +233,30 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const TransactionList = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
-    const { walletId, currencyCode } = ownProps.route.params
+export const TransactionList = withWallet((props: OwnProps) => {
+  const { wallet, route } = props
+  const { walletId, currencyCode } = route.params
+  const theme = useTheme()
+  const dispatch = useDispatch()
 
-    // getTransactions
-    const { currencyWallets } = state.core.account
-    const currencyWallet = currencyWallets[walletId]
-    const tokenId = currencyWallet != null ? getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, currencyCode) : undefined
+  const account = useSelector(state => state.core.account)
+  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
+  const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
+  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
-    return {
-      numTransactions: state.ui.scenes.transactionList.numTransactions,
-      currencyCode,
-      wallet: currencyWallet,
-      tokenId,
-      transactions: state.ui.scenes.transactionList.transactions
-    }
-  },
-  dispatch => ({
-    fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean) {
-      dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
-    }
+  const handleMoreTransactions = useHandler((reset: boolean): void => {
+    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
   })
-)(withTheme(TransactionListComponent))
+
+  return (
+    <TransactionListComponent
+      {...props}
+      currencyCode={currencyCode}
+      numTransactions={numTransactions}
+      tokenId={tokenId}
+      theme={theme}
+      transactions={transactions}
+      fetchMoreTransactions={handleMoreTransactions}
+    />
+  )
+})
