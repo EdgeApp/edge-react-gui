@@ -84,7 +84,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       const userData = await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
       const { totalCollateralETH, totalDebtETH } = userData
       const loanToValue = parseFloat(totalDebtETH.toString()) / parseFloat(totalCollateralETH.toString())
-      instance.loanToValue = loanToValue
+      instance.loanToValue = isNaN(loanToValue) ? 0 : loanToValue
     }
     const validateWalletParam = (walletParam: EdgeCurrencyWallet) => {
       if (walletParam.currencyInfo.pluginId !== wallet.currencyInfo.pluginId)

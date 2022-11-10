@@ -14,7 +14,7 @@ export const Thermostat = ({ ratio, textColor }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const percent = Math.max(0, Math.min(1, ratio)) * 100
-  const percentText = `${percent.toFixed(0)}%`
+  const percentText = ratio === 0 ? '--' : `${percent.toFixed(0)}%`
 
   return (
     <View style={styles.container}>
