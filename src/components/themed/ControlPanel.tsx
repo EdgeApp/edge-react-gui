@@ -6,6 +6,7 @@ import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from '
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
 import Feather from 'react-native-vector-icons/Feather'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
@@ -17,11 +18,13 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
+import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
@@ -55,6 +58,7 @@ export function ControlPanel(props: Props) {
   // ---- Redux State ----
 
   const account = useSelector(state => state.core.account)
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -86,14 +90,13 @@ export function ControlPanel(props: Props) {
   const handleDeleteAccount = (username: string) => () => {
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
         bridge={bridge}
         title={s.strings.forget_account_title}
         message={sprintf(s.strings.forget_account_message_common, username)}
         buttons={{
           ok: {
             label: s.strings.string_forget,
-            async onPress() {
+            onPress: async () => {
               await dispatch(deleteLocalAccount(username))
               return true
             },
@@ -147,8 +150,7 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
-    // @ts-expect-error
-    handleGoToScene('loanDashboard')
+    handleGoToScene('loanDashboard', {})
   }
 
   const handleLoginQr = () => {
@@ -230,22 +232,24 @@ export function ControlPanel(props: Props) {
 
   /// ---- Row Data ----
 
-  const rowDatas: any[] = [
+  const rowDatas: Array<{
+    pressHandler: () => void
+    iconName?: string // Fontello
+    iconNameFontAwesome?: string
+    title: string
+  }> = [
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('fioAddressList'),
+      pressHandler: () => handleGoToScene('fioAddressList', {}),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('fioRequestList'),
+      pressHandler: () => handleGoToScene('fioRequestList', {}),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('wcConnections'),
+      pressHandler: () => handleGoToScene('wcConnections', {}),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
@@ -257,15 +261,13 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('termsOfService'),
+      pressHandler: () => handleGoToScene('termsOfService', {}),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      // @ts-expect-error
-      pressHandler: () => handleGoToScene('settingsOverviewTab'),
+      pressHandler: () => handleGoToScene('settingsOverviewTab', {}),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
@@ -276,6 +278,14 @@ export function ControlPanel(props: Props) {
     }
   ]
 
+  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+    rowDatas.unshift({
+      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      iconNameFontAwesome: 'hand-holding-usd',
+      title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
+    })
+  }
+
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} background="none">
       {/* ==== Top Panel Start ==== */}
@@ -284,12 +294,7 @@ export function ControlPanel(props: Props) {
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
           {selectedWallet == null || selectedDenomination == null ? (
-            <TitleText
-              // @ts-expect-error
-              style={[styles.text, { marginLeft: theme.rem(1), marginRight: theme.rem(1) }]}
-            >
-              {s.strings.exchange_rate_loading_singular}
-            </TitleText>
+            <TitleText style={{ ...styles.text, marginLeft: theme.rem(1), marginRight: theme.rem(1) }}>{s.strings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>
@@ -358,7 +363,10 @@ export function ControlPanel(props: Props) {
             {rowDatas.map(rowData => (
               <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
-                  <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
+                  {rowData.iconNameFontAwesome != null ? (
+                    <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                  ) : null}
                 </View>
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>

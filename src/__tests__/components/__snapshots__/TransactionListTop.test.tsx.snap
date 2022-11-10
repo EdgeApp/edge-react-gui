@@ -233,6 +233,15 @@ exports[`TransactionListTop should render with loading props 1`] = `
         />
       </View>
     </React.Fragment>
+    <EarnCrypto
+      wallet={
+        Object {
+          "currencyInfo": Object {
+            "currencyCode": "CODE",
+          },
+        }
+      }
+    />
   </View>
   <Memo(SceneHeaderComponent)
     underline={true}

@@ -1,10 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BuyCrypto should render with some props 1`] = `
-<React.Fragment>
-  <ButtonBox
-    onPress={[Function]}
-    paddingRem={1}
+Array [
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "marginBottom": 0,
+        "marginLeft": 0,
+        "marginRight": 0,
+        "marginTop": 0,
+        "opacity": 1,
+        "paddingBottom": 22,
+        "paddingLeft": 22,
+        "paddingRight": 22,
+        "paddingTop": 22,
+      }
+    }
   >
     <View
       style={
@@ -25,29 +46,43 @@ exports[`BuyCrypto should render with some props 1`] = `
           }
         }
       >
-        <Memo(CryptoIconComponent)
-          marginRem={
-            Array [
-              0.25,
-              0,
-            ]
-          }
-          sizeRem={2.25}
-          walletId="my wallet"
-        />
-        <WithTheme(EdgeTextComponent)
+        <View
           style={
             Object {
-              "fontFamily": "Quicksand-Medium",
-              "marginVertical": 6,
+              "height": 51,
+              "marginBottom": 6,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 6,
+              "width": 51,
             }
+          }
+        />
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "fontFamily": "Quicksand-Medium",
+                "marginVertical": 6,
+              },
+              null,
+            ]
           }
         >
           Buy Bitcoin
-        </WithTheme(EdgeTextComponent)>
+        </Text>
       </View>
     </View>
-  </ButtonBox>
+  </View>,
   <View
     style={
       Object {
@@ -58,15 +93,27 @@ exports[`BuyCrypto should render with some props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
       style={
-        Object {
-          "fontSize": 28,
-        }
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "fontSize": 28,
+          },
+          null,
+        ]
       }
     >
       No transactions yet
-    </WithTheme(EdgeTextComponent)>
-  </View>
-</React.Fragment>
+    </Text>
+  </View>,
+]
 `;

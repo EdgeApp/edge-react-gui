@@ -3,12 +3,16 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { useSelector } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { ioniaPluginIds } from './EarnCrypto'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
@@ -30,7 +34,14 @@ export const BuyCrypto = (props: Props) => {
     Actions.push('pluginListBuy', { direction: 'buy' })
   })
 
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+
   const { displayName, pluginId } = wallet.currencyInfo
+
+  let message = s.strings.transaction_list_buy_crypto_message
+  if (ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+    message = s.strings.transaction_list_buy_and_earn_crypto_message
+  }
 
   return (
     <>
@@ -40,7 +51,7 @@ export const BuyCrypto = (props: Props) => {
             <View style={styles.buyCrypto}>
               <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-              <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>{sprintf(message, displayName)}</EdgeText>
             </View>
           </View>
         </ButtonBox>
