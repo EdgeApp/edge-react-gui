@@ -2,39 +2,8 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { TransactionListTop } from '../themed/TransactionListTop'
-
-interface Props {
-  walletId: string
-  isEmpty: boolean
-  searching: boolean
-  tokenId?: string
-  navigation: NavigationProp<'transactionList'>
-  onChangeSortingState: (isSearching: boolean) => void
-  onSearchTransaction: (searchString: string) => void
-}
-
-export const Top = (props: Props) => {
-  const loading = useSelector(state => !state.ui.wallets.byId[props.walletId])
-
-  return loading ? (
-    <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
-  ) : (
-    <TransactionListTop
-      walletId={props.walletId}
-      isEmpty={props.isEmpty}
-      tokenId={props.tokenId}
-      navigation={props.navigation}
-      searching={props.searching}
-      onChangeSortingState={props.onChangeSortingState}
-      onSearchTransaction={props.onSearchTransaction}
-    />
-  )
-}
 
 export const EmptyLoader = () => {
   const theme = useTheme()

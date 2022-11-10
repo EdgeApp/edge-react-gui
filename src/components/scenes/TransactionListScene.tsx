@@ -1,20 +1,24 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { withWallet } from '../hoc/withWallet'
+import { ThemeProps, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
-import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents'
+import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
+import { TransactionListTop } from '../themed/TransactionListTop'
 import { ExchangedFlipInputTester } from './ExchangedFlipInputTester'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -35,18 +39,18 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
+  fetchMoreTransactions: (reset: boolean) => void
 }
 
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
   route: RouteProp<'transactionList'>
+  wallet: EdgeCurrencyWallet
 }
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 interface State {
-  isTransactionListUnsupported: boolean
   reset: boolean
   searching: boolean
   filteredTransactions: TransactionListTx[]
@@ -57,7 +61,6 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      isTransactionListUnsupported: false,
       reset: true,
       searching: false,
       filteredTransactions: [],
@@ -66,13 +69,9 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount = () => {
-    this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
-    }
-
-    if (this.props.wallet != null && !!SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported) {
-      this.setState({ isTransactionListUnsupported: true })
     }
   }
 
@@ -81,7 +80,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     const currencyCodeChanged = prevProps.currencyCode !== this.props.currencyCode
 
     if (walletIdChanged || currencyCodeChanged) {
-      this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+      this.props.fetchMoreTransactions(this.state.reset)
       if (this.state.reset) {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ reset: false })
@@ -89,8 +88,12 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  isUnsupported(): boolean {
+    return SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported === true
+  }
+
   handleScrollEnd = () => {
-    this.props.fetchMoreTransactions(this.props.wallet.id, this.props.currencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(this.state.reset)
     if (this.state.reset) {
       this.setState({ reset: false })
     }
@@ -149,9 +152,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderEmptyComponent = () => {
     const { tokenId, numTransactions, wallet } = this.props
-    const { isTransactionListUnsupported } = this.state
 
-    if (isTransactionListUnsupported) {
+    if (this.isUnsupported()) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
     } else if (numTransactions > 0) {
       return <EmptyLoader />
@@ -175,16 +177,17 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { wallet } = this.props
-    const { isTransactionListUnsupported } = this.state
+    const { currencyCode, navigation, tokenId, wallet } = this.props
+    const { searching } = this.state
 
     return (
-      <Top
-        walletId={wallet.id}
-        isEmpty={isTransactionListUnsupported || this.props.transactions.length < 1}
-        searching={this.state.searching}
-        navigation={this.props.navigation}
-        tokenId={this.props.tokenId}
+      <TransactionListTop
+        navigation={navigation}
+        currencyCode={currencyCode}
+        isEmpty={this.isUnsupported() || this.props.transactions.length < 1}
+        searching={searching}
+        tokenId={tokenId}
+        wallet={wallet}
         onChangeSortingState={this.handleChangeSortingState}
         onSearchTransaction={this.handleSearchTransaction}
       />
@@ -193,11 +196,15 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   keyExtractor = (item: TransactionListTx) => item.txid
 
-  getItemLayout = (data: any, index: number) => ({ length: this.props.theme.rem(4.25), offset: this.props.theme.rem(4.25) * index, index })
+  getItemLayout = (data: unknown, index: number) => ({
+    length: this.props.theme.rem(4.25),
+    offset: this.props.theme.rem(4.25) * index,
+    index
+  })
 
   render() {
-    const { filteredTransactions, loading, reset, searching, isTransactionListUnsupported } = this.state
-    const transactions = isTransactionListUnsupported || reset ? [] : searching ? filteredTransactions : this.props.transactions
+    const { filteredTransactions, loading, reset, searching } = this.state
+    const transactions = this.isUnsupported() || reset ? [] : searching ? filteredTransactions : this.props.transactions
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
@@ -229,26 +236,30 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const TransactionList = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
-    const { walletId, currencyCode } = ownProps.route.params
+export const TransactionList = withWallet((props: OwnProps) => {
+  const { wallet, route } = props
+  const { walletId, currencyCode } = route.params
+  const theme = useTheme()
+  const dispatch = useDispatch()
 
-    // getTransactions
-    const { currencyWallets } = state.core.account
-    const currencyWallet = currencyWallets[walletId]
-    const tokenId = currencyWallet != null ? getTokenId(state.core.account, currencyWallet.currencyInfo.pluginId, currencyCode) : undefined
+  const account = useSelector(state => state.core.account)
+  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
+  const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
+  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
-    return {
-      numTransactions: state.ui.scenes.transactionList.numTransactions,
-      currencyCode,
-      wallet: currencyWallet,
-      tokenId,
-      transactions: state.ui.scenes.transactionList.transactions
-    }
-  },
-  dispatch => ({
-    fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean) {
-      dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
-    }
+  const handleMoreTransactions = useHandler((reset: boolean): void => {
+    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
   })
-)(withTheme(TransactionListComponent))
+
+  return (
+    <TransactionListComponent
+      {...props}
+      currencyCode={currencyCode}
+      numTransactions={numTransactions}
+      tokenId={tokenId}
+      theme={theme}
+      transactions={transactions}
+      fetchMoreTransactions={handleMoreTransactions}
+    />
+  )
+})
