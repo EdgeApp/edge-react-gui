@@ -972,13 +972,13 @@ const strings = {
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
   loan_breakdown_title: 'Loan Breakdown',
-  loan_close_loan_warning:
-    "Closing your loan will liquidate some of the collateral to pay of the remaining principal and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
+  loan_close_swap_warning:
+    "Closing your loan will liquidate some of the deposited collateral if you do not have enough balance to repay the remaining principal and interest on your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
   loan_close_loan_no_tx_needed_message:
     `There appears to be no principal to repay nor collateral to withdraw.\n\n` +
     `No transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
   loan_close_loan_title: 'Close Loan',
-  loan_close_loan_error:
+  loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
   loan_collateral_amount: 'Collateral Amount',
   loan_collateral_destination: 'Collateral Destination',
@@ -993,7 +993,7 @@ const strings = {
   loan_debt_destination: 'Loan Destination',
   loan_details_title: 'Loan Details',
   loan_enter_s_amount_s: 'Enter %1$s Amount (%2$s)',
-  loan_error_title: 'Unexpected Error',
+  fragment_error: 'Error',
   loan_estimate_fee: 'Estimated Fee',
   loan_exchange_rate: 'Exchange Rate',
   loan_failed_loan: 'Failed to load loan data',

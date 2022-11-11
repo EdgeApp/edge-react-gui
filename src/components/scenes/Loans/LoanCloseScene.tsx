@@ -65,8 +65,6 @@ export const LoanCloseScene = (props: Props) => {
   const debt = debts[0]
   const debtTokenId = debt?.tokenId
 
-  const isLoanCloseSupported = collaterals.length <= 1 && debts.length <= 1
-
   // Derived State:
 
   // Create Action Ops
@@ -151,10 +149,8 @@ export const LoanCloseScene = (props: Props) => {
             ))}
           </Tile>
         ) : null}
-        {!isLoanCloseSupported ? (
-          <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
-        ) : actionProgram !== null ? (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {actionProgram !== null ? (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
         ) : (
           <Alert
             title={s.strings.loan_close_loan_title}
@@ -166,7 +162,7 @@ export const LoanCloseScene = (props: Props) => {
         )}
         {aggregateErrorMessage.length > 0 ? (
           <Alert
-            title={s.strings.loan_error_title}
+            title={s.strings.fragment_error}
             message={translateError(aggregateErrorMessage.concat('\n\n'))}
             type="error"
             numberOfLines={7}

@@ -240,6 +240,9 @@ export const makeAaveCloseAction = async ({
   const debt = debts[0]
   const debtTokenId = debt?.tokenId
 
+  // Only accept this request if the user has only singular debt/collateral assets
+  if (collaterals.length > 1 || debts.length > 1) throw new Error(s.strings.loan_close_multiple_asset_error)
+
   const seqAction: SeqActionOp = {
     type: 'seq',
     actions: []
