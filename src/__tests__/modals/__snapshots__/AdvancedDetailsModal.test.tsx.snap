@@ -276,17 +276,15 @@ Array [
             },
             undefined,
             Object {
-              "fontFamily": "FontAwesome5Free-Solid",
+              "fontFamily": "anticon",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            Object {
-              "fontWeight": "900",
-            },
+            Object {},
           ]
         }
       >
-        
+        
       </Text>
     </View>
   </View>,
