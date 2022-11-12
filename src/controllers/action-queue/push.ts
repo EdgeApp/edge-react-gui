@@ -1,30 +1,15 @@
-import { asMaybe } from 'cleaners'
-
-import ENV from '../../../env.json'
 import s from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
-import { base58 } from '../../util/encoding'
+import { makePushClient } from '../../util/PushClient/PushClient'
 import { filterNull } from '../../util/safeFilters'
 import { ActionEffect, ActionProgram, ExecutionContext, ExecutionOutput, PushEventEffect } from './types'
-import {
-  asErrorResponse,
-  asLoginPayload,
-  LoginUpdatePayload,
-  NewPushEvent,
-  PushEventStatus,
-  PushRequestBody,
-  wasLoginUpdatePayload,
-  wasPushRequestBody
-} from './types/pushApiTypes'
+import { LoginUpdatePayload, NewPushEvent, PushEventStatus } from './types/pushApiTypes'
 import { BroadcastTx, PushEventState, PushMessage, PushTrigger } from './types/pushTypes'
 
 export interface PushEventInfo {
   newPushEvent: NewPushEvent
   pushEventEffect: PushEventEffect
 }
-
-const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV
-const { pushServerUri } = ACTION_QUEUE
 
 /*
 Each PushEvent's trigger should be the effect of the previous ExecutionOutput:
@@ -108,25 +93,8 @@ export async function prepareNewPushEvents(
 
 export async function checkPushEvent(context: ExecutionContext, eventId: string): Promise<boolean> {
   const { account, clientId } = context
-  const { rootLoginId } = account
-  const requestBody: PushRequestBody = {
-    apiKey: AIRBITZ_API_KEY,
-    deviceId: clientId,
-    loginId: base58.parse(rootLoginId)
-  }
-
-  const response = await fetch(`${pushServerUri}/v2/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: wasPushRequestBody(requestBody)
-  })
-
-  if (!response.ok) {
-    throw new Error(`Request failed with ${response.status}`)
-  }
-
-  const data = await response.json()
-  const loginPayload = asLoginPayload(data)
+  const pushClient = makePushClient(account, clientId)
+  const loginPayload = await pushClient.getPushEvents()
   const eventStatusMap: { [eventId: string]: PushEventStatus } = loginPayload.events.reduce(
     (map, eventStatus) => ({ ...map, [eventStatus.eventId]: eventStatus }),
     {}
@@ -149,36 +117,8 @@ export async function effectCanBeATrigger(context: ExecutionContext, effect: Act
 
 export async function uploadPushEvents(context: ExecutionContext, payload: LoginUpdatePayload): Promise<void> {
   const { account, clientId } = context
-  const { rootLoginId } = account
-  const requestBody: PushRequestBody = {
-    apiKey: AIRBITZ_API_KEY,
-    deviceId: clientId,
-    loginId: base58.parse(rootLoginId)
-  }
-  const response = await fetch(`${pushServerUri}/v2/login/update`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: wasPushRequestBody({ ...requestBody, data: wasLoginUpdatePayload(payload) })
-  })
-
-  if (!response.ok) {
-    const responseBody = await response.text()
-    const responseData = asMaybe(asErrorResponse)(responseBody)
-    console.error(
-      'Failed push-server request:',
-      JSON.stringify(
-        {
-          responseBody,
-          responseData
-        },
-        null,
-        2
-      )
-    )
-    throw new Error(`Request failed with ${response.status}`)
-  }
+  const pushClient = makePushClient(account, clientId)
+  return await pushClient.uploadPushEvents(payload)
 }
 
 async function actionEffectToPushTrigger(context: ExecutionContext, effect: ActionEffect): Promise<PushTrigger | null> {
