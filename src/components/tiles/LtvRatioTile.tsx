@@ -66,5 +66,5 @@ export const LtvRatioTile = (props: {
 }
 
 export const getLtvColorValue = (ltvValue: string, theme: Theme): string => {
-  return gt(ltvValue, '0.7') ? theme.dangerText : gt(ltvValue, '0.6') ? theme.warningText : theme.positiveText
+  return gt(ltvValue, '0.7') ? theme.dangerText : gt(ltvValue, '0.6') ? theme.warningText : gt(ltvValue, '0') ? theme.positiveText : theme.deactivatedText
 }
