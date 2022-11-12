@@ -1024,6 +1024,9 @@ const strings = {
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_withdraw_collateral: 'Withdraw Collateral',
 
+  loan_notification_ltv_threshold_alert_title: 'Loan Liquidation Alert!',
+  loan_notification_ltv_threshold_alert_message: 'You loan is coming close to liquidation and requires your immediate attention!',
+
   loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
   loan_status_cancel_txs_modal_msg:

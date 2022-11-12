@@ -100,7 +100,7 @@ export function Services(props: Props) {
         {account == null ? null : <SortedWalletList account={account} />}
         <EdgeContextCallbackManager />
         <PermissionsManager />
-        <LoanManagerService />
+        {account == null ? null : <LoanManagerService account={account} />}
         <NetworkActivity />
         <PasswordReminderService />
         <WalletLifecycle />
