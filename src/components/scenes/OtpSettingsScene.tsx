@@ -17,12 +17,12 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
 }
 type Props = StateProps & ThemeProps
 
-type State = {
+interface State {
   otpKey?: string
   showKey: boolean
 }

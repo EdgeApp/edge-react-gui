@@ -2,7 +2,7 @@ import { ViewStyle } from 'react-native'
 
 import { useTheme } from '../components/services/ThemeContext'
 
-export type SpaceProps = {
+export interface SpaceProps {
   // Compond space adjectives:
   around?: boolean | number
   horizontal?: boolean | number

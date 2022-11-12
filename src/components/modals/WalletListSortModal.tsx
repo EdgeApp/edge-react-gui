@@ -20,7 +20,7 @@ const options = [
 export const asSortOption = asValue('manual', 'name', 'currencyCode', 'currencyName', 'highest', 'lowest')
 export type SortOption = ReturnType<typeof asSortOption>
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<SortOption>
   sortOption: SortOption
 }

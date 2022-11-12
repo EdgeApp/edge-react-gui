@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
-type Props = {
+interface Props {
   children: React.ReactNode
 }
 

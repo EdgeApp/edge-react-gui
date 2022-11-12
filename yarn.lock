@@ -6395,10 +6395,10 @@ edge-core-js@^0.19.20, edge-core-js@^0.19.30:
     yaob "^0.3.8"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.18.7:
-  version "0.18.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.7.tgz#b21e9f2ad58c360e90e82008c9ed9ae45140e3b7"
-  integrity sha512-38O9GdGPFmATawKSBViBwCiVEACh2FizX+2M4kaDZR0K4nKtlsxoIDTVEi+nDyoSbOdwgCq6f3q+l4nVV+O1ww==
+edge-currency-accountbased@^0.18.8:
+  version "0.18.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.8.tgz#27f998f1cc9aefac1d55323d2b70f3567484f4e0"
+  integrity sha512-YK8u1rvKwCkEplDKNYJeBCzapggtyb3dHe5zcb4WgZSTnLyq04edT42Qk7rV1XxkEbFvg15BgSLDZumo1m2MWQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -6444,10 +6444,10 @@ edge-currency-monero@^0.5.3:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.2.2.tgz#cc9b4a7d32071ee16faf1d737aa028a8c20fa13d"
-  integrity sha512-PyMyw+dvRbYu2Ouraz24FQ6LBWHjeZeE1UsVji9tF1GqKylcxq5nrLDDVsIH8Lus1COfXiASRMmnWsLEAwp4jg==
+edge-currency-plugins@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.2.3.tgz#beeafb9a8628a241197ce0d1850b212ecd4be703"
+  integrity sha512-psaVViMEYeyFwaTULdkrkt/tN6iiTuaJMVR6WXrCVq3Qs3Vg50AlD8IpbwSTEKyOpKZoUeYAeGL0vax4SszIsw==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -6473,10 +6473,10 @@ edge-currency-plugins@^1.2.2:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.15.4:
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.15.4.tgz#f3a710434c9f8e47fd0cd30ee45c2586734e0eb7"
-  integrity sha512-LkPxQLlneX3OqB4abJlpN96WzhWewcsvnYcHy/FDo8gjpOPjVAR6Zv1UIKxTe7z/5n+va/2MzaNbe8ORumBySQ==
+edge-exchange-plugins@^0.16.6:
+  version "0.16.6"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.6.tgz#5bfbe05b11b5232cf807be8918694c127a6118bd"
+  integrity sha512-l+1NxV83hO0gNihZCJvVzzwiMdYJJKCm+pZBCt+7jpRgVq00+8i93Uw4UdsVLcr2xnfGMiXEEfduPpFX702Ujg==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -6490,10 +6490,10 @@ edge-exchange-plugins@^0.15.4:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.11:
-  version "0.10.11"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.11.tgz#2a9193afa58f77ed0532bc7739968f71457a6ecd"
-  integrity sha512-/lYeZJxxatkBtsFy1a88+vgYJoL/f9C81Zq/eC0DLvPnG7p5y9IByhQZj8/DdA/U+68ln64iZZWIwQ17fu8Ydg==
+edge-login-ui-rn@^0.10.12:
+  version "0.10.12"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.12.tgz#8b9c99b152628a6f2864ccaa27365b82bcf89ff3"
+  integrity sha512-vWm45g1tRBRhOZym7q9MCdb7JYbROEzqaFZhn45MhRgnlrCVSnFJ6jRvC7g3XogJBykYAxlX/3swlDFy+PbvPw==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -12801,10 +12801,10 @@ react-native-zcash@^0.2.3:
   dependencies:
     rfc4648 "^1.3.0"
 
-react-native@^0.67.2:
-  version "0.67.2"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.67.2.tgz#312224bc2271c3cecd374d4bc425619cff4ea5dc"
-  integrity sha512-grEtpOLLvtSg8Bivg0ffVRCjTkresqMt7Jdog/geF6VAYhb4RnLaaUCWvyrfyB9buf135FKnqg5BIuve/XQNXA==
+react-native@^0.67.5:
+  version "0.67.5"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.67.5.tgz#9f2aeabf0766fb4bd5385685f4f4f2406bcdf819"
+  integrity sha512-/xEksthqImZGDfcqzEmbOw0KRkp9/x+cC8T8uTHhSKLLa8pOFLGdF190UOjnLammGmAmFy0+ZcJf0Ujm53IGeA==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^6.0.0"

@@ -2,6 +2,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction, JsonObject, OtpE
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
+import { LoanManageActionOpType } from '../components/scenes/Loans/LoanManageScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
@@ -11,6 +12,7 @@ import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
+  EdgeTokenId,
   FeeOption,
   FioConnectionWalletItem,
   FioDomain,
@@ -22,7 +24,7 @@ import {
 } from './types'
 import { UriQueryMap } from './WebTypes'
 
-type PluginViewParams = {
+interface PluginViewParams {
   // The GUI plugin we are showing the user:
   plugin: GuiPlugin
 
@@ -33,7 +35,7 @@ type PluginViewParams = {
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-export type ParamList = {
+export interface ParamList {
   // Top-level router:
   root: {}
   login: {}
@@ -73,7 +75,10 @@ export type ParamList = {
     walletNames: { [key: string]: string }
     fiatCode: string
   }
-  createWalletSelectCrypto: {}
+  createWalletSelectCrypto: {
+    newAccountFlow?: (items: WalletCreateItem[]) => Promise<void>
+    defaultSelection?: EdgeTokenId[]
+  }
   createWalletSelectFiat: {
     createWalletList: WalletCreateItem[]
   }
@@ -209,16 +214,8 @@ export type ParamList = {
   loanClose: {
     loanAccountId: string
   }
-  loanDeposit: {
-    loanAccountId: string
-  }
-  loanBorrow: {
-    loanAccountId: string
-  }
-  loanWithdraw: {
-    loanAccountId: string
-  }
-  loanRepay: {
+  loanManage: {
+    actionOpType: LoanManageActionOpType
     loanAccountId: string
   }
   loanStatus: {
@@ -279,6 +276,7 @@ export type ParamList = {
   testScene: {}
   transactionDetails: {
     edgeTransaction: EdgeTransaction
+    walletId: string
     amountFiat?: number
     thumbnailPath?: string
   }
@@ -344,7 +342,7 @@ type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 /**
  * The of the `navigation` prop passed to each scene.
  */
-export type NavigationProp<Name extends keyof ParamList> = {
+export interface NavigationProp<Name extends keyof ParamList> {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => () => void
   isFocused: () => boolean
@@ -372,7 +370,7 @@ export type NavigationProp<Name extends keyof ParamList> = {
 /**
  * The of the `route` prop passed to each scene.
  */
-export type RouteProp<Name extends keyof ParamList> = {
+export interface RouteProp<Name extends keyof ParamList> {
   name: Name
   params: ParamList[Name]
 }

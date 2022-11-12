@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 
-type Props = {
+interface Props {
   // Display options:
   appendFiatCurrencyCode?: boolean
   autoPrecision?: boolean

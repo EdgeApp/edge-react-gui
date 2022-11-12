@@ -10,11 +10,13 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 
-type Props = {
+interface Props {
   account: EdgeAccount
 }
 
-type EnabledTokenIds = { [walletId: string]: string[] }
+interface EnabledTokenIds {
+  [walletId: string]: string[]
+}
 
 /**
  * Manages the master wallet list, which includes all

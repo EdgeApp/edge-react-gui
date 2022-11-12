@@ -13,7 +13,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'currencyNotificationSettings'>
 }
 

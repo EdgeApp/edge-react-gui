@@ -9,17 +9,17 @@ describe('WalletListHeader', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      sorting: true,
-      searching: true,
-      searchText: 'string',
-      openSortModal: () => undefined,
-      onChangeSearchText: () => undefined,
-      // @ts-expect-error
-      onChangeSearchingState: searching => undefined,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<WalletListHeaderComponent {...props} />)
+    const actual = renderer.render(
+      <WalletListHeaderComponent
+        sorting
+        searching
+        searchText="string"
+        openSortModal={() => undefined}
+        onChangeSearchText={() => undefined}
+        onChangeSearchingState={searching => undefined}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

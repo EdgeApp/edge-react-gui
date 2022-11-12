@@ -11,7 +11,7 @@ import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 
-type Props = {
+interface Props {
   onSlidingComplete: (reset: () => void) => unknown
   parentStyle?: any
   completePoint?: number

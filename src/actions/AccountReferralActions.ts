@@ -9,7 +9,7 @@ import ENV from '../../env.json'
 import { pickLanguage } from '../locales/intl'
 import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
 import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak, MessageTweak } from '../types/TweakTypes'
 import { fetchInfo, fetchReferral } from '../util/network'
@@ -21,174 +21,186 @@ const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
 /**
  * Call this at login time to load the account referral information.
  */
-export const loadAccountReferral = (account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
-  // First try the disk:
-  try {
-    const [cacheText, referralText] = await Promise.all([
-      // Cache errors are fine:
-      account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
-      // Referral errors mean we aren't affiliated:
-      account.disklet.getText(ACCOUNT_REFERRAL_FILE)
-    ])
-    const cache = asDiskReferralCache(JSON.parse(cacheText))
-    const referral = unpackAccountReferral(JSON.parse(referralText))
-    dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
-    return
-  } catch (error: any) {}
-
-  // Try new account affiliation:
-  if (account.newAccount) {
+export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    // First try the disk:
     try {
-      await createAccountReferral()(dispatch, getState)
+      const [cacheText, referralText] = await Promise.all([
+        // Cache errors are fine:
+        account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
+        // Referral errors mean we aren't affiliated:
+        account.disklet.getText(ACCOUNT_REFERRAL_FILE)
+      ])
+      const cache = asDiskReferralCache(JSON.parse(cacheText))
+      const referral = unpackAccountReferral(JSON.parse(referralText))
+      dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
       return
     } catch (error: any) {}
-  }
 
-  // Otherwise, just use default values:
-  const referral: AccountReferral = {
-    promotions: [],
-    ignoreAccountSwap: false,
-    hiddenAccountMessages: {}
+    // Try new account affiliation:
+    if (account.newAccount) {
+      try {
+        await createAccountReferral()(dispatch, getState)
+        return
+      } catch (error: any) {}
+    }
+
+    // Otherwise, just use default values:
+    const referral: AccountReferral = {
+      promotions: [],
+      ignoreAccountSwap: false,
+      hiddenAccountMessages: {}
+    }
+    const cache: ReferralCache = {
+      accountMessages: [],
+      accountPlugins: []
+    }
+    dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
   }
-  const cache: ReferralCache = {
-    accountMessages: [],
-    accountPlugins: []
-  }
-  dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
 }
 
 /**
  * Copies device referral information into the account on first login.
  */
-const createAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
-  // Copy the app install reason into the account:
-  const state = getState()
-  const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
-  const creationDate = new Date()
-  const referral: AccountReferral = {
-    creationDate,
-    installerId,
-    currencyCodes,
-    promotions: [],
-    ignoreAccountSwap: false,
-    hiddenAccountMessages: {}
-  }
-  const cache: ReferralCache = {
-    accountMessages: lockStartDates(messages, creationDate),
-    accountPlugins: lockStartDates(plugins, creationDate)
-  }
+function createAccountReferral(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    // Copy the app install reason into the account:
+    const state = getState()
+    const { installerId, currencyCodes, messages, plugins } = state.deviceReferral
+    const creationDate = new Date()
+    const referral: AccountReferral = {
+      creationDate,
+      installerId,
+      currencyCodes,
+      promotions: [],
+      ignoreAccountSwap: false,
+      hiddenAccountMessages: {}
+    }
+    const cache: ReferralCache = {
+      accountMessages: lockStartDates(messages, creationDate),
+      accountPlugins: lockStartDates(plugins, creationDate)
+    }
 
-  dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
-  await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
+    dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
+    await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
 
-  // Also try activating the same link as a promotion (with silent errors):
-  if (installerId != null) {
-    await activatePromotion(installerId)(dispatch, getState).catch(() => undefined)
+    // Also try activating the same link as a promotion (with silent errors):
+    if (installerId != null) {
+      await activatePromotion(installerId)(dispatch, getState).catch(() => undefined)
+    }
   }
 }
 
 /**
  * Downloads a promotion matching the given install link.
  */
-export const activatePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const uri = `api/v1/promo?installerId=${installerId}`
-  let reply
-  try {
-    reply = await fetchReferral(uri)
-  } catch (e: any) {
-    console.warn(`Failed to contact referral server`)
-    return
-  }
-  if (!reply.ok) {
-    console.warn(`Referral server returned status code ${reply.status}`)
-  }
-  if (reply.status === 404) {
-    throw new Error(`Invalid promotion code ${installerId}`)
-  }
-  const clean = asServerTweaks(await reply.json())
+export function activatePromotion(installerId: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const uri = `api/v1/promo?installerId=${installerId}`
+    let reply
+    try {
+      reply = await fetchReferral(uri)
+    } catch (e: any) {
+      console.warn(`Failed to contact referral server`)
+      return
+    }
+    if (!reply.ok) {
+      console.warn(`Referral server returned status code ${reply.status}`)
+    }
+    if (reply.status === 404) {
+      throw new Error(`Invalid promotion code ${installerId}`)
+    }
+    const clean = asServerTweaks(await reply.json())
 
-  // Lock the start dates:
-  const now = new Date()
-  const promotion: Promotion = {
-    installerId,
-    hiddenMessages: {},
-    messages: lockStartDates(clean.messages, now),
-    plugins: lockStartDates(clean.plugins, now)
+    // Lock the start dates:
+    const now = new Date()
+    const promotion: Promotion = {
+      installerId,
+      hiddenMessages: {},
+      messages: lockStartDates(clean.messages, now),
+      plugins: lockStartDates(clean.plugins, now)
+    }
+    dispatch({ type: 'PROMOTION_ADDED', data: promotion })
+    saveAccountReferral(getState())
   }
-  dispatch({ type: 'PROMOTION_ADDED', data: promotion })
-  saveAccountReferral(getState())
 }
 
 /**
  * Cancels a promotion that a user may have installed from a link.
  */
-export const removePromotion = (installerId: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'PROMOTION_REMOVED', data: installerId })
-  saveAccountReferral(getState())
+export function removePromotion(installerId: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    dispatch({ type: 'PROMOTION_REMOVED', data: installerId })
+    saveAccountReferral(getState())
+  }
 }
 
 /**
  * Hides the provided message from the user.
  */
-export const hideMessageTweak = (messageId: string, source: TweakSource) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId, source } })
-  saveAccountReferral(getState())
+export function hideMessageTweak(messageId: string, source: TweakSource): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    dispatch({ type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId, source } })
+    saveAccountReferral(getState())
+  }
 }
 
 /**
  * Deactivates any swap plugin preferences from the account affiliation.
  */
-export const ignoreAccountSwap =
-  (ignore: boolean = true) =>
-  async (dispatch: Dispatch, getState: GetState) => {
+export function ignoreAccountSwap(ignore: boolean = true): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
     saveAccountReferral(getState())
   }
-
-export const refreshAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
-  const cache: ReferralCache = {
-    accountMessages: [],
-    accountPlugins: []
-  }
-
-  let uri = `api/v1/partner?installerId=${installerId}`
-  let reply
-  try {
-    reply = await fetchReferral(uri)
-    if (!reply.ok) {
-      throw new Error(`Returned status code ${reply.status}`)
-    }
-    const clean = asServerTweaks(await reply.json())
-    cache.accountMessages.push(...lockStartDates(clean.messages, creationDate))
-    cache.accountPlugins.push(...lockStartDates(clean.plugins, creationDate))
-  } catch (e: any) {
-    console.warn(`Failed to contact referral server: ${e.message}`)
-  }
-
-  // Get promo cards from info server
-  const appId = config.appId ?? 'edge'
-
-  uri = `v1/promoCards/${appId}`
-  try {
-    reply = await fetchInfo(uri)
-    if (!reply.ok) {
-      throw new Error(`Returned status code ${reply.status}`)
-    }
-    const clean = asArray(asMessageTweak)(await reply.json())
-    const validated = await validatePromoCards(state.core.account, clean)
-    cache.accountMessages.push(...lockStartDates(validated, creationDate))
-  } catch (e: any) {
-    console.warn(`Failed to contact info server: ${e.message}`)
-  }
-
-  if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
-  dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
-  saveReferralCache(getState())
 }
 
-export type ValidateFuncs = {
+export function refreshAccountReferral(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
+    const cache: ReferralCache = {
+      accountMessages: [],
+      accountPlugins: []
+    }
+
+    let uri = `api/v1/partner?installerId=${installerId}`
+    let reply
+    try {
+      reply = await fetchReferral(uri)
+      if (!reply.ok) {
+        throw new Error(`Returned status code ${reply.status}`)
+      }
+      const clean = asServerTweaks(await reply.json())
+      cache.accountMessages.push(...lockStartDates(clean.messages, creationDate))
+      cache.accountPlugins.push(...lockStartDates(clean.plugins, creationDate))
+    } catch (e: any) {
+      console.warn(`Failed to contact referral server: ${e.message}`)
+    }
+
+    // Get promo cards from info server
+    const appId = config.appId ?? 'edge'
+
+    uri = `v1/promoCards/${appId}`
+    try {
+      reply = await fetchInfo(uri)
+      if (!reply.ok) {
+        throw new Error(`Returned status code ${reply.status}`)
+      }
+      const clean = asArray(asMessageTweak)(await reply.json())
+      const validated = await validatePromoCards(state.core.account, clean)
+      cache.accountMessages.push(...lockStartDates(validated, creationDate))
+    } catch (e: any) {
+      console.warn(`Failed to contact info server: ${e.message}`)
+    }
+
+    if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
+    dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
+    saveReferralCache(getState())
+  }
+}
+
+export interface ValidateFuncs {
   getCountryCodeByIp: () => Promise<string>
   checkWyreHasLinkedBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
   getBuildNumber: () => string

@@ -6,12 +6,12 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
 import { TransactionListTx } from '../../types/types'
-import { splitTransactionCategory } from '../../util/utils'
+import { formatCategory, splitCategory } from '../../util/categories'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
-type OwnProps = {
+interface OwnProps {
   cryptoAmount: string
   denominationSymbol?: string
   fiatAmount: string
@@ -81,30 +81,10 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
 
     // Transaction Category
-    let categoryText
-    const transactionCategory = transaction.metadata ? transaction.metadata.category : null
-    if (transactionCategory) {
-      const splittedFullCategory = splitTransactionCategory(transactionCategory)
-      const { category, subCategory } = splittedFullCategory
-      if (subCategory) {
-        const mainCategory = category.toLowerCase()
-        switch (mainCategory) {
-          case 'exchange':
-            categoryText = `${s.strings.fragment_transaction_exchange}:${subCategory}`
-            break
-          case 'expense':
-            categoryText = `${s.strings.fragment_transaction_expense}:${subCategory}`
-            break
-          case 'transfer':
-            categoryText = `${s.strings.fragment_transaction_transfer}:${subCategory}`
-            break
-          case 'income':
-            categoryText = `${s.strings.fragment_transaction_income}:${subCategory}`
-            break
-          default:
-            break
-        }
-      }
+    let categoryText: string | undefined
+    const category = transaction.metadata?.category
+    if (category != null && category !== '') {
+      categoryText = formatCategory(splitCategory(category))
     }
 
     return (

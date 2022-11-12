@@ -9,6 +9,7 @@ import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
 import { asActionProgram, asActionProgramState } from './cleaners'
 import { ActionProgram, ActionProgramState, ActionQueueItem, ActionQueueMap } from './types'
 import { checkEffectIsDone } from './util/checkEffectIsDone'
+import { makeInitialProgramState } from './util/makeInitialProgramState'
 
 const { debugStore } = ENV.ACTION_QUEUE
 
@@ -17,7 +18,7 @@ export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 export const asStoreItem = asEither(asActionProgram, asActionProgramState)
 export type StoreItem = ReturnType<typeof asStoreItem>
 
-export type ActionQueueStore = {
+export interface ActionQueueStore {
   createActionQueueItem: (program: ActionProgram) => Promise<ActionProgramState>
   getActionQueueItem: (programId: string) => Promise<ActionQueueItem>
   updateActionQueueItem: (programState: ActionProgramState) => Promise<void>
@@ -57,14 +58,7 @@ export const makeActionQueueStore = (account: EdgeAccount, clientId: string): Ac
       const { programId } = program
 
       // Initial program state
-      const programState: ActionProgramState = {
-        clientId,
-        programId: programId,
-        effective: true,
-        executing: false,
-        lastExecutionTime: 0,
-        nextExecutionTime: 0
-      }
+      const programState: ActionProgramState = makeInitialProgramState(clientId, programId)
 
       // Only add the mockMode field if environment is configured with the flag enabled
       if (ENV.ACTION_QUEUE.mockMode) program.mockMode = true

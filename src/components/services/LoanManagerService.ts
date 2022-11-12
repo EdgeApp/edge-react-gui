@@ -16,7 +16,6 @@ export const LoanManagerService = () => {
   // Initialization
   //
 
-  // @ts-expect-error
   useAsyncEffect(async () => {
     if (account.disklet != null) {
       dispatch(loadLoanAccounts(account))
@@ -30,8 +29,7 @@ export const LoanManagerService = () => {
   React.useEffect(() => {
     const cleanup = () => {
       for (const loanAccount of Object.values(loanAccountMap)) {
-        const { borrowEngine } = loanAccount
-        if (!checkLoanHasFunds(borrowEngine) && loanAccount.closed) {
+        if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
           dispatch(deleteLoanAccount(loanAccount))
         }
       }

@@ -38,10 +38,10 @@ import { QrCode } from '../themed/QrCode'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'request'>
 }
-type StateProps = {
+interface StateProps {
   currencyCode?: string
   wallet?: EdgeCurrencyWallet
   exchangeSecondaryToPrimaryRatio?: string
@@ -52,16 +52,18 @@ type StateProps = {
   useLegacyAddress?: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
-type CurrencyMinimumPopupState = { [pluginId: string]: ModalState }
+interface CurrencyMinimumPopupState {
+  [pluginId: string]: ModalState
+}
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-type State = {
+interface State {
   publicAddress: string
   legacyAddress: string
   encodedURI: string | undefined

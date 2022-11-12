@@ -16,7 +16,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'wcDisconnect'>
   navigation: NavigationProp<'wcConnections'>
 }

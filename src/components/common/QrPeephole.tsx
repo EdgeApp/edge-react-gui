@@ -3,7 +3,7 @@ import { Defs, G, LinearGradient, Mask, Path, Rect, Stop, Svg, Use } from 'react
 
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
-type OwnProps = {
+interface OwnProps {
   width: number
   height: number
   holeSize: number

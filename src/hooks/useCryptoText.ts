@@ -12,7 +12,7 @@ import {
   zeroString
 } from '../util/utils'
 
-type UseCryptoTextParams = {
+interface UseCryptoTextParams {
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
   exchangeRate?: string

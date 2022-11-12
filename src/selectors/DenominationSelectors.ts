@@ -1,19 +1,19 @@
 import { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { RootState, ThunkAction } from '../types/reduxTypes'
 
-const emptyEdgeDenomination: EdgeDenomination = {
+export const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
   multiplier: '1',
   symbol: ''
 }
 
-export const getDisplayDenominationFromState =
-  (pluginId: string, currencyCode: string) =>
-  (dispatch: Dispatch, getState: GetState): EdgeDenomination => {
+export function getDisplayDenominationFromState(pluginId: string, currencyCode: string): ThunkAction<EdgeDenomination> {
+  return (dispatch, getState) => {
     const state = getState()
     return getDisplayDenomination(state, pluginId, currencyCode)
   }
+}
 
 export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
@@ -23,9 +23,11 @@ export const getDisplayDenomination = (state: RootState, pluginId: string, curre
   return getExchangeDenomination(state, pluginId, currencyCode)
 }
 
-export const getExchangeDenominationFromState = (pluginId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  return getExchangeDenomination(state, pluginId, currencyCode)
+export function getExchangeDenominationFromState(pluginId: string, currencyCode: string): ThunkAction<EdgeDenomination> {
+  return (dispatch, getState) => {
+    const state = getState()
+    return getExchangeDenomination(state, pluginId, currencyCode)
+  }
 }
 
 /**

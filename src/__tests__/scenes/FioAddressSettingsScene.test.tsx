@@ -4,36 +4,38 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressSettingsComponent } from '../../components/scenes/FioAddressSettingsScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('FioAddressSettingsComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      showAddBundledTxs: true,
-      showTransfer: true,
-      isConnected: true,
-      refreshAllFioAddresses: () => undefined,
-      route: {
-        params: {
-          fioWallet: [
-            {
-              currencyCode: 'FIO',
-              nativeAmount: '100',
-              networkFee: '1',
-              blockHeight: 34,
-              date: 220322,
-              txid: '0x34346463',
-              signedTx: '0xdgs3442',
-              ourReceiveAddresses: ['FioAddress']
-            }
-          ],
-          fioAddressName: 'MyFioAddress'
-        }
-      },
-      theme: getTheme()
+    const fakeWallet: any = {
+      currencyCode: 'FIO',
+      nativeAmount: '100',
+      networkFee: '1',
+      blockHeight: 34,
+      date: 220322,
+      txid: '0x34346463',
+      signedTx: '0xdgs3442',
+      ourReceiveAddresses: ['FioAddress']
     }
-    const actual = renderer.render(<FioAddressSettingsComponent {...props} />)
+
+    const actual = renderer.render(
+      <FioAddressSettingsComponent
+        navigation={fakeNavigation}
+        isConnected
+        refreshAllFioAddresses={() => undefined}
+        route={{
+          name: 'fioAddressSettings',
+          params: {
+            fioWallet: fakeWallet,
+            fioAddressName: 'MyFioAddress'
+          }
+        }}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

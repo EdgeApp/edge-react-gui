@@ -4,7 +4,7 @@ import { useWatch } from '../hooks/useWatch'
 import { useSelector } from '../types/reactRedux'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
-export type SelectedWallet = {
+export interface SelectedWallet {
   currencyCode: string
   tokenId?: string
   wallet: EdgeCurrencyWallet

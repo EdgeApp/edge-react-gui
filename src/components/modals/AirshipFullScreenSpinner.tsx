@@ -19,7 +19,7 @@ const fadeInTime = 300
 const fadeOutTime = 1000
 const visibleTime = 3000
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   // The message to show in the toast:
   message?: string

@@ -24,7 +24,7 @@ import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
 import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
 
-type WalletDetails = {
+interface WalletDetails {
   name: string
   pluginId?: string
   receiveAddress: {
@@ -35,7 +35,7 @@ type WalletDetails = {
   fiatCurrencyCode: string
 }
 
-type EdgeRequestSpendOptions = {
+interface EdgeRequestSpendOptions {
   // Specify the currencyCode to spend to this URI. Required for spending tokens
   currencyCode?: string
 
@@ -57,18 +57,18 @@ type EdgeRequestSpendOptions = {
   orderId?: string
 }
 
-type EdgeGetReceiveAddressOptions = {
+interface EdgeGetReceiveAddressOptions {
   // Metadata to tag these addresses with for when funds arrive at the address
   metadata?: EdgeMetadata
 }
 
-type EdgeGetWalletHistoryResult = {
+interface EdgeGetWalletHistoryResult {
   fiatCurrencyCode: string // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
   balance: string // the current balance of wallet in the native amount units. I.e. "satoshis"
   transactions: EdgeTransaction[]
 }
 
-export type EdgeProviderSpendTarget = {
+export interface EdgeProviderSpendTarget {
   exchangeAmount?: string
   nativeAmount?: string
   publicAddress?: string

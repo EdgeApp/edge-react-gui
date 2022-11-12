@@ -5,7 +5,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   title?: string
   children?: React.ReactNode
   underline?: boolean

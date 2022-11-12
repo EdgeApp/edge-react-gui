@@ -29,7 +29,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { WalletCreateItem } from '../themed/WalletList'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'createWalletSelectFiat'>
   route: RouteProp<'createWalletSelectFiat'>
 }

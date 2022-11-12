@@ -56,7 +56,7 @@ for (const icon of iconFamily) {
   fontMap[fontFamily] = { icon }
 }
 
-type Props = {
+interface Props {
   name: string
   font: string
   size: number

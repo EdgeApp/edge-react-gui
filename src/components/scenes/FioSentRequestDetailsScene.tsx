@@ -14,11 +14,11 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'fioSentRequestDetails'>
 }
 
-type StateProps = {
+interface StateProps {
   fiatSymbol: string
   isoFiatCurrencyCode: string
   exchangeRates: GuiExchangeRates

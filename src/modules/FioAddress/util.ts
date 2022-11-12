@@ -17,14 +17,14 @@ const DEFAULT_BUNDLE_SET_VALUE = 1
 
 export const BUNDLED_TXS_AMOUNT_ALERT = 5
 
-type DiskletConnectedWallets = {
+interface DiskletConnectedWallets {
   [fullCurrencyCode: string]: {
     walletId: string
     publicAddress: string
   }
 }
 
-type BuyAddressResponse = {
+interface BuyAddressResponse {
   success: {
     charge: {
       pricing: {
@@ -40,7 +40,7 @@ type BuyAddressResponse = {
   }
 }
 
-export type FioAddresses = {
+export interface FioAddresses {
   addresses: {
     [address: string]: boolean
   }

@@ -14,7 +14,7 @@ import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow'
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 
-type Props = {
+interface Props {
   footer?: React.ComponentType<{}> | React.ReactElement
   header?: React.ComponentType<{}> | React.ReactElement
   navigation: NavigationProp<'walletList'>

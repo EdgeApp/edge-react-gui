@@ -1,0 +1,294 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdvancedDetailsModal should render with loading props 1`] = `
+Array [
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "transparent",
+        "bottom": 0,
+        "left": 0,
+        "opacity": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <BlurView
+      blurAmount={10}
+      blurType="light"
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>,
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "alignSelf": "flex-end",
+        "backgroundColor": "#0D2145",
+        "borderColor": "rgba(255, 255, 255, 0)",
+        "borderTopLeftRadius": 22,
+        "borderTopRightRadius": 22,
+        "borderWidth": 0,
+        "flexDirection": undefined,
+        "flexShrink": 1,
+        "justifyContent": undefined,
+        "marginBottom": -64,
+        "marginLeft": 0,
+        "marginRight": 0,
+        "marginTop": 0,
+        "maxHeight": undefined,
+        "overflow": "visible",
+        "paddingBottom": 64,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 0,
+        "shadowOffset": Object {
+          "height": 0,
+          "width": 0,
+        },
+        "shadowOpacity": 1,
+        "shadowRadius": 10,
+        "transform": Array [
+          Object {
+            "translateY": 1334,
+          },
+        ],
+        "width": 512,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "height": 84,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          Array [
+            Object {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            Object {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Advanced Details
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "maxHeight": 449,
+        }
+      }
+    >
+      <RCTScrollView>
+        <View>
+          <View
+            accessibilityState={
+              Object {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "flex": 1,
+                    },
+                    Object {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    Array [
+                      Object {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      Object {
+                        "color": "#66EDA8",
+                        "height": 17,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 6,
+                        "width": 17,
+                      },
+                      Object {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      Object {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Transaction ID
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                Object {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+        </View>
+      </RCTScrollView>
+    </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "opacity": 1,
+          "paddingTop": 22,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 28,
+            },
+            undefined,
+            Object {
+              "fontFamily": "FontAwesome5Free-Solid",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {
+              "fontWeight": "900",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+]
+`;

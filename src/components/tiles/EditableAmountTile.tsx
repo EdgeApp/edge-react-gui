@@ -11,7 +11,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
-type Props = {
+interface Props {
   title: string
   exchangeRates: GuiExchangeRates
   nativeAmount: string

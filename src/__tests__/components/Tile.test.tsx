@@ -9,19 +9,13 @@ describe('Tile', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props = {
-      body: 'string',
-      children: 11,
-      error: false,
-      onPress: () => undefined,
-      title: 'string',
-      type: 'copy',
-      contentPadding: true,
-      maximumHeight: 'small',
-      theme: getTheme()
-    }
-    // @ts-expect-error
-    const actual = renderer.render(<TileComponent {...props} />)
+    const fakeChild: React.ReactNode = 11 as any
+
+    const actual = renderer.render(
+      <TileComponent body="string" error={false} onPress={() => undefined} title="string" type="copy" contentPadding maximumHeight="small" theme={getTheme()}>
+        {fakeChild}
+      </TileComponent>
+    )
 
     expect(actual).toMatchSnapshot()
   })

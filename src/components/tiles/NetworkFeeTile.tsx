@@ -9,7 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { Tile } from './Tile'
 
-// TODO: Integrate into SendScene, FlipInputModal, and TransactionAdvanceDetails
+// TODO: Integrate into SendScene, FlipInputModal, and AdvancedDetailsModal
 export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount: string }) => {
   const {
     wallet: {

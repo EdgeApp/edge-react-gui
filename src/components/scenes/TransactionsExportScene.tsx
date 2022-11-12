@@ -22,27 +22,27 @@ import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 import { SettingsRow } from '../themed/SettingsRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
-type File = {
+interface File {
   contents: string
   mimeType: string // 'text/csv'
   fileName: string // wallet-btc-2020.csv
 }
 
-type OwnProps = {
+interface OwnProps {
   route: RouteProp<'transactionsExport'>
 }
 
-type StateProps = {
+interface StateProps {
   multiplier: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   updateTxsFiatDispatch: (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) => void
 }
 
 type Props = StateProps & OwnProps & ThemeProps & DispatchProps
 
-type State = {
+interface State {
   startDate: Date
   endDate: Date
   isExportQbo: boolean

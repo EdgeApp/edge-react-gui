@@ -7,7 +7,7 @@ import { useSelector } from '../types/reactRedux'
 import { DECIMAL_PRECISION, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
-type Props = {
+interface Props {
   appendFiatCurrencyCode?: boolean
   autoPrecision?: boolean
   cryptoCurrencyCode: string

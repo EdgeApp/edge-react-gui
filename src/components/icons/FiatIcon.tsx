@@ -8,7 +8,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   mono?: boolean // To use the mono dark icon logo
   fiatCurrencyCode: string // The currency code to use for the icon image
 

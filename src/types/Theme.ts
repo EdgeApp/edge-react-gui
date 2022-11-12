@@ -1,7 +1,7 @@
 import { asNumber, asObject } from 'cleaners'
 import { ImageSourcePropType } from 'react-native'
 
-type ThemeShadowParams = {
+interface ThemeShadowParams {
   shadowColor: string
   shadowOffset: {
     width: number
@@ -12,7 +12,7 @@ type ThemeShadowParams = {
   elevation: number
 }
 
-type TextShadowParams = {
+interface TextShadowParams {
   textShadowColor: string
   textShadowOffset: {
     width: number
@@ -48,7 +48,7 @@ export const textNoShadow: TextShadowParams = {
 }
 
 // Commented themes are not used
-export type Theme = {
+export interface Theme {
   // The app scaling factor, which is the height of "normal" text:
   rem: (size: number) => number
 

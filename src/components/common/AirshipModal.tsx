@@ -7,7 +7,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 import { SafeAreaGap } from './LayoutContext'
 
-type Props<T> = {
+interface Props<T> {
   bridge: AirshipBridge<T>
   children: React.ReactNode | ((gap: SafeAreaGap) => React.ReactNode)
 

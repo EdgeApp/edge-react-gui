@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
 
-export type RequestTypeState = {
+export interface RequestTypeState {
   useLegacyAddress: boolean
   uniqueLegacyAddress: boolean
 }

@@ -5,7 +5,7 @@ import { TransactionListTx } from '../../types/types'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   edgeTransaction: TransactionListTx
 }
 

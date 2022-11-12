@@ -3,7 +3,7 @@ import { View, ViewStyle } from 'react-native'
 
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 
-type OwnProps = {
+interface OwnProps {
   children?: React.ReactNode
   style?: ViewStyle
 }

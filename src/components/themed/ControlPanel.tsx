@@ -36,7 +36,9 @@ import { FiatText } from '../text/FiatText'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 
-type Props = { navigation: NavigationProp<'controlPanel'> }
+interface Props {
+  navigation: NavigationProp<'controlPanel'>
+}
 
 const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)

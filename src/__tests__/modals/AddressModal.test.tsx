@@ -1,4 +1,5 @@
 import { describe, expect, it } from '@jest/globals'
+import { makeMemoryDisklet } from 'disklet'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
@@ -10,37 +11,38 @@ describe('AddressModalComponent', () => {
   it('should render with loaded props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      bridge: fakeAirshipBridge,
-      walletId: 'string',
-      currencyCode: 'string',
-      title: 'string',
-      isFioOnly: true,
-      useUserFioAddressesOnly: true,
-      checkAddressConnected: true,
-      account: {
-        disklet: {
-          // @ts-expect-error
-          getText: async path => {}
-        }
-      },
-      userFioAddresses: [
-        {
-          name: 'string',
-          bundledTxs: 11,
-          walletId: 'string'
-        }
-      ],
-      userFioAddressesLoading: true,
-      coreWallet: {
-        currencyInfo: {
-          currencyCode: 'BTC'
-        }
-      },
-      refreshAllFioAddresses: () => undefined,
-      theme: getTheme()
+    const fakeAccount: any = {
+      disklet: makeMemoryDisklet()
     }
-    const actual = renderer.render(<AddressModalComponent {...props} />)
+    const fakeWallet: any = {
+      currencyInfo: {
+        currencyCode: 'BTC'
+      }
+    }
+
+    const actual = renderer.render(
+      <AddressModalComponent
+        bridge={fakeAirshipBridge}
+        walletId="string"
+        currencyCode="string"
+        title="string"
+        isFioOnly
+        useUserFioAddressesOnly
+        checkAddressConnected
+        account={fakeAccount}
+        userFioAddresses={[
+          {
+            name: 'string',
+            bundledTxs: 11,
+            walletId: 'string'
+          }
+        ]}
+        userFioAddressesLoading
+        coreWallet={fakeWallet}
+        refreshAllFioAddresses={() => undefined}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

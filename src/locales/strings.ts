@@ -14,7 +14,7 @@ import zh from './strings/zh.json'
 
 const allLocales = { en, de, ru, es, it, pt, ja, fr, ko, vi, zh }
 
-const strings: typeof en = { ...en }
+const strings = { ...en }
 const out = { strings }
 
 // Set the language at boot:

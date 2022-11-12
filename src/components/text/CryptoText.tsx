@@ -7,7 +7,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeText } from '../themed/EdgeText'
 
-type Props = {
+interface Props {
   nativeAmount: string
   tokenId?: string
   wallet: EdgeCurrencyWallet

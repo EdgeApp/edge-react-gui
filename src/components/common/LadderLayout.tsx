@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Image, Text, View } from 'react-native'
 
-type Props = {
+interface Props {
   children: React.ReactNode
 
   // Space to put between all items:

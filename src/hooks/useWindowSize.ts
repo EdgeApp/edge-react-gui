@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Dimensions } from 'react-native'
 
-type ScaledSize = {
+interface ScaledSize {
   width: number
   height: number
 }

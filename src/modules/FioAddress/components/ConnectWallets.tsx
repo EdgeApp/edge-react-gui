@@ -14,18 +14,18 @@ import { Actions } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { makeConnectWallets } from '../util'
 
-type LocalState = {
+interface LocalState {
   connectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
   disconnectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
   prevItemsConnected: { [key: string]: boolean }
 }
 
-type StateProps = {
+interface StateProps {
   walletItems: { [key: string]: FioConnectionWalletItem }
   loading: boolean
 }
 
-type OwnProps = {
+interface OwnProps {
   fioAddressName: string
   fioWallet: EdgeCurrencyWallet | null
   disabled: boolean

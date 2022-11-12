@@ -17,19 +17,19 @@ export const NON_PASSWORD_LOGINS_POSTPONEMENT = 2
 
 export const INITIAL_PASSWORD_USES = 0
 
-type NewAccountAction = {
+interface NewAccountAction {
   type: 'NEW_ACCOUNT_LOGIN'
   data: {
     lastLoginDate: number
   }
 }
-type PasswordUsedAction = {
+interface PasswordUsedAction {
   type: 'PASSWORD_USED'
   data: {
     lastPasswordUseDate: number
   }
 }
-type PasswordLoginAction = {
+interface PasswordLoginAction {
   type: 'PASSWORD_LOGIN'
   data: {
     lastPasswordUseDate: number
@@ -39,11 +39,11 @@ type PasswordLoginAction = {
     lastLoginDate: number
   }
 }
-type PasswordReminderPostponedAction = {
+interface PasswordReminderPostponedAction {
   type: 'PASSWORD_REMINDER_POSTPONED'
   data: {}
 }
-type NonPasswordLoginAction = {
+interface NonPasswordLoginAction {
   type: 'NON_PASSWORD_LOGIN'
   data: {
     lastPasswordUseDate: number
@@ -53,11 +53,11 @@ type NonPasswordLoginAction = {
     lastLoginDate: number
   }
 }
-type ChangePasswordAction = {
+interface ChangePasswordAction {
   type: 'REQUEST_CHANGE_PASSWORD'
   data: {}
 }
-type DefaultAction = {
+interface DefaultAction {
   type: 'default'
   data: {}
 }
@@ -71,7 +71,7 @@ export type PasswordReminderReducerAction =
   | ChangePasswordAction
   | DefaultAction
 
-export type PasswordReminderState = {
+export interface PasswordReminderState {
   lastLoginDate: number
   lastPasswordUseDate: number
   needsPasswordCheck: boolean

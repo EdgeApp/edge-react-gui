@@ -7,7 +7,7 @@ import { nightText } from '../../styles/common/textStyles'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   message: string
   onPress: () => void

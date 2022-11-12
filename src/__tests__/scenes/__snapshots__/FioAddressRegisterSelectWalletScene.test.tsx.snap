@@ -60,7 +60,9 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
             "marginTop": 28,
           }
         }
-      />
+      >
+        MyFio@edge
+      </FormattedText>
     </View>
     <MainButton
       label="FIO Names"

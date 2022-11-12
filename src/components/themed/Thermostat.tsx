@@ -5,7 +5,7 @@ import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
-type Props = {
+interface Props {
   ratio: number
 }
 

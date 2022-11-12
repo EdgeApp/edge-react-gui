@@ -6,10 +6,10 @@ import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { connect } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
-type StateProps = {
+interface StateProps {
   contactsPermission: PermissionStatus
 }
-type DispatchProps = {
+interface DispatchProps {
   loadContactsSuccess: (contacts: GuiContact[]) => void
 }
 type Props = StateProps & DispatchProps
@@ -151,6 +151,18 @@ const merchantPartners = [
     givenName: 'Totle',
     hasThumbnail: true,
     thumbnailPath: 'totle-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Swapuz',
+    hasThumbnail: true,
+    thumbnailPath: 'swapuz.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',

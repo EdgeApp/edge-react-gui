@@ -6,7 +6,7 @@ exports[`ChangePinComponent should render with loading props 1`] = `
   hasTabs={false}
 >
   <UNDEFINED
-    account={[Function]}
+    account={Object {}}
     context={
       Object {
         "apiKey": "",

@@ -1,4 +1,4 @@
-import { add, div, mul } from 'biggystring'
+import { add, div, max, mul } from 'biggystring'
 import * as React from 'react'
 
 import { useWatch } from '../../hooks/useWatch'
@@ -45,7 +45,8 @@ export const LtvRatioTile = (props: {
     totalCollateralFiatValue = add(totalCollateralFiatValue, changeAmount)
   }
 
-  const futureValue = zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2)
+  // Floor the futureValue at '0'
+  const futureValue = max('0', zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2))
 
   return <PercentageChangeArrowTile title={s.strings.loan_loan_to_value_ratio} currentValue={currentValue} futureValue={futureValue} />
 }

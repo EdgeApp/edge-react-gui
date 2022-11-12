@@ -2,7 +2,7 @@ import { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown'
 import { showError } from '../components/services/AirshipInstance'
-import { Dispatch, GetState, RootState } from '../types/reduxTypes'
+import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { TransactionListTx } from '../types/types'
 import { isReceivedTransaction, unixToLocaleDateTime } from '../util/utils'
 import { checkFioObtData } from './FioActions'
@@ -15,52 +15,54 @@ export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACT
 export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
-export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
-  let { currentEndIndex } = state.ui.scenes.transactionList
-  const { transactions } = state.ui.scenes.transactionList
-  let existingTransactions = transactions
-  const walletTransactionsCount = numTransactions
-  // if we are resetting then start over
-  if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
-    currentEndIndex = 0
-    existingTransactions = []
-  }
-
-  // new batch will start with the first index after previous end index
-  const nextStartIndex = currentEndIndex ? currentEndIndex + 1 : 0
-  let nextEndIndex = currentEndIndex // start off with nextEndIndex equal to previous endIndex, will add range
-
-  // set number of transactions in our existingTransactions array
-  const existingTransactionsCount = existingTransactions.length
-  if (!existingTransactionsCount) {
-    // if there are no transactions yet
-    nextEndIndex = INITIAL_TRANSACTION_BATCH_QUANTITY - 1 // then the ending index will be batch quantity minus one
-  } else if (existingTransactionsCount < walletTransactionsCount) {
-    // if we haven't gotten all of the transactions yet
-    nextEndIndex += SUBSEQUENT_TRANSACTION_BATCH_QUANTITY // then the next batch end index will be the addition of the batch quantity
-    if (nextEndIndex >= walletTransactionsCount) {
-      // if you're at the end
-      // @ts-expect-error
-      nextEndIndex = undefined // then don't worry about getting anything more
+export function fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state: RootState = getState()
+    const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
+    let { currentEndIndex } = state.ui.scenes.transactionList
+    const { transactions } = state.ui.scenes.transactionList
+    let existingTransactions = transactions
+    const walletTransactionsCount = numTransactions
+    // if we are resetting then start over
+    if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
+      currentEndIndex = 0
+      existingTransactions = []
     }
-  }
 
-  if (
-    nextEndIndex !== currentEndIndex || // if there are more tx to fetch
-    (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
-    (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
-  ) {
-    let startEntries
-    if (nextEndIndex) {
-      startEntries = nextEndIndex - nextStartIndex + 1
+    // new batch will start with the first index after previous end index
+    const nextStartIndex = currentEndIndex ? currentEndIndex + 1 : 0
+    let nextEndIndex = currentEndIndex // start off with nextEndIndex equal to previous endIndex, will add range
+
+    // set number of transactions in our existingTransactions array
+    const existingTransactionsCount = existingTransactions.length
+    if (!existingTransactionsCount) {
+      // if there are no transactions yet
+      nextEndIndex = INITIAL_TRANSACTION_BATCH_QUANTITY - 1 // then the ending index will be batch quantity minus one
+    } else if (existingTransactionsCount < walletTransactionsCount) {
+      // if we haven't gotten all of the transactions yet
+      nextEndIndex += SUBSEQUENT_TRANSACTION_BATCH_QUANTITY // then the next batch end index will be the addition of the batch quantity
+      if (nextEndIndex >= walletTransactionsCount) {
+        // if you're at the end
+        // @ts-expect-error
+        nextEndIndex = undefined // then don't worry about getting anything more
+      }
     }
-    // If startEntries is undefined / null, this means query until the end of the transaction list
-    getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-      startEntries,
-      startIndex: nextStartIndex
-    })
+
+    if (
+      nextEndIndex !== currentEndIndex || // if there are more tx to fetch
+      (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
+      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
+    ) {
+      let startEntries
+      if (nextEndIndex) {
+        startEntries = nextEndIndex - nextStartIndex + 1
+      }
+      // If startEntries is undefined / null, this means query until the end of the transaction list
+      getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+        startEntries,
+        startIndex: nextStartIndex
+      })
+    }
   }
 }
 
@@ -120,69 +122,75 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   }
 }
 
-export const refreshTransactionsRequest = (walletId: string, transactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const selectedWalletId = state.ui.wallets.selectedWalletId
-  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  let shouldFetch = false
-  for (const transaction of transactions) {
-    if (transaction.currencyCode === selectedCurrencyCode) {
-      shouldFetch = true
-      break
-    }
-  }
-  // Check if this is the selected wallet and we are on the transaction list scene
-  if (walletId === selectedWalletId && shouldFetch) {
-    dispatch(fetchTransactions(walletId, selectedCurrencyCode))
-  }
-}
-
-export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
-  const edgeTransaction: EdgeTransaction = edgeTransactions[0]
-  const state = getState()
-  const currentViewableTransactions = state.ui.scenes.transactionList.transactions
-  const selectedWalletId = state.ui.wallets.selectedWalletId
-  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  let numberOfRelevantTransactions = 0
-  let isTransactionForSelectedWallet = false
-  const receivedTxs: EdgeTransaction[] = []
-  for (const transaction of edgeTransactions) {
-    if (isReceivedTransaction(transaction)) {
-      receivedTxs.push(transaction)
-    }
-    if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
-      isTransactionForSelectedWallet = true
-      // this next part may be unnecessary
-      const indexOfNewTransaction = currentViewableTransactions.findIndex(tx => tx.txid === transaction.txid)
-      if (indexOfNewTransaction === -1) {
-        numberOfRelevantTransactions++
+export function refreshTransactionsRequest(walletId: string, transactions: EdgeTransaction[]): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+    let shouldFetch = false
+    for (const transaction of transactions) {
+      if (transaction.currencyCode === selectedCurrencyCode) {
+        shouldFetch = true
+        break
       }
     }
+    // Check if this is the selected wallet and we are on the transaction list scene
+    if (walletId === selectedWalletId && shouldFetch) {
+      dispatch(fetchTransactions(walletId, selectedCurrencyCode))
+    }
   }
-  const options = {
-    startIndex: 0,
-    startEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
-  }
-  if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
-  if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
-  if (!isReceivedTransaction(edgeTransaction)) return
-  showTransactionDropdown(edgeTransaction, walletId)
 }
 
-export const fetchTransactions = (walletId: string, currencyCode: string, options?: object) => (dispatch: Dispatch, getState: GetState) => {
-  const state: RootState = getState()
-  let startEntries, startIndex
-  if (options) {
-    // @ts-expect-error
-    startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1
-    // @ts-expect-error
-    startIndex = options.startIndex || 0
-  } else {
-    startEntries = state.ui.scenes.transactionList.currentEndIndex + 1
-    startIndex = 0
+export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const edgeTransaction: EdgeTransaction = edgeTransactions[0]
+    const state = getState()
+    const currentViewableTransactions = state.ui.scenes.transactionList.transactions
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+    let numberOfRelevantTransactions = 0
+    let isTransactionForSelectedWallet = false
+    const receivedTxs: EdgeTransaction[] = []
+    for (const transaction of edgeTransactions) {
+      if (isReceivedTransaction(transaction)) {
+        receivedTxs.push(transaction)
+      }
+      if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
+        isTransactionForSelectedWallet = true
+        // this next part may be unnecessary
+        const indexOfNewTransaction = currentViewableTransactions.findIndex(tx => tx.txid === transaction.txid)
+        if (indexOfNewTransaction === -1) {
+          numberOfRelevantTransactions++
+        }
+      }
+    }
+    const options = {
+      startIndex: 0,
+      startEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
+    }
+    if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
+    if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
+    if (!isReceivedTransaction(edgeTransaction)) return
+    showTransactionDropdown(edgeTransaction, walletId)
   }
-  getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
-    startEntries,
-    startIndex
-  })
+}
+
+export function fetchTransactions(walletId: string, currencyCode: string, options?: object): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state: RootState = getState()
+    let startEntries, startIndex
+    if (options) {
+      // @ts-expect-error
+      startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1
+      // @ts-expect-error
+      startIndex = options.startIndex || 0
+    } else {
+      startEntries = state.ui.scenes.transactionList.currentEndIndex + 1
+      startIndex = 0
+    }
+    getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+      startEntries,
+      startIndex
+    })
+  }
 }

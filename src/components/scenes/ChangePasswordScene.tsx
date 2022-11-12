@@ -7,11 +7,11 @@ import { NavigationProp } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'changePassword'>
 }
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   context: EdgeContext
 }

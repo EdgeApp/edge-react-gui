@@ -8,7 +8,7 @@ import { LayoutContext } from './LayoutContext'
 const slideInTime = 300
 const slideOutTime = 500
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   children: React.ReactNode
 

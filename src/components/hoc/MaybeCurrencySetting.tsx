@@ -8,7 +8,7 @@ import { useWatch } from '../../hooks/useWatch'
 /**
  * Specific settings sections will receive these cleaned props.
  */
-export type CurrencySettingProps<T, X> = {
+export interface CurrencySettingProps<T, X> {
   // The starting value, taken from the plugin's currency info:
   defaultSetting: T
 
@@ -23,7 +23,7 @@ export type CurrencySettingProps<T, X> = {
   onUpdate: (setting: T) => Promise<void>
 }
 
-type Props = {
+interface Props {
   currencyConfig: EdgeCurrencyConfig
 }
 

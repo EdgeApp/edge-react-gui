@@ -28,13 +28,13 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'loanDashboard'>
 }
 
 // First-element is the default wallet plugin used to create new wallet
-const SUPPORTED_WALLET_PLUGIN_IDS = ['ethereum']
-if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('polygon')
+const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']
+if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('ethereum')
 
 export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props

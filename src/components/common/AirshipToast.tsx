@@ -4,7 +4,7 @@ import { AirshipBridge, AirshipToast as RawToast } from 'react-native-airship'
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   children?: React.ReactNode
 

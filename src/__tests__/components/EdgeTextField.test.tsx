@@ -9,11 +9,7 @@ describe('EdgeTextField', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      marginRem: 11,
-      theme: getTheme()
-    }
-    const actual = renderer.render(<EdgeTextFieldComponent {...props} />)
+    const actual = renderer.render(<EdgeTextFieldComponent marginRem={11} theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

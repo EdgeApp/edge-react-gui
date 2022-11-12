@@ -6,7 +6,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/serv
 
 const isIos = Platform.OS === 'ios'
 
-export type Props = {
+export interface Props {
   onPress: () => unknown
   isEmpty?: boolean
 }

@@ -13,15 +13,15 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'createWalletSelectFiat'>
 }
-type StateProps = {
+interface StateProps {
   userId: string
   disklet: Disklet
 }
 
-type LocalState = {
+interface LocalState {
   showButton: boolean
   showConfetti: boolean
 }

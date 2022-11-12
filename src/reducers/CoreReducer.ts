@@ -5,7 +5,7 @@ import { combineReducers, Reducer } from 'redux'
 import { Action } from '../types/reduxTypes'
 import { edgeLogin, EdgeLoginState } from './EdgeLoginReducer'
 
-export type CoreState = {
+export interface CoreState {
   readonly account: EdgeAccount
   readonly context: EdgeContext
   readonly disklet: Disklet

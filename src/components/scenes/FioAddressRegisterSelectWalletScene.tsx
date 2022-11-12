@@ -21,7 +21,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
-type StateProps = {
+interface StateProps {
   state: RootState
   wallets: { [walletId: string]: GuiWallet }
   fioPlugin?: EdgeCurrencyConfig
@@ -30,16 +30,16 @@ type StateProps = {
   isConnected: boolean
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioAddressRegisterSelectWallet'>
   route: RouteProp<'fioAddressRegisterSelectWallet'>
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
-type LocalState = {
+interface LocalState {
   loading: boolean
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }

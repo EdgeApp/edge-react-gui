@@ -4,7 +4,7 @@ import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
 
-export type PermissionsState = {
+export interface PermissionsState {
   camera: PermissionStatus
   contacts: PermissionStatus
   location: PermissionStatus

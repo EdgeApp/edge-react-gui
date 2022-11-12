@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { showError } from './AirshipInstance'
 
-type Props = {}
+interface Props {}
 
 export function DeepLinkingManager(props: Props) {
   const dispatch = useDispatch()

@@ -16,23 +16,23 @@ import { EdgeText } from '../themed/EdgeText'
 import { Radio } from '../themed/ThemedButtons'
 import { Tile } from '../tiles/Tile'
 
-type State = {
+interface State {
   acknowledge: boolean
   connectWalletsLoading: boolean
   showSlider: boolean
 }
 
-type StateProps = {
+interface StateProps {
   ccWalletMap: CcWalletMap
   isConnected: boolean
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioConnectToWalletsConfirm'>
   route: RouteProp<'fioConnectToWalletsConfirm'>
 }
 
-type DispatchProps = {
+interface DispatchProps {
   updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
 }
 

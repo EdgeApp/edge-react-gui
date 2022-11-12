@@ -9,7 +9,7 @@ import { textStyle } from '../../styles/common/textStylesThemed'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   message: string
 

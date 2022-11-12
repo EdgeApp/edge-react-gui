@@ -17,7 +17,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
-type Props = {
+interface Props {
   navigation: NavigationProp<'walletList'>
 
   // Open the row for demo purposes:

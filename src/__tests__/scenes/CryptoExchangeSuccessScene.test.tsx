@@ -10,22 +10,9 @@ describe('CryptoExchangeSuccessComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const props: any = {
-      navigation: fakeNavigation,
-      userId: '',
-      disklet: {
-        state: {
-          core: {
-            disklet: () => undefined
-          }
-        }
-      },
-      showButton: true,
-      showConfetti: true,
-      theme: getTheme()
-    }
+    const fakeDisklet: any = {}
 
-    const actual = renderer.render(<CryptoExchangeSuccessComponent {...props} />)
+    const actual = renderer.render(<CryptoExchangeSuccessComponent navigation={fakeNavigation} userId="" disklet={fakeDisklet} theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

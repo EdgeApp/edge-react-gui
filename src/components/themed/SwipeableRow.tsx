@@ -14,7 +14,7 @@ import Animated, {
 
 import { useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   // The content to render in the row.
   // This will determine the row's overall dimensions.
   children?: React.ReactNode

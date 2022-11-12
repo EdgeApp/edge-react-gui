@@ -7,13 +7,13 @@ import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
 import { Card } from './Card'
 
-type SummaryDetail = {
+interface SummaryDetail {
   label: string
   value: string
   icon?: React.ReactNode
 }
 
-type Props = {
+interface Props {
   currencyCode: string
   currencyIcon: React.ReactNode
   details: SummaryDetail[]

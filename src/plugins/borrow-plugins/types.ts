@@ -8,7 +8,7 @@ import { PendingTxMap } from '../../controllers/action-queue/types'
 // -----------------------------------------------------------------------------
 
 // Borrow more:
-export type BorrowRequest = {
+export interface BorrowRequest {
   tokenId?: string
   nativeAmount: string
 
@@ -17,7 +17,7 @@ export type BorrowRequest = {
 }
 
 // Make payment:
-export type RepayRequest = {
+export interface RepayRequest {
   tokenId?: string
   nativeAmount: string
 
@@ -27,7 +27,7 @@ export type RepayRequest = {
 }
 
 // Deposit collateral:
-export type DepositRequest = {
+export interface DepositRequest {
   tokenId?: string
   nativeAmount: string
 
@@ -36,22 +36,22 @@ export type DepositRequest = {
 }
 
 // Withdraw collateral:
-export type WithdrawRequest = {
+export interface WithdrawRequest {
   tokenId?: string
-  nativeAmount?: string
+  nativeAmount: string
 
   // Optional destination for the funds
   toWallet?: EdgeCurrencyWallet
 }
 
-export type BroadcastTx = {
+export interface BroadcastTx {
   walletId: string
   networkFee: EdgeNetworkFee
   tx: EdgeTransaction
 }
 
 // General purpose approvable action
-export type ApprovableAction = {
+export interface ApprovableAction {
   readonly networkFee: EdgeNetworkFee
   readonly unsignedTxs: EdgeTransaction[]
   // Optional pending txs to pass along to the wallet when making transactions
@@ -66,28 +66,34 @@ export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'l
 // Engine
 // -----------------------------------------------------------------------------
 
-export type BorrowCollateral = {
+export interface BorrowCollateral {
   tokenId?: string
   nativeAmount: string
 }
 
-export type BorrowDebt = {
+export interface BorrowDebt {
   tokenId?: string
   nativeAmount: string
   apr: number
 }
 
-export type BorrowEngine = {
+export interface BorrowEngine {
   // Currency wallet for the loan account (e.g. Ethereum wallet)
   currencyWallet: EdgeCurrencyWallet
 
+  // Loan State
   collaterals: BorrowCollateral[]
   debts: BorrowDebt[]
-
   loanToValue: number
 
+  // Engine State
   readonly watch: Subscriber<BorrowEngine>
+  isRunning: boolean
   syncRatio: number
+
+  // Life-cycle
+  startEngine: () => Promise<void>
+  stopEngine: () => Promise<void>
 
   // Returns the APR for borrow a particular token
   getAprQuote: (tokenId?: string) => Promise<number>
@@ -105,7 +111,7 @@ export type BorrowEngine = {
 // Plugin Info
 // -----------------------------------------------------------------------------
 
-export type BorrowPluginInfo = {
+export interface BorrowPluginInfo {
   borrowPluginId: string
 
   // Display information
@@ -124,7 +130,7 @@ export type BorrowPluginInfo = {
 // Plugin
 // -----------------------------------------------------------------------------
 
-export type BorrowPlugin = {
+export interface BorrowPlugin {
   borrowInfo: BorrowPluginInfo
   makeBorrowEngine: (wallet: EdgeCurrencyWallet) => Promise<BorrowEngine>
 }

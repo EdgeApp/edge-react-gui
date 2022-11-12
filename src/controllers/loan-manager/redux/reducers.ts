@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from 'redux'
 import { Action } from '../../../types/reduxTypes'
 import { LoanAccountMap } from '../types'
 
-export type LoanManagerState = {
+export interface LoanManagerState {
   readonly loanAccounts: LoanAccountMap
   readonly lastResyncTimestamp: number
   readonly syncRatio: number

@@ -4,7 +4,7 @@ import { makeMasonryPolicy } from './policies/masonryPolicy'
 import { StakePolicyInfo } from './stakePolicy'
 import { StakeProviderInfo } from './types'
 
-export type StakePluginInfo = {
+export interface StakePluginInfo {
   pluginId: string
   policyInfo: StakePolicyInfo[]
 }

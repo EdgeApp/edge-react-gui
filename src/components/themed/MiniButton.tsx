@@ -6,7 +6,7 @@ import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
-type Props = {
+interface Props {
   // The text to show inside the button:
   label: string
 

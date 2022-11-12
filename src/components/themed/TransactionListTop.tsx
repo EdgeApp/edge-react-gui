@@ -1,4 +1,5 @@
-import { add, gt } from 'biggystring'
+import { add, gt, mul } from 'biggystring'
+import { EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -9,59 +10,57 @@ import { selectWalletFromModal } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
+import { useWalletName } from '../../hooks/useWalletName'
+import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { StakePolicy } from '../../plugins/stake-plugins'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { convertCurrency } from '../../selectors/WalletSelectors'
-import { connect } from '../../types/reactRedux'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
-import { MapObject } from '../../types/types'
 import { stakePlugin } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 
-type OwnProps = {
-  walletId: string
-  isEmpty: boolean
+interface OwnProps {
   navigation: NavigationProp<'transactionList'>
-  searching: boolean
+
+  // Wallet identity:
+  currencyCode: string
   tokenId?: string
+  wallet: EdgeCurrencyWallet
+
+  // Scene state:
+  isEmpty: boolean
+  searching: boolean
   onChangeSortingState: (isSearching: boolean) => void
   onSearchTransaction: (searchString: string) => void
 }
 
-type StateProps = {
-  cryptoAmount: string
-  currencyCode: string
-  pluginId: string
-  denominationName: string
-  fiatCurrencyCode: string
-  fiatBalance: string
-  fiatSymbol: string
-  walletName: string
+interface StateProps {
+  balances: EdgeBalances
+  displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
+  exchangeRate: string
   isAccountBalanceVisible: boolean
-  stakingBalances: {
-    [cCode: string]: {
-      crypto: string
-      fiat: string
-    }
-  }
+  walletName: string
 }
 
-type DispatchProps = {
+interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
   toggleBalanceVisibility: () => void
 }
 
-type State = {
+interface State {
   input: string
   stakePolicies: StakePolicy[] | null
 }
@@ -86,35 +85,52 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidMount() {
-    stakePlugin.getStakePolicies().then(stakePolicies => {
-      const { currencyCode, pluginId } = this.props
-      const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
-        return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+    const { currencyCode, wallet } = this.props
+    const { pluginId } = wallet.currencyInfo
+
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
+      stakePlugin.getStakePolicies().then(stakePolicies => {
+        const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
+          return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+        })
+        this.setState({ stakePolicies: filteredStatePolicies })
       })
-      this.setState({ stakePolicies: filteredStatePolicies })
-    })
+    } else {
+      this.setState({ stakePolicies: [] })
+    }
   }
 
   handleOpenWalletListModal = () => {
+    const { navigation } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          this.props.onSelectWallet(walletId, currencyCode)
+        if (walletId != null && currencyCode != null) {
+          navigation.setParams({ currencyCode, walletId })
         }
       }
     )
   }
 
   handleMenu = () => {
-    Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} tokenId={this.props.tokenId} navigation={this.props.navigation} walletId={this.props.walletId} />
-    ))
+    const { wallet, tokenId, navigation } = this.props
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />)
   }
 
   renderBalanceBox = () => {
-    const { cryptoAmount, currencyCode, denominationName, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } =
-      this.props
+    const { balances, displayDenomination, exchangeDenomination, exchangeRate, currencyCode, isAccountBalanceVisible, theme, wallet, walletName } = this.props
     const styles = getStyles(theme)
+
+    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
+    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+
+    const nativeBalance = balances[currencyCode] ?? '0'
+    const cryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeBalance) // convert to correct denomination
+    const cryptoAmountFormat = formatNumber(add(cryptoAmount, '0'))
+
+    // Fiat Balance Formatting
+    const exchangeAmount = convertNativeToDenomination(exchangeDenomination.multiplier)(nativeBalance)
+    const fiatBalance = mul(exchangeAmount, exchangeRate)
+    const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return (
       <View style={styles.balanceBoxContainer}>
@@ -122,7 +138,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
               <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={walletId} />
+                <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={wallet.id} />
                 <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
@@ -134,9 +150,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {isAccountBalanceVisible ? (
                 <>
                   <EdgeText style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
-                    {cryptoAmount + ' ' + denominationName}
+                    {cryptoAmountFormat + ' ' + displayDenomination.name}
                   </EdgeText>
-                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}</EdgeText>
                 </>
               ) : (
                 <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
@@ -154,23 +170,38 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, currencyCode, stakingBalances, fiatSymbol, fiatCurrencyCode } = this.props
+    const { theme, currencyCode, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
     const styles = getStyles(theme)
 
-    const lockedBalance = stakingBalances != null ? stakingBalances[`${currencyCode}${STAKING_BALANCES.locked}`] : null
+    if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
 
-    return lockedBalance != null && lockedBalance.crypto != null && lockedBalance.crypto !== '0' ? (
+    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
+    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+
+    const nativeLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    if (nativeLocked === '0') return null
+
+    const stakingCryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeLocked)
+    const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
+
+    const stakingExchangeAmount = convertNativeToDenomination(exchangeDenomination.multiplier)(nativeLocked)
+    const stakingFiatBalance = mul(stakingExchangeAmount, exchangeRate)
+    const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+
+    return (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
-          {sprintf(s.strings.staking_status, lockedBalance.crypto + ' ' + currencyCode, fiatSymbol + lockedBalance.fiat + ' ' + fiatCurrencyCode)}
+          {sprintf(s.strings.staking_status, stakingCryptoAmountFormat + ' ' + currencyCode, fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode)}
         </EdgeText>
       </View>
-    ) : null
+    )
   }
 
   isStakingAvailable = (): boolean => {
-    const { currencyCode, pluginId } = this.props
+    const { currencyCode, wallet } = this.props
+    const { pluginId } = wallet.currencyInfo
     const { stakePolicies } = this.state
+
     const isStakingPolicyAvailable = stakePolicies != null && stakePolicies.length > 0
 
     // Special case for FIO because it uses it's own staking plugin
@@ -206,15 +237,24 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleStakePress = () => {
-    const { currencyCode, walletId } = this.props
+    const { currencyCode, wallet } = this.props
     const { stakePolicies } = this.state
 
     // Handle FIO staking
-    if (currencyCode === 'FIO') Actions.push('fioStakingOverview', { currencyCode, walletId })
+    if (currencyCode === 'FIO') {
+      Actions.push('fioStakingOverview', {
+        currencyCode,
+        walletId: wallet.id
+      })
+    }
 
     // Handle StakePlugin staking
     if (stakePolicies != null && stakePolicies.length > 0) {
-      Actions.push('stakeOptions', { walletId, currencyCode, stakePolicies })
+      Actions.push('stakeOptions', {
+        walletId: wallet.id,
+        currencyCode,
+        stakePolicies
+      })
     }
   }
 
@@ -395,65 +435,39 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
-  state => {
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const { currencyInfo } = state.core.account.currencyWallets[selectedWalletId]
-    const { pluginId } = currencyInfo
-    const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-    const guiWallet = state.ui.wallets.byId[selectedWalletId]
-    const balance = guiWallet.nativeBalances[selectedCurrencyCode]
-    const stakingBalances: MapObject<{ crypto: string; fiat: string }> = {}
+export function TransactionListTop(props: OwnProps) {
+  const { wallet, currencyCode } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
 
-    // Crypto Amount Formatting
-    const currencyDenomination = getDisplayDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
-    const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = formatNumber(add(cryptoAmount, '0'))
+  const { pluginId } = wallet.currencyInfo
+  const displayDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
+  const exchangeDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
+  const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
 
-    // Fiat Balance Formatting
-    const defaultDenomination = getExchangeDenomination(state, currencyInfo.pluginId, selectedCurrencyCode)
-    const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
-    const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
-    const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
+  const walletName = useWalletName(wallet)
+  const balances = useWatch(wallet, 'balances')
 
-    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
-      for (const cCodeKey in STAKING_BALANCES) {
-        const stakingCurrencyCode = `${selectedCurrencyCode}${STAKING_BALANCES[cCodeKey]}`
-
-        const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
-        const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-        const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
-
-        const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-        const stakingFiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
-        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
-
-        stakingBalances[stakingCurrencyCode] = {
-          crypto: stakingCryptoAmountFormat,
-          fiat: stakingFiatBalanceFormat
-        }
-      }
-    }
-
-    return {
-      currencyCode: selectedCurrencyCode,
-      pluginId,
-      cryptoAmount: cryptoAmountFormat,
-      denominationName: currencyDenomination.name,
-      fiatCurrencyCode: guiWallet.fiatCurrencyCode,
-      fiatBalance: fiatBalanceFormat,
-      fiatSymbol: getSymbolFromCurrency(guiWallet.isoFiatCurrencyCode),
-      walletName: guiWallet.name,
-      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible,
-      stakingBalances
-    }
-  },
-  dispatch => ({
-    toggleBalanceVisibility() {
-      dispatch(toggleAccountBalanceVisibility())
-    },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
-    }
+  const handleBalanceVisibility = useHandler(() => {
+    dispatch(toggleAccountBalanceVisibility())
   })
-)(withTheme(TransactionListTopComponent))
+  const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
+    dispatch(selectWalletFromModal(walletId, currencyCode))
+  })
+
+  return (
+    <TransactionListTopComponent
+      {...props}
+      balances={balances}
+      displayDenomination={displayDenomination}
+      exchangeDenomination={exchangeDenomination}
+      exchangeRate={exchangeRate}
+      walletName={walletName}
+      isAccountBalanceVisible={isAccountBalanceVisible}
+      toggleBalanceVisibility={handleBalanceVisibility}
+      onSelectWallet={handleSelectWallet}
+      theme={theme}
+    />
+  )
+}

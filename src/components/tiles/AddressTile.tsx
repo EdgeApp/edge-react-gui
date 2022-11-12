@@ -22,7 +22,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
-type OwnProps = {
+interface OwnProps {
   coreWallet: EdgeCurrencyWallet
   currencyCode: string
   title: string
@@ -34,10 +34,10 @@ type OwnProps = {
   isCameraOpen: boolean
   fioToAddress?: string
 }
-type StateProps = {
+interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
 }
-type State = {
+interface State {
   clipboard: string
   loading: boolean
 }

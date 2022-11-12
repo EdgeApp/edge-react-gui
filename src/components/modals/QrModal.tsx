@@ -7,7 +7,7 @@ import { useWindowSize } from '../../hooks/useWindowSize'
 import { useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'
 
-type Props = {
+interface Props {
   bridge: AirshipBridge<void>
   data?: string
 }

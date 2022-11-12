@@ -16,7 +16,7 @@ export type BitPayErrorCode =
 /**
  * Options passed to the BitPayError constructor.
  */
-type BitPayErrorOptions = {
+interface BitPayErrorOptions {
   header?: string
   statusCode?: string
   text?: string

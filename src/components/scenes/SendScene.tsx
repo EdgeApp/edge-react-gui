@@ -6,13 +6,15 @@ import {
   EdgeMetadata,
   EdgeParsedUri,
   EdgeSpendTarget,
-  EdgeTransaction
+  EdgeTransaction,
+  JsonObject
 } from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
+import { dismissScamWarning } from '../../actions/ScamWarningActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -24,7 +26,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
-import { ScamWarningCard } from '../cards/ScamWarningCard'
+import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../modals/FlipInputModal'
@@ -43,7 +45,7 @@ import { Tile } from '../tiles/Tile'
 
 const PIN_MAX_LENGTH = 4
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   authRequired: 'pin' | 'none'
   defaultSelectedWalletId: string
@@ -61,7 +63,7 @@ type StateProps = {
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
 }
 
-type DispatchProps = {
+interface DispatchProps {
   reset: () => void
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string, isFeeChanged?: boolean) => void
   signBroadcastAndSave: (
@@ -76,13 +78,13 @@ type DispatchProps = {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'send'>
   route: RouteProp<'send'>
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type WalletStates = {
+interface WalletStates {
   selectedWalletId: string
   selectedCurrencyCode: string
   wallet: EdgeCurrencyWallet
@@ -132,7 +134,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
     if (guiMakeSpendInfo != null) {
-      this.updateSendConfirmationTx(guiMakeSpendInfo)
+      this.updateSendConfirmationTx(guiMakeSpendInfo, true)
     }
   }
 
@@ -151,7 +153,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  updateSendConfirmationTx = (guiMakeSpendInfo: GuiMakeSpendInfo) => {
+  updateSendConfirmationTx = (guiMakeSpendInfo: GuiMakeSpendInfo, isOnMount?: boolean) => {
     this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
     const recipientAddress =
       guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
@@ -159,6 +161,15 @@ class SendComponent extends React.PureComponent<Props, State> {
         : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
         ? guiMakeSpendInfo.spendTargets[0].publicAddress
         : ''
+
+    if (isOnMount && recipientAddress !== '') {
+      // Show a scam warning for the first time this scene was mounted with a
+      // pre-populated address.
+      // A SendScene with the above initialization hides the scam warning that
+      // is visible only when accessing the SendScene without a pre-populated
+      // address
+      dismissScamWarning(this.props.account.disklet)
+    }
     this.setState({ recipientAddress })
   }
 
@@ -190,7 +201,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
+  handleChangeAddressFromScan = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
     const { sendConfirmationUpdateTx, route } = this.props
     const { guiMakeSpendInfo } = route.params
     const { spendTargets } = newGuiMakeSpendInfo
@@ -198,11 +209,9 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (parsedUri) {
       const nativeAmount = parsedUri.nativeAmount || ''
-      const otherParams = {}
+      const otherParams: JsonObject = {}
       if (newGuiMakeSpendInfo.fioAddress != null) {
-        // @ts-expect-error
         otherParams.fioAddress = newGuiMakeSpendInfo.fioAddress
-        // @ts-expect-error
         otherParams.isSendUsingFioAddress = newGuiMakeSpendInfo.isSendUsingFioAddress
       }
       const spendTargets: EdgeSpendTarget[] = [
@@ -223,8 +232,13 @@ class SendComponent extends React.PureComponent<Props, State> {
       }
     }
     sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-    // @ts-expect-error
-    this.setState({ recipientAddress })
+
+    // In this use case, the address is not populated on the SendScene and the
+    // scam warning card is **technically** visible, but only for a split second
+    // before the QR scanner appears.
+    // Ensure the user sees the scam warning, if necessary.
+    dismissScamWarning(this.props.account.disklet)
+    this.setState({ recipientAddress: recipientAddress ?? '' })
   }
 
   handleFlipInputModal = () => {
@@ -372,7 +386,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           recipientAddress={recipientAddress}
           coreWallet={coreWallet}
           currencyCode={selectedCurrencyCode}
-          onChangeAddress={this.handleChangeAddress}
+          onChangeAddress={this.handleChangeAddressFromScan}
           resetSendTransaction={this.resetSendTransaction}
           lockInputs={lockInputs || lockTilesMap.address}
           isCameraOpen={!!isCameraOpen}
@@ -387,7 +401,18 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderScamWarning() {
     const { recipientAddress } = this.state
     if (recipientAddress === '') {
-      return <ScamWarningCard marginRem={[1.5, 1]} />
+      return (
+        <WarningCard
+          title={s.strings.warning_scam_title}
+          points={[
+            s.strings.warning_scam_message_financial_advice,
+            s.strings.warning_scam_message_irreversibility,
+            s.strings.warning_scam_message_unknown_recipients
+          ]}
+          footer={s.strings.warning_scam_footer}
+          marginRem={[1.5, 1]}
+        />
+      )
     }
     return null
   }
@@ -590,7 +615,6 @@ class SendComponent extends React.PureComponent<Props, State> {
         <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
-          {this.renderScamWarning()}
           {this.renderAmount()}
           {this.renderError()}
           {this.renderFees()}
@@ -599,6 +623,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderUniqueIdentifier()}
           {this.renderInfoTiles()}
           {this.renderAuthentication()}
+          {this.renderScamWarning()}
           <View style={styles.footer}>{!!recipientAddress && <SafeSlider onSlidingComplete={this.submit} disabled={sliderDisabled} />}</View>
         </KeyboardAwareScrollView>
       </SceneWrapper>

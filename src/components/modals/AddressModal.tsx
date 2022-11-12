@@ -21,7 +21,7 @@ import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
-type OwnProps = {
+interface OwnProps {
   bridge: AirshipBridge<string | undefined>
   // eslint-disable-next-line react/no-unused-prop-types
   walletId: string
@@ -32,7 +32,7 @@ type OwnProps = {
   checkAddressConnected?: boolean
 }
 
-type StateProps = {
+interface StateProps {
   account: EdgeAccount
   userFioAddresses: FioAddress[]
   userFioAddressesLoading: boolean
@@ -40,11 +40,11 @@ type StateProps = {
   fioPlugin?: EdgeCurrencyConfig
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
-type State = {
+interface State {
   uri: string
   statusLabel: string
   fieldError: string | undefined
@@ -190,7 +190,6 @@ export class AddressModalComponent extends React.Component<Props, State> {
       this.setCryptoAddress(addr)
     } catch (err: any) {
       if (err instanceof ResolutionError) {
-        // @ts-expect-error
         const message = sprintf(s.strings[err.code], domain, currencyTicker)
         if (domain === '') this.setStatusLabel(s.strings.fragment_send_address)
         else {

@@ -12,14 +12,14 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from './EdgeText'
 import { SceneHeader } from './SceneHeader'
 
-type StateProps = {
+interface StateProps {
   showBalance: boolean
   fiatAmount: number
   defaultIsoFiat: string
   exchangeRates: GuiExchangeRates
 }
 
-type DispatchProps = {
+interface DispatchProps {
   toggleAccountBalanceVisibility: () => void
 }
 

@@ -14,12 +14,12 @@ import { cacheStyles } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
-type StateProps = {
+interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
   isConnected: boolean
 }
 
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioNameConfirm'>
   route: RouteProp<'fioNameConfirm'>
 }

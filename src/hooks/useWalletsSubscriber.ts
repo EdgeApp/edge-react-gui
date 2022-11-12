@@ -3,8 +3,10 @@ import * as React from 'react'
 
 type Cleanup = (() => void) | undefined
 
-type WalletMap = { [walletId: string]: EdgeCurrencyWallet }
-type State = {
+interface WalletMap {
+  [walletId: string]: EdgeCurrencyWallet
+}
+interface State {
   cleanups: Map<string, Cleanup>
   lastWallets: WalletMap
   subscribe: (wallet: EdgeCurrencyWallet) => Cleanup

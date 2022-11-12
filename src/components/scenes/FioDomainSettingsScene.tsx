@@ -18,20 +18,20 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
-type State = {
+interface State {
   showRenew: boolean
   showVisibility: boolean
   showTransfer: boolean
 }
 
-type StateProps = {
+interface StateProps {
   isConnected: boolean
 }
 
-type DispatchProps = {
+interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
-type OwnProps = {
+interface OwnProps {
   navigation: NavigationProp<'fioDomainSettings'>
   route: RouteProp<'fioDomainSettings'>
 }

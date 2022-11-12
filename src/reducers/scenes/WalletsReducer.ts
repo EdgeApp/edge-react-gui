@@ -6,7 +6,7 @@ import { Action } from '../../types/reduxTypes'
 import { GuiWallet } from '../../types/types'
 import { tokenIdsToCurrencyCodes } from '../../util/utils'
 
-export type WalletsState = {
+export interface WalletsState {
   byId: { [walletId: string]: GuiWallet }
   selectedWalletId: string
   selectedCurrencyCode: string
@@ -24,7 +24,7 @@ const byId = (state = {}, action: Action): WalletsState['byId'] => {
         out[walletId] = {
           // @ts-expect-error
           ...state[walletId],
-          ...schema(wallets[walletId])
+          ...makeGuiWallet(wallets[walletId])
         }
       }
 
@@ -43,7 +43,7 @@ const byId = (state = {}, action: Action): WalletsState['byId'] => {
         out[wallet.id] = {
           // @ts-expect-error
           ...state[wallet.id],
-          ...schema(wallet)
+          ...makeGuiWallet(wallet)
         }
       }
       return out
@@ -122,7 +122,7 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
   }
 }
 
-function schema(wallet: EdgeCurrencyWallet): GuiWallet {
+export function makeGuiWallet(wallet: EdgeCurrencyWallet): GuiWallet {
   const { blockHeight, currencyInfo, id, type } = wallet
   const { currencyCode, metaTokens, pluginId } = currencyInfo
   const name: string = wallet.name || 'no wallet name'

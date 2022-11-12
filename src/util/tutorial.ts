@@ -2,7 +2,7 @@ import { Disklet } from 'disklet'
 
 import { TUTORIAL } from '../constants/constantSettings'
 
-type UserTutorialList = {
+interface UserTutorialList {
   walletListSlideTutorialCount: number
 }
 
