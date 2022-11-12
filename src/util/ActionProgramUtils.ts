@@ -1,3 +1,4 @@
+import { div, gt, gte, lt, max, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js/types'
 import { sprintf } from 'sprintf-js'
 
@@ -6,10 +7,14 @@ import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
 import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
 import s from '../locales/strings'
 import { BorrowEngine } from '../plugins/borrow-plugins/types'
+import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
+import { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
 import { zeroString } from './utils'
+
+const MINIMUM_PARASWAP_AMOUNT = '100000' // Don't attempt paraswaps under 1 cent
 
 // -----------------------------------------------------------------------------
 //  Given the user inputs made in the AAVE UI, return the Actions needed to
@@ -225,20 +230,56 @@ export const makeAaveDepositAction = async ({
 
 export const makeAaveCloseAction = async ({
   borrowPluginId,
-  borrowEngine
+  borrowEngine,
+  exchangeRates
 }: {
   borrowPluginId: string
   borrowEngine: BorrowEngine
+  exchangeRates: GuiExchangeRates
 }): Promise<ActionOp | null> => {
   const { currencyWallet: wallet } = borrowEngine
 
-  const collaterals = borrowEngine.collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
-  const collateral = collaterals[0]
-  const collateralTokenId = collateral?.tokenId
+  // #region Validation
 
+  // Only accept this request if the user has only singular debt/collateral assets
+  const collaterals = borrowEngine.collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
   const debts = borrowEngine.debts.filter(debt => !zeroString(debt.nativeAmount))
+  if (debts.length === 0) return null
+
+  if (collaterals.length > 1 || debts.length > 1) throw new Error(s.strings.loan_close_multiple_asset_error)
+
+  // Reject this close action if the user does not have enough debt token
+  // balance in their wallet to partially repay such that:
+  // D / (C - D) <= 74% LTV, where C = collateral in fiat, D = debt in fiat
+  // In other words, target debt balance prior to swapping = (37 * C) / 87
+  const {
+    currencyConfig: { allTokens },
+    currencyInfo,
+    fiatCurrencyCode: isoFiatCurrencyCode
+  } = wallet
+
+  const collateral = collaterals[0]
+  const collateralTokenId = collateral.tokenId
   const debt = debts[0]
-  const debtTokenId = debt?.tokenId
+  const debtTokenId = debt.tokenId
+  if (debtTokenId == null) throw new Error('Could not find debt tokenId') // Should not happen...
+
+  const { currencyCode: collateralCurrencyCode } = collateral.tokenId == null ? currencyInfo : allTokens[collateral.tokenId] ?? {}
+  const { currencyCode: debtCurrencyCode } = debt.tokenId == null ? currencyInfo : allTokens[debt.tokenId] ?? {}
+  const collateralFiat = convertCurrencyFromExchangeRates(exchangeRates, collateralCurrencyCode, isoFiatCurrencyCode, collateral.nativeAmount)
+  const principalFiat = convertCurrencyFromExchangeRates(exchangeRates, debtCurrencyCode, isoFiatCurrencyCode, debt.nativeAmount)
+  const debtBalanceNativeAmount = wallet.balances[debtCurrencyCode]
+  const debtBalanceFiat = convertCurrencyFromExchangeRates(exchangeRates, debtCurrencyCode, isoFiatCurrencyCode, debtBalanceNativeAmount)
+
+  // Target principal we want to arrive at after initial repayment from balance
+  const targetPrincipalFiat = div(mul('37', collateralFiat), '87')
+  const targetPrincipalFiatDeficit = gt(principalFiat, targetPrincipalFiat) ? sub(principalFiat, targetPrincipalFiat) : '0'
+
+  // Check if we have enough debt token to arrive at that deficit
+  if (lt(debtBalanceFiat, targetPrincipalFiatDeficit))
+    throw new Error(sprintf(s.strings.loan_close_insufficient_funds_2s, sub(targetPrincipalFiatDeficit, debtBalanceFiat), debtCurrencyCode))
+
+  // #endregion Validation
 
   const seqAction: SeqActionOp = {
     type: 'seq',
@@ -246,16 +287,40 @@ export const makeAaveCloseAction = async ({
   }
 
   // Repay actions
-  if (debtTokenId != null) {
+  let repayWithBalanceNativeAmount = '0'
+  let repayWithCollateralNativeAmount = '0'
+  if (gte(debtBalanceNativeAmount, debt.nativeAmount)) {
+    // If the user does has enough debt balance to fully cover the principal,
+    // simply repay the full amount from the wallet balance
+    repayWithBalanceNativeAmount = debt.nativeAmount
+  } else {
+    // If the user does not have enough debt balance to fully cover the principal,
+    // first repay with the maximum debt balance such that the following repay
+    // with collateral will not fail due to not meeting paraswap minimums
+    repayWithCollateralNativeAmount = max(sub(debt.nativeAmount, debtBalanceNativeAmount), MINIMUM_PARASWAP_AMOUNT)
+    repayWithBalanceNativeAmount = sub(debt.nativeAmount, repayWithCollateralNativeAmount)
+  }
+
+  // Construct repay with balance
+  if (!zeroString(repayWithBalanceNativeAmount))
     seqAction.actions.push({
       type: 'loan-repay',
-      nativeAmount: MAX_AMOUNT.toString(),
+      nativeAmount: repayWithBalanceNativeAmount,
+      borrowPluginId,
+      tokenId: debtTokenId,
+      walletId: wallet.id
+    })
+
+  // Construct repay with collateral
+  if (!zeroString(repayWithCollateralNativeAmount))
+    seqAction.actions.push({
+      type: 'loan-repay',
+      nativeAmount: repayWithCollateralNativeAmount,
       borrowPluginId,
       fromTokenId: collateralTokenId,
       tokenId: debtTokenId,
       walletId: wallet.id
     })
-  }
 
   // Withdraw actions
   const withdrawalToken = getToken(wallet, collateralTokenId)
