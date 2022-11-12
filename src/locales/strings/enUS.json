@@ -861,6 +861,7 @@
   "loan_close_loan_no_tx_needed_message": "There appears to be no principal to repay nor collateral to withdraw.\n\nNo transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.",
   "loan_close_loan_title": "Close Loan",
   "loan_close_multiple_asset_error": "Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.",
+  "loan_close_insufficient_funds_2s": "An additional %1$s %2$s is required to close your loan.",
   "loan_collateral_amount": "Collateral Amount",
   "loan_collateral_destination": "Collateral Destination",
   "loan_collateral_required": "Collateral Amount Required",
