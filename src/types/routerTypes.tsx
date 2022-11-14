@@ -262,6 +262,7 @@ export interface ParamList {
   }
   send2: {
     walletId: string
+    tokenId?: string
     spendInfo?: EdgeSpendInfo
     openCamera?: boolean
     lockTilesMap?: {
