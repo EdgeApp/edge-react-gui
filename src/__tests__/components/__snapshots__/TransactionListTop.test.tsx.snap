@@ -902,9 +902,7 @@ Array [
     style={
       Array [
         Object {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "center",
           "marginLeft": 22,
           "paddingBottom": 22,
         },
@@ -913,6 +911,16 @@ Array [
       ]
     }
   >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginRight": 22,
+        }
+      }
+    />
     <Text
       adjustsFontSizeToFit={true}
       minimumFontScale={0.65}

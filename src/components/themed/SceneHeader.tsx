@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -22,9 +21,11 @@ export const SceneHeaderComponent = (props: Props) => {
   return (
     <>
       <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
-        {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+        <View style={styles.titleContainer}>
+          {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+          {tertiary}
+        </View>
         {children}
-        {tertiary ? <Space right>{tertiary}</Space> : null}
       </View>
       <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
     </>
@@ -33,12 +34,17 @@ export const SceneHeaderComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    justifyContent: 'center',
     marginLeft: theme.rem(1),
-    paddingBottom: theme.rem(1),
+    paddingBottom: theme.rem(1)
+  },
+  titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginRight: theme.rem(1)
   },
+
   topMargin: {
     marginTop: theme.rem(1)
   },
