@@ -22,6 +22,7 @@ describe('AccelerateTxModelComponent', () => {
       <AccelerateTxModelComponent
         bridge={fakeAirshipBridge}
         edgeTransaction={{
+          walletId: '',
           blockHeight: 0,
           currencyCode: 'BTC',
           date: 0,

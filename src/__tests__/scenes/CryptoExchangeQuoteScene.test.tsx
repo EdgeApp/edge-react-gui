@@ -23,8 +23,20 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       }
     }
 
+    const fakeRequest: any = {
+      fromWallet: {
+        fiatCurrencyCode: 'USD',
+        name: ''
+      },
+      toWallet: {
+        fiatCurrencyCode: 'USD',
+        name: ''
+      }
+    }
+
     const swapInfo: GuiSwapInfo = {
       quote: {
+        request: fakeRequest,
         isEstimate: true,
         fromNativeAmount: '10000',
         toNativeAmount: '10000',
@@ -36,6 +48,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         approve: async () => ({
           orderId: 'demo',
           transaction: {
+            walletId: '',
             txid: 'txid2',
             date: 1524486980,
             currencyCode: 'BTC',
@@ -56,16 +69,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         }),
         close: async () => undefined
       },
-      request: {
-        fromWallet: {
-          fiatCurrencyCode: 'USD',
-          name: ''
-        },
-        toWallet: {
-          fiatCurrencyCode: 'USD',
-          name: ''
-        }
-      } as any,
+      request: fakeRequest,
       fee: '1',
       fromDisplayAmount: '1',
       fromFiat: '1',

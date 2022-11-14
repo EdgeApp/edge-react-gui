@@ -49,6 +49,7 @@ describe('TransactionListRow', () => {
           walletId="lmnop"
           currencyCode="BTC"
           transaction={{
+            walletId: '',
             dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
             time: '22:53:08',
             unfilteredIndex: 0,

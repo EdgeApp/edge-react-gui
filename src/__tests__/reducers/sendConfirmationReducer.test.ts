@@ -32,6 +32,7 @@ describe('sendConfirmation reducer', () => {
           metadata: {}
         }
         const transaction: EdgeTransaction = {
+          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,
@@ -67,6 +68,7 @@ describe('sendConfirmation reducer', () => {
           }
         }
         const transaction: EdgeTransaction = {
+          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,
@@ -113,6 +115,7 @@ describe('sendConfirmation reducer', () => {
       test('with pin error', () => {
         const guiMakeSpendInfo = { nativeAmount: '0' }
         const transaction: EdgeTransaction = {
+          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,

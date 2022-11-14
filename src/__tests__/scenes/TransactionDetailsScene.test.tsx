@@ -71,6 +71,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
+                walletId: '',
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
@@ -102,6 +103,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
+                walletId: '',
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z

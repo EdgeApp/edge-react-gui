@@ -9,6 +9,7 @@ const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encod
 
 const edgeTxs: EdgeTransaction[] = [
   {
+    walletId: '',
     txid: 'txid1',
     date: 1524476980,
     currencyCode: 'BTC',
@@ -27,6 +28,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid2',
     date: 1524576980,
     currencyCode: 'BTC',
@@ -45,6 +47,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid3',
     date: 1524676980,
     currencyCode: 'BTC',
@@ -62,6 +65,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid4',
     date: 1524776980,
     currencyCode: 'BTC',
@@ -79,6 +83,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid4',
     date: 1524876980,
     currencyCode: 'USDC',
@@ -97,6 +102,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid5',
     date: 1524976980,
     currencyCode: 'BTC',
@@ -114,6 +120,7 @@ const edgeTxs: EdgeTransaction[] = [
     deviceDescription: 'iphone12'
   },
   {
+    walletId: '',
     txid: 'txid6',
     date: 1525076980,
     currencyCode: 'BTC',

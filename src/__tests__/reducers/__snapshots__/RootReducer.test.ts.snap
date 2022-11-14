@@ -182,6 +182,7 @@ Object {
           "parentNetworkFee": "",
           "signedTx": "",
           "txid": "",
+          "walletId": "",
         },
         "transactionMetadata": null,
       },

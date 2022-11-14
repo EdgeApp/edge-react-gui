@@ -30,6 +30,7 @@ export const initialState = {
   isEditable: true,
 
   transaction: {
+    walletId: '',
     txid: '',
     date: 0,
     currencyCode: '',

@@ -314,6 +314,7 @@ export class EdgeProvider extends Bridgeable {
     const transactions: EdgeTransaction[] = []
     for (const tx of txs) {
       const newTx: EdgeTransaction = {
+        walletId: tx.walletId,
         currencyCode: tx.currencyCode,
         nativeAmount: tx.nativeAmount,
         networkFee: tx.networkFee,
