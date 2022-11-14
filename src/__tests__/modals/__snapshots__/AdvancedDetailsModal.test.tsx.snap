@@ -186,7 +186,8 @@ Array [
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -201,6 +202,7 @@ Array [
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
