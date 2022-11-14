@@ -46,11 +46,14 @@ exports[`Tile should render with loading props 1`] = `
           }
         />
         <WithTheme(EdgeTextComponent)
+          disableFontScaling={true}
+          ellipsizeMode="tail"
           style={
             Object {
               "color": "#A4C7DF",
               "fontSize": 17,
               "paddingBottom": 6,
+              "paddingRight": 22,
             }
           }
         >
