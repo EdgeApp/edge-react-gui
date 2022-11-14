@@ -121,10 +121,17 @@ const SendComponent = (props: Props) => {
   }
 
   const renderAddressAmountTile = (index: number, spendTarget: EdgeSpendTarget) => {
-    const { publicAddress, nativeAmount } = spendTarget
+    const { publicAddress, nativeAmount, otherParams = {} } = spendTarget
+    const { fioAddress } = otherParams
+    let title = ''
+    if (fioAddress != null) {
+      title = `Send To (${fioAddress}) ${publicAddress}`
+    } else {
+      title = `Send To ${publicAddress}`
+    }
     return (
       <EditableAmountTile
-        title={`Send To ${publicAddress}`}
+        title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
         wallet={coreWallet}
@@ -151,7 +158,8 @@ const SendComponent = (props: Props) => {
   const renderAddressTile = (index: number, spendTarget: EdgeSpendTarget) => {
     if (coreWallet != null && !hiddenTilesMap.address) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
-      const { publicAddress = '' } = spendTarget
+      const { publicAddress = '', otherParams = {} } = spendTarget
+      const { fioAddress } = otherParams
       const title = s.strings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <AddressTile2
@@ -163,6 +171,7 @@ const SendComponent = (props: Props) => {
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
           isCameraOpen={!!openCamera}
+          fioToAddress={fioAddress}
         />
       )
     }
