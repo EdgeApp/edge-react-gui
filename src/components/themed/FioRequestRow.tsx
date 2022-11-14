@@ -38,7 +38,7 @@ interface StateProps {
 type Props = OwnProps & StateProps & ThemeProps
 
 class FioRequestRowComponent extends React.PureComponent<Props> {
-  rowRef: { current: SwipableRowRef | null } = React.createRef()
+  rowRef = React.createRef<SwipableRowRef>()
 
   closeRow = () => {
     if (this.rowRef.current != null) this.rowRef.current.close()
