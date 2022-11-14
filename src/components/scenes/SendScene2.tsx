@@ -2,9 +2,11 @@ import { EdgeAccount, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'ed
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
+import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
@@ -19,6 +21,7 @@ import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
+import { Tile } from '../tiles/Tile'
 
 interface Props {
   // navigation: NavigationProp<'send2'>
@@ -65,19 +68,45 @@ const SendComponent = (props: Props) => {
       setSpendInfo({ ...spendInfo })
     }
 
-  const renderAddressTile = (spendTarget: EdgeSpendTarget) => {
+  const handleAddressAmountPress = (index: number) => () => {
+    spendInfo.spendTargets.splice(index, 1)
+    setSpendInfo({ ...spendInfo })
+  }
+
+  const renderAddressAmountTile = (index: number, spendTarget: EdgeSpendTarget) => {
+    const { publicAddress, nativeAmount } = spendTarget
+    return (
+      <EditableAmountTile
+        title={`Send To ${publicAddress}`}
+        exchangeRates={exchangeRates}
+        nativeAmount={nativeAmount ?? ''}
+        wallet={coreWallet}
+        currencyCode={currencyCode}
+        exchangeDenomination={cryptoExchangeDenomination}
+        displayDenomination={cryptoDisplayDenomination}
+        lockInputs={lockTilesMap.amount ?? false}
+        compressed
+        // TODO: Handle press
+        onPress={handleAddressAmountPress(index)}
+      />
+    )
+  }
+
+  const renderAddressTile = (index: number, spendTarget: EdgeSpendTarget) => {
     if (coreWallet != null && !hiddenTilesMap.address) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '' } = spendTarget
+      const title = s.strings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <AddressTile2
-          title={s.strings.send_scene_send_to_address}
+          title={title}
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
           currencyCode={currencyCode}
           onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={() => {
             spendTarget.publicAddress = undefined
+            spendTarget.nativeAmount = undefined
             setSpendInfo({ ...spendInfo })
           }}
           lockInputs={lockTilesMap.address}
@@ -116,12 +145,13 @@ const SendComponent = (props: Props) => {
     )).catch(error => console.log(error))
   }
 
-  const renderAmount = (spendTarget: EdgeSpendTarget) => {
+  const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
     const { publicAddress, nativeAmount } = spendTarget
     if (publicAddress != null && !hiddenTilesMap.amount) {
+      const title = s.strings.fio_request_amount + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
-          title={s.strings.fio_request_amount}
+          title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
           wallet={coreWallet}
@@ -140,13 +170,41 @@ const SendComponent = (props: Props) => {
 
   const renderAddressAmountPairs = () => {
     const out: Array<JSX.Element | null> = []
-    for (const spendTarget of spendInfo?.spendTargets ?? []) {
-      let element = renderAddressTile(spendTarget)
-      if (element != null) out.push(element)
-      element = renderAmount(spendTarget)
-      if (element != null) out.push(element)
+    for (let i = 0; i < spendInfo.spendTargets.length; i++) {
+      const spendTarget = spendInfo.spendTargets[i]
+      let element
+      if (i < spendInfo.spendTargets.length - 1) {
+        element = renderAddressAmountTile(i, spendTarget)
+        if (element != null) out.push(element)
+      } else {
+        element = renderAddressTile(i, spendTarget)
+        if (element != null) out.push(element)
+        element = renderAmount(i, spendTarget)
+        if (element != null) out.push(element)
+      }
     }
     return out
+  }
+
+  const handleAddAddress = useHandler(() => {
+    spendInfo.spendTargets.push({})
+    setSpendInfo({ ...spendInfo })
+  })
+
+  const renderAddAddress = () => {
+    const type = coreWallet.type
+    const maxSpendTargets = getSpecialCurrencyInfo(type)?.maxSpendTargets ?? 1
+    if (maxSpendTargets < 2 || hiddenTilesMap.address || hiddenTilesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
+      return null
+    }
+    const numTargets = spendInfo.spendTargets.length
+    const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
+    const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
+    if (lastTargetHasAddress && lastTargetHasAmount) {
+      return <Tile type="touchable" title={s.strings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" contentPadding />
+    } else {
+      return null
+    }
   }
 
   useAsyncEffect(async () => {
@@ -173,6 +231,7 @@ const SendComponent = (props: Props) => {
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {renderAddressAmountPairs()}
+        {renderAddAddress()}
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
