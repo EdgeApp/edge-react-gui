@@ -52,13 +52,3 @@ export const asVersionFile = asJSON(
   })
 )
 export type VersionFile = ReturnType<typeof asVersionFile>
-
-/**
- * Legacy build number files on the Jenkins server.
- */
-export const asLegacyBuildNumFile = asJSON(
-  asObject({
-    buildNum: asString
-  })
-)
-export type LegacyBuildNumFile = ReturnType<typeof asLegacyBuildNumFile>

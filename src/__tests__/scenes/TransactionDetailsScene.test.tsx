@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
@@ -63,7 +63,7 @@ describe('TransactionDetailsScene', () => {
   const store = createStore(rootReducer, fakeState, applyMiddleware(thunk))
 
   it('should render', () => {
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
@@ -71,6 +71,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
+                walletId: fakeCoreWallet.id,
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
@@ -79,7 +80,6 @@ describe('TransactionDetailsScene', () => {
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
                 otherParams: {},
-                wallet: fakeCoreWallet,
                 blockHeight: 0
               },
               walletId: fakeCoreWallet.id,
@@ -90,11 +90,11 @@ describe('TransactionDetailsScene', () => {
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
@@ -102,6 +102,7 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
+                walletId: fakeCoreWallet.id,
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
@@ -110,7 +111,6 @@ describe('TransactionDetailsScene', () => {
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
                 otherParams: {},
-                wallet: fakeCoreWallet,
                 blockHeight: 0,
                 metadata: {
                   amountFiat: -6392.93
@@ -124,6 +124,6 @@ describe('TransactionDetailsScene', () => {
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })

@@ -1,9 +1,12 @@
 import { div, gt, lte, mul } from 'biggystring'
 import * as React from 'react'
+import { TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
@@ -15,6 +18,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
@@ -29,9 +33,10 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
+import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
-import { FillLoader } from '../../progress-indicators/FillLoader'
+import { Shimmer } from '../../progress-indicators/Shimmer'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
@@ -46,26 +51,30 @@ import { FormScene } from '../FormScene'
 export type LoanManageActionOpType = 'loan-deposit' | 'loan-withdraw' | 'loan-borrow' | 'loan-repay'
 
 // User input display strings
-const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string } } = {
+const ACTIONOP_TYPE_STRING_MAP: { [key: string]: { headerText: string; amountCard: string; srcDestCard: string; supportUrl: string } } = {
   'loan-deposit': {
     headerText: s.strings.loan_add_collateral,
     amountCard: s.strings.loan_fragment_deposit,
-    srcDestCard: s.strings.loan_fund_source
+    srcDestCard: s.strings.loan_fund_source,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'add-collateral')
   },
   'loan-withdraw': {
     headerText: s.strings.loan_withdraw_collateral,
     amountCard: s.strings.loan_fragment_withdraw,
-    srcDestCard: s.strings.loan_fund_destination
+    srcDestCard: s.strings.loan_fund_destination,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'withdraw-collateral')
   },
   'loan-borrow': {
     headerText: s.strings.loan_borrow_more,
     amountCard: s.strings.loan_fragment_loan,
-    srcDestCard: s.strings.loan_fund_destination
+    srcDestCard: s.strings.loan_fund_destination,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-more')
   },
   'loan-repay': {
     headerText: s.strings.loan_make_payment,
     amountCard: s.strings.loan_fragment_repay,
-    srcDestCard: s.strings.loan_fund_source
+    srcDestCard: s.strings.loan_fund_source,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment')
   }
 } as const
 
@@ -275,6 +284,8 @@ export const LoanManageScene = (props: Props) => {
     setActionNativeAmount(nativeCryptoAmount)
   })
 
+  const handleInfoIconPress = useUrlHandler(actionOpStrings.supportUrl)
+
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
     if (actionProgram != null) {
       try {
@@ -330,7 +341,16 @@ export const LoanManageScene = (props: Props) => {
   // #endregion Handlers
 
   return (
-    <FormScene headerText={actionOpStrings.headerText} onSliderComplete={handleSliderComplete} sliderDisabled={actionProgram == null}>
+    <FormScene
+      headerText={actionOpStrings.headerText}
+      onSliderComplete={handleSliderComplete}
+      sliderDisabled={actionProgram == null}
+      headerTertiary={
+        <TouchableOpacity onPress={handleInfoIconPress}>
+          <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+        </TouchableOpacity>
+      }
+    >
       <Space vertical around={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
@@ -342,11 +362,12 @@ export const LoanManageScene = (props: Props) => {
         />
         {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
         <EdgeText style={styles.textTitle}>{actionOpStrings.srcDestCard}</EdgeText>
-        {bankAccountsMap != null ? (
-          <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
-        ) : (
-          <FillLoader />
-        )}
+        <Space around={0.5}>
+          <Shimmer isShown={bankAccountsMap == null} />
+          <Peek isShown={bankAccountsMap != null}>
+            <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
+          </Peek>
+        </Space>
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile

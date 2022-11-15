@@ -155,7 +155,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
       if (isReceivedTransaction(transaction)) {
         receivedTxs.push(transaction)
       }
-      if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
+      if (transaction.currencyCode === selectedCurrencyCode && transaction.walletId === selectedWalletId) {
         isTransactionForSelectedWallet = true
         // this next part may be unnecessary
         const indexOfNewTransaction = currentViewableTransactions.findIndex(tx => tx.txid === transaction.txid)
@@ -171,7 +171,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
     if (!isReceivedTransaction(edgeTransaction)) return
-    showTransactionDropdown(edgeTransaction, walletId)
+    showTransactionDropdown(edgeTransaction)
   }
 }
 

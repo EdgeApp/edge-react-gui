@@ -22,6 +22,7 @@ import { EdgeTokenId, GuiMakeSpendInfo } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../../../util/CurrencyWalletHelpers'
 import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
 
 interface WalletDetails {
@@ -205,7 +206,7 @@ export class EdgeProvider extends Bridgeable {
   async getCurrentWalletInfo(): Promise<WalletDetails> {
     const edgeWallet = this.selectedWallet
     const currencyCode = this.selectedCurrencyCode
-    const walletName = edgeWallet.name ?? ''
+    const walletName = getWalletName(edgeWallet)
     const receiveAddress = await edgeWallet.getReceiveAddress()
     const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
 
@@ -294,7 +295,7 @@ export class EdgeProvider extends Bridgeable {
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fragment_wallets_export_transactions}
-        message={sprintf(s.strings.transaction_history_permission, this.selectedWallet.name ?? '')}
+        message={sprintf(s.strings.transaction_history_permission, getWalletName(this.selectedWallet))}
         buttons={{
           ok: { label: s.strings.yes },
           cancel: { label: s.strings.no }
@@ -313,6 +314,7 @@ export class EdgeProvider extends Bridgeable {
     const transactions: EdgeTransaction[] = []
     for (const tx of txs) {
       const newTx: EdgeTransaction = {
+        walletId: tx.walletId,
         currencyCode: tx.currencyCode,
         nativeAmount: tx.nativeAmount,
         networkFee: tx.networkFee,

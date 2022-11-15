@@ -172,9 +172,8 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { route } = this.props
+    const { route, wallet } = this.props
     const { edgeTransaction } = route.params
-    const { wallet } = edgeTransaction
 
     if (wallet) {
       Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)

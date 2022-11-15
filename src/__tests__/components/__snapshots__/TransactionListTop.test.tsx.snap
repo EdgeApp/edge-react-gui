@@ -804,6 +804,99 @@ Array [
         </Text>
       </View>
     </View>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "marginBottom": -22,
+          "marginLeft": 0,
+          "marginRight": 0,
+          "marginTop": 22,
+          "opacity": 1,
+          "paddingBottom": 11,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 11,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, .1)",
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "padding": 11,
+          }
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "overflow": "hidden",
+              },
+              Object {
+                "height": 45,
+                "margin": 11,
+                "width": 45,
+              },
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="contain"
+            source={
+              Object {
+                "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={0}
+          style={
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "flex": 1,
+                "margin": 11,
+              },
+              null,
+            ]
+          }
+        >
+          Spend USD → Earn BTC
+        </Text>
+      </View>
+    </View>
   </View>,
   <View
     style={
@@ -818,6 +911,16 @@ Array [
       ]
     }
   >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginRight": 22,
+        }
+      }
+    />
     <Text
       adjustsFontSizeToFit={true}
       minimumFontScale={0.65}

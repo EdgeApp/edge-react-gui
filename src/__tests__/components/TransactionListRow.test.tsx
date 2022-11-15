@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
@@ -43,12 +43,13 @@ describe('TransactionListRow', () => {
     }
     const store = createStore(rootReducer, mockStore)
 
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionListRow
           walletId="lmnop"
           currencyCode="BTC"
           transaction={{
+            walletId: '',
             dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
             time: '22:53:08',
             unfilteredIndex: 0,
@@ -65,6 +66,6 @@ describe('TransactionListRow', () => {
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })

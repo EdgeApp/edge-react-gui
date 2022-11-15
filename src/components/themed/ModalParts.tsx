@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -42,7 +42,7 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
 
   return (
     <TouchableOpacity onPress={props.onPress} style={styles.closeArrow}>
-      <FontAwesome5 name="chevron-down" size={theme.rem(1.25)} color={theme.iconTappable} />
+      <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
     </TouchableOpacity>
   )
 }

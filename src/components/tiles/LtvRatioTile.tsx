@@ -1,4 +1,4 @@
-import { add, div, max, mul } from 'biggystring'
+import { add, div, gt, max, mul } from 'biggystring'
 import * as React from 'react'
 
 import { useWatch } from '../../hooks/useWatch'
@@ -8,6 +8,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { useTotalFiatAmount } from '../../util/borrowUtils'
 import { mulToPrecision, zeroString } from '../../util/utils'
+import { Theme, useTheme } from '../services/ThemeContext'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
 export const LtvRatioTile = (props: {
@@ -17,6 +18,7 @@ export const LtvRatioTile = (props: {
   type: 'debts' | 'collaterals'
   direction: 'increase' | 'decrease'
 }) => {
+  const theme = useTheme()
   const { borrowEngine, direction, nativeAmount, tokenId, type } = props
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
@@ -48,5 +50,21 @@ export const LtvRatioTile = (props: {
   // Floor the futureValue at '0'
   const futureValue = max('0', zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2))
 
-  return <PercentageChangeArrowTile title={s.strings.loan_loan_to_value_ratio} currentValue={currentValue} futureValue={futureValue} />
+  // Determine colors
+  const currentValueColor = getLtvColorValue(currentValue, theme)
+  const futureValueColor = getLtvColorValue(futureValue, theme)
+
+  return (
+    <PercentageChangeArrowTile
+      title={s.strings.loan_loan_to_value_ratio}
+      currentValue={currentValue}
+      currentValueColor={currentValueColor}
+      futureValue={futureValue}
+      futureValueColor={futureValueColor}
+    />
+  )
+}
+
+export const getLtvColorValue = (ltvValue: string, theme: Theme): string => {
+  return gt(ltvValue, '0.7') ? theme.dangerText : gt(ltvValue, '0.6') ? theme.warningText : gt(ltvValue, '0') ? theme.positiveText : theme.deactivatedText
 }

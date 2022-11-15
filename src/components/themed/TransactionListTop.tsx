@@ -27,6 +27,7 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { EarnCrypto } from './EarnCrypto'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
@@ -68,7 +69,7 @@ interface State {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
+  textInput = React.createRef<OutlinedTextInputRef>()
 
   constructor(props: Props) {
     super(props)
@@ -267,7 +268,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   render() {
-    const { isEmpty, searching, theme } = this.props
+    const { wallet, isEmpty, searching, theme, tokenId } = this.props
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
@@ -325,6 +326,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
+          {!isEmpty && !searching && <EarnCrypto wallet={wallet} tokenId={tokenId} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>

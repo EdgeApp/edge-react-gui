@@ -98,7 +98,7 @@ type State = {
 
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTileRef | null = null
-  pinInput: { current: TextInput | null } = React.createRef()
+  pinInput = React.createRef<TextInput>()
 
   constructor(props: Props) {
     super(props)

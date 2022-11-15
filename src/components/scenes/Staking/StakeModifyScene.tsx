@@ -12,6 +12,7 @@ import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../.
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
+import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -168,7 +169,7 @@ export const StakeModifyScene = (props: Props) => {
         currencyCode={currencyCode}
         onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
-        headerText={sprintf(header, wallet.name)}
+        headerText={sprintf(header, getWalletName(wallet))}
         hideMaxButton={
           /* TODO: Max button needs to be enabled after max calculation for
           multi-asset staking is fully implemented and working in plugin */
@@ -251,7 +252,7 @@ export const StakeModifyScene = (props: Props) => {
     return (
       <View style={styles.amountTilesContainer}>
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
-          <EdgeText>{wallet.name}</EdgeText>
+          <EdgeText>{getWalletName(wallet)}</EdgeText>
         </IconTile>
         {
           // Render stake/unstake amount tiles

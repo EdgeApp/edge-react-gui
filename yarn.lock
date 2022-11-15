@@ -6368,10 +6368,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20, edge-core-js@^0.19.30:
-  version "0.19.30"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.30.tgz#45ab5b204c3e119835d3b230b95855997b88c3e1"
-  integrity sha512-9KDNcxguKs4vLXNYBy9BppT7zztqC1DdLXn8eXCOHgm27+0UArC74aHnL2zK9nss5XG6PKStbLB+oynM2BQhnA==
+edge-core-js@^0.19.20, edge-core-js@^0.19.32:
+  version "0.19.32"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.32.tgz#22d2f728c18b0423d7ddae7c3d1c6038da1c0661"
+  integrity sha512-/bUcqI1TKi8UHcNzPTen7WQr8BE7u/CS+8v5oS8owInDm42Zy0iSci8MJUqs3BRM0sfA+7yTBVxKLoD3Uo6TNg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -6395,10 +6395,10 @@ edge-core-js@^0.19.20, edge-core-js@^0.19.30:
     yaob "^0.3.8"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.18.8:
-  version "0.18.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.8.tgz#27f998f1cc9aefac1d55323d2b70f3567484f4e0"
-  integrity sha512-YK8u1rvKwCkEplDKNYJeBCzapggtyb3dHe5zcb4WgZSTnLyq04edT42Qk7rV1XxkEbFvg15BgSLDZumo1m2MWQ==
+edge-currency-accountbased@^0.18.9:
+  version "0.18.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.18.9.tgz#9968b2b4db6ef8b6072dbc734b9d3e88fe71fdd8"
+  integrity sha512-s/vVFnWOlDDbId+o7/in/5pIj4S7H9Wz915KWoDIhSWbCXg+I6quMnNMlfJLR3yApqzMALa3eGIntkklr2nQjw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -6473,10 +6473,10 @@ edge-currency-plugins@^1.2.3:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.16.6:
-  version "0.16.6"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.6.tgz#5bfbe05b11b5232cf807be8918694c127a6118bd"
-  integrity sha512-l+1NxV83hO0gNihZCJvVzzwiMdYJJKCm+pZBCt+7jpRgVq00+8i93Uw4UdsVLcr2xnfGMiXEEfduPpFX702Ujg==
+edge-exchange-plugins@^0.16.7:
+  version "0.16.7"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.7.tgz#28c997458cd2e1bfcc23f414e372a1a039e78948"
+  integrity sha512-veoDUJCXzfxWqCNQrShk5CsFQ9w+OVrKCbI/p9JvF9ODogLFBJStEiY1E1sSO96FmxhqywtUj81P7CRBn6AdMQ==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -6490,10 +6490,10 @@ edge-exchange-plugins@^0.16.6:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.12:
-  version "0.10.12"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.12.tgz#8b9c99b152628a6f2864ccaa27365b82bcf89ff3"
-  integrity sha512-vWm45g1tRBRhOZym7q9MCdb7JYbROEzqaFZhn45MhRgnlrCVSnFJ6jRvC7g3XogJBykYAxlX/3swlDFy+PbvPw==
+edge-login-ui-rn@^0.10.14:
+  version "0.10.14"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.14.tgz#28379ae42a33479ee5cb0b194a99e5b6b6520ca7"
+  integrity sha512-re//dBGEFedJ75G9NtZla1rwNYmIAggVmIAxH6spNPR1ad03aPSjhJcX/Ycb5U0/Xc5ExdO+suD9/M46xWlGnQ==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"

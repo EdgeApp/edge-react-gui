@@ -7,6 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
@@ -14,6 +15,7 @@ import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkE
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
@@ -97,6 +99,8 @@ export const LoanDetailsScene = (props: Props) => {
       icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
     }
   ]
+
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details'))
 
   const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', { actionQueueId: programEdge.programId, loanAccountId })
@@ -203,7 +207,16 @@ export const LoanDetailsScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_details_title} style={styles.sceneHeader} />
+      <SceneHeader
+        underline
+        title={s.strings.loan_details_title}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space around>
           {renderProgramStatusCard()}
@@ -220,6 +233,7 @@ export const LoanDetailsScene = (props: Props) => {
             <SectionHeading>{s.strings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
           {debts.map(debt => {
+            if (zeroString(debt.nativeAmount)) return null
             const token = getToken(wallet, debt.tokenId)
             const currencyCode = token?.currencyCode ?? 'N/A'
             const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))

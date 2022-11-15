@@ -8,6 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import s from '../../locales/strings'
+import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../modules/FioAddress/util'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
@@ -37,7 +38,7 @@ interface StateProps {
 type Props = OwnProps & StateProps & ThemeProps
 
 class FioRequestRowComponent extends React.PureComponent<Props> {
-  rowRef: { current: SwipableRowRef | null } = React.createRef()
+  rowRef = React.createRef<SwipableRowRef>()
 
   closeRow = () => {
     if (this.rowRef.current != null) this.rowRef.current.close()
@@ -199,17 +200,20 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
         fiatAmount: ''
       }
     }
-    const tokenCode = fioRequest.content.token_code.toUpperCase()
+    let tokenCode = fioRequest.content.token_code.toUpperCase()
     try {
-      const { allCurrencyInfos } = state.ui.settings.plugins
-      const plugin = allCurrencyInfos.find(plugin => {
-        const { currencyCode: pluginCurrencyCode } = plugin
+      const { currencyConfig } = state.core.account
+      const pluginId = Object.keys(currencyConfig).find(pluginId => {
+        const { currencyCode: pluginCurrencyCode } = currencyConfig[pluginId].currencyInfo
         if (pluginCurrencyCode == null) return false
-        return pluginCurrencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase()
+        const { fioChainCode } = convertEdgeToFIOCodes(pluginId, pluginCurrencyCode, tokenCode)
+        return fioChainCode === fioRequest.content.chain_code.toUpperCase()
       })
 
-      if (plugin == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
-      displayDenomination = getDisplayDenomination(state, plugin.pluginId, tokenCode)
+      if (pluginId == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
+      const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(pluginId, fioRequest.content.chain_code.toUpperCase(), tokenCode)
+      tokenCode = edgeTokenCode
+      displayDenomination = getDisplayDenomination(state, pluginId, tokenCode)
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }

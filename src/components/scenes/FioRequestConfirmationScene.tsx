@@ -5,7 +5,7 @@ import { View } from 'react-native'
 
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
-import { addToFioAddressCache, checkPubAddress, getRemainingBundles } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, checkPubAddress, convertEdgeToFIOCodes, getRemainingBundles } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { CcWalletMap } from '../../reducers/FioReducer'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -166,6 +166,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           console.log(e)
         }
 
+        const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(edgeWallet.currencyInfo.pluginId, chainCode, primaryCurrencyInfo.exchangeCurrencyCode)
+
         // send fio request
         await fioWallet.otherMethods.fioAction('requestFunds', {
           payerFioAddress: this.state.fioAddressTo,
@@ -173,8 +175,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           payerFioPublicKey: payerPublicKey,
           payeeTokenPublicAddress: publicAddress,
           amount: val,
-          tokenCode: primaryCurrencyInfo.exchangeCurrencyCode,
-          chainCode: chainCode || primaryCurrencyInfo.exchangeCurrencyCode,
+          tokenCode: fioTokenCode,
+          chainCode: fioChainCode,
           memo: this.state.memo,
           maxFee: 0
         })

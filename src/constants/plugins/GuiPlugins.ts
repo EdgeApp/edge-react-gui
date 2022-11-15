@@ -132,6 +132,13 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
   },
+  ionia: {
+    pluginId: 'ionia',
+    storeId: 'ioniarewards',
+    baseUri: 'https://ioniaedge.web.app',
+    displayName: 'Ionia',
+    permissions: [] // TODO: need permissions?
+  },
   xanpool: {
     pluginId: 'xanpool',
     storeId: 'xanpool',
@@ -156,6 +163,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     permissions: ['camera', 'location']
   }
 }
+
+export const IONIA_SUPPORTED_FIATS = ['USD']
 
 export const customPluginRow: GuiPluginRow = {
   pluginId: 'custom',

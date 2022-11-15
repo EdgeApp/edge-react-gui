@@ -52,7 +52,7 @@ interface Props {
 /**
  * Type definitions for our static methods.
  * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
- * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
+ * `const ref = createRef<OutlinedTextInputRef>()`
  */
 export interface OutlinedTextInputRef {
   focus: () => void

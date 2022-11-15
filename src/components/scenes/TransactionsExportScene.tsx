@@ -11,6 +11,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -86,7 +87,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { sourceWallet, currencyCode } = route.params
     const iconSize = theme.rem(1.25)
 
-    const walletName = `${sourceWallet.name || s.strings.string_no_wallet_name} (${currencyCode})`
+    const walletName = `${getWalletName(sourceWallet)} (${currencyCode})`
     const startDateString = formatDate(startDate)
     const endDateString = formatDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
@@ -168,7 +169,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     const now = new Date()
 
-    const walletName = sourceWallet.name != null ? sourceWallet.name : s.strings.string_no_wallet_name
+    const walletName = getWalletName(sourceWallet)
 
     const fullCurrencyCode =
       sourceWallet.currencyInfo.currencyCode === currencyCode ? currencyCode : `${sourceWallet.currencyInfo.currencyCode}-${currencyCode}`

@@ -23,7 +23,7 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 export class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
+  textInput = React.createRef<OutlinedTextInputRef>()
 
   componentDidUpdate(prevProps: Props) {
     if (!prevProps.searching && this.props.searching && this.textInput.current) {

@@ -49,8 +49,8 @@ const palette = {
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
 
-  whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp05: 'rgba(255, 255, 255, .05)',
+  whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -217,6 +217,9 @@ export const edgeDark: Theme = {
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
   sliderTabMore: palette.accentBlue,
+
+  shimmerBackgroundColor: palette.whiteOp05,
+  shimmerBackgroundHighlight: palette.whiteOp10,
 
   // pinOutline: palette.white,
   // pinFilled: palette.white,

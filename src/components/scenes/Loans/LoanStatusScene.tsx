@@ -1,15 +1,18 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { ScrollView } from 'react-native-gesture-handler'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { ActionDisplayInfo, ActionQueueMap } from '../../../controllers/action-queue/types'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import s from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -74,6 +77,12 @@ export const LoanStatusScene = (props: Props) => {
     }
   })
 
+  //
+  // Handlers
+  //
+
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-status'))
+
   const handleDonePress = useHandler(() => {
     if (loanAccountId != null) navigation.navigate('loanDetails', { loanAccountId })
     else navigation.navigate('loanDashboard', {})
@@ -83,7 +92,16 @@ export const LoanStatusScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
-      <SceneHeader underline title={s.strings.loan_status_title} />
+      <SceneHeader
+        underline
+        title={s.strings.loan_status_title}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       {displayInfo == null ? (
         <FillLoader />
       ) : (

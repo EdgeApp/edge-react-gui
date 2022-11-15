@@ -52,7 +52,7 @@ interface Props {
 /**
  * Type definitions for our static methods.
  * Create a ref object using `useRef<SwipableRowRef>(null)` or
- * `const ref: { current: SwipableRowRef | null } = createRef()`
+ * `const ref = createRef<SwipableRowRef>()`
  */
 export interface SwipableRowRef {
   // Snap the row to its resting position:
