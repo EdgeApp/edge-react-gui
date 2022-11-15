@@ -6,9 +6,7 @@ exports[`SceneHeader should render with loading props 1`] = `
     style={
       Array [
         Object {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "center",
           "marginLeft": 22,
           "paddingBottom": 22,
         },
@@ -19,16 +17,27 @@ exports[`SceneHeader should render with loading props 1`] = `
       ]
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <View
       style={
         Object {
-          "fontFamily": "Quicksand-Medium",
-          "fontSize": 27,
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginRight": 22,
         }
       }
     >
-      string
-    </WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "fontFamily": "Quicksand-Medium",
+            "fontSize": 27,
+          }
+        }
+      >
+        string
+      </WithTheme(EdgeTextComponent)>
+    </View>
     hello
   </View>
   <View
