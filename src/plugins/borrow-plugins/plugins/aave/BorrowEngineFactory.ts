@@ -262,6 +262,16 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
         const { tokenId, toWallet = wallet } = request
 
+        // Refresh collaterals. It's possible that this follows an op including
+        // a repay with collateral.
+        const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+        instance.collaterals = reserveTokenBalances.map(({ address, aBalance }) => {
+          return {
+            tokenId: addressToTokenId(address),
+            nativeAmount: aBalance.toString()
+          }
+        })
+
         const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
         if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
 
