@@ -1,3 +1,4 @@
+import { eq } from 'biggystring'
 import * as React from 'react'
 import { ReturnKeyType, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -6,6 +7,8 @@ import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
 import { Card } from '../cards/Card'
+import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
+import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
@@ -40,9 +43,22 @@ export function ExchangedFlipInputTester(props: {}) {
     setValue1(text)
   }
 
+  const onAmountsChanged = (amounts: ExchangedFlipInputAmounts) => {
+    console.log(JSON.stringify(amounts, null, 2))
+  }
+
+  const handleFlipInputModal = () => {
+    if (selectedWallet == null) return
+    Airship.show<FlipInputModalResult>(bridge => {
+      if (selectedWallet == null) return null
+      return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} onAmountsChanged={onAmountsChanged} />
+    }).catch(error => console.log(error))
+  }
+
   const coreWallet = selectedWallet?.wallet
   const currencyCode = coreWallet?.currencyInfo.currencyCode ?? ''
-  const balance = coreWallet?.balances[currencyCode] ?? ''
+  let balance = coreWallet?.balances[currencyCode] ?? ''
+  if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
   const headerCallback = () => console.log('Header pressed')
 
@@ -76,6 +92,7 @@ export function ExchangedFlipInputTester(props: {}) {
       <MainButton label="Set Crypto Amt" onPress={onPress0} />
       <OutlinedTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} />
       <MainButton label="Set Fiat Amt" onPress={onPress1} />
+      <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
     </View>
   )
 }

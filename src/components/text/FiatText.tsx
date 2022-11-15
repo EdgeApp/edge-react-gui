@@ -8,6 +8,8 @@ interface Props {
   // Display options:
   appendFiatCurrencyCode?: boolean
   autoPrecision?: boolean
+  minPrecision?: number
+  maxPrecision?: number
   fiatSymbolSpace?: boolean
   hideFiatSymbol?: boolean
 
@@ -21,7 +23,17 @@ interface Props {
  * Return a formatted fiat text string representing the exchange rate of a
  * specific crypto asset and native amount.
  **/
-export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, hideFiatSymbol, fiatSymbolSpace, nativeCryptoAmount, tokenId, wallet }: Props) => {
+export const FiatText = ({
+  appendFiatCurrencyCode,
+  autoPrecision,
+  minPrecision,
+  maxPrecision,
+  hideFiatSymbol,
+  fiatSymbolSpace,
+  nativeCryptoAmount,
+  tokenId,
+  wallet
+}: Props) => {
   const { currencyCode, denomination, isoFiatCurrencyCode } = useTokenDisplayData({
     tokenId,
     wallet
@@ -30,6 +42,8 @@ export const FiatText = ({ appendFiatCurrencyCode, autoPrecision, hideFiatSymbol
   const text = useFiatText({
     appendFiatCurrencyCode,
     autoPrecision,
+    minPrecision,
+    maxPrecision,
     cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: denomination.multiplier,
     fiatSymbolSpace,
