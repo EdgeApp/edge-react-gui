@@ -245,6 +245,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           tx: depositTx,
           wallet,
           spendToken: token,
+          nativeAmount,
           metadata: {
             name: 'AAVE',
             category: 'Transfer:Deposit',
@@ -288,6 +289,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(nativeAmount, '-1'),
           metadata: {
             name: 'AAVE',
             category: 'Transfer:Withdraw',
@@ -324,6 +327,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const borrowAction = await makeApprovableCall({
           tx: borrowTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(nativeAmount, '-1'),
           metadata: {
             name: 'AAVE',
             category: 'Transfer:Borrow',
@@ -445,6 +450,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           txCallInfos.push({
             tx: repayTx,
             wallet,
+            spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
               category: 'Expense:Repay',
@@ -488,6 +495,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
             tx: repayTx,
             wallet,
             spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
               category: 'Expense:Repay',
