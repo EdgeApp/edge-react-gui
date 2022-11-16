@@ -25,7 +25,7 @@ import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -40,7 +40,6 @@ export interface Props {
 
 export const LoanCloseScene = (props: Props) => {
   const theme = useTheme()
-  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const clientId = useSelector(state => state.core.context.clientId)
@@ -126,7 +125,6 @@ export const LoanCloseScene = (props: Props) => {
       <SceneHeader
         underline
         title={s.strings.loan_close_loan_title}
-        style={styles.sceneHeader}
         withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -179,12 +177,3 @@ export const LoanCloseScene = (props: Props) => {
     </SceneWrapper>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: theme.rem(1)
-  }
-}))
