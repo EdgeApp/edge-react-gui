@@ -159,7 +159,7 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
       programId: actionProgram.programId,
       programType
     }
-    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge] }))
+    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge], closed: programType === 'loan-close' }))
 
     return loanAccount
   }
