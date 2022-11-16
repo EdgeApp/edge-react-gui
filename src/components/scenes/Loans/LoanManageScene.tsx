@@ -27,7 +27,7 @@ import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/ty
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
-import { useTotalFiatAmount } from '../../../util/borrowUtils'
+import { getWalletPickerExcludeWalletIds, useTotalFiatAmount } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
@@ -110,7 +110,7 @@ export const LoanManageScene = (props: Props) => {
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
-  const manageActionStrings = MANAGE_ACTION_DATA_MAP[loanManageType]
+  const manageActionData = MANAGE_ACTION_DATA_MAP[loanManageType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
@@ -128,8 +128,8 @@ export const LoanManageScene = (props: Props) => {
     () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
-  const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
-  const hardAllowedCollateralAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralAddr }, { pluginId: 'bitcoin' }]
+  const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralAddr }]
+  if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
   const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtAddr }]
 
   // Selected debt/collateral
@@ -220,7 +220,7 @@ export const LoanManageScene = (props: Props) => {
         case 'loan-manage-deposit':
           actionOp = await makeAaveDepositAction({
             borrowPluginId,
-            depositTokenId: hardAllowedCollateralAsset[0].tokenId,
+            depositTokenId: hardAllowedCollateralAssets[0].tokenId,
             nativeAmount: actionNativeAmount,
             borrowEngineWallet: borrowEngineWallet,
             srcTokenId: selectedAsset.tokenId,
@@ -271,8 +271,6 @@ export const LoanManageScene = (props: Props) => {
             ]
           }
           break
-        default:
-          throw new Error(`LoanManageScene cannot generate actionOps for ${loanManageType}`)
       }
       setActionProgram(await makeActionProgram(actionOp))
     }
@@ -307,12 +305,12 @@ export const LoanManageScene = (props: Props) => {
     setActionNativeAmount(nativeCryptoAmount)
   })
 
-  const handleInfoIconPress = useUrlHandler(manageActionStrings.supportUrl)
+  const handleInfoIconPress = useUrlHandler(manageActionData.supportUrl)
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
     if (actionProgram != null) {
       try {
-        await dispatch(runLoanActionProgram(loanAccount, actionProgram, MANAGE_ACTION_DATA_MAP[loanManageType].programType))
+        await dispatch(runLoanActionProgram(loanAccount, actionProgram, manageActionData.programType))
 
         // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
         Actions.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
@@ -331,11 +329,11 @@ export const LoanManageScene = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet={isSceneTypeDebts}
+        showCreateWallet
         createWalletId={isSceneTypeDebts ? borrowEngineWallet.id : undefined}
         showBankOptions={loanManageType === 'loan-manage-borrow'}
-        excludeWalletIds={isSceneTypeDebts ? excludeWalletIds : undefined}
-        allowedAssets={isSceneTypeDebts ? hardAllowedDebtAsset : hardAllowedCollateralAsset}
+        excludeWalletIds={getWalletPickerExcludeWalletIds(wallets, loanManageType, borrowEngineWallet)}
+        allowedAssets={isSceneTypeDebts ? hardAllowedDebtAsset : hardAllowedCollateralAssets}
         filterActivation
       />
     ))
@@ -365,7 +363,7 @@ export const LoanManageScene = (props: Props) => {
 
   return (
     <FormScene
-      headerText={manageActionStrings.headerText}
+      headerText={manageActionData.headerText}
       onSliderComplete={handleSliderComplete}
       sliderDisabled={actionProgram == null}
       headerTertiary={
@@ -379,12 +377,12 @@ export const LoanManageScene = (props: Props) => {
           wallet={borrowEngineWallet}
           iconUri={iconUri}
           inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
-          title={sprintf(s.strings.loan_enter_s_amount_s, manageActionStrings.amountCard, fiatCurrencyCode)}
+          title={sprintf(s.strings.loan_enter_s_amount_s, manageActionData.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
         {isShowAprChange ? <AprCard apr={newDebtApr} key="apr" /> : null}
-        <EdgeText style={styles.textTitle}>{manageActionStrings.srcDestCard}</EdgeText>
+        <EdgeText style={styles.textTitle}>{manageActionData.srcDestCard}</EdgeText>
         <Space around={0.5}>
           <Shimmer isShown={bankAccountsMap == null} />
           <Peek isShown={bankAccountsMap != null}>
