@@ -52,7 +52,7 @@ export const LoanDetailsSummaryCard = (props: Props) => {
         {ltv != null ? (
           <View style={styles.ltvContainer}>
             <EdgeText style={styles.detailLabel}>{s.strings.loan_loan_to_value_ratio}</EdgeText>
-            <Thermostat ratio={ltv} textColor={getLtvColorValue(ltv.toString(), theme)} />
+            <Thermostat ratio={ltv} textColor={getLtvColorValue(ltv, theme)} />
           </View>
         ) : null}
       </View>
