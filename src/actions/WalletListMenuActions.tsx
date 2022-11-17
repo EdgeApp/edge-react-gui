@@ -124,7 +124,7 @@ export function walletListMenuAction(
             wallet
               .changeEnabledTokenIds(newlyEnabledTokenIds)
               .then(() => {
-                logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${tokenId}`)
+                logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
               })
               .catch(showError)
           }

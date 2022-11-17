@@ -57,9 +57,9 @@ export const ManageTokensRowComponent = (props: Props) => {
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)
     if (isEnabled) {
-      logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${tokenId}`)
+      logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
     } else {
-      logActivity(`Enable Token: ${getWalletName(wallet)} ${wallet.type} ${tokenId}`)
+      logActivity(`Enable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
     }
   })
 
