@@ -1,9 +1,10 @@
-import { add, min, mul } from 'biggystring'
+import { add, gt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
+import { MAX_AMOUNT } from '../../../../constants/valueConstants'
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
 import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
@@ -265,8 +266,9 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
         if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
 
-        // Let the debt total be the upper boundary for nativeAmount
-        const nativeAmount = min(request.nativeAmount, collateral.nativeAmount)
+        // Anything above the current collateral amount will be automatically
+        // converted to the MAX_AMOUNT in order to withdraw all collateral.
+        const nativeAmount = gt(request.nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount
 
         if (nativeAmount === '0') throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
 
