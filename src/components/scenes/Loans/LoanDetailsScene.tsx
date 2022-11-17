@@ -139,7 +139,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_action_add_collateral,
         iconName: 'add-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-deposit', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-deposit', loanAccountId })
         },
         isDisabled: isActionProgramRunning
       },
@@ -147,7 +147,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_action_withdraw_collateral,
         iconName: 'withdraw-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-withdraw', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-withdraw', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -155,7 +155,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_borrow_more,
         iconName: 'borrow-more',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-borrow', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-borrow', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -163,7 +163,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_make_payment,
         iconName: 'make-payment',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-repay', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-repay', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenDebts
       },

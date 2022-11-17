@@ -2,7 +2,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction, JsonObject, OtpE
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
-import { LoanManageActionOpType } from '../components/scenes/Loans/LoanManageScene'
+import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
@@ -215,7 +215,7 @@ export interface ParamList {
     loanAccountId: string
   }
   loanManage: {
-    actionOpType: LoanManageActionOpType
+    loanManageType: LoanManageType
     loanAccountId: string
   }
   loanStatus: {
