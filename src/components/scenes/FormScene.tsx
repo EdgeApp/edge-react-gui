@@ -24,7 +24,7 @@ export const FormScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <SceneHeader style={styles.sceneHeader} title={headerText} tertiary={headerTertiary} withTopMargin underline />
+      <SceneHeader title={headerText} tertiary={headerTertiary} withTopMargin underline />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
@@ -36,10 +36,6 @@ export const FormScene = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  sceneHeader: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',
