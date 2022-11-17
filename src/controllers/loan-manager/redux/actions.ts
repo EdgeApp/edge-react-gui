@@ -66,7 +66,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
         programEdges
       }
 
-      loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
+      await loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
     }
 
     // Update loan account if it does exist
@@ -74,7 +74,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
       const { closed, programEdges } = loanAccount
       loanAccountMapRecord.data[loanAccount.id].closed = closed
       loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
-      loanAccountMapRecord.update(loanAccountMapRecord.data)
+      await loanAccountMapRecord.update(loanAccountMapRecord.data)
     }
 
     if (existingLoanAccountEntry == null) {
@@ -135,7 +135,7 @@ export function deleteLoanAccount(loanAccountOrId: LoanAccount | string): ThunkA
     const loanAccountId = typeof loanAccountOrId === 'string' ? loanAccountOrId : loanAccountOrId.id
     if (loanAccountMapRecord.data[loanAccountId] != null) {
       const { [loanAccountId]: _, ...loanAccountMapRecordUpdated } = loanAccountMapRecord.data
-      loanAccountMapRecord.update(loanAccountMapRecordUpdated)
+      await loanAccountMapRecord.update(loanAccountMapRecordUpdated)
     } else {
       throw new Error('Could not find LoanAccount id: ' + loanAccountId)
     }
