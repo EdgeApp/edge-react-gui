@@ -904,6 +904,8 @@
   "loan_select_receiving_wallet": "Seleziona un portafoglio ricevente",
   "loan_select_source_collateral": "Seleziona la fonte del collaterale",
   "loan_withdraw_collateral": "Prelievo Collaterale",
+  "loan_notification_ltv_threshold_alert_title": "Loan Liquidation Alert!",
+  "loan_notification_ltv_threshold_alert_message": "You loan is coming close to liquidation and requires your immediate attention!",
   "loan_aave_fragment": "AAVE",
   "loan_status_cancel_txs": "Annulla transazioni",
   "loan_status_cancel_txs_modal_msg": "L'annullamento delle transazioni interromperà il processo corrente, ma non può invertire i passaggi già effettuati. Se si desidera annullare le azioni, questi passi dovranno essere fatti manualmente.\n\nSe hai domande, contattaci via e-mail a %1$s",
