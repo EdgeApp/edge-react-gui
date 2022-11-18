@@ -130,6 +130,7 @@ export const asDevicePayload = asObject({
 /**
  * POST /v2/login response payload.
  */
+export type LoginPayload = ReturnType<typeof asLoginPayload>
 export const asLoginPayload = asObject({
   events: asArray(asPushEventStatus)
 })

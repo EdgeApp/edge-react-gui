@@ -6,11 +6,13 @@ import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueue
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
 import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
+import { wasPushRequestBody } from '../../controllers/action-queue/types/pushApiTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useExecutionContext } from '../../hooks/useExecutionContext'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
+import { makePushClient } from '../../util/PushClient/PushClient'
 
 const EXECUTION_INTERVAL = 1000
 
@@ -44,6 +46,19 @@ export const ActionQueueService = () => {
       })
     )
   })
+
+  //
+  // Log Dev Info
+  //
+  React.useEffect(() => {
+    if (__DEV__ && account != null && account.rootLoginId != null && clientId != null) {
+      const pushClient = makePushClient(account, clientId)
+      const requestBody = pushClient.getPushRequestBody()
+      console.log('***********************')
+      console.log('PUSH SERVER DEV INFO:', wasPushRequestBody(requestBody))
+      console.log('***********************')
+    }
+  }, [account, clientId])
 
   //
   // Initialization
