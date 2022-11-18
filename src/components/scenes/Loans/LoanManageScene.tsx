@@ -355,7 +355,7 @@ export const LoanManageScene = (props: Props) => {
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
-          inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less)}
+          inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
           title={sprintf(s.strings.loan_enter_s_amount_s, actionOpStrings.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
