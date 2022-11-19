@@ -8,6 +8,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -29,6 +30,7 @@ export const BuyCrypto = (props: Props) => {
   const { wallet, tokenId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
     Actions.push('pluginListBuy', { direction: 'buy' })
@@ -39,7 +41,7 @@ export const BuyCrypto = (props: Props) => {
   const { displayName, pluginId } = wallet.currencyInfo
 
   let message = s.strings.transaction_list_buy_crypto_message
-  if (ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (!hideIoniaRewards && ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     message = s.strings.transaction_list_buy_and_earn_crypto_message
   }
 
