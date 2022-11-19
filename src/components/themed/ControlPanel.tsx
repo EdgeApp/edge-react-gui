@@ -54,6 +54,7 @@ export function ControlPanel(props: Props) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { hideIoniaRewards = false } = config
 
   // ---- Redux State ----
 
@@ -278,7 +279,7 @@ export function ControlPanel(props: Props) {
     }
   ]
 
-  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
       iconNameFontAwesome: 'hand-holding-usd',
