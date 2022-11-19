@@ -5,9 +5,11 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet } from '../../../actions/CreateWalletActions'
+import { isShowLoanWelcomeModal } from '../../../actions/LoanWelcomeActions'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
 import { LoanAccount } from '../../../controllers/loan-manager/types'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
@@ -24,6 +26,7 @@ import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
+import { LoanWelcomeModal } from '../../modals/LoanWelcomeModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, redText } from '../../services/AirshipInstance'
@@ -70,6 +73,11 @@ export const LoanDashboardScene = (props: Props) => {
   //
   // Effects
   //
+
+  useAsyncEffect(async () => {
+    if (await isShowLoanWelcomeModal(account.disklet)) Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   React.useEffect(() => {
     // Only resync on scene mount every 5 minutes
