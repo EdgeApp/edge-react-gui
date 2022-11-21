@@ -2,10 +2,26 @@ import { jest } from '@jest/globals'
 
 jest.useFakeTimers()
 
+jest.mock('react-native/Libraries/Utilities/Platform', () => ({
+  OS: 'ios',
+  isPad: false,
+  isTVOS: false,
+  isTV: false,
+  constants: {
+    reactNativeVersion: {
+      major: 0,
+      minor: 67
+    }
+  },
+  select: obj => obj.ios ?? obj.default
+}))
+
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('react-native-gesture-handler', () => ({
-  PanGestureHandler() {}
+  PanGestureHandler({ children }) {
+    return children
+  }
 }))
 
 jest.mock('rn-qr-generator', () => ({
