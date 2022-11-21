@@ -980,7 +980,7 @@ const strings = {
   loan_close_loan_title: 'Close Loan',
   loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
-  loan_close_insufficient_funds_2s: 'An additional %1$s %2$s is required to close your loan.',
+  loan_close_insufficient_funds_4s: 'An additional %1$s %2$s or a deposit of %3$s %4$s is required to close your loan.',
   loan_collateral_amount: 'Collateral Amount',
   loan_collateral_destination: 'Collateral Destination',
   loan_collateral_required: 'Collateral Amount Required',

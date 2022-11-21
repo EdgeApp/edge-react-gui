@@ -149,8 +149,16 @@ export const LoanCloseScene = (props: Props) => {
             ))}
           </Tile>
         ) : null}
-        {actionProgram !== null ? (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {aggregateErrorMessage.length > 0 ? (
+          <Alert
+            title={s.strings.fragment_error}
+            message={translateError(aggregateErrorMessage.join('\n\n'))}
+            type="error"
+            numberOfLines={7}
+            marginRem={[1, 1, 0]}
+          />
+        ) : actionProgram !== null ? (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={10} marginRem={[1, 1, 0]} />
         ) : (
           <Alert
             title={s.strings.loan_close_loan_title}
@@ -160,15 +168,6 @@ export const LoanCloseScene = (props: Props) => {
             marginRem={[1, 1, 0]}
           />
         )}
-        {aggregateErrorMessage.length > 0 ? (
-          <Alert
-            title={s.strings.fragment_error}
-            message={translateError(aggregateErrorMessage.concat('\n\n'))}
-            type="error"
-            numberOfLines={7}
-            marginRem={[1, 1, 0]}
-          />
-        ) : null}
 
         <Space top bottom={2}>
           <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} />
