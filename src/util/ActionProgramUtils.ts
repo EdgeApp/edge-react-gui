@@ -6,7 +6,7 @@ import { MAX_AMOUNT } from '../constants/valueConstants'
 import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
 import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
 import s from '../locales/strings'
-import { BorrowCollateral, BorrowEngine } from '../plugins/borrow-plugins/types'
+import { BorrowCollateral, BorrowDebt, BorrowEngine } from '../plugins/borrow-plugins/types'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { GuiExchangeRates } from '../types/types'
@@ -256,7 +256,7 @@ export const makeAaveCloseAction = async ({
   if (collaterals.length > 1 || debts.length > 1) throw new Error(s.strings.loan_close_multiple_asset_error)
 
   const collateral: BorrowCollateral | undefined = collaterals[0]
-  const debt: BorrowCollateral | undefined = debts[0]
+  const debt: BorrowDebt | undefined = debts[0]
 
   if (collateral != null) {
     const collateralTokenId = collateral.tokenId
