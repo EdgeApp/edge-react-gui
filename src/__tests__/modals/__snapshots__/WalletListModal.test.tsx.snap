@@ -143,97 +143,81 @@ Array [
       }
     >
       <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "borderColor": "rgba(164, 199, 223, 1)",
+        style={
+          Array [
+            Object {
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 22,
+              "position": "absolute",
+              "right": 22,
+            },
+            Object {
+              "borderColor": undefined,
               "right": 11,
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "borderColor": "rgba(164, 199, 223, 1)",
-            "borderTopWidth": 1,
-            "bottom": 0,
-            "left": 22,
-            "position": "absolute",
-            "right": 11,
-          }
+          ]
         }
       />
       <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "borderColor": "rgba(164, 199, 223, 1)",
+        style={
+          Array [
+            Object {
+              "borderBottomLeftRadius": 11,
+              "borderBottomWidth": 1,
+              "borderLeftWidth": 1,
+              "borderRightWidth": 0,
+              "borderTopLeftRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": 22,
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "borderBottomLeftRadius": 11,
-            "borderBottomWidth": 1,
-            "borderColor": "rgba(164, 199, 223, 1)",
-            "borderLeftWidth": 1,
-            "borderRightWidth": 0,
-            "borderTopLeftRadius": 11,
-            "borderTopWidth": 1,
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "top": 0,
-            "width": 22,
-          }
-        }
-      />
-      <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "borderColor": "rgba(164, 199, 223, 1)",
+            Object {
+              "borderColor": undefined,
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "borderBottomRightRadius": 11,
-            "borderBottomWidth": 1,
-            "borderColor": "rgba(164, 199, 223, 1)",
-            "borderLeftWidth": 0,
-            "borderRightWidth": 1,
-            "borderTopRightRadius": 11,
-            "borderTopWidth": 1,
-            "bottom": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-            "width": 22,
-          }
+          ]
         }
       />
       <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "borderColor": "rgba(164, 199, 223, 1)",
+        style={
+          Array [
+            Object {
+              "borderBottomRightRadius": 11,
+              "borderBottomWidth": 1,
+              "borderLeftWidth": 0,
+              "borderRightWidth": 1,
+              "borderTopRightRadius": 11,
+              "borderTopWidth": 1,
+              "bottom": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "width": 22,
+            },
+            Object {
+              "borderColor": undefined,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "borderTopWidth": 1,
+              "left": 22,
+              "position": "absolute",
+              "right": 22,
+              "top": 0,
+            },
+            Object {
+              "borderColor": undefined,
               "left": 22,
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "borderColor": "rgba(164, 199, 223, 1)",
-            "borderTopWidth": 1,
-            "left": 22,
-            "position": "absolute",
-            "right": 22,
-            "top": 0,
-          }
+          ]
         }
       />
       <View
@@ -256,10 +240,18 @@ Array [
         }
       >
         <Text
-          animatedStyle={
-            Object {
-              "value": Object {
-                "color": "rgba(164, 199, 223, 1)",
+          numberOfLines={1}
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "alignSelf": "flex-start",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+              },
+              Object {
+                "color": undefined,
                 "transform": Array [
                   Object {
                     "translateX": -0,
@@ -272,62 +264,44 @@ Array [
                   },
                 ],
               },
-            }
-          }
-          collapsable={false}
-          numberOfLines={1}
-          onLayout={[Function]}
-          style={
-            Object {
-              "alignSelf": "flex-start",
-              "color": "rgba(164, 199, 223, 1)",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "padding": 0,
-              "transform": Array [
-                Object {
-                  "translateX": -0,
-                },
-                Object {
-                  "translateY": -0,
-                },
-                Object {
-                  "scale": 1,
-                },
-              ],
-            }
+            ]
           }
         >
           Search Wallets
         </Text>
       </View>
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
-              "opacity": 0,
-            },
-          }
-        }
-        collapsable={false}
         numberOfLines={1}
         style={
-          Object {
-            "bottom": -28,
-            "color": "#E85466",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 17,
-            "left": 28,
-            "opacity": 0,
-            "position": "absolute",
-          }
+          Array [
+            Object {
+              "bottom": -28,
+              "color": "#E85466",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "left": 28,
+              "position": "absolute",
+            },
+            Object {
+              "opacity": 0,
+            },
+          ]
         }
       />
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
-              "color": "rgba(164, 199, 223, 1)",
+        numberOfLines={1}
+        onLayout={[Function]}
+        style={
+          Array [
+            Object {
+              "bottom": -10,
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "position": "absolute",
+              "right": 28,
+            },
+            Object {
+              "color": undefined,
               "opacity": 0,
               "transform": Array [
                 Object {
@@ -338,29 +312,7 @@ Array [
                 },
               ],
             },
-          }
-        }
-        collapsable={false}
-        numberOfLines={1}
-        onLayout={[Function]}
-        style={
-          Object {
-            "bottom": -10,
-            "color": "rgba(164, 199, 223, 1)",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 17,
-            "opacity": 0,
-            "position": "absolute",
-            "right": 28,
-            "transform": Array [
-              Object {
-                "translateX": 6,
-              },
-              Object {
-                "scale": 0,
-              },
-            ],
-          }
+          ]
         }
       >
         

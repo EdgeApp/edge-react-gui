@@ -172,7 +172,7 @@ jest.mock('react-native-localize', () => ({
 
 jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
 
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
 
 for (const log in global.console) {
   global.console[log] = jest.fn()
