@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
@@ -15,7 +15,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonBox } from '../themed/ThemedButtons'
+import { Card } from './Card'
 
 export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards)
 
@@ -24,7 +24,7 @@ interface Props {
   tokenId?: string
 }
 
-export const EarnCrypto = (props: Props) => {
+export const EarnCryptoCard = (props: Props) => {
   const { wallet, tokenId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -47,14 +47,14 @@ export const EarnCrypto = (props: Props) => {
   return (
     <>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
-        <ButtonBox marginRem={[1, 0, -1, 0]} onPress={handlePress}>
-          <View style={styles.container}>
+        <Card paddingRem={0} marginRem={[1, 0.5, -0.5, 0.5]}>
+          <TouchableOpacity onPress={handlePress} style={styles.container}>
             <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>
               {sprintf(s.strings.side_menu_rewards_tx_list_button_2s, defaultFiat, currencyCode)}
             </EdgeText>
-          </View>
-        </ButtonBox>
+          </TouchableOpacity>
+        </Card>
       )}
     </>
   )
@@ -64,10 +64,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: theme.rem(0.5),
-    backgroundColor: theme.tileBackground,
-    borderWidth: theme.cardBorder,
-    borderColor: theme.cardBorderColor
+    padding: theme.rem(0.5)
   },
   icon: {
     width: theme.rem(2),
@@ -75,7 +72,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   },
   text: {
-    flex: 1,
-    margin: theme.rem(0.5)
+    marginLeft: theme.rem(0.5)
   }
 }))
