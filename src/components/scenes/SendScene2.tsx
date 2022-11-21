@@ -87,6 +87,12 @@ interface FioSenderInfo {
   skipRecord?: boolean
 }
 
+// TODO: For now, do not allow multiple targets to be added via GUI. UX is very poor until
+// animation is added. Waiting for reanimated v3 which fixes crashes in Layout animations.
+// Note: multiple targets can be added via JSON payment protocol to fix payments to Anypay
+// invoices.
+const ALLOW_MULTIPLE_TARGETS = false
+
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
@@ -400,7 +406,7 @@ const SendComponent = (props: Props) => {
     const numTargets = spendInfo.spendTargets.length
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
-    if (lastTargetHasAddress && lastTargetHasAmount) {
+    if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
       return <Tile type="touchable" title={s.strings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" contentPadding />
     } else {
       return null
