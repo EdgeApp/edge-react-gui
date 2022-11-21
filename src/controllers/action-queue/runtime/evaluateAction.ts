@@ -1,5 +1,7 @@
 import { add, mul } from 'biggystring'
+import { sprintf } from 'sprintf-js'
 
+import s from '../../../locales/strings'
 import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -146,6 +148,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
     case 'wyre-sell': {
       const { wyreAccountId, nativeAmount, tokenId, walletId } = actionOp
       const wallet = account.currencyWallets[walletId]
+      const parentCurrencyCode = wallet.currencyInfo.currencyCode
       const currencyCode = getCurrencyCode(wallet, tokenId)
 
       const wyreClient = await makeWyreClient({
@@ -167,6 +170,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
               publicAddress: paymentAddress
             }
           ],
+          metadata: {
+            name: 'Wyre',
+            category: 'Exchange:Sell',
+            notes: sprintf(s.strings.wyre_metadata_sell_notes_4s, currencyCode, parentCurrencyCode, wallet.name, paymentAddress)
+          },
           pendingTxs
         })
         const signedTx = await wallet.signTx(unsignedTx)

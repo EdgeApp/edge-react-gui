@@ -232,7 +232,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
             spendToken: token,
             metadata: {
               name: 'AAVE',
-              category: 'expense',
+              category: 'Expense:Service',
               notes: `AAVE contract approval`
             }
           })
@@ -245,9 +245,10 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           tx: depositTx,
           wallet,
           spendToken: token,
+          nativeAmount,
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Deposit',
             notes: `Deposit ${token.currencyCode} collateral`
           }
         })
@@ -288,9 +289,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(nativeAmount, '-1'),
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Withdraw',
             notes: `Withdraw ${token.currencyCode} collateral`
           }
         })
@@ -324,9 +327,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const borrowAction = await makeApprovableCall({
           tx: borrowTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(nativeAmount, '-1'),
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Borrow',
             notes: `Borrow ${token.displayName} loan`
           }
         })
@@ -416,7 +421,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               wallet,
               metadata: {
                 name: 'AAVE',
-                category: 'expense',
+                category: 'Expense:Service',
                 notes: `AAVE contract approval`
               }
             })
@@ -445,9 +450,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           txCallInfos.push({
             tx: repayTx,
             wallet,
+            spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
-              category: 'transfer',
+              category: 'Expense:Repay',
               notes: `AAVE repay ${debtToken.displayName} with ${collateralToken.displayName} collateral`
             }
           })
@@ -471,7 +478,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               spendToken: debtToken,
               metadata: {
                 name: 'AAVE',
-                category: 'expense',
+                category: 'Expense:Service',
                 notes: `AAVE contract approval`
               }
             })
@@ -488,9 +495,10 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
             tx: repayTx,
             wallet,
             spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
-              category: 'transfer',
+              category: 'Expense:Repay',
               notes: `Repay ${debtToken.displayName} loan`
             }
           })

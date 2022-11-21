@@ -839,6 +839,7 @@
   "wallet_list_sort_currencyName": "Sort by currency name",
   "wallet_list_sort_highest": "Sort by highest value",
   "wallet_list_sort_lowest": "Sort by lowest value",
+  "wyre_metadata_sell_notes_4s": "Sell %1$s on chain %2$s from %3$s to Wyre at address: %4$s. For assistance, please contact support@sendwyre.com.",
   "select_fio_address_address_from": "Send from FIO Crypto Handle",
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "FIO Memo Error",

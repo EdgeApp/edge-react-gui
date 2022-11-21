@@ -108,14 +108,15 @@ export const LoanCloseScene = (props: Props) => {
     // Still loading action program
     if (actionProgram === undefined) return
 
-    // Always update the loan program marking it as close
-    await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
-
-    // No action program necessary to close loan
+    // Dispatch action program if necessary to close loan
     if (actionProgram !== null) {
       await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
+      // Navigate to the loan status scene if program is dispatched
       navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
     } else {
+      // Update the loan program marking it as close
+      await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
+      // Navigate to loan dashboard scene if no action program is necessary
       navigation.popToTop()
     }
   })

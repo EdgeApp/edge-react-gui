@@ -66,7 +66,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
         programEdges
       }
 
-      loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
+      await loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
     }
 
     // Update loan account if it does exist
@@ -74,10 +74,14 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
       const { closed, programEdges } = loanAccount
       loanAccountMapRecord.data[loanAccount.id].closed = closed
       loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
-      loanAccountMapRecord.update(loanAccountMapRecord.data)
+      await loanAccountMapRecord.update(loanAccountMapRecord.data)
     }
 
-    logActivity(`Create Loan Account`, { loanAccountId: loanAccount.id })
+    if (existingLoanAccountEntry == null) {
+      logActivity(`Create Loan Account`, { loanAccount })
+    } else {
+      logActivity(`Update Loan Account`, { loanAccount })
+    }
 
     dispatch({
       type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
@@ -131,7 +135,7 @@ export function deleteLoanAccount(loanAccountOrId: LoanAccount | string): ThunkA
     const loanAccountId = typeof loanAccountOrId === 'string' ? loanAccountOrId : loanAccountOrId.id
     if (loanAccountMapRecord.data[loanAccountId] != null) {
       const { [loanAccountId]: _, ...loanAccountMapRecordUpdated } = loanAccountMapRecord.data
-      loanAccountMapRecord.update(loanAccountMapRecordUpdated)
+      await loanAccountMapRecord.update(loanAccountMapRecordUpdated)
     } else {
       throw new Error('Could not find LoanAccount id: ' + loanAccountId)
     }
@@ -155,7 +159,7 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
       programId: actionProgram.programId,
       programType
     }
-    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge] }))
+    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge], closed: programType === 'loan-close' }))
 
     return loanAccount
   }

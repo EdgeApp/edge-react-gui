@@ -4,23 +4,16 @@ import { asArray, asBoolean, asJSON, asObject, asOptional, asString, asValue, Cl
 // Store Types
 //
 
-export type LoanProgramType = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'loan-repay' | 'loan-withdraw' | 'loan-close'
-export interface LoanProgramEdge {
-  programId: string
-  programType: LoanProgramType
-}
-export const asLoanProgramEdge: Cleaner<LoanProgramEdge> = asObject({
+export type LoanProgramType = ReturnType<typeof asLoanProgramType>
+export const asLoanProgramType = asValue('loan-create', 'loan-deposit', 'loan-borrow', 'loan-repay', 'loan-withdraw', 'loan-close')
+export type LoanProgramEdge = ReturnType<typeof asLoanProgramEdge>
+export const asLoanProgramEdge = asObject({
   programId: asString,
-  programType: asValue('loan-create', 'loan-deposit', 'loan-borrow', 'loan-repay', 'loan-withdraw')
+  programType: asLoanProgramType
 })
 
-export interface LoanAccountEntry {
-  closed: boolean
-  walletId: string
-  borrowPluginId: string
-  programEdges: LoanProgramEdge[]
-}
-export const asLoanAccountEntry: Cleaner<LoanAccountEntry> = asObject({
+export type LoanAccountEntry = ReturnType<typeof asLoanAccountEntry>
+export const asLoanAccountEntry = asObject({
   closed: asOptional(asBoolean, false),
   walletId: asString,
   borrowPluginId: asString,
