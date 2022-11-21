@@ -25,6 +25,7 @@ import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
@@ -78,7 +79,6 @@ export const LoanCreateScene = (props: Props) => {
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
-  const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
 
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
@@ -250,10 +250,10 @@ export const LoanCreateScene = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet={!isSrc}
+        showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}
         showBankOptions={!isSrc}
-        excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
+        excludeWalletIds={getWalletPickerExcludeWalletIds(wallets, isSrc ? 'loan-manage-deposit' : 'loan-manage-borrow', borrowEngineWallet)}
         allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
         filterActivation
       />
