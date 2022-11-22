@@ -14,6 +14,7 @@ interface TappableAccountCardProps {
   emptyLabel: string
   onPress: () => void
   selectedAsset: SelectableAsset
+  marginRem?: number[] | number
 }
 
 export interface SelectableAsset {
@@ -23,7 +24,7 @@ export interface SelectableAsset {
 }
 
 const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
-  const { emptyLabel, onPress, selectedAsset } = props
+  const { emptyLabel, onPress, selectedAsset, marginRem } = props
   const { paymentMethod, tokenId, wallet } = selectedAsset
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -43,7 +44,7 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
   )
 
   return (
-    <TappableCard onPress={handlePress} paddingRem={0.5}>
+    <TappableCard onPress={handlePress} paddingRem={0.5} marginRem={marginRem}>
       {renderInitial()}
       {renderAccount()}
     </TappableCard>
