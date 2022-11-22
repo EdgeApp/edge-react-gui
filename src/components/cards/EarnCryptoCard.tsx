@@ -10,7 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -22,15 +22,16 @@ export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId
 interface Props {
   wallet: EdgeCurrencyWallet
   tokenId?: string
+  navigation: NavigationProp<'transactionList'>
 }
 
 export const EarnCryptoCard = (props: Props) => {
-  const { wallet, tokenId } = props
+  const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const handlePress = useHandler(() => {
-    Actions.push('pluginView', {
+    navigation.navigate('pluginViewBuy', {
       plugin: guiPlugins.ionia
     })
   })

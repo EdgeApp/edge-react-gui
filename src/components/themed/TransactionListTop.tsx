@@ -326,7 +326,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} />}
+          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
