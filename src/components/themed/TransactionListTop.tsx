@@ -22,12 +22,12 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
 import { stakePlugin } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
+import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { EarnCrypto } from './EarnCrypto'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
@@ -326,7 +326,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching && <EarnCrypto wallet={wallet} tokenId={tokenId} />}
+          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
