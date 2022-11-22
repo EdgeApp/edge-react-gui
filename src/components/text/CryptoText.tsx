@@ -32,8 +32,7 @@ export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol 
   const {
     denomination: exchangeDenomination,
     fiatDenomination,
-    assetToFiatRate,
-    currencyCode
+    assetToFiatRate
   } = useTokenDisplayData({
     tokenId,
     wallet
@@ -48,7 +47,7 @@ export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol 
     exchangeRate: assetToFiatRate,
     fiatDenomination,
     nativeAmount,
-    currencyCode: withSymbol ? undefined : currencyCode
+    currencyCode: withSymbol ? undefined : displayDenomination.name
   })
 
   return cryptoText
