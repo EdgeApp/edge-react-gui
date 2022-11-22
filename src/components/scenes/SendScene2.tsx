@@ -15,6 +15,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
+import { dismissScamWarning } from '../../actions/ScamWarningActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -32,6 +33,7 @@ import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, roundedFee } from '../../util/utils'
+import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
@@ -102,6 +104,7 @@ const SendComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
   const flipInputModalRef = React.useRef<FlipInputModalRef>(null)
   const {
@@ -153,6 +156,11 @@ const SendComponent = (props: Props) => {
 
   const tokenId = tokenIdProp ?? getTokenId(account, pluginId, currencyCode)
   spendInfo.currencyCode = getCurrencyCode(coreWallet, tokenId)
+
+  if (initialMount.current) {
+    dismissScamWarning(account.disklet)
+    initialMount.current = false
+  }
 
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
@@ -582,6 +590,26 @@ const SendComponent = (props: Props) => {
     )
   }
 
+  const renderScamWarning = () => {
+    const { publicAddress } = spendInfo.spendTargets[0]
+
+    if (publicAddress === '' || publicAddress == null) {
+      return (
+        <WarningCard
+          title={s.strings.warning_scam_title}
+          points={[
+            s.strings.warning_scam_message_financial_advice,
+            s.strings.warning_scam_message_irreversibility,
+            s.strings.warning_scam_message_unknown_recipients
+          ]}
+          footer={s.strings.warning_scam_footer}
+          marginRem={[1.5, 1]}
+        />
+      )
+    }
+    return null
+  }
+
   const recordFioObtData = async (spendTarget: EdgeSpendTarget, currencyCode: string, txid: string) => {
     const { nativeAmount, publicAddress: payeePublicAddress = '', otherParams = {} } = spendTarget
     const { fioAddress: payeeFioAddress } = otherParams
@@ -862,6 +890,7 @@ const SendComponent = (props: Props) => {
         {renderUniqueIdentifier()}
         {renderInfoTiles()}
         {renderAuthentication()}
+        {renderScamWarning()}
         <View style={styles.footer}>
           {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
         </View>
