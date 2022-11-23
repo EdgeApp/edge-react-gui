@@ -1,7 +1,7 @@
 //
 // Action Operations
 //
-import { asArray, asBoolean, asCodec, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 import { asBase64 } from '../../util/cleaners/asBase64'
 import {
@@ -32,39 +32,38 @@ import {
 } from './types'
 
 // A serializable error object
-const asJsonError = asObject({
-  name: asString,
-  message: asString,
-  stack: asString
-}).withRest
+export interface CleanError extends Error {
+  message: string
+  name: string
+  stack?: string
+  [key: string]: any
+}
+export const asCleanError = (raw: any): CleanError => {
+  const cleanError = asMaybe(
+    asObject<CleanError>({
+      message: asString,
+      name: asString,
+      stack: asOptional(asString)
+    }).withRest
+  )(raw)
 
-const asError = asCodec(
-  (raw: any) => {
-    // Handle Error
-    if (raw instanceof Error) return raw
+  if (cleanError != null) return cleanError
 
-    if (typeof raw === 'string') {
-      const error = new Error(raw)
-      return error
-    }
-    // Handle JsonError
-    const jsonError = asMaybe(asJsonError)(raw)
-    if (jsonError != null) {
-      const error = new Error(jsonError.message)
-      Object.defineProperty(error, 'name', {
-        configurable: true,
-        value: jsonError.name
-      })
-      // TODO: Copy stack trace
-      return error
-    }
+  if (typeof raw === 'string') {
+    return { message: raw, name: 'Error' }
+  }
 
-    // Invalid type
-    throw new TypeError('Expected Error')
-  },
-  // Serialize as a JsonError
-  asJsonError
-)
+  let message: string | undefined
+  if ('message' in raw && typeof raw.message === 'string') {
+    message = raw.message
+  }
+
+  return {
+    message: ['Unexpected exception', ...(message ? [message] : [])].join(': '),
+    name: 'UnexpectedException',
+    ...raw
+  }
+}
 
 const asSeqActionOp = asObject<SeqActionOp>({
   type: asValue('seq'),
@@ -197,7 +196,7 @@ const asTxConfsEffect = asObject<TxConfsEffect>({
 })
 const asDoneEffect = asObject<DoneEffect>({
   type: asValue('done'),
-  error: asOptional(asError),
+  error: asOptional(asCleanError),
   cancelled: asOptional(asBoolean)
 })
 export const asActionEffect: Cleaner<ActionEffect> = asEither(
