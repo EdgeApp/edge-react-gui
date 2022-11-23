@@ -191,6 +191,7 @@ const strings = {
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
+  transaction_list_buy_and_earn_crypto_message: 'Buy or Earn %s',
   transaction_list_no_tx_yet: 'No transactions yet',
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
@@ -597,6 +598,10 @@ const strings = {
   fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
+  // Rewards
+  side_menu_rewards_button_1s: 'Spend %1$s → Earn Crypto',
+  side_menu_rewards_tx_list_button_2s: 'Spend %1$s → Earn %2$s',
+
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
@@ -820,6 +825,7 @@ const strings = {
   fio_request_renew_domain_ok_text: 'Your domain has been successfully renewed',
   fio_request_sent_details_to: 'Request sent to',
   fio_request_sent_details_from: 'Request sent from',
+  fio_request_unknown_chain_code: 'Unknown chain code: %s',
   fio_get_requests_error: 'There was an issue fetching requests',
   fio_confirm_request_error: 'There was an issue during request send',
   fio_reject_request_error: 'There was an issue during request rejection',
@@ -906,7 +912,6 @@ const strings = {
   export_transaction_quickbooks_qbo: 'Quickbooks QBO',
   export_transaction_csv: 'CSV',
   string_export: 'Export',
-  string_no_wallet_name: 'No Wallet Name',
   string_status: 'Status',
   string_fee: 'Fee',
   string_total_amount: 'Total Amount',
@@ -967,14 +972,15 @@ const strings = {
   loan_borrow_details_title: 'Borrow Details',
   loan_borrow_more: 'Borrow More',
   loan_breakdown_title: 'Loan Breakdown',
-  loan_close_loan_warning:
-    "Closing your loan will liquidate some of the collateral to pay of the remaining principal and interest of your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
+  loan_close_swap_warning:
+    "Closing your loan will liquidate some of the deposited collateral if you do not have enough balance to repay the remaining principal and interest on your loan. The remaining collateral will be deposited back to your wallet.\n\nLiquidation most likely will incur a higer capital cost, if remaining principal isn't repaid.",
   loan_close_loan_no_tx_needed_message:
     `There appears to be no principal to repay nor collateral to withdraw.\n\n` +
     `No transactions are required to close your account, however the account may re-appear after closing if there are pending on-chain transactions.`,
   loan_close_loan_title: 'Close Loan',
-  loan_close_loan_error:
+  loan_close_multiple_asset_error:
     'Closing loans with multiple debt assets and/or deposited collateral assets is not supported.\n\nPlease specify funding sources to repay loans with using Repay.',
+  loan_close_insufficient_funds_2s: 'An additional %1$s %2$s is required to close your loan.',
   loan_collateral_amount: 'Collateral Amount',
   loan_collateral_destination: 'Collateral Destination',
   loan_collateral_required: 'Collateral Amount Required',
@@ -988,7 +994,7 @@ const strings = {
   loan_debt_destination: 'Loan Destination',
   loan_details_title: 'Loan Details',
   loan_enter_s_amount_s: 'Enter %1$s Amount (%2$s)',
-  loan_error_title: 'Unexpected Error',
+  fragment_error: 'Error',
   loan_estimate_fee: 'Estimated Fee',
   loan_exchange_rate: 'Exchange Rate',
   loan_failed_loan: 'Failed to load loan data',

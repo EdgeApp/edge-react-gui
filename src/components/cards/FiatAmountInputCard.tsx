@@ -32,15 +32,24 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     currencyConfig: { allTokens }
   } = wallet
 
+  // TODO: Exchange rate conversions not be handled here. Callers should handle
+  // currency conversions elsewhere.
   // Convert amount fiat -> amount crypto, notify caller
-  const token = tokenId != null ? allTokens[tokenId] : null
-  const { denominations: destDenoms } = token != null ? token : wallet.currencyInfo
-  const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
+  const [nativeCryptoAmount, setNativeCryptoAmount] = React.useState<string>('0')
 
-  const nativeCryptoAmount = truncateDecimals(
-    destToFiatRate == null || destToFiatRate === '0' ? '0' : mul(destExchangeMultiplier, div(fiatAmount ?? '0', destToFiatRate, DECIMAL_PRECISION)),
-    0
-  )
+  React.useEffect(() => {
+    const token = tokenId != null ? allTokens[tokenId] : null
+    const { denominations: destDenoms } = token != null ? token : wallet.currencyInfo
+    const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
+
+    const calculatedNativeCryptoAmount = truncateDecimals(
+      destToFiatRate == null || destToFiatRate === '0' ? '0' : mul(destExchangeMultiplier, div(fiatAmount ?? '0', destToFiatRate, DECIMAL_PRECISION)),
+      0
+    )
+
+    setNativeCryptoAmount(calculatedNativeCryptoAmount)
+    if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(fiatAmount)) onAmountChanged(fiatAmount, calculatedNativeCryptoAmount)
+  }, [allTokens, destToFiatRate, fiatAmount, onAmountChanged, tokenId, wallet.currencyInfo])
 
   const handleEditActionfiatAmount = React.useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
@@ -51,7 +60,8 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
         }
       }
     )
-  }, [fiatAmount, inputModalMessage, nativeCryptoAmount, onAmountChanged, title])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fiatAmount, inputModalMessage, onAmountChanged, title])
 
   const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
 

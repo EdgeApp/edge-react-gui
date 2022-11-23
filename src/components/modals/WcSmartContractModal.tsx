@@ -11,6 +11,7 @@ import s from '../../locales/strings'
 import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -51,7 +52,7 @@ export const WcSmartContractModal = (props: Props) => {
   const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
 
   if (wallet == null) return null
-  const walletName = wallet.name
+  const walletName = getWalletName(wallet)
 
   let amountCurrencyCode = wallet.currencyInfo.currencyCode
   if (toAddress != null) {
@@ -149,11 +150,9 @@ export const WcSmartContractModal = (props: Props) => {
             tokenId={tokenId}
           />
         )}
-        {walletName != null && (
-          <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={walletImageUri}>
-            <EdgeText>{walletName}</EdgeText>
-          </IconTile>
-        )}
+        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={walletImageUri}>
+          <EdgeText>{walletName}</EdgeText>
+        </IconTile>
         <IconTile title={s.strings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>

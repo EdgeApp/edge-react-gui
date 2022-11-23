@@ -244,6 +244,9 @@ export const testDark: Theme = {
   sliderTabRequest: palette.accentGreen,
   sliderTabMore: palette.accentBlue,
 
+  shimmerBackgroundColor: palette.whiteOp05,
+  shimmerBackgroundHighlight: palette.whiteOp10,
+
   // pinOutline: palette.white,
   // pinFilled: palette.white,
 

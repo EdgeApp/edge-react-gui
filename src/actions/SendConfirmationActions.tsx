@@ -320,7 +320,6 @@ export function signBroadcastAndSave(
       await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
 
       edgeSignedTransaction.metadata = edgeMetadata
-      edgeSignedTransaction.wallet = wallet
 
       if (payeeFioAddress != null) {
         addToFioAddressCache(account, [payeeFioAddress])
@@ -351,7 +350,7 @@ export function signBroadcastAndSave(
           } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
             const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
             const amount = guiMakeSpendInfo.nativeAmount ?? '0'
-            const chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+            const chainCode = wallet.currencyInfo.currencyCode
 
             try {
               recordSend(fioWallet, fioAddress, {

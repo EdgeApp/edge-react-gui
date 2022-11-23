@@ -12,6 +12,7 @@ import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
@@ -116,7 +117,7 @@ export function WalletListMenuModal(props: Props) {
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       {wallet != null && (
         <View>
-          <ModalTitle>{wallet.name}</ModalTitle>
+          <ModalTitle>{getWalletName(wallet)}</ModalTitle>
           <View style={styles.row}>
             <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
             <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>

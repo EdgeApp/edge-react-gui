@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
 import { stakePlugin } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
+import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -68,7 +69,7 @@ interface State {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
+  textInput = React.createRef<OutlinedTextInputRef>()
 
   constructor(props: Props) {
     super(props)
@@ -267,7 +268,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   render() {
-    const { isEmpty, searching, theme } = this.props
+    const { wallet, isEmpty, searching, theme, tokenId } = this.props
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
@@ -325,6 +326,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
+          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>

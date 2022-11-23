@@ -7,6 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -57,7 +58,7 @@ export function EditTokenScene(props: Props) {
             label: s.strings.string_delete,
             async onPress() {
               await wallet.currencyConfig.removeCustomToken(tokenId)
-              logActivity(`Delete Custom Token: ${account.username} -- ${wallet.name ?? 'no_wallet_name'} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`)
+              logActivity(`Delete Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`)
 
               navigation.goBack()
               return true
@@ -102,9 +103,7 @@ export function EditTokenScene(props: Props) {
     } else {
       const tokenId = await wallet.currencyConfig.addCustomToken(token)
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
-      logActivity(
-        `Add Custom Token: ${account.username} -- ${wallet.name ?? 'no_wallet_name'} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`
-      )
+      logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`)
     }
     navigation.goBack()
   })

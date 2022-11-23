@@ -7,13 +7,15 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   ratio: number
+  textColor: string
 }
 
-export const Thermostat = ({ ratio }: Props) => {
+export const Thermostat = ({ ratio, textColor }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const percent = Math.max(0, Math.min(1, ratio)) * 100
-  const percentText = `${percent.toFixed(0)}%`
+  const percentText = ratio === 0 ? '--' : `${percent.toFixed(0)}%`
+
   return (
     <View style={styles.container}>
       <View style={styles.barContainer}>
@@ -28,7 +30,7 @@ export const Thermostat = ({ ratio }: Props) => {
           <Rect x={`${percent}%`} y="0" width="3" height="12" fill="white" rx="1" ry="1" />
         </Svg>
       </View>
-      <EdgeText style={styles.percentText}>{percentText}</EdgeText>
+      <EdgeText style={{ ...styles.percentText, color: textColor }}>{percentText}</EdgeText>
     </View>
   )
 }

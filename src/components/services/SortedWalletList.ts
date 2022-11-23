@@ -1,13 +1,12 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { sprintf } from 'sprintf-js'
 
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { normalizeForSearch } from '../../util/utils'
 
 interface Props {
@@ -120,8 +119,7 @@ export function SortedWalletList(props: Props) {
         wallets,
         alphabeticalSort(({ wallet }) => {
           if (wallet == null) return
-          if (wallet.name != null) return wallet.name
-          return sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
+          return getWalletName(wallet)
         })
       )
       break
@@ -260,7 +258,7 @@ export function searchWalletList(list: WalletListItem[], isSearching: boolean, s
 
     // Grab wallet and token information:
     const { currencyCode, displayName } = token == null ? wallet.currencyInfo : token
-    const name = wallet.name ?? sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
+    const name = getWalletName(wallet)
 
     return normalizeForSearch(currencyCode).includes(target) || normalizeForSearch(displayName).includes(target) || normalizeForSearch(name).includes(target)
   })

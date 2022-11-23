@@ -10,7 +10,7 @@ export function showSplitWalletModal(walletId: string, currencyCode: string): Th
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const { currencyWallets } = account
+    const { currencyConfig, currencyWallets } = account
     const edgeWallet = currencyWallets[walletId]
 
     let bodyText = s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile
@@ -30,14 +30,13 @@ export function showSplitWalletModal(walletId: string, currencyCode: string): Th
       />
     ))
 
-    const { allCurrencyInfos } = state.ui.settings.plugins
-    const newCurrencyInfo = allCurrencyInfos.find(info => info.currencyCode === currencyCode)
-    if (newCurrencyInfo == null) return
-    const newWalletType = newCurrencyInfo.walletType
-
     if (resolveValue === 'confirm') {
+      const pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
+      if (pluginId == null) return
+      const { walletType } = currencyConfig[pluginId].currencyInfo
+
       try {
-        await account.splitWalletInfo(walletId, newWalletType)
+        await account.splitWalletInfo(walletId, walletType)
         dispatch({
           type: 'UI/WALLETS/UPSERT_WALLETS',
           data: { wallets: [edgeWallet] }

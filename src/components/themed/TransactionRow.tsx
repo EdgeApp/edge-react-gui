@@ -17,6 +17,7 @@ interface OwnProps {
   fiatAmount: string
   fiatSymbol: string
   onPress: () => void
+  onLongPress: () => void
   isSentTransaction: boolean
   requiredConfirmations: number
   selectedCurrencyName: string
@@ -39,6 +40,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
       fiatSymbol,
       isSentTransaction,
       onPress,
+      onLongPress,
       requiredConfirmations,
       selectedCurrencyName,
       theme,
@@ -88,7 +90,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <ClickableRow paddingRem={[0, 1]} onPress={onPress}>
+      <ClickableRow paddingRem={[0, 1]} onPress={onPress} onLongPress={onLongPress}>
         <View style={styles.iconContainer}>
           <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
             {thumbnailPath ? null : transactionIcon}

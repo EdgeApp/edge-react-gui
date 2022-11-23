@@ -1,7 +1,10 @@
 import * as React from 'react'
+import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -9,6 +12,7 @@ import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import s from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -61,15 +65,15 @@ export const LoanCloseScene = (props: Props) => {
   const debt = debts[0]
   const debtTokenId = debt?.tokenId
 
-  const isLoanCloseSupported = collaterals.length <= 1 && debts.length <= 1
-
   // Derived State:
 
   // Create Action Ops
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const [actionProgram, actionProgramError] = useAsyncValue(async () => {
     const actionOp = await makeAaveCloseAction({
       borrowPluginId,
-      borrowEngine
+      borrowEngine,
+      exchangeRates
     })
 
     if (actionOp == null) return null
@@ -95,7 +99,12 @@ export const LoanCloseScene = (props: Props) => {
   const networkFeeAggregate = (networkFeeMap ?? {})[borrowEngineWallet.currencyInfo.currencyCode]
   const networkFeeAmountAggregate = networkFeeAggregate != null ? networkFeeAggregate.nativeAmount : '0'
 
-  // Handlers:
+  //
+  // Handlers
+  //
+
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'close-loan'))
+
   const handleSliderComplete = useHandler(async (reset: () => void) => {
     // Still loading action program
     if (actionProgram === undefined) return
@@ -114,36 +123,36 @@ export const LoanCloseScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_close_loan_title} style={styles.sceneHeader}>
-        <Space right>
-          <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </Space>
-      </SceneHeader>
+      <SceneHeader
+        underline
+        title={s.strings.loan_close_loan_title}
+        style={styles.sceneHeader}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <Tile title={s.strings.loan_remaining_principal} type="static">
+          <Tile title={s.strings.loan_remaining_principal} type="static" contentPadding={false}>
             {debts.map(debt => (
-              <Space key={debt.tokenId} vertical={0.5}>
-                <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} />
-              </Space>
+              <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
           </Tile>
         ) : null}
         {collaterals.length > 0 ? (
-          <Tile title={s.strings.loan_collateral_amount} type="static">
+          <Tile title={s.strings.loan_collateral_amount} type="static" contentPadding={false}>
             {collaterals.map(collateral => (
-              <Space key={collateral.tokenId} vertical={0.5}>
-                <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} />
-              </Space>
+              <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
           </Tile>
         ) : null}
-        {!isLoanCloseSupported ? (
-          <Alert title={s.strings.send_scene_error_title} message={s.strings.loan_close_loan_error} type="error" numberOfLines={7} marginRem={[1, 1, 0]} />
-        ) : actionProgram !== null ? (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_loan_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {actionProgram !== null ? (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
         ) : (
           <Alert
             title={s.strings.loan_close_loan_title}
@@ -155,7 +164,7 @@ export const LoanCloseScene = (props: Props) => {
         )}
         {aggregateErrorMessage.length > 0 ? (
           <Alert
-            title={s.strings.loan_error_title}
+            title={s.strings.fragment_error}
             message={translateError(aggregateErrorMessage.concat('\n\n'))}
             type="error"
             numberOfLines={7}

@@ -348,6 +348,8 @@ exports[`MenuTab should render with loading props 1`] = `
       "settingsRowHeaderFontSizeRem": 1,
       "settingsRowPressed": "rgba(255, 255, 255, 0)",
       "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
+      "shimmerBackgroundColor": "rgba(255, 255, 255, .05)",
+      "shimmerBackgroundHighlight": "rgba(255, 255, 255, .1)",
       "sideMenuBorderColor": "rgba(255, 255, 255, 0)",
       "sideMenuBorderWidth": 0,
       "sideMenuColor": "#0D2145",

@@ -8,19 +8,23 @@ import { EdgeText } from './EdgeText'
 interface Props {
   title?: string
   children?: React.ReactNode
+  tertiary?: React.ReactNode
   underline?: boolean
   withTopMargin?: boolean
   style?: ViewStyle
 }
 
 export const SceneHeaderComponent = (props: Props) => {
-  const { title, underline, withTopMargin, children, style } = props
+  const { title, underline, withTopMargin, children, tertiary = null, style } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
     <>
       <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
-        {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+        <View style={styles.titleContainer}>
+          {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+          {tertiary}
+        </View>
         {children}
       </View>
       <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
@@ -34,6 +38,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1),
     paddingBottom: theme.rem(1)
   },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginRight: theme.rem(1)
+  },
+
   topMargin: {
     marginTop: theme.rem(1)
   },

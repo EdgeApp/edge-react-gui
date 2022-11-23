@@ -7,12 +7,11 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
-import { getSpecialCurrencyInfo } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { Actions } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
-import { makeConnectWallets } from '../util'
+import { convertFIOToEdgeCodes, makeConnectWallets } from '../util'
 
 interface LocalState {
   connectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
@@ -150,13 +149,15 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       const noWalletSymbol = '-'
 
       // Convert back to Edge currency code to display the icon
-      const info = getSpecialCurrencyInfo(wallet.edgeWallet.currencyInfo.pluginId)
-      const currencyCode = wallet.currencyCode === info.fioChainCode ? info.chainCode : wallet.currencyCode
+      const pluginId = wallet.edgeWallet.currencyInfo.pluginId
+      const { tokenCode: currencyCode } = convertFIOToEdgeCodes(pluginId, wallet.chainCode, wallet.currencyCode)
 
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
-            <View style={styles.containerLeft}>{wallet != null ? <CryptoIcon currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}</View>
+            <View style={styles.containerLeft}>
+              {wallet != null ? <CryptoIcon pluginId={pluginId} currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
+            </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
                 <EdgeText style={styles.walletDetailsRowCurrency}>{currencyCode}</EdgeText>

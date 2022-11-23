@@ -11,6 +11,7 @@ import { connect } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -121,7 +122,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             miningFee={fee}
             total={fromTotalFiat}
             walletId={request.fromWallet.id}
-            walletName={request.fromWallet.name || ''}
+            walletName={getWalletName(request.fromWallet)}
             showFeeWarning={showFeeWarning}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
@@ -132,7 +133,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             fiatCurrencyAmount={toFiat}
             fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
             walletId={request.toWallet.id}
-            walletName={request.toWallet.name || ''}
+            walletName={getWalletName(request.toWallet)}
           />
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>

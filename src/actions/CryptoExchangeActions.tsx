@@ -26,6 +26,7 @@ import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { Actions } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -182,7 +183,8 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   })
 
   // Currency conversion tools:
-  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
+  // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+  const { fromWallet, toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -326,14 +328,15 @@ export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void
 
     const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
-    const { toWallet, fromCurrencyCode, toCurrencyCode } = request
+    // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+    const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
     try {
       logEvent('SwapStart')
       const { swapInfo } = account.swapConfig[pluginId]
 
       // Build the category string:
       const isTransfer = pluginId === 'transfer'
-      const toWalletName = toWallet.name ?? ''
+      const toWalletName = getWalletName(toWallet)
       const name = isTransfer ? toWalletName : swapInfo.displayName
       const swapType = isTransfer ? 'transfer' : 'exchange'
       const swapTarget = isTransfer ? toWalletName : toCurrencyCode

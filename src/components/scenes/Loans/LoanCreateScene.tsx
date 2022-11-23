@@ -1,28 +1,32 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
-import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
+import { useCurrencyFiatRate } from '../../../hooks/useTokenDisplayData'
+import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
+import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -79,8 +83,9 @@ export const LoanCreateScene = (props: Props) => {
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
+  const hardCollateralCurrencyCode = 'WBTC'
   const { tokenId: hardSrcTokenAddr } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
+    () => guessFromCurrencyCode(account, { currencyCode: hardCollateralCurrencyCode, pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
   const { tokenId: hardDestTokenAddr } = React.useMemo(
@@ -100,23 +105,38 @@ export const LoanCreateScene = (props: Props) => {
   // #region State
   // -----------------------------------------------------------------------------
 
+  // #region Borrow Engine Wallet Data
+
+  const borrowEngineWalletPluginId = borrowEngineWallet.currencyInfo.pluginId
+
+  const collateralTokenId = getTokenId(account, borrowEngineWalletPluginId, hardCollateralCurrencyCode)
+  const collateralToken = collateralTokenId != null ? allTokens[borrowEngineWalletPluginId][collateralTokenId] : null
+  const collateralDenoms = collateralToken != null ? collateralToken.denominations : borrowEngineWallet.currencyInfo.denominations
+  const collateralExchangeMultiplier = collateralDenoms[0].multiplier
+
+  // #endregion Borrow Engine Wallet Data
+
   // #region Source Wallet Data
+
   const [srcWalletId, setSrcWalletId] = React.useState<string | undefined>(undefined)
   const [srcTokenId, setSrcTokenId] = React.useState<string | undefined>(undefined)
   const [srcCurrencyCode, setSrcCurrencyCode] = React.useState<string | undefined>(undefined)
 
   const srcWallet = srcWalletId == null ? undefined : wallets[srcWalletId]
   const srcPluginId = srcWallet == null ? null : srcWallet.currencyInfo.pluginId
-  const srcToken = React.useMemo(
-    () => (srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : null),
-    [allTokens, srcPluginId, srcTokenId]
-  )
+  const srcToken = srcTokenId != null && srcPluginId != null ? allTokens[srcPluginId][srcTokenId] : null
   const srcBalance = useWalletBalance(srcWallet ?? borrowEngineWallet, srcTokenId) // HACK: Balance isn't being used anyway if the src wallet hasn't been chosen yet. Default to the borrow engine wallet in this case so this hook can be used
   const srcWalletName = useWalletName(srcWallet ?? borrowEngineWallet) // HACK: srcWalletName is used for the warning card display, which would never show unless the srcWallet has been set.
   const srcAssetName = srcToken != null ? srcToken.displayName : srcWallet != null ? srcWallet.currencyInfo.displayName : ''
+
+  const srcDenoms =
+    srcToken != null ? srcToken.denominations : srcWallet != null && srcWallet.currencyInfo != null ? srcWallet.currencyInfo.denominations : null
+  const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
+
   // #endregion Source Wallet Data
 
   // #region Destination Wallet/Bank Data
+
   const [destWallet, setDestWallet] = React.useState<EdgeCurrencyWallet | undefined>(undefined)
   const [destTokenId, setDestTokenId] = React.useState<string | undefined>(undefined)
   const [destBankId, setDestBankId] = React.useState<string | undefined>(undefined)
@@ -130,11 +150,14 @@ export const LoanCreateScene = (props: Props) => {
     }
   }, [account])
   const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
+
   // #endregion Destination Wallet/Bank Data
 
   // #region Borrow Amounts
+
   const [borrowAmountFiat, setBorrowAmountFiat] = React.useState('0')
   const [nativeCryptoBorrowAmount, setNativeCryptoBorrowAmount] = React.useState('0')
+
   // #endregion Borrow Amounts
 
   // #region APR
@@ -153,34 +176,60 @@ export const LoanCreateScene = (props: Props) => {
   // #endregion APR
 
   // #region Required Collateral, LTV
-  const isUserInputComplete = (srcTokenId != null || srcWallet != null) && (destTokenId != null || destBankId != null) && !zeroString(borrowAmountFiat)
   // TODO: LTV is calculated in equivalent ETH value, NOT USD! These calcs/limits/texts might need to be updated...
-  const requiredFiat = React.useMemo(() => {
-    const initRequiredFiat = div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION)
 
-    // HACK: Special case for handling new loans on polygon since minimums can easily be exceeded
-    return borrowPlugin.borrowInfo.currencyPluginId === 'polygon' ? max(initRequiredFiat, '105') : initRequiredFiat
-  }, [borrowAmountFiat, borrowPlugin.borrowInfo.currencyPluginId, ltvRatio])
+  // Total amount of collateral required
+  const totalRequiredCollateralFiat = div(borrowAmountFiat, ltvRatio, DECIMAL_PRECISION)
 
-  // Convert collateral in fiat -> collateral crypto
-  const { assetToFiatRate: srcToFiatRate } = useTokenDisplayData({
-    tokenId: srcTokenId,
-    wallet: srcWallet ?? borrowEngineWallet
+  // Convert required collateral in fiat -> required collateral in crypto
+  // We want to use the same isoFiatCurrencyCode throughout the scene,
+  // regardless of what srcWallet's isoFiatCurrencyCode is, so all these
+  // conversions have the same quote asset.
+  const collateralToFiatRate = useCurrencyFiatRate({ currencyCode: srcCurrencyCode, isoFiatCurrencyCode })
+
+  const isUserInputComplete =
+    srcWallet != null && (destWallet != null || destBankId != null) && !zeroString(borrowAmountFiat) && !zeroString(collateralToFiatRate)
+  let totalRequiredCollateralNativeAmount = !isUserInputComplete
+    ? '0'
+    : truncateDecimals(mul(collateralExchangeMultiplier, div(totalRequiredCollateralFiat, collateralToFiatRate, DECIMAL_PRECISION)), 0)
+
+  // #region Calculate Swaps
+
+  const isRequiresSwap =
+    !zeroString(totalRequiredCollateralNativeAmount) && srcWallet != null && srcCurrencyCode != null && srcWallet.id !== borrowEngineWallet.id
+
+  // Calculate how much collateral asset we can obtain after swapping from src asset
+  const srcToCollateralExchangeRate = useSelector(state => {
+    const exchangeRate = isRequiresSwap ? convertCurrency(state, srcCurrencyCode, hardCollateralCurrencyCode) : '1'
+    // HACK: We don't have BTC->WBTC exchange rates for now, but this selector
+    // will be needed in the future for supporting non-like-kind swaps for collateral
+    return zeroString(exchangeRate) ? '1' : exchangeRate
   })
 
-  const srcDenoms = !isUserInputComplete
-    ? null
-    : srcToken != null
-    ? srcToken.denominations
-    : srcWallet != null && srcWallet.currencyInfo != null
-    ? srcWallet.currencyInfo.denominations
-    : []
+  const minSwapInputNativeAmount = useSelector(state =>
+    isRequiresSwap && borrowPlugin.borrowInfo.currencyPluginId === 'polygon' && srcCurrencyCode != null && srcExchangeMultiplier != null
+      ? truncateDecimals(mul('110', convertCurrency(state, 'iso:USD', srcCurrencyCode, srcExchangeMultiplier)), 0)
+      : '0'
+  )
 
-  const srcExchangeMultiplier = srcDenoms == null ? '0' : srcDenoms[0].multiplier
-  const nativeRequiredCrypto = !isUserInputComplete ? '0' : truncateDecimals(mul(srcExchangeMultiplier, div(requiredFiat, srcToFiatRate, DECIMAL_PRECISION)), 0)
+  if (isRequiresSwap) {
+    // Calculate how much src asset we need to swap
+    const requiredSwapInputNativeAmount = truncateDecimals(div(totalRequiredCollateralNativeAmount, srcToCollateralExchangeRate, DECIMAL_PRECISION), 0)
 
-  const isInsufficientCollateral = zeroString(nativeRequiredCrypto) ? false : lt(srcBalance, nativeRequiredCrypto)
+    // Factor in swap minimums for totalRequiredCollateralNativeAmount
+    totalRequiredCollateralNativeAmount = mul(max(requiredSwapInputNativeAmount, minSwapInputNativeAmount), srcToCollateralExchangeRate)
+  }
+
+  // #endregion Calculate Swaps
+
+  const expectedCollateralBalance = truncateDecimals(mul(srcBalance, srcToCollateralExchangeRate), 0)
+
+  const isInsufficientCollateral =
+    zeroString(totalRequiredCollateralNativeAmount) || zeroString(srcToCollateralExchangeRate)
+      ? false
+      : lt(expectedCollateralBalance, totalRequiredCollateralNativeAmount)
   const displayLtvLimit = React.useMemo(() => toPercentString(ltvRatio), [ltvRatio])
+
   // #endregion Required Collateral, LTV
 
   // #endregion State
@@ -188,6 +237,8 @@ export const LoanCreateScene = (props: Props) => {
   // -----------------------------------------------------------------------------
   // #region Handlers
   // -----------------------------------------------------------------------------
+
+  const handleInfoIconPress = useUrlHandler(sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-with-aave'))
 
   /**
    * Show a wallet picker modal filtered by the allowed assets defined by the
@@ -281,7 +332,16 @@ export const LoanCreateScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader underline title={s.strings.loan_create_title} />
+      <SceneHeader
+        underline
+        title={s.strings.loan_create_title}
+        withTopMargin
+        tertiary={
+          <TouchableOpacity onPress={handleInfoIconPress}>
+            <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        }
+      />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <View style={styles.sceneContainer}>
           {/* Amount  to borrow */}
@@ -329,7 +389,7 @@ export const LoanCreateScene = (props: Props) => {
                 {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
               </EdgeText>
             ) : (
-              <CryptoFiatAmountRow nativeAmount={nativeRequiredCrypto} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
+              <CryptoFiatAmountRow nativeAmount={totalRequiredCollateralNativeAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
           </Card>
 
@@ -350,7 +410,7 @@ export const LoanCreateScene = (props: Props) => {
                   destWallet,
                   destTokenId,
                   nativeDestAmount: nativeCryptoBorrowAmount,
-                  nativeSrcAmount: nativeRequiredCrypto,
+                  nativeSrcAmount: totalRequiredCollateralNativeAmount,
                   paymentMethod,
                   srcWallet,
                   srcTokenId

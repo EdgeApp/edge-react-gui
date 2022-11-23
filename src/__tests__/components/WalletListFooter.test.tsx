@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { WalletListFooter } from '../../components/themed/WalletListFooter'
@@ -12,12 +12,12 @@ describe('WalletListFooter', () => {
   it('should render with loading props', () => {
     const store = createStore(rootReducer)
 
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <WalletListFooter navigation={fakeNavigation} />
       </Provider>
     )
 
-    expect(actual.toJSON()).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })

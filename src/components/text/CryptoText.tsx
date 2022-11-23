@@ -38,8 +38,9 @@ export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol 
     tokenId,
     wallet
   })
-  const state = useSelector(state => state)
-  const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, exchangeDenomination.name ?? wallet.currencyInfo.currencyCode)
+  const displayDenomination = useSelector(state =>
+    getDisplayDenomination(state, wallet.currencyInfo.pluginId, exchangeDenomination.name ?? wallet.currencyInfo.currencyCode)
+  )
 
   const cryptoText = useCryptoText({
     displayDenomination,

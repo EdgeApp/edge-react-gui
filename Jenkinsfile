@@ -39,6 +39,13 @@ pipeline {
 
     stage ("Get secret files") {
       steps {
+        // Import the settings files
+        withCredentials([
+          file(credentialsId: "githubSshKey", variable: "id_github"),
+        ]) {
+          sh "cp ${id_github} ./id_github"
+        }
+
         sh "node -r sucrase/register ./scripts/secretFiles.ts ${BRANCH_NAME} ${SECRET_FILES}"
       }
     }
@@ -51,11 +58,8 @@ pipeline {
 
     stage ("Get build number and version") {
       steps {
-        // Copy release-version.json from the previous build:
-        copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
-
-        // Pick the new build number and version:
-        sh "node -r sucrase/register ./scripts/updateVersion.ts ${BRANCH_NAME}"
+        // Pick the new build number and version from git:
+        sh "node -r sucrase/register ./scripts/gitVersionFile.ts ${BRANCH_NAME}"
 
         // Update our description:
         script {
@@ -131,8 +135,6 @@ pipeline {
         maxNumberOfBuilds: 0,
         sourceEncoding: 'ASCII'
       )
-      // Archiving the buildnums for future builds
-      archiveArtifacts artifacts: "release-version.json", allowEmptyArchive: true
     }
     success {
       echo "The force is strong with this one"

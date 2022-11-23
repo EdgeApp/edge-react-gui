@@ -182,6 +182,7 @@ Object {
           "parentNetworkFee": "",
           "signedTx": "",
           "txid": "",
+          "walletId": "",
         },
         "transactionMetadata": null,
       },
@@ -226,10 +227,6 @@ Object {
         "passwordUseCount": 0,
       },
       "pinLoginEnabled": false,
-      "plugins": Object {
-        "allCurrencyInfos": Array [],
-        "supportedWalletTypes": Array [],
-      },
       "preferredSwapPluginId": "",
       "spendingLimits": Object {
         "transaction": Object {
