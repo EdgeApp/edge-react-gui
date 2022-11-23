@@ -85,6 +85,13 @@ const MANAGE_ACTION_DATA_MAP: {
   }
 } as const
 
+const sceneTypeMap = {
+  'loan-manage-borrow': 'debts',
+  'loan-manage-repay': 'debts',
+  'loan-manage-withdraw': 'collaterals',
+  'loan-manage-deposit': 'collaterals'
+} as const
+
 interface Props {
   navigation: NavigationProp<'loanManage'>
   route: RouteProp<'loanManage'>
@@ -133,7 +140,7 @@ export const LoanManageScene = (props: Props) => {
   const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
-  const sceneType = ['loan-borrow', 'loan-repay'].includes(loanManageType) ? 'debts' : 'collaterals'
+  const sceneType = sceneTypeMap[loanManageType]
   const isSceneTypeDebts = sceneType === 'debts'
   const defaultTokenId = isSceneTypeDebts ? hardDebtTokenId : hardCollateralTokenId
 
