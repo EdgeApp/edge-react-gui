@@ -1,4 +1,4 @@
-import { add, gt, min, mul } from 'biggystring'
+import { add, gt, lt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
@@ -262,16 +262,12 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         return composeApprovableActions(...actions, mutateStateAction)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { tokenId, toWallet = wallet } = request
+        const { nativeAmount, tokenId, toWallet = wallet } = request
 
-        const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
+        const collateral = instance.collaterals.find(collateral => collateral.tokenId === tokenId)
         if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
 
-        // Anything above the current collateral amount will be automatically
-        // converted to the MAX_AMOUNT in order to withdraw all collateral.
-        const nativeAmount = gt(request.nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount
-
-        if (nativeAmount === '0') throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+        if (lt(nativeAmount, '0')) throw new Error(`BorrowEngine: invalid withdraw request nativeAmount ${request.nativeAmount}.`)
 
         validateWalletParam(toWallet)
 
@@ -279,18 +275,24 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const tokenAddress = getTokenAddress(token)
 
         const asset = tokenAddress
-        const amount = BigNumber.from(nativeAmount)
+        // Anything above the current collateral amount will be automatically
+        // converted to the MAX_AMOUNT in order to withdraw all collateral.
+        const contractTokenAmount = BigNumber.from(gt(nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount)
         const to = (await toWallet.getReceiveAddress()).publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
-        const withdrawTx = asGracefulTxInfo(await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, amount, to, { gasLimit: '800000', gasPrice }))
+        const withdrawTx = asGracefulTxInfo(
+          await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, contractTokenAmount, to, { gasLimit: '800000', gasPrice })
+        )
 
+        // Cap the withdraw amount to the total collateral
+        const amountWithdrawn = min(nativeAmount, collateral.nativeAmount)
         const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
           spendToken: token,
-          nativeAmount: mul(nativeAmount, '-1'),
+          nativeAmount: mul(amountWithdrawn, '-1'),
           metadata: {
             name: 'AAVE',
             category: 'Transfer:Withdraw',
@@ -299,7 +301,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         })
 
         const mutateStateAction = makeSideEffectApprovableAction(async () => {
-          adjustCollateral(tokenId, mul('-1', nativeAmount))
+          adjustCollateral(tokenId, mul('-1', amountWithdrawn))
         })
 
         return composeApprovableActions(withdrawAction, mutateStateAction)
