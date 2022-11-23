@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
-import { makeStakePlugin } from '../plugins/stake-plugins'
+import { makeStakePlugin } from '../plugins/stake-plugins/uniswapV2/uniV2Plugin'
 import { PositionAllocation, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
 

@@ -2,15 +2,15 @@ import { gt, gte, lte, sub } from 'biggystring'
 import { ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import s from '../../../../locales/strings'
+import { cacheTxMetadata } from '../../metadataCache'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { makeBigAccumulator } from '../../util/accumulator'
+import { makeBuilder } from '../../util/builder'
+import { fromHex, toHex } from '../../util/hex'
 import { makeContract, makeSigner, multipass } from '../contracts'
-import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../types'
-import { makeBigAccumulator } from '../util/accumulator'
-import { makeBuilder } from '../util/builder'
-import { fromHex, toHex } from '../util/hex'
-import { StakePluginPolicy } from './types'
+import { StakePluginPolicy } from '../types'
 
 const HOUR = 1000 * 60 * 60
 

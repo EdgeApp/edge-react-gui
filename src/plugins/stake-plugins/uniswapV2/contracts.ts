@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import ENV from '../../../env.json'
+import ENV from '../../../../env.json'
 import ANYSWAP_V5_ERC20_ABI from './abi/ANYSWAP_V5_ERC20_ABI.json'
 import MASONRY_ABI from './abi/MASONRY_ABI.json'
 import TOMB_TREASURY_ABI from './abi/TOMB_TREASURY_ABI.json'

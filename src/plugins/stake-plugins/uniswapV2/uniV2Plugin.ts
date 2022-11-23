@@ -1,12 +1,12 @@
 import { asNumber, asObject, Cleaner } from 'cleaners'
 import { EdgeCorePluginOptions } from 'edge-core-js'
 
-import { fetchInfo } from '../../util/network'
+import { fetchInfo } from '../../../util/network'
+import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, StakePolicy, StakePosition, StakePositionRequest } from '../types'
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
-import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, StakePolicy, StakePosition, StakePositionRequest } from './types'
 
-export * from './types'
+export * from '../types'
 
 export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {

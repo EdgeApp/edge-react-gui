@@ -1,8 +1,8 @@
+import { StakeProviderInfo } from '../types'
 import { makeContract } from './contracts'
 import { makeCemeteryPolicy } from './policies/cemeteryPolicy'
 import { makeMasonryPolicy } from './policies/masonryPolicy'
 import { StakePolicyInfo } from './stakePolicy'
-import { StakeProviderInfo } from './types'
 
 export interface StakePluginInfo {
   pluginId: string
