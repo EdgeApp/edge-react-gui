@@ -70,8 +70,10 @@ export const makePushClient = (account: EdgeAccount, clientId: string): PushClie
           'Failed push-server request:',
           JSON.stringify(
             {
+              requestBodyData: requestBody.data,
               responseBody,
-              responseData
+              responseData,
+              responseStatus: response.status
             },
             null,
             2
