@@ -63,6 +63,10 @@ const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet; tokenId?: 
       {
         label: s.strings.fragment_wallets_export_transactions,
         value: 'exportWalletTransactions'
+      },
+      {
+        label: s.strings.fragment_wallets_delete_wallet,
+        value: 'delete'
       }
     ]
   }

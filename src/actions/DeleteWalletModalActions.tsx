@@ -1,16 +1,14 @@
 import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
-import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import s from '../locales/strings'
 import { B } from '../styles/common/textStyles'
 import { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
-import { logActivity } from '../util/logger'
 
-export function showDeleteWalletModal(walletId: string, additionalMsg?: string): ThunkAction<Promise<void>> {
+export function showDeleteWalletModal(walletId: string, additionalMsg?: string): ThunkAction<Promise<'confirm' | 'cancel' | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -35,19 +33,6 @@ export function showDeleteWalletModal(walletId: string, additionalMsg?: string):
       </ButtonsModal>
     ))
 
-    if (resolveValue === 'confirm') {
-      const { name, type, id } = currencyWallets[walletId]
-      account
-        .changeWalletStates({ [walletId]: { deleted: true } })
-        .catch(showError)
-        .then(r => {
-          logActivity(`Archived Wallet ${account.username} -- ${name ?? 'noname'} ${type} ${id}`)
-        })
-
-      // Remove loan accounts associated with the wallet
-      if (state.loanManager.loanAccounts[walletId] != null) {
-        await dispatch(deleteLoanAccount(walletId))
-      }
-    }
+    return resolveValue
   }
 }

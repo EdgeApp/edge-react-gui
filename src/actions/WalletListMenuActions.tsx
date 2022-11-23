@@ -8,6 +8,7 @@ import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
+import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
@@ -58,10 +59,11 @@ export function walletListMenuAction(
     case 'delete': {
       return async (dispatch, getState) => {
         const state = getState()
-        const wallets = state.ui.wallets.byId
-        const wallet = wallets[walletId]
+        const { account } = state.core
+        const { currencyWallets } = state.core.account
+        const wallet = currencyWallets[walletId]
 
-        if (Object.values(wallets).length === 1) {
+        if (Object.values(currencyWallets).length === 1) {
           Airship.show(bridge => (
             <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={s.strings.cannot_delete_last_wallet_modal_title}>
               <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
@@ -89,12 +91,43 @@ export function walletListMenuAction(
         // If we are in the tx list scene, go back to the wallet list so we don't crash on a deleted wallet
         // Otherwise, goBack() does nothing if already in Wallet List
         navigation.goBack()
-        if (fioAddress) {
-          dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_fio_extra_message_mobile))
-        } else if (wallet.currencyCode && wallet.currencyCode.toLowerCase() === 'eth') {
-          dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_eth_extra_message))
-        } else {
-          dispatch(showDeleteWalletModal(walletId))
+
+        // Determine the modal's additional message
+        let additionalMsg: string | undefined
+        if (tokenId == null) {
+          if (fioAddress) {
+            additionalMsg = s.strings.fragmet_wallets_delete_fio_extra_message_mobile
+          } else if (wallet.currencyInfo.metaTokens.length > 0) {
+            additionalMsg = s.strings.fragmet_wallets_delete_eth_extra_message
+          }
+        }
+
+        // Prompt user for action from modal
+        const resolveValue = await dispatch(showDeleteWalletModal(walletId, additionalMsg))
+
+        // Archive wallet or token if user confirmed action
+        if (resolveValue === 'confirm') {
+          if (tokenId === null) {
+            account
+              .changeWalletStates({ [walletId]: { deleted: true } })
+              .then(r => {
+                logActivity(`Archived Wallet ${account.username} -- ${getWalletName(wallet)} ${wallet.type} ${wallet.id}`)
+              })
+              .catch(showError)
+
+            // Remove loan accounts associated with the wallet
+            if (state.loanManager.loanAccounts[walletId] != null) {
+              await dispatch(deleteLoanAccount(walletId))
+            }
+          } else {
+            const newlyEnabledTokenIds = wallet.enabledTokenIds.filter(id => id !== tokenId)
+            wallet
+              .changeEnabledTokenIds(newlyEnabledTokenIds)
+              .then(() => {
+                logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
+              })
+              .catch(showError)
+          }
         }
       }
     }
