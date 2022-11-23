@@ -8,7 +8,7 @@ import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { RootState } from '../../../reducers/RootReducer'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
-import { getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
+import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoIcon } from '../../icons/CryptoIcon'
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const StakeOptionsScene = (props: Props) => {
-  const { walletId, currencyCode, stakePolicies } = props.route.params
+  const { stakePlugins, walletId, currencyCode, stakePolicies } = props.route.params
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -34,8 +34,9 @@ export const StakeOptionsScene = (props: Props) => {
 
   React.useEffect(() => {
     if (stakePolicies.length === 1) {
+      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicies[0])
       // Transition to next scene immediately
-      navigation.replace('stakeOverview', { walletId, stakePolicy: stakePolicies[0] })
+      if (stakePlugin != null) navigation.replace('stakeOverview', { stakePlugin, walletId, stakePolicy: stakePolicies[0] })
     }
     return undefined
   }, [stakePolicies, navigation, walletId])
@@ -50,7 +51,8 @@ export const StakeOptionsScene = (props: Props) => {
   //
 
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
-    navigation.navigate('stakeOverview', { walletId, stakePolicy })
+    const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
+    if (stakePlugin != null) navigation.navigate('stakeOverview', { stakePlugin, walletId, stakePolicy })
   }
 
   //

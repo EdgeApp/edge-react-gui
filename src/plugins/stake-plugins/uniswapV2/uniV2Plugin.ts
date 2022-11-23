@@ -6,7 +6,7 @@ import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, Stake
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
 
-export const makeStakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
+export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
   const fetchResponse = await fetchInfo(`v1/apyValues`)
     .then(async res => {
       if (!res.ok) {

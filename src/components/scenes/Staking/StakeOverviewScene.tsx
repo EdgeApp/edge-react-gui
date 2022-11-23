@@ -5,8 +5,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { makeStakePlugin } from '../../../plugins/stake-plugins/stakePlugins'
-import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
+import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
@@ -28,8 +27,7 @@ interface Props {
 
 export const StakeOverviewScene = (props: Props) => {
   const { navigation } = props
-  const { walletId } = props.route.params
-  const stakePolicy: StakePolicy = props.route.params.stakePolicy
+  const { stakePolicy, stakePlugin, walletId } = props.route.params
   const { stakePolicyId } = stakePolicy
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -62,20 +60,19 @@ export const StakeOverviewScene = (props: Props) => {
 
   React.useEffect(() => {
     let abort = false
-    makeStakePlugin().then(async stakePlugin =>
-      stakePlugin
-        .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
-        .then(async stakePosition => {
-          if (abort) return
-          const guiAllocations = getPositionAllocations(stakePosition)
-          setStakeAllocations(guiAllocations.staked)
-          setRewardAllocations(guiAllocations.earned)
-          setStakePosition(stakePosition)
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    )
+    stakePlugin
+      .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
+      .then(async stakePosition => {
+        if (abort) return
+        const guiAllocations = getPositionAllocations(stakePosition)
+        setStakeAllocations(guiAllocations.staked)
+        setRewardAllocations(guiAllocations.earned)
+        setStakePosition(stakePosition)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
     return () => {
       abort = true
     }
@@ -84,7 +81,7 @@ export const StakeOverviewScene = (props: Props) => {
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
     if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
-      navigation.navigate('stakeModify', { walletId, stakePolicy, stakePosition, modification })
+      navigation.navigate('stakeModify', { stakePlugin, walletId, stakePolicy, stakePosition, modification })
     }
   }
 

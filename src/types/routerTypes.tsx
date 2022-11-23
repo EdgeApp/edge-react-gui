@@ -8,7 +8,7 @@ import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
-import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
@@ -264,14 +264,15 @@ export interface ParamList {
   settingsOverviewTab: {}
   spendingLimits: {}
   stakeModify: {
+    stakePlugin: StakePlugin
     walletId: string
     stakePolicy: StakePolicy
     stakePosition: StakePosition
     modification: ChangeQuoteRequest['action']
   }
-  stakeClaim: { stakePolicy: StakePolicy; walletId: string }
-  stakeOptions: { currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
-  stakeOverview: { stakePolicy: StakePolicy; walletId: string }
+  stakeClaim: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
+  stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
+  stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   termsOfService: {}
   testScene: {}
   transactionDetails: {
