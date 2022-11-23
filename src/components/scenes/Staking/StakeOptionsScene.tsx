@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { StakePolicy } from '../../../plugins/stake-plugins/uniswapV2/uniV2Plugin'
+import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { RootState } from '../../../reducers/RootReducer'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'

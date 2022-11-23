@@ -8,7 +8,7 @@ import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
-import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake-plugins/uniswapV2/uniV2Plugin'
+import { ChangeQuoteRequest, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,

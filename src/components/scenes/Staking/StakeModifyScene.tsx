@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins/uniswapV2/uniV2Plugin'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins/types'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'

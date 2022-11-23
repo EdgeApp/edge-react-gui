@@ -5,7 +5,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/uniswapV2/uniV2Plugin'
+import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'

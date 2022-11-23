@@ -6,8 +6,6 @@ import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, Stake
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
 
-export * from '../types'
-
 export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
   const instance: StakePlugin = {
     async getStakePolicies(): Promise<StakePolicy[]> {
