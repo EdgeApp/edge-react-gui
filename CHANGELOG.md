@@ -1,5 +1,44 @@
 # edge-react-gui
 
+## 2.27.0 (2022-11-23)
+
+- Add Ionia gift card rewards program
+- AVAX: Add USDC
+- Add long press on transaction row to share
+- Fix wallet name consistency
+- Fix FIO request handling of BSC chain code
+- Replace wallet in EdgeTransaction with walletId
+- Various visual fixes
+- Various code cleanups
+- Upgrade edge-core-js to v0.19.32
+  - added: EdgeTransaction.walletId.
+  - added: Add the swap request to the quote object as EdgeSwapQuote.request.
+  - changed: Change login server to login.edge.app, and filter which domains we allow.
+  - deprecated: EdgeTransaction.wallet. Use EdgeTransaction.walletId instead.
+  - added: Specifying token spends by their ID, instead of their imprecise currency code:
+    - EdgeSpendInfo.tokenId
+    - EdgeSwapRequest.fromTokenId
+    - EdgeSwapRequest.toTokenId
+  - deprecated: Spending tokens by their currency code.
+    - EdgeSpendInfo.currencyCode
+    - EdgeSwapRequest.fromCurrencyCode
+    - EdgeSwapRequest.toCurrencyCode
+- Upgrade edge-currency-accountbased to v0.18.10
+  - AVAX: Add USDC token
+  - Extend makeSpend to support token amount metadata for smart-contract calls
+  - Fix Travis builds
+  - Fix prepare scripts
+  - Make Polkadot types visible in Typescript
+  - Enable remaining ESLint rule
+- Upgrade edge-exchange-plugins to v0.16.8
+  - Sideshift: Update to API v2
+  - ChangeHero: Prevent 'to' quotes due to over-precise amounts breaking data encoding.
+  - Add testing framework to run plugins in Node
+- Upgrade edge-login-ui-rn to v0.10.14
+  - Update password error display rules
+  - Conditionally show character limit counter in password input field
+  - Update translations
+
 ## 2.26.0 (2022-11-10)
 
 - Add swap provider Swapuz
