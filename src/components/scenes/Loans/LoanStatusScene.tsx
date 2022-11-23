@@ -10,6 +10,7 @@ import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { ActionDisplayInfo, ActionQueueMap } from '../../../controllers/action-queue/types'
+import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { StepProgressBar } from '../../progress-indicators/StepProgressBar'
@@ -31,11 +33,13 @@ import { SceneHeader } from '../../themed/SceneHeader'
 interface Props {
   navigation: NavigationProp<'loanStatus'>
   route: RouteProp<'loanStatus'>
+  loanAccount: LoanAccount
 }
 
-export const LoanStatusScene = (props: Props) => {
-  const { navigation, route } = props
-  const { actionQueueId, loanAccountId } = route.params
+export const LoanStatusSceneComponent = (props: Props) => {
+  const { navigation, route, loanAccount } = props
+  const loanAccountId = loanAccount.id
+  const { actionQueueId } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const account: EdgeAccount = useSelector(state => state.core.account)
@@ -160,3 +164,5 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+
+export const LoanStatusScene = withLoanAccount(LoanStatusSceneComponent)
