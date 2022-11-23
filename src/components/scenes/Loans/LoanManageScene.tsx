@@ -120,22 +120,22 @@ export const LoanManageScene = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const { tokenId: hardDebtAddr } = React.useMemo(
+  const { tokenId: hardDebtTokenId } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
-  const { tokenId: hardCollateralAddr } = React.useMemo(
+  const { tokenId: hardCollateralTokenId } = React.useMemo(
     () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
     [account, borrowEnginePluginId]
   )
-  const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralAddr }]
+  const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
-  const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtAddr }]
+  const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
   const sceneType = ['loan-borrow', 'loan-repay'].includes(loanManageType) ? 'debts' : 'collaterals'
   const isSceneTypeDebts = sceneType === 'debts'
-  const defaultTokenId = isSceneTypeDebts ? hardDebtAddr : hardCollateralAddr
+  const defaultTokenId = isSceneTypeDebts ? hardDebtTokenId : hardCollateralTokenId
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
@@ -349,7 +349,7 @@ export const LoanManageScene = (props: Props) => {
           const paymentMethod = bankAccountsMap[wyreAccountId]
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
-          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtAddr, paymentMethod })
+          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtTokenId, paymentMethod })
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
           const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
