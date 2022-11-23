@@ -71,7 +71,7 @@ export const formatFiatString = (props: {
   const { fiatAmount, minPrecision = 2, maxPrecision = 6, autoPrecision = true, noGrouping = false } = props
 
   // Use US locale delimiters for determining precision
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
+  const fiatAmtCleanedDelim = fiatAmount.replace(',', '.')
   let precision = minPrecision
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
