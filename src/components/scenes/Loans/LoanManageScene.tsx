@@ -83,7 +83,7 @@ const MANAGE_ACTION_DATA_MAP: {
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment'),
     programType: 'loan-repay'
   }
-} as const
+}
 
 const sceneTypeMap = {
   'loan-manage-borrow': 'debts',
