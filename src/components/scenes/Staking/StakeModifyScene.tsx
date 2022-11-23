@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
+import { makeStakePlugin } from '../../../plugins/stake-plugins/stakePlugins'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins/types'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
@@ -13,7 +14,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
@@ -98,23 +99,25 @@ export const StakeModifyScene = (props: Props) => {
       setChangeQuote(null)
       setSliderLocked(true)
       // Setup the request and get calculated values
-      stakePlugin
-        .fetchChangeQuote(changeQuoteRequest)
-        .then((changeQuote: ChangeQuote) => {
-          if (abort) return
-          // Success, clear error msg and set change quote to trigger re-render
-          setErrorMessage('')
-          setChangeQuote(changeQuote)
-        })
-        .catch(err => {
-          if (abort) return
-          // Display error msg tile
-          setErrorMessage(err.message)
-        })
-        .finally(() => {
-          if (abort) return
-          setSliderLocked(false)
-        })
+      makeStakePlugin().then(async stakePlugin =>
+        stakePlugin
+          .fetchChangeQuote(changeQuoteRequest)
+          .then((changeQuote: ChangeQuote) => {
+            if (abort) return
+            // Success, clear error msg and set change quote to trigger re-render
+            setErrorMessage('')
+            setChangeQuote(changeQuote)
+          })
+          .catch(err => {
+            if (abort) return
+            // Display error msg tile
+            setErrorMessage(err.message)
+          })
+          .finally(() => {
+            if (abort) return
+            setSliderLocked(false)
+          })
+      )
     }
     return () => {
       abort = true

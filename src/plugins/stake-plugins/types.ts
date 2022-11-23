@@ -98,7 +98,7 @@ export interface StakePosition {
 // -----------------------------------------------------------------------------
 
 export interface StakePlugin {
-  getStakePolicies: () => Promise<StakePolicy[]>
+  policies: StakePolicy[]
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }

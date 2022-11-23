@@ -2,29 +2,28 @@ import { asNumber, asObject, Cleaner } from 'cleaners'
 import { EdgeCorePluginOptions } from 'edge-core-js'
 
 import { fetchInfo } from '../../../util/network'
-import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, StakePolicy, StakePosition, StakePositionRequest } from '../types'
+import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, StakePosition, StakePositionRequest } from '../types'
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
 
-export const makeStakePlugin = (opts?: EdgeCorePluginOptions): StakePlugin => {
-  const instance: StakePlugin = {
-    async getStakePolicies(): Promise<StakePolicy[]> {
-      const fetchResponse = await fetchInfo(`v1/apyValues`)
-        .then(async res => {
-          if (!res.ok) {
-            throw new Error(`Fetch APY invalid response: ${await res.text()}`)
-          }
-          return res
-        })
-        .catch(err => {
-          throw new Error(`Fetch APY failed: ${err.message}`)
-        })
-      const fetchResponseJson = await fetchResponse.json()
-      const infoServerResponse = asInfoServerResponse(fetchResponseJson)
+export const makeStakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
+  const fetchResponse = await fetchInfo(`v1/apyValues`)
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`Fetch APY invalid response: ${await res.text()}`)
+      }
+      return res
+    })
+    .catch(err => {
+      throw new Error(`Fetch APY failed: ${err.message}`)
+    })
+  const fetchResponseJson = await fetchResponse.json()
+  const infoServerResponse = asInfoServerResponse(fetchResponseJson)
 
-      const policies = pluginInfo.policyInfo.map(toStakePolicy(infoServerResponse))
-      return policies
-    },
+  const policies = pluginInfo.policyInfo.map(toStakePolicy(infoServerResponse))
+
+  const instance: StakePlugin = {
+    policies,
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { stakePolicyId } = request
 

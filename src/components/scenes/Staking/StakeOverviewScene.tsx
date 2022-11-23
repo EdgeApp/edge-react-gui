@@ -5,13 +5,14 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
+import { makeStakePlugin } from '../../../plugins/stake-plugins/stakePlugins'
 import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -61,19 +62,20 @@ export const StakeOverviewScene = (props: Props) => {
 
   React.useEffect(() => {
     let abort = false
-    stakePlugin
-      .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
-      .then(async stakePosition => {
-        if (abort) return
-        const guiAllocations = getPositionAllocations(stakePosition)
-        setStakeAllocations(guiAllocations.staked)
-        setRewardAllocations(guiAllocations.earned)
-        setStakePosition(stakePosition)
-      })
-      .catch(err => {
-        console.error(err)
-      })
-
+    makeStakePlugin().then(async stakePlugin =>
+      stakePlugin
+        .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
+        .then(async stakePosition => {
+          if (abort) return
+          const guiAllocations = getPositionAllocations(stakePosition)
+          setStakeAllocations(guiAllocations.staked)
+          setRewardAllocations(guiAllocations.earned)
+          setStakePosition(stakePosition)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    )
     return () => {
       abort = true
     }
