@@ -135,7 +135,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   ionia: {
     pluginId: 'ionia',
     storeId: 'ioniarewards',
-    baseUri: 'https://ioniaedge.web.app',
+    baseUri: 'https://ionia-edge.web.app',
     displayName: 'Ionia',
     permissions: [] // TODO: need permissions?
   },
