@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.27.01 (2022-11-24)
+
+- Update Ionia Rewards URL
+
 ## 2.27.0 (2022-11-23)
 
 - Add Ionia gift card rewards program
