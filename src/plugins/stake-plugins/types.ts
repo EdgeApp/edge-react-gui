@@ -104,11 +104,3 @@ export interface StakePlugin {
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }
-
-// -----------------------------------------------------------------------------
-// Info Server Response
-// -----------------------------------------------------------------------------
-
-export interface InfoServerResponse {
-  policies: { [key: string]: number }
-}

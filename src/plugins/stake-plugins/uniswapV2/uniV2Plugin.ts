@@ -1,8 +1,8 @@
-import { asNumber, asObject, Cleaner } from 'cleaners'
 import { EdgeCorePluginOptions } from 'edge-core-js'
 
 import { fetchInfo } from '../../../util/network'
-import { ChangeQuote, ChangeQuoteRequest, InfoServerResponse, StakePlugin, StakePosition, StakePositionRequest } from '../types'
+import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePosition, StakePositionRequest } from '../types'
+import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
 
@@ -43,10 +43,3 @@ export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promis
   }
   return instance
 }
-
-// -----------------------------------------------------------------------------
-// Cleaners
-// -----------------------------------------------------------------------------
-const asInfoServerResponse: Cleaner<InfoServerResponse> = asObject({
-  policies: asObject(asNumber)
-})
