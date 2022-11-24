@@ -8,6 +8,7 @@ import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { RootState } from '../../../reducers/RootReducer'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -24,9 +25,9 @@ interface Props {
 export const StakeOptionsScene = (props: Props) => {
   const { stakePlugins, walletId, currencyCode, stakePolicies } = props.route.params
   const { navigation } = props
+  const { account } = useSelector(state => state.core)
   const theme = useTheme()
   const styles = getStyles(theme)
-  const icon = React.useMemo(() => <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId="fantom" sizeRem={1.5} />, [])
 
   //
   // Stake Policies
@@ -45,6 +46,9 @@ export const StakeOptionsScene = (props: Props) => {
     const { currencyWallets } = state.core.account
     return currencyWallets[walletId]
   })
+
+  const pluginId = wallet?.currencyInfo.pluginId
+  const tokenId = pluginId ? getTokenId(account, pluginId, currencyCode) : undefined
 
   //
   // Handlers
@@ -80,7 +84,7 @@ export const StakeOptionsScene = (props: Props) => {
 
   const renderSceneHeader = () => (
     <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
-      {icon}
+      <CryptoIcon marginRem={[0, 0.5, 0, 0]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
     </SceneHeader>
   )
 
