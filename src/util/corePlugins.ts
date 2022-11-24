@@ -68,6 +68,7 @@ export const swapPlugins = {
   tombSwap: ENV.TOMB_SWAP_INIT,
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
+  thorchainda: ENV.THORCHAIN_INIT,
 
   transfer: true
 }
