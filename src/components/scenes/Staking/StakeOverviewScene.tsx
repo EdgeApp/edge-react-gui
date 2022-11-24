@@ -6,7 +6,6 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
-import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -61,7 +60,7 @@ export const StakeOverviewScene = (props: Props) => {
   React.useEffect(() => {
     let abort = false
     stakePlugin
-      .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
+      .fetchStakePosition({ stakePolicyId, wallet })
       .then(async stakePosition => {
         if (abort) return
         const guiAllocations = getPositionAllocations(stakePosition)

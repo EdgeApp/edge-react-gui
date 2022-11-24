@@ -2,6 +2,8 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
+import { EdgeCurrencyWallet } from 'edge-core-js'
+
 export interface AssetId {
   pluginId: string
   currencyCode: string
@@ -44,7 +46,7 @@ export interface ChangeQuoteRequest {
   stakePolicyId: string
   currencyCode: string
   nativeAmount: string
-  signerSeed: string
+  wallet: EdgeCurrencyWallet
 }
 
 export interface QuoteAllocation {
@@ -65,7 +67,7 @@ export interface ChangeQuote {
 
 export interface StakePositionRequest {
   stakePolicyId: string
-  signerSeed: string
+  wallet: EdgeCurrencyWallet
 }
 
 export interface PositionAllocation {
