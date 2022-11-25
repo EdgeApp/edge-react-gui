@@ -21,6 +21,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
+import { getPluginFromPolicy } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -249,7 +250,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleStakePress = () => {
-    const { currencyCode, wallet } = this.props
+    const { currencyCode, wallet, navigation } = this.props
     const { stakePlugins, stakePolicies } = this.state
 
     // Handle FIO staking
@@ -261,13 +262,19 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     }
 
     // Handle StakePlugin staking
-    if (stakePlugins != null && stakePolicies != null && stakePolicies.length > 0) {
-      Actions.push('stakeOptions', {
-        walletId: wallet.id,
-        currencyCode,
-        stakePlugins,
-        stakePolicies
-      })
+    if (stakePlugins != null && stakePolicies != null) {
+      if (stakePolicies.length > 1) {
+        navigation.push('stakeOptions', {
+          walletId: wallet.id,
+          currencyCode,
+          stakePlugins,
+          stakePolicies
+        })
+      } else if (stakePolicies.length === 1) {
+        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicies[0])
+        // Transition to next scene immediately
+        if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicies[0] })
+      }
     }
   }
 

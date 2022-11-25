@@ -29,19 +29,6 @@ export const StakeOptionsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  //
-  // Stake Policies
-  //
-
-  React.useEffect(() => {
-    if (stakePolicies.length === 1) {
-      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicies[0])
-      // Transition to next scene immediately
-      if (stakePlugin != null) navigation.replace('stakeOverview', { stakePlugin, walletId, stakePolicy: stakePolicies[0] })
-    }
-    return undefined
-  }, [stakePolicies, navigation, walletId])
-
   const wallet = useSelector((state: RootState) => {
     const { currencyWallets } = state.core.account
     return currencyWallets[walletId]
