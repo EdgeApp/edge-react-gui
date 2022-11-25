@@ -1,12 +1,23 @@
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
+import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
+import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }: { fromCurrencyLogos: string[]; toCurrencyLogos: string[]; text: string }) {
-  const styles = getStyles(useTheme())
+interface StakingReturnsCardParams {
+  fromCurrencyLogos: string[]
+  toCurrencyLogos: string[]
+  text: string
+  stakeProviderInfo?: StakeProviderInfo
+}
+
+export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text, stakeProviderInfo }: StakingReturnsCardParams) {
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   const renderArrow = () => {
     return (
@@ -14,6 +25,18 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }:
         <View style={styles.arrowTopLine} />
         <View style={styles.arrowBase} />
         <View style={styles.arrowBottomLine} />
+      </View>
+    )
+  }
+
+  const renderStakeProvider = () => {
+    if (stakeProviderInfo == null) return null
+    const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
+    const swapProviderIcon = getStakeProviderIcon(pluginId, stakeProviderId, theme)
+    return (
+      <View style={styles.swapProvider}>
+        {swapProviderIcon ? <FastImage style={styles.swapProviderIcon} resizeMode={FastImage.resizeMode.contain} source={{ uri: swapProviderIcon }} /> : null}
+        <EdgeText style={styles.swapProviderText}>{displayName}</EdgeText>
       </View>
     )
   }
@@ -33,6 +56,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text }:
         </View>
         <View style={styles.textContainer}>
           <EdgeText>{text}</EdgeText>
+          {renderStakeProvider()}
         </View>
       </View>
       <View style={styles.rightCap} />
@@ -97,6 +121,20 @@ const getStyles = cacheStyles((theme: Theme) => {
       borderRightWidth: theme.thinLineWidth,
       borderBottomRightRadius: theme.rem(0.5),
       borderTopRightRadius: theme.rem(0.5)
+    },
+    swapProvider: {
+      marginTop: theme.rem(0.25),
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    swapProviderIcon: {
+      width: theme.rem(0.625),
+      height: theme.rem(0.625),
+      marginRight: theme.rem(0.5)
+    },
+    swapProviderText: {
+      fontSize: theme.rem(0.75),
+      color: theme.secondaryText
     },
     arrowContainer: {
       flexDirection: 'row'

@@ -118,6 +118,7 @@ export const StakeOverviewScene = (props: Props) => {
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
           text={sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}
+          stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
       <FlatList
