@@ -8,7 +8,7 @@ import { asInfoServerResponse, InfoServerResponse } from '../util/internalTypes'
 
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
-const MIDGARD_SERVERS_DEFAULT = ['https://midgard.thorchain.info']
+const MIDGARD_SERVERS_DEFAULT = ['https://midgard.ninerealms.com', 'https://midgard.thorchain.info']
 const THORNODE_SERVERS_DEFAULT = ['https://thornode.ninerealms.com']
 
 // When withdrawing from a vault, this represents a withdrawal of 100% of the staked amount.
@@ -76,6 +76,8 @@ const asQuoteDeposit = asObject({
   inbound_address: asString
 })
 
+type Savers = ReturnType<typeof asSavers>
+type Pools = ReturnType<typeof asPools>
 type ExchangeInfo = ReturnType<typeof asExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
 
@@ -180,7 +182,8 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
       return res
     })
     .catch(err => {
-      console.warn(`Fetch APY failed: ${err.message}`)
+      const msg = `Fetch APY failed: ${err.message}`
+      console.warn(msg)
     })
   if (fetchResponse != null) {
     try {
@@ -188,7 +191,8 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
       const infoServerResponse = asInfoServerResponse(fetchResponseJson)
       updatePolicyApys(infoServerResponse)
     } catch (err: any) {
-      console.warn(`Parsing Fetch APY failed: ${err.message}`)
+      const msg = `Parsing Fetch APY failed: ${err.message}`
+      console.warn(msg)
     }
   }
 
@@ -223,6 +227,8 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
 
       const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
 
+      let pools: Pools = []
+      let savers: Savers = []
       const [saversResponse, poolsResponse] = await Promise.all([
         fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`),
         fetchWaterfall(midgardServers, `/v2/pools`)
@@ -233,14 +239,14 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
         throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
       }
       const saversJson = await saversResponse.json()
-      const savers = asSavers(saversJson)
+      savers = asSavers(saversJson)
 
       if (!poolsResponse.ok) {
         const responseText = await poolsResponse.text()
         throw new Error(`Thorchain could not fetch /v2/pools: ${responseText}`)
       }
       const poolsJson = await poolsResponse.json()
-      const pools = asPools(poolsJson)
+      pools = asPools(poolsJson)
 
       const saver = savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
       const pool = pools.find(p => p.asset === asset)
@@ -475,27 +481,31 @@ const updateInboundAddresses = async (): Promise<void> => {
     }
   }
 
-  if (exchangeInfo != null) {
-    midgardServers = exchangeInfo.swap.plugins.thorchain.midgardServers
-    thornodeServers = exchangeInfo.swap.plugins.thorchain.thornodeServers ?? thornodeServers
-  }
-
-  if (now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS || inboundAddresses == null) {
-    // Get current pool
-    const [iaResponse] = await Promise.all([
-      fetchWaterfall(midgardServers, 'v2/thorchain/inbound_addresses', {
-        headers
-      })
-    ])
-
-    if (!iaResponse.ok) {
-      const responseText = await iaResponse.text()
-      throw new Error(`Thorchain could not fetch inbound_addresses: ${responseText}`)
+  try {
+    if (exchangeInfo != null) {
+      midgardServers = exchangeInfo.swap.plugins.thorchain.midgardServers
+      thornodeServers = exchangeInfo.swap.plugins.thorchain.thornodeServers ?? thornodeServers
     }
 
-    const iaJson = await iaResponse.json()
-    inboundAddresses = asInboundAddresses(iaJson)
-    inboundAddressesLastUpdate = now
+    if (now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS || inboundAddresses == null) {
+      // Get current pool
+      const [iaResponse] = await Promise.all([
+        fetchWaterfall(midgardServers, 'v2/thorchain/inbound_addresses', {
+          headers
+        })
+      ])
+
+      if (!iaResponse.ok) {
+        const responseText = await iaResponse.text()
+        throw new Error(`Thorchain could not fetch inbound_addresses: ${responseText}`)
+      }
+
+      const iaJson = await iaResponse.json()
+      inboundAddresses = asInboundAddresses(iaJson)
+      inboundAddressesLastUpdate = now
+    }
+  } catch (e: any) {
+    console.warn(e.message)
   }
 }
 

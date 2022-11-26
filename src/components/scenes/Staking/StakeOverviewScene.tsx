@@ -14,6 +14,7 @@ import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, ge
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -43,9 +44,9 @@ export const StakeOverviewScene = (props: Props) => {
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
-  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>()
-  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>()
-  const [stakePosition, setStakePosition] = React.useState<StakePosition>()
+  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
+  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
+  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>()
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -69,6 +70,7 @@ export const StakeOverviewScene = (props: Props) => {
         setStakePosition(stakePosition)
       })
       .catch(err => {
+        showError(err)
         console.error(err)
       })
 
