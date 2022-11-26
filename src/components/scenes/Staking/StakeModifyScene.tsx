@@ -37,7 +37,7 @@ export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
   const { stakePlugin, walletId, stakePolicy, stakePosition, modification } = props.route.params
-  const { stakePolicyId } = stakePolicy
+  const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning } = stakePolicy
 
   // Hooks
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
@@ -236,9 +236,18 @@ export const StakeModifyScene = (props: Props) => {
 
       const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
 
-      if (modification === 'stake') warningMessage = s.strings.stake_warning_stake
-      if (modification === 'claim') warningMessage = s.strings.stake_warning_claim
-      if (modification === 'unstake') warningMessage = isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+      if (modification === 'stake') {
+        if (stakeWarning === null) return null
+        warningMessage = stakeWarning ?? s.strings.stake_warning_stake
+      }
+      if (modification === 'claim') {
+        if (claimWarning === null) return null
+        warningMessage = claimWarning ?? s.strings.stake_warning_claim
+      }
+      if (modification === 'unstake') {
+        if (unstakeWarning === null) return null
+        warningMessage = unstakeWarning ?? isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+      }
     }
     return warningMessage == null ? null : (
       <Alert marginRem={[0, 1, 1, 1]} title={s.strings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />

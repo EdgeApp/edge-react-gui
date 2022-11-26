@@ -36,6 +36,15 @@ export interface StakePolicy {
 
   // The assets which must be staked
   stakeAssets: AssetId[]
+
+  // Warnings
+  // string => show string as warning
+  // null => show no warning
+  // undefined => show default warning (used for Tomb finance)
+  // TODO: Needs better architecture so strings are not declared in the plugin
+  stakeWarning?: string | null
+  unstakeWarning?: string | null
+  claimWarning?: string | null
 }
 
 // -----------------------------------------------------------------------------

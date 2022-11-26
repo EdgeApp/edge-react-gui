@@ -104,46 +104,48 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'tcsavers'
 }
 
+const policyDefault = {
+  apy: 0,
+  stakeProviderInfo,
+  stakeWarning: null,
+  unstakeWarning: null,
+  claimWarning: null
+}
+
 const policies: StakePolicy[] = [
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/bitcoin:btc=bitcoin:btc',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'bitcoin', currencyCode: 'BTC' }],
     stakeAssets: [{ pluginId: 'bitcoin', currencyCode: 'BTC' }]
   },
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/litecoin:ltc=litecoin:ltc',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'litecoin', currencyCode: 'LTC' }],
     stakeAssets: [{ pluginId: 'litecoin', currencyCode: 'LTC' }]
   },
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/bitcoincash:bch=bitcoincash:bch',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'bitcoincash', currencyCode: 'BCH' }],
     stakeAssets: [{ pluginId: 'bitcoincash', currencyCode: 'BCH' }]
   },
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/dogecoin:doge=dogecoin:doge',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'dogecoin', currencyCode: 'DOGE' }],
     stakeAssets: [{ pluginId: 'dogecoin', currencyCode: 'DOGE' }]
   },
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/ethereum:eth=ethereum:eth',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }],
     stakeAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }]
   },
   {
+    ...policyDefault,
     stakePolicyId: 'tcsavers/avalanche:avax=avalanche:avax',
-    stakeProviderInfo,
-    apy: 0,
     rewardAssets: [{ pluginId: 'avalanche', currencyCode: 'AVAX' }],
     stakeAssets: [{ pluginId: 'avalanche', currencyCode: 'AVAX' }]
   }
