@@ -169,6 +169,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -192,6 +193,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -225,6 +227,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -352,6 +355,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isCustomTokensSupported: true,
     isBitPayProtocolSupported: false
   },
@@ -515,6 +519,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -685,6 +690,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isCustomTokensSupported: true
   }
 }
