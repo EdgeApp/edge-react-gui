@@ -676,7 +676,15 @@ const updateInboundAddresses = async (): Promise<void> => {
 const getPrimaryAddress = async (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<{ primaryAddress: string; addressBalance: string }> => {
   const { publicAddress, nativeBalance, segwitAddress, segwitNativeBalance } = await wallet.getReceiveAddress({ forceIndex: 0, currencyCode })
   const primaryAddress = segwitAddress ?? publicAddress
-  const addressBalance = segwitAddress != null ? segwitNativeBalance ?? '0' : nativeBalance ?? '0'
+  let addressBalance = '0'
+
+  if (wallet.displayPublicSeed?.toLowerCase() === primaryAddress.toLowerCase()) {
+    // If this is a single address chain (ie ETH, AVAX) then the address balance is always
+    // the wallet balance
+    addressBalance = await wallet.balances[currencyCode]
+  } else {
+    addressBalance = segwitAddress != null ? segwitNativeBalance ?? '0' : nativeBalance ?? '0'
+  }
 
   return { primaryAddress, addressBalance }
 }
