@@ -441,7 +441,7 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
 }
 
 const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
-  const { wallet, nativeAmount: requestNativeAmount, currencyCode } = request
+  const { action, wallet, nativeAmount: requestNativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
 
   const policyCurrencyInfo = policyCurrencyInfos[pluginId]
@@ -470,9 +470,17 @@ const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy):
 
   const nativeAmount = gt(requestNativeAmount, stakedAmount) ? stakedAmount : requestNativeAmount
 
-  // User can only request to withdraw the original stakedAmount. The earned amount
-  // is always withdrawn as well so add the two together.
-  const totalUnstakeNativeAmount = toFixed(add(nativeAmount, earnedAmount), 0, 0)
+  let totalUnstakeNativeAmount = '0'
+  if (action === 'unstake') {
+    // If action === unstake
+    // User can only request to withdraw the original stakedAmount. The earned amount
+    // is always withdrawn as well so add the two together.
+    totalUnstakeNativeAmount = toFixed(add(nativeAmount, earnedAmount), 0, 0)
+  } else {
+    // If action === claim
+    // The user will be explicitly unstaking the earned amount
+    totalUnstakeNativeAmount = earnedAmount
+  }
 
   // Get a percent of redeemableValue from what user entered +
   let fractionToUnstake = div(totalUnstakeNativeAmount, redeemableValue, DIVIDE_PRECISION)
