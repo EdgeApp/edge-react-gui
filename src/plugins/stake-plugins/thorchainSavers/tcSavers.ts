@@ -1,4 +1,4 @@
-import { add, div, lt, max, mul, sub, toFixed } from 'biggystring'
+import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeCorePluginOptions, EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 
@@ -441,18 +441,149 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
 }
 
 const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
-  const { pluginId, currencyCode } = policy.stakeAssets[0]
+  const { wallet, nativeAmount: requestNativeAmount, currencyCode } = request
+  const { pluginId } = wallet.currencyInfo
 
+  const policyCurrencyInfo = policyCurrencyInfos[pluginId]
+  const walletBalance = wallet.balances[currencyCode]
+  const { minAmount } = policyCurrencyInfo
+  const { allocations } = await getStakePosition(request)
+
+  if (lt(walletBalance, TC_SAVERS_WITHDRAWAL_SCALE_UNITS)) {
+    throw new InsufficientFundsError({ currencyCode })
+  }
+
+  let stakedAmount = '0'
+  let earnedAmount = '0'
+  const redeemableValue = allocations.reduce((prev, alloc) => {
+    const { allocationType, nativeAmount: allocAmount } = alloc
+    if (allocationType === 'staked') {
+      stakedAmount = allocAmount
+      return add(prev, allocAmount)
+    }
+    if (allocationType === 'earned') {
+      earnedAmount = allocAmount
+      return add(prev, allocAmount)
+    }
+    return prev
+  }, '0')
+
+  const nativeAmount = gt(requestNativeAmount, stakedAmount) ? stakedAmount : requestNativeAmount
+
+  // User can only request to withdraw the original stakedAmount. The earned amount
+  // is always withdrawn as well so add the two together.
+  const totalUnstakeNativeAmount = toFixed(add(nativeAmount, earnedAmount), 0, 0)
+
+  // Get a percent of redeemableValue from what user entered +
+  let fractionToUnstake = div(totalUnstakeNativeAmount, redeemableValue, DIVIDE_PRECISION)
+  if (gt(fractionToUnstake, '1')) {
+    fractionToUnstake = '1'
+  }
+
+  const totalUnstakeExchangeAmount = await wallet.nativeToDenomination(totalUnstakeNativeAmount, currencyCode)
+  const totalUnstakeThorAmount = toFixed(mul(totalUnstakeExchangeAmount, THOR_LIMIT_UNITS), 0, 0)
+
+  const withdrawBps = toFixed(mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS), 0, 0)
+  const mainnetCode = MAINNET_CODE_TRANSCRIPTION[wallet.currencyInfo.pluginId]
+  const { primaryAddress, addressBalance } = await getPrimaryAddress(wallet, currencyCode)
+
+  const asset = `${mainnetCode}.${mainnetCode}`
+  const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
+  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path)
+  const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut } = quoteDeposit
+
+  const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
+  const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+  const slippageNativeAmount = await wallet.denominationToNative(slippageDisplayAmount, currencyCode)
+  const utxoSourceAddress = primaryAddress
+  const forceChangeAddress = primaryAddress
+
+  let needsFundingPrimary = false
+  let networkFee = '0'
+
+  const sendNativeAmount = add(minAmount, withdrawBps)
+  if (lt(addressBalance, sendNativeAmount)) {
+    // Easy check to see if primary address doesn't have enough funds
+    needsFundingPrimary = true
+  } else {
+    try {
+      // Try to spend right out of the primaryAddress
+      const estimateTx = await wallet.makeSpend({
+        spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
+        otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress }
+      })
+      networkFee = estimateTx.networkFee
+    } catch (e: unknown) {
+      if (e instanceof InsufficientFundsError) {
+        needsFundingPrimary = true
+      }
+    }
+  }
+
+  if (needsFundingPrimary) {
+    // Estimate the total cost to create the two transactions
+    // 1. Fund the primary address with the sendNativeAmount + fees for tx #2
+    // 2. Send the requested amount to the pool address
+
+    const estimateTx = await wallet.makeSpend({
+      spendTargets: [{ publicAddress: primaryAddress, nativeAmount: sendNativeAmount }]
+    })
+    networkFee = estimateTx.networkFee
+
+    const remainingBalance = sub(sub(walletBalance, mul(networkFee, '2')), sendNativeAmount)
+    if (lt(remainingBalance, '0')) {
+      throw new InsufficientFundsError({ currencyCode })
+    }
+  }
+
+  const totalFee = add(slippageNativeAmount, needsFundingPrimary ? mul(networkFee, '2') : networkFee)
   return {
     allocations: [
       {
         allocationType: 'unstake',
         pluginId,
         currencyCode,
-        nativeAmount: '0'
+        nativeAmount
+      },
+      {
+        allocationType: 'fee',
+        pluginId,
+        currencyCode,
+        nativeAmount: toFixed(totalFee, 0, 0)
       }
     ],
-    approve: async () => {}
+    approve: async () => {
+      if (needsFundingPrimary) {
+        // Transfer funds into the primary address
+        const tx = await wallet.makeSpend({
+          spendTargets: [
+            {
+              publicAddress: primaryAddress,
+              nativeAmount: add(networkFee, sendNativeAmount)
+            }
+          ],
+          metadata: { name: 'Thorchain Savers', category: 'Expense:Network Fee' },
+          otherParams: { forceChangeAddress }
+        })
+        const signedTx = await wallet.signTx(tx)
+        const broadcastedTx = await wallet.broadcastTx(signedTx)
+        await wallet.saveTx(broadcastedTx)
+      }
+      // Spend from primary address to pool address
+      const tx = await wallet.makeSpend({
+        spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
+
+        // Use otherParams to meet Thorchain Savers requirements
+        // 1. Sort the outputs by how they are sent to makeSpend making the target output the 1st, change 2nd
+        // 2. Only use UTXOs from the primary address (index 0)
+        // 3. Force change to go to the primary address
+        otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+        metadata: { name: 'Thorchain Savers', category: 'Expense:Withdraw Stake Request' }
+      })
+      const signedTx = await wallet.signTx(tx)
+      const broadcastedTx = await wallet.broadcastTx(signedTx)
+      await wallet.saveTx(broadcastedTx)
+    }
   }
 }
 
