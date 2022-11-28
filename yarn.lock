@@ -3728,9 +3728,9 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-"altcoin-js@https://github.com/EdgeApp/altcoin-js.git#master":
+"altcoin-js@git+https://github.com/EdgeApp/altcoin-js.git#master":
   version "5.1.10"
-  resolved "https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
+  resolved "git+https://github.com/EdgeApp/altcoin-js.git#b0a16589b50c1a88482bb98930b13d14088b44f4"
   dependencies:
     bech32 "^1.1.4"
     big-integer "^1.6.44"
@@ -6368,7 +6368,7 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.20, edge-core-js@^0.19.32:
+edge-core-js@^0.19.32:
   version "0.19.32"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.32.tgz#22d2f728c18b0423d7ddae7c3d1c6038da1c0661"
   integrity sha512-/bUcqI1TKi8UHcNzPTen7WQr8BE7u/CS+8v5oS8owInDm42Zy0iSci8MJUqs3BRM0sfA+7yTBVxKLoD3Uo6TNg==
@@ -6388,6 +6388,33 @@ edge-core-js@^0.19.20, edge-core-js@^0.19.32:
     node-fetch "^2.6.1"
     redux "^3.6.0"
     redux-keto "^0.3.4"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.0"
+    yaob "^0.3.8"
+    yavent "^0.1.3"
+
+edge-core-js@^0.19.33:
+  version "0.19.33"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.33.tgz#55129d6d15d3da4dd3221eedc62684e071b99d3d"
+  integrity sha512-OIXQAGYS3cxAsU64lMA7ppU539sAGFdpv/Ss7RI3L4SJQhom5J2m74nvm1Y7vSXj78tH5bTNHqh9nClck34VsQ==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^4.0.0"
+    cleaners "^0.3.11"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.7"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^4.2.0"
+    redux-keto "^0.3.5"
     redux-pixies "^0.3.6"
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
@@ -6444,10 +6471,10 @@ edge-currency-monero@^0.5.3:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.2.3.tgz#beeafb9a8628a241197ce0d1850b212ecd4be703"
-  integrity sha512-psaVViMEYeyFwaTULdkrkt/tN6iiTuaJMVR6WXrCVq3Qs3Vg50AlD8IpbwSTEKyOpKZoUeYAeGL0vax4SszIsw==
+edge-currency-plugins@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.0.tgz#860ed08c52a06be67af381ce173521727bbfa5fc"
+  integrity sha512-bzqmBwM5mE3zpG6y48rjUlJRbDCQ6HupROX3QEPYt1GXj2UOOjnvO2NmxFqs6cFpW4PKD42XN3Pbz7nr7vTfdA==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -6464,7 +6491,7 @@ edge-currency-plugins@^1.2.3:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.20"
+    edge-core-js "^0.19.33"
     edge-sync-client "^0.2.7"
     memlet "^0.1.6"
     uri-js "^4.4.0"
@@ -13031,6 +13058,11 @@ redux-keto@^0.3.4:
   resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.4.tgz#1bf78a36736dc181dd419b10e57116dea17fa3a5"
   integrity sha512-16q/QujMkv+zdsVRExJuGbl6grXZLoRakBbQR5E9DmEAPIeJoXtjmc6L3bCMUVjBfF+0XFQyJDZwjhS2guh+ng==
 
+redux-keto@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.5.tgz#dc87f93483d134d0dc3693dc052374901c6f9a69"
+  integrity sha512-TcFK6zefcBMRjRGBEjmQOGjG7nLxKsKUY8ZPbm/qHLlP9HPXZFhJI1TB5uTuRka0l3JP7yyhn1qMGhsRyM/djg==
+
 redux-pixies@^0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.6.tgz#b2ea20a559ba9238a020f0f329afe7e6abf18e4c"
@@ -13060,6 +13092,13 @@ redux@^4.0.0, redux@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.0.tgz#eb049679f2f523c379f1aff345c8612f294c88d4"
   integrity sha512-uI2dQN43zqLWCt6B/BMGRMY6db7TTY4qeHHfGeKb3EOhmOKjU3KdWvNLJyqaHRksv/ErdNH7cFZWg9jXtewy4g==
+  dependencies:
+    "@babel/runtime" "^7.9.2"
+
+redux@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.0.tgz#46f10d6e29b6666df758780437651eeb2b969f13"
+  integrity sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==
   dependencies:
     "@babel/runtime" "^7.9.2"
 
