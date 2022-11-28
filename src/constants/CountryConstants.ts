@@ -2,8 +2,7 @@ import { CountryData } from '../types/types'
 import { FLAG_LOGO_URL } from './CdnConstants'
 
 export const COUNTRY_CODES: CountryData[] = [
-  // @ts-expect-error
-  { name: 'Afghanistan', 'alpha-2': 'AF', fiat: '' },
+  { name: 'Afghanistan', 'alpha-2': 'AF' },
   { name: 'Åland Islands', filename: 'aland-islands', 'alpha-2': 'AX' },
   { name: 'Albania', 'alpha-2': 'AL' },
   { name: 'Algeria', 'alpha-2': 'DZ' },
