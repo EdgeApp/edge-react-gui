@@ -43,7 +43,8 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     return (
       country.name.toLowerCase().includes(lowerCaseText) ||
       (country.filename != null && country.filename.includes(lowerCaseText)) ||
-      (country['alpha-2'] != null && country['alpha-2'].includes(upperCaseText))
+      country['alpha-2'].includes(upperCaseText) ||
+      country['alpha-3'].includes(upperCaseText)
     )
   }
 
