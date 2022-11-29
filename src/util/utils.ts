@@ -100,7 +100,7 @@ export const roundUpToLeastSignificant = (input: string): string => {
   return add(input, oneExtra)
 }
 
-export const zeroString = (input: any): boolean => input == null || typeof input !== 'string' || input === '' || eq(input, '0')
+export const zeroString = (input?: string): boolean => input == null || input === '' || eq(input, '0')
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
