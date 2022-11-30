@@ -43,10 +43,28 @@ export interface AaveNetwork {
   makeTokenContract: (tokenAddress: string) => Promise<ethers.Contract>
 }
 
+interface FunctionCache {
+  getAllReservesTokens?: Array<{ symbol: string; address: string }>
+  getReserveTokenContracts: {
+    [address: string]: { aToken: ethers.Contract; sToken: ethers.Contract; vToken: ethers.Contract }
+  }
+  getReserveTokenAprRates: {
+    [tokenAddress: string]: {
+      variableApr: number
+      stableApr: number
+    }
+  }
+}
+
 const RAY = BigNumber.from('10').pow('27')
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
   const { provider, contractAddresses, enabledTokens } = blueprint
+
+  const fnCache: FunctionCache = {
+    getReserveTokenContracts: {},
+    getReserveTokenAprRates: {}
+  }
 
   const lendingPool = new ethers.Contract(contractAddresses.lendingPool, LENDING_POOL_ABI, provider)
   const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
@@ -62,30 +80,38 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     // Helpers
     //
 
-    // TODO: Cache the response for this function
     async getAllReservesTokens() {
+      if (fnCache.getAllReservesTokens != null) return fnCache.getAllReservesTokens
+
       const reserveTokens: Array<[string, string]> = await protocolDataProvider.getAllReservesTokens()
       const out: Array<{ symbol: string; address: string }> = reserveTokens.map(([symbol, address]) => ({ symbol, address }))
-      return out.filter(reserveToken => enabledTokens[reserveToken.symbol])
+
+      fnCache.getAllReservesTokens = out.filter(reserveToken => enabledTokens[reserveToken.symbol])
+      return fnCache.getAllReservesTokens
     },
 
-    // TODO: Cache the response for this function
     async getReserveTokenContracts(address) {
-      const [aTokenAddress, sTokenAddress, vTokenAddress] = await protocolDataProvider.getReserveTokensAddresses(address)
+      if (fnCache.getReserveTokenContracts[address] != null) return fnCache.getReserveTokenContracts[address]
+
+      const reserveTokenAddresses = await protocolDataProvider.getReserveTokensAddresses(address)
+      const [aTokenAddress, sTokenAddress, vTokenAddress] = reserveTokenAddresses
       const aToken = new ethers.Contract(aTokenAddress, A_TOKEN_ABI, provider)
       const sToken = new ethers.Contract(sTokenAddress, STABLE_DEBT_TOKEN_ABI, provider)
       const vToken = new ethers.Contract(vTokenAddress, VARIABLE_DEBT_TOKEN_ABI, provider)
-      return { aToken, sToken, vToken }
+
+      fnCache.getReserveTokenContracts[address] = { aToken, sToken, vToken }
+      return fnCache.getReserveTokenContracts[address]
     },
 
-    // TODO: Cache the response for this function
     async getReserveTokenBalances(address) {
       const reserveTokens = await instance.getAllReservesTokens()
       const whenReserveTokenBalances = reserveTokens.map(async token => {
         const { aToken, vToken } = await instance.getReserveTokenContracts(token.address)
-        const aBalance = await aToken.balanceOf(address)
-        const vBalance = await vToken.balanceOf(address)
-        const { variableApr } = await instance.getReserveTokenAprRates(token.address)
+        const [aBalance, vBalance, { variableApr }] = await Promise.all([
+          aToken.balanceOf(address),
+          vToken.balanceOf(address),
+          instance.getReserveTokenAprRates(token.address)
+        ])
 
         return { address: token.address, aBalance, vBalance, variableApr }
       })
@@ -96,15 +122,18 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     },
 
     async getReserveTokenAprRates(tokenAddress) {
+      if (fnCache.getReserveTokenAprRates[tokenAddress] != null) return fnCache.getReserveTokenAprRates[tokenAddress]
+
       const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
 
       const variableApr = parseFloat(variableBorrowRate.toString()) / parseFloat(RAY.toString())
       const stableApr = parseFloat(stableBorrowRate.toString()) / parseFloat(RAY.toString())
 
-      return {
+      fnCache.getReserveTokenAprRates[tokenAddress] = {
         variableApr,
         stableApr
       }
+      return fnCache.getReserveTokenAprRates[tokenAddress]
     },
     async makeTokenContract(tokenAddress) {
       return new ethers.Contract(tokenAddress, ERC20_ABI, provider)
