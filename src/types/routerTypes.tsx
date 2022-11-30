@@ -220,7 +220,7 @@ export interface ParamList {
   }
   loanStatus: {
     actionQueueId: string
-    loanAccountId?: string
+    loanAccountId: string
   }
   manageTokens: {
     walletId: string

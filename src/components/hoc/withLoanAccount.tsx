@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { LoanAccount } from '../../controllers/loan-manager/types'
 import { useSelector } from '../../types/reactRedux'
+import { LoadingScene } from '../scenes/LoadingScene'
 
 interface NavigationProps {
   navigation: { popToTop: () => void }
@@ -26,6 +27,8 @@ export function withLoanAccount<Props extends { loanAccount: LoanAccount }>(
     React.useEffect(() => {
       if (loanAccount == null) navigation.popToTop()
     }, [navigation, loanAccount, loanAccounts])
+
+    if (loanAccount == null) return <LoadingScene />
 
     return <Component {...(props as any)} loanAccount={loanAccount} />
   }
