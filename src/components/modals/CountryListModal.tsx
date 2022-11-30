@@ -1,10 +1,12 @@
 import * as React from 'react'
+import { ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { getCountry } from 'react-native-localize'
 
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { CountryData } from '../../types/types'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -16,9 +18,15 @@ interface Props {
   bridge: AirshipBridge<string>
 }
 
+interface CountryListViewToken extends ViewToken {
+  item: CountryData
+}
+
 export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const [visibleRows, setVisibleRows] = React.useState<CountryListViewToken[]>([])
 
   const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
@@ -54,23 +62,28 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     else countryCodes.push(country)
   }
 
-  const handleSubmitEditing = (newCountry: string) => {
-    const result = countryCodes.find(({ 'alpha-2': alpha, filename = alpha, name = alpha }) =>
-      [alpha, name, filename].find(country => country.toLowerCase() === newCountry.toLowerCase())
-    ) ?? { 'alpha-2': countryCode }
+  const handleSubmitEditing = useHandler(() => {
+    if (visibleRows.length > 0) {
+      bridge.resolve(visibleRows[0].item['alpha-2'])
+    }
+  })
 
-    bridge.resolve(result['alpha-2'])
-  }
+  const onViewableItemsChanged = useHandler((info: { viewableItems: ViewToken[] }) => {
+    setVisibleRows(info.viewableItems)
+  })
 
   return (
     <ListModal
       bridge={bridge}
       title={s.strings.buy_sell_crypto_select_country_button}
       label={s.strings.search_region}
+      autoFocus
+      blurOnClear={false}
       rowsData={countryCodes}
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      onViewableItemsChanged={onViewableItemsChanged}
     />
   )
 }
