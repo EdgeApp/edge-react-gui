@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useRef } from 'react'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
+import { asCleanError } from '../../controllers/action-queue/cleaners'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
 import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
@@ -122,13 +123,14 @@ export const ActionQueueService = () => {
         // Use mock execution function if program is marked as mockMode
         const context = program.mockMode ? executionContextMock : executionContext
 
-        const { nextState } = await executeActionProgram(context, program, state).catch((error: Error): ExecutionResults => {
-          console.warn(new Error('Action Program Exception: ' + error.message))
-          console.error(error)
+        const { nextState } = await executeActionProgram(context, program, state).catch((error): ExecutionResults => {
+          const cleanError = asCleanError(error)
+          console.warn(new Error('Action Program Exception: ' + cleanError.message))
+          console.error(cleanError)
           return {
             nextState: {
               ...state,
-              effect: { type: 'done', error },
+              effect: { type: 'done', error: cleanError },
               effective: true,
               nextExecutionTime: -1
             }

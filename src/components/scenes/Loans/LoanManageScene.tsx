@@ -15,6 +15,7 @@ import { makeInitialProgramState } from '../../../controllers/action-queue/util/
 import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { LoanProgramType } from '../../../controllers/loan-manager/store'
+import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
@@ -34,6 +35,7 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
+import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
@@ -95,25 +97,24 @@ const sceneTypeMap = {
 interface Props {
   navigation: NavigationProp<'loanManage'>
   route: RouteProp<'loanManage'>
+  loanAccount: LoanAccount
 }
 
-export const LoanManageScene = (props: Props) => {
+export const LoanManageSceneComponent = (props: Props) => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
-  const { navigation, route } = props
-  const { loanManageType, loanAccountId } = route.params
+  const { navigation, route, loanAccount } = props
+  const { loanManageType } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const executionContext = useExecutionContext()
 
-  const loanAccount = loanAccounts[loanAccountId]
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
@@ -454,3 +455,5 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+
+export const LoanManageScene = withLoanAccount(LoanManageSceneComponent)

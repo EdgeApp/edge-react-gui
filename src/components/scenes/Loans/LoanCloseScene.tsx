@@ -9,6 +9,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
@@ -24,6 +25,7 @@ import { translateError } from '../../../util/translateError'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
+import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Space } from '../../layout/Space'
 import { useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
@@ -36,20 +38,18 @@ import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 export interface Props {
   route: RouteProp<'loanClose'>
   navigation: NavigationProp<'loanClose'>
+  loanAccount: LoanAccount
 }
 
-export const LoanCloseScene = (props: Props) => {
+export const LoanCloseSceneComponent = (props: Props) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const clientId = useSelector(state => state.core.context.clientId)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const executionContext = useExecutionContext()
 
-  const { navigation, route } = props
-  const { loanAccountId } = route.params
-  const loanAccount = loanAccounts[loanAccountId]
+  const { navigation, loanAccount } = props
   const { borrowPlugin, borrowEngine } = loanAccount
   const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
   const { currencyWallet: borrowEngineWallet } = borrowEngine
@@ -177,3 +177,5 @@ export const LoanCloseScene = (props: Props) => {
     </SceneWrapper>
   )
 }
+
+export const LoanCloseScene = withLoanAccount(LoanCloseSceneComponent)

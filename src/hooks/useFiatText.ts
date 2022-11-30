@@ -4,6 +4,7 @@ import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyC
 import { formatNumber } from '../locales/intl'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
+import { toBigNumberString } from '../util/toBigNumberString'
 import { DECIMAL_PRECISION, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
@@ -71,7 +72,7 @@ export const formatFiatString = (props: {
   const { fiatAmount, minPrecision = 2, maxPrecision = 6, autoPrecision = true, noGrouping = false } = props
 
   // Use US locale delimiters for determining precision
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
+  const fiatAmtCleanedDelim = fiatAmount.replace(',', '.')
   let precision = minPrecision
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
@@ -86,16 +87,15 @@ export const formatFiatString = (props: {
   }
 
   // Convert back to a localized fiat amount string with specified precision and grouping
-  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
+  return displayFiatAmount(fiatAmtCleanedDelim, precision, noGrouping)
 }
 
 /**
  * Returns a localized fiat amount string
  * */
-// @ts-expect-error
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
-  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
-  const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = abs(initialAmount)
+export const displayFiatAmount = (fiatAmount?: number | string, precision: number = 2, noGrouping: boolean = true) => {
+  const fiatAmountBns = fiatAmount != null ? toBigNumberString(fiatAmount) : undefined
+  if (fiatAmountBns == null || fiatAmountBns === '0') return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  const absoluteAmount = abs(fiatAmountBns)
   return formatNumber(toFixed(absoluteAmount, precision, precision), { noGrouping })
 }
