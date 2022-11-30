@@ -112,7 +112,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
     if (actionProgram !== null) {
       await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
       // Navigate to the loan status scene if program is dispatched
-      navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+      navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
     } else {
       // Update the loan program marking it as close
       await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
