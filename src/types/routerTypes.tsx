@@ -395,9 +395,8 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
       push(name, params) {
         props.navigation.push(name, { route: { name, params } })
       },
-      replace(...a) {
-        // prev, next, params) {
-        props.navigation.replace(...a) // prev, next, next, { route: { params } })
+      replace(name, params) {
+        props.navigation.replace(name, { route: { name, params } })
       },
       setParams(params) {
         props.navigation.setParams({ route: { name: Actions.currentScene, params } })
