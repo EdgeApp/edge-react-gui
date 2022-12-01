@@ -2,10 +2,11 @@ import * as React from 'react'
 
 import { LoanAccount } from '../../controllers/loan-manager/types'
 import { useSelector } from '../../types/reactRedux'
+import { NavigationProp, ParamList } from '../../types/routerTypes'
 import { LoadingScene } from '../scenes/LoadingScene'
 
 interface NavigationProps {
-  navigation: { popToTop: () => void }
+  navigation: NavigationProp<keyof ParamList>
   route: { params: { loanAccountId: string } }
 }
 
@@ -25,11 +26,15 @@ export function withLoanAccount<Props extends { loanAccount: LoanAccount }>(
     const loanAccount = loanAccounts[route.params.loanAccountId]
 
     React.useEffect(() => {
-      if (loanAccount == null) navigation.popToTop()
+      if (loanAccount == null) navigation.navigate('loanDashboard', {})
     }, [navigation, loanAccount, loanAccounts])
 
-    if (loanAccount == null) return <LoadingScene />
-
-    return <Component {...(props as any)} loanAccount={loanAccount} />
+    if (loanAccount == null) {
+      // Prevent the wrapped scene from being called with a null LoanAccount.
+      // useEffect will instantly navigate back to the dashboard in this case.
+      return <LoadingScene />
+    } else {
+      return <Component {...(props as any)} loanAccount={loanAccount} />
+    }
   }
 }
