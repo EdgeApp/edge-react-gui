@@ -463,6 +463,7 @@ const strings = {
   string_first_celo_wallet_name: 'My Celo',
   string_first_solana_wallet_name: 'My Solana',
   string_first_zcash_wallet_name: 'My Zcash',
+  string_first_tron_wallet_name: 'My Tron',
   string_first_doge_wallet_name: 'My Doge',
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',

@@ -25,6 +25,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   tezos: true,
   solana: true,
   celo: true,
+  tron: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
