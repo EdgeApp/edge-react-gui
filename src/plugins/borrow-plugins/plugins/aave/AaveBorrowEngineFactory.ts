@@ -200,7 +200,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           throw new Error(`AAVE requires a contract address, but tokenId '${tokenId ?? ''}' has none`)
         }
 
-        const { variableApr } = await aaveNetwork.getReserveTokenRates(tokenAddress)
+        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(tokenAddress)
 
         return variableApr
       },
