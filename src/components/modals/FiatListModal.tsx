@@ -18,6 +18,10 @@ interface Props {
   bridge: AirshipBridge<GuiFiatType>
 }
 
+interface FiatListViewToken extends ViewToken {
+  item: GuiFiatType
+}
+
 export const FiatListModal = (props: Props) => {
   const { bridge } = props
 
@@ -26,7 +30,7 @@ export const FiatListModal = (props: Props) => {
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const supportedFiats = React.useMemo(() => getSupportedFiats(defaultFiat).filter(item => FIAT_COUNTRY[item.value] != null), [defaultFiat])
-  const [visibleRows, setVisibleRows] = React.useState<ViewToken[]>([])
+  const [visibleRows, setVisibleRows] = React.useState<FiatListViewToken[]>([])
 
   const fiatModalRowFilter = (searchText: string, item: GuiFiatType) => {
     const lowerCaseText = searchText.toLowerCase()
