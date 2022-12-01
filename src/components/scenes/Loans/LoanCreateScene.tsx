@@ -1,7 +1,7 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -34,6 +34,7 @@ import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
+import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -343,7 +344,7 @@ export const LoanCreateScene = (props: Props) => {
         }
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <View style={styles.sceneContainer}>
+        <Space horizontal={0.5} bottom={1}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
@@ -358,9 +359,9 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <View style={styles.cardContainer}>
+            <Space isItemCenter isGroupCenter>
               <AprCard apr={apr} />
-            </View>
+            </Space>
           )}
 
           {/* Source of Collateral / Source Wallet */}
@@ -370,6 +371,7 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_source_collateral}
             selectedAsset={{ wallet: srcWallet, tokenId: srcTokenId }}
             onPress={handleShowWalletPickerModal('source')}
+            marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Fund Destination */}
@@ -379,11 +381,12 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_receiving_wallet}
             onPress={handleShowWalletPickerModal('destination')}
             selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
+            marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0.5, 0.5, 0.5, 0.5]}>
+          <Card marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
@@ -397,29 +400,31 @@ export const LoanCreateScene = (props: Props) => {
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <MainButton
-              label={s.strings.string_next_capitalized}
-              disabled={isInsufficientCollateral || !isUserInputComplete}
-              type="secondary"
-              onPress={() => {
-                if (destTokenId == null || srcWallet == null) return
+            <Space around>
+              <MainButton
+                label={s.strings.string_next_capitalized}
+                disabled={isInsufficientCollateral || !isUserInputComplete}
+                type="secondary"
+                onPress={() => {
+                  if (destTokenId == null || srcWallet == null) return
 
-                navigation.navigate('loanCreateConfirmation', {
-                  borrowEngine,
-                  borrowPlugin,
-                  destWallet,
-                  destTokenId,
-                  nativeDestAmount: nativeCryptoBorrowAmount,
-                  nativeSrcAmount: totalRequiredCollateralNativeAmount,
-                  paymentMethod,
-                  srcWallet,
-                  srcTokenId
-                })
-              }}
-              marginRem={[1.5, 6, 6, 6]}
-            />
+                  navigation.navigate('loanCreateConfirmation', {
+                    borrowEngine,
+                    borrowPlugin,
+                    destWallet,
+                    destTokenId,
+                    nativeDestAmount: nativeCryptoBorrowAmount,
+                    nativeSrcAmount: totalRequiredCollateralNativeAmount,
+                    paymentMethod,
+                    srcWallet,
+                    srcTokenId
+                  })
+                }}
+                alignSelf="center"
+              />
+            </Space>
           )}
-        </View>
+        </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
@@ -445,11 +450,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     margin: theme.rem(0.5),
     textAlign: 'left'
-  },
-  sceneContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    margin: theme.rem(0.5),
-    marginTop: theme.rem(0)
   }
 }))
