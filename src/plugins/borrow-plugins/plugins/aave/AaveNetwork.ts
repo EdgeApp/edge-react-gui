@@ -36,7 +36,7 @@ export interface AaveNetwork {
     vToken: ethers.Contract
   }>
   getReserveTokenBalances: (address: string) => Promise<Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }>>
-  getReserveTokenRates: (tokenAddress: string) => Promise<{
+  getReserveTokenAprRates: (tokenAddress: string) => Promise<{
     variableApr: number
     stableApr: number
   }>
@@ -85,7 +85,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
         const { aToken, vToken } = await instance.getReserveTokenContracts(token.address)
         const aBalance = await aToken.balanceOf(address)
         const vBalance = await vToken.balanceOf(address)
-        const { variableApr } = await instance.getReserveTokenRates(token.address)
+        const { variableApr } = await instance.getReserveTokenAprRates(token.address)
 
         return { address: token.address, aBalance, vBalance, variableApr }
       })
@@ -95,7 +95,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
       return reserveTokenBalances
     },
 
-    async getReserveTokenRates(tokenAddress) {
+    async getReserveTokenAprRates(tokenAddress) {
       const [, , , , variableBorrowRate, stableBorrowRate, , , , , ,] = await lendingPool.getReserveData(tokenAddress)
 
       const variableApr = parseFloat(variableBorrowRate.toString()) / parseFloat(RAY.toString())
