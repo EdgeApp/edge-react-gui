@@ -107,7 +107,7 @@ export function walletListMenuAction(
 
         // Archive wallet or token if user confirmed action
         if (resolveValue === 'confirm') {
-          if (tokenId === null) {
+          if (tokenId == null) {
             account
               .changeWalletStates({ [walletId]: { deleted: true } })
               .then(r => {
