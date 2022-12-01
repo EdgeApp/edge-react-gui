@@ -204,11 +204,13 @@ export const LoanDetailsSceneComponent = (props: Props) => {
 
   // #endregion
 
+  const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
+
   return (
     <SceneWrapper>
       <SceneHeader
         underline
-        title={s.strings.loan_details_title}
+        title={`${s.strings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
         withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
