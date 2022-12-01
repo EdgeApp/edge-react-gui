@@ -28,6 +28,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -63,6 +64,12 @@ export const LoanCreateScene = (props: Props) => {
   const existingProgramId = useRunningActionQueueId('loan-create', borrowEngineWallet.id)
   const existingLoanAccount = useSelector(state => state.loanManager.loanAccounts[borrowEngineWallet.id])
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId, loanAccountId: existingLoanAccount.id })
+
+  // Force enable tokens required for loan
+  useAsyncEffect(async () => {
+    await enableToken('WBTC', borrowEngineWallet)
+    await enableToken('USDC', borrowEngineWallet)
+  }, [])
 
   // #endregion Initialization
 
