@@ -51,8 +51,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: theme.rem(4.25),
-    marginLeft: theme.rem(0.5)
+    minHeight: theme.rem(4.25)
   }
 }))
 
