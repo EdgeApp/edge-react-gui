@@ -4,10 +4,10 @@ import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { truncateDecimals } from '../../locales/intl'
-import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
+import { sanitizeDecimalAmount } from '../themed/FlipInput'
 import { UnderlinedNumInputCard } from './UnderlinedNumInputCard'
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
  * based on the given wallet.
  */
 const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, title, tokenId, onAmountChanged }: Props) => {
-  const [fiatAmount, setFiatAmount] = React.useState('0')
+  const [inputFiatAmount, setInputFiatAmount] = React.useState('0')
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({ tokenId, wallet: wallet })
   const {
@@ -41,29 +41,31 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     const token = tokenId != null ? allTokens[tokenId] : null
     const { denominations: destDenoms } = token != null ? token : wallet.currencyInfo
     const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
-
+    
+    // Clean localized fiat amount prior to biggystring ops
+    const fiatAmount = sanitizeDecimalAmount(inputFiatAmount, 2)
     const calculatedNativeCryptoAmount = truncateDecimals(
       destToFiatRate == null || destToFiatRate === '0' ? '0' : mul(destExchangeMultiplier, div(fiatAmount ?? '0', destToFiatRate, DECIMAL_PRECISION)),
       0
     )
 
     setNativeCryptoAmount(calculatedNativeCryptoAmount)
-    if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(fiatAmount)) onAmountChanged(fiatAmount, calculatedNativeCryptoAmount)
-  }, [allTokens, destToFiatRate, fiatAmount, onAmountChanged, tokenId, wallet.currencyInfo])
+    if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(fiatAmount)) onAmountChanged(inputFiatAmount, calculatedNativeCryptoAmount)
+  }, [allTokens, destToFiatRate, inputFiatAmount, onAmountChanged, tokenId, wallet.currencyInfo])
 
   const handleEditActionfiatAmount = React.useCallback(() => {
     Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
       inputAmount => {
-        if (inputAmount != null && !zeroString(inputAmount)) {
-          setFiatAmount(inputAmount)
-          onAmountChanged(fiatAmount, nativeCryptoAmount)
+        if (inputAmount != null && !zeroString(sanitizeDecimalAmount(inputAmount, 2))) {
+          setInputFiatAmount(inputAmount)
+          onAmountChanged(inputFiatAmount, nativeCryptoAmount)
         }
       }
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fiatAmount, inputModalMessage, onAmountChanged, title])
+  }, [inputFiatAmount, inputModalMessage, onAmountChanged, title])
 
-  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: fiatAmount ?? '0', autoPrecision: true }), [fiatAmount])
+  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: inputFiatAmount ?? '0', autoPrecision: true }), [inputFiatAmount])
 
   return (
     <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
