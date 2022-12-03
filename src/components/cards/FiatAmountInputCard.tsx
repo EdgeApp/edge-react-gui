@@ -41,7 +41,7 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     const token = tokenId != null ? allTokens[tokenId] : null
     const { denominations: destDenoms } = token != null ? token : wallet.currencyInfo
     const destExchangeMultiplier = destDenoms == null ? '0' : destDenoms[0].multiplier
-    
+
     // Clean localized fiat amount prior to biggystring ops
     const fiatAmount = sanitizeDecimalAmount(inputFiatAmount, 2)
     const calculatedNativeCryptoAmount = truncateDecimals(
@@ -65,7 +65,10 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFiatAmount, inputModalMessage, onAmountChanged, title])
 
-  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: inputFiatAmount ?? '0', autoPrecision: true }), [inputFiatAmount])
+  const formattedFiatAmount = React.useMemo(
+    () => formatFiatString({ fiatAmount: inputFiatAmount ?? '0', autoPrecision: true, maxPrecision: 2 }),
+    [inputFiatAmount]
+  )
 
   return (
     <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
