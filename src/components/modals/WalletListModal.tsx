@@ -206,7 +206,7 @@ export function WalletListModal(props: Props) {
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{headerTitle}</ModalTitle>
+      <ModalTitle>{headerTitle}</ModalTitle>
       {renderBankSection()}
       <OutlinedTextInput
         returnKeyType="search"
@@ -216,7 +216,7 @@ export function WalletListModal(props: Props) {
         onBlur={handleSearchUnfocus}
         onClear={handleSearchClear}
         value={searchText}
-        marginRem={[1, 0.75, 1.25]}
+        marginRem={[0.5, 0, 1.25, 0]}
         searchIcon
       />
       <WalletList

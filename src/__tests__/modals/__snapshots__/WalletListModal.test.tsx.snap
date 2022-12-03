@@ -95,9 +95,7 @@ Array [
               "fontSize": 27,
               "marginVertical": 11,
             },
-            Object {
-              "textAlign": "center",
-            },
+            null,
             Object {
               "paddingBottom": 0,
               "paddingLeft": 0,
@@ -132,9 +130,9 @@ Array [
           Object {
             "flexGrow": 0,
             "marginBottom": 28,
-            "marginLeft": 17,
-            "marginRight": 17,
-            "marginTop": 22,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 11,
             "paddingLeft": 65,
             "paddingRight": 65,
             "paddingVertical": 0,
