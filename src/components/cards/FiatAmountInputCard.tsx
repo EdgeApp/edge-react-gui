@@ -67,7 +67,11 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanitizedFiatAmount, inputModalMessage, onAmountChanged, title])
 
-  const formattedFiatAmount = React.useMemo(() => formatFiatString({ fiatAmount: sanitizedFiatAmount ?? '0', autoPrecision: true }), [sanitizedFiatAmount])
+  const formattedFiatAmount = React.useMemo(
+    () => formatFiatString({ fiatAmount: sanitizedFiatAmount ?? '0', autoPrecision: true, maxPrecision: 2 }),
+
+    [sanitizedFiatAmount]
+  )
 
   return (
     <UnderlinedNumInputCard currencyCode="USD" formattedAmount={formattedFiatAmount} iconUri={iconUri} title={title} onPress={handleEditActionfiatAmount} />
