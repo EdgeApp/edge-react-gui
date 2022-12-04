@@ -1,9 +1,18 @@
 import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
-import { asArray, asBoolean, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeCorePluginOptions, EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 
 import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
-import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition, StakePositionRequest, StakeProviderInfo } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  StakeBelowLimitError,
+  StakePlugin,
+  StakePolicy,
+  StakePosition,
+  StakePositionRequest,
+  StakeProviderInfo
+} from '../types'
 import { asInfoServerResponse, InfoServerResponse } from '../util/internalTypes'
 
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
@@ -71,11 +80,15 @@ const asPool = asObject({
 })
 
 const asPools = asArray(asPool)
-const asQuoteDeposit = asObject({
-  expected_amount_out: asString,
-  inbound_address: asString
-})
-
+const asQuoteDeposit = asEither(
+  asObject({
+    expected_amount_out: asString,
+    inbound_address: asString
+  }),
+  asObject({
+    error: asString
+  })
+)
 type Savers = ReturnType<typeof asSavers>
 type Pools = ReturnType<typeof asPools>
 type ExchangeInfo = ReturnType<typeof asExchangeInfo>
@@ -322,16 +335,9 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
   const { wallet, nativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
 
-  const policyCurrencyInfo = policyCurrencyInfos[pluginId]
   const walletBalance = wallet.balances[currencyCode]
-  const { minAmount } = policyCurrencyInfo
-  const minStakeAmount = add(minAmount, TC_SAVERS_WITHDRAWAL_SCALE_UNITS)
   const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
   const thorAmount = toFixed(mul(exchangeAmount, THOR_LIMIT_UNITS), 0, 0)
-
-  if (lt(nativeAmount, minStakeAmount)) {
-    throw new Error(`Must stake at least ${exchangeAmount} ${currencyCode}`)
-  }
 
   if (lt(walletBalance, nativeAmount)) {
     throw new InsufficientFundsError({ currencyCode })
@@ -345,6 +351,14 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
   const asset = `${mainnetCode}.${mainnetCode}`
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path)
+  if ('error' in quoteDeposit) {
+    const { error } = quoteDeposit
+    if (error.includes('not enough fee')) {
+      throw new StakeBelowLimitError(request, currencyCode)
+    }
+    throw new Error(error)
+  }
+
   const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut } = quoteDeposit
 
   const slippageThorAmount = sub(thorAmount, expectedAmountOut)
@@ -498,6 +512,13 @@ const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy):
   const asset = `${mainnetCode}.${mainnetCode}`
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path)
+  if ('error' in quoteDeposit) {
+    const { error } = quoteDeposit
+    if (error.includes('not enough fee')) {
+      throw new StakeBelowLimitError(request, currencyCode)
+    }
+    throw new Error(error)
+  }
   const { inbound_address: poolAddress, expected_amount_out: expectedAmountOut } = quoteDeposit
 
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)

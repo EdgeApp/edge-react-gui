@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins/types'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeBelowLimitError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -108,7 +108,20 @@ export const StakeModifyScene = (props: Props) => {
         .catch(err => {
           if (abort) return
           // Display error msg tile
-          setErrorMessage(err.message)
+          if (err instanceof StakeBelowLimitError) {
+            const { currencyCode, nativeMin } = err
+            let errMessage = changeQuoteRequest.action === 'stake' ? s.strings.stake_error_stake_below_minimum : s.strings.stake_error_unstake_below_minimum
+            if (nativeMin != null) {
+              wallet.nativeToDenomination(nativeMin, currencyCode).then(minExchangeAmount => {
+                errMessage += `: ${minExchangeAmount} ${currencyCode}`
+                setErrorMessage(errMessage)
+              })
+            } else {
+              setErrorMessage(errMessage)
+            }
+          } else {
+            setErrorMessage(err.message)
+          }
         })
         .finally(() => {
           if (abort) return

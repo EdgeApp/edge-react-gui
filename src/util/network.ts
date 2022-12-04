@@ -36,6 +36,7 @@ export async function cleanMultiFetch<T>(
   const response = await fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
   if (!response.ok) {
     const text = await response.text()
+    console.error(text)
     throw new Error(`Error fetching ${path}: ${text}`)
   }
   const responseJson = await response.json()

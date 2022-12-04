@@ -4,6 +4,29 @@
 
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
+// -----------------------------------------------------------------------------
+// Errors
+// -----------------------------------------------------------------------------
+
+/**
+ * Trying to stake or unstake an amount that is too low.
+ * @param nativeMin the minimum supported amount, in the currency specified
+ */
+export class StakeBelowLimitError extends Error {
+  name: string
+  request: ChangeQuoteRequest
+  currencyCode: string
+  nativeMin?: string
+
+  constructor(request: ChangeQuoteRequest, currencyCode: string, nativeMin?: string) {
+    super('Amount is too low')
+    this.currencyCode = currencyCode
+    this.name = 'StakeBelowLimitError'
+    this.nativeMin = nativeMin
+    this.request = request
+  }
+}
+
 export interface AssetId {
   pluginId: string
   currencyCode: string

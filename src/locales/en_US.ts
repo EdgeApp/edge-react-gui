@@ -1126,6 +1126,8 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+  stake_error_stake_below_minimum: 'Stake amount below minimum',
+  stake_error_unstake_below_minimum: 'Unstake amount below minimum',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',
