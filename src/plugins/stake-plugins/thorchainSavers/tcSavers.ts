@@ -219,84 +219,88 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       await updateInboundAddresses()
-      const { stakePolicyId, wallet } = request
-      const policy = getPolicyFromId(stakePolicyId)
-      const { pluginId, currencyCode } = policy.stakeAssets[0]
-      const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
-      const asset = `${mainnetCode}.${currencyCode}`
-
-      const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
-
-      let pools: Pools = []
-      let savers: Savers = []
-      const [saversResponse, poolsResponse] = await Promise.all([
-        fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`),
-        fetchWaterfall(midgardServers, `/v2/pools`)
-      ])
-
-      if (!saversResponse.ok) {
-        const responseText = await saversResponse.text()
-        throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
-      }
-      const saversJson = await saversResponse.json()
-      savers = asSavers(saversJson)
-
-      if (!poolsResponse.ok) {
-        const responseText = await poolsResponse.text()
-        throw new Error(`Thorchain could not fetch /v2/pools: ${responseText}`)
-      }
-      const poolsJson = await poolsResponse.json()
-      pools = asPools(poolsJson)
-
-      const saver = savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
-      const pool = pools.find(p => p.asset === asset)
-      let stakedAmount = '0'
-      let earnedAmount = '0'
-      if (saver != null && pool != null) {
-        const { units, asset_deposit_value: assetDepositValue } = saver
-        const { saversDepth, saversUnits } = pool
-        stakedAmount = assetDepositValue
-        const redeemableValue = div(mul(units, saversDepth), saversUnits, DIVIDE_PRECISION)
-        earnedAmount = sub(redeemableValue, stakedAmount)
-
-        // Convert from Thor units to exchangeAmount
-        stakedAmount = div(stakedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
-        earnedAmount = div(earnedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
-
-        // Convert from exchangeAmount to nativeAmount
-        stakedAmount = await wallet.denominationToNative(stakedAmount, currencyCode)
-        earnedAmount = await wallet.denominationToNative(earnedAmount, currencyCode)
-
-        // Truncate decimals
-        stakedAmount = toFixed(stakedAmount, 0, 0)
-        earnedAmount = toFixed(earnedAmount, 0, 0)
-
-        // Cap negative value to 0
-        earnedAmount = max(earnedAmount, '0')
-      }
-
-      return {
-        allocations: [
-          {
-            pluginId,
-            currencyCode,
-            allocationType: 'staked',
-            nativeAmount: stakedAmount
-          },
-          {
-            pluginId,
-            currencyCode,
-            allocationType: 'earned',
-            nativeAmount: earnedAmount
-          }
-        ],
-        canStake: true,
-        canUnstake: true,
-        canClaim: true
-      }
+      return getStakePosition(request)
     }
   }
   return instance
+}
+
+const getStakePosition = async (request: StakePositionRequest): Promise<StakePosition> => {
+  const { stakePolicyId, wallet } = request
+  const policy = getPolicyFromId(stakePolicyId)
+  const { pluginId, currencyCode } = policy.stakeAssets[0]
+  const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
+  const asset = `${mainnetCode}.${currencyCode}`
+
+  const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
+
+  let pools: Pools = []
+  let savers: Savers = []
+  const [saversResponse, poolsResponse] = await Promise.all([
+    fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`),
+    fetchWaterfall(midgardServers, `/v2/pools`)
+  ])
+
+  if (!saversResponse.ok) {
+    const responseText = await saversResponse.text()
+    throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
+  }
+  const saversJson = await saversResponse.json()
+  savers = asSavers(saversJson)
+
+  if (!poolsResponse.ok) {
+    const responseText = await poolsResponse.text()
+    throw new Error(`Thorchain could not fetch /v2/pools: ${responseText}`)
+  }
+  const poolsJson = await poolsResponse.json()
+  pools = asPools(poolsJson)
+
+  const saver = savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
+  const pool = pools.find(p => p.asset === asset)
+  let stakedAmount = '0'
+  let earnedAmount = '0'
+  if (saver != null && pool != null) {
+    const { units, asset_deposit_value: assetDepositValue } = saver
+    const { saversDepth, saversUnits } = pool
+    stakedAmount = assetDepositValue
+    const redeemableValue = div(mul(units, saversDepth), saversUnits, DIVIDE_PRECISION)
+    earnedAmount = sub(redeemableValue, stakedAmount)
+
+    // Convert from Thor units to exchangeAmount
+    stakedAmount = div(stakedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+    earnedAmount = div(earnedAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+
+    // Convert from exchangeAmount to nativeAmount
+    stakedAmount = await wallet.denominationToNative(stakedAmount, currencyCode)
+    earnedAmount = await wallet.denominationToNative(earnedAmount, currencyCode)
+
+    // Truncate decimals
+    stakedAmount = toFixed(stakedAmount, 0, 0)
+    earnedAmount = toFixed(earnedAmount, 0, 0)
+
+    // Cap negative value to 0
+    earnedAmount = max(earnedAmount, '0')
+  }
+
+  return {
+    allocations: [
+      {
+        pluginId,
+        currencyCode,
+        allocationType: 'staked',
+        nativeAmount: stakedAmount
+      },
+      {
+        pluginId,
+        currencyCode,
+        allocationType: 'earned',
+        nativeAmount: earnedAmount
+      }
+    ],
+    canStake: true,
+    canUnstake: true,
+    canClaim: true
+  }
 }
 
 const updatePolicyApys = (infoServerResponse: InfoServerResponse) => {
