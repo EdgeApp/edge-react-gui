@@ -23,7 +23,7 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, RouteProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -44,12 +44,12 @@ import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
 interface Props {
-  // navigation: NavigationProp<'send2'>
+  navigation: NavigationProp<'send2'>
   route: RouteProp<'send2'>
 }
 
 const SendComponent = (props: Props) => {
-  const { route } = props
+  const { route, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -209,11 +209,11 @@ const SendComponent = (props: Props) => {
           ))
           switch (result) {
             case 'buy':
-              Actions.jump('pluginListBuy', { direction: 'buy' })
+              navigation.navigate('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              Actions.jump('exchangeScene', {})
+              navigation.navigate('exchangeScene', {})
               break
           }
         }
