@@ -8,9 +8,8 @@ import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
@@ -37,7 +36,6 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const { navigation, openTutorial = false, token, tokenId, wallet } = props
 
   const rowRef = React.useRef<SwipableRowRef>(null)
-  const account = useSelector(state => state.core.account)
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -93,7 +91,6 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const handleSend = useHandler(() => {
     closeRow()
     dispatch(selectWallet(wallet.id, currencyCode, true))
-    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
     navigation.navigate('send2', {
       walletId: wallet.id,
       tokenId,
