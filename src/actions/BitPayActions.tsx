@@ -197,55 +197,53 @@ export async function launchBitPay(
     spendInfo,
     tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
     lockTilesMap: { amount: true, address: true },
-    alternateBroadcast: async (tx: EdgeTransaction) => {
-      return tx
-    },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
       Actions.pop()
-      if (!error && edgeTransaction != null) {
-        const unsignedHex = edgeTransaction?.otherParams?.unsignedTx
-        const signedHex = edgeTransaction.signedTx
-        errorData = { ...errorData, spendInfo, walletId: selectedWallet?.id, edgeTransaction }
+    },
+    alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
+      const unsignedHex = edgeTransaction.otherParams?.unsignedTx
+      const signedHex = edgeTransaction.signedTx
+      errorData = { ...errorData, spendInfo, walletId: selectedWallet?.id, edgeTransaction }
 
-        if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
+      if (selectedWallet == null) throw new Error('Missing selectedWallet')
+      if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
 
-        const verificationPaymentRequest = {
+      const verificationPaymentRequest = {
+        chain: requestCurrencyCode,
+        currency: requestCurrencyCode,
+        transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
+      }
+      responseJson = await fetchBitPayJsonResponse(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/payment-verification',
+          'x-paypro-version': '2'
+        },
+        body: JSON.stringify(verificationPaymentRequest)
+      })
+
+      // Verify that the transaction data reply matches
+      const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
+      if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
+        errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
+        errorData.responseJson = responseJson
+        throw new BitPayError('TxVerificationMismatch', { errorData })
+      }
+
+      await fetchBitPayJsonResponse(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/payment',
+          'x-paypro-version': '2'
+        },
+        body: JSON.stringify({
           chain: requestCurrencyCode,
           currency: requestCurrencyCode,
-          transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
-        }
-        responseJson = await fetchBitPayJsonResponse(uri, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/payment-verification',
-            'x-paypro-version': '2'
-          },
-          body: JSON.stringify(verificationPaymentRequest)
+          transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
         })
-
-        // Verify that the transaction data reply matches
-        const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
-        if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
-          errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
-          errorData.responseJson = responseJson
-          throw new BitPayError('TxVerificationMismatch', { errorData })
-        }
-
-        await fetchBitPayJsonResponse(uri, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/payment',
-            'x-paypro-version': '2'
-          },
-          body: JSON.stringify({
-            chain: requestCurrencyCode,
-            currency: requestCurrencyCode,
-            transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
-          })
-        })
-        await selectedWallet?.broadcastTx(edgeTransaction)
-      }
+      })
+      return await selectedWallet.broadcastTx(edgeTransaction)
     }
   }
 
