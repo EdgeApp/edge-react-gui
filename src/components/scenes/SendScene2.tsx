@@ -40,7 +40,6 @@ const SendComponent = (props: Props) => {
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
     openCamera,
-    allowedCurrencyCodes,
     lockTilesMap = {},
     hiddenTilesMap = {}
   } = route.params
@@ -193,7 +192,7 @@ const SendComponent = (props: Props) => {
 
   const handleWalletPress = useHandler(() => {
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} />
     ))
       .then((result: WalletListResult) => {
         if (result.walletId == null || result.currencyCode == null) {
@@ -206,7 +205,10 @@ const SendComponent = (props: Props) => {
           setSpendInfo({ spendTargets: [{}] })
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        showError(error)
+        console.error(error)
+      })
   })
 
   const renderSelectedWallet = () => {
