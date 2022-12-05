@@ -2,10 +2,26 @@ import { jest } from '@jest/globals'
 
 jest.useFakeTimers()
 
+jest.mock('react-native/Libraries/Utilities/Platform', () => ({
+  OS: 'ios',
+  isPad: false,
+  isTVOS: false,
+  isTV: false,
+  constants: {
+    reactNativeVersion: {
+      major: 0,
+      minor: 67
+    }
+  },
+  select: obj => obj.ios ?? obj.default
+}))
+
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('react-native-gesture-handler', () => ({
-  PanGestureHandler() {}
+  PanGestureHandler({ children }) {
+    return children
+  }
 }))
 
 jest.mock('rn-qr-generator', () => ({
@@ -156,7 +172,7 @@ jest.mock('react-native-localize', () => ({
 
 jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
 
-require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests()
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
 
 for (const log in global.console) {
   global.console[log] = jest.fn()

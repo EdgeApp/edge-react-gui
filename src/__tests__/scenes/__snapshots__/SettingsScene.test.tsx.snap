@@ -421,14 +421,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
-          animatedStyle={
-            Object {
-              "value": Object {
-                "height": 0,
-              },
-            }
-          }
-          collapsable={false}
           style={
             Object {
               "height": 0,
@@ -1847,14 +1839,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
-          animatedStyle={
-            Object {
-              "value": Object {
-                "height": 73,
-              },
-            }
-          }
-          collapsable={false}
           style={
             Object {
               "height": 73,
