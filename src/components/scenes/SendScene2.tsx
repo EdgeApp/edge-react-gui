@@ -65,7 +65,6 @@ const SendComponent = (props: Props) => {
           }}
           lockInputs={lockTilesMap.address}
           isCameraOpen={!!openCamera}
-          ref={() => {}}
         />
       )
     }

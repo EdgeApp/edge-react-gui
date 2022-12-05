@@ -33,7 +33,6 @@ type OwnProps = {
   onChangeAddress: (changeAddressResult: ChangeAddressResult) => Promise<void>
   resetSendTransaction: () => void
   lockInputs?: boolean
-  addressTileRef: any
   isCameraOpen: boolean
   fioToAddress?: string
 }
@@ -63,8 +62,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     AppState.addEventListener('change', this.handleAppStateChange)
 
-    this._setClipboard(this.props)
-    this.props.addressTileRef(this)
+    this._setClipboard()
     if (this.props.isCameraOpen) {
       this.handleScan()
     }
@@ -72,8 +70,6 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   componentWillUnmount(): void {
     AppState.removeEventListener('change', this.handleAppStateChange)
-
-    this.props.addressTileRef(undefined)
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -83,11 +79,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleAppStateChange = (appState: string) => {
-    if (appState === 'active') this._setClipboard(this.props)
+    if (appState === 'active') this._setClipboard()
   }
 
   onChangeAddress = async (address: string) => {
-    if (!address) return
+    if (address == null || address === '') return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
 
     this.setState({ loading: true })
@@ -158,9 +154,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  // @ts-expect-error
-  _setClipboard = async props => {
-    const { coreWallet, currencyCode } = props
+  _setClipboard = async () => {
+    const { coreWallet, currencyCode } = this.props
 
     try {
       this.setState({ loading: true })
@@ -214,7 +209,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this._setClipboard(this.props)
+      this._setClipboard()
       this.props.resetSendTransaction()
     }
   }
@@ -278,13 +273,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+export const AddressTile2 = connect<StateProps, {}, OwnProps>(
   state => ({
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
 )(withTheme(AddressTileComponent))
-
-export const AddressTile2 = React.forwardRef<AddressTileRef, Omit<OwnProps, 'addressTileRef'>>((props, ref) => (
-  <AddressTileConnector {...props} addressTileRef={ref} />
-))
