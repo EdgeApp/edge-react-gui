@@ -29,7 +29,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
-import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, roundedFee } from '../../util/utils'
@@ -146,16 +146,16 @@ const SendComponent = (props: Props) => {
   const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount)
   const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const [currencyCode, setCurrencyCode] = useState<string>(spendInfo?.currencyCode ?? currencyWallets[walletId].currencyInfo.currencyCode)
-  const { pluginId } = currencyWallets[walletId].currencyInfo
+  const [tokenId, setTokenId] = useState<string | undefined>(spendInfo.tokenId ?? tokenIdProp)
+  const coreWallet = currencyWallets[walletId]
+  const { pluginId } = coreWallet.currencyInfo
+  const currencyCode = getCurrencyCode(coreWallet, tokenId)
   const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
   const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
   const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
   const parentExchangeDenom = useExchangeDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
-  const coreWallet = currencyWallets[walletId]
 
-  const tokenId = tokenIdProp ?? getTokenId(account, pluginId, currencyCode)
-  spendInfo.currencyCode = getCurrencyCode(coreWallet, tokenId)
+  spendInfo.tokenId = tokenId
 
   if (initialMount.current) {
     dismissScamWarning(account.disklet)
@@ -377,7 +377,7 @@ const SendComponent = (props: Props) => {
         setWalletId(result.walletId)
         const { pluginId: newPluginId } = currencyWallets[result.walletId].currencyInfo
         if (pluginId !== newPluginId || currencyCode !== result.currencyCode) {
-          setCurrencyCode(result.currencyCode)
+          setTokenId(result.tokenId)
           setSpendInfo({ spendTargets: [{}] })
         }
       })
