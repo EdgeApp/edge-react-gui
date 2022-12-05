@@ -709,7 +709,7 @@ const SendComponent = (props: Props) => {
       if (onDone) {
         onDone(null, broadcastedTx)
       } else {
-        Actions.replace('transactionDetails', {
+        navigation.replace('transactionDetails', {
           edgeTransaction: broadcastedTx,
           walletId
         })
@@ -764,7 +764,7 @@ const SendComponent = (props: Props) => {
 
   React.useEffect(() => {
     return () => {
-      onBack && onBack()
+      if (onBack != null) onBack()
     }
   }, [])
 
