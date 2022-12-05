@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
-import { asMap, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import { asDate, asMap, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
-import fs from 'fs'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
@@ -16,6 +15,7 @@ import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeRootState } from '../../util/fake/fakeRootState'
+import fakeUser from '../../util/fake/fakeUserDump.json'
 
 jest.useRealTimers()
 
@@ -23,16 +23,14 @@ let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
 
 let btcWallet: EdgeCurrencyWallet | undefined
-let ethWallet: EdgeCurrencyWallet | undefined
-let avaxWallet: EdgeCurrencyWallet | undefined
 
-const DUMP_USER_FILE = './src/util/fake/fakeUserDump.json'
-
-const asDateStr = (raw: string): Date => new Date(raw)
+// For use later when we need tests that use EVM currencies
+// let ethWallet: EdgeCurrencyWallet | undefined
+// let avaxWallet: EdgeCurrencyWallet | undefined
 
 const asFakeUser = asObject({
   username: asString,
-  lastLogin: asOptional(asDateStr),
+  lastLogin: asOptional(asDate),
   loginId: asString,
   loginKey: asString,
   repos: asMap(asMap(asUnknown)),
@@ -45,12 +43,9 @@ const asUserDump = asObject({
 })
 
 beforeAll(async () => {
-  const userFile = fs.readFileSync(DUMP_USER_FILE, { encoding: 'utf8' })
-  const json = JSON.parse(userFile)
-  const dump = asUserDump(json)
+  const dump = asUserDump(fakeUser)
   const loginKey = dump.loginKey
-  const fakeUsers = []
-  fakeUsers.push(dump.data)
+  const fakeUsers = [dump.data]
 
   const allPlugins = {
     bitcoin: makeFakePlugin(btcCurrencyInfo),
@@ -65,16 +60,24 @@ beforeAll(async () => {
   context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true, ethereum: true, avalanche: true } })
   account = await context.loginWithKey('bob', loginKey)
   const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
-  const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
-  const avaxInfo = await account.getFirstWalletInfo('wallet:avalanche')
 
-  btcWallet = await account.waitForCurrencyWallet(btcInfo?.id ?? '')
-  ethWallet = await account.waitForCurrencyWallet(ethInfo?.id ?? '')
-  avaxWallet = await account.waitForCurrencyWallet(avaxInfo?.id ?? '')
+  // For use later when we need tests that use EVM currencies
+  // const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
+  // const avaxInfo = await account.getFirstWalletInfo('wallet:avalanche')
 
-  if (btcWallet == null) process.exit(-1)
-  if (ethWallet == null) process.exit(-1)
-  if (avaxWallet == null) process.exit(-1)
+  if (
+    btcInfo == null
+    // || ethInfo == null
+    // || avaxInfo == null
+  ) {
+    console.error('Unable to get wallet infos')
+    process.exit(-1)
+  }
+  btcWallet = await account.waitForCurrencyWallet(btcInfo.id)
+
+  // For use later when we need tests that use EVM currencies
+  // ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
+  // avaxWallet = await account.waitForCurrencyWallet(avaxInfo.id)
 })
 
 describe('SendScene2', () => {
