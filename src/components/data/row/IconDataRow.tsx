@@ -8,7 +8,7 @@ import { EdgeText } from '../../themed/EdgeText'
 interface Props {
   icon: React.ReactNode
   leftText: string
-  leftTextExtended?: string | React.ReactNode
+  leftTextExtended?: React.ReactNode
   leftSubtext: string | React.ReactNode
   rightText?: string | React.ReactNode
   rightSubText?: string | React.ReactNode
@@ -31,7 +31,7 @@ const IconDataRowComponent = (props: Props) => {
       <View style={styles.leftColumn}>
         <View style={styles.row}>
           <EdgeText style={styles.leftText}>{leftText}</EdgeText>
-          {leftTextExtended != null ? <EdgeText style={styles.leftTextExtended}>{leftTextExtended}</EdgeText> : null}
+          {leftTextExtended != null ? leftTextExtended : null}
         </View>
         <EdgeText style={styles.leftSubtext}>{leftSubtext}</EdgeText>
       </View>
@@ -50,21 +50,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Layout:
   rightColumn: {
     alignItems: 'flex-end',
-    flexDirection: 'column',
-    paddingRight: theme.rem(1)
+    flexDirection: 'column'
   },
   leftColumn: {
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    marginRight: theme.rem(0.5),
+    marginRight: theme.rem(0.25),
     marginLeft: theme.rem(1)
   },
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginLeft: theme.rem(0.5)
+    justifyContent: 'center'
   },
   row: {
     flexDirection: 'row',
@@ -78,15 +76,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   leftText: {
-    flexBasis: 'auto',
-    flexShrink: 1,
     fontFamily: theme.fontFaceMedium
-  },
-  leftTextExtended: {
-    textAlign: 'left',
-    flexBasis: 'auto',
-    flexShrink: 1,
-    marginLeft: theme.rem(0.75)
   },
   leftSubtext: {
     fontSize: theme.rem(0.75),
