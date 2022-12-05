@@ -41,7 +41,6 @@ const SendComponent = (props: Props) => {
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
-  console.log(edgeTransaction?.currencyCode ?? '')
 
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
