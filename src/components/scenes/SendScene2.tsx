@@ -54,6 +54,30 @@ interface Props {
   route: RouteProp<'send2'>
 }
 
+export interface SendScene2Params {
+  walletId: string
+  tokenId?: string
+  spendInfo?: EdgeSpendInfo
+  openCamera?: boolean
+  lockTilesMap?: {
+    address?: boolean
+    wallet?: boolean
+    amount?: boolean
+  }
+  hiddenTilesMap?: {
+    address?: boolean
+    amount?: boolean
+    fioAddressSelect?: boolean
+  }
+  infoTiles?: Array<{ label: string; value: string }>
+  // fioAddress?: string // TODO: Implement specifying fio address
+  // fioPendingRequest?: FioRequest // TODO: Implement specifying a fio payment request
+  onBack?: () => void
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  beforeTransaction?: () => Promise<void>
+  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
+}
+
 interface FioSenderInfo {
   fioAddress: string
   fioWallet: EdgeCurrencyWallet | null
