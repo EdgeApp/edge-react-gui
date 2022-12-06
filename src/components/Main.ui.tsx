@@ -49,6 +49,7 @@ import { HeaderTitle } from './navigation/HeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
+import { ChangeMiningFeeScene2 } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
@@ -82,6 +83,7 @@ import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene'
 import { Request } from './scenes/RequestScene'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
 import { SendScene } from './scenes/SendScene'
+import { SendScene2 } from './scenes/SendScene2'
 import { SettingsScene } from './scenes/SettingsScene'
 import { SpendingLimitsScene } from './scenes/SpendingLimitsScene'
 import { StakeModifyScene } from './scenes/Staking/StakeModifyScene'
@@ -519,6 +521,29 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key="changeMiningFee"
               component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              // @ts-expect-error
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
+            />
+          </Stack>
+
+          <Stack key="send2" hideTabBar>
+            <Scene
+              key="send2"
+              component={withNavigation(ifLoggedIn(SendScene2))}
+              navTransparent
+              onEnter={props => {
+                this.props.checkAndShowGetCryptoModal(props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
+              }}
+              onExit={this.props.dispatchDisableScan}
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene
+              key="changeMiningFee2"
+              component={withNavigation(ifLoggedIn(ChangeMiningFeeScene2))}
               navTransparent
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}

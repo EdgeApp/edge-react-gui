@@ -1,8 +1,9 @@
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
+import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
@@ -44,6 +45,12 @@ export interface ParamList {
   // Logged-in scenes:
   changeMiningFee: {
     guiMakeSpendInfo: GuiMakeSpendInfo
+    maxSpendSet: boolean
+    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
+    wallet: EdgeCurrencyWallet
+  }
+  changeMiningFee2: {
+    spendInfo: EdgeSpendInfo
     maxSpendSet: boolean
     onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
     wallet: EdgeCurrencyWallet
@@ -260,6 +267,7 @@ export interface ParamList {
     }
     infoTiles?: Array<{ label: string; value: string }>
   }
+  send2: SendScene2Params
   settingsOverview: {}
   settingsOverviewTab: {}
   spendingLimits: {}

@@ -8,12 +8,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { launchBitPay } from '../../actions/BitPayActions'
 import { addressWarnings } from '../../actions/ScanActions'
-import { ENS_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
 import { connect } from '../../types/reactRedux'
-import { GuiMakeSpendInfo } from '../../types/types'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -22,15 +20,19 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
+export interface ChangeAddressResult {
+  fioAddress?: string
+  parsedUri?: EdgeParsedUri
+}
+
 interface OwnProps {
   coreWallet: EdgeCurrencyWallet
   currencyCode: string
   title: string
   recipientAddress: string
-  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>
+  onChangeAddress: (changeAddressResult: ChangeAddressResult) => Promise<void>
   resetSendTransaction: () => void
   lockInputs?: boolean
-  addressTileRef: any
   isCameraOpen: boolean
   fioToAddress?: string
 }
@@ -61,8 +63,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     AppState.addEventListener('change', this.handleAppStateChange)
 
-    this._setClipboard(this.props)
-    this.props.addressTileRef(this)
+    this._setClipboard()
     if (this.props.isCameraOpen) {
       this.handleScan()
     }
@@ -70,8 +71,6 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   componentWillUnmount(): void {
     AppState.removeEventListener('change', this.handleAppStateChange)
-
-    this.props.addressTileRef(undefined)
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -81,11 +80,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleAppStateChange = (appState: string) => {
-    if (appState === 'active') this._setClipboard(this.props)
+    if (appState === 'active') this._setClipboard()
   }
 
   onChangeAddress = async (address: string) => {
-    if (!address) return
+    if (address == null || address === '') return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
 
     this.setState({ loading: true })
@@ -104,7 +103,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
 
     // Try resolving address by ENS domain for ethereum wallets only
-    if (coreWallet.currencyInfo.pluginId === 'ethereum' && ENS_DOMAINS.some(domain => address.endsWith(domain))) {
+    if (coreWallet.currencyInfo.pluginId === 'ethereum' && /^.*\.eth$/.test(address)) {
       const chainId = 1 // Hard-coded to Ethereum mainnet
       const network = ethers.providers.getNetwork(chainId)
       if (network.name !== 'unknown') {
@@ -137,7 +136,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
+      onChangeAddress({ fioAddress, parsedUri })
     } catch (e: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
@@ -156,9 +155,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  // @ts-expect-error
-  _setClipboard = async props => {
-    const { coreWallet, currencyCode } = props
+  _setClipboard = async () => {
+    const { coreWallet, currencyCode } = this.props
 
     try {
       this.setState({ loading: true })
@@ -212,7 +210,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this._setClipboard(this.props)
+      this._setClipboard()
       this.props.resetSendTransaction()
     }
   }
@@ -222,7 +220,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
-    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'touchable' : 'static'
+    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
     return (
       <View>
         <Tile type={tileType} title={title} onPress={this.handleTilePress}>
@@ -244,11 +242,13 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
               )}
             </View>
           )}
-          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-          {recipientAddress == null ? null : (
-            <EdgeText numberOfLines={3} disableFontScaling>
-              {recipientAddress}
-            </EdgeText>
+          {recipientAddress == null || recipientAddress === '' ? null : (
+            <>
+              {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+              <EdgeText numberOfLines={3} disableFontScaling>
+                {recipientAddress}
+              </EdgeText>
+            </>
           )}
         </Tile>
       </View>
@@ -274,15 +274,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+export const AddressTile2 = connect<StateProps, {}, OwnProps>(
   state => ({
     account: state.core.account,
-    fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})
 )(withTheme(AddressTileComponent))
-
-export const AddressTile = React.forwardRef<AddressTileRef, Omit<OwnProps, 'addressTileRef'>>((props, ref) => (
-  <AddressTileConnector {...props} addressTileRef={ref} />
-))

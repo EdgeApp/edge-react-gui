@@ -686,6 +686,7 @@ const strings = {
   save: 'Save',
   four_digit_pin: '4 Digit PIN',
   pin: 'PIN',
+  spending_limits_enter_pin: 'Enter PIN',
 
   hang_tight: 'Hang tight',
   trying_to_find: 'Searching for the best exchange rate...',
@@ -1048,6 +1049,7 @@ const strings = {
   send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
+  send_add_destination_address: 'Add Destination Address',
 
   // Request Scene
   request_balance: 'You have %s',
