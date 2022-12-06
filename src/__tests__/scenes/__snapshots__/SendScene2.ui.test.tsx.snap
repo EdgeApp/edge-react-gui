@@ -483,6 +483,138 @@ exports[`SendScene2 1 spendTarget 1`] = `
           />
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -1095,6 +1227,138 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 }
               >
                 $ 0.22
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
               </Text>
             </View>
           </View>
@@ -2067,6 +2331,138 @@ exports[`SendScene2 2 spendTargets 1`] = `
           />
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -2696,6 +3092,138 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           />
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -3303,6 +3831,138 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           </View>
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -3769,6 +4429,138 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 }
               >
                 Amount: 0.00001234 BTC ($ 0.22)
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
               </Text>
             </View>
           </View>
@@ -4512,6 +5304,138 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           />
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -5213,6 +6137,138 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           />
         </View>
         <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
           style={
             Object {
               "alignItems": "center",
@@ -5872,6 +6928,138 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 }
               >
                 $ 2.27
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginLeft": 22,
+              }
+            }
+          />
+        </View>
+        <View
+          accessibilityState={
+            Object {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "marginTop": 22,
+                "paddingBottom": 22,
+                "paddingHorizontal": 22,
+              }
+            }
+          >
+            <View
+              style={
+                Array [
+                  Object {
+                    "flex": 1,
+                  },
+                  Object {
+                    "paddingLeft": 6,
+                  },
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                ellipsizeMode="tail"
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "paddingBottom": 6,
+                      "paddingRight": 22,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Fee:
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  Array [
+                    Object {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    Object {
+                      "color": "#FFFFFF",
+                    },
+                    null,
+                  ]
+                }
+              >
+                 0 (0)
+              </Text>
+            </View>
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#66EDA8",
+                      "marginHorizontal": 11,
+                      "textAlign": "center",
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
               </Text>
             </View>
           </View>
