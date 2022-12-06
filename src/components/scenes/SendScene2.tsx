@@ -429,11 +429,11 @@ const SendComponent = (props: Props) => {
   }
 
   const renderFees = () => {
-    if (edgeTransaction != null) {
+    if (spendInfo.spendTargets[0].publicAddress != null) {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       let feeDisplayDenomination: EdgeDenomination
       let feeExchangeDenomination: EdgeDenomination
-      if (edgeTransaction.parentNetworkFee != null) {
+      if (edgeTransaction?.parentNetworkFee != null) {
         feeDisplayDenomination = parentDisplayDenom
         feeExchangeDenomination = parentExchangeDenom
       } else {
