@@ -272,7 +272,6 @@ const SendComponent = (props: Props) => {
       wallet: coreWallet,
       onSubmit: (networkFeeOption, customNetworkFee) => {
         setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
-        setMaxSpendSetter(0)
         setPinValue(undefined)
       }
     })
