@@ -57,7 +57,6 @@ export const swapPlugins = {
   changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   exolix: ENV.EXOLIX_INIT,
-  foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   letsexchange: ENV.LETSEXCHANGE_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
