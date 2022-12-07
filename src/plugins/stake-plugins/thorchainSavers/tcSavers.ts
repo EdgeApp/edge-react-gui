@@ -1,6 +1,6 @@
 import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { EdgeCorePluginOptions, EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
+import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 
 import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
 import {
@@ -13,7 +13,7 @@ import {
   StakePositionRequest,
   StakeProviderInfo
 } from '../types'
-import { asInfoServerResponse, InfoServerResponse } from '../util/internalTypes'
+import { asInfoServerResponse, EdgeGuiPluginOptions, InfoServerResponse } from '../util/internalTypes'
 
 const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
@@ -34,6 +34,12 @@ interface PolicyCurrencyInfo {
   type: 'utxo' | 'evm'
   minAmount: string
 }
+
+const asInitOptions = asObject({
+  ninerealmsClientId: asOptional(asString, ''),
+  affiliateFeeBasis: asOptional(asString, '50'),
+  thorname: asOptional(asString, 'ej')
+})
 
 const asInboundAddresses = asArray(
   asObject({
@@ -186,7 +192,7 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 
 let inboundAddressesLastUpdate: number = 0
 
-export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
+export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
   const fetchResponse = await fetchInfo(`v1/apyValues`)
     .then(async res => {
       if (!res.ok) {
@@ -228,17 +234,18 @@ export const makeTcSaversPlugin = async (opts?: EdgeCorePluginOptions): Promise<
         throw new Error('Only mainnet coins supported for staking')
       }
 
-      return changeQuoteFuncs[action](request, policy)
+      return changeQuoteFuncs[action](opts, request, policy)
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      await updateInboundAddresses()
-      return getStakePosition(request)
+      await updateInboundAddresses(opts)
+      return getStakePosition(opts, request)
     }
   }
   return instance
 }
 
-const getStakePosition = async (request: StakePositionRequest): Promise<StakePosition> => {
+const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest): Promise<StakePosition> => {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { stakePolicyId, wallet } = request
   const policy = getPolicyFromId(stakePolicyId)
   const { pluginId, currencyCode } = policy.stakeAssets[0]
@@ -250,8 +257,8 @@ const getStakePosition = async (request: StakePositionRequest): Promise<StakePos
   let pools: Pools = []
   let savers: Savers = []
   const [saversResponse, poolsResponse] = await Promise.all([
-    fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`),
-    fetchWaterfall(midgardServers, `/v2/pools`)
+    fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } }),
+    fetchWaterfall(midgardServers, `/v2/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
   ])
 
   if (!saversResponse.ok) {
@@ -331,7 +338,9 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
   return policy
 }
 
-const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+
   const { wallet, nativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
 
@@ -343,14 +352,14 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
     throw new InsufficientFundsError({ currencyCode })
   }
 
-  await updateInboundAddresses()
+  await updateInboundAddresses(opts)
 
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[wallet.currencyInfo.pluginId]
   const { primaryAddress, addressBalance } = await getPrimaryAddress(wallet, currencyCode)
 
   const asset = `${mainnetCode}.${mainnetCode}`
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
-  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path)
+  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
     if (error.includes('not enough fee')) {
@@ -454,14 +463,15 @@ const stakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): P
   }
 }
 
-const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
 
   const policyCurrencyInfo = policyCurrencyInfos[pluginId]
   const walletBalance = wallet.balances[currencyCode]
   const { minAmount } = policyCurrencyInfo
-  const { allocations } = await getStakePosition(request)
+  const { allocations } = await getStakePosition(opts, request)
 
   if (lt(walletBalance, TC_SAVERS_WITHDRAWAL_SCALE_UNITS)) {
     throw new InsufficientFundsError({ currencyCode })
@@ -511,7 +521,7 @@ const unstakeRequest = async (request: ChangeQuoteRequest, policy: StakePolicy):
 
   const asset = `${mainnetCode}.${mainnetCode}`
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
-  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path)
+  const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
   if ('error' in quoteDeposit) {
     const { error } = quoteDeposit
     if (error.includes('not enough fee')) {
@@ -626,7 +636,8 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const updateInboundAddresses = async (): Promise<void> => {
+const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void> => {
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const now = Date.now()
   if (now - exchangeInfoLastUpdate > EXCHANGE_INFO_UPDATE_FREQ_MS || exchangeInfo == null) {
     try {
@@ -655,7 +666,7 @@ const updateInboundAddresses = async (): Promise<void> => {
       // Get current pool
       const [iaResponse] = await Promise.all([
         fetchWaterfall(midgardServers, 'v2/thorchain/inbound_addresses', {
-          headers
+          headers: { ...headers, 'x-client-id': ninerealmsClientId }
         })
       ])
 

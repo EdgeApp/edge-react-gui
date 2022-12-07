@@ -178,6 +178,7 @@ const asConfig = asObject({
   ),
   THORCHAIN_INIT: asCorePluginInit(
     asObject({
+      ninerealmsClientId: asOptional(asString, ''),
       affiliateFeeBasis: asOptional(asString, '50'),
       thorname: asOptional(asString, 'ej')
     }).withRest
