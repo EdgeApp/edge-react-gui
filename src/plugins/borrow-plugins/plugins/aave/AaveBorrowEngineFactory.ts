@@ -105,16 +105,12 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         overrides = { ...overrides, gasPrice }
         console.warn(`getApproveAllowanceTx was called without a gasPrice overrides parameter. The caller should pass the gasPrice instead.`)
       }
-      const allowance = await tokenContract.allowance(ownerAddress, spenderAddress)
-      if (!allowance.sub(allowanceAmount).gte(0)) {
-        return asGracefulTxInfo(
-          await tokenContract.populateTransaction.approve(spenderAddress, ethers.constants.MaxUint256, {
-            gasLimit: '500000',
-            ...overrides
-          })
-        )
-      }
-      return null
+      return asGracefulTxInfo(
+        await tokenContract.populateTransaction.approve(spenderAddress, BigNumber.from(allowanceAmount), {
+          gasLimit: '500000',
+          ...overrides
+        })
+      )
     }
 
     //
