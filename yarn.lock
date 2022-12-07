@@ -4971,7 +4971,7 @@ big.js@^5.2.2:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
 
-biggystring@^3.0.0, biggystring@^3.0.2:
+biggystring@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-3.0.2.tgz#e9a8cd1ada0ec54b377a621cde53dea5e19085b6"
   integrity sha512-Sl1Ek3XwFliCf08nIaypxQtW+XwocfF33h5WC2baU5xVBf/LBctiK28cB3hmhWOBeArtZp0FbNk4hgDFCP3Fag==
@@ -6964,33 +6964,6 @@ ed25519@0.0.4:
   dependencies:
     bindings "^1.2.1"
     nan "^2.0.9"
-
-edge-core-js@^0.19.32:
-  version "0.19.32"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.32.tgz#22d2f728c18b0423d7ddae7c3d1c6038da1c0661"
-  integrity sha512-/bUcqI1TKi8UHcNzPTen7WQr8BE7u/CS+8v5oS8owInDm42Zy0iSci8MJUqs3BRM0sfA+7yTBVxKLoD3Uo6TNg==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^3.0.2"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.7"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^3.6.0"
-    redux-keto "^0.3.4"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.8"
-    yavent "^0.1.3"
 
 edge-core-js@^0.19.33:
   version "0.19.33"
@@ -13756,11 +13729,6 @@ redux-flipper@^2.0.1:
     cycle "^1.0.3"
     dayjs "^1.8.29"
 
-redux-keto@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.4.tgz#1bf78a36736dc181dd419b10e57116dea17fa3a5"
-  integrity sha512-16q/QujMkv+zdsVRExJuGbl6grXZLoRakBbQR5E9DmEAPIeJoXtjmc6L3bCMUVjBfF+0XFQyJDZwjhS2guh+ng==
-
 redux-keto@^0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.5.tgz#dc87f93483d134d0dc3693dc052374901c6f9a69"
@@ -13780,16 +13748,6 @@ redux-thunk@~2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.1.2.tgz#c698ed734d3a7448dd0de9865a0fb41312c2d779"
   integrity sha1-xpjtc006dEjdDemGWg+0ExLC13k=
-
-redux@^3.6.0:
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
-  integrity sha512-pNqnf9q1hI5HHZRBkj3bAngGZW/JMCmexDlOxw4XagXY2o1327nHH54LoTjiPJ0gizoqPDRqWyX/00g0hD6w+A==
-  dependencies:
-    lodash "^4.2.1"
-    lodash-es "^4.2.1"
-    loose-envify "^1.1.0"
-    symbol-observable "^1.0.3"
 
 redux@^4.0.0, redux@^4.1.0:
   version "4.1.0"
@@ -15337,11 +15295,6 @@ symbol-observable@^0.2.3:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-0.2.4.tgz#95a83db26186d6af7e7a18dbd9760a2f86d08f40"
   integrity sha1-lag9smGG1q9+ehjb2XYKL4bQj0A=
-
-symbol-observable@^1.0.3:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
-  integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
 
 symbol-tree@^3.2.4:
   version "3.2.4"

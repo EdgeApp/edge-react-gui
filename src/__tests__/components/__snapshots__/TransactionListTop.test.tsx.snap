@@ -750,6 +750,17 @@ Array [
           Send
         </Text>
       </View>
+      <ActivityIndicator
+        color="#66EDA8"
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "paddingRight": 22,
+          }
+        }
+      />
     </View>
     <View
       style={

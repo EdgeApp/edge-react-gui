@@ -6,14 +6,13 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation } from '../../../plugins/stake-plugins'
-import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeBelowLimitError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
@@ -37,8 +36,8 @@ interface Props {
 export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
-  const { walletId, stakePolicy, stakePosition, modification } = props.route.params
-  const { stakePolicyId } = stakePolicy
+  const { stakePlugin, walletId, stakePolicy, stakePosition, modification } = props.route.params
+  const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning } = stakePolicy
 
   // Hooks
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
@@ -67,7 +66,7 @@ export const StakeModifyScene = (props: Props) => {
     stakePolicyId: stakePolicy.stakePolicyId,
     currencyCode: '',
     nativeAmount: '0',
-    signerSeed: getSeed(wallet)
+    wallet
   })
 
   // Slider state
@@ -109,7 +108,20 @@ export const StakeModifyScene = (props: Props) => {
         .catch(err => {
           if (abort) return
           // Display error msg tile
-          setErrorMessage(err.message)
+          if (err instanceof StakeBelowLimitError) {
+            const { currencyCode, nativeMin } = err
+            let errMessage = changeQuoteRequest.action === 'stake' ? s.strings.stake_error_stake_below_minimum : s.strings.stake_error_unstake_below_minimum
+            if (nativeMin != null) {
+              wallet.nativeToDenomination(nativeMin, currencyCode).then(minExchangeAmount => {
+                errMessage += `: ${minExchangeAmount} ${currencyCode}`
+                setErrorMessage(errMessage)
+              })
+            } else {
+              setErrorMessage(errMessage)
+            }
+          } else {
+            setErrorMessage(err.message)
+          }
         })
         .finally(() => {
           if (abort) return
@@ -237,9 +249,18 @@ export const StakeModifyScene = (props: Props) => {
 
       const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
 
-      if (modification === 'stake') warningMessage = s.strings.stake_warning_stake
-      if (modification === 'claim') warningMessage = s.strings.stake_warning_claim
-      if (modification === 'unstake') warningMessage = isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+      if (modification === 'stake') {
+        if (stakeWarning === null) return null
+        warningMessage = stakeWarning ?? s.strings.stake_warning_stake
+      }
+      if (modification === 'claim') {
+        if (claimWarning === null) return null
+        warningMessage = claimWarning ?? s.strings.stake_warning_claim
+      }
+      if (modification === 'unstake') {
+        if (unstakeWarning === null) return null
+        warningMessage = unstakeWarning ?? isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+      }
     }
     return warningMessage == null ? null : (
       <Alert marginRem={[0, 1, 1, 1]} title={s.strings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />

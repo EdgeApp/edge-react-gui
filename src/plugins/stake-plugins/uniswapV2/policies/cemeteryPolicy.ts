@@ -4,17 +4,18 @@ import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
 import { ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import s from '../../../../locales/strings'
+import { cacheTxMetadata } from '../../metadataCache'
+import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { makeBigAccumulator } from '../../util/accumulator'
+import { round } from '../../util/biggystringplus'
+import { makeBuilder } from '../../util/builder'
+import { getSeed } from '../../util/getSeed'
+import { fromHex } from '../../util/hex'
 import { getContractInfo, makeContract, makeSigner, multipass } from '../contracts'
-import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo'
 import { StakePolicyInfo } from '../stakePolicy'
-import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../types'
-import { makeBigAccumulator } from '../util/accumulator'
-import { round } from '../util/biggystringplus'
-import { makeBuilder } from '../util/builder'
-import { fromHex } from '../util/hex'
-import { StakePluginPolicy } from './types'
+import { StakePluginPolicy } from '../types'
 
 export interface CemeteryPolicyOptions {
   disableStake?: boolean
@@ -98,7 +99,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, signerSeed } = request
+      const { action, stakePolicyId, wallet } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -118,6 +119,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       // Get the signer for the wallet
+      const signerSeed = getSeed(wallet)
       const signerAddress = await makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
@@ -617,7 +619,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, signerSeed } = request
+      const { stakePolicyId, wallet } = request
+      const signerSeed = getSeed(wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)

@@ -2,6 +2,31 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
+import { EdgeCurrencyWallet } from 'edge-core-js'
+
+// -----------------------------------------------------------------------------
+// Errors
+// -----------------------------------------------------------------------------
+
+/**
+ * Trying to stake or unstake an amount that is too low.
+ * @param nativeMin the minimum supported amount, in the currency specified
+ */
+export class StakeBelowLimitError extends Error {
+  name: string
+  request: ChangeQuoteRequest
+  currencyCode: string
+  nativeMin?: string
+
+  constructor(request: ChangeQuoteRequest, currencyCode: string, nativeMin?: string) {
+    super('Amount is too low')
+    this.currencyCode = currencyCode
+    this.name = 'StakeBelowLimitError'
+    this.nativeMin = nativeMin
+    this.request = request
+  }
+}
+
 export interface AssetId {
   pluginId: string
   currencyCode: string
@@ -34,6 +59,15 @@ export interface StakePolicy {
 
   // The assets which must be staked
   stakeAssets: AssetId[]
+
+  // Warnings
+  // string => show string as warning
+  // null => show no warning
+  // undefined => show default warning (used for Tomb finance)
+  // TODO: Needs better architecture so strings are not declared in the plugin
+  stakeWarning?: string | null
+  unstakeWarning?: string | null
+  claimWarning?: string | null
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +78,7 @@ export interface ChangeQuoteRequest {
   stakePolicyId: string
   currencyCode: string
   nativeAmount: string
-  signerSeed: string
+  wallet: EdgeCurrencyWallet
 }
 
 export interface QuoteAllocation {
@@ -65,7 +99,7 @@ export interface ChangeQuote {
 
 export interface StakePositionRequest {
   stakePolicyId: string
-  signerSeed: string
+  wallet: EdgeCurrencyWallet
 }
 
 export interface PositionAllocation {
@@ -98,15 +132,7 @@ export interface StakePosition {
 // -----------------------------------------------------------------------------
 
 export interface StakePlugin {
-  getStakePolicies: () => Promise<StakePolicy[]>
+  policies: StakePolicy[]
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
-}
-
-// -----------------------------------------------------------------------------
-// Info Server Response
-// -----------------------------------------------------------------------------
-
-export interface InfoServerResponse {
-  policies: { [key: string]: number }
 }

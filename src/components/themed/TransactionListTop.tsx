@@ -15,12 +15,13 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
-import { StakePolicy } from '../../plugins/stake-plugins'
+import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
+import { StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
-import { stakePlugin } from '../../util/stakeUtils'
+import { getPluginFromPolicy } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -64,6 +65,7 @@ interface DispatchProps {
 interface State {
   input: string
   stakePolicies: StakePolicy[] | null
+  stakePlugins: StakePlugin[] | null
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -75,7 +77,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     super(props)
     this.state = {
       input: '',
-      stakePolicies: null
+      stakePolicies: null,
+      stakePlugins: null
     }
   }
 
@@ -83,21 +86,30 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     if (!prevProps.searching && this.props.searching && this.textInput.current) {
       this.textInput.current.focus()
     }
+    this.updatePluginsAndPolicies()
   }
 
   componentDidMount() {
+    this.updatePluginsAndPolicies()
+  }
+
+  updatePluginsAndPolicies() {
     const { currencyCode, wallet } = this.props
     const { pluginId } = wallet.currencyInfo
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
-      stakePlugin.getStakePolicies().then(stakePolicies => {
-        const filteredStatePolicies = stakePolicies.filter(stakePolicy => {
-          return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
-        })
-        this.setState({ stakePolicies: filteredStatePolicies })
+      makeStakePlugins().then(stakePlugins => {
+        let stakePolicies: StakePolicy[] = []
+        for (const stakePlugin of stakePlugins) {
+          const filteredStatePolicies = stakePlugin.policies.filter(stakePolicy => {
+            return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
+          })
+          stakePolicies = [...stakePolicies, ...filteredStatePolicies]
+        }
+        this.setState({ stakePolicies, stakePlugins })
       })
     } else {
-      this.setState({ stakePolicies: [] })
+      this.setState({ stakePolicies: [], stakePlugins: [] })
     }
   }
 
@@ -238,8 +250,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleStakePress = () => {
-    const { currencyCode, wallet } = this.props
-    const { stakePolicies } = this.state
+    const { currencyCode, wallet, navigation } = this.props
+    const { stakePlugins, stakePolicies } = this.state
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
@@ -250,12 +262,19 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     }
 
     // Handle StakePlugin staking
-    if (stakePolicies != null && stakePolicies.length > 0) {
-      Actions.push('stakeOptions', {
-        walletId: wallet.id,
-        currencyCode,
-        stakePolicies
-      })
+    if (stakePlugins != null && stakePolicies != null) {
+      if (stakePolicies.length > 1) {
+        navigation.push('stakeOptions', {
+          walletId: wallet.id,
+          currencyCode,
+          stakePlugins,
+          stakePolicies
+        })
+      } else if (stakePolicies.length === 1) {
+        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicies[0])
+        // Transition to next scene immediately
+        if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicies[0] })
+      }
     }
   }
 
