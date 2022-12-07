@@ -77,11 +77,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
       await loanAccountMapRecord.update(loanAccountMapRecord.data)
     }
 
-    if (existingLoanAccountEntry == null) {
-      logActivity(`Create Loan Account`, { loanAccount })
-    } else {
-      logActivity(`Update Loan Account`, { loanAccount })
-    }
+    logActivity(`Create Loan Account`, { loanAccountId: loanAccount.id })
 
     dispatch({
       type: 'LOAN_MANAGER/SET_LOAN_ACCOUNT',
