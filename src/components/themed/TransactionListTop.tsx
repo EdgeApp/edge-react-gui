@@ -86,7 +86,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     if (!prevProps.searching && this.props.searching && this.textInput.current) {
       this.textInput.current.focus()
     }
-    this.updatePluginsAndPolicies()
+
+    // Update staking policies if the wallet changes
+    if (prevProps.wallet !== this.props.wallet) {
+      this.updatePluginsAndPolicies()
+    }
   }
 
   componentDidMount() {
