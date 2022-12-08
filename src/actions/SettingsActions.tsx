@@ -11,7 +11,6 @@ import {
   setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
   setDeveloperModeOn as setDeveloperModeOnAccountSettings,
   setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
-  setSpamFilterOn as setSpamFilterOnAccountSettings,
   setSpendingLimits as setSpendingLimitsAccountSettings
 } from '../modules/Core/Account/settings'
 import { convertCurrency } from '../selectors/WalletSelectors'
@@ -257,22 +256,6 @@ export function setDeveloperModeOn(developerModeOn: boolean): ThunkAction<void> 
           return
         }
         dispatch({ type: 'DEVELOPER_MODE_OFF' })
-      })
-      .catch(showError)
-  }
-}
-
-export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    setSpamFilterOnAccountSettings(account, spamFilterOn)
-      .then(() => {
-        if (spamFilterOn) {
-          dispatch({ type: 'SPAM_FILTER_ON' })
-          return
-        }
-        dispatch({ type: 'SPAM_FILTER_OFF' })
       })
       .catch(showError)
   }

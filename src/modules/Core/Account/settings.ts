@@ -64,7 +64,6 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true,
-  spamFilterOn: true,
   spendingLimits: {
     transaction: {
       amount: 0,
@@ -77,7 +76,6 @@ export const LOCAL_ACCOUNT_TYPES = {
   developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
-  spamFilterOn: 'boolean',
   spendingLimits: 'object'
 }
 
@@ -134,13 +132,6 @@ export const setAccountBalanceVisibility = async (account: EdgeAccount, isAccoun
 export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: boolean) => {
   return getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { developerModeOn })
-    return setLocalSettings(account, updatedSettings)
-  })
-}
-
-export const setSpamFilterOn = async (account: EdgeAccount, spamFilterOn: boolean) => {
-  return getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { spamFilterOn })
     return setLocalSettings(account, updatedSettings)
   })
 }

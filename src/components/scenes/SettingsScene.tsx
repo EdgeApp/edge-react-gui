@@ -11,7 +11,6 @@ import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
-  setSpamFilterOn,
   showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
@@ -48,7 +47,6 @@ interface StateProps {
   autoLogoutTimeInSeconds: number
   defaultFiat: string
   developerModeOn: boolean
-  spamFilterOn: boolean
   isLocked: boolean
   pinLoginEnabled: boolean
   supportsTouchId: boolean
@@ -64,7 +62,6 @@ interface DispatchProps {
   showRestoreWalletsModal: () => void
   showUnlockSettingsModal: () => void
   toggleDeveloperMode: (developerModeOn: boolean) => void
-  toggleSpamFilter: (spamFilterOn: boolean) => void
   logoutRequest: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
@@ -229,10 +226,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     navigation.navigate('notificationSettings', {})
   }
 
-  handleSpamToggle = async (): Promise<void> => {
-    this.props.toggleSpamFilter(!this.props.spamFilterOn)
-  }
-
   handleDeveloperToggle = (): void => {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
@@ -307,12 +300,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsSwitchRow
-            key="spamFilter"
-            label={s.strings.settings_hide_spam_transactions}
-            value={this.props.spamFilterOn}
-            onPress={this.handleSpamToggle}
-          />
           <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
@@ -377,7 +364,6 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds,
     defaultFiat: getDefaultFiat(state),
     developerModeOn: state.ui.settings.developerModeOn,
-    spamFilterOn: state.ui.settings.spamFilterOn,
     isLocked: state.ui.settings.changesLocked,
     pinLoginEnabled: state.ui.settings.pinLoginEnabled,
     supportsTouchId: state.ui.settings.isTouchSupported,
@@ -413,9 +399,6 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     toggleDeveloperMode(developerModeOn: boolean) {
       dispatch(setDeveloperModeOn(developerModeOn))
-    },
-    toggleSpamFilter(spamFilterOn: boolean) {
-      dispatch(setSpamFilterOn(spamFilterOn))
     },
     async logoutRequest() {
       await dispatch(logoutRequest())

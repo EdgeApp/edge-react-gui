@@ -28,7 +28,6 @@ describe('MyComponent', () => {
         autoLogoutTimeInSeconds={600}
         defaultFiat="iso:USD"
         developerModeOn
-        spamFilterOn
         isLocked={false}
         pinLoginEnabled
         supportsTouchId={false}
@@ -43,7 +42,6 @@ describe('MyComponent', () => {
         showRestoreWalletsModal={() => undefined}
         showUnlockSettingsModal={() => undefined}
         toggleDeveloperMode={() => undefined}
-        toggleSpamFilter={() => undefined}
         logoutRequest={async () => undefined}
       />
     )
@@ -62,7 +60,6 @@ describe('MyComponent', () => {
         autoLogoutTimeInSeconds={600}
         defaultFiat="iso:USD"
         developerModeOn
-        spamFilterOn
         isLocked
         pinLoginEnabled
         supportsTouchId={false}
@@ -77,7 +74,6 @@ describe('MyComponent', () => {
         showRestoreWalletsModal={() => undefined}
         showUnlockSettingsModal={() => undefined}
         toggleDeveloperMode={() => undefined}
-        toggleSpamFilter={() => undefined}
         logoutRequest={async () => undefined}
       />
     )
