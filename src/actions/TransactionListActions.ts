@@ -151,6 +151,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
     const currentViewableTransactions = state.ui.scenes.transactionList.transactions
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+    const spamFilterOn = state.ui.settings.spamFilterOn
     const exchangeDenom = getExchangeDenomination(state, wallet.currencyInfo.pluginId, edgeTransaction.currencyCode)
     let numberOfRelevantTransactions = 0
     let isTransactionForSelectedWallet = false
@@ -175,7 +176,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
     if (!isReceivedTransaction(edgeTransaction)) return
-    if (!isSpamTransaction(edgeTransaction, exchangeRate, exchangeDenom)) showTransactionDropdown(edgeTransaction)
+    if (!spamFilterOn || !isSpamTransaction(edgeTransaction, exchangeRate, exchangeDenom)) showTransactionDropdown(edgeTransaction)
   }
 }
 
