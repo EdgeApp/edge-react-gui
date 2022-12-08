@@ -7,12 +7,10 @@ import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { isSpamTransaction } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ThemeProps, useTheme } from '../services/ThemeContext'
@@ -245,11 +243,8 @@ export const TransactionList = withWallet((props: OwnProps) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
   const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
-  const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
-  const filterTransactions = transactions.filter(tx => !isSpamTransaction(tx, exchangeRate, exchangeDenom))
-  const numTransactions = filterTransactions.length
   const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
   const handleMoreTransactions = useHandler((reset: boolean): void => {
@@ -263,7 +258,7 @@ export const TransactionList = withWallet((props: OwnProps) => {
       numTransactions={numTransactions}
       tokenId={tokenId}
       theme={theme}
-      transactions={filterTransactions}
+      transactions={transactions}
       fetchMoreTransactions={handleMoreTransactions}
     />
   )

@@ -2,10 +2,9 @@ import { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown'
 import { showError } from '../components/services/AirshipInstance'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { TransactionListTx } from '../types/types'
-import { isReceivedTransaction, isSpamTransaction, unixToLocaleDateTime } from '../util/utils'
+import { isReceivedTransaction, unixToLocaleDateTime } from '../util/utils'
 import { checkFioObtData } from './FioActions'
 
 export const updateBalance = () => ({
@@ -146,12 +145,9 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
   return (dispatch, getState) => {
     const edgeTransaction: EdgeTransaction = edgeTransactions[0]
     const state = getState()
-    const wallet = state.core.account.currencyWallets[walletId]
-    const exchangeRate = state.exchangeRates[`${edgeTransaction.currencyCode}_${wallet.fiatCurrencyCode}`]
     const currentViewableTransactions = state.ui.scenes.transactionList.transactions
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-    const exchangeDenom = getExchangeDenomination(state, wallet.currencyInfo.pluginId, edgeTransaction.currencyCode)
     let numberOfRelevantTransactions = 0
     let isTransactionForSelectedWallet = false
     const receivedTxs: EdgeTransaction[] = []
@@ -175,7 +171,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
     if (!isReceivedTransaction(edgeTransaction)) return
-    if (!isSpamTransaction(edgeTransaction, exchangeRate, exchangeDenom)) showTransactionDropdown(edgeTransaction)
+    showTransactionDropdown(edgeTransaction)
   }
 }
 
