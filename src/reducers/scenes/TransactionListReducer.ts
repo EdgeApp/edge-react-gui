@@ -86,7 +86,7 @@ const currentEndIndex = (state = 0, action: Action): number => {
   }
 }
 
-export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
+export const transactionList = combineReducers<TransactionListState, Action>({
   currentCurrencyCode,
   currentEndIndex,
   currentWalletId,

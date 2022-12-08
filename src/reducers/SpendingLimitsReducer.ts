@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
 
 import { Action } from '../types/reduxTypes'
+import { SpendingLimits } from '../types/types'
 
-// REDUCERS
-export const initialState = {
+export const initialState: SpendingLimits = {
   transaction: {
     isEnabled: false,
     amount: 0
@@ -37,6 +37,6 @@ export const transaction = combineReducers({
   amount
 })
 
-export const spendingLimits = combineReducers({
+export const spendingLimits = combineReducers<SpendingLimits, Action>({
   transaction
 })

@@ -24,7 +24,7 @@ const defaultReferralCache: ReferralCache = {
   accountPlugins: []
 }
 
-const accountInner: Reducer<AccountState, Action> = combineReducers({
+const accountInner = combineReducers<AccountState, Action>({
   accountReferral(state: AccountReferral = defaultAccountReferral, action: Action): AccountReferral {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {

@@ -88,7 +88,7 @@ const walletAccountActivationQuoteError = (state: string = '', action: Action): 
   }
 }
 
-export const createWallet: Reducer<CreateWalletState, Action> = combineReducers({
+export const createWallet = combineReducers<CreateWalletState, Action>({
   isCheckingHandleAvailability,
   handleAvailableStatus,
   handleActivationInfo,

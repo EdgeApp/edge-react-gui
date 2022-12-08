@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
@@ -44,7 +44,7 @@ export interface RootState {
   readonly network: NetworkState
 }
 
-export const rootReducer: Reducer<RootState, Action> = combineReducers({
+export const rootReducer = combineReducers<RootState, Action>({
   contacts(state: GuiContact[] = [], action: Action): GuiContact[] {
     return action.type === 'CONTACTS/LOAD_CONTACTS_SUCCESS' ? action.data.contacts : state
   },
@@ -60,7 +60,6 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
       case 'LOGOUT':
         return {}
     }
-    // @ts-expect-error
     return state
   },
 
@@ -84,8 +83,11 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
     return state
   },
 
-  // @ts-expect-error
-  priceChangeNotifications(state: PriceChangeNotificationSettings = { ignorePriceChanges: false }, action: Action): PriceChangeNotificationSettings {
+  priceChangeNotifications(
+    // @ts-expect-error
+    state: PriceChangeNotificationSettings = { ignorePriceChanges: false },
+    action: Action
+  ): PriceChangeNotificationSettings {
     switch (action.type) {
       case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':
         return action.data

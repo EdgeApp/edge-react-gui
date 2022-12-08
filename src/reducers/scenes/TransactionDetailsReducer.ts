@@ -17,6 +17,6 @@ const subcategories: Reducer<string[], Action> = (state = [], action) => {
   }
 }
 
-export const transactionDetails: Reducer<TransactionDetailsState, Action> = combineReducers({
+export const transactionDetails = combineReducers<TransactionDetailsState, Action>({
   subcategories
 })
