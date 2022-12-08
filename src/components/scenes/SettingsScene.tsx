@@ -110,9 +110,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       case 'TouchID':
         this.setState({ touchIdText: s.strings.settings_button_use_touchID })
         break
-      // @ts-expect-error
+      // @ts-expect-error This is supposed to handle Android:
       case 'Fingerprint':
         this.setState({ touchIdText: s.strings.settings_button_use_biometric })
+        break
+
+      case false:
+        break
     }
   }
 

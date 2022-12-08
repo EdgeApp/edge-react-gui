@@ -36,15 +36,17 @@ export const loanManager = combineReducers<LoanManagerState, Action>({
       case 'LOAN_MANAGER/SET_SYNC_RATIO': {
         return Date.now()
       }
+      default:
+        return state
     }
-    return state
   },
   syncRatio(state: number = 0, action: Action): number {
     switch (action.type) {
       case 'LOAN_MANAGER/SET_SYNC_RATIO': {
         return action.syncRatio
       }
+      default:
+        return state
     }
-    return state
   }
 })

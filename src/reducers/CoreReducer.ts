@@ -33,8 +33,9 @@ export const core = combineReducers<CoreState, Action>({
         return action.data.account
       case 'LOGOUT':
         return defaultAccount
+      default:
+        return state
     }
-    return state
   },
 
   context(state: EdgeContext = defaultContext, action: Action): EdgeContext {
@@ -51,8 +52,9 @@ export const core = combineReducers<CoreState, Action>({
         return true
       case 'LOGOUT':
         return false
+      default:
+        return state
     }
-    return state
   },
 
   // Nested reducers:

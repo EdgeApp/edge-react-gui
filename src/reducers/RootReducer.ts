@@ -59,8 +59,9 @@ export const rootReducer = combineReducers<RootState, Action>({
         return action.data.exchangeRates
       case 'LOGOUT':
         return {}
+      default:
+        return state
     }
-    return state
   },
 
   nextUsername(state: string | null = null, action: Action): string | null {
@@ -69,8 +70,9 @@ export const rootReducer = combineReducers<RootState, Action>({
         const { username = null } = action.data
         return username
       }
+      default:
+        return state
     }
-    return state
   },
 
   pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
@@ -79,8 +81,9 @@ export const rootReducer = combineReducers<RootState, Action>({
         return action.data
       case 'DEEP_LINK_HANDLED':
         return null
+      default:
+        return state
     }
-    return state
   },
 
   priceChangeNotifications(
@@ -91,8 +94,9 @@ export const rootReducer = combineReducers<RootState, Action>({
     switch (action.type) {
       case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':
         return action.data
+      default:
+        return state
     }
-    return state
   },
 
   sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {

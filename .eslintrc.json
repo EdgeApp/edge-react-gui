@@ -10,6 +10,14 @@
   "globals": {
     "fetch": true
   },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/switch-exhaustiveness-check": "error"
+      }
+    }
+  ],
   "parserOptions": {
     "project": "tsconfig.json"
   },

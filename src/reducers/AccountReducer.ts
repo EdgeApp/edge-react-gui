@@ -61,8 +61,9 @@ const accountInner = combineReducers<AccountState, Action>({
         const promotions = state.promotions.filter(promo => promo.installerId !== installerId)
         return { ...state, promotions }
       }
+      default:
+        return state
     }
-    return state
   },
 
   accountReferralLoaded(state: boolean = false, action: Action): boolean {
@@ -79,8 +80,9 @@ const accountInner = combineReducers<AccountState, Action>({
         const cache = action.data
         return cache
       }
+      default:
+        return state
     }
-    return state
   }
 })
 
