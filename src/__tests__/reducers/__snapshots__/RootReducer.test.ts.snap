@@ -228,6 +228,7 @@ Object {
       },
       "pinLoginEnabled": false,
       "preferredSwapPluginId": "",
+      "spamFilterOn": true,
       "spendingLimits": Object {
         "transaction": Object {
           "amount": 0,

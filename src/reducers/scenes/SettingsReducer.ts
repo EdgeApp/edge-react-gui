@@ -32,6 +32,7 @@ export interface AccountInitPayload {
   passwordReminder: PasswordReminderState
   pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
+  spamFilterOn: boolean
   spendingLimits: SpendingLimits
   touchIdInfo: GuiTouchIdInfo
   walletId: string
@@ -81,6 +82,7 @@ export interface SettingsState {
   isAccountBalanceVisible: boolean
   walletsSort: SortOption
   mostRecentWallets: MostRecentWallet[]
+  spamFilterOn: boolean
   spendingLimits: {
     transaction: {
       isEnabled: boolean
@@ -131,6 +133,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        spamFilterOn,
         developerModeOn
       } = action.data
       const newState: SettingsState = {
@@ -149,6 +152,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        spamFilterOn,
         developerModeOn
       }
       if (developerModeOn && ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
@@ -161,6 +165,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'DEVELOPER_MODE_OFF': {
       if (ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = false
       return { ...state, developerModeOn: false }
+    }
+    case 'SPAM_FILTER_ON': {
+      return { ...state, spamFilterOn: true }
+    }
+    case 'SPAM_FILTER_OFF': {
+      return { ...state, spamFilterOn: false }
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {

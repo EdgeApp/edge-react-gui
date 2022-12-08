@@ -246,10 +246,11 @@ export const TransactionList = withWallet((props: OwnProps) => {
 
   const account = useSelector(state => state.core.account)
   const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
-  const filterTransactions = transactions.filter(tx => !isSpamTransaction(tx, exchangeRate, exchangeDenom))
-  const numTransactions = filterTransactions.length
+  const spamFilteredTransactions = transactions.filter(tx => !spamFilterOn || !isSpamTransaction(tx, exchangeRate, exchangeDenom))
+  const numTransactions = spamFilteredTransactions.length
   const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
   const handleMoreTransactions = useHandler((reset: boolean): void => {
@@ -263,7 +264,7 @@ export const TransactionList = withWallet((props: OwnProps) => {
       numTransactions={numTransactions}
       tokenId={tokenId}
       theme={theme}
-      transactions={filterTransactions}
+      transactions={spamFilteredTransactions}
       fetchMoreTransactions={handleMoreTransactions}
     />
   )

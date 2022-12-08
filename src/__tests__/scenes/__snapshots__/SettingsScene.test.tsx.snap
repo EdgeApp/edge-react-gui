@@ -887,6 +887,74 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             }
           >
+            Hide spam transactions
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
+              style={
+                Array [
+                  Object {
+                    "height": 31,
+                    "width": 51,
+                  },
+                  Object {
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
+                  },
+                ]
+              }
+              tintColor="#87939E"
+              value={true}
+            />
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
             Notifications
           </Text>
           <Text
@@ -2359,6 +2427,74 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             }
           >
             PIN Re-login
+          </Text>
+          <View
+            pointerEvents="none"
+            style={
+              Object {
+                "marginHorizontal": 11,
+                "padding": 0,
+              }
+            }
+          >
+            <RCTSwitch
+              accessibilityRole="switch"
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#66EDA8"
+              style={
+                Array [
+                  Object {
+                    "height": 31,
+                    "width": 51,
+                  },
+                  Object {
+                    "backgroundColor": "#87939E",
+                    "borderRadius": 16,
+                  },
+                ]
+              }
+              tintColor="#87939E"
+              value={true}
+            />
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Hide spam transactions
           </Text>
           <View
             pointerEvents="none"
