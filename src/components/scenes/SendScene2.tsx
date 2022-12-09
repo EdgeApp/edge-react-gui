@@ -320,6 +320,8 @@ const SendComponent = (props: Props) => {
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
               navigation.navigate('exchangeScene', {})
               break
+            default:
+              break
           }
         }
       })
