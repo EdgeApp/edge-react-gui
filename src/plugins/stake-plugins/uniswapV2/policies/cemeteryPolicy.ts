@@ -1,7 +1,7 @@
 import '@ethersproject/shims'
 
 import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings'
@@ -228,25 +228,21 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
             const tokenAContract = makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
-            const allowanceResponse = await multipass(p => tokenAContract.connect(p).allowance(signerAddress, spenderAddress))
-            const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
-            if (!isFullyAllowed) {
-              txs.build(
-                (gasLimit =>
-                  async function approveSwapRouter({ signer }) {
-                    const result = await tokenAContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                      gasLimit,
-                      gasPrice,
-                      nonce: nextNonce()
-                    })
-                    cacheTxMetadata(result.hash, parentCurrencyCode, {
-                      name: metadataName,
-                      category: 'Expense:Fees',
-                      notes: `Approve ${metadataLpName} liquidity pool contract`
-                    })
-                  })(gasLimitAcc('50000'))
-              )
-            }
+            txs.build(
+              (gasLimit =>
+                async function approveSwapRouter({ signer }) {
+                  const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
+                  })
+                  cacheTxMetadata(result.hash, parentCurrencyCode, {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${metadataLpName} liquidity pool contract`
+                  })
+                })(gasLimitAcc('50000'))
+            )
           })
         )
 
@@ -375,20 +371,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
               const spenderAddress = poolContract.address
-              const allowanceResponse = await lpTokenContract.connect(signer).allowance(signerAddress, spenderAddress)
-              const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
-              if (!isFullyAllowed) {
-                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
-                cacheTxMetadata(result.hash, parentCurrencyCode, {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${metadataLpName} rewards pool contract`
-                })
-              }
+              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
+              })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Approve ${metadataLpName} rewards pool contract`
+              })
             })(gasLimitAcc('50000'))
         )
 
@@ -474,25 +466,21 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
         // 4. Allow Swap on the LP-token contract
         const spenderAddress = swapRouterContract.address
-        const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
-        const isAllowed = allowanceResponse.sub(expectedLiquidityAmount).gte(0)
-        if (!isAllowed) {
-          txs.build(
-            (gasLimit =>
-              async function approveSwapRouter({ signer }) {
-                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
-                cacheTxMetadata(result.hash, parentCurrencyCode, {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${metadataLpName} liquidity pool contract`
-                })
-              })(gasLimitAcc('50000'))
-          )
-        }
+        txs.build(
+          (gasLimit =>
+            async function approveSwapRouter({ signer }) {
+              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(expectedLiquidityAmount), {
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
+              })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Approve ${metadataLpName} liquidity pool contract`
+              })
+            })(gasLimitAcc('50000'))
+        )
 
         // 4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
         txs.build(

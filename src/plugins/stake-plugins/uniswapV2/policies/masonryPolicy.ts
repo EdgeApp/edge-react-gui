@@ -1,5 +1,5 @@
-import { gt, gte, lte, sub } from 'biggystring'
-import { ethers } from 'ethers'
+import { gt, lte } from 'biggystring'
+import { BigNumber } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings'
@@ -8,7 +8,7 @@ import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, S
 import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
 import { getSeed } from '../../util/getSeed'
-import { fromHex, toHex } from '../../util/hex'
+import { fromHex } from '../../util/hex'
 import { makeContract, makeSigner, multipass } from '../contracts'
 import { pluginInfo } from '../pluginInfo'
 import { StakePluginPolicy } from '../types'
@@ -214,33 +214,26 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
       // 2. Send Stake TX on Pool-Contract
 
-      // Make sure the allowance >= nativeAmount for the selected allocation
-      // TODO: Change condition to check the `allowance >= nativeAmount` for each stake-asset
-
       await Promise.all(
         allocations.map(async allocation => {
           // We don't need to approve the stake pool contract for the token earned token contract
           if (allocation.allocationType === 'claim') return
           const tokenContract = makeContract(allocation.currencyCode)
-          const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, poolContract.address))
-          const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
-          if (!isFullyAllowed) {
-            txs.build(
-              (gasLimit =>
-                async function approvePoolContract({ signer }) {
-                  const result = await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
-                  cacheTxMetadata(result.hash, nativeCurrencyCode, {
-                    name: metadataName,
-                    category: 'Expense:Fees',
-                    notes: 'Approve staking rewards pool contract'
-                  })
-                })(gasLimitAcc('50000'))
-            )
-          }
+          txs.build(
+            (gasLimit =>
+              async function approvePoolContract({ signer }) {
+                const result = await tokenContract.connect(signer).approve(poolContract.address, BigNumber.from(allocation.nativeAmount), {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: 'Approve staking rewards pool contract'
+                })
+              })(gasLimitAcc('50000'))
+          )
         })
       )
 
