@@ -30,13 +30,15 @@ import { PLATFORM } from './platform'
 const palette = {
   white: '#FFFFFF',
   black: '#000000',
-  royalBlue: '#003B65',
-  darkerNavy: '#0c1134',
-  edgeNavy: '#12194e',
+  darkestNavy: '#000020',
+  // darkerNavy: '#000028',
+  edgeNavy: '#000028',
+  // edgeNavy: '#12194e',
   lighterNavy: '#172164',
   edgeBlue: '#0c1134',
   lightMint: '#a6f5cc',
   edgeMint: '#66EDA8',
+  darkMint: '#16272E',
   blueGray: '#A4C7DF',
   gray: '#87939E',
   lightGray: '#D9E3ED',
@@ -83,11 +85,11 @@ export const edgeDark: Theme = {
   iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkerNavy,
-  buySellCustomPluginModalIcon: palette.darkerNavy,
+  transactionListIconBackground: palette.edgeBlue,
+  buySellCustomPluginModalIcon: palette.edgeNavy,
 
   // Background
-  backgroundGradientColors: [palette.edgeNavy, palette.edgeNavy],
+  backgroundGradientColors: [palette.darkestNavy, palette.darkestNavy, palette.darkMint],
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
@@ -105,8 +107,8 @@ export const edgeDark: Theme = {
   modalBorderRadiusRem: 1,
 
   sideMenuColor: palette.edgeNavy,
-  sideMenuBorderColor: palette.transparent,
-  sideMenuBorderWidth: 0,
+  sideMenuBorderColor: palette.lighterNavy,
+  sideMenuBorderWidth: 0.5,
   sideMenuFont: palette.QuicksandMedium,
 
   // Tile
@@ -151,8 +153,8 @@ export const edgeDark: Theme = {
   keypadButtonFont: palette.QuicksandMedium,
 
   primaryButtonOutline: palette.transparent,
-  primaryButtonOutlineWidth: 1,
-  primaryButton: [palette.edgeMint, palette.lightMint],
+  primaryButtonOutlineWidth: 0,
+  primaryButton: [palette.lightMint, palette.lightMint],
   primaryButtonColorStart: { x: 0.25, y: 0 },
   primaryButtonColorEnd: { x: 0.75, y: 1 },
   primaryButtonText: palette.edgeBlue,
@@ -207,10 +209,10 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: [palette.darkerNavy, palette.lighterNavy],
+  tabBarBackground: [palette.edgeNavy, palette.edgeNavy],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeNavy],
+  tabBarTopOutlineColors: [palette.lighterNavy, palette.lighterNavy],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
@@ -275,7 +277,7 @@ export const edgeDark: Theme = {
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.darkerNavy, palette.lighterNavy],
+  settingsRowHeaderBackground: [palette.edgeNavy, palette.edgeNavy],
   settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
   settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
