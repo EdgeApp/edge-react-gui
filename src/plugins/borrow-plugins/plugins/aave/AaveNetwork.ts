@@ -2,6 +2,7 @@ import { BigNumber, ethers } from 'ethers'
 
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
 import ERC20_ABI from './abi/ERC20_ABI.json'
+import IPRICEORACLE_ABI from './abi/IPRICEORACLE_ABI.json'
 import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
 import PARASWAP_ABI from './abi/PARASWAP_ABI.json'
 import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
@@ -16,6 +17,7 @@ export interface AaveNetworkBlueprint {
     lendingPool: string
     protocolDataProvider: string
     paraSwapRepayAdapter: string
+    IPriceOracle: string
   }
   enabledTokens: { [currencyCode: string]: boolean }
 }
@@ -27,6 +29,7 @@ export interface AaveNetwork {
   lendingPool: ethers.Contract
   protocolDataProvider: ethers.Contract
   paraSwapRepayAdapter: ethers.Contract
+  IPriceOracle: ethers.Contract
 
   // Helpers
   getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
@@ -41,6 +44,8 @@ export interface AaveNetwork {
     stableApr: number
   }>
   makeTokenContract: (tokenAddress: string) => Promise<ethers.Contract>
+
+  getAssetPrice: (tokenAddress: string) => Promise<BigNumber>
 }
 
 interface FunctionCache {
@@ -68,6 +73,8 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
 
   const lendingPool = new ethers.Contract(contractAddresses.lendingPool, LENDING_POOL_ABI, provider)
   const protocolDataProvider = new ethers.Contract(contractAddresses.protocolDataProvider, PROTOCOL_DATA_PROVIDER_ABI, provider)
+  const IPriceOracle = new ethers.Contract(contractAddresses.IPriceOracle, IPRICEORACLE_ABI, provider)
+
   const paraSwapRepayAdapter = new ethers.Contract(contractAddresses.paraSwapRepayAdapter, PARASWAP_ABI, provider)
 
   const instance: AaveNetwork = {
@@ -75,10 +82,15 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     lendingPool,
     protocolDataProvider,
     paraSwapRepayAdapter,
+    IPriceOracle,
 
     //
     // Helpers
     //
+
+    async getAssetPrice(address): Promise<BigNumber> {
+      return await IPriceOracle.getAssetPrice(address)
+    },
 
     async getAllReservesTokens() {
       if (fnCache.getAllReservesTokens != null) return fnCache.getAllReservesTokens
