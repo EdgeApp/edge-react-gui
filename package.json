@@ -133,6 +133,7 @@
     "react-native-flipper": "^0.143.0",
     "react-native-fs": "^2.19.0",
     "react-native-gesture-handler": "^2.4.1",
+    "react-native-haptic-feedback": "^1.14.0",
     "react-native-image-picker": "^4.0.6",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.5.6",
