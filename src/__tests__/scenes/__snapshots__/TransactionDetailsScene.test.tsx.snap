@@ -129,7 +129,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -144,6 +145,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -269,7 +271,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -284,6 +287,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -395,7 +399,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -410,6 +415,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -524,7 +530,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -539,6 +546,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -703,7 +711,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -718,6 +727,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -828,7 +838,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -843,6 +854,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1159,7 +1171,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1174,6 +1187,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1299,7 +1313,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1314,6 +1329,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1425,7 +1441,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1440,6 +1457,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1554,7 +1572,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1569,6 +1588,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1733,7 +1753,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1748,6 +1769,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1858,7 +1880,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1873,6 +1896,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]

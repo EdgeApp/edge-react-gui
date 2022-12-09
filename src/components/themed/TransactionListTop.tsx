@@ -243,7 +243,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleSend = (): void => {
-    Actions.push('send', {})
+    const { wallet, tokenId } = this.props
+    Actions.push('send2', { walletId: wallet.id, tokenId })
   }
 
   handleSearchDone = () => {

@@ -16,8 +16,11 @@ describe('AddressTileComponent', () => {
       }
     }
 
+    const fakeAccount: any = {}
+
     const actual = renderer.render(
       <AddressTileComponent
+        account={fakeAccount}
         coreWallet={fakeWallet}
         currencyCode="BTC"
         title="Title"

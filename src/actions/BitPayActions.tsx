@@ -1,9 +1,10 @@
 import { asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
+import { SendScene2Params } from '../components/scenes/SendScene2'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
@@ -19,6 +20,7 @@ import {
   BpVerificationResponse
 } from '../types/BitPayTypes'
 import { Actions } from '../types/routerTypes'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 
 /**
  * Performs the fetch commands to BitPay.
@@ -67,6 +69,7 @@ const bitPaySupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
 export async function launchBitPay(
+  account: EdgeAccount,
   uri: string,
   params: {
     wallet?: EdgeCurrencyWallet
@@ -98,7 +101,8 @@ export async function launchBitPay(
 
   // Select payment wallet, if this wasn't called directly from a wallet's
   // send scene
-  let selectedWallet, selectedCurrencyCode
+  let selectedWallet: EdgeCurrencyWallet | undefined
+  let selectedCurrencyCode: string | undefined
   if (params.wallet) {
     // Ensure the core wallet is accepted by this invoice as a payment option
     selectedCurrencyCode = params.wallet.currencyInfo.currencyCode
@@ -144,30 +148,37 @@ export async function launchBitPay(
 
   // Validate invoice data
   const invoiceResponse = asBpInvoiceResponse(responseJson)
-  let errorData = { uri, initOpts, responseJson, invoiceResponse }
+  let errorData: any = { uri, initOpts, responseJson, invoiceResponse }
   if (invoiceResponse.instructions.length > 1) {
     throw new BitPayError('MultiInstructionInvoice', { errorData })
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
-  // @ts-expect-error
   errorData = { ...errorData, invoiceInstruction }
   if (!invoiceInstruction.outputs || invoiceInstruction.outputs.length === 0) {
     throw new BitPayError('EmptyOutputInvoice', { errorData })
   }
+
+  const metadata = params.metadata ?? {}
+  const paymentIdString = sprintf(s.strings.bitpay_metadata_name, paymentId)
+  metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
+
   // Make the spend to generate the tx hexes
   let requiredFeeRate = invoiceInstruction.requiredFeeRate
   // This is in addition to the 1.5x multiplier in edge-currency-bitcoin. It's an additional buffer
   // because the protocol doesn't discount segwit transactions and we want to make sure the transaction succeeds.
   if (typeof requiredFeeRate === 'number') requiredFeeRate *= 1.2
   const spendInfo: EdgeSpendInfo = {
-    // @ts-expect-error
-    selectedCurrencyCode,
-    spendTargets: invoiceInstruction.outputs.map(output => {
+    currencyCode: selectedCurrencyCode,
+    // Reverse the outputs since Anypay puts the merchant amount first. Making it last will have
+    // amount shown in a large Amount Tile. Anypay fee will show compressed in a combined
+    // address/amount Tile
+    spendTargets: invoiceInstruction.outputs.reverse().map(output => {
       return {
         nativeAmount: output.amount.toString(),
         publicAddress: output.address
       }
     }),
+    metadata,
     otherParams: {
       paymentProtocolInfo: {
         merchant: {
@@ -176,92 +187,72 @@ export async function launchBitPay(
       }
     }
   }
-
-  const unsignedTx = await selectedWallet.makeSpend(spendInfo)
-  const unsignedHex = unsignedTx.otherParams?.unsignedTx ?? '' // unsignedTx is now a required field in otherParams in makeSpend()
-  const signedTx = await selectedWallet.signTx(unsignedTx)
-  const signedHex = signedTx.signedTx ?? ''
-
-  // @ts-expect-error
-  errorData = { ...errorData, spendInfo, walletId: selectedWallet.id, unsignedTx, signedTx }
-  if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
-
-  // Send the unsigned TX and signed weightedSize to BitPay for verification
-  const verificationPaymentRequest = {
-    chain: requestCurrencyCode,
-    currency: requestCurrencyCode,
-    transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
-  }
-  responseJson = await fetchBitPayJsonResponse(uri, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/payment-verification',
-      'x-paypro-version': '2'
-    },
-    body: JSON.stringify(verificationPaymentRequest)
-  })
-
-  // Verify that the transaction data reply matches
-  const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
-  if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
-    // @ts-expect-error
-    errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
-    errorData.responseJson = responseJson
-    throw new BitPayError('TxVerificationMismatch', { errorData })
+  if (requiredFeeRate != null) {
+    spendInfo.networkFeeOption = 'custom'
+    spendInfo.customNetworkFee = { satPerByte: Math.ceil(requiredFeeRate) }
   }
 
-  // Pass spend info to the send scene for user to confirm tx.
-  // TODO: using otherparams.protocolInfo.merchant.requiredFeeRate triggers a
-  // CORS error during the spend confirmation.
-  // Temp fix copies the calculation from the bitcoin plugin for paymentProtocol
-  // fees into customNetworkFee.
-  const spendTarget = spendInfo.spendTargets[0]
-  const metadata = params.metadata ?? {}
-  const paymentIdString = sprintf(s.strings.bitpay_metadata_name, paymentId)
-  metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
-  const guiMakeSpendInfo = {
-    selectedCurrencyCode,
-    nativeAmount: spendTarget.nativeAmount,
-    publicAddress: spendTarget.publicAddress,
-    networkFeeOption: 'custom',
-    // @ts-expect-error
-    customNetworkFee: { satPerByte: Math.ceil(parseFloat(requiredFeeRate) * 1.5) },
-    metadata,
-    lockInputs: true,
-    onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+  const sendParams: SendScene2Params = {
+    walletId: selectedWallet.id,
+    spendInfo,
+    tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
+    lockTilesMap: { amount: true, address: true },
+    onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
       Actions.pop()
-      if (!error && edgeTransaction) {
-        fetchBitPayJsonResponse(uri, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/payment',
-            'x-paypro-version': '2'
-          },
-          body: JSON.stringify({
-            chain: requestCurrencyCode,
-            currency: requestCurrencyCode,
-            transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
-          })
-        })
+    },
+    alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
+      const unsignedHex = edgeTransaction.otherParams?.unsignedTx
+      const signedHex = edgeTransaction.signedTx
+      errorData = { ...errorData, spendInfo, walletId: selectedWallet?.id, edgeTransaction }
+
+      if (selectedWallet == null) throw new Error('Missing selectedWallet')
+      if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
+
+      const verificationPaymentRequest = {
+        chain: requestCurrencyCode,
+        currency: requestCurrencyCode,
+        transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
       }
+      responseJson = await fetchBitPayJsonResponse(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/payment-verification',
+          'x-paypro-version': '2'
+        },
+        body: JSON.stringify(verificationPaymentRequest)
+      })
+
+      // Verify that the transaction data reply matches
+      const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
+      if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
+        errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
+        errorData.responseJson = responseJson
+        throw new BitPayError('TxVerificationMismatch', { errorData })
+      }
+
+      await fetchBitPayJsonResponse(uri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/payment',
+          'x-paypro-version': '2'
+        },
+        body: JSON.stringify({
+          chain: requestCurrencyCode,
+          currency: requestCurrencyCode,
+          transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
+        })
+      })
+      return await selectedWallet.broadcastTx(edgeTransaction)
     }
   }
 
   // Send confirmation scene
-  if (Actions.currentScene === 'send') {
-    Actions.refresh({
-      guiMakeSpendInfo,
-      selectedWalletId: selectedWallet?.id ?? '',
-      selectedCurrencyCode
-    })
+  if (Actions.currentScene === 'send2') {
+    Actions.pop()
+    Actions.push('send2', sendParams)
   } else {
-    Actions.push('send', {
-      // @ts-expect-error
-      guiMakeSpendInfo,
-      selectedWalletId: selectedWallet.id,
-      selectedCurrencyCode
-    })
+    Actions.push('send2', sendParams)
   }
 }
 
