@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { Action } from '../../../types/reduxTypes'
 import { LoanAccountMap } from '../types'
@@ -9,7 +9,7 @@ export interface LoanManagerState {
   readonly syncRatio: number
 }
 
-export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
+export const loanManager = combineReducers<LoanManagerState, Action>({
   loanAccounts(state: LoanAccountMap = {}, action: Action): LoanAccountMap {
     switch (action.type) {
       case 'LOAN_MANAGER/SET_LOAN_ACCOUNT': {
@@ -36,15 +36,17 @@ export const loanManager: Reducer<LoanManagerState, Action> = combineReducers({
       case 'LOAN_MANAGER/SET_SYNC_RATIO': {
         return Date.now()
       }
+      default:
+        return state
     }
-    return state
   },
   syncRatio(state: number = 0, action: Action): number {
     switch (action.type) {
       case 'LOAN_MANAGER/SET_SYNC_RATIO': {
         return action.syncRatio
       }
+      default:
+        return state
     }
-    return state
   }
 })

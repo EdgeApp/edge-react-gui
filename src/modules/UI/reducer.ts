@@ -15,7 +15,7 @@ export interface UiState {
   readonly wallets: WalletsState
 }
 
-const uiInner: Reducer<UiState, Action> = combineReducers({
+const uiInner = combineReducers<UiState, Action>({
   fio,
   passwordReminder,
   scenes,

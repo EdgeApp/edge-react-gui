@@ -159,26 +159,29 @@ export function walletListMenuAction(
           label: s.strings.transaction_details_show_advanced_block_explorer,
           type: 'secondary'
         }
-        Airship.show(bridge => (
+        const buttons = xpubExplorer != null ? { copy, link } : { copy }
+
+        Airship.show<'copy' | 'link' | undefined>(bridge => (
           <ButtonsModal
-            // @ts-expect-error
             bridge={bridge}
-            buttons={xpubExplorer != null ? { copy, link } : { copy }}
+            buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
             closeArrow
             message={displayPublicSeed ?? ''}
             title={s.strings.fragment_wallets_view_xpub}
           />
-          // @ts-expect-error
-        )).then((result: 'copy' | 'link' | undefined) => {
+        )).then(result => {
           switch (result) {
             case 'copy':
-              // @ts-expect-error
-              Clipboard.setString(displayPublicSeed)
+              Clipboard.setString(displayPublicSeed ?? '')
               showToast(s.strings.fragment_wallets_pubkey_copied_title)
               break
             case 'link':
-              // @ts-expect-error
-              if (xpubExplorer != null) Linking.openURL(sprintf(currencyInfo.xpubExplorer, displayPublicSeed))
+              if (xpubExplorer != null) {
+                Linking.openURL(sprintf(xpubExplorer, displayPublicSeed))
+              }
+              break
+            case undefined:
+              break
           }
         })
       }

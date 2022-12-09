@@ -24,7 +24,7 @@ const defaultReferralCache: ReferralCache = {
   accountPlugins: []
 }
 
-const accountInner: Reducer<AccountState, Action> = combineReducers({
+const accountInner = combineReducers<AccountState, Action>({
   accountReferral(state: AccountReferral = defaultAccountReferral, action: Action): AccountReferral {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {
@@ -61,8 +61,9 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
         const promotions = state.promotions.filter(promo => promo.installerId !== installerId)
         return { ...state, promotions }
       }
+      default:
+        return state
     }
-    return state
   },
 
   accountReferralLoaded(state: boolean = false, action: Action): boolean {
@@ -79,8 +80,9 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
         const cache = action.data
         return cache
       }
+      default:
+        return state
     }
-    return state
   }
 })
 

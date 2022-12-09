@@ -1,6 +1,6 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext } from 'edge-core-js/types'
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { Action } from '../types/reduxTypes'
 import { edgeLogin, EdgeLoginState } from './EdgeLoginReducer'
@@ -26,15 +26,16 @@ const accountHack: any = {
 }
 const defaultAccount: EdgeAccount = accountHack
 
-export const core: Reducer<CoreState, Action> = combineReducers({
+export const core = combineReducers<CoreState, Action>({
   account(state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
     switch (action.type) {
       case 'LOGIN':
         return action.data.account
       case 'LOGOUT':
         return defaultAccount
+      default:
+        return state
     }
-    return state
   },
 
   context(state: EdgeContext = defaultContext, action: Action): EdgeContext {
@@ -51,8 +52,9 @@ export const core: Reducer<CoreState, Action> = combineReducers({
         return true
       case 'LOGOUT':
         return false
+      default:
+        return state
     }
-    return state
   },
 
   // Nested reducers:

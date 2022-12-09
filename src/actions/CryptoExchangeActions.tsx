@@ -100,6 +100,9 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
               dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
             }
             break
+          case 'cancel':
+          case undefined:
+            break
         }
       }
       dispatch(processSwapQuoteError(error))
@@ -294,28 +297,23 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
     }
 
     const permissionError = asMaybeSwapPermissionError(error)
-    if (permissionError != null) {
-      switch (permissionError.reason) {
-        case 'geoRestriction': {
-          return dispatch({
-            type: 'GENERIC_SHAPE_SHIFT_ERROR',
-            data: s.strings.ss_geolock
-          })
-        }
-      }
+    if (permissionError?.reason === 'geoRestriction') {
+      return dispatch({
+        type: 'GENERIC_SHAPE_SHIFT_ERROR',
+        data: s.strings.ss_geolock
+      })
     }
 
     // Some plugins get this error wrong:
-    // @ts-expect-error
-    if (error.message === 'InsufficientFundsError') {
+    const message = error instanceof Error ? error.message : String(error)
+    if (message === 'InsufficientFundsError') {
       return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
     }
 
     // Anything else:
-    const typeHack: any = error
     return dispatch({
       type: 'GENERIC_SHAPE_SHIFT_ERROR',
-      data: typeHack.message
+      data: message
     })
   }
 }
