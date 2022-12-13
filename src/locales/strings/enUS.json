@@ -1,6 +1,8 @@
 {
   "action_queue_display_unknown_title": "Unknown action",
   "action_queue_display_unknown_message": "Edge is unable to identify the type of action being completed.",
+  "aciton_queue_display_close_title": "Closing Loan",
+  "action_queue_display_close_message": "Edge is paying principal in full and withdrawing the remaining collateral.",
   "action_queue_display_seq_title": "Action steps",
   "action_queue_display_seq_message": "Doing a sequence of actions.",
   "action_queue_display_par_title": "Action group",

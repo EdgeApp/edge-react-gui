@@ -395,7 +395,8 @@ export const makeAaveCloseAction = async ({
         actions: [
           {
             type: 'par',
-            actions: evmActions
+            actions: evmActions,
+            displayKey: 'close'
           }
         ]
       }

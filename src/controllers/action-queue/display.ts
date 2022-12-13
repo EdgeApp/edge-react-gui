@@ -291,6 +291,10 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
         messageData = { stringKey: `action_queue_display_loan_borrow_message_1s`, wildcards: [currencyCode] }
       }
       break
+    case 'close':
+      titleData = { stringKey: `aciton_queue_display_close_title` }
+      messageData = { stringKey: `action_queue_display_close_message` }
+      break
     default: {
       // Fallback to default display implementation
       return { title: undefined, message: undefined }

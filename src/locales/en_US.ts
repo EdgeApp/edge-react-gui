@@ -5,6 +5,9 @@ const strings = {
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // close
+  aciton_queue_display_close_title: 'Closing Loan',
+  action_queue_display_close_message: `Edge is paying principal in full and withdrawing the remaining collateral.`,
   // seq
   action_queue_display_seq_title: `Action steps`,
   action_queue_display_seq_message: `Doing a sequence of actions.`,
