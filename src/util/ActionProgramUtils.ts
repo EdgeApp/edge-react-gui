@@ -132,7 +132,8 @@ export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Prom
   const loanParallelActions: ActionOp[] = []
   sequenceActions.push({
     type: 'par',
-    actions: loanParallelActions
+    actions: loanParallelActions,
+    displayKey: 'borrow'
   })
 
   const borrowToken = getToken(borrowEngineWallet, destination.tokenId)

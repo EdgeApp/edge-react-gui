@@ -75,7 +75,7 @@ const asParActionOp = asObject<ParActionOp>({
   actions: asArray((raw: any) => asActionOp(raw)),
   displayKey: (raw: unknown) => asOptional(asParActionOpDisplayKey)(raw)
 })
-const asParActionOpDisplayKey = asValue('create', 'swap-deposit-fees')
+const asParActionOpDisplayKey = asValue('borrow', 'create', 'swap-deposit-fees')
 
 const asBroadcastTxActionOp = asObject<BroadcastTxActionOp>({
   type: asValue('broadcast-tx'),

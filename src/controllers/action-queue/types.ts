@@ -18,7 +18,7 @@ export interface ParActionOp {
   actions: ActionOp[]
   displayKey?: ParActionOpDisplayKey
 }
-export type ParActionOpDisplayKey = 'create' | 'swap-deposit-fees'
+export type ParActionOpDisplayKey = 'borrow' | 'create' | 'swap-deposit-fees'
 
 export interface BroadcastTxActionOp {
   type: 'broadcast-tx'
