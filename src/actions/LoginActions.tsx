@@ -33,23 +33,21 @@ import { updateWalletsRequest } from './WalletActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
-  const walletId = account.activeWalletIds[0]
+  const [walletId] = account.activeWalletIds
   const walletKey = account.allKeys.find(key => key.id === walletId)
-  if (!walletKey) {
-    throw new Error('Cannot find a walletInfo for the active wallet')
-  }
 
   // Find the matching currency code:
-  const currencyCodes = {}
-  for (const pluginId of Object.keys(account.currencyConfig)) {
-    const { currencyInfo } = account.currencyConfig[pluginId]
-    // @ts-expect-error
-    currencyCodes[currencyInfo.walletType] = currencyInfo.currencyCode
+  if (walletKey != null) {
+    for (const pluginId of Object.keys(account.currencyConfig)) {
+      const { currencyInfo } = account.currencyConfig[pluginId]
+      if (currencyInfo.walletType === walletKey.type) {
+        return { walletId, currencyCode: currencyInfo.currencyCode }
+      }
+    }
   }
-  // @ts-expect-error
-  const currencyCode = currencyCodes[walletKey.type]
 
-  return { walletId, currencyCode }
+  // The user has no wallets:
+  return { walletId: '', currencyCode: '' }
 }
 
 export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
