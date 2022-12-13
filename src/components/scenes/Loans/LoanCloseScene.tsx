@@ -171,7 +171,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
         )}
 
         <Space top bottom={2}>
-          <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} />
+          <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} disabledText={s.strings.send_confirmation_slide_to_confirm} />
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
