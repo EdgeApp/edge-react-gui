@@ -95,7 +95,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidMount() {
-    this.updatePluginsAndPolicies()
+    // this.updatePluginsAndPolicies()
   }
 
   updatePluginsAndPolicies() {
