@@ -1,17 +1,15 @@
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
-import { openDrawer } from '../../actions/ScenesActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
-import { useDispatch } from '../../types/reactRedux'
+import { Actions } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 export const SideMenuButton = () => {
   const theme = useTheme()
-  const dispatch = useDispatch()
   const { container } = getStyles(theme)
-  const onPress = useHandler(() => dispatch(openDrawer()))
+  const onPress = useHandler(() => Actions.drawerOpen())
 
   return (
     <TouchableOpacity onPress={onPress} style={container}>

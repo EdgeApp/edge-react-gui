@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -38,14 +37,9 @@ export function WalletListScene(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const [showSlidingTutorial, setShowTutorial] = React.useState(false)
 
-  const account = useSelector(state => state.core.account)
   const disklet = useSelector(state => state.core.disklet)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
-
-  // Subscribe to account state:
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const loading = Object.keys(currencyWallets).length <= 0
 
   const handleSort = useHandler(() => {
     Airship.show<SortOption>(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
@@ -133,8 +127,7 @@ export function WalletListScene(props: Props) {
         </View>
       )}
       <View style={styles.listStack}>
-        <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
-          <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+        <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
           <WalletListSwipeable
             key="fullList"
             header={header}
