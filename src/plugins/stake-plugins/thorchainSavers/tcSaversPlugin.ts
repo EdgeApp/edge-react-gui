@@ -302,6 +302,8 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
     earnedAmount = max(earnedAmount, '0')
   }
 
+  const canUnstake = gt(stakedAmount, '0')
+
   return {
     allocations: [
       {
@@ -318,8 +320,8 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
       }
     ],
     canStake: true,
-    canUnstake: true,
-    canClaim: true
+    canUnstake,
+    canClaim: canUnstake
   }
 }
 
