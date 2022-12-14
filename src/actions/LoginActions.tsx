@@ -138,6 +138,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
       defaultIsoFiat: '',
       denominationSettings: {},
       developerModeOn: false,
+      spamFilterOn: true,
       isAccountBalanceVisible: false,
       mostRecentWallets: [],
       passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
