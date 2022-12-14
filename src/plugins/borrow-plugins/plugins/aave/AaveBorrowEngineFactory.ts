@@ -448,8 +448,6 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           txCallInfos.push({
             tx: repayTx,
             wallet,
-            spendToken: debtToken,
-            nativeAmount,
             metadata: {
               name: 'AAVE',
               category: 'Expense:Repay',
