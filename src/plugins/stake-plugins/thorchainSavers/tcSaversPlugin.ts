@@ -540,7 +540,13 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
   let needsFundingPrimary = false
   let networkFee = '0'
 
-  const sendNativeAmount = add(minAmount, withdrawBps)
+  // Convert the thorchain denominated send amount to native amount
+  const sendThorAmount = add(minAmount, withdrawBps)
+  const sendExchangeAmount = div(sendThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
+  const sendNativeAmountFloat = await wallet.denominationToNative(sendExchangeAmount, currencyCode)
+  const sendNativeAmount = toFixed(sendNativeAmountFloat, 0, 0)
+
+  // Convert thorchain amount to nativeAmount
   if (lt(addressBalance, sendNativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
     needsFundingPrimary = true
