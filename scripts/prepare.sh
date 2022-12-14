@@ -26,8 +26,8 @@ npx jetify
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
 # Create zcash checkpoints
-mkdir -p android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet
-cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ android/app/build/intermediates/merged_assets/debug/out/saplingtree/mainnet 2>/dev/null || :
+mkdir -p android/app/src/main/assets/saplingtree/mainnet
+cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ android/app/src/main/assets/saplingtree/mainnet 2>/dev/null || :
 cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ ios/Pods/ZcashLightClientKit/Sources/ZcashLightClientKit/Resources/saplingtree-checkpoints/mainnet 2>/dev/null || :
 
 # Copy Firebase configs
