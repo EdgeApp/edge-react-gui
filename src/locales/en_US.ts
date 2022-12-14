@@ -5,6 +5,9 @@ const strings = {
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // close
+  aciton_queue_display_close_title: 'Closing Loan',
+  action_queue_display_close_message: `Edge is paying principal in full and withdrawing the remaining collateral.`,
   // seq
   action_queue_display_seq_title: `Action steps`,
   action_queue_display_seq_message: `Doing a sequence of actions.`,
@@ -19,7 +22,7 @@ const strings = {
   action_queue_display_fiat_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
   // loan_borrow
   action_queue_display_loan_borrow_title: `Take out loan`,
-  action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
+  action_queue_display_loan_borrow_message_1s: `A %1$s loan has been requested and is on its way to your wallet.`,
   // loan_deposit
   action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
   action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
