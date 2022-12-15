@@ -166,10 +166,15 @@ export const LoanManageSceneComponent = (props: Props) => {
   })
 
   const [bankAccountsMap] = useAsyncValue<PaymentMethodsMap>(async (): Promise<PaymentMethodsMap> => {
-    if (account == null) return {}
-    const wyreClient = await makeWyreClient({ account })
-    if (!wyreClient.isAccountSetup) return {}
-    return await wyreClient.getPaymentMethods()
+    try {
+      if (account == null) return {}
+      const wyreClient = await makeWyreClient({ account })
+      if (!wyreClient.isAccountSetup) return {}
+      return await wyreClient.getPaymentMethods()
+    } catch (e: any) {
+      console.warn(`Failed to get Wyre payment methods: ${e}`)
+      return {}
+    }
   }, [account])
 
   // New debt/collateral amount
