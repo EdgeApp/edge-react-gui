@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeTokenId } from '../../types/types'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { makeCurrencyCodeTable } from '../../util/utils'
+import { CustomAsset } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
@@ -24,16 +25,20 @@ import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
+import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 import { ButtonsModal } from './ButtonsModal'
 
 export interface WalletListResult {
-  walletId?: string
   currencyCode?: string
   tokenId?: string
+  walletId?: string
 
   // Wyre buy/sell
   isBankSignupRequest?: boolean
   wyreAccountId?: string
+
+  // Custom asset selection
+  customAsset?: CustomAsset
 }
 
 interface Props {
@@ -41,16 +46,17 @@ interface Props {
 
   // Filtering:
   allowedAssets?: EdgeTokenId[]
+  allowKeysOnlyMode?: boolean
+  customAssets?: CustomAsset[]
   excludeAssets?: EdgeTokenId[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
-  allowKeysOnlyMode?: boolean
 
   // Visuals:
+  createWalletId?: string
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
-  createWalletId?: string
 
   // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
   // Valid formats include "ETH", "REP", or "ETH-REP",
@@ -71,16 +77,17 @@ export function WalletListModal(props: Props) {
 
     // Filtering:
     allowedAssets,
+    allowKeysOnlyMode = false,
+    customAssets,
     excludeAssets,
     excludeWalletIds,
     filterActivation,
-    allowKeysOnlyMode = false,
 
     // Visuals:
+    createWalletId,
     headerTitle,
     showBankOptions = false,
     showCreateWallet,
-    createWalletId,
 
     // Deprecated:
     allowedCurrencyCodes,
@@ -88,6 +95,8 @@ export function WalletListModal(props: Props) {
   } = props
 
   // #region Constants
+
+  const showCustomAssets = customAssets != null && customAssets.length > 0
 
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
@@ -136,11 +145,11 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((paymentMethodId: string) => () => {
     bridge.resolve({ wyreAccountId: paymentMethodId })
   })
-  const handleWalletListPress = useHandler((walletId: string, currencyCode: string) => {
+  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, _tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(s.strings.network_alert_title)
-    } else bridge.resolve({ walletId, currencyCode })
+    } else bridge.resolve({ walletId, currencyCode, customAsset })
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
@@ -182,32 +191,49 @@ export function WalletListModal(props: Props) {
     )
   })
 
+  const renderCustomAsset = useHandler(item => {
+    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.tokenId} customAsset={item.item} onPress={handleWalletListPress} />
+  })
+
   const renderBankSection = () => {
     if (!showBankOptions) return null
     if (bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
     return (
-      <>
-        <View>
-          <FlatList
-            data={Object.values(bankAccountsMap)}
-            keyboardShouldPersistTaps="handled"
-            renderItem={renderPaymentMethod}
-            getItemLayout={handleItemLayout}
-            keyExtractor={item => item.id}
-            style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
-          />
-        </View>
-        <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
-      </>
+      <View>
+        <FlatList
+          data={Object.values(bankAccountsMap)}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderPaymentMethod}
+          getItemLayout={handleItemLayout}
+          keyExtractor={item => item.id}
+          style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
+        />
+      </View>
     )
   }
+
+  const renderCustomAssetSection = () =>
+    showCustomAssets ? (
+      <View>
+        <FlatList
+          data={customAssets}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderCustomAsset}
+          getItemLayout={handleItemLayout}
+          keyExtractor={item => item.referenceTokenId}
+          style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
+        />
+      </View>
+    ) : null
 
   // #endregion Renderers
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{headerTitle}</ModalTitle>
+      <ModalTitle center>{headerTitle}</ModalTitle>
       {renderBankSection()}
+      {renderCustomAssetSection()}
+      {showBankOptions || showCustomAssets ? <EdgeText>{s.strings.your_wallets}</EdgeText> : null}
       <OutlinedTextInput
         returnKeyType="search"
         label={s.strings.search_wallets}

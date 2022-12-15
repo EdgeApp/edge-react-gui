@@ -59,6 +59,7 @@ const MANAGE_ACTION_DATA_MAP: {
     actionSide: 'debts' | 'collaterals'
     amountCard: string
     headerText: string
+    isFundDestWallet: boolean
     programType: LoanProgramType
     srcDestCard: string
     supportUrl: string
@@ -68,6 +69,7 @@ const MANAGE_ACTION_DATA_MAP: {
     actionSide: 'debts',
     amountCard: s.strings.loan_fragment_loan,
     headerText: s.strings.loan_borrow_more,
+    isFundDestWallet: true,
     programType: 'loan-borrow',
     srcDestCard: s.strings.loan_fund_destination,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-more')
@@ -76,6 +78,7 @@ const MANAGE_ACTION_DATA_MAP: {
     actionSide: 'collaterals',
     amountCard: s.strings.loan_fragment_deposit,
     headerText: s.strings.loan_add_collateral,
+    isFundDestWallet: false,
     programType: 'loan-deposit',
     srcDestCard: s.strings.loan_fund_source,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'add-collateral')
@@ -84,6 +87,7 @@ const MANAGE_ACTION_DATA_MAP: {
     actionSide: 'debts',
     amountCard: s.strings.loan_fragment_repay,
     headerText: s.strings.loan_make_payment,
+    isFundDestWallet: false,
     programType: 'loan-repay',
     srcDestCard: s.strings.loan_fund_source,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment')
@@ -92,6 +96,7 @@ const MANAGE_ACTION_DATA_MAP: {
     actionSide: 'collaterals',
     amountCard: s.strings.loan_fragment_withdraw,
     headerText: s.strings.loan_withdraw_collateral,
+    isFundDestWallet: true,
     programType: 'loan-withdraw',
     srcDestCard: s.strings.loan_fund_destination,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'withdraw-collateral')
@@ -142,7 +147,7 @@ export const LoanManageSceneComponent = (props: Props) => {
   )
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
-  const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
+  const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
   const isActionSideDebts = manageActionData.actionSide === 'debts'
@@ -268,7 +273,8 @@ export const LoanManageSceneComponent = (props: Props) => {
                 borrowPluginId,
                 nativeAmount: actionNativeAmount,
                 walletId: borrowEngineWallet.id,
-                tokenId: selectedAsset.tokenId
+                tokenId: hardAllowedDebtAssets[0].tokenId,
+                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : undefined
               }
             ]
           }
@@ -351,15 +357,31 @@ export const LoanManageSceneComponent = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet
-        createWalletId={isActionSideDebts ? borrowEngineWallet.id : undefined}
+        showCreateWallet={manageActionData.isFundDestWallet}
+        createWalletId={manageActionData.isFundDestWallet ? borrowEngineWallet.id : undefined}
         showBankOptions={loanManageType === 'loan-manage-borrow'}
         excludeWalletIds={getWalletPickerExcludeWalletIds(wallets, loanManageType, borrowEngineWallet)}
-        allowedAssets={isActionSideDebts ? hardAllowedDebtAsset : hardAllowedCollateralAssets}
+        allowedAssets={isActionSideDebts ? hardAllowedDebtAssets : hardAllowedCollateralAssets}
+        customAssets={
+          // For repay, allow selection of a deposited collateral asset if there
+          // are no other collateral asset balances
+          loanManageType === 'loan-manage-repay' &&
+          collaterals.find(collateral => collateral.tokenId !== hardCollateralTokenId && !zeroString(collateral.nativeAmount)) == null
+            ? [
+                {
+                  wallet: borrowEngineWallet,
+                  nativeBalance: collaterals.find(collateral => collateral.tokenId === hardCollateralTokenId)?.nativeAmount ?? '0',
+                  referenceTokenId: hardCollateralTokenId ?? '',
+                  displayName: sprintf(s.strings.loan_deposited_collateral_s, 'WBTC'),
+                  currencyCode: 'WBTC'
+                }
+              ]
+            : undefined
+        }
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId }) => {
+      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId, customAsset }) => {
         if (isBankSignupRequest) {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
@@ -367,6 +389,8 @@ export const LoanManageSceneComponent = (props: Props) => {
             deepPath: '',
             deepQuery: {}
           })
+        } else if (customAsset != null) {
+          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardAllowedDebtAssets[0].tokenId, customAsset: customAsset })
         } else if (wyreAccountId != null) {
           const paymentMethod = bankAccountsMap[wyreAccountId]
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
