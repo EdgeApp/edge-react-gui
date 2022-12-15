@@ -517,7 +517,6 @@ const strings = {
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
   title_create_wallets: 'Create Wallets',
-  title_deposit_to_edge: 'Deposit to Edge',
   title_export_transactions: 'Export Transactions',
   title_edge_login: 'Edge Login',
   title_exchange: 'Exchange',
@@ -1014,6 +1013,7 @@ const strings = {
   loan_current_principal: 'Current Principal',
   loan_dashboard_title: 'Loan Dashboard',
   loan_debt_destination: 'Loan Destination',
+  loan_deposited_collateral_s: 'Deposited %1$s Collateral',
   loan_details_title: 'Loan Details',
   loan_enter_s_amount_s: 'Enter %1$s Amount (%2$s)',
   fragment_error: 'Error',
@@ -1023,7 +1023,7 @@ const strings = {
   loan_fiat_value: 'Fiat Value',
   loan_fragment_deposit: 'Deposit',
   loan_fragment_loan: 'Loan',
-  loan_fragment_repay: 'Repayment',
+  loan_fragment_repay: 'Payment',
   loan_fragment_withdraw: 'Withdrawal',
   loan_fund_source: 'Fund Source',
   loan_fund_destination: 'Fund Destination',
@@ -1177,7 +1177,7 @@ const strings = {
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
-  deposit_to_edge: 'Deposit to Edge',
+  your_wallets: 'Your Wallets',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
