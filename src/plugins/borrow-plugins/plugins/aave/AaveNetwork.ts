@@ -124,7 +124,6 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
           vToken.balanceOf(address),
           instance.getReserveTokenAprRates(token.address)
         ])
-
         return { address: token.address, aBalance, vBalance, variableApr }
       })
       const reserveTokenBalances: Array<{ address: string; aBalance: BigNumber; vBalance: BigNumber; variableApr: number }> = await Promise.all(

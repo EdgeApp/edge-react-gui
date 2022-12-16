@@ -1,16 +1,26 @@
-import { add, gt, lt, min, mul } from 'biggystring'
+import { add, div, gt, lt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { MAX_AMOUNT } from '../../../../constants/valueConstants'
-import { snooze, zeroString } from '../../../../util/utils'
+import { DECIMAL_PRECISION, snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
 import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
 import { asGraceful } from '../../common/cleaners/asGraceful'
 import { composeApprovableActions } from '../../common/util/composeApprovableActions'
-import { ApprovableAction, BorrowCollateral, BorrowDebt, BorrowEngine, BorrowRequest, DepositRequest, RepayRequest, WithdrawRequest } from '../../types'
+import {
+  ApprovableAction,
+  BorrowCollateral,
+  BorrowDebt,
+  BorrowEngine,
+  BorrowRequest,
+  CalculateLtvRequest,
+  DepositRequest,
+  RepayRequest,
+  WithdrawRequest
+} from '../../types'
 import { AaveNetwork } from './AaveNetwork'
 export { ContractMethod, SwapSide } from 'paraswap-core'
 
@@ -112,6 +122,13 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         })
       )
     }
+    const getLoanAssetETHValue = async (loanAsset: BorrowCollateral | BorrowDebt): Promise<string> => {
+      if (loanAsset.tokenId == null) throw new Error('getLoanAssetETHValue: No tokenId on supplied collateral or debt')
+      const loanAssetMult = getToken(loanAsset.tokenId).denominations[0].multiplier
+      const loanAssetEthPrice = await aaveNetwork.getAssetPrice(loanAsset.tokenId.toLowerCase())
+      const loanAssetEthValue = div(mul(loanAsset.nativeAmount, loanAssetEthPrice.toString()), loanAssetMult)
+      return loanAssetEthValue
+    }
 
     //
     // Network Synchronization
@@ -179,6 +196,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       isRunning: false,
       syncRatio: 0,
 
+      // Lifecycle
       async startEngine() {
         if (instance.isRunning) return
         instance.isRunning = true
@@ -188,19 +206,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         instance.isRunning = false
       },
 
-      async getAprQuote(tokenId?: string): Promise<number> {
-        const token = getToken(tokenId)
-        const tokenAddress = getTokenAddress(token)
-
-        if (tokenAddress == null) {
-          throw new Error(`AAVE requires a contract address, but tokenId '${tokenId ?? ''}' has none`)
-        }
-
-        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(tokenAddress)
-
-        return variableApr
-      },
-
+      // Modifications
       async deposit(request: DepositRequest): Promise<ApprovableAction> {
         const { nativeAmount, tokenId, fromWallet = wallet } = request
         if (zeroString(nativeAmount)) throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
@@ -508,6 +514,43 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         }
 
         return composeApprovableActions(...actions)
+      },
+
+      // Utilities
+      async getAprQuote(tokenId?: string): Promise<number> {
+        const token = getToken(tokenId)
+        const tokenAddress = getTokenAddress(token)
+
+        if (tokenAddress == null) {
+          throw new Error(`getAprQuote: AAVE requires a contract address, but tokenId '${tokenId ?? ''}' has none`)
+        }
+
+        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(tokenAddress)
+
+        return variableApr
+      },
+      async calculateProjectedLtv(request: CalculateLtvRequest): Promise<string> {
+        const { collaterals: newCollaterals, debts: newDebts } = request
+
+        const debts = newDebts.filter(a => !zeroString(a.nativeAmount))
+        const collaterals = newCollaterals.filter(a => !zeroString(a.nativeAmount))
+
+        // Collaterals will always be present, but debts might be empty
+        if (collaterals.length > 0) {
+          // Calculate the ETH value of the modified debts/collaterals using
+          // AAVE's price oracle
+          const calculateTotalLoanAssetETH = async (prev: Promise<string>, loanAsset: BorrowCollateral | BorrowDebt) =>
+            add(await prev, await getLoanAssetETHValue(loanAsset))
+
+          const totalCollateralETH = await collaterals.reduce(calculateTotalLoanAssetETH, Promise.resolve<string>('0'))
+          const totalDebtETH = await debts.reduce(calculateTotalLoanAssetETH, Promise.resolve<string>('0'))
+
+          // Recalculate LTV
+          return zeroString(totalCollateralETH) ? '0' : div(totalDebtETH, totalCollateralETH, DECIMAL_PRECISION)
+        } else {
+          console.log('calculateProjectedLtv: No collaterals found')
+          return '0'
+        }
       }
     })
 
