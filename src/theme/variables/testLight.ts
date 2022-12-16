@@ -287,7 +287,9 @@ export const testLight: Theme = {
   // Settings Row
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: palette.lightGray,
+  settingsRowHeaderBackground: [palette.lightGray, palette.lightGray],
+  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
+  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,

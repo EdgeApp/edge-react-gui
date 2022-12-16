@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -15,13 +16,17 @@ interface Props {
  */
 export const SettingsHeaderRowComponent = (props: Props) => {
   const { icon, label } = props
-  const styles = getStyles(useTheme())
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const colors = theme.settingsRowHeaderBackground
+  const start = theme.settingsRowHeaderBackgroundStart
+  const end = theme.settingsRowHeaderBackgroundEnd
 
   return (
-    <View style={styles.row}>
+    <LinearGradient colors={colors} start={start} end={end} style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
       <Text style={styles.text}>{label}</Text>
-    </View>
+    </LinearGradient>
   )
 }
 
@@ -30,7 +35,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // Layout:
     minHeight: theme.rem(2.75),
     padding: theme.rem(1),
-    backgroundColor: theme.settingsRowHeaderBackground,
 
     // Children:
     alignItems: 'center',
