@@ -3,6 +3,7 @@ import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
+import { triggerHaptic } from '../../util/haptic'
 
 const isIos = Platform.OS === 'ios'
 
@@ -15,6 +16,11 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
   static defaultProps = {
     withArrow: false,
     onPress: () => {}
+  }
+
+  handlePress = () => {
+    triggerHaptic('impactLight')
+    this.props.onPress()
   }
 
   renderIcon = () => {
@@ -32,7 +38,7 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
         {this.renderIcon()}
       </TouchableOpacity>
     )

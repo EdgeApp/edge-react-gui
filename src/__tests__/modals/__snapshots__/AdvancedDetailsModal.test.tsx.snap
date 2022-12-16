@@ -44,7 +44,7 @@ Array [
     style={
       Object {
         "alignSelf": "flex-end",
-        "backgroundColor": "#0D2145",
+        "backgroundColor": "#121d25",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -167,7 +167,7 @@ Array [
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -273,7 +273,7 @@ Array [
         style={
           Array [
             Object {
-              "color": "#66EDA8",
+              "color": "#00f1a2",
               "fontSize": 28,
             },
             undefined,

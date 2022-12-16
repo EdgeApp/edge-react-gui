@@ -36,7 +36,7 @@ exports[`Tile should render with loading props 1`] = `
           size={12}
           style={
             Object {
-              "color": "#66EDA8",
+              "color": "#00f1a2",
               "height": 17,
               "position": "absolute",
               "right": 0,

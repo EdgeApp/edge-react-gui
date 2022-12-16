@@ -488,7 +488,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "fontSize": 34,
                     },
                     undefined,
@@ -527,7 +527,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "fontSize": 34,
                     },
                     undefined,
@@ -643,7 +643,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontSize": 22,
               },
               undefined,
@@ -671,7 +671,7 @@ Array [
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "marginLeft": 6,
@@ -710,7 +710,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontSize": 22,
               },
               undefined,
@@ -738,7 +738,7 @@ Array [
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "marginLeft": 6,
@@ -751,7 +751,7 @@ Array [
         </Text>
       </View>
       <ActivityIndicator
-        color="#66EDA8"
+        color="#00f1a2"
         style={
           Object {
             "alignItems": "center",

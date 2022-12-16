@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../locales/strings'
 import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
+import { triggerHaptic } from '../../util/haptic'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
@@ -28,6 +29,18 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 class TransactionRowComponent extends React.PureComponent<Props> {
+  handlePress = () => {
+    const { onPress } = this.props
+    triggerHaptic('impactLight')
+    if (onPress != null) onPress()
+  }
+
+  handleLongPress = () => {
+    const { onLongPress } = this.props
+    triggerHaptic('impactLight')
+    if (onLongPress != null) onLongPress()
+  }
+
   render() {
     // What is this for?
     // @ts-expect-error
@@ -39,8 +52,6 @@ class TransactionRowComponent extends React.PureComponent<Props> {
       fiatAmount,
       fiatSymbol,
       isSentTransaction,
-      onPress,
-      onLongPress,
       requiredConfirmations,
       selectedCurrencyName,
       theme,
@@ -90,7 +101,7 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <ClickableRow paddingRem={[0, 1]} onPress={onPress} onLongPress={onLongPress}>
+      <ClickableRow paddingRem={[0, 1]} onPress={this.handlePress} onLongPress={this.handleLongPress}>
         <View style={styles.iconContainer}>
           <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
             {thumbnailPath ? null : transactionIcon}

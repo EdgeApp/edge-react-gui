@@ -5,6 +5,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import s from '../../locales/strings'
+import { triggerHaptic } from '../../util/haptic'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -34,10 +35,18 @@ export class TileComponent extends React.PureComponent<Props> {
     showToast(s.strings.fragment_copied)
   }
 
+  handlePress = () => {
+    triggerHaptic('impactLight')
+    if (this.props.type === 'copy') {
+      this.copy()
+    } else {
+      if (this.props.onPress != null) this.props.onPress()
+    }
+  }
+
   render() {
     const { body, title, contentPadding = true, children, theme, type, maximumHeight = 'medium', error } = this.props
     const styles = getStyles(theme)
-    const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     const numberOfLines = textHeights[maximumHeight]
 
     if (type === 'loading') {
@@ -54,7 +63,7 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback onPress={this.handlePress} disabled={type === 'static'}>
         <View>
           <View style={styles.container}>
             <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
