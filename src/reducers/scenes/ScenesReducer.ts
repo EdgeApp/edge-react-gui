@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { fioAddress, FioAddressSceneState } from '../../modules/FioAddress/reducer'
 import { Action } from '../../types/reduxTypes'
@@ -17,7 +17,7 @@ export interface ScenesState {
   readonly transactionList: TransactionListState
 }
 
-export const scenes: Reducer<ScenesState, Action> = combineReducers({
+export const scenes = combineReducers<ScenesState, Action>({
   createWallet,
   fioAddress,
   requestType,

@@ -13,6 +13,7 @@ import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/d
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
 import { LoanProgramEdge } from '../../../controllers/loan-manager/store'
+import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
@@ -20,7 +21,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { NavigationProp } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
@@ -28,6 +29,7 @@ import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
@@ -39,22 +41,19 @@ import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
 interface Props {
-  route: RouteProp<'loanDetails'>
   navigation: NavigationProp<'loanDetails'>
+  loanAccount: LoanAccount
 }
 
-export const LoanDetailsScene = (props: Props) => {
+export const LoanDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
-  const { route, navigation } = props
-  const { params } = route
-  const { loanAccountId } = params
-  const loanAccount = loanAccounts[loanAccountId]
+  const { navigation, loanAccount } = props
+  const loanAccountId = loanAccount.id
   const { borrowEngine } = loanAccount
 
   // Derive state from borrowEngine:
@@ -139,7 +138,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_action_add_collateral,
         iconName: 'add-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-deposit', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-deposit', loanAccountId })
         },
         isDisabled: isActionProgramRunning
       },
@@ -147,7 +146,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_action_withdraw_collateral,
         iconName: 'withdraw-collateral',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-withdraw', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-withdraw', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -155,7 +154,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_borrow_more,
         iconName: 'borrow-more',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-borrow', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-borrow', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
@@ -163,7 +162,7 @@ export const LoanDetailsScene = (props: Props) => {
         title: s.strings.loan_make_payment,
         iconName: 'make-payment',
         handlePress: () => {
-          navigation.navigate('loanManage', { actionOpType: 'loan-repay', loanAccountId })
+          navigation.navigate('loanManage', { loanManageType: 'loan-manage-repay', loanAccountId })
         },
         isDisabled: isActionProgramRunning || !isOpenDebts
       },
@@ -205,11 +204,13 @@ export const LoanDetailsScene = (props: Props) => {
 
   // #endregion
 
+  const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
+
   return (
     <SceneWrapper>
       <SceneHeader
         underline
-        title={s.strings.loan_details_title}
+        title={`${s.strings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
         withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -300,6 +301,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row'
   }
 }))
+
+export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
 export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string; nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)

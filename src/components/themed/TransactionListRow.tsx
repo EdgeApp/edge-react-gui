@@ -6,15 +6,14 @@ import { sprintf } from 'sprintf-js'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
+import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { Actions } from '../../types/routerTypes'
 import { GuiContact, TransactionListTx } from '../../types/types'
-import { getHistoricalRate } from '../../util/exchangeRates'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -38,8 +37,7 @@ interface Props {
 export function TransactionListRow(props: Props) {
   const { currencyCode, walletId, transaction } = props
   const { metadata } = transaction
-  const { name, amountFiat: defaultAmountFiat } = metadata ?? {}
-  const isMounted = React.useRef(true)
+  const { name, amountFiat: defaultAmountFiat = 0 } = metadata ?? {}
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -47,7 +45,6 @@ export function TransactionListRow(props: Props) {
   const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
-  const [amountFiat, setAmountFiat] = useState<number>(defaultAmountFiat ?? 0)
 
   const displayDenomination = useSelector(state => getDisplayDenomination(state, currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
@@ -60,12 +57,6 @@ export function TransactionListRow(props: Props) {
 
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
-
-  React.useEffect(() => {
-    return () => {
-      isMounted.current = false
-    }
-  }, [])
 
   // Thumbnail
   let thumbnailPath: string | undefined
@@ -96,15 +87,9 @@ export function TransactionListRow(props: Props) {
   const cryptoExchangeAmount = div(abs(transaction.nativeAmount ?? '0'), exchangeDenomination.multiplier, DECIMAL_PRECISION)
   const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
-  // Fiat Amount
-  if (amountFiat === 0) {
-    const isoDate = new Date(transaction.date * 1000).toISOString()
-    getHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, isoDate).then(rate => {
-      if (isMounted.current) {
-        setAmountFiat(rate * Number(cryptoExchangeAmount))
-      }
-    })
-  }
+  const isoDate = new Date(transaction.date * 1000).toISOString()
+  const historicalRate = useHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, isoDate)
+  const amountFiat = defaultAmountFiat > 0 ? defaultAmountFiat : historicalRate * Number(cryptoExchangeAmount)
 
   const handlePress = useHandler(() => {
     if (transaction == null) {

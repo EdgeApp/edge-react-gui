@@ -1,3 +1,4 @@
+import { Cleaner } from 'cleaners'
 import { EdgeFetchFunction, EdgeFetchOptions, EdgeFetchResponse } from 'edge-core-js'
 
 import { config } from '../theme/appConfig'
@@ -22,6 +23,25 @@ export async function fetchWaterfall(
     return result
   })
   return asyncWaterfall(funcs, timeout)
+}
+
+export async function cleanMultiFetch<T>(
+  cleaner: Cleaner<T>,
+  servers: string[],
+  path: string,
+  options?: EdgeFetchOptions,
+  timeout: number = 5000,
+  doFetch?: EdgeFetchFunction
+): Promise<T> {
+  const response = await fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
+  if (!response.ok) {
+    const text = await response.text()
+    console.error(text)
+    throw new Error(`Error fetching ${path}: ${text}`)
+  }
+  const responseJson = await response.json()
+  const out = cleaner(responseJson)
+  return out
 }
 
 async function multiFetch(

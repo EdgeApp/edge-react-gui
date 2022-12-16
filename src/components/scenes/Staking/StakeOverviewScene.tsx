@@ -5,16 +5,16 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { ChangeQuoteRequest, PositionAllocation, StakePolicy, StakePosition } from '../../../plugins/stake-plugins'
-import { getSeed } from '../../../plugins/stake-plugins/util/getSeed'
+import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, stakePlugin } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -27,8 +27,7 @@ interface Props {
 
 export const StakeOverviewScene = (props: Props) => {
   const { navigation } = props
-  const { walletId } = props.route.params
-  const stakePolicy: StakePolicy = props.route.params.stakePolicy
+  const { stakePolicy, stakePlugin, walletId } = props.route.params
   const { stakePolicyId } = stakePolicy
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -45,9 +44,9 @@ export const StakeOverviewScene = (props: Props) => {
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
 
   // Hooks
-  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>()
-  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>()
-  const [stakePosition, setStakePosition] = React.useState<StakePosition>()
+  const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
+  const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
+  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>()
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -62,7 +61,7 @@ export const StakeOverviewScene = (props: Props) => {
   React.useEffect(() => {
     let abort = false
     stakePlugin
-      .fetchStakePosition({ stakePolicyId, signerSeed: getSeed(wallet) })
+      .fetchStakePosition({ stakePolicyId, wallet })
       .then(async stakePosition => {
         if (abort) return
         const guiAllocations = getPositionAllocations(stakePosition)
@@ -71,6 +70,7 @@ export const StakeOverviewScene = (props: Props) => {
         setStakePosition(stakePosition)
       })
       .catch(err => {
+        showError(err)
         console.error(err)
       })
 
@@ -82,7 +82,7 @@ export const StakeOverviewScene = (props: Props) => {
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
     if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
-      navigation.navigate('stakeModify', { walletId, stakePolicy, stakePosition, modification })
+      navigation.navigate('stakeModify', { stakePlugin, walletId, stakePolicy, stakePosition, modification })
     }
   }
 
@@ -120,6 +120,7 @@ export const StakeOverviewScene = (props: Props) => {
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
           text={sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}
+          stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
       <FlatList

@@ -25,6 +25,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   tezos: true,
   solana: true,
   celo: true,
+  tron: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
@@ -56,7 +57,6 @@ export const swapPlugins = {
   changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   exolix: ENV.EXOLIX_INIT,
-  foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   letsexchange: ENV.LETSEXCHANGE_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
@@ -68,6 +68,7 @@ export const swapPlugins = {
   tombSwap: ENV.TOMB_SWAP_INIT,
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
+  thorchainda: ENV.THORCHAIN_INIT,
 
   transfer: true
 }

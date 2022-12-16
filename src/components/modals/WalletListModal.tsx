@@ -182,32 +182,31 @@ export function WalletListModal(props: Props) {
     )
   })
 
-  const renderBankSection = () =>
-    showBankOptions ? (
+  const renderBankSection = () => {
+    if (!showBankOptions) return null
+    if (bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
+    return (
       <>
-        {bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? (
-          renderBankSignupButton()
-        ) : (
-          <View>
-            <FlatList
-              data={Object.values(bankAccountsMap)}
-              keyboardShouldPersistTaps="handled"
-              renderItem={renderPaymentMethod}
-              getItemLayout={handleItemLayout}
-              keyExtractor={item => item.id}
-              style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
-            />
-          </View>
-        )}
+        <View>
+          <FlatList
+            data={Object.values(bankAccountsMap)}
+            keyboardShouldPersistTaps="handled"
+            renderItem={renderPaymentMethod}
+            getItemLayout={handleItemLayout}
+            keyExtractor={item => item.id}
+            style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
+          />
+        </View>
         <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
       </>
-    ) : null
+    )
+  }
 
   // #endregion Renderers
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{headerTitle}</ModalTitle>
+      <ModalTitle>{headerTitle}</ModalTitle>
       {renderBankSection()}
       <OutlinedTextInput
         returnKeyType="search"
@@ -217,7 +216,7 @@ export function WalletListModal(props: Props) {
         onBlur={handleSearchUnfocus}
         onClear={handleSearchClear}
         value={searchText}
-        marginRem={[1, 0.75, 1.25]}
+        marginRem={[0.5, 0, 1.25, 0]}
         searchIcon
       />
       <WalletList

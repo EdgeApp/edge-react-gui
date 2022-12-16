@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { Action } from '../../../types/reduxTypes'
 import { ActionQueueMap } from '../types'
@@ -9,7 +9,7 @@ export interface ActionQueueState {
   readonly activeProgramIds: string[]
 }
 
-export const actionQueue: Reducer<ActionQueueState, Action> = combineReducers({
+export const actionQueue = combineReducers<ActionQueueState, Action>({
   actionQueueMap(state: ActionQueueMap = {}, action: Action): ActionQueueMap {
     switch (action.type) {
       case 'ACTION_QUEUE/LOAD_QUEUE': {

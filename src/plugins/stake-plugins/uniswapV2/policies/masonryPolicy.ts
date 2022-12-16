@@ -1,16 +1,17 @@
-import { gt, gte, lte, sub } from 'biggystring'
-import { ethers } from 'ethers'
+import { gt, lte } from 'biggystring'
+import { BigNumber } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import s from '../../../../locales/strings'
+import { cacheTxMetadata } from '../../metadataCache'
+import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { makeBigAccumulator } from '../../util/accumulator'
+import { makeBuilder } from '../../util/builder'
+import { getSeed } from '../../util/getSeed'
+import { fromHex } from '../../util/hex'
 import { makeContract, makeSigner, multipass } from '../contracts'
-import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../types'
-import { makeBigAccumulator } from '../util/accumulator'
-import { makeBuilder } from '../util/builder'
-import { fromHex, toHex } from '../util/hex'
-import { StakePluginPolicy } from './types'
+import { StakePluginPolicy } from '../types'
 
 const HOUR = 1000 * 60 * 60
 
@@ -90,7 +91,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, signerSeed } = request
+      const { action, stakePolicyId, wallet } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -102,6 +103,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.currencyCode)[0]
 
       // Get the signer for the wallet
+      const signerSeed = getSeed(wallet)
       const signerAddress = makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
@@ -212,33 +214,26 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
       // 2. Send Stake TX on Pool-Contract
 
-      // Make sure the allowance >= nativeAmount for the selected allocation
-      // TODO: Change condition to check the `allowance >= nativeAmount` for each stake-asset
-
       await Promise.all(
         allocations.map(async allocation => {
           // We don't need to approve the stake pool contract for the token earned token contract
           if (allocation.allocationType === 'claim') return
           const tokenContract = makeContract(allocation.currencyCode)
-          const allowanceResponse = await multipass(p => tokenContract.connect(p).allowance(signerAddress, poolContract.address))
-          const isFullyAllowed = gte(sub(allowanceResponse._hex, toHex(allocation.nativeAmount)), '0')
-          if (!isFullyAllowed) {
-            txs.build(
-              (gasLimit =>
-                async function approvePoolContract({ signer }) {
-                  const result = await tokenContract.connect(signer).approve(poolContract.address, ethers.constants.MaxUint256, {
-                    gasLimit,
-                    gasPrice,
-                    nonce: nextNonce()
-                  })
-                  cacheTxMetadata(result.hash, nativeCurrencyCode, {
-                    name: metadataName,
-                    category: 'Expense:Fees',
-                    notes: 'Approve staking rewards pool contract'
-                  })
-                })(gasLimitAcc('50000'))
-            )
-          }
+          txs.build(
+            (gasLimit =>
+              async function approvePoolContract({ signer }) {
+                const result = await tokenContract.connect(signer).approve(poolContract.address, BigNumber.from(allocation.nativeAmount), {
+                  gasLimit,
+                  gasPrice,
+                  nonce: nextNonce()
+                })
+                cacheTxMetadata(result.hash, nativeCurrencyCode, {
+                  name: metadataName,
+                  category: 'Expense:Fees',
+                  notes: 'Approve staking rewards pool contract'
+                })
+              })(gasLimitAcc('50000'))
+          )
         })
       )
 
@@ -361,7 +356,8 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
     },
     // TODO: Implement support for multi-asset staking
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, signerSeed } = request
+      const { stakePolicyId, wallet } = request
+      const signerSeed = getSeed(wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)

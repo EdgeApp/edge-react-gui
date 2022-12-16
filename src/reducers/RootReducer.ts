@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
@@ -44,7 +44,7 @@ export interface RootState {
   readonly network: NetworkState
 }
 
-export const rootReducer: Reducer<RootState, Action> = combineReducers({
+export const rootReducer = combineReducers<RootState, Action>({
   contacts(state: GuiContact[] = [], action: Action): GuiContact[] {
     return action.type === 'CONTACTS/LOAD_CONTACTS_SUCCESS' ? action.data.contacts : state
   },
@@ -59,9 +59,9 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         return action.data.exchangeRates
       case 'LOGOUT':
         return {}
+      default:
+        return state
     }
-    // @ts-expect-error
-    return state
   },
 
   nextUsername(state: string | null = null, action: Action): string | null {
@@ -70,8 +70,9 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         const { username = null } = action.data
         return username
       }
+      default:
+        return state
     }
-    return state
   },
 
   pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
@@ -80,17 +81,22 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
         return action.data
       case 'DEEP_LINK_HANDLED':
         return null
+      default:
+        return state
     }
-    return state
   },
 
-  // @ts-expect-error
-  priceChangeNotifications(state: PriceChangeNotificationSettings = { ignorePriceChanges: false }, action: Action): PriceChangeNotificationSettings {
+  priceChangeNotifications(
+    // @ts-expect-error
+    state: PriceChangeNotificationSettings = { ignorePriceChanges: false },
+    action: Action
+  ): PriceChangeNotificationSettings {
     switch (action.type) {
       case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':
         return action.data
+      default:
+        return state
     }
-    return state
   },
 
   sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {

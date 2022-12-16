@@ -27,7 +27,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       ]
     }
   >
-    <ForwardRef
+    <View
       style={
         Array [
           Object {
@@ -38,43 +38,13 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "right": 22,
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "borderColor": "rgba(164, 199, 223, 1)",
-                "right": 34,
-              },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 6,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
-              },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            "borderColor": undefined,
+            "right": 34,
           },
         ]
       }
     />
-    <ForwardRef
+    <View
       style={
         Array [
           Object {
@@ -91,42 +61,12 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "width": 22,
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "borderColor": "rgba(164, 199, 223, 1)",
-              },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 9,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
-              },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            "borderColor": undefined,
           },
         ]
       }
     />
-    <ForwardRef
+    <View
       style={
         Array [
           Object {
@@ -143,42 +83,12 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "width": 22,
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "borderColor": "rgba(164, 199, 223, 1)",
-              },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 12,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
-              },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            "borderColor": undefined,
           },
         ]
       }
     />
-    <ForwardRef
+    <View
       style={
         Array [
           Object {
@@ -189,38 +99,8 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "top": 0,
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "borderColor": "rgba(164, 199, 223, 1)",
-                "left": 34,
-              },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 15,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
-              },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            "borderColor": undefined,
+            "left": 34,
           },
         ]
       }
@@ -244,7 +124,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         ]
       }
     >
-      <ForwardRef
+      <Text
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -256,56 +136,26 @@ exports[`OutlinedTextInput should render with some props 1`] = `
               "padding": 0,
             },
             Object {
-              "animatedStyle": Object {
-                "current": Object {},
-              },
-              "initial": Object {
-                "updater": [Function],
-                "value": Object {
-                  "color": "rgba(164, 199, 223, 1)",
-                  "transform": Array [
-                    Object {
-                      "translateX": -36,
-                    },
-                    Object {
-                      "translateY": -34,
-                    },
-                    Object {
-                      "scale": 0.75,
-                    },
-                  ],
+              "color": undefined,
+              "transform": Array [
+                Object {
+                  "translateX": -36,
                 },
-              },
-              "viewDescriptors": Object {
-                "add": [Function],
-                "batchToRemove": Set {},
-                "items": Array [],
-                "rebuildsharableViewDescriptors": [Function],
-                "remove": [Function],
-                "sharableViewDescriptors": MutableValue {
-                  "_animation": null,
-                  "_id": 18,
-                  "_listeners": Array [],
-                  "_setter": [Function],
-                  "_value": Array [],
+                Object {
+                  "translateY": -34,
                 },
-                "tags": Set {},
-                "waitForInsertSync": false,
-                "waitForRemoveSync": false,
-              },
-              "viewsRef": Object {
-                "add": [Function],
-                "items": Set {},
-                "remove": [Function],
-              },
+                Object {
+                  "scale": 0.75,
+                },
+              ],
             },
           ]
         }
       >
         string
-      </ForwardRef>
+      </Text>
     </View>
-    <ForwardRef
+    <Text
       numberOfLines={1}
       style={
         Array [
@@ -318,44 +168,14 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "position": "absolute",
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "opacity": 0,
-              },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 24,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
-              },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            "opacity": 0,
           },
         ]
       }
     >
       string
-    </ForwardRef>
-    <ForwardRef
+    </Text>
+    <Text
       numberOfLines={1}
       onLayout={[Function]}
       style={
@@ -368,52 +188,22 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "right": 28,
           },
           Object {
-            "animatedStyle": Object {
-              "current": Object {},
-            },
-            "initial": Object {
-              "updater": [Function],
-              "value": Object {
-                "color": "rgba(164, 199, 223, 1)",
-                "opacity": 1,
-                "transform": Array [
-                  Object {
-                    "translateX": 0,
-                  },
-                  Object {
-                    "scale": 1,
-                  },
-                ],
+            "color": undefined,
+            "opacity": 1,
+            "transform": Array [
+              Object {
+                "translateX": 0,
               },
-            },
-            "viewDescriptors": Object {
-              "add": [Function],
-              "batchToRemove": Set {},
-              "items": Array [],
-              "rebuildsharableViewDescriptors": [Function],
-              "remove": [Function],
-              "sharableViewDescriptors": MutableValue {
-                "_animation": null,
-                "_id": 21,
-                "_listeners": Array [],
-                "_setter": [Function],
-                "_value": Array [],
+              Object {
+                "scale": 1,
               },
-              "tags": Set {},
-              "waitForInsertSync": false,
-              "waitForRemoveSync": false,
-            },
-            "viewsRef": Object {
-              "add": [Function],
-              "items": Set {},
-              "remove": [Function],
-            },
+            ],
           },
         ]
       }
     >
       5
-    </ForwardRef>
+    </Text>
     <Icon
       allowFontScaling={false}
       name="search1"

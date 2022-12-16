@@ -6,6 +6,7 @@ import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-
 import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
+import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { asActionProgram, asActionProgramState } from '../controllers/action-queue/cleaners'
@@ -13,7 +14,7 @@ import { ActionProgram, ActionProgramState } from '../controllers/action-queue/t
 import s from '../locales/strings'
 import { sendLogs } from '../modules/Logs/api'
 import { ThunkAction } from '../types/reduxTypes'
-import { log, logWithType, readLogs } from '../util/logger'
+import { clearLogs, log, logWithType, readLogs } from '../util/logger'
 
 interface LogOutput {
   isoDate: string
@@ -73,6 +74,42 @@ export function showSendLogsModal(): ThunkAction<Promise<void>> {
         }}
       />
     ))
+  }
+}
+
+export function showClearLogsModal(): ThunkAction<Promise<void>> {
+  return async (dispatch, _getState) => {
+    Airship.show<string | number | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.settings_button_clear_logs}
+        message={s.strings.settings_modal_clear_logs_message}
+        buttons={{
+          yes: {
+            label: 'Clear',
+            type: 'secondary',
+            onPress: async () => {
+              await dispatch(clearAllLogs())
+              showToast(s.strings.settings_modal_clear_logs_success)
+              return true
+            }
+          },
+          no: {
+            label: 'Cancel',
+            type: 'escape'
+          }
+        }}
+      />
+    )).catch(showError)
+  }
+}
+
+function clearAllLogs(): ThunkAction<Promise<void>> {
+  return async (_dispatch, _getState) => {
+    await clearLogs('activity')
+    await logWithType('activity', 'CLEARED ACTIVITY LOGS')
+    await clearLogs('info')
+    await logWithType('info', 'CLEARED INFO LOGS')
   }
 }
 

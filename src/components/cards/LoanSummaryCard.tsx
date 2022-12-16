@@ -9,6 +9,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import s from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
+import { useSelector } from '../../types/reactRedux'
 import { Theme } from '../../types/Theme'
 import { Peek } from '../layout/Peek'
 import { Space } from '../layout/Space'
@@ -46,6 +47,8 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     fiatAmount: borrowTotal
   })
 
+  const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
+
   try {
     // TODO: Calculate amount-adjusted cumulative interest
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
@@ -56,6 +59,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
         <Peek isShown={!isLoading}>
           <TappableCard onPress={onPress}>
             <View style={styles.cardContainer}>
+              {isDevMode ? <EdgeText>{`${currencyWallet.name}`}</EdgeText> : null}
               <View style={styles.row}>
                 <FastImage style={styles.icon} source={{ uri: iconUri }} />
                 <EdgeText style={styles.textMain}>{displayBorrowTotal}</EdgeText>

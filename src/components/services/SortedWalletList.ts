@@ -114,6 +114,9 @@ export function SortedWalletList(props: Props) {
       )
       break
 
+    case 'manual':
+      break
+
     case 'name':
       sorted = stableSort(
         wallets,

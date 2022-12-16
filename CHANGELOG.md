@@ -1,5 +1,64 @@
 # edge-react-gui
 
+## 2.28.0 (2022-12-18)
+
+- Add Tron (TRX) with TRC20 support
+- Add Thorchain DEX Aggregator
+- Add Thorchain Savers Vaults
+- Add KNCv2 (ETH)
+- Fix BCH splitting
+- Add option to disable token from wallet menu
+- Add additional context modal to password change function
+- ChangeHero: Re-enable token swaps
+- Deprecate FoxExchange
+- Add alpha-3 country codes to country list modal search results
+- Various visual fixes
+- Upgrade edge-core-js to v0.19.33
+  - added: New options for getReceiveAddress
+  - change: Upgrade biggystring to 4.0.0
+  - change: Increase BCH replay protection transaction value amount
+  - change: Upgrade redux to 4.2.0
+  - change: Upgrade redux-keto to 0.3.5
+  - fix: Login server override testing
+- Upgrade edge-currency-accountbased to v0.20.5
+  - TRX: Make sure to check the total native asset cost in makeSpend
+  - FIO: Update server list
+  - EVM: Only cache gas limit if retrieved from network
+  - EVM: Fail makeSpend for contract transactions if unable to estimate gas limit
+  - EVM: Rework gasLimit calculation to double any estimate for transaction that interacts with a contract
+  - Update default Polygon BUSD address from Paxos (0xdab529f40e671a1d4bf91361c21bf9f0c9712ab7) to Binance (0x9c9e5fd8bbc25984b178fdce6117defa39d2db39)
+  - TRX: Fix missing timestamp on broadcasted transactions
+  - ETH: Add new KNC token and rename old token to KNCV1
+  - Fix Ethereum and builtin token handling
+  - Various code cleanups
+  - Lay ground work for future dynamically imported currencies by breaking plugins into 'inner' and 'outer' portions
+    - 'outer' plugins contain currency details, network info, and list to optional plugin methods
+    - 'inner' plugins contain heavy lifting code to create wallets and interact with networks
+  - TRX: Fix walletType check in derivePublicKey
+  - Add Tron (TRX) with TRC20 token support
+  - Fix getTokenId logic error
+  - Fix balance checking in makeSpendCheck
+  - Rename Plugin to Tools
+  - Make URI helpers standalone
+  - Add type definitions for core globals and third-party modules
+  - Various code cleanups
+- Upgrade edge-currency-monero to v0.5.4
+  - Reduce transaction changed callbacks on wallet initialization
+- Upgrade edge-currency-plugins to v1.3.1
+  - add: forceIndex option to getReceiveAddress to get specific derivation index
+  - add: Return balance of address with getReceiveAddress
+  - add: utxoSourceAddress option to makeSpend to only use UTXOs from a specific address
+  - add: forceChangeAddress option to makeSpend to force change to go to specific address
+  - fix: Enable and fix BCH to BSV splitting
+- Upgrade edge-exchange-plugins to v0.16.10
+  - Add Thorchain DEX aggregator
+  - ChangeHero: Re-enable 'to' quotes
+  - ChangeHero: Re-enable token swaps
+  - Thorchain DA: Update cleaners
+  - Deprecate FoxExchange
+- Upgrade edge-login-ui-rn to v0.10.15
+  - Add warning message to change password modal
+
 ## 2.27.01 (2022-11-24)
 
 - Update Ionia Rewards URL

@@ -6,7 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { showSendLogsModal } from '../../actions/LogActions'
+import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
@@ -26,6 +26,7 @@ import { secondsToDisplay } from '../../util/displayTime'
 import { Collapsable } from '../common/Collapsable'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -53,6 +54,7 @@ interface StateProps {
 }
 interface DispatchProps {
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => Promise<void>
+  handleClearLogs: () => void
   handleSendLogs: () => void
   lockSettings: () => void
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
@@ -108,9 +110,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       case 'TouchID':
         this.setState({ touchIdText: s.strings.settings_button_use_touchID })
         break
-      // @ts-expect-error
+      // @ts-expect-error This is supposed to handle Android:
       case 'Fingerprint':
         this.setState({ touchIdText: s.strings.settings_button_use_biometric })
+        break
+
+      case false:
+        break
     }
   }
 
@@ -247,7 +253,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, theme, handleSendLogs, isLocked, navigation } = this.props
+    const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
 
@@ -329,7 +335,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingToggle}
           />
-          <MainButton alignSelf="center" label={s.strings.settings_button_send_logs} marginRem={2} type="secondary" onPress={handleSendLogs} />
+          <Space around={2}>
+            <MainButton alignSelf="center" label={s.strings.settings_button_send_logs} type="secondary" onPress={handleSendLogs} />
+            <MainButton alignSelf="center" label={s.strings.settings_button_clear_logs} marginRem={[1, 0, 0, 0]} type="escape" onPress={handleClearLogs} />
+          </Space>
         </ScrollView>
       </SceneWrapper>
     )
@@ -363,6 +372,9 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   dispatch => ({
     async dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
       await dispatch(updateTouchIdEnabled(arg, account))
+    },
+    handleClearLogs() {
+      dispatch(showClearLogsModal())
     },
     handleSendLogs() {
       dispatch(showSendLogsModal())

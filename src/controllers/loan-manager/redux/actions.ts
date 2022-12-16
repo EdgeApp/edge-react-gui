@@ -66,7 +66,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
         programEdges
       }
 
-      loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
+      await loanAccountMapRecord.update({ ...loanAccountMapRecord.data, [loanAccount.id]: loanEntry })
     }
 
     // Update loan account if it does exist
@@ -74,7 +74,7 @@ export function saveLoanAccount(loanAccount: LoanAccount): ThunkAction<Promise<v
       const { closed, programEdges } = loanAccount
       loanAccountMapRecord.data[loanAccount.id].closed = closed
       loanAccountMapRecord.data[loanAccount.id].programEdges = programEdges
-      loanAccountMapRecord.update(loanAccountMapRecord.data)
+      await loanAccountMapRecord.update(loanAccountMapRecord.data)
     }
 
     logActivity(`Create Loan Account`, { loanAccountId: loanAccount.id })
@@ -131,7 +131,7 @@ export function deleteLoanAccount(loanAccountOrId: LoanAccount | string): ThunkA
     const loanAccountId = typeof loanAccountOrId === 'string' ? loanAccountOrId : loanAccountOrId.id
     if (loanAccountMapRecord.data[loanAccountId] != null) {
       const { [loanAccountId]: _, ...loanAccountMapRecordUpdated } = loanAccountMapRecord.data
-      loanAccountMapRecord.update(loanAccountMapRecordUpdated)
+      await loanAccountMapRecord.update(loanAccountMapRecordUpdated)
     } else {
       throw new Error('Could not find LoanAccount id: ' + loanAccountId)
     }
@@ -155,7 +155,7 @@ export function runLoanActionProgram(loanAccount: LoanAccount, actionProgram: Ac
       programId: actionProgram.programId,
       programType
     }
-    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge] }))
+    await dispatch(saveLoanAccount({ ...loanAccount, programEdges: [...loanAccount.programEdges, programEdge], closed: programType === 'loan-close' }))
 
     return loanAccount
   }
@@ -166,8 +166,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
     const typeHack: any = Object.values(borrowPluginMap)
     const borrowPlugins: BorrowPlugin[] = typeHack
 
-    // `loanAccountIds` is synonymous to `walletIds`
-    const loanAccountIds = Object.keys(account.currencyWallets)
+    const walletIds = Object.keys(account.currencyWallets)
 
     dispatch({
       type: 'LOAN_MANAGER/SET_SYNC_RATIO',
@@ -175,68 +174,61 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
     })
 
     let progress = 0
-    const promises = loanAccountIds
-      .map(async (id, i) => {
-        const loanAccountId = id
-        const existingLoanAccount = selectLoanAccount(getState(), loanAccountId)
+    for (const walletId of walletIds) {
+      const loanAccountId = walletId
+      const existingLoanAccount = selectLoanAccount(getState(), loanAccountId)
 
-        try {
-          const wallet = await account.waitForCurrencyWallet(loanAccountId)
+      try {
+        const wallet = await account.waitForCurrencyWallet(loanAccountId)
 
-          const currencyPluginId = wallet.currencyConfig.currencyInfo.pluginId
-          const borrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
+        const currencyPluginId = wallet.currencyConfig.currencyInfo.pluginId
+        const borrowPlugin = borrowPlugins.find(borrowPlugin => borrowPlugin.borrowInfo.currencyPluginId === currencyPluginId)
 
-          if (borrowPlugin == null) return
+        if (borrowPlugin == null) return
 
-          // Create new loan account and save it if it has funds
-          if (existingLoanAccount == null) {
-            const loanAccount = await makeLoanAccount(borrowPlugin, wallet)
-            const borrowEngine = loanAccount.borrowEngine
+        // Create new loan account and save it if it has funds
+        if (existingLoanAccount == null) {
+          const loanAccount = await makeLoanAccount(borrowPlugin, wallet)
+          const borrowEngine = loanAccount.borrowEngine
 
-            // Start engine
-            await borrowEngine.startEngine()
+          // Start engine
+          await borrowEngine.startEngine()
 
-            await waitForBorrowEngineSync(borrowEngine)
+          await waitForBorrowEngineSync(borrowEngine)
 
-            if (checkLoanHasFunds(loanAccount)) {
-              // Save the new loan account if it has funds
-              await dispatch(saveLoanAccount(loanAccount))
-            } else {
-              // Cleanup the new loan engine if it has no funds
-              await borrowEngine.stopEngine()
-            }
+          if (checkLoanHasFunds(loanAccount)) {
+            // Save the new loan account if it has funds
+            await dispatch(saveLoanAccount(loanAccount))
+          } else {
+            // Cleanup the new loan engine if it has no funds
+            await borrowEngine.stopEngine()
           }
-
-          // Remove existing loan account if it is fully closed
-          if (existingLoanAccount != null) {
-            // Create new loan account for wallet if it doesn't exist
-            const loanAccount = existingLoanAccount
-            const borrowEngine = loanAccount.borrowEngine
-
-            await waitForBorrowEngineSync(borrowEngine) // If it exists in loan manager, it should be started
-
-            if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
-              // Cleanup and remove loan account if it's marked as closed
-              await existingLoanAccount.borrowEngine.stopEngine()
-              await dispatch(deleteLoanAccount(loanAccountId))
-            }
-          }
-        } catch (error: any) {
-          console.error(error)
         }
-      })
-      .map(async promise =>
-        promise.then(() => {
-          const syncRatio = ++progress / loanAccountIds.length
-          // console.log('\n###\n', { total: ids.length, progress, syncRatio }, '\n###\n')
-          dispatch({
-            type: 'LOAN_MANAGER/SET_SYNC_RATIO',
-            syncRatio
-          })
-        })
-      )
 
-    await Promise.all(promises)
+        // Remove existing loan account if it is fully closed
+        if (existingLoanAccount != null) {
+          // Create new loan account for wallet if it doesn't exist
+          const loanAccount = existingLoanAccount
+          const borrowEngine = loanAccount.borrowEngine
+
+          await waitForBorrowEngineSync(borrowEngine) // If it exists in loan manager, it should be started
+
+          if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
+            // Cleanup and remove loan account if it's marked as closed
+            await existingLoanAccount.borrowEngine.stopEngine()
+            await dispatch(deleteLoanAccount(loanAccountId))
+          }
+        }
+      } catch (error: any) {
+        console.error(error)
+      } finally {
+        const syncRatio = ++progress / walletIds.length
+        dispatch({
+          type: 'LOAN_MANAGER/SET_SYNC_RATIO',
+          syncRatio
+        })
+      }
+    }
 
     dispatch({
       type: 'LOAN_MANAGER/SET_SYNC_RATIO',

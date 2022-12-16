@@ -4,6 +4,7 @@ import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyC
 import { formatNumber } from '../locales/intl'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
+import { toBigNumberString } from '../util/toBigNumberString'
 import { DECIMAL_PRECISION, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
@@ -17,6 +18,8 @@ interface Props {
   isoFiatCurrencyCode?: string
   nativeCryptoAmount?: string
   noGrouping?: boolean
+  minPrecision?: number
+  maxPrecision?: number
 }
 
 export const useFiatText = (props: Props): string => {
@@ -29,6 +32,8 @@ export const useFiatText = (props: Props): string => {
     hideFiatSymbol,
     isoFiatCurrencyCode = USD_FIAT,
     nativeCryptoAmount = cryptoExchangeMultiplier,
+    minPrecision,
+    maxPrecision,
     noGrouping
   } = props
 
@@ -46,6 +51,8 @@ export const useFiatText = (props: Props): string => {
       ? formatFiatString({
           fiatAmount,
           autoPrecision,
+          minPrecision,
+          maxPrecision,
           noGrouping
         })
       : '0'
@@ -55,35 +62,40 @@ export const useFiatText = (props: Props): string => {
   return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
-export const formatFiatString = (props: { autoPrecision?: boolean; fiatAmount: string; noGrouping?: boolean; maxPrecision?: number }): string => {
-  const { fiatAmount, maxPrecision = 2, autoPrecision = false, noGrouping = false } = props
+export const formatFiatString = (props: {
+  autoPrecision?: boolean
+  fiatAmount: string
+  noGrouping?: boolean
+  minPrecision?: number
+  maxPrecision?: number
+}): string => {
+  const { fiatAmount, minPrecision = 2, maxPrecision = 6, autoPrecision = true, noGrouping = false } = props
 
   // Use US locale delimiters for determining precision
-  const fiatAmtCleanedDelim = fiatAmount.toString().replace(',', '.')
-  let precision: number = maxPrecision
+  const fiatAmtCleanedDelim = fiatAmount.replace(',', '.')
+  let precision = minPrecision
   let tempFiatAmount = parseFloat(fiatAmtCleanedDelim)
   if (autoPrecision) {
     if (Math.log10(tempFiatAmount) >= 3) {
       // Drop decimals if over '1000' of any fiat currency
       precision = 0
     }
-    while (tempFiatAmount <= 0.1 && tempFiatAmount > 0) {
+    while (tempFiatAmount <= 1 && tempFiatAmount > 0) {
       tempFiatAmount *= 10
       precision += precision < maxPrecision ? 1 : 0
     }
   }
 
   // Convert back to a localized fiat amount string with specified precision and grouping
-  return displayFiatAmount(parseFloat(fiatAmtCleanedDelim), precision, noGrouping)
+  return displayFiatAmount(fiatAmtCleanedDelim, precision, noGrouping)
 }
 
 /**
  * Returns a localized fiat amount string
  * */
-// @ts-expect-error
-export const displayFiatAmount = (fiatAmount?: number, precision?: number = 2, noGrouping?: boolean = true) => {
-  if (fiatAmount == null || fiatAmount === 0) return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
-  const initialAmount = fiatAmount.toFixed(precision)
-  const absoluteAmount = abs(initialAmount)
+export const displayFiatAmount = (fiatAmount?: number | string, precision: number = 2, noGrouping: boolean = true) => {
+  const fiatAmountBns = fiatAmount != null ? toBigNumberString(fiatAmount) : undefined
+  if (fiatAmountBns == null || fiatAmountBns === '0') return precision > 0 ? formatNumber('0.' + '0'.repeat(precision)) : '0'
+  const absoluteAmount = abs(fiatAmountBns)
   return formatNumber(toFixed(absoluteAmount, precision, precision), { noGrouping })
 }

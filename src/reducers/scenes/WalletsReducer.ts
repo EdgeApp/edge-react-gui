@@ -180,7 +180,7 @@ export function makeGuiWallet(wallet: EdgeCurrencyWallet): GuiWallet {
   return newWallet
 }
 
-const fioWallets = (state = [], action: Action): WalletsState['fioWallets'] => {
+const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (state = [], action) => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets
@@ -199,8 +199,7 @@ const fioWallets = (state = [], action: Action): WalletsState['fioWallets'] => {
   }
 }
 
-// @ts-expect-error
-export const wallets: Reducer<WalletsState, Action> = combineReducers({
+export const wallets = combineReducers<WalletsState, Action>({
   byId,
   selectedWalletId,
   selectedCurrencyCode,

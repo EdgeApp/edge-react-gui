@@ -55,6 +55,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monero',
   'wallet:ethereum',
   'wallet:zcash',
+  'wallet:tron',
   'wallet:polkadot',
   'wallet:ethereumclassic',
   'wallet:binance',
@@ -168,6 +169,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -191,6 +193,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -224,6 +227,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -347,6 +351,20 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isStakingSupported: true,
+    isCustomTokensSupported: true,
+    isBitPayProtocolSupported: false
+  },
+  tron: {
+    initWalletName: s.strings.string_first_tron_wallet_name,
+    chainCode: 'TRX',
+    dummyPublicAddress: 'TG8dEvp1JHJRRWEBzmURjbUwb4sbGbHgKs',
+    allowZeroTx: true,
+    noChangeMiningFee: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -501,6 +519,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isPrivateKeySweepable: true,
     isBitPayProtocolSupported: true
   },
@@ -671,6 +690,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    isStakingSupported: true,
     isCustomTokensSupported: true
   }
 }

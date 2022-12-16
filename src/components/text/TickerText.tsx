@@ -1,7 +1,6 @@
 import { abs, div, gt, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Text } from 'react-native'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
@@ -9,6 +8,7 @@ import { toPercentString } from '../../locales/intl'
 import { Theme } from '../../types/Theme'
 import { zeroString } from '../../util/utils'
 import { useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   wallet: EdgeCurrencyWallet
@@ -54,5 +54,17 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
   const { percentString, deltaColorStyle } = getPercentDeltaString(currencyCode, assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)
 
   const tickerText = `${fiatText} ${percentString}`
-  return <Text style={{ color: deltaColorStyle }}>{tickerText}</Text>
+  return (
+    <EdgeText
+      style={{
+        color: deltaColorStyle,
+        textAlign: 'left',
+        flexShrink: 1,
+        marginLeft: theme.rem(0.75),
+        alignSelf: 'center'
+      }}
+    >
+      {tickerText}
+    </EdgeText>
+  )
 }

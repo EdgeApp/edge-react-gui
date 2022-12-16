@@ -28,9 +28,6 @@ const pluginData: { [pluginId: string]: TermsUri } = {
     termsUri: 'https://changenow.io/terms-of-use',
     privacyUri: 'https://changenow.io/privacy-policy',
     kycUri: 'https://changenow.io/faq/kyc'
-  },
-  foxExchange: {
-    termsUri: 'https://fox.exchange/tos'
   }
 }
 

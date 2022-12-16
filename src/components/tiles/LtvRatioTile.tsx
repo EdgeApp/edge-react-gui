@@ -1,4 +1,4 @@
-import { add, div, gt, max, mul } from 'biggystring'
+import { add, div, max, mul } from 'biggystring'
 import * as React from 'react'
 
 import { useWatch } from '../../hooks/useWatch'
@@ -51,8 +51,8 @@ export const LtvRatioTile = (props: {
   const futureValue = max('0', zeroString(totalCollateralFiatValue) ? '0' : div(totalDebtFiatValue, totalCollateralFiatValue, 2))
 
   // Determine colors
-  const currentValueColor = getLtvColorValue(currentValue, theme)
-  const futureValueColor = getLtvColorValue(futureValue, theme)
+  const currentValueColor = getLtvColorValue(parseFloat(currentValue), theme)
+  const futureValueColor = getLtvColorValue(parseFloat(futureValue), theme)
 
   return (
     <PercentageChangeArrowTile
@@ -65,6 +65,6 @@ export const LtvRatioTile = (props: {
   )
 }
 
-export const getLtvColorValue = (ltvValue: string, theme: Theme): string => {
-  return gt(ltvValue, '0.7') ? theme.dangerText : gt(ltvValue, '0.6') ? theme.warningText : gt(ltvValue, '0') ? theme.positiveText : theme.deactivatedText
+export const getLtvColorValue = (ltvValue: number, theme: Theme): string => {
+  return ltvValue > 0.7 ? theme.dangerText : ltvValue > 0.6 ? theme.warningText : ltvValue > 0 ? theme.positiveText : theme.deactivatedText
 }

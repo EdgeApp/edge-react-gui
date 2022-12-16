@@ -136,6 +136,9 @@ export function sendConfirmationUpdateTx(
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
               Actions.jump('exchangeScene', {})
               break
+            case 'cancel':
+            case undefined:
+              break
           }
         }
         const typeHack: any = error

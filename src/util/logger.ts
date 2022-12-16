@@ -109,6 +109,16 @@ async function writeLog(type: LogType, content: string): Promise<void> {
   }
 }
 
+export async function clearLogs(type: LogType): Promise<void> {
+  const paths = logMap[type]
+
+  for (let i = 0; i < paths.length; i++) {
+    if (await RNFS.exists(paths[i])) {
+      await RNFS.unlink(paths[i])
+    }
+  }
+}
+
 export async function readLogs(type: LogType): Promise<string | undefined> {
   const paths = logMap[type]
 

@@ -9,6 +9,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
 import { runLoanActionProgram, saveLoanAccount } from '../../../controllers/loan-manager/redux/actions'
+import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
@@ -24,8 +25,9 @@ import { translateError } from '../../../util/translateError'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
+import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Space } from '../../layout/Space'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
+import { useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -36,21 +38,18 @@ import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 export interface Props {
   route: RouteProp<'loanClose'>
   navigation: NavigationProp<'loanClose'>
+  loanAccount: LoanAccount
 }
 
-export const LoanCloseScene = (props: Props) => {
+export const LoanCloseSceneComponent = (props: Props) => {
   const theme = useTheme()
-  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const clientId = useSelector(state => state.core.context.clientId)
-  const loanAccounts = useSelector(state => state.loanManager.loanAccounts)
 
   const executionContext = useExecutionContext()
 
-  const { navigation, route } = props
-  const { loanAccountId } = route.params
-  const loanAccount = loanAccounts[loanAccountId]
+  const { navigation, loanAccount } = props
   const { borrowPlugin, borrowEngine } = loanAccount
   const borrowPluginId = borrowPlugin.borrowInfo.borrowPluginId
   const { currencyWallet: borrowEngineWallet } = borrowEngine
@@ -109,14 +108,15 @@ export const LoanCloseScene = (props: Props) => {
     // Still loading action program
     if (actionProgram === undefined) return
 
-    // Always update the loan program marking it as close
-    await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
-
-    // No action program necessary to close loan
+    // Dispatch action program if necessary to close loan
     if (actionProgram !== null) {
       await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-close'))
-      navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId })
+      // Navigate to the loan status scene if program is dispatched
+      navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
     } else {
+      // Update the loan program marking it as close
+      await dispatch(saveLoanAccount({ ...loanAccount, closed: true }))
+      // Navigate to loan dashboard scene if no action program is necessary
       navigation.popToTop()
     }
   })
@@ -126,7 +126,6 @@ export const LoanCloseScene = (props: Props) => {
       <SceneHeader
         underline
         title={s.strings.loan_close_loan_title}
-        style={styles.sceneHeader}
         withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -151,8 +150,16 @@ export const LoanCloseScene = (props: Props) => {
             ))}
           </Tile>
         ) : null}
-        {actionProgram !== null ? (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={7} marginRem={[1, 1, 0]} />
+        {aggregateErrorMessage.length > 0 ? (
+          <Alert
+            title={s.strings.fragment_error}
+            message={translateError(aggregateErrorMessage.join('\n\n'))}
+            type="error"
+            numberOfLines={7}
+            marginRem={[1, 1, 0]}
+          />
+        ) : actionProgram !== null ? (
+          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={10} marginRem={[1, 1, 0]} />
         ) : (
           <Alert
             title={s.strings.loan_close_loan_title}
@@ -162,15 +169,6 @@ export const LoanCloseScene = (props: Props) => {
             marginRem={[1, 1, 0]}
           />
         )}
-        {aggregateErrorMessage.length > 0 ? (
-          <Alert
-            title={s.strings.fragment_error}
-            message={translateError(aggregateErrorMessage.concat('\n\n'))}
-            type="error"
-            numberOfLines={7}
-            marginRem={[1, 1, 0]}
-          />
-        ) : null}
 
         <Space top bottom={2}>
           <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} />
@@ -180,11 +178,4 @@ export const LoanCloseScene = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: theme.rem(1)
-  }
-}))
+export const LoanCloseScene = withLoanAccount(LoanCloseSceneComponent)

@@ -34,6 +34,7 @@ describe('MyComponent', () => {
         touchIdEnabled
         // DispatchProps:
         dispatchUpdateEnableTouchIdEnable={async () => undefined}
+        handleClearLogs={() => undefined}
         handleSendLogs={() => undefined}
         lockSettings={() => undefined}
         onTogglePinLoginEnabled={async () => undefined}
@@ -66,6 +67,7 @@ describe('MyComponent', () => {
         // DispatchProps:
         dispatchUpdateEnableTouchIdEnable={async () => undefined}
         lockSettings={() => undefined}
+        handleClearLogs={() => undefined}
         handleSendLogs={() => undefined}
         onTogglePinLoginEnabled={async () => undefined}
         setAutoLogoutTimeInSeconds={() => undefined}

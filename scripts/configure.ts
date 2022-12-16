@@ -129,11 +129,6 @@ const asConfig = asObject({
       tpid: asOptional(asString, 'finance@edge')
     }).withRest
   ),
-  FOX_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
   GODEX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -183,6 +178,7 @@ const asConfig = asObject({
   ),
   THORCHAIN_INIT: asCorePluginInit(
     asObject({
+      ninerealmsClientId: asOptional(asString, ''),
       affiliateFeeBasis: asOptional(asString, '50'),
       thorname: asOptional(asString, 'ej')
     }).withRest

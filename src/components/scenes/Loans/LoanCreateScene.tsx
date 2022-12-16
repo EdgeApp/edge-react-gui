@@ -1,7 +1,7 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -25,14 +25,17 @@ import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
+import { Space } from '../../layout/Space'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -62,6 +65,12 @@ export const LoanCreateScene = (props: Props) => {
   const existingLoanAccount = useSelector(state => state.loanManager.loanAccounts[borrowEngineWallet.id])
   if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId, loanAccountId: existingLoanAccount.id })
 
+  // Force enable tokens required for loan
+  useAsyncEffect(async () => {
+    await enableToken('WBTC', borrowEngineWallet)
+    await enableToken('USDC', borrowEngineWallet)
+  }, [])
+
   // #endregion Initialization
 
   // -----------------------------------------------------------------------------
@@ -78,7 +87,6 @@ export const LoanCreateScene = (props: Props) => {
   const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const borrowEnginePluginId = borrowEngineCurrencyInfo.pluginId
-  const excludeWalletIds = Object.keys(wallets).filter(walletId => walletId !== borrowEngineWallet.id)
 
   // Hard-coded src/dest assets, used as intermediate src/dest steps for cases if the
   // user selected src/dest that don't involve the borrowEngineWallet.
@@ -250,10 +258,10 @@ export const LoanCreateScene = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet={!isSrc}
+        showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}
         showBankOptions={!isSrc}
-        excludeWalletIds={!isSrc ? excludeWalletIds : undefined}
+        excludeWalletIds={getWalletPickerExcludeWalletIds(wallets, isSrc ? 'loan-manage-deposit' : 'loan-manage-borrow', borrowEngineWallet)}
         allowedAssets={!isSrc ? hardAllowedDestAsset : hardAllowedSrcAsset}
         filterActivation
       />
@@ -343,12 +351,12 @@ export const LoanCreateScene = (props: Props) => {
         }
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <View style={styles.sceneContainer}>
+        <Space horizontal={0.5} bottom={1}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
             iconUri={iconUri}
-            inputModalMessage={sprintf(s.strings.loan_must_be_s_or_less, displayLtvLimit)}
+            inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, displayLtvLimit)}
             title={sprintf(s.strings.loan_enter_s_amount_s, s.strings.loan_fragment_loan, fiatCurrencyCode)}
             tokenId={destTokenId}
             onAmountChanged={handleBorrowAmountChanged}
@@ -358,9 +366,9 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <View style={styles.cardContainer}>
+            <Space isItemCenter isGroupCenter>
               <AprCard apr={apr} />
-            </View>
+            </Space>
           )}
 
           {/* Source of Collateral / Source Wallet */}
@@ -370,6 +378,7 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_source_collateral}
             selectedAsset={{ wallet: srcWallet, tokenId: srcTokenId }}
             onPress={handleShowWalletPickerModal('source')}
+            marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Fund Destination */}
@@ -379,11 +388,12 @@ export const LoanCreateScene = (props: Props) => {
             emptyLabel={s.strings.loan_select_receiving_wallet}
             onPress={handleShowWalletPickerModal('destination')}
             selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
+            marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0.5, 0.5, 0.5, 0.5]}>
+          <Card marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
@@ -397,29 +407,31 @@ export const LoanCreateScene = (props: Props) => {
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <MainButton
-              label={s.strings.string_next_capitalized}
-              disabled={isInsufficientCollateral || !isUserInputComplete}
-              type="secondary"
-              onPress={() => {
-                if (destTokenId == null || srcWallet == null) return
+            <Space around>
+              <MainButton
+                label={s.strings.string_next_capitalized}
+                disabled={isInsufficientCollateral || !isUserInputComplete}
+                type="secondary"
+                onPress={() => {
+                  if (destTokenId == null || srcWallet == null) return
 
-                navigation.navigate('loanCreateConfirmation', {
-                  borrowEngine,
-                  borrowPlugin,
-                  destWallet,
-                  destTokenId,
-                  nativeDestAmount: nativeCryptoBorrowAmount,
-                  nativeSrcAmount: totalRequiredCollateralNativeAmount,
-                  paymentMethod,
-                  srcWallet,
-                  srcTokenId
-                })
-              }}
-              marginRem={[1.5, 6, 6, 6]}
-            />
+                  navigation.navigate('loanCreateConfirmation', {
+                    borrowEngine,
+                    borrowPlugin,
+                    destWallet,
+                    destTokenId,
+                    nativeDestAmount: nativeCryptoBorrowAmount,
+                    nativeSrcAmount: totalRequiredCollateralNativeAmount,
+                    paymentMethod,
+                    srcWallet,
+                    srcTokenId
+                  })
+                }}
+                alignSelf="center"
+              />
+            </Space>
           )}
-        </View>
+        </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
@@ -445,11 +457,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     margin: theme.rem(0.5),
     textAlign: 'left'
-  },
-  sceneContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    margin: theme.rem(0.5),
-    marginTop: theme.rem(0)
   }
 }))

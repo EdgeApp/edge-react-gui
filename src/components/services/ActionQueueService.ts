@@ -3,14 +3,17 @@ import * as React from 'react'
 import { useRef } from 'react'
 
 import { makeActionQueueStore } from '../../controllers/action-queue/ActionQueueStore'
+import { asCleanError } from '../../controllers/action-queue/cleaners'
 import { updateActionProgramState } from '../../controllers/action-queue/redux/actions'
 import { executeActionProgram } from '../../controllers/action-queue/runtime/executeActionProgram'
 import { ActionProgramState, ActionQueueMap, ExecutionResults } from '../../controllers/action-queue/types'
+import { wasPushRequestBody } from '../../controllers/action-queue/types/pushApiTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useExecutionContext } from '../../hooks/useExecutionContext'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { makePeriodicTask } from '../../util/PeriodicTask'
+import { makePushClient } from '../../util/PushClient/PushClient'
 
 const EXECUTION_INTERVAL = 1000
 
@@ -44,6 +47,19 @@ export const ActionQueueService = () => {
       })
     )
   })
+
+  //
+  // Log Dev Info
+  //
+  React.useEffect(() => {
+    if (__DEV__ && account != null && account.rootLoginId != null && clientId != null) {
+      const pushClient = makePushClient(account, clientId)
+      const requestBody = pushClient.getPushRequestBody()
+      console.log('***********************')
+      console.log('PUSH SERVER DEV INFO:', wasPushRequestBody(requestBody))
+      console.log('***********************')
+    }
+  }, [account, clientId])
 
   //
   // Initialization
@@ -107,13 +123,14 @@ export const ActionQueueService = () => {
         // Use mock execution function if program is marked as mockMode
         const context = program.mockMode ? executionContextMock : executionContext
 
-        const { nextState } = await executeActionProgram(context, program, state).catch((error: Error): ExecutionResults => {
-          console.warn(new Error('Action Program Exception: ' + error.message))
-          console.error(error)
+        const { nextState } = await executeActionProgram(context, program, state).catch((error): ExecutionResults => {
+          const cleanError = asCleanError(error)
+          console.warn(new Error('Action Program Exception: ' + cleanError.message))
+          console.error(cleanError)
           return {
             nextState: {
               ...state,
-              effect: { type: 'done', error },
+              effect: { type: 'done', error: cleanError },
               effective: true,
               nextExecutionTime: -1
             }

@@ -3,12 +3,8 @@ import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
 import s from '../locales/strings'
-import { makeStakePlugin } from '../plugins/stake-plugins'
-import { PositionAllocation, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
-
-// TODO: Get the plugin instance from the core context when the plugin is loaded into the core
-export const stakePlugin = makeStakePlugin()
 
 /**
  * Returns an array of all currency codes for a particular asset type
@@ -73,4 +69,8 @@ export const getPolicyIconUris = (
   const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress).symbolImage)
 
   return { stakeAssetUris, rewardAssetUris }
+}
+
+export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
+  return stakePlugins.find(plugin => plugin.policies.find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
 }

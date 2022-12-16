@@ -20,11 +20,12 @@ export interface CallInfo {
   tx: TxInfo
   wallet: EdgeCurrencyWallet
   spendToken?: EdgeToken
+  nativeAmount?: string
   metadata?: EdgeMetadata
 }
 
 export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAction> => {
-  const { tx: txInfo, wallet, spendToken, metadata } = params
+  const { tx: txInfo, wallet, spendToken, nativeAmount, metadata } = params
   const { id: walletId } = wallet
   const { gasLimit, gasPrice } = txInfo
 
@@ -37,7 +38,7 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
       skipChecks: dryrun,
       spendTargets: [
         {
-          nativeAmount: txInfo.value ? txInfo.value.toString() : '0',
+          nativeAmount: txInfo.value ? txInfo.value.toString() : nativeAmount ?? '0',
           publicAddress: txInfo.to,
           otherParams: { data: txInfo.data }
         }

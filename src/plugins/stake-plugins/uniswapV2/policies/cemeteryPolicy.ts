@@ -1,20 +1,21 @@
 import '@ethersproject/shims'
 
 import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import s from '../../../../locales/strings'
+import { cacheTxMetadata } from '../../metadataCache'
+import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
+import { makeBigAccumulator } from '../../util/accumulator'
+import { round } from '../../util/biggystringplus'
+import { makeBuilder } from '../../util/builder'
+import { getSeed } from '../../util/getSeed'
+import { fromHex } from '../../util/hex'
 import { getContractInfo, makeContract, makeSigner, multipass } from '../contracts'
-import { cacheTxMetadata } from '../metadataCache'
 import { pluginInfo } from '../pluginInfo'
 import { StakePolicyInfo } from '../stakePolicy'
-import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../types'
-import { makeBigAccumulator } from '../util/accumulator'
-import { round } from '../util/biggystringplus'
-import { makeBuilder } from '../util/builder'
-import { fromHex } from '../util/hex'
-import { StakePluginPolicy } from './types'
+import { StakePluginPolicy } from '../types'
 
 export interface CemeteryPolicyOptions {
   disableStake?: boolean
@@ -98,7 +99,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, signerSeed } = request
+      const { action, stakePolicyId, wallet } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -118,6 +119,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       // Get the signer for the wallet
+      const signerSeed = getSeed(wallet)
       const signerAddress = await makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
@@ -226,25 +228,21 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
             const tokenAContract = makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
-            const allowanceResponse = await multipass(p => tokenAContract.connect(p).allowance(signerAddress, spenderAddress))
-            const isFullyAllowed = allowanceResponse.sub(allocation.nativeAmount).gte(0)
-            if (!isFullyAllowed) {
-              txs.build(
-                (gasLimit =>
-                  async function approveSwapRouter({ signer }) {
-                    const result = await tokenAContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                      gasLimit,
-                      gasPrice,
-                      nonce: nextNonce()
-                    })
-                    cacheTxMetadata(result.hash, parentCurrencyCode, {
-                      name: metadataName,
-                      category: 'Expense:Fees',
-                      notes: `Approve ${metadataLpName} liquidity pool contract`
-                    })
-                  })(gasLimitAcc('50000'))
-              )
-            }
+            txs.build(
+              (gasLimit =>
+                async function approveSwapRouter({ signer }) {
+                  const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
+                    gasLimit,
+                    gasPrice,
+                    nonce: nextNonce()
+                  })
+                  cacheTxMetadata(result.hash, parentCurrencyCode, {
+                    name: metadataName,
+                    category: 'Expense:Fees',
+                    notes: `Approve ${metadataLpName} liquidity pool contract`
+                  })
+                })(gasLimitAcc('50000'))
+            )
           })
         )
 
@@ -373,20 +371,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
               const spenderAddress = poolContract.address
-              const allowanceResponse = await lpTokenContract.connect(signer).allowance(signerAddress, spenderAddress)
-              const isFullyAllowed = allowanceResponse.sub(liquidity).gte('0')
-              if (!isFullyAllowed) {
-                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
-                cacheTxMetadata(result.hash, parentCurrencyCode, {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${metadataLpName} rewards pool contract`
-                })
-              }
+              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
+              })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Approve ${metadataLpName} rewards pool contract`
+              })
             })(gasLimitAcc('50000'))
         )
 
@@ -472,25 +466,21 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
         // 4. Allow Swap on the LP-token contract
         const spenderAddress = swapRouterContract.address
-        const allowanceResponse = await multipass(p => lpTokenContract.connect(p).allowance(signerAddress, spenderAddress))
-        const isAllowed = allowanceResponse.sub(expectedLiquidityAmount).gte(0)
-        if (!isAllowed) {
-          txs.build(
-            (gasLimit =>
-              async function approveSwapRouter({ signer }) {
-                const result = await lpTokenContract.connect(signer).approve(spenderAddress, ethers.constants.MaxUint256, {
-                  gasLimit,
-                  gasPrice,
-                  nonce: nextNonce()
-                })
-                cacheTxMetadata(result.hash, parentCurrencyCode, {
-                  name: metadataName,
-                  category: 'Expense:Fees',
-                  notes: `Approve ${metadataLpName} liquidity pool contract`
-                })
-              })(gasLimitAcc('50000'))
-          )
-        }
+        txs.build(
+          (gasLimit =>
+            async function approveSwapRouter({ signer }) {
+              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(expectedLiquidityAmount), {
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
+              })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Approve ${metadataLpName} liquidity pool contract`
+              })
+            })(gasLimitAcc('50000'))
+        )
 
         // 4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
         txs.build(
@@ -617,7 +607,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, signerSeed } = request
+      const { stakePolicyId, wallet } = request
+      const signerSeed = getSeed(wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)

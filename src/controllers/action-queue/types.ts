@@ -1,6 +1,7 @@
 import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
 
 import { Dispatch, GetState } from '../../types/reduxTypes'
+import { CleanError } from './cleaners'
 
 //
 // Action Operations
@@ -150,7 +151,7 @@ export interface TxConfsEffect {
 }
 export interface DoneEffect {
   type: 'done'
-  error?: Error
+  error?: CleanError
   cancelled?: boolean
 }
 
@@ -242,7 +243,7 @@ export interface PendingTxMap {
 // Action Display API
 //
 
-export type ActionDisplayStatus = 'pending' | 'active' | 'done' | Error
+export type ActionDisplayStatus = 'pending' | 'active' | 'done' | CleanError
 
 export interface ActionDisplayInfo {
   title: string

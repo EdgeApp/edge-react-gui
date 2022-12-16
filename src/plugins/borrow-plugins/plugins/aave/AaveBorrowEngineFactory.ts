@@ -1,9 +1,10 @@
-import { add, min, mul } from 'biggystring'
+import { add, gt, lt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
+import { MAX_AMOUNT } from '../../../../constants/valueConstants'
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
 import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
@@ -23,7 +24,7 @@ export interface BorrowEngineBlueprint {
   asTokenContractAddress: Cleaner<string>
 }
 
-export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
+export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
   return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
     const { aaveNetwork, asTokenContractAddress } = blueprint
     const walletAddress = (await wallet.getReceiveAddress()).publicAddress
@@ -104,16 +105,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         overrides = { ...overrides, gasPrice }
         console.warn(`getApproveAllowanceTx was called without a gasPrice overrides parameter. The caller should pass the gasPrice instead.`)
       }
-      const allowance = await tokenContract.allowance(ownerAddress, spenderAddress)
-      if (!allowance.sub(allowanceAmount).gte(0)) {
-        return asGracefulTxInfo(
-          await tokenContract.populateTransaction.approve(spenderAddress, ethers.constants.MaxUint256, {
-            gasLimit: '500000',
-            ...overrides
-          })
-        )
-      }
-      return null
+      return asGracefulTxInfo(
+        await tokenContract.populateTransaction.approve(spenderAddress, BigNumber.from(allowanceAmount), {
+          gasLimit: '500000',
+          ...overrides
+        })
+      )
     }
 
     //
@@ -199,7 +196,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           throw new Error(`AAVE requires a contract address, but tokenId '${tokenId ?? ''}' has none`)
         }
 
-        const { variableApr } = await aaveNetwork.getReserveTokenRates(tokenAddress)
+        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(tokenAddress)
 
         return variableApr
       },
@@ -231,7 +228,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             spendToken: token,
             metadata: {
               name: 'AAVE',
-              category: 'expense',
+              category: 'Expense:Service',
               notes: `AAVE contract approval`
             }
           })
@@ -244,9 +241,10 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           tx: depositTx,
           wallet,
           spendToken: token,
+          nativeAmount,
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Deposit',
             notes: `Deposit ${token.currencyCode} collateral`
           }
         })
@@ -260,15 +258,12 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         return composeApprovableActions(...actions, mutateStateAction)
       },
       async withdraw(request: WithdrawRequest): Promise<ApprovableAction> {
-        const { tokenId, toWallet = wallet } = request
+        const { nativeAmount, tokenId, toWallet = wallet } = request
 
-        const collateral = instance.collaterals.find(debt => debt.tokenId === tokenId)
+        const collateral = instance.collaterals.find(collateral => collateral.tokenId === tokenId)
         if (collateral == null) throw new Error(`No collateral to withdraw for ${tokenId}`)
 
-        // Let the debt total be the upper boundary for nativeAmount
-        const nativeAmount = min(request.nativeAmount, collateral.nativeAmount)
-
-        if (nativeAmount === '0') throw new Error('BorrowEngine: withdraw request contains no nativeAmount.')
+        if (lt(nativeAmount, '0')) throw new Error(`BorrowEngine: invalid withdraw request nativeAmount ${request.nativeAmount}.`)
 
         validateWalletParam(toWallet)
 
@@ -276,25 +271,33 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const tokenAddress = getTokenAddress(token)
 
         const asset = tokenAddress
-        const amount = BigNumber.from(nativeAmount)
+        // Anything above the current collateral amount will be automatically
+        // converted to the MAX_AMOUNT in order to withdraw all collateral.
+        const contractTokenAmount = BigNumber.from(gt(nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount)
         const to = (await toWallet.getReceiveAddress()).publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
-        const withdrawTx = asGracefulTxInfo(await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, amount, to, { gasLimit: '800000', gasPrice }))
+        const withdrawTx = asGracefulTxInfo(
+          await aaveNetwork.lendingPool.populateTransaction.withdraw(asset, contractTokenAmount, to, { gasLimit: '800000', gasPrice })
+        )
 
+        // Cap the withdraw amount to the total collateral
+        const amountWithdrawn = min(nativeAmount, collateral.nativeAmount)
         const withdrawAction = await makeApprovableCall({
           tx: withdrawTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(amountWithdrawn, '-1'),
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Withdraw',
             notes: `Withdraw ${token.currencyCode} collateral`
           }
         })
 
         const mutateStateAction = makeSideEffectApprovableAction(async () => {
-          adjustCollateral(tokenId, mul('-1', nativeAmount))
+          adjustCollateral(tokenId, mul('-1', amountWithdrawn))
         })
 
         return composeApprovableActions(withdrawAction, mutateStateAction)
@@ -322,9 +325,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
         const borrowAction = await makeApprovableCall({
           tx: borrowTx,
           wallet,
+          spendToken: token,
+          nativeAmount: mul(nativeAmount, '-1'),
           metadata: {
             name: 'AAVE',
-            category: 'transfer',
+            category: 'Transfer:Borrow',
             notes: `Borrow ${token.displayName} loan`
           }
         })
@@ -414,7 +419,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               wallet,
               metadata: {
                 name: 'AAVE',
-                category: 'expense',
+                category: 'Expense:Service',
                 notes: `AAVE contract approval`
               }
             })
@@ -443,9 +448,11 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
           txCallInfos.push({
             tx: repayTx,
             wallet,
+            spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
-              category: 'transfer',
+              category: 'Expense:Repay',
               notes: `AAVE repay ${debtToken.displayName} with ${collateralToken.displayName} collateral`
             }
           })
@@ -469,7 +476,7 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
               spendToken: debtToken,
               metadata: {
                 name: 'AAVE',
-                category: 'expense',
+                category: 'Expense:Service',
                 notes: `AAVE contract approval`
               }
             })
@@ -486,9 +493,10 @@ export const makeBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
             tx: repayTx,
             wallet,
             spendToken: debtToken,
+            nativeAmount,
             metadata: {
               name: 'AAVE',
-              category: 'transfer',
+              category: 'Expense:Repay',
               notes: `Repay ${debtToken.displayName} loan`
             }
           })

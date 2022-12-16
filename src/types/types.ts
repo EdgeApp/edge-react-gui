@@ -201,6 +201,7 @@ export interface GuiExchangeRates {
 export interface CountryData {
   name: string
   'alpha-2': string
+  'alpha-3': string
   filename?: string
 }
 
