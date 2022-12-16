@@ -97,7 +97,7 @@
     "assert": "^2.0.0",
     "async-lock": "^1.1.2",
     "base-x": "^4.0.0",
-    "biggystring": "^4.0.0",
+    "biggystring": "^4.1.0",
     "cleaner-config": "^0.1.9",
     "cleaners": "^0.3.13",
     "core-js": "^2.5.2",

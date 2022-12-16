@@ -4985,6 +4985,13 @@ biggystring@^4.0.0:
   dependencies:
     bn.js "^4.11.7"
 
+biggystring@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-4.1.0.tgz#e96dad823d8d6eec32f7655f87d078bedead634e"
+  integrity sha512-c3CZvToyx569EMMm5KXe3JOkgKnyhkUGxWDWYnuV1MhKbUJPlf/47p5HzPEBIRlomwWb8qjTH+3Xl5d4AOk4kg==
+  dependencies:
+    bn.js "^4.11.7"
+
 bigi@1.4.2, bigi@^1.1.0, bigi@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/bigi/-/bigi-1.4.2.tgz#9c665a95f88b8b08fc05cfd731f561859d725825"
