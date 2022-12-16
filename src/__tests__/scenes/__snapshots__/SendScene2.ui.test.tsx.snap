@@ -4,8 +4,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -129,7 +129,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -258,7 +258,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -383,7 +383,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -586,7 +586,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -675,7 +675,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -704,7 +704,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -763,8 +763,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -888,7 +888,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -1017,7 +1017,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -1142,7 +1142,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -1345,7 +1345,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -1636,7 +1636,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -1665,7 +1665,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -1724,8 +1724,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -1849,7 +1849,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -1977,7 +1977,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -2106,7 +2106,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -2231,7 +2231,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -2434,7 +2434,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -2523,7 +2523,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -2552,7 +2552,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -2611,8 +2611,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -2736,7 +2736,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -2864,7 +2864,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -2992,7 +2992,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -3195,7 +3195,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -3284,7 +3284,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -3313,7 +3313,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -3372,8 +3372,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -3497,7 +3497,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -3625,7 +3625,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -3754,7 +3754,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -3934,7 +3934,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -4023,7 +4023,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -4052,7 +4052,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -4111,8 +4111,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -4236,7 +4236,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -4364,7 +4364,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -4547,7 +4547,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -4636,7 +4636,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -4665,7 +4665,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -4724,8 +4724,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -4849,7 +4849,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -4977,7 +4977,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -5204,7 +5204,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -5407,7 +5407,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -5496,7 +5496,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -5525,7 +5525,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -5584,8 +5584,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -5709,7 +5709,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -5939,7 +5939,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -6240,7 +6240,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -6329,7 +6329,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -6358,7 +6358,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -6417,8 +6417,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -6542,7 +6542,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -7046,7 +7046,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "marginHorizontal": 11,
                       "textAlign": "center",
                     },
@@ -7135,7 +7135,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   Array [
                     Object {
                       "alignItems": "center",
-                      "backgroundColor": "#66EDA8",
+                      "backgroundColor": "#00f1a2",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -7164,7 +7164,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "fontSize": 34,
                       },
                       Object {
-                        "color": "#0E4B75",
+                        "color": "#1b2f3b",
                         "fontSize": 51,
                       },
                       Object {
@@ -7223,8 +7223,8 @@ exports[`SendScene2 Render SendScene 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -7348,7 +7348,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       "fontSize": 12,
                     },
                     Object {
-                      "color": "#66EDA8",
+                      "color": "#00f1a2",
                       "height": 17,
                       "position": "absolute",
                       "right": 0,
@@ -7528,7 +7528,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       style={
                         Array [
                           Object {
-                            "color": "#66EDA8",
+                            "color": "#00f1a2",
                             "fontSize": 45,
                           },
                           undefined,
@@ -7556,7 +7556,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                             "includeFontPadding": false,
                           },
                           Object {
-                            "color": "#66EDA8",
+                            "color": "#00f1a2",
                             "fontSize": 17,
                           },
                           null,
@@ -7591,7 +7591,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       style={
                         Array [
                           Object {
-                            "color": "#66EDA8",
+                            "color": "#00f1a2",
                             "fontSize": 45,
                           },
                           undefined,
@@ -7621,7 +7621,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                             "includeFontPadding": false,
                           },
                           Object {
-                            "color": "#66EDA8",
+                            "color": "#00f1a2",
                             "fontSize": 17,
                           },
                           null,

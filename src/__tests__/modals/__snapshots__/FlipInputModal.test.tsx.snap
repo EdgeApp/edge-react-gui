@@ -126,7 +126,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
               size={17}
               style={
                 Object {
-                  "color": "#66EDA8",
+                  "color": "#00f1a2",
                   "marginLeft": 11,
                 }
               }
