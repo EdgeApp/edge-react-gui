@@ -1380,7 +1380,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           }
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -1481,7 +1481,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           }
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -6022,7 +6022,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           }
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -6828,7 +6828,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           }
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}

@@ -237,7 +237,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -496,7 +496,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1279,7 +1279,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1538,7 +1538,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}

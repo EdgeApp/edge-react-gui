@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
+import { triggerHaptic } from '../../util/haptic'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -46,6 +47,7 @@ export const SafeSlider = (props: Props) => {
     setCompleted(false)
   })
   const complete = () => {
+    triggerHaptic('impactMedium')
     onSlidingComplete(() => resetSlider())
     setCompleted(true)
   }

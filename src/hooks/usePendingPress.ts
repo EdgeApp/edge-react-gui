@@ -2,6 +2,7 @@ import * as React from 'react'
 import { SharedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { showError } from '../components/services/AirshipInstance'
+import { triggerHaptic } from '../util/haptic'
 
 export type OnPress = () => void | Promise<void>
 
@@ -15,6 +16,7 @@ export function usePendingPress(onPress?: OnPress): [boolean, () => void] {
 
   function handlePress() {
     if (onPress == null || pending) return
+    triggerHaptic('impactLight')
 
     const out = onPress()
     if (out != null && typeof out.then === 'function') {

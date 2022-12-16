@@ -21,6 +21,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
+import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { EarnCryptoCard } from '../cards/EarnCryptoCard'
@@ -118,6 +119,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
+    triggerHaptic('impactLight')
     const { navigation } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
@@ -130,6 +132,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleMenu = () => {
     const { wallet, tokenId, navigation } = this.props
+    triggerHaptic('impactLight')
     Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />)
   }
 
@@ -239,15 +242,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
+    triggerHaptic('impactLight')
     Actions.push('request', {})
   }
 
   handleSend = (): void => {
+    triggerHaptic('impactLight')
     const { wallet, tokenId } = this.props
     Actions.push('send2', { walletId: wallet.id, tokenId })
   }
 
   handleSearchDone = () => {
+    triggerHaptic('impactLight')
     this.props.onChangeSortingState(false)
     if (this.textInput.current) {
       this.textInput.current.clear()
@@ -255,6 +261,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleStakePress = () => {
+    triggerHaptic('impactLight')
     const { currencyCode, wallet, navigation } = this.props
     const { stakePlugins, stakePolicies } = this.state
 
@@ -284,6 +291,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   clearText = () => {
+    triggerHaptic('impactLight')
     this.setState({ input: '' })
     this.props.onSearchTransaction('')
     if (this.textInput.current) {

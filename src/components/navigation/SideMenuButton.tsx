@@ -4,12 +4,16 @@ import { TouchableOpacity } from 'react-native'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { Actions } from '../../types/routerTypes'
+import { triggerHaptic } from '../../util/haptic'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 export const SideMenuButton = () => {
   const theme = useTheme()
   const { container } = getStyles(theme)
-  const onPress = useHandler(() => Actions.drawerOpen())
+  const onPress = useHandler(() => {
+    triggerHaptic('impactLight')
+    Actions.drawerOpen()
+  })
 
   return (
     <TouchableOpacity onPress={onPress} style={container}>
