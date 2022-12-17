@@ -2,6 +2,7 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { isIPhoneX } from 'react-native-safe-area-view'
+import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
@@ -23,6 +24,7 @@ type Props = OwnProps & ThemeProps
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 const title = {
+  coinRanking: s.strings.title_markets,
   walletList: s.strings.title_wallets,
   pluginListBuy: s.strings.title_buy,
   pluginListSell: s.strings.title_sell,
@@ -31,10 +33,12 @@ const title = {
 }
 
 export class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange' | 'extraTab') => {
+  handleOnPress = (route: 'coinRanking' | 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange' | 'extraTab') => {
     const { navigation } = this.props
 
     switch (route) {
+      case 'coinRanking':
+        return navigation.navigate('coinRanking', {})
       case 'walletList':
         return navigation.navigate('walletListScene', {})
       case 'pluginListBuy':
@@ -69,6 +73,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
           {routes.map((element: any, index: number) => {
             const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
             const icon = {
+              coinRanking: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
               walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
               pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
               pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,

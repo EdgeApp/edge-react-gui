@@ -57,6 +57,7 @@ export interface ParamList {
   }
   changePassword: {}
   changePin: {}
+  coinRanking: {}
   controlPanel: {}
   createWalletAccountSelect: {
     accountName: string
