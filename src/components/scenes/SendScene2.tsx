@@ -157,6 +157,10 @@ const SendComponent = (props: Props) => {
 
   spendInfo.tokenId = tokenId
 
+  // TODO: Fix currency plugins that implement getMaxSpendable to not look at the currencyCode
+  // but the tokenId. Then we can remove the line below
+  spendInfo.currencyCode = currencyCode
+
   if (initialMount.current) {
     dismissScamWarning(account.disklet)
     initialMount.current = false
