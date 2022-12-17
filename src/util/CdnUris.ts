@@ -36,8 +36,8 @@ export interface CurrencyIcons {
 export function getCurrencyIconUris(pluginId: string, contractAddress: string = pluginId): CurrencyIcons {
   const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
   return {
-    symbolImage: `${edgeLight.iconServerBaseUri}/currencyIcons/${currencyPath}.png`,
-    symbolImageDarkMono: `${edgeDark.iconServerBaseUri}/currencyIcons/${currencyPath}_dark.png`
+    symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,
+    symbolImageDarkMono: `${edgeDark.iconServerBaseUri}/currencyIconsV3/${currencyPath}_dark.png`
   }
 }
 
