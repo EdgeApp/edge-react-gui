@@ -435,7 +435,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
                       }
                     }
                     style={
@@ -598,7 +598,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                       }
                     }
                     style={
@@ -761,7 +761,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
                       }
                     }
                     style={
@@ -795,7 +795,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                       }
                     }
                     style={
