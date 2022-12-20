@@ -13199,7 +13199,14 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.10, react-native-airship@^0.2.9:
+react-native-airship@^0.2.11:
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.11.tgz#5c264864fa36c68a78f17d50459ab82021ccf2e6"
+  integrity sha512-mlvggqWh/GqNx3OAE44j4MKpqRsU+L4/EdxooA19KgOGLaLxg92CZ31Xqa59NwxVAm046FMuC0bexWYXzM4l9Q==
+  dependencies:
+    yavent "^0.1.1"
+
+react-native-airship@^0.2.9:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.10.tgz#5d93a5707435dab311ae1633a0f64f2ece8a2dbc"
   integrity sha512-VX+2yC/ZsaV62Y/PdBqvguDUQggCzFwI8dmEBY0QT0jcrCLm4IdhT//KuvsHR7eYTD5zXB0+0fW5VMy95IEvTg==
@@ -13337,7 +13344,7 @@ react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
