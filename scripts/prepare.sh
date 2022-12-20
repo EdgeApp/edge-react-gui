@@ -30,6 +30,11 @@ mkdir -p android/app/src/main/assets/saplingtree/mainnet
 cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ android/app/src/main/assets/saplingtree/mainnet 2>/dev/null || :
 cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ ios/Pods/ZcashLightClientKit/Sources/ZcashLightClientKit/Resources/saplingtree-checkpoints/mainnet 2>/dev/null || :
 
+# Create piratechain checkpoints
+mkdir -p android/app/src/main/assets/piratesaplingtree/mainnet
+cp -R node_modules/edge-currency-accountbased/lib/zcash/arrrCheckpoints/ android/app/src/main/assets/piratesaplingtree/mainnet 2>/dev/null || :
+cp -R node_modules/edge-currency-accountbased/lib/zcash/arrrCheckpoints/ ios/Pods/PirateLightClientKit/Sources/PirateLightClientKit/Resources/piratesaplingtree-checkpoints/mainnet 2>/dev/null || :
+
 # Copy Firebase configs
 if [ ! -f "ios/edge/GoogleService-Info.plist" ]; then
   cp ios/edge/GoogleService-Info.sample.plist ios/edge/GoogleService-Info.plist

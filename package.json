@@ -143,6 +143,7 @@
     "react-native-mymonero-core": "^0.2.5",
     "react-native-patina": "^0.1.6",
     "react-native-permissions": "^3.3.1",
+    "react-native-piratechain": "^0.3.2",
     "react-native-popup-menu": "0.13.3",
     "react-native-reanimated": "^2.8.0",
     "react-native-router-flux": "4.0.6",

@@ -72,6 +72,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:digibyte',
   'wallet:vertcoin',
   'wallet:ravencoin',
+  'wallet:piratechain',
   'wallet:qtum',
   'wallet:feathercoin',
   'wallet:bitcoingold',
@@ -689,6 +690,17 @@ export const SPECIAL_CURRENCY_INFO: {
       keyboardType: 'default'
     }
   },
+  piratechain: {
+    initWalletName: s.strings.string_first_piratechain_wallet_name,
+    chainCode: 'ARRR',
+    dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
+    noChangeMiningFee: true,
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      keyboardType: 'default'
+    }
+  },
   polygon: {
     initWalletName: s.strings.string_first_polygon_wallet_name,
     chainCode: 'MATIC',
@@ -769,6 +781,7 @@ export const WALLET_LIST_MENU: Array<{
       'vertcoin',
       'wax',
       'monero',
+      'piratechain',
       'zcash'
     ],
     label: s.strings.fragment_wallets_view_xpub,

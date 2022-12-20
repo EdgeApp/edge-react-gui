@@ -13379,6 +13379,13 @@ react-native-permissions@^3.0.1, react-native-permissions@^3.3.1:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.3.1.tgz#8a359d9c0531afcde2f642a459b48c4c1e3e8f2d"
   integrity sha512-Ap9nVWBWJ7lyU6Ye3Qltm2V+Ut6XjDcs+6ZBmK1UUxcCoSSGx/mQg2GbMJLjlnoVtUgVHR3IhyZ0mN9DlMPRFQ==
 
+react-native-piratechain@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.3.2.tgz#5374ddacb0803374b00160ff4dacdc291647ec80"
+  integrity sha512-2DLzBwtduKvRWsQ3q28PTABGmEhBk2nfO4f0qzEdQ63lgTrZBmkCM1CSM2942AM78+4gEAxOa8RB0JsZg1061g==
+  dependencies:
+    rfc4648 "^1.3.0"
+
 react-native-popup-menu@0.13.3:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"

@@ -173,6 +173,7 @@ PODS:
     - SwiftProtobuf (< 2.0.0, >= 1.9.0)
   - hermes-engine (0.9.0)
   - libevent (2.1.12)
+  - libpiratelc (0.0.5)
   - libwebp (1.2.1):
     - libwebp/demux (= 1.2.1)
     - libwebp/mux (= 1.2.1)
@@ -202,6 +203,10 @@ PODS:
     - RNPermissions
   - Permission-Notifications (3.3.1):
     - RNPermissions
+  - PirateLightClientKit (0.14.3-beta):
+    - gRPC-Swift (~> 1.0)
+    - libpiratelc (= 0.0.5)
+    - SQLite.swift (~> 0.12.2)
   - PromisesObjC (2.1.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -438,6 +443,9 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
+  - react-native-piratechain (0.3.2):
+    - PirateLightClientKit (= 0.14.3-beta)
+    - React
   - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
@@ -676,7 +684,7 @@ PODS:
     - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
-  - SwiftProtobuf (1.19.0)
+  - SwiftProtobuf (1.20.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -734,6 +742,7 @@ DEPENDENCIES:
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
+  - PirateLightClientKit (from `https://github.com/PirateNetwork/PirateLightClientKit.git`, commit `f939db082643d73cead7172da0a862f3b3df34a9`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -756,6 +765,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
@@ -832,6 +842,7 @@ SPEC REPOS:
     - gRPC-Swift
     - hermes-engine
     - libevent
+    - libpiratelc
     - libwebp
     - libzcashlc
     - Logging
@@ -890,6 +901,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
   Permission-Notifications:
     :path: "../node_modules/react-native-permissions/ios/Notifications"
+  PirateLightClientKit:
+    :commit: f939db082643d73cead7172da0a862f3b3df34a9
+    :git: https://github.com/PirateNetwork/PirateLightClientKit.git
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -930,6 +944,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-piratechain:
+    :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
@@ -1015,6 +1031,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/zcash/ZcashLightClientKit.git
 
 CHECKOUT OPTIONS:
+  PirateLightClientKit:
+    :commit: f939db082643d73cead7172da0a862f3b3df34a9
+    :git: https://github.com/PirateNetwork/PirateLightClientKit.git
   ZcashLightClientKit:
     :commit: 74f3ae20f26748e162c051e5fa343c71febc4294
     :git: https://github.com/zcash/ZcashLightClientKit.git
@@ -1062,6 +1081,7 @@ SPEC CHECKSUMS:
   gRPC-Swift: 77154009a019e97f8c4bd8f2bb75fe9726801157
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  libpiratelc: 8b923888cb473667fb7a84fa9b590e95a57f8a3d
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   libzcashlc: 1dfab6ecf157d60e58349906842f370bc65a5962
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
@@ -1073,6 +1093,7 @@ SPEC CHECKSUMS:
   Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
   Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
   Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
+  PirateLightClientKit: b5e76b77affabfc6eb6b1a01dad738d9c58c5ade
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: 412e994c1e570cf35378a32c18fd46e50634938b
@@ -1094,6 +1115,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 74240a44d33d95eff85d2aecba2dfaf969682566
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-piratechain: 21ee59f2a925cab4b84a4d08b833356d7432fe51
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
@@ -1149,11 +1171,11 @@ SPEC CHECKSUMS:
   SwiftNIOSSL: 7c2ddcbcbb2a8188468b7fe9c2bc6124df4b3772
   SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
-  SwiftProtobuf: 6ef3f0e422ef90d6605ca20b21a94f6c1324d6b3
+  SwiftProtobuf: b02b5075dcf60c9f5f403000b3b0c202a11b6ae1
   Yoga: 099a946cbf84c9b32ffdc4278d72db26710ecf92
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZcashLightClientKit: 82bfa46e9cf6667261912b0cf99510a61645131b
 
-PODFILE CHECKSUM: 24ae58d0b9317e831b041481df6192f3444a2445
+PODFILE CHECKSUM: 2c8eb53f773ad98335ff8c0df91d74e83c87b8d6
 
 COCOAPODS: 1.11.3
