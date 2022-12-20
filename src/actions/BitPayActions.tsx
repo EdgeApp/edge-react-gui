@@ -178,14 +178,7 @@ export async function launchBitPay(
         publicAddress: output.address
       }
     }),
-    metadata,
-    otherParams: {
-      paymentProtocolInfo: {
-        merchant: {
-          requiredFeeRate
-        }
-      }
-    }
+    metadata
   }
   if (requiredFeeRate != null) {
     spendInfo.networkFeeOption = 'custom'
