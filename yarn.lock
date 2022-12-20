@@ -6955,10 +6955,37 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.33, edge-core-js@^0.19.34:
+edge-core-js@^0.19.33:
   version "0.19.34"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.34.tgz#f8074a4ea40aae194b05f8a9448ca7e352fe1c73"
   integrity sha512-+MXfuO96c59pFdl1cTDjdIZLplBwFWkBOsOdSEwG6+zJwtgpw+155fMpqsry9nGbxmabGxGFVdjCkhpGXArSNg==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^4.0.0"
+    cleaners "^0.3.11"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.7"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^4.2.0"
+    redux-keto "^0.3.5"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.0"
+    yaob "^0.3.8"
+    yavent "^0.1.3"
+
+edge-core-js@^0.19.35:
+  version "0.19.35"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.35.tgz#4578f15ef6f533e57b034caf130842f0001f3d85"
+  integrity sha512-2AFZXLRcWZXn6Fx7Pxz2eYLuHQRLHtOeEK5nXHBm5pTwbMnDzHNX+mvjtG54cdtKEy7Wm2KBwo4WP0Am1kZzRA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7078,10 +7105,10 @@ edge-exchange-plugins@^0.16.12:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.16:
-  version "0.10.16"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.16.tgz#cd8a349cf66f612e4b8f58d22df879fa64a81d6a"
-  integrity sha512-c3uy7HhYd5bv6Fp3+Gd+VC3sFN13SyUl9FzFyT/5UehK29J0FuB+HwF2h4BGK+pgskSKIBbyesWbdWALjeP38w==
+edge-login-ui-rn@^0.10.17:
+  version "0.10.17"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.17.tgz#14678a046c6961a62f048d8f2c591cb901001621"
+  integrity sha512-sq/NH2dcn2o6xCeSo0xrRDtM9Emer+rTfrwgxWlQCL+LCFu6ZUJWOf/Ckm6ILGw66nzF9FH2LBtr+5bCPC9RyQ==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -13310,7 +13337,7 @@ react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
