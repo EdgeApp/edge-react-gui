@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -107,14 +108,22 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    const { route } = this.props
-    const { amountFiat: defaultAmountFiat } = route.params
+  async componentDidMount() {
+    const { route, wallet } = this.props
+    const { amountFiat: defaultAmountFiat, edgeTransaction } = route.params
 
     this.props.getSubcategories()
 
-    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null) {
+    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null && defaultAmountFiat !== 0) {
       this.setState({ amountFiat: displayFiatAmount(defaultAmountFiat) })
+    } else {
+      const { currencyCode, date, nativeAmount } = edgeTransaction
+      const isoDate = new Date(date * 1000).toISOString()
+
+      const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
+      const isoRate = await getHistoricalRate(`${currencyCode}_${wallet.fiatCurrencyCode}`, isoDate)
+      const fiatAmount = isoRate * Number(exchangeAmount)
+      this.setState({ amountFiat: displayFiatAmount(fiatAmount) })
     }
   }
 
