@@ -1,3 +1,4 @@
+import { lt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
@@ -12,7 +13,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { isSpamTransaction } from '../../util/utils'
+import { calculateSpamThreshold, isReceivedTransaction, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ThemeProps, useTheme } from '../services/ThemeContext'
@@ -36,6 +37,7 @@ interface StateProps {
   numTransactions: number
   wallet: EdgeCurrencyWallet
   currencyCode: string
+  spamThreshold?: string
   tokenId?: string
   transactions: TransactionListTx[]
 }
@@ -174,7 +176,10 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   renderTransaction = (transaction: FlatListItem<TransactionListTx>) => {
-    const { wallet, currencyCode } = this.props
+    const { wallet, currencyCode, spamThreshold } = this.props
+    if (spamThreshold != null && isReceivedTransaction(transaction.item) && lt(transaction.item.nativeAmount, spamThreshold)) {
+      return null
+    }
     return <TransactionListRow walletId={wallet.id} currencyCode={currencyCode} transaction={transaction.item} />
   }
 
@@ -245,12 +250,17 @@ export const TransactionList = withWallet((props: OwnProps) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
   const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
-  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
-  const spamFilteredTransactions = transactions.filter(tx => !spamFilterOn || !isSpamTransaction(tx, exchangeRate, exchangeDenom))
-  const numTransactions = spamFilteredTransactions.length
+
+  let spamThreshold
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  if (spamFilterOn && !zeroString(exchangeRate)) {
+    spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
+  }
+
   const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
   const handleMoreTransactions = useHandler((reset: boolean): void => {
@@ -262,9 +272,10 @@ export const TransactionList = withWallet((props: OwnProps) => {
       {...props}
       currencyCode={currencyCode}
       numTransactions={numTransactions}
+      spamThreshold={spamThreshold}
       tokenId={tokenId}
       theme={theme}
-      transactions={spamFilteredTransactions}
+      transactions={transactions}
       fetchMoreTransactions={handleMoreTransactions}
     />
   )

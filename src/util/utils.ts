@@ -212,9 +212,10 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
-// A spam transaction is worth less than one hundredth of a unit of the wallet currency (ie. 1 cent)
-export const isSpamTransaction = (tx: EdgeTransaction, rate: string, denom: EdgeDenomination): boolean => {
-  return isReceivedTransaction(tx) && !zeroString(rate) && lt(div(tx.nativeAmount, denom.multiplier), div('0.01', rate, DECIMAL_PRECISION))
+// multiplier / exchange rate / ( 1 / unit )
+// 100000000 / $16500 / (1/$0.001) = ~6 sats
+export const calculateSpamThreshold = (rate: string, denom: EdgeDenomination) => {
+  return div(div(denom.multiplier, rate), '1000')
 }
 
 export interface PrecisionAdjustParams {
