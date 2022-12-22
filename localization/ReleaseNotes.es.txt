@@ -50,13 +50,13 @@ v1.7.0
 * Soporte para direcciones Bech32
 Traslada Edge Core a un proceso independiente para aumentar el rendimiento y respuesta de la interfaz gráfica
 * Vende criptomonedas hacia tu tarjeta de crédito usando Simplex
-* Incluye LibertyX para comprar Bitcoin de comercios físicos en EE.
+* Incluye LibertyX para comprar Bitcoin de comercios físicos en EE. UU
 
 v1.6.2
 
 * Solucionada la denominación fiat de carteras de Airbitz a Edge
 * Solucionados problemas de bloqueo en la cartera EOS
-* Arreglados varios errores en la interface de usuario
+*Solucionados varios errores de la interface de usuario
 *Solucionado el etiquetado de metadatos para actualizarse inmediatamente después de guardar
 *Mejora en la sincronización de XRP y ETH
 *Uso de múltiples servicios para transmitir transacciones XRP y ETH
@@ -67,7 +67,7 @@ v1.6.1
 * Mejora del cálculo de comisiones en BTC
 * Añade botón para comprar criptomonedas en la vista de listado de carteras
 * Añade nuevo botón para comprar y cambiar criptomonedas en carteras vacías
-*Solucionados varios errores de la interface de usuario
+* Arreglados varios errores en la interface de usuario
 * Funcionalidad de plugins mejorada
 
 v1.6.0
