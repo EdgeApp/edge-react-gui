@@ -1,6 +1,14 @@
+import { asEither, asObject, asString } from 'cleaners'
+
 import ENV from '../../env.json'
 import { BitPayError, translateBitPayError } from '../types/BitPayError'
 import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
+
+const asErrorMessage = asEither(
+  asString,
+  (raw: unknown) => asObject({ message: asString })(raw).message,
+  (raw: unknown) => `Unrecognized exception: ${String(raw)}`
+)
 
 /**
  * Something got thrown, so turn that into a dev-friendly string.
@@ -8,7 +16,7 @@ import { ResolutionError, translateResolutionError } from '../types/ResolutionEr
  * @returns A string with (hopefully) enough information to debug the issue.
  */
 export function makeErrorLog(error: unknown): string {
-  let message = String(error)
+  let message = asErrorMessage(error)
   if (ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS || ENV.DEBUG_VERBOSE_ERRORS) {
     if (error instanceof Error) message += `\n${error.stack}`
     message += `\n${JSON.stringify(error, null, 2)}`
@@ -26,5 +34,5 @@ export function translateError(error: unknown): string {
   if (error instanceof BitPayError) return translateBitPayError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)
 
-  return error instanceof Error ? error.message : String(error)
+  return asErrorMessage(error)
 }
