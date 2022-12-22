@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
-import { useRunningActionQueueId } from '../../../controllers/action-queue/ActionQueueStore'
 import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -59,11 +58,6 @@ export const LoanCreateScene = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   const { currencyWallet: borrowEngineWallet } = borrowEngine
-
-  // Skip directly to LoanStatusScene if an action for the same actionOpType is already being processed
-  const existingProgramId = useRunningActionQueueId('loan-create', borrowEngineWallet.id)
-  const existingLoanAccount = useSelector(state => state.loanManager.loanAccounts[borrowEngineWallet.id])
-  if (existingProgramId != null) navigation.navigate('loanStatus', { actionQueueId: existingProgramId, loanAccountId: existingLoanAccount.id })
 
   // Force enable tokens required for loan
   useAsyncEffect(async () => {

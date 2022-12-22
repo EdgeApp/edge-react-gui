@@ -4,8 +4,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -102,7 +102,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#66EDA8"
+              onTintColor="#00f1a2"
               style={
                 Array [
                   Object {
@@ -170,7 +170,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#66EDA8"
+              onTintColor="#00f1a2"
               style={
                 Array [
                   Object {

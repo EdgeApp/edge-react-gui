@@ -157,13 +157,17 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
 
       const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
 
-      const makeExecutionOutput = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
+      const makeExecutionOutput = async (_dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
         // Get any pending txs for this wallet
         const pendingTxs = pendingTxMap[walletId]
 
         const unsignedTx = await wallet.makeSpend({
           currencyCode,
-          skipChecks: dryrun,
+          // Always skip checks instead of inheriting from dryrun param because
+          // USDC balance isn't available when using this action op specifically
+          // in the case of being contained in a par, preceeded by a borrow, and
+          // with this par being the first op of the ActionProgram.
+          skipChecks: true,
           spendTargets: [
             {
               nativeAmount,

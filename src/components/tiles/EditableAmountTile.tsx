@@ -20,6 +20,7 @@ interface Props {
   exchangeDenomination: EdgeDenomination
   displayDenomination: EdgeDenomination
   lockInputs: boolean
+  compressed?: boolean
   onPress: () => void
 }
 
@@ -27,7 +28,7 @@ export const EditableAmountTile = (props: Props) => {
   let cryptoAmountSyntax
   let cryptoAmountStyle
   let fiatAmountSyntax
-  const { title, exchangeRates, nativeAmount, wallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress } = props
+  const { title, exchangeRates, nativeAmount, wallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress, compressed = false } = props
   const { isoFiatCurrencyCode } = getWalletFiat(wallet)
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
@@ -48,14 +49,18 @@ export const EditableAmountTile = (props: Props) => {
     cryptoAmountSyntax = `0 ${displayDenomination.name}`
   }
 
-  return (
-    <Tile type={lockInputs ? 'static' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
-      <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
-        {cryptoAmountSyntax}
-      </EdgeText>
-      {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-    </Tile>
-  )
+  if (compressed) {
+    return <Tile type={lockInputs ? 'static' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+  } else {
+    return (
+      <Tile type={lockInputs ? 'static' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
+        <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
+          {cryptoAmountSyntax}
+        </EdgeText>
+        {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
+      </Tile>
+    )
+  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

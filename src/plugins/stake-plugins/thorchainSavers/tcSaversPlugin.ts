@@ -257,8 +257,8 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   let pools: Pools = []
   let savers: Savers = []
   const [saversResponse, poolsResponse] = await Promise.all([
-    fetchWaterfall(thornodeServers, `/thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } }),
-    fetchWaterfall(midgardServers, `/v2/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
+    fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } }),
+    fetchWaterfall(midgardServers, `v2/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
   ])
 
   if (!saversResponse.ok) {

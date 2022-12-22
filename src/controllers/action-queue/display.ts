@@ -18,6 +18,7 @@ import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { filterNull } from '../../util/safeFilters'
+import { LoanBorrowActionOp } from './types'
 import { checkEffectIsDone } from './util/checkEffectIsDone'
 import { getEffectErrors } from './util/getEffectErrors'
 
@@ -164,7 +165,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_borrow_title,
-        message: sprintf(s.strings.action_queue_display_loan_borrow_message, currencyCode)
+        message: sprintf(s.strings.action_queue_display_loan_borrow_message_1s, currencyCode)
       }
     }
     case 'loan-deposit': {
@@ -278,6 +279,21 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
           wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, feeCurrencyCode, s.strings.loan_aave_fragment]
         }
       }
+      break
+    case 'borrow':
+      {
+        const { actions: parActions } = actionOp
+        const { tokenId, walletId } = parActions[0] as LoanBorrowActionOp
+        const wallet = await account.waitForCurrencyWallet(walletId)
+        const currencyCode = getCurrencyCode(wallet, tokenId)
+
+        titleData = { stringKey: `action_queue_display_loan_borrow_title` }
+        messageData = { stringKey: `action_queue_display_loan_borrow_message_1s`, wildcards: [currencyCode] }
+      }
+      break
+    case 'close':
+      titleData = { stringKey: `aciton_queue_display_close_title` }
+      messageData = { stringKey: `action_queue_display_close_message` }
       break
     default: {
       // Fallback to default display implementation

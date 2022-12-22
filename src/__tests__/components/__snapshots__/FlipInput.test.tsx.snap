@@ -302,7 +302,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
+        color="#00f1a2"
         name="exchange"
         size={39}
         style={

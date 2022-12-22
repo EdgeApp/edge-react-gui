@@ -1,5 +1,5 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -8,7 +8,8 @@ import SafariView from 'react-native-safari-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions'
+import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
+import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -49,8 +51,8 @@ interface StateProps {
 }
 interface DispatchProps {
   getSubcategories: () => void
+  refreshTransaction: (walletId: string, transaction: EdgeTransaction) => void
   setNewSubcategory: (newSubcategory: string) => void
-  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -106,14 +108,22 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    const { route } = this.props
-    const { amountFiat: defaultAmountFiat } = route.params
+  async componentDidMount() {
+    const { route, wallet } = this.props
+    const { amountFiat: defaultAmountFiat, edgeTransaction } = route.params
 
     this.props.getSubcategories()
 
-    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null) {
+    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null && defaultAmountFiat !== 0) {
       this.setState({ amountFiat: displayFiatAmount(defaultAmountFiat) })
+    } else {
+      const { currencyCode, date, nativeAmount } = edgeTransaction
+      const isoDate = new Date(date * 1000).toISOString()
+
+      const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
+      const isoRate = await getHistoricalRate(`${currencyCode}_${wallet.fiatCurrencyCode}`, isoDate)
+      const fiatAmount = isoRate * Number(exchangeAmount)
+      this.setState({ amountFiat: displayFiatAmount(fiatAmount) })
     }
   }
 
@@ -284,27 +294,31 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   onSaveTxDetails = (newDetails?: any) => {
     if (newDetails == null) return
-    const { route } = this.props
+    const { route, wallet } = this.props
     // @ts-expect-error
     const { contactName, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
-    const { edgeTransaction } = route.params
+    const { edgeTransaction: transaction } = route.params
     let finalAmountFiat
     const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
     if (isNaN(decimalAmountFiat)) {
       // if invalid number set to previous saved amountFiat
-      finalAmountFiat = edgeTransaction.metadata ? edgeTransaction.metadata.amountFiat : 0.0
+      finalAmountFiat = transaction.metadata ? transaction.metadata.amountFiat : 0.0
     } else {
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    edgeTransaction.metadata = {
+    transaction.metadata = {
       name: contactName,
       category,
       notes,
       amountFiat: finalAmountFiat,
       bizId
     }
-    this.props.setTransactionDetails(edgeTransaction, edgeTransaction.metadata)
+    wallet
+      .saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata)
+      .then(() => this.props.refreshTransaction(wallet.id, transaction))
+      .catch(showError)
+
     this.setState(newDetails)
   }
 
@@ -571,8 +585,8 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       subcategoriesList={subcategoriesList}
       currentFiatAmount={currentFiatAmount}
       getSubcategories={() => dispatch(getSubcategories())}
+      refreshTransaction={(walletId: string, transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(walletId, [transaction]))}
       setNewSubcategory={async newSubcategory => dispatch(setNewSubcategory(newSubcategory))}
-      setTransactionDetails={(transaction, edgeMetadata) => dispatch(setTransactionDetails(transaction, edgeMetadata))}
       theme={theme}
       wallet={wallet}
       walletName={walletName}

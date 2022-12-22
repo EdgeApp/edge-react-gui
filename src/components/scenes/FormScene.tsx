@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import s from '../../locales/strings'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SafeSlider } from '../themed/SafeSlider'
@@ -28,7 +29,7 @@ export const FormScene = (props: Props) => {
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
-          <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} />
+          <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} disabledText={s.strings.send_confirmation_slide_to_confirm} />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

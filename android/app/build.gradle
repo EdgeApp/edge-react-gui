@@ -156,6 +156,12 @@ android {
         }
     }
 
+    packagingOptions {
+        resources.merges.add("service.proto")
+        resources.merges.add("darkside.proto")
+        resources.merges.add("compact_formats.proto")
+    }
+
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->

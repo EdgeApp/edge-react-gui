@@ -4,8 +4,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -187,7 +187,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "overflow": "hidden",
                     },
                     Object {
-                      "backgroundColor": "#0C446A",
+                      "backgroundColor": "#1b2f3b",
                       "borderRadius": 22,
                       "height": 45,
                       "marginLeft": 6,
@@ -435,7 +435,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
                       }
                     }
                     style={
@@ -518,7 +518,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   style={
                     Array [
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "fontSize": 34,
                       },
                       undefined,
@@ -598,7 +598,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                       }
                     }
                     style={
@@ -681,7 +681,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   style={
                     Array [
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "fontSize": 34,
                       },
                       undefined,
@@ -761,7 +761,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
                       }
                     }
                     style={
@@ -795,7 +795,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     resizeMode="cover"
                     source={
                       Object {
-                        "uri": "https://content.edge.app/currencyIcons/ethereum/ethereum.png",
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
                       }
                     }
                     style={
@@ -931,9 +931,9 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             Array [
               Object {
                 "alignItems": "center",
-                "borderColor": "#66EDA8",
+                "borderColor": "#00f1a2",
                 "borderRadius": 6,
-                "borderWidth": 1,
+                "borderWidth": 1.5,
                 "flexDirection": "row",
                 "justifyContent": "center",
                 "minHeight": 67,
@@ -965,7 +965,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
@@ -1068,7 +1068,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#00f1a2",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,

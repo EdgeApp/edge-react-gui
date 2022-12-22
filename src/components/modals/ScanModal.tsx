@@ -11,6 +11,7 @@ import { useLayout } from '../../hooks/useLayout'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
+import { triggerHaptic } from '../../util/haptic'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -39,7 +40,10 @@ export const ScanModal = (props: Props) => {
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
 
-  const handleFlash = () => setTorchEnabled(!torchEnabled)
+  const handleFlash = () => {
+    triggerHaptic('impactLight')
+    setTorchEnabled(!torchEnabled)
+  }
 
   // Mount effects
   React.useEffect(() => {
@@ -50,14 +54,17 @@ export const ScanModal = (props: Props) => {
   }, [])
 
   const handleBarCodeRead = (result: { data: string }) => {
+    triggerHaptic('impactLight')
     bridge.resolve(result.data)
   }
 
   const handleSettings = () => {
+    triggerHaptic('impactLight')
     Linking.openSettings()
   }
 
   const handleTextInput = async () => {
+    triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
       <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
     ))
@@ -68,6 +75,7 @@ export const ScanModal = (props: Props) => {
   }
 
   const handleAlbum = () => {
+    triggerHaptic('impactLight')
     launchImageLibrary(
       {
         mediaType: 'photo'
@@ -111,6 +119,7 @@ export const ScanModal = (props: Props) => {
   // }
 
   const handleClose = () => {
+    triggerHaptic('impactLight')
     // @ts-expect-error
     bridge.resolve()
   }

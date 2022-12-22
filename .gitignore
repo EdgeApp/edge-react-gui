@@ -41,6 +41,10 @@ coverage/
 /android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
 /ios/edge/edgeApiKey.h
 
+# Checkpoint jsons
+/android/app/src/main/assets/saplingtree/
+/android/app/src/main/assets/piratesaplingtree/
+
 # ----------------------------------------------------------------------
 # Everything below comes from React Native.
 # Do not edit this section except during React Native version upgrades.

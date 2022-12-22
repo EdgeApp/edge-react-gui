@@ -60,7 +60,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
+        color="#00f1a2"
         name="help_idea"
         size={34}
       />
@@ -91,7 +91,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
+        color="#00f1a2"
         name="help_headset"
         size={34}
       />
@@ -122,7 +122,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
+        color="#00f1a2"
         name="help_call"
         size={34}
       />
@@ -153,7 +153,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
+        color="#00f1a2"
         name="globe"
         size={34}
       />

@@ -183,7 +183,7 @@ exports[`Request should render with loaded props 1`] = `
         </WithTheme(EdgeTextComponent)>
         <Icon
           allowFontScaling={false}
-          color="#66EDA8"
+          color="#00f1a2"
           name="chevron-forward"
           size={34}
         />

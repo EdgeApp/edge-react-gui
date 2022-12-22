@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
@@ -12,8 +13,10 @@ export const Airship = makeAirship()
  * Used when some user-requested operation fails.
  */
 export function showError(error: unknown): void {
+  const translatedError = translateError(error)
+  Bugsnag.notify(`showError: ${translatedError}`)
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} />)
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} />)
 }
 
 /**
@@ -21,8 +24,10 @@ export function showError(error: unknown): void {
  * Used when some user-requested operation succeeds but with a warning.
  */
 export function showWarning(error: unknown): void {
+  const translatedError = translateError(error)
+  Bugsnag.notify(`showWarning: ${translatedError}`)
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />)
 }
 
 /**
