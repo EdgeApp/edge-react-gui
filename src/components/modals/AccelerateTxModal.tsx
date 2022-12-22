@@ -1,27 +1,23 @@
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import { playSendSound } from '../../actions/SoundActions'
 import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
-import { showError, showToast, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../tiles/Tile'
 
-type Status = 'confirming' | 'sending' | 'sent'
-
 interface OwnProps {
-  bridge: AirshipBridge<void>
-  edgeTransaction: EdgeTransaction
+  acceleratedTx: EdgeTransaction
+  bridge: AirshipBridge<EdgeTransaction | null>
+  replacedTx: EdgeTransaction
   wallet: EdgeCurrencyWallet
 }
 interface StateProps {
@@ -34,9 +30,8 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 interface State {
-  edgeUnsignedTransaction?: EdgeTransaction
   error?: Error
-  status: Status
+  status: 'confirming' | 'sending' | 'sent'
   mounted: boolean
 }
 
@@ -45,118 +40,48 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     super(props)
 
     this.state = {
-      edgeUnsignedTransaction: undefined,
       error: undefined,
       status: 'confirming',
       mounted: true
     }
   }
 
-  componentDidMount() {
-    this.makeRbfTransaction()
-  }
+  signBroadcastAndSave = async () => {
+    const { acceleratedTx, wallet } = this.props
 
-  makeRbfTransaction = async () => {
-    const { edgeTransaction, wallet } = this.props
+    this.setState({ status: 'sending' })
 
-    const edgeTransactionSpendTargets = edgeTransaction.spendTargets
+    try {
+      // Sign, broadcast, and save the accelerated transaction
+      const signedTx = await wallet.signTx(acceleratedTx)
+      await wallet.broadcastTx(signedTx)
+      await wallet.saveTx(signedTx)
 
-    if (edgeTransactionSpendTargets && edgeTransactionSpendTargets.length) {
-      // Currency code for the new tx is the same as the first spend target
-      const { currencyCode } = edgeTransactionSpendTargets[0]
-      // Map the EdgeTransaction.spendTargets to EdgeSpendTargets
-      const spendTargets = edgeTransactionSpendTargets.map(spendTarget => ({
-        nativeAmount: spendTarget.nativeAmount,
-        publicAddress: spendTarget.publicAddress,
-        uniqueIdentifier: spendTarget.uniqueIdentifier
-      }))
-      const {
-        // Use the txid from the replaced transaction as the rbfTxid
-        txid: rbfTxid,
-        // Copy replaced transaction's metadata and swapInfo to the RBF transaction
-        metadata,
-        swapData
-      } = edgeTransaction
-
-      const edgeSpendInfo: EdgeSpendInfo = {
-        currencyCode,
-        spendTargets,
-        rbfTxid,
-        metadata,
-        swapData
+      if (this.state.mounted) {
+        this.setState({ status: 'sent' })
       }
-
-      try {
-        const edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
-
-        this.setState({
-          edgeUnsignedTransaction
-        })
-      } catch (error: any) {
-        this.setState({
-          error
-        })
+      this.closeModal(signedTx)
+    } catch (error: any) {
+      if (this.state.mounted) {
+        this.closeModal(null, error)
       }
-    } else {
-      const error = new Error('Missing spend target data.')
-      this.setState({
-        error
-      })
     }
   }
 
-  signBroadcastAndSaveRbf = async () => {
-    const { wallet } = this.props
-    const { edgeUnsignedTransaction } = this.state
-
-    if (edgeUnsignedTransaction) {
-      let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
-
-      this.setState({ status: 'sending' })
-
-      try {
-        // Sign, broadcast, and save the RBF transaction
-        edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
-        edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
-        await wallet.saveTx(edgeSignedTransaction)
-
-        if (this.state.mounted) {
-          playSendSound().catch(error => console.log(error)) // Fail quietly
-
-          this.setState({ status: 'sent' })
-
-          showToast(s.strings.transaction_success_message)
-
-          Actions.replace('transactionDetails', {
-            edgeTransaction: edgeSignedTransaction,
-            walletId: wallet.id
-          })
-        } else {
-          showWarning(s.strings.transaction_success_message)
-        }
-      } catch (error: any) {
-        console.log(error)
-
-        if (this.state.mounted) {
-          this.setState({ status: 'confirming' })
-          showError(error)
-        }
-      }
-    } else {
-      throw new Error(s.strings.invalid_spend_request)
-    }
-  }
-
-  closeModal = () => {
+  closeModal = (signedTx: EdgeTransaction | null, err?: Error) => {
     this.setState({
       mounted: false
     })
-    this.props.bridge.resolve()
+    if (err != null) this.props.bridge.reject(err)
+    else this.props.bridge.resolve(signedTx)
+  }
+
+  handleCancel = () => {
+    this.closeModal(null)
   }
 
   handleConfirmation = async () => {
-    await this.signBroadcastAndSaveRbf()
-    this.closeModal()
+    await this.signBroadcastAndSave()
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
@@ -172,48 +97,40 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   render() {
-    const { bridge, edgeTransaction, theme } = this.props
-    const { error, status, edgeUnsignedTransaction } = this.state
+    const { acceleratedTx, bridge, replacedTx, theme } = this.props
+    const { error, status } = this.state
 
     const styles = getStyles(theme)
 
-    const oldFee = this.getTxFeeDisplay(edgeTransaction)
-    const newFee = edgeUnsignedTransaction != null ? this.getTxFeeDisplay(edgeUnsignedTransaction) : ''
+    const oldFee = this.getTxFeeDisplay(replacedTx)
+    const newFee = this.getTxFeeDisplay(acceleratedTx)
 
     const isSending = status === 'sending'
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.closeModal}>
-        {edgeUnsignedTransaction || error ? (
-          <>
-            <ModalTitle>{s.strings.transaction_details_accelerate_transaction_header}</ModalTitle>
-            <ModalMessage>{s.strings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
-            <View style={styles.container}>
-              <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-              {!!newFee && <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
-            </View>
-            {error && (
-              <View style={styles.error}>
-                <Text style={styles.errorText} numberOfLines={3}>
-                  {error.message}
-                </Text>
-              </View>
-            )}
-            <View style={styles.container}>
-              <Slider
-                disabled={isSending || !!error}
-                onSlidingComplete={this.handleConfirmation}
-                showSpinner={isSending}
-                disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
-              />
-            </View>
-            <ModalCloseArrow onPress={this.closeModal} />
-          </>
-        ) : (
-          <View style={styles.loadingContianer}>
-            <ActivityIndicator color={theme.primaryText} style={styles.loading} size="large" />
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
+        <ModalTitle>{s.strings.transaction_details_accelerate_transaction_header}</ModalTitle>
+        <ModalMessage>{s.strings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
+        <View style={styles.container}>
+          <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+        </View>
+        {error == null ? null : (
+          <View style={styles.error}>
+            <Text style={styles.errorText} numberOfLines={3}>
+              {error.message}
+            </Text>
           </View>
         )}
+        <View style={styles.container}>
+          <Slider
+            disabled={isSending || !!error}
+            onSlidingComplete={this.handleConfirmation}
+            showSpinner={isSending}
+            disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
+          />
+        </View>
+        <ModalCloseArrow onPress={this.handleCancel} />
       </ThemedModal>
     )
   }

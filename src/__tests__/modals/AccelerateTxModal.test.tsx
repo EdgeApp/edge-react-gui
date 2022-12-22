@@ -21,13 +21,25 @@ describe('AccelerateTxModalComponent', () => {
     const actual = renderer.render(
       <AccelerateTxModalComponent
         bridge={fakeAirshipBridge}
-        edgeTransaction={{
+        replacedTx={{
           walletId: '',
           blockHeight: 0,
           currencyCode: 'BTC',
           date: 0,
           nativeAmount: '-681',
           networkFee: '681',
+          otherParams: {},
+          ourReceiveAddresses: ['123123123'],
+          signedTx: '',
+          txid: ''
+        }}
+        acceleratedTx={{
+          walletId: '',
+          blockHeight: 0,
+          currencyCode: 'BTC',
+          date: 0,
+          nativeAmount: '-1362',
+          networkFee: '1362',
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
