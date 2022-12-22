@@ -2,11 +2,11 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { AccelerateTxModelComponent } from '../../components/modals/AccelerateTxModel'
+import { AccelerateTxModalComponent } from '../../components/modals/AccelerateTxModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 
-describe('AccelerateTxModelComponent', () => {
+describe('AccelerateTxModalComponent', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -19,7 +19,7 @@ describe('AccelerateTxModelComponent', () => {
     }
 
     const actual = renderer.render(
-      <AccelerateTxModelComponent
+      <AccelerateTxModalComponent
         bridge={fakeAirshipBridge}
         edgeTransaction={{
           walletId: '',

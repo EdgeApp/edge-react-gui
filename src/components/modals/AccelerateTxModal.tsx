@@ -40,7 +40,7 @@ interface State {
   mounted: boolean
 }
 
-export class AccelerateTxModelComponent extends PureComponent<Props, State> {
+export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -240,7 +240,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps>(
+export const AccelerateTxModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     exchangeRates: state.exchangeRates
   }),
@@ -252,4 +252,4 @@ export const AccelerateTxModel = connect<StateProps, DispatchProps, OwnProps>(
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
     }
   })
-)(withTheme(AccelerateTxModelComponent))
+)(withTheme(AccelerateTxModalComponent))

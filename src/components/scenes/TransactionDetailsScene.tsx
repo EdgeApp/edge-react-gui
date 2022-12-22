@@ -24,7 +24,7 @@ import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { AccelerateTxModel } from '../modals/AccelerateTxModel'
+import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
@@ -186,7 +186,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = route.params
 
     if (wallet) {
-      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
+      Airship.show(bridge => <AccelerateTxModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
