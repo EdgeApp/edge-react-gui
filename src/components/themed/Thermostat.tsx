@@ -22,8 +22,8 @@ export const Thermostat = ({ ratio, textColor }: Props) => {
         <Svg width="100%" height="12">
           <Defs>
             <LinearGradient id="gradosaur">
-              <Stop offset="0.55" stopColor="#66EDA8" stopOpacity="1" />
-              <Stop offset="0.90" stopColor="#E85466" stopOpacity="1" />
+              <Stop offset="0.55" stopColor={theme.positiveText} stopOpacity="1" />
+              <Stop offset="0.90" stopColor={theme.negativeText} stopOpacity="1" />
             </LinearGradient>
           </Defs>
           <Rect x="0" y="2" width="100%" height="8" fill="url(#gradosaur)" />
