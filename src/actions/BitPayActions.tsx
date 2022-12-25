@@ -164,9 +164,10 @@ export async function launchBitPay(
 
   // Make the spend to generate the tx hexes
   let requiredFeeRate = invoiceInstruction.requiredFeeRate
-  // This is in addition to the 1.5x multiplier in edge-currency-bitcoin. It's an additional buffer
-  // because the protocol doesn't discount segwit transactions and we want to make sure the transaction succeeds.
-  if (typeof requiredFeeRate === 'number') requiredFeeRate *= 1.2
+  // This is an additional buffer because the protocol doesn't discount segwit
+  // transactions and we want to make sure the transaction succeeds.
+  const { pluginId } = selectedWallet.currencyInfo
+  if (typeof requiredFeeRate === 'number' && SPECIAL_CURRENCY_INFO[pluginId].hasSegwit) requiredFeeRate *= 1.8
   const spendInfo: EdgeSpendInfo = {
     currencyCode: selectedCurrencyCode,
     // Reverse the outputs since Anypay puts the merchant amount first. Making it last will have
