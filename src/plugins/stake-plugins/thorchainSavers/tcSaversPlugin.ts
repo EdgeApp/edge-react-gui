@@ -7,6 +7,7 @@ import {
   ChangeQuote,
   ChangeQuoteRequest,
   PositionAllocation,
+  QuoteAllocation,
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
@@ -368,6 +369,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const { primaryAddress, addressBalance } = await getPrimaryAddress(wallet, currencyCode)
 
   const asset = `${mainnetCode}.${mainnetCode}`
+
   const path = `/thorchain/quote/saver/deposit?asset=${asset}&address=${primaryAddress}&amount=${thorAmount}`
   const quoteDeposit = await cleanMultiFetch(asQuoteDeposit, thornodeServers, path, { headers: { 'x-client-id': ninerealmsClientId } })
   if ('error' in quoteDeposit) {
@@ -423,27 +425,43 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   }
 
   const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
+
+  const allocations: QuoteAllocation[] = [
+    {
+      allocationType: 'stake',
+      pluginId,
+      currencyCode,
+      nativeAmount
+    },
+    {
+      allocationType: 'fee',
+      pluginId,
+      currencyCode,
+      nativeAmount: toFixed(fee, 0, 0)
+    },
+    {
+      allocationType: 'stakeFee',
+      pluginId,
+      currencyCode,
+      nativeAmount: toFixed(slippageNativeAmount, 0, 0)
+    }
+  ]
+
+  const futureUnstakeFee = await estimateUnstakeFee(opts, request, asset, ninerealmsClientId).catch(e => {
+    console.error(e.message)
+  })
+
+  if (futureUnstakeFee != null) {
+    allocations.push({
+      allocationType: 'futureUnstakeFee',
+      pluginId,
+      currencyCode,
+      nativeAmount: toFixed(futureUnstakeFee, 0, 0)
+    })
+  }
+
   return {
-    allocations: [
-      {
-        allocationType: 'stake',
-        pluginId,
-        currencyCode,
-        nativeAmount
-      },
-      {
-        allocationType: 'fee',
-        pluginId,
-        currencyCode,
-        nativeAmount: toFixed(fee, 0, 0)
-      },
-      {
-        allocationType: 'stakeFee',
-        pluginId,
-        currencyCode,
-        nativeAmount: toFixed(slippageNativeAmount, 0, 0)
-      }
-    ],
+    allocations,
     approve: async () => {
       if (needsFundingPrimary) {
         // Transfer funds into the primary address
@@ -562,8 +580,8 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
   const slippageNativeAmount = await wallet.denominationToNative(slippageDisplayAmount, currencyCode)
-  const utxoSourceAddress = primaryAddress
-  const forceChangeAddress = primaryAddress
+  const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(wallet, currencyCode)
+  const forceChangeAddress = utxoSourceAddress
 
   let needsFundingPrimary = false
   let networkFee = '0'
@@ -674,6 +692,41 @@ const changeQuoteFuncs = {
 
 const headers = {
   'Content-Type': 'application/json'
+}
+
+// ----------------------------------------------------------------------------
+// Estimate the fees to unstake by faking an unstake calculation using the
+// address and amount from the largest staked address in the savers pool for
+// the requested asset. This will calculate the withdrawBps for the fake
+// unstake by using the ratio of the requested unstake amount compared to the
+// total amount of the largest staked address
+// ----------------------------------------------------------------------------
+const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, asset: string, ninerealmsClientId: string): Promise<string> => {
+  const { currencyCode, stakePolicyId, wallet } = request
+  const saversResponse = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } })
+  if (!saversResponse.ok) {
+    const responseText = await saversResponse.text()
+    throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
+  }
+  const saversJson = await saversResponse.json()
+  const savers = asSavers(saversJson)
+
+  if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
+  const bigSaver = savers.reduce((prev, current) => (gt(current.units, prev.units) ? current : prev))
+  const primaryAddress = bigSaver.asset_address
+
+  const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet }
+  const stakePosition = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
+  const { allocations } = stakePosition
+
+  const addressBalance = wallet.balances[currencyCode]
+  const unstakeQuote = await unstakeRequestInner(opts, { ...request, action: 'unstake' }, { addressBalance, allocations, primaryAddress })
+
+  const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'fee')
+  const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'stakeFee')
+
+  if (networkFee == null || stakeFee == null) throw new Error('Cannot estimate unstake fee: No fees found')
+  return add(networkFee.nativeAmount, stakeFee.nativeAmount)
 }
 
 const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void> => {
