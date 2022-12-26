@@ -1145,6 +1145,9 @@ const strings = {
   stake_estimated_unstaking_fee: 'Estimated Unstaking Fee',
   stake_staking_fee_message: 'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
   stake_unstaking_fee_message: 'The specified Unstaking Fee will be deducted from the amount withdrawn reducing the amount received.',
+  stake_future_unstaking_fee: 'Future Unstake Fee Estimate',
+  stake_future_unstaking_fee_message:
+    'When you unstake these funds, you will incur the estimated unstake fee specified. This amount is only an estimate and is based on the funds currently staked in the pool. The actual fees incurred may be different at the time you unstake.',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',

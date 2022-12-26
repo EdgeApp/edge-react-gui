@@ -222,6 +222,19 @@ export const StakeModifyScene = (props: Props) => {
     ))
   }
 
+  const handlePressFutureUnstakingFee = () => {
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.stake_future_unstaking_fee}
+        message={s.strings.stake_future_unstaking_fee_message}
+        buttons={{
+          ok: { label: s.strings.string_ok }
+        }}
+      />
+    ))
+  }
+
   // Renderers
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -291,6 +304,31 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  const renderFutureUnstakeFeeAmountRow = (modification: ChangeQuoteRequest['action'], asset: { pluginId: string; currencyCode: string }) => {
+    if (modification !== 'stake') return null
+    const { pluginId, currencyCode } = asset
+    const quoteAllocation: QuoteAllocation | undefined =
+      changeQuote != null
+        ? changeQuote.allocations.find(
+            allocation => allocation.allocationType === 'futureUnstakeFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
+          )
+        : undefined
+    if (quoteAllocation == null) return null
+
+    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+
+    return (
+      <CryptoFiatAmountTile
+        type="questionable"
+        title={s.strings.stake_future_unstaking_fee}
+        nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        walletId={walletId}
+        denomination={quoteDenom}
+        onPress={handlePressFutureUnstakingFee}
+      />
+    )
+  }
+
   const renderWarning = () => {
     // Warnings are only shown for single asset staking
     let warningMessage = null
@@ -352,6 +390,11 @@ export const StakeModifyScene = (props: Props) => {
             denomination={nativeAssetDenomination}
           />
         }
+        {
+          // Render stake/unstake fee tiles
+          stakePolicy.stakeAssets.map(asset => renderFutureUnstakeFeeAmountRow(modification, asset))
+        }
+
         {errorMessage === '' || sliderLocked ? null : <ErrorTile message={errorMessage} />}
       </View>
     )
