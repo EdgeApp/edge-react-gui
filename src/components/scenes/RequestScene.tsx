@@ -73,8 +73,7 @@ interface State {
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestSceneComponent extends React.Component<Props, State> {
-  // @ts-expect-error
-  amounts: ExchangedFlipInputAmounts
+  amounts: ExchangedFlipInputAmounts | undefined
   flipInput: React.ElementRef<typeof FlipInput> | null = null
   unsubscribeAddressChanged: (() => void) | undefined
 
@@ -254,8 +253,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       />
     ))
       .then((result?: string) => {
-        // @ts-expect-error
-        return result === 'confirm' ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
+        return result === 'confirm' && addressExplorer != null ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
       })
       .catch(error => console.log(error))
   }
@@ -473,7 +471,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (!this.amounts || lte(this.amounts.nativeAmount, '0')) {
+    if (this.amounts == null || lte(this.amounts.nativeAmount, '0')) {
       if (Platform.OS === 'android') {
         showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
         return
