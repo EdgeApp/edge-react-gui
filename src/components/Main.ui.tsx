@@ -80,7 +80,7 @@ import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene'
-import { Request } from './scenes/RequestScene'
+import { RequestScene } from './scenes/RequestScene'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
 import { SendScene } from './scenes/SendScene'
 import { SendScene2 } from './scenes/SendScene2'
@@ -484,7 +484,7 @@ export class MainComponent extends React.Component<Props> {
           <Stack key="request" hideTabBar>
             <Scene
               key="request"
-              component={withNavigation(ifLoggedIn(Request))}
+              component={withNavigation(ifLoggedIn(RequestScene))}
               navTransparent
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}

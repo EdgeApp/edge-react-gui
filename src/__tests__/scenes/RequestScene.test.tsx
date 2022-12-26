@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { RequestComponent } from '../../components/scenes/RequestScene'
+import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
@@ -11,7 +11,7 @@ describe('Request', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
-      <RequestComponent
+      <RequestSceneComponent
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode={null as any}
@@ -38,7 +38,7 @@ describe('Request', () => {
     }
 
     const actual = renderer.render(
-      <RequestComponent
+      <RequestSceneComponent
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode="BTC"
