@@ -6,6 +6,7 @@ import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/networ
 import {
   ChangeQuote,
   ChangeQuoteRequest,
+  PositionAllocation,
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
@@ -473,6 +474,20 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 }
 
 const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
+  const { allocations } = await getStakePosition(opts, request)
+  const { wallet, currencyCode } = request
+  const { addressBalance, primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
+  return unstakeRequestInner(opts, request, { addressBalance, allocations, primaryAddress })
+}
+
+interface UnstakeRequestParams {
+  allocations: PositionAllocation[]
+  primaryAddress: string
+  addressBalance: string
+}
+
+const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, params: UnstakeRequestParams): Promise<ChangeQuote> => {
+  const { allocations, primaryAddress, addressBalance } = params
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
@@ -480,7 +495,6 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
   const policyCurrencyInfo = policyCurrencyInfos[pluginId]
   const walletBalance = wallet.balances[currencyCode]
   const { minAmount } = policyCurrencyInfo
-  const { allocations } = await getStakePosition(opts, request)
 
   if (lt(walletBalance, TC_SAVERS_WITHDRAWAL_SCALE_UNITS)) {
     throw new InsufficientFundsError({ currencyCode })
@@ -526,7 +540,6 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
 
   const withdrawBps = toFixed(mul(fractionToUnstake, TC_SAVERS_WITHDRAWAL_SCALE_UNITS), 0, 0)
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[wallet.currencyInfo.pluginId]
-  const { primaryAddress, addressBalance } = await getPrimaryAddress(wallet, currencyCode)
 
   const asset = `${mainnetCode}.${mainnetCode}`
   const path = `/thorchain/quote/saver/withdraw?asset=${asset}&address=${primaryAddress}&amount=${totalUnstakeThorAmount}&withdraw_bps=${withdrawBps}`
