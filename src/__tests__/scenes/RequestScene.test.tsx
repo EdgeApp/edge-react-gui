@@ -19,7 +19,6 @@ describe('Request', () => {
         exchangeSecondaryToPrimaryRatio={null as any}
         primaryCurrencyInfo={null as any}
         secondaryCurrencyInfo={null as any}
-        useLegacyAddress={null as any}
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}
@@ -46,7 +45,6 @@ describe('Request', () => {
         exchangeSecondaryToPrimaryRatio={{} as any}
         primaryCurrencyInfo={{ displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
         secondaryCurrencyInfo={{} as any}
-        useLegacyAddress={false}
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}
