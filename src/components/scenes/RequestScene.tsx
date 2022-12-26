@@ -74,7 +74,7 @@ interface State {
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class RequestComponent extends React.Component<Props, State> {
+export class RequestSceneComponent extends React.Component<Props, State> {
   // @ts-expect-error
   amounts: ExchangedFlipInputAmounts
   flipInput: React.ElementRef<typeof FlipInput> | null = null
@@ -595,7 +595,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Request = connect<StateProps, DispatchProps, OwnProps>(
+export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
@@ -661,4 +661,4 @@ export const Request = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(selectWalletFromModal(walletId, currencyCode))
     }
   })
-)(withTheme(RequestComponent))
+)(withTheme(RequestSceneComponent))
