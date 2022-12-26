@@ -64,7 +64,6 @@ type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 interface State {
   publicAddress: string
-  legacyAddress: string
   encodedURI: string | undefined
   minimumPopupModalState: CurrencyMinimumPopupState
   isFioMode: boolean
@@ -89,7 +88,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     })
     this.state = {
       publicAddress: '',
-      legacyAddress: '',
       encodedURI: undefined,
       minimumPopupModalState,
       isFioMode: false
@@ -131,17 +129,13 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   async generateEncodedUri() {
     const { wallet, currencyCode } = this.props
-    let legacyAddress = ''
     let publicAddress = ''
     if (wallet != null) {
       const receiveAddress = await wallet.getReceiveAddress()
-      // @ts-expect-error
-      legacyAddress = receiveAddress.legacyAddress
       publicAddress = receiveAddress.publicAddress
     }
     this.setState({
-      publicAddress,
-      legacyAddress
+      publicAddress
     })
     if (!currencyCode) return
     const abcEncodeUri = {
@@ -157,10 +151,8 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     } catch (e: any) {
       console.log(e)
       publicAddress = s.strings.loading
-      legacyAddress = s.strings.loading
       this.setState({
-        publicAddress,
-        legacyAddress
+        publicAddress
       })
     }
   }
@@ -175,7 +167,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const didWalletChange = prevProps.wallet && wallet.id !== prevProps.wallet.id
 
     if (didAddressChange || didWalletChange) {
-      let { publicAddress, legacyAddress } = receiveAddress
+      let { publicAddress } = receiveAddress
 
       const abcEncodeUri = { publicAddress, currencyCode }
       let encodedURI
@@ -184,15 +176,12 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       } catch (err: any) {
         console.log(err)
         publicAddress = s.strings.loading
-        legacyAddress = s.strings.loading
       }
 
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         encodedURI,
-        publicAddress: publicAddress,
-        // @ts-expect-error
-        legacyAddress: legacyAddress
+        publicAddress: publicAddress
       })
     }
     // old blank address to new
@@ -599,7 +588,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       return {
         account,
         publicAddress: '',
-        legacyAddress: '',
         fioAddressesExist: false,
         isConnected: state.network.isConnected
       }
