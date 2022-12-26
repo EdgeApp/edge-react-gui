@@ -648,7 +648,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
-      useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
+      useLegacyAddress: false,
       fioAddressesExist,
       isConnected: state.network.isConnected
     }

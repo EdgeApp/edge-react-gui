@@ -26,10 +26,6 @@ test('initialState', () => {
       fioAddressesLoading: false,
       fioDomains: []
     },
-    requestType: {
-      useLegacyAddress: false,
-      uniqueLegacyAddress: false
-    },
     sendConfirmation: SendConfirmationInitialState,
     transactionDetails: {
       subcategories: []

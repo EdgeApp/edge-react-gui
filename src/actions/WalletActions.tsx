@@ -41,9 +41,6 @@ export function selectWallet(walletId: string, currencyCode: string, alwaysActiv
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { walletId, currencyCode }
       })
-      const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-      const receiveAddress = await wallet.getReceiveAddress({ currencyCode })
-      dispatch({ type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress } })
     }
   }
 }

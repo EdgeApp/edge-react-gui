@@ -1,15 +1,5 @@
 import { Disklet } from 'disklet'
-import {
-  EdgeAccount,
-  EdgeContext,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeLobby,
-  EdgeReceiveAddress,
-  EdgeSpendInfo,
-  EdgeSwapPluginType,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
 import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
@@ -64,8 +54,6 @@ type NoDataActionName =
   | 'START_SHIFT_TRANSACTION'
   | 'UI/SEND_CONFIRMATION/RESET'
   | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
-  | 'USE_LEGACY_REQUEST_ADDRESS'
-  | 'USE_REGULAR_REQUEST_ADDRESS'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
@@ -114,7 +102,6 @@ export type Action =
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR'; data: string }
-  | { type: 'NEW_RECEIVE_ADDRESS'; data: { receiveAddress: EdgeReceiveAddress } }
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY'; data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR'; data: string }
