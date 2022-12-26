@@ -44,6 +44,7 @@ export function WalletListSortable(props: Props) {
       order={walletOrder}
       onRowMoved={handleRowMoved}
       renderRow={(wallet: EdgeCurrencyWallet | undefined) => <WalletListSortableRow wallet={wallet} />}
+      disableAnimatedScrolling
     />
   )
 }
