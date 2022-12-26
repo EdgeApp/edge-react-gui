@@ -269,8 +269,7 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  // @ts-expect-error
-  const renderChangeQuoteAmountTiles = modification => {
+  const renderChangeQuoteAmountTiles = (modification: ChangeQuoteRequest['action']) => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
     return (
       <View style={styles.amountTilesContainer}>
