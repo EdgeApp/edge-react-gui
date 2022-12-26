@@ -15,6 +15,7 @@ import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { ButtonsModal } from '../../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -198,6 +199,29 @@ export const StakeModifyScene = (props: Props) => {
       .catch(error => console.log(error))
   }
 
+  const handlePressStakingFee = (modification: ChangeQuoteRequest['action']) => () => {
+    let title: string
+    let message: string
+    if (modification === 'stake') {
+      title = s.strings.stake_estimated_staking_fee
+      message = s.strings.stake_staking_fee_message
+    } else {
+      title = s.strings.stake_estimated_unstaking_fee
+      message = s.strings.stake_unstaking_fee_message
+    }
+
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={title}
+        message={message}
+        buttons={{
+          ok: { label: s.strings.string_ok }
+        }}
+      />
+    ))
+  }
+
   // Renderers
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -241,6 +265,32 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  const renderStakeFeeAmountRow = (modification: ChangeQuoteRequest['action'], asset: { pluginId: string; currencyCode: string }) => {
+    if (!(modification === 'stake' || modification === 'unstake' || modification === 'claim')) return null
+    const { pluginId, currencyCode } = asset
+    const quoteAllocation: QuoteAllocation | undefined =
+      changeQuote != null
+        ? changeQuote.allocations.find(
+            allocation => allocation.allocationType === 'stakeFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
+          )
+        : undefined
+    if (quoteAllocation == null) return null
+
+    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const title = modification === 'stake' ? s.strings.stake_estimated_staking_fee : s.strings.stake_estimated_unstaking_fee
+
+    return (
+      <CryptoFiatAmountTile
+        type="questionable"
+        title={title}
+        nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        walletId={walletId}
+        denomination={quoteDenom}
+        onPress={handlePressStakingFee(modification)}
+      />
+    )
+  }
+
   const renderWarning = () => {
     // Warnings are only shown for single asset staking
     let warningMessage = null
@@ -271,6 +321,7 @@ export const StakeModifyScene = (props: Props) => {
 
   const renderChangeQuoteAmountTiles = (modification: ChangeQuoteRequest['action']) => {
     const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
+
     return (
       <View style={styles.amountTilesContainer}>
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
@@ -285,6 +336,10 @@ export const StakeModifyScene = (props: Props) => {
         {
           // Render claim amount tile
           modification === 'claim' || modification === 'unstake' ? stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset)) : null
+        }
+        {
+          // Render stake/unstake fee tiles
+          stakePolicy.stakeAssets.map(asset => renderStakeFeeAmountRow(modification, asset))
         }
         {
           // Render network fee tile
