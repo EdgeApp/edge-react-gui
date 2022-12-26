@@ -1141,6 +1141,10 @@ const strings = {
   stake_error_insufficient_s: 'Insufficient %s',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
+  stake_estimated_staking_fee: 'Estimated Staking Fee',
+  stake_estimated_unstaking_fee: 'Estimated Unstaking Fee',
+  stake_staking_fee_message: 'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
+  stake_unstaking_fee_message: 'The specified Unstaking Fee will be deducted from the amount withdrawn reducing the amount received.',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',

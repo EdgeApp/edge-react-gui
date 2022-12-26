@@ -415,7 +415,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     }
   }
 
-  const totalFee = add(slippageNativeAmount, needsFundingPrimary ? mul(networkFee, '2') : networkFee)
+  const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
   return {
     allocations: [
       {
@@ -428,7 +428,13 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
         allocationType: 'fee',
         pluginId,
         currencyCode,
-        nativeAmount: toFixed(totalFee, 0, 0)
+        nativeAmount: toFixed(fee, 0, 0)
+      },
+      {
+        allocationType: 'stakeFee',
+        pluginId,
+        currencyCode,
+        nativeAmount: toFixed(slippageNativeAmount, 0, 0)
       }
     ],
     approve: async () => {
@@ -584,7 +590,7 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
     }
   }
 
-  const totalFee = add(slippageNativeAmount, needsFundingPrimary ? mul(networkFee, '2') : networkFee)
+  const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
   return {
     allocations: [
       {
@@ -597,7 +603,13 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
         allocationType: 'fee',
         pluginId,
         currencyCode,
-        nativeAmount: toFixed(totalFee, 0, 0)
+        nativeAmount: toFixed(fee, 0, 0)
+      },
+      {
+        allocationType: 'stakeFee',
+        pluginId,
+        currencyCode,
+        nativeAmount: toFixed(slippageNativeAmount, 0, 0)
       }
     ],
     approve: async () => {
