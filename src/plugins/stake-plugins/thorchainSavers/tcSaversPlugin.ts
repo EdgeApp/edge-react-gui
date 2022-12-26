@@ -235,7 +235,7 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
         throw new Error('Only mainnet coins supported for staking')
       }
 
-      return changeQuoteFuncs[action](opts, request, policy)
+      return changeQuoteFuncs[action](opts, request)
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       await updateInboundAddresses(opts)
@@ -341,7 +341,7 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
   return policy
 }
 
-const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
   const { wallet, nativeAmount, currencyCode } = request
@@ -472,7 +472,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   }
 }
 
-const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, policy: StakePolicy): Promise<ChangeQuote> => {
+const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode } = request
   const { pluginId } = wallet.currencyInfo
