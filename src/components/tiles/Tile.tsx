@@ -16,13 +16,15 @@ const textHeights = {
   large: 0
 }
 
+export type TileType = 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable' | 'delete'
+
 interface OwnProps {
   body?: string
   children?: React.ReactNode
   error?: boolean
   onPress?: () => void
   title: string
-  type: 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable' | 'delete'
+  type: TileType
   contentPadding?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
 }
