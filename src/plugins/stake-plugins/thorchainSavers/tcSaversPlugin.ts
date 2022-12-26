@@ -247,14 +247,20 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
 }
 
 const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest): Promise<StakePosition> => {
+  const { stakePolicyId, wallet } = request
+  const policy = getPolicyFromId(stakePolicyId)
+  const { currencyCode } = policy.stakeAssets[0]
+  const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
+  return getStakePositionInner(opts, request, primaryAddress)
+}
+
+const getStakePositionInner = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest, primaryAddress: string): Promise<StakePosition> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { stakePolicyId, wallet } = request
   const policy = getPolicyFromId(stakePolicyId)
   const { pluginId, currencyCode } = policy.stakeAssets[0]
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[pluginId]
   const asset = `${mainnetCode}.${currencyCode}`
-
-  const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
 
   let pools: Pools = []
   let savers: Savers = []
