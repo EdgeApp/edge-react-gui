@@ -49,7 +49,6 @@ interface StateProps {
   isConnected: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
   secondaryCurrencyInfo?: GuiCurrencyInfo
-  useLegacyAddress?: boolean
 }
 
 interface DispatchProps {
@@ -131,7 +130,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   async generateEncodedUri() {
-    const { wallet, useLegacyAddress, currencyCode } = this.props
+    const { wallet, currencyCode } = this.props
     let legacyAddress = ''
     let publicAddress = ''
     if (wallet != null) {
@@ -146,7 +145,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     })
     if (!currencyCode) return
     const abcEncodeUri = {
-      publicAddress: useLegacyAddress && legacyAddress != null ? legacyAddress : publicAddress,
+      publicAddress,
       currencyCode
     }
     let encodedURI
@@ -167,19 +166,18 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    const { currencyCode, wallet, useLegacyAddress } = this.props
+    const { currencyCode, wallet } = this.props
     if (wallet == null || currencyCode == null) return
     const { pluginId } = wallet.currencyInfo
     const receiveAddress = await wallet.getReceiveAddress()
 
     const didAddressChange = this.state.publicAddress !== receiveAddress.publicAddress
-    const changeLegacyPublic = useLegacyAddress !== prevProps.useLegacyAddress
     const didWalletChange = prevProps.wallet && wallet.id !== prevProps.wallet.id
 
-    if (didAddressChange || changeLegacyPublic || didWalletChange) {
+    if (didAddressChange || didWalletChange) {
       let { publicAddress, legacyAddress } = receiveAddress
 
-      const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
+      const abcEncodeUri = { publicAddress, currencyCode }
       let encodedURI
       try {
         encodedURI = await wallet.encodeUri(abcEncodeUri)
@@ -251,9 +249,9 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleAddressBlockExplorer = () => {
-    const { wallet, useLegacyAddress } = this.props
+    const { wallet } = this.props
     const addressExplorer = wallet != null ? wallet.currencyInfo.addressExplorer : null
-    const requestAddress = useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const requestAddress = this.state.publicAddress
 
     Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
@@ -311,7 +309,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
-    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const requestAddress = this.state.publicAddress
     const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(wallet))
     const { keysOnlyMode = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
 
@@ -395,13 +393,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   onExchangeAmountChanged = async (amounts: ExchangedFlipInputAmounts) => {
-    const { publicAddress, legacyAddress } = this.state
+    const { publicAddress } = this.state
     const { currencyCode } = this.props
     this.amounts = amounts
     if (!currencyCode) return
-    const edgeEncodeUri: EdgeEncodeUri =
-      // @ts-expect-error
-      this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
+    const edgeEncodeUri: EdgeEncodeUri = { publicAddress, currencyCode }
     if (gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
@@ -416,7 +412,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   copyToClipboard = () => {
-    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const requestAddress = this.state.publicAddress
     Clipboard.setString(requestAddress)
     showToast(s.strings.fragment_request_address_copied)
   }
@@ -439,8 +435,8 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, wallet, useLegacyAddress } = this.props
-    const { legacyAddress, publicAddress } = this.state
+    const { currencyCode, wallet } = this.props
+    const { publicAddress } = this.state
     if (!currencyCode || !wallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
     }
@@ -453,11 +449,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
       if (sharedAddress != null && !sharedAddress.includes('amount')) {
-        const edgeEncodeUri: EdgeEncodeUri =
-          useLegacyAddress && legacyAddress
-            ? // @ts-expect-error
-              { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }
-            : { publicAddress, currencyCode, nativeAmount: '0' }
+        const edgeEncodeUri: EdgeEncodeUri = { publicAddress, currencyCode, nativeAmount: '0' }
         const newUri = await wallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
@@ -648,7 +640,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
-      useLegacyAddress: false,
       fioAddressesExist,
       isConnected: state.network.isConnected
     }
