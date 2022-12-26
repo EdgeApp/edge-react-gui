@@ -8,6 +8,7 @@ import {
   ChangeQuoteRequest,
   PositionAllocation,
   QuoteAllocation,
+  QuoteInfo,
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
@@ -352,7 +353,7 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
-  const { wallet, nativeAmount, currencyCode } = request
+  const { wallet, nativeAmount, currencyCode, stakePolicyId } = request
   const { pluginId } = wallet.currencyInfo
 
   const walletBalance = wallet.balances[currencyCode]
@@ -426,6 +427,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   const fee = needsFundingPrimary ? mul(networkFee, '2') : networkFee
 
+  let quoteInfo: QuoteInfo | undefined
   const allocations: QuoteAllocation[] = [
     {
       allocationType: 'stake',
@@ -458,10 +460,27 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       currencyCode,
       nativeAmount: toFixed(futureUnstakeFee, 0, 0)
     })
+
+    // Calculate the amount of time needed to break even from just fees
+    const totalFee = add(add(fee, slippageNativeAmount), futureUnstakeFee)
+    const policy = policies.find(policy => policy.stakePolicyId === stakePolicyId)
+    if (policy == null) {
+      throw new Error(`Cannot find policy ${stakePolicyId}`)
+    }
+    const totalFeePercent = (Number(totalFee) / Number(nativeAmount)) * 100
+    const { apy } = policy
+
+    const breakEvenYears = totalFeePercent / apy
+    const breakEvenDays = breakEvenYears * 365
+
+    quoteInfo = {
+      breakEvenDays
+    }
   }
 
   return {
     allocations,
+    quoteInfo,
     approve: async () => {
       if (needsFundingPrimary) {
         // Transfer funds into the primary address

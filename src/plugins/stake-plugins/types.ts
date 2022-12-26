@@ -91,8 +91,13 @@ export interface QuoteAllocation {
   nativeAmount: string
 }
 
+export interface QuoteInfo {
+  breakEvenDays?: number
+}
+
 export interface ChangeQuote {
   allocations: QuoteAllocation[]
+  quoteInfo?: QuoteInfo
   approve: () => Promise<void>
 }
 
