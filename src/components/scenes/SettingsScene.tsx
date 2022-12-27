@@ -31,7 +31,7 @@ import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, changeTheme, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
@@ -180,6 +180,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest()
           await this.props.context.deleteLocalAccount(username)
+          showToast(sprintf(s.strings.delete_account_feedback, username))
           return true
         }}
       />
