@@ -162,7 +162,7 @@ const strings = {
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
-  fragment_request_address_copied: 'Request address successfully copied to clipboard',
+  fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
@@ -317,6 +317,8 @@ const strings = {
   request_qr_email_title: 'Pay with %1$s:',
   request_email_subject: '%1$s %2$s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  request_qr_your_receiving_legacy_address: 'Your Receiving Legacy Address',
+  request_qr_your_receiving_segwit_address: 'Your Receiving Segwit Address',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
