@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { playSendSound } from '../../actions/SoundActions'
 import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
 import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
@@ -17,26 +18,27 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, RouteProp } from '../../types/routerTypes'
+import { Actions, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { AccelerateTxModel } from '../modals/AccelerateTxModel'
+import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
+  navigation: NavigationProp<'transactionDetails'>
   route: RouteProp<'transactionDetails'>
   wallet: EdgeCurrencyWallet
 }
@@ -57,13 +59,14 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
-  contactName: string // remove commenting once metaData in Redux
-  thumbnailPath?: string
-  notes: string
+  acceleratedTx: EdgeTransaction | null
   amountFiat: string
-  direction: string
   bizId: number
   category: string
+  contactName: string // remove commenting once metaData in Redux
+  direction: string
+  notes: string
+  thumbnailPath?: string
 }
 
 interface FiatCryptoAmountUI {
@@ -98,13 +101,14 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     )
 
     this.state = {
+      acceleratedTx: null,
       amountFiat: displayFiatAmount(amountFiat),
-      contactName,
-      notes,
+      bizId: 0,
       category,
-      thumbnailPath,
+      contactName,
       direction,
-      bizId: 0
+      notes,
+      thumbnailPath
     }
   }
 
@@ -125,6 +129,19 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       const fiatAmount = isoRate * Number(exchangeAmount)
       this.setState({ amountFiat: displayFiatAmount(fiatAmount) })
     }
+
+    // Try accelerating transaction to check if transaction can be accelerated
+    this.makeAcceleratedTx(edgeTransaction)
+      .then(acceleratedTx => {
+        this.setState({ acceleratedTx })
+      })
+      .catch(_err => {})
+  }
+
+  async makeAcceleratedTx(transaction: EdgeTransaction): Promise<EdgeTransaction | null> {
+    const { wallet } = this.props
+
+    return await wallet.accelerate(transaction)
   }
 
   openPersonInput = () => {
@@ -181,14 +198,38 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     )).then(notes => (notes != null ? this.onSaveTxDetails({ notes }) : null))
   }
 
-  openAccelerateModel = () => {
-    const { route, wallet } = this.props
-    const { edgeTransaction } = route.params
+  openAccelerateModel = async () => {
+    const { acceleratedTx } = this.state
+    const { edgeTransaction } = this.props.route.params
+    const { navigation, wallet } = this.props
 
-    if (wallet) {
-      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
-    } else {
-      showError(new Error('Transaction is missing wallet data.'))
+    if (acceleratedTx == null) {
+      throw new Error('Missing accelerated transaction data.')
+    }
+
+    try {
+      const signedTx = await Airship.show<EdgeTransaction | null>(bridge => (
+        <AccelerateTxModal bridge={bridge} acceleratedTx={acceleratedTx} replacedTx={edgeTransaction} wallet={wallet} />
+      ))
+
+      if (signedTx != null) {
+        playSendSound().catch(error => console.log(error))
+        showToast(s.strings.transaction_details_accelerate_transaction_sent)
+
+        navigation.pop()
+        navigation.push('transactionDetails', {
+          edgeTransaction: signedTx,
+          walletId: wallet.id
+        })
+      }
+    } catch (err: any) {
+      if (err?.message === 'transaction underpriced') {
+        const newAcceleratedTx = await this.makeAcceleratedTx(acceleratedTx)
+        this.setState({ acceleratedTx: newAcceleratedTx })
+        showError(s.strings.transaction_details_accelerate_transaction_fee_too_low)
+        return
+      }
+      showError(err)
     }
   }
 
@@ -400,7 +441,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { wallet, theme, route } = this.props
     const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
-    const { direction, amountFiat, contactName, thumbnailPath, notes, category } = this.state
+    const { direction, acceleratedTx, amountFiat, contactName, thumbnailPath, notes, category } = this.state
     const styles = getStyles(theme)
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
@@ -421,14 +462,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         recipientsAddresses = `${recipientsAddresses}${spendTargets[i].publicAddress}${newLine}`
       }
     }
-
-    // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
-    // Disabled until we fix a bug:
-    const isAcceleratable = false
-    // edgeTransaction.spendTargets?.length &&
-    // currencyInfo?.canReplaceByFee === true &&
-    // edgeTransaction.confirmations === 'unconfirmed' &&
-    // edgeTransaction.otherParams?.nonceUsed != null
 
     const categoriesText = formatCategory(splitCategory(category))
 
@@ -478,7 +511,9 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData(crypto.symbolString)}
-            {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
+            {acceleratedTx == null ? null : (
+              <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
+            )}
             <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
@@ -546,7 +581,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionDetailsScene = withWallet((props: OwnProps) => {
-  const { route, wallet } = props
+  const { navigation, route, wallet } = props
   const { edgeTransaction } = route.params
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -580,6 +615,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
 
   return (
     <TransactionDetailsComponent
+      navigation={navigation}
       route={route}
       contacts={contacts}
       subcategoriesList={subcategoriesList}
