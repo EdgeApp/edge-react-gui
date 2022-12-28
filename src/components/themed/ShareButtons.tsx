@@ -2,6 +2,7 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -30,9 +31,10 @@ function ShareButton(props: { text: string; onPress: () => void; icon: string })
   const { icon, text, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const handlePress = useHandler(() => onPress())
 
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={styles.button} onPress={handlePress}>
       <Fontello name={icon} size={theme.rem(1.5)} style={styles.image} color={theme.iconTappable} />
       <EdgeText style={styles.text}>{text}</EdgeText>
     </TouchableOpacity>
