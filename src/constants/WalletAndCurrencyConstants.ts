@@ -125,6 +125,7 @@ interface SpecialCurrencyInfo {
   // Flags that could move to EdgeCurrencyInfo:
   fioChainCode?: string
   allowZeroTx?: boolean
+  hasSegwit?: boolean
   isAccountActivationRequired?: boolean
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
@@ -165,6 +166,7 @@ export const SPECIAL_CURRENCY_INFO: {
 } = {
   bitcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    hasSegwit: true,
     initWalletName: s.strings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
@@ -178,6 +180,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   bitcointestnet: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
@@ -227,6 +230,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isBitPayProtocolSupported: true
   },
   litecoin: {
+    hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: s.strings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
