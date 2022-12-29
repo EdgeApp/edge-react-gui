@@ -17,6 +17,8 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,6 +58,9 @@ public class MessagesWorker extends Worker {
       } else {
         cancelNotification();
       }
+
+      // Update the push server:
+      updateFirebaseToken(core);
     } catch (Exception e) {
       Log.e(workId, e.toString());
       return Result.failure();
@@ -132,5 +137,21 @@ public class MessagesWorker extends Worker {
     OneTimeWorkRequest messagesWorkRequest =
         new OneTimeWorkRequest.Builder(MessagesWorker.class).build();
     manager.enqueue(messagesWorkRequest);
+  }
+
+  private void updateFirebaseToken(EdgeCore core) {
+    OnSuccessListener listener =
+        new OnSuccessListener<String>() {
+          @Override
+          public void onSuccess(String token) {
+            try {
+              core.updatePushToken(token);
+            } catch (Exception e) {
+            }
+          }
+        };
+
+    FirebaseMessaging messaging = FirebaseMessaging.getInstance();
+    messaging.getToken().addOnSuccessListener(listener);
   }
 }

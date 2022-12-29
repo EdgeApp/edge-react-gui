@@ -1,6 +1,7 @@
 package co.edgesecure.app;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import java.io.ByteArrayOutputStream;
@@ -86,6 +87,25 @@ public class EdgeCore {
     return problemUsers;
   }
 
+  public void updatePushToken(String token) throws JSONException, IOException {
+    // Read the clientId:
+    File basePath = context.getFilesDir();
+    File file = new File(basePath, "client.json");
+    JSONObject json = new JSONObject(readFile(file));
+    String clientId64 = json.getString("clientId");
+    String clientId = Base58.encode(Base64.decode(clientId64, Base64.DEFAULT));
+
+    // Prepare our payload:
+    JSONObject payloadJson = new JSONObject();
+    payloadJson.put("apiKey", EdgeApiKey.apiKey);
+    payloadJson.put("deviceId", clientId);
+    payloadJson.put("deviceToken", token);
+
+    // Do the request:
+    String uri = EdgeApiKey.pushServer.concat("/v2/device/");
+    pushFetch(uri, payloadJson.toString());
+  }
+
   /** Does a request / reply with the auth server. */
   private String authFetch(String uri, String body) throws IOException {
     HttpsURLConnection connection = null;
@@ -120,6 +140,41 @@ public class EdgeCore {
       return readInputStream(connection.getInputStream());
     } catch (Exception e) {
       throw new IOException("Could not reach auth server " + uri, e);
+    } finally {
+      if (connection != null) connection.disconnect();
+    }
+  }
+
+  /** Does a request / reply with the push server. */
+  private void pushFetch(String uri, String body) throws IOException {
+    HttpsURLConnection connection = null;
+    try {
+      // Set up the HTTPS connection:
+      connection = (HttpsURLConnection) new URL(uri).openConnection();
+      SSLContext context = SSLContext.getInstance("TLS");
+      context.init(null, null, null);
+      connection.setSSLSocketFactory(context.getSocketFactory());
+
+      // Add the auth server headers:
+      byte[] bodyData = body.getBytes("UTF-8");
+      connection.setRequestProperty("Accept", "application/json");
+      connection.setRequestProperty("Content-Type", "application/json");
+      connection.setRequestProperty("Content-Length", Integer.toString(bodyData.length));
+      connection.setRequestMethod("POST");
+      connection.setDoInput(true);
+      connection.setDoOutput(true);
+      connection.setUseCaches(false);
+
+      // Send the body:
+      OutputStream wr = connection.getOutputStream();
+      wr.write(bodyData);
+      wr.flush();
+      wr.close();
+      connection.connect();
+
+      Log.i(logId, String.format("%s %d", uri, connection.getResponseCode()));
+    } catch (Exception e) {
+      throw new IOException("Could not reach push server " + uri, e);
     } finally {
       if (connection != null) connection.disconnect();
     }
