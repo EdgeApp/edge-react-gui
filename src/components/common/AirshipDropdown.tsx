@@ -29,10 +29,8 @@ interface Props {
 export class AirshipDropdown extends React.Component<Props> {
   offset: Animated.Value
   timeout: ReturnType<typeof setTimeout> | undefined
-  // @ts-expect-error
-  unclear: Unsubscribe
-  // @ts-expect-error
-  unresult: Unsubscribe
+  unclear: Unsubscribe | undefined
+  unresult: Unsubscribe | undefined
 
   constructor(props: Props) {
     super(props)

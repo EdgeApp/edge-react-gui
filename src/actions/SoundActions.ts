@@ -17,11 +17,9 @@ export async function playSendSound(): Promise<void> {
 /**
  * Turn the node-style Sound constructor into a promise.
  */
-// @ts-expect-error
-async function loadSound(name): Promise<Sound> {
+async function loadSound(name: string): Promise<Sound> {
   return new Promise((resolve, reject) => {
-    // @ts-expect-error
-    const sound = new Sound(name, Sound.MAIN_BUNDLE, error => (error ? reject(error) : resolve(sound)))
+    const sound: Sound = new Sound(name, Sound.MAIN_BUNDLE, error => (error ? reject(error) : resolve(sound)))
   })
 }
 
