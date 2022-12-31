@@ -1,7 +1,7 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
-import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
+import { NotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
@@ -87,7 +87,7 @@ export type Action =
   | { type: 'LOGOUT'; data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN'; data: { messageId: string; source: TweakSource } }
   | { type: 'PERMISSIONS/UPDATE'; data: Partial<PermissionsState> }
-  | { type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE'; data: PriceChangeNotificationSettings }
+  | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS'; data: HandleAvailableStatus }

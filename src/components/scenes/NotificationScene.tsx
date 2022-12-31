@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
-import { serverSettingsToState, setDeviceSettings } from '../../actions/NotificationActions'
+import { NotificationSettings, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
-import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -19,34 +18,53 @@ interface OwnProps {
 
 type Props = OwnProps
 
+type NotificationSettingToggleSetting = keyof NotificationSettings
+
 export const NotificationScene = (props: Props) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  const settings = useSelector(state => state.priceChangeNotifications)
+  const settings = useSelector(state => state.notificationSettings)
   const account = useSelector(state => state.core.account)
 
   const currencyConfigs = useWatch(account, 'currencyConfig')
 
-  const toggleNotifications = useHandler(async () => {
+  const handlePressToggleSetting = async (toggleSetting: NotificationSettingToggleSetting) => {
     try {
-      const newSettings = await dispatch(setDeviceSettings({ ignorePriceChanges: !settings.ignorePriceChanges }))
+      const newSettings = await dispatch(setDeviceSettings({ [toggleSetting]: !settings[toggleSetting] }))
       dispatch({
-        type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
-        data: serverSettingsToState(newSettings)
+        type: 'NOTIFICATION_SETTINGS_UPDATE',
+        data: serverSettingsToNotificationSettings(newSettings)
       })
     } catch (e: any) {
       showError(`Failed to reach notification server: ${e}`)
     }
-  })
+  }
 
-  const rows = React.useMemo(
-    () => [
-      <SettingsSwitchRow key="all" label={s.strings.settings_notifications_switch} value={!settings.ignorePriceChanges} onPress={toggleNotifications} />,
-      ...Object.keys(currencyConfigs)
+  const pluginIds = React.useMemo(
+    () =>
+      Object.keys(currencyConfigs)
         .filter(pluginId => settings.plugins[pluginId] != null)
-        .sort((a, b) => a.localeCompare(b))
-        .map(pluginId => {
+        .sort((a, b) => a.localeCompare(b)),
+    [currencyConfigs, settings.plugins]
+  )
+
+  return (
+    <SceneWrapper background="theme" hasTabs={false}>
+      <ScrollView>
+        <SettingsSwitchRow
+          key="marketing-notifications"
+          label={s.strings.settings_marketing_notifications_switch}
+          value={!settings.ignoreMarketing}
+          onPress={async () => handlePressToggleSetting('ignoreMarketing')}
+        />
+        <SettingsSwitchRow
+          key="price-notifications"
+          label={s.strings.settings_price_notifications_switch}
+          value={!settings.ignorePriceChanges}
+          onPress={async () => handlePressToggleSetting('ignorePriceChanges')}
+        />
+        {pluginIds.map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]
 
           const onPress = () =>
@@ -61,14 +79,8 @@ export const NotificationScene = (props: Props) => {
               <CryptoIcon pluginId={pluginId} />
             </SettingsTappableRow>
           )
-        })
-    ],
-    [currencyConfigs, navigation, settings, toggleNotifications]
-  )
-
-  return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>{rows}</ScrollView>
+        })}
+      </ScrollView>
     </SceneWrapper>
   )
 }
