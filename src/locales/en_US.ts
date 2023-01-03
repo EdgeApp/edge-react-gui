@@ -358,6 +358,8 @@ const strings = {
   settings_hide_spam_transactions: 'Hide spam transactions',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
+  swap_preferred_dex: 'Prefer Decentralized',
+  swap_preferred_cex: 'Prefer Centralized',
   swap_options_header_decentralized: 'Decentralized\nNo personal info required',
   swap_options_header_centralized: 'Centralized\nMay require personal info',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',

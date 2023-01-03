@@ -1,11 +1,13 @@
-import { EdgePluginMap, EdgeSwapConfig } from 'edge-core-js/types'
+import { EdgePluginMap, EdgeSwapConfig, EdgeSwapPluginType } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import Feather from 'react-native-vector-icons/Feather'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions'
-import { setPreferredSwapPluginId } from '../../actions/SettingsActions'
+import { setPreferredSwapPluginId, setPreferredSwapPluginType } from '../../actions/SettingsActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
@@ -22,6 +24,7 @@ import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
 interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void
+  changePreferredSwapPluginType: (swapPluginType: EdgeSwapPluginType | undefined) => void
   ignoreAccountSwap: () => void
   removePromotion: (installerId: string) => Promise<void>
 }
@@ -31,6 +34,7 @@ interface StateProps {
   accountReferral: AccountReferral
   exchanges: EdgePluginMap<EdgeSwapConfig>
   settingsPreferredSwap: string | undefined
+  settingsPreferredSwapType: EdgeSwapPluginType | undefined
 }
 
 type Props = StateProps & DispatchProps & ThemeProps
@@ -71,36 +75,86 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   handlePreferredModal = () => {
-    const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap, theme } = this.props
+    const {
+      accountPlugins,
+      changePreferredSwapPlugin,
+      changePreferredSwapPluginType,
+      exchanges,
+      ignoreAccountSwap,
+      accountReferral,
+      settingsPreferredSwap,
+      settingsPreferredSwapType,
+      theme
+    } = this.props
     const styles = getStyles(this.props.theme)
 
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
 
     // Selected Exchange
     const selectedPluginId = activePlugins.preferredSwapPluginId ?? ''
-    const selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : s.strings.swap_preferred_cheapest
+
+    let selected: string
+    if (settingsPreferredSwapType === 'DEX') {
+      selected = s.strings.swap_preferred_dex
+    } else if (settingsPreferredSwapType === 'CEX') {
+      selected = s.strings.swap_preferred_cex
+    } else {
+      selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : s.strings.swap_preferred_cheapest
+    }
 
     // Process Items
-    const exchangeItems = Object.keys(exchanges)
+    const cexItems = Object.keys(exchanges)
+      .filter(pluginId => exchanges[pluginId].swapInfo.swapPluginType !== 'DEX')
       .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+
+    const dexItems = Object.keys(exchanges)
+      .filter(pluginId => exchanges[pluginId].swapInfo.swapPluginType === 'DEX')
+      .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+
+    const exchangeItems = [...dexItems, ...cexItems]
+      // const exchangeItems = [...cexItems, ...dexItems]
       .filter(pluginId => exchanges[pluginId].enabled && pluginId !== 'transfer')
       .map(pluginId => ({
         name: exchanges[pluginId].swapInfo.displayName,
         icon: getSwapPluginIconUri(pluginId, theme)
       }))
 
-    const exchangeDefaultItem = {
+    const preferCheapest = {
       name: s.strings.swap_preferred_cheapest,
       icon: <AntDesignIcon name="barschart" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
     }
 
+    const preferDex = {
+      name: s.strings.swap_preferred_dex,
+      icon: <Feather name="globe" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
+    }
+
+    const preferCex = {
+      name: s.strings.swap_preferred_cex,
+      icon: <MaterialCommunityIcons name="bank-outline" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
+    }
+
     // Render
     Airship.show<string | undefined>(bridge => (
-      <RadioListModal bridge={bridge} title={s.strings.swap_preferred_header} items={[exchangeDefaultItem, ...exchangeItems]} selected={selected} />
+      <RadioListModal
+        bridge={bridge}
+        title={s.strings.swap_preferred_header}
+        items={[preferCheapest, preferDex, preferCex, ...exchangeItems]}
+        selected={selected}
+      />
     )).then(result => {
       if (result == null) return
       if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
-      changePreferredSwapPlugin(Object.keys(exchanges).find(pluginId => exchanges[pluginId].swapInfo.displayName === result))
+      if (result === preferDex.name) {
+        changePreferredSwapPluginType('DEX')
+        changePreferredSwapPlugin(undefined)
+      } else if (result === preferCex.name) {
+        changePreferredSwapPluginType('CEX')
+        changePreferredSwapPlugin(undefined)
+      } else {
+        changePreferredSwapPluginType(undefined)
+        changePreferredSwapPlugin(Object.keys(exchanges).find(pluginId => exchanges[pluginId].swapInfo.displayName === result))
+      }
     })
   }
 
@@ -150,7 +204,7 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   renderPreferredArea() {
-    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, theme } = this.props
+    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, settingsPreferredSwapType, theme } = this.props
     const styles = getStyles(theme)
     const iconSize = theme.rem(1.25)
 
@@ -160,7 +214,7 @@ export class SwapSettings extends React.Component<Props, State> {
     const { swapSource } = activePlugins
 
     // Pick the plugin description:
-    const { label, icon } =
+    let { label, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
             label: exchanges[pluginId].swapInfo.displayName,
@@ -170,6 +224,16 @@ export class SwapSettings extends React.Component<Props, State> {
             label: s.strings.swap_preferred_cheapest,
             icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
+
+    if (settingsPreferredSwapType != null) {
+      if (settingsPreferredSwapType === 'DEX') {
+        label = s.strings.swap_preferred_dex
+        icon = <Feather name="globe" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
+      } else if (settingsPreferredSwapType === 'CEX') {
+        label = s.strings.swap_preferred_cex
+        icon = <MaterialCommunityIcons name="bank-outline" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
+      }
+    }
 
     // If a promo controls the swap plugin, provide a disable option:
     if (swapSource.type === 'promotion') {
@@ -224,11 +288,15 @@ export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
     exchanges: state.core.account.swapConfig,
-    settingsPreferredSwap: state.ui.settings.preferredSwapPluginId
+    settingsPreferredSwap: state.ui.settings.preferredSwapPluginId,
+    settingsPreferredSwapType: state.ui.settings.preferredSwapPluginType
   }),
   dispatch => ({
     changePreferredSwapPlugin(pluginId) {
       dispatch(setPreferredSwapPluginId(pluginId))
+    },
+    changePreferredSwapPluginType(swapPluginType) {
+      dispatch(setPreferredSwapPluginType(swapPluginType))
     },
     ignoreAccountSwap() {
       dispatch(ignoreAccountSwap())

@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
 import ENV from '../../../env.json'
 import { SortOption } from '../../components/modals/WalletListSortModal'
@@ -32,6 +32,7 @@ export interface AccountInitPayload {
   passwordReminder: PasswordReminderState
   pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
+  preferredSwapPluginType: EdgeSwapPluginType | undefined
   spamFilterOn: boolean
   spendingLimits: SpendingLimits
   touchIdInfo: GuiTouchIdInfo
@@ -78,6 +79,7 @@ export interface SettingsState {
   isTouchSupported: boolean
   loginStatus: boolean | null
   preferredSwapPluginId: string | undefined
+  preferredSwapPluginType: EdgeSwapPluginType | undefined
   pinLoginEnabled: boolean
   isAccountBalanceVisible: boolean
   walletsSort: SortOption
@@ -126,6 +128,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         preferredSwapPluginId,
+        preferredSwapPluginType,
         countryCode,
         pinLoginEnabled,
         denominationSettings,
@@ -145,6 +148,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
+        preferredSwapPluginType,
         countryCode,
         pinLoginEnabled,
         denominationSettings,
@@ -218,6 +222,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN': {
       const pluginId = action.data
       return { ...state, preferredSwapPluginId: pluginId }
+    }
+
+    case 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE': {
+      const swapPluginType = action.data
+      return { ...state, preferredSwapPluginType: swapPluginType }
     }
 
     case 'UI/SETTINGS/SET_SETTINGS_LOCK': {

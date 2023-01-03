@@ -1,7 +1,7 @@
 /* eslint-disable quote-props */
 
-import { asArray, asBoolean, asMap, asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
+import { asArray, asBoolean, asMap, asMaybe, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
 import { showError } from '../../../components/services/AirshipInstance'
@@ -28,12 +28,14 @@ export const asCurrencyCodeDenom = asObject({
 const asDenominationSettings = asMap(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
 
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
+export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
 
 export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
   defaultFiat: asOptional(asString, 'USD'),
   defaultIsoFiat: asOptional(asString, 'iso:USD'),
   preferredSwapPluginId: asOptional(asString, ''),
+  preferredSwapPluginType: asOptional(asSwapPluginType),
   countryCode: asOptional(asString, ''),
   mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
   passwordRecoveryRemindersShown: asOptional(
@@ -101,6 +103,13 @@ export const setDefaultFiatRequest = async (account: EdgeAccount, defaultFiat: s
 export const setPreferredSwapPluginId = async (account: EdgeAccount, pluginId: string | undefined) => {
   return getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId })
+    return setSyncedSettings(account, updatedSettings)
+  })
+}
+
+export const setPreferredSwapPluginType = async (account: EdgeAccount, swapPluginType: EdgeSwapPluginType | undefined) => {
+  return getSyncedSettings(account).then(async settings => {
+    const updatedSettings = updateSettings(settings, { preferredSwapPluginType: swapPluginType })
     return setSyncedSettings(account, updatedSettings)
   })
 }
