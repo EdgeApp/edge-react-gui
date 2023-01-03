@@ -128,6 +128,7 @@ const stakeProviderInfo: StakeProviderInfo = {
 const policyDefault = {
   apy: 0,
   stakeProviderInfo,
+  disableMaxStake: true,
   stakeWarning: null,
   unstakeWarning: null,
   claimWarning: null
