@@ -1,4 +1,4 @@
-import { add, gt, mul } from 'biggystring'
+import { add, gt, mul, round } from 'biggystring'
 import { EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
@@ -229,6 +229,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return isStakingSupported
   }
 
+  getBestApy = (): string | undefined => {
+    const { stakePolicies } = this.state
+    if (stakePolicies == null || stakePolicies.length === 0) return
+    const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
+    if (bestApy === 0) return
+    return round(bestApy.toString(), -1) + '%'
+  }
+
   handleOnChangeText = (input: string) => {
     this.setState({ input })
   }
@@ -304,6 +312,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
+    const bestApy = this.getBestApy()
     const styles = getStyles(theme)
 
     return (
@@ -352,6 +361,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                     <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
                       <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
                       <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
+                      {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
                     </TouchableOpacity>
                   )
                 )}
@@ -433,6 +443,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     color: theme.textLink,
     fontFamily: theme.fontFaceMedium,
+    marginLeft: theme.rem(0.25)
+  },
+  apyText: {
+    fontSize: theme.rem(0.75),
+    color: theme.textLink,
+    fontFamily: theme.fontFaceMedium,
+    marginTop: theme.rem(-0.5),
     marginLeft: theme.rem(0.25)
   },
 
