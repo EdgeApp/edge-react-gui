@@ -834,17 +834,10 @@ const SendComponent = (props: Props) => {
   // Calculate the transaction
   useAsyncEffect(async () => {
     try {
-      if (pinSpendingLimitsEnabled) {
-        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
-        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
-        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = mul(totalExchangeAmount, rate)
-        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
-        setSpendingLimitExceeded(exceeded)
-      }
-
       if (spendInfo.spendTargets[0].publicAddress == null) {
         setEdgeTransaction(null)
+        setSpendingLimitExceeded(false)
+        setMaxSpendSetter(0)
         return
       }
       if (maxSpendSetter === 1) {
@@ -854,6 +847,14 @@ const SendComponent = (props: Props) => {
       if (spendInfo.spendTargets[0].nativeAmount == null) {
         flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
         return
+      }
+      if (pinSpendingLimitsEnabled) {
+        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
+        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
+        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+        const fiatAmount = mul(totalExchangeAmount, rate)
+        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
+        setSpendingLimitExceeded(exceeded)
       }
       const edgeTx = await coreWallet.makeSpend(spendInfo)
       setEdgeTransaction(edgeTx)
