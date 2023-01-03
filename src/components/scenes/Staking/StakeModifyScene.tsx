@@ -37,7 +37,7 @@ export const StakeModifyScene = (props: Props) => {
   // Constants
   const { navigation } = props
   const { stakePlugin, walletId, stakePolicy, stakePosition, modification } = props.route.params
-  const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning } = stakePolicy
+  const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
 
   // Hooks
   const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
@@ -174,6 +174,12 @@ export const StakeModifyScene = (props: Props) => {
 
   const handleShowFlipInputModal = (currencyCode: string) => () => {
     const header = modification === 'stake' ? s.strings.stake_modal_modify_stake_title : s.strings.stake_modal_modify_unstake_title
+
+    // TODO: Max button needs to be enabled after max calculation for
+    // multi-asset staking is fully implemented and working in plugin
+    // Also disable if the policy explicity disables it.
+    const hideMaxButton = existingStaked.length > 1 || (disableMaxStake ?? false)
+
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
@@ -182,11 +188,7 @@ export const StakeModifyScene = (props: Props) => {
         onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, getWalletName(wallet))}
-        hideMaxButton={
-          /* TODO: Max button needs to be enabled after max calculation for
-          multi-asset staking is fully implemented and working in plugin */
-          existingStaked.length > 1
-        }
+        hideMaxButton={hideMaxButton}
       />
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
