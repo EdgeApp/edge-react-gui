@@ -351,7 +351,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   isStakingAvailable && (
                     <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
                       <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
+                      <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
                     </TouchableOpacity>
                   )
                 )}
