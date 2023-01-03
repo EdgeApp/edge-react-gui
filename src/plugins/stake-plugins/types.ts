@@ -68,6 +68,9 @@ export interface StakePolicy {
   stakeWarning?: string | null
   unstakeWarning?: string | null
   claimWarning?: string | null
+
+  // Do not allow Max button when staking
+  disableMaxStake?: boolean
 }
 
 // -----------------------------------------------------------------------------
