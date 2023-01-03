@@ -1000,6 +1000,7 @@
   "stake_break_even_time_message": "Based on the total fees incurred to stake and unstake your requested amount, this is the estimated amount of time you need to keep funds staked to earn enough rewards to pay for the fees incurred. This time frame is only an estimate as is subject to change based on change in rewards APY and the total amount of funds in the staking pool.",
   "stake_break_even_days_s": "%1$s days",
   "stake_break_even_days_months_s": "%1$s days (%2$s months)",
+  "stake_earn_button_label": "Earn",
   "fiat_plugin_select_asset_to_purchase": "Select Asset to Purchase",
   "fiat_plugin_buy_currencycode": "Buy %s",
   "fiat_plugin_amount_currencycode": "Amount %s",
