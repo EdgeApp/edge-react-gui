@@ -21,6 +21,7 @@ function makeNativeHeaders() {
 
 public class EdgeApiKey {
   public static let apiKey = "${apiKey}"
+  public static let pushServer = "${pushServer}"
 }
 `
   fs.writeFileSync(iosPath, iosSource)

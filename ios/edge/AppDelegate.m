@@ -4,6 +4,7 @@
 #import "RCTSplashScreen.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
+#import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -140,6 +141,12 @@ static void InitializeFlipper(UIApplication *application) {
             completionHandler(UIBackgroundFetchResultNewData);
            }];
     });
+
+    NSString *token = [FIRMessaging messaging].FCMToken;
+    if (token) {
+      [core updatePushTokenWithToken:token completion:^(BOOL success) {
+      }];
+    }
   }];
 }
 

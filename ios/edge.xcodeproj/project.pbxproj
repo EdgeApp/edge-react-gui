@@ -16,6 +16,7 @@
 		3D2A4BE322934B0000E1EC61 /* blank.html in Resources */ = {isa = PBXBuildFile; fileRef = 3D2A4BE222934B0000E1EC61 /* blank.html */; };
 		3DB9F75E2964E940004E836A /* EdgeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F75D2964E93F004E836A /* EdgeCore.swift */; };
 		3DB9F7602965F406004E836A /* EdgeApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F75F2965F406004E836A /* EdgeApiKey.swift */; };
+		3DB9F7622966B25E004E836A /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F7612966B25E004E836A /* Base58.swift */; };
 		50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */; };
 		5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */; };
 		6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */; };
@@ -58,6 +59,7 @@
 		3D2A4BE222934B0000E1EC61 /* blank.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = blank.html; path = ../android/app/src/main/assets/blank.html; sourceTree = "<group>"; };
 		3DB9F75D2964E93F004E836A /* EdgeCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeCore.swift; sourceTree = "<group>"; };
 		3DB9F75F2965F406004E836A /* EdgeApiKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeApiKey.swift; sourceTree = "<group>"; };
+		3DB9F7612966B25E004E836A /* Base58.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
 		5374C609A9164C53819F3FDD /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
 		550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.debug.xcconfig"; sourceTree = "<group>"; };
 		6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Black.ttf"; path = "../src/assets/fonts/SourceSansPro-Black.ttf"; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				3DB9F7612966B25E004E836A /* Base58.swift */,
 				3DB9F75F2965F406004E836A /* EdgeApiKey.swift */,
 				3DB9F75D2964E93F004E836A /* EdgeCore.swift */,
 				FD982BC41FABFA020057F035 /* SplashScreenResource */,
@@ -449,6 +452,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				3DB9F75E2964E940004E836A /* EdgeCore.swift in Sources */,
+				3DB9F7622966B25E004E836A /* Base58.swift in Sources */,
 				3DB9F7602965F406004E836A /* EdgeApiKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

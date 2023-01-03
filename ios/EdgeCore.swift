@@ -74,6 +74,69 @@ public class EdgeCore: NSObject {
     }
   }
 
+  @objc
+  public func updatePushToken(token: NSString, completion: @escaping (Bool) -> Void) {
+    do {
+      let encoder = JSONEncoder()
+
+      // Read the clientId:
+      guard let clientId = readClientId() else {
+        return completion(false)
+      }
+
+      // Prepare our payload:
+      var body = PushRequestBody()
+      body.apiKey = EdgeApiKey.apiKey
+      body.deviceId = Base58.encode(Array(clientId))
+      body.deviceToken = String(token)
+
+      // Prepare our request:
+      guard let url = URL(string: "\(EdgeApiKey.pushServer)/v2/device/") else {
+        return completion(false)
+      }
+      var request = URLRequest(url: url)
+      request.httpBody = try encoder.encode(body)
+      request.httpMethod = "POST"
+      request.setValue("application/json", forHTTPHeaderField: "Accept")
+      request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+      // Perform the request:
+      let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        if error != nil { return completion(false) }
+        if let httpResponse = response as? HTTPURLResponse {
+          if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+            return completion(false)
+          }
+        }
+        return completion(true)
+      }
+
+      task.resume()
+    } catch {
+      return completion(false)
+    }
+  }
+
+  private func readClientId() -> Data? {
+    let decoder = JSONDecoder()
+    let fs = FileManager.default
+    guard let documentUrl = fs.urls(for: .documentDirectory, in: .userDomainMask).first else {
+      return nil
+    }
+    let clientUrl = documentUrl.appendingPathComponent("client.json").absoluteURL
+    if let data = try? Data(contentsOf: clientUrl),
+      let clientFile = try? decoder.decode(ClientFile.self, from: data),
+      let clientId = Data(base64Encoded: clientFile.clientId)
+    {
+      return clientId
+    }
+    return nil
+  }
+
+  private struct ClientFile: Codable {
+    var clientId: String
+  }
+
   private struct EdgeBox: Codable {
     // TODO
   }
@@ -103,5 +166,11 @@ public class EdgeCore: NSObject {
     var otpResetPending: Bool?
     var pendingVouchers: [EdgePendingVoucher]?
     var recovery2Corrupt: Bool?
+  }
+
+  private struct PushRequestBody: Codable {
+    var apiKey: String?
+    var deviceId: String?
+    var deviceToken: String?
   }
 }
