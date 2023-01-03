@@ -32,6 +32,7 @@
     "cover": "jest --config jest.config.js --coverage",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-java": "cd android; ./format-java.sh",
+    "fix-swift": "swift-format format -i ios/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
     "ios": "react-native run-ios",
     "lint": "eslint .",
