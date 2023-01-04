@@ -586,7 +586,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // Calculate the networkFee as the gasLimit * gasPrice in the native token
       const networkFee = gasLimitAcc().mul(gasPrice).toString()
       allocations.push({
-        allocationType: 'fee',
+        allocationType: 'networkFee',
         pluginId: policyInfo.parentPluginId,
         currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee

@@ -300,7 +300,7 @@ export const StakeModifyScene = (props: Props) => {
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
-            allocation => allocation.allocationType === 'stakeFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
+            allocation => allocation.allocationType === 'deductedFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
           )
         : undefined
     if (quoteAllocation == null) return null
@@ -392,7 +392,7 @@ export const StakeModifyScene = (props: Props) => {
   }
 
   const renderChangeQuoteAmountTiles = (modification: ChangeQuoteRequest['action']) => {
-    const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
+    const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'networkFee')
 
     return (
       <View style={styles.amountTilesContainer}>

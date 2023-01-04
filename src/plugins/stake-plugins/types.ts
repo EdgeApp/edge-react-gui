@@ -85,7 +85,7 @@ export interface ChangeQuoteRequest {
 }
 
 export interface QuoteAllocation {
-  allocationType: 'stake' | 'unstake' | 'claim' | 'fee' | 'stakeFee' | 'futureUnstakeFee'
+  allocationType: 'stake' | 'unstake' | 'claim' | 'networkFee' | 'deductedFee' | 'futureUnstakeFee'
   pluginId: string
   currencyCode: string
   nativeAmount: string

@@ -436,13 +436,13 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       nativeAmount
     },
     {
-      allocationType: 'fee',
+      allocationType: 'networkFee',
       pluginId,
       currencyCode,
       nativeAmount: toFixed(fee, 0, 0)
     },
     {
-      allocationType: 'stakeFee',
+      allocationType: 'deductedFee',
       pluginId,
       currencyCode,
       nativeAmount: toFixed(slippageNativeAmount, 0, 0)
@@ -656,13 +656,13 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         nativeAmount
       },
       {
-        allocationType: 'fee',
+        allocationType: 'networkFee',
         pluginId,
         currencyCode,
         nativeAmount: toFixed(fee, 0, 0)
       },
       {
-        allocationType: 'stakeFee',
+        allocationType: 'deductedFee',
         pluginId,
         currencyCode,
         nativeAmount: toFixed(slippageNativeAmount, 0, 0)
@@ -741,8 +741,8 @@ const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuo
   const addressBalance = wallet.balances[currencyCode]
   const unstakeQuote = await unstakeRequestInner(opts, { ...request, action: 'unstake' }, { addressBalance, allocations, primaryAddress })
 
-  const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'fee')
-  const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'stakeFee')
+  const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'networkFee')
+  const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'deductedFee')
 
   if (networkFee == null || stakeFee == null) throw new Error('Cannot estimate unstake fee: No fees found')
   return add(networkFee.nativeAmount, stakeFee.nativeAmount)
