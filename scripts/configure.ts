@@ -78,6 +78,12 @@ const asConfig = asObject({
       evmScanApiKey: asOptional(asArray(asString), [])
     }).withRest
   ),
+  CHANGELLY_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      secret: asOptional(asString, '')
+    }).withRest
+  ),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
