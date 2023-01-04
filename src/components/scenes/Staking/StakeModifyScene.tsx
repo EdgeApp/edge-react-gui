@@ -1,4 +1,4 @@
-import { gt } from 'biggystring'
+import { gt, toFixed } from 'biggystring'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -13,8 +13,10 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { ButtonsModal } from '../../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -27,6 +29,7 @@ import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { IconTile } from '../../tiles/IconTile'
+import { Tile } from '../../tiles/Tile'
 
 interface Props {
   navigation: NavigationProp<'stakeModify'>
@@ -59,6 +62,7 @@ export const StakeModifyScene = (props: Props) => {
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
   const changeQuoteAllocations = changeQuote?.allocations ?? []
+  const { quoteInfo } = changeQuote ?? {}
 
   // Request that the user will modify, triggering a ChangeQuote recalculation
   const [changeQuoteRequest, setChangeQuoteRequest] = React.useState<ChangeQuoteRequest>({
@@ -198,6 +202,55 @@ export const StakeModifyScene = (props: Props) => {
       .catch(error => console.log(error))
   }
 
+  const handlePressStakingFee = (modification: ChangeQuoteRequest['action']) => () => {
+    let title: string
+    let message: string
+    if (modification === 'stake') {
+      title = s.strings.stake_estimated_staking_fee
+      message = s.strings.stake_staking_fee_message
+    } else {
+      title = s.strings.stake_estimated_unstaking_fee
+      message = s.strings.stake_unstaking_fee_message
+    }
+
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={title}
+        message={message}
+        buttons={{
+          ok: { label: s.strings.string_ok }
+        }}
+      />
+    ))
+  }
+
+  const handlePressFutureUnstakingFee = () => {
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.stake_future_unstaking_fee}
+        message={s.strings.stake_future_unstaking_fee_message}
+        buttons={{
+          ok: { label: s.strings.string_ok }
+        }}
+      />
+    ))
+  }
+
+  const handlePressBreakEvenDays = () => {
+    Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.stake_break_even_time}
+        message={s.strings.stake_break_even_time_message}
+        buttons={{
+          ok: { label: s.strings.string_ok }
+        }}
+      />
+    ))
+  }
+
   // Renderers
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -241,6 +294,75 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
+  const renderStakeFeeAmountRow = (modification: ChangeQuoteRequest['action'], asset: { pluginId: string; currencyCode: string }) => {
+    if (!(modification === 'stake' || modification === 'unstake' || modification === 'claim')) return null
+    const { pluginId, currencyCode } = asset
+    const quoteAllocation: QuoteAllocation | undefined =
+      changeQuote != null
+        ? changeQuote.allocations.find(
+            allocation => allocation.allocationType === 'deductedFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
+          )
+        : undefined
+    if (quoteAllocation == null) return null
+
+    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const title = modification === 'stake' ? s.strings.stake_estimated_staking_fee : s.strings.stake_estimated_unstaking_fee
+
+    return (
+      <CryptoFiatAmountTile
+        type="questionable"
+        title={title}
+        nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        walletId={walletId}
+        denomination={quoteDenom}
+        onPress={handlePressStakingFee(modification)}
+      />
+    )
+  }
+
+  const renderFutureUnstakeFeeAmountRow = (modification: ChangeQuoteRequest['action'], asset: { pluginId: string; currencyCode: string }) => {
+    if (modification !== 'stake') return null
+    const { pluginId, currencyCode } = asset
+    const quoteAllocation: QuoteAllocation | undefined =
+      changeQuote != null
+        ? changeQuote.allocations.find(
+            allocation => allocation.allocationType === 'futureUnstakeFee' && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
+          )
+        : undefined
+    if (quoteAllocation == null) return null
+
+    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+
+    return (
+      <CryptoFiatAmountTile
+        type="questionable"
+        title={s.strings.stake_future_unstaking_fee}
+        nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        walletId={walletId}
+        denomination={quoteDenom}
+        onPress={handlePressFutureUnstakingFee}
+      />
+    )
+  }
+
+  const renderBreakEvenDays = () => {
+    const { breakEvenDays = 0 } = quoteInfo ?? {}
+    const months = toFixed(toBigNumberString(breakEvenDays / 30), 1, 1)
+    const days = toFixed(toBigNumberString(breakEvenDays), 0, 0)
+
+    let message: string
+    if (breakEvenDays > 60) {
+      message = sprintf(s.strings.stake_break_even_days_months_s, days, months)
+    } else {
+      message = sprintf(s.strings.stake_break_even_days_s, days)
+    }
+    return (
+      <Tile type="questionable" title={s.strings.stake_break_even_time} contentPadding={false} onPress={handlePressBreakEvenDays}>
+        <EdgeText>{message}</EdgeText>
+      </Tile>
+    )
+  }
+
   const renderWarning = () => {
     // Warnings are only shown for single asset staking
     let warningMessage = null
@@ -269,9 +391,9 @@ export const StakeModifyScene = (props: Props) => {
     )
   }
 
-  // @ts-expect-error
-  const renderChangeQuoteAmountTiles = modification => {
-    const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'fee')
+  const renderChangeQuoteAmountTiles = (modification: ChangeQuoteRequest['action']) => {
+    const networkFeeQuote = changeQuoteAllocations.find(allocation => allocation.allocationType === 'networkFee')
+
     return (
       <View style={styles.amountTilesContainer}>
         <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
@@ -288,6 +410,10 @@ export const StakeModifyScene = (props: Props) => {
           modification === 'claim' || modification === 'unstake' ? stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset)) : null
         }
         {
+          // Render stake/unstake fee tiles
+          stakePolicy.stakeAssets.map(asset => renderStakeFeeAmountRow(modification, asset))
+        }
+        {
           // Render network fee tile
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
@@ -298,6 +424,11 @@ export const StakeModifyScene = (props: Props) => {
             denomination={nativeAssetDenomination}
           />
         }
+        {
+          // Render stake/unstake fee tiles
+          stakePolicy.stakeAssets.map(asset => renderFutureUnstakeFeeAmountRow(modification, asset))
+        }
+        {quoteInfo?.breakEvenDays != null ? renderBreakEvenDays() : null}
         {errorMessage === '' || sliderLocked ? null : <ErrorTile message={errorMessage} />}
       </View>
     )

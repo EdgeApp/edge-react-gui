@@ -85,14 +85,19 @@ export interface ChangeQuoteRequest {
 }
 
 export interface QuoteAllocation {
-  allocationType: 'stake' | 'unstake' | 'claim' | 'fee'
+  allocationType: 'stake' | 'unstake' | 'claim' | 'networkFee' | 'deductedFee' | 'futureUnstakeFee'
   pluginId: string
   currencyCode: string
   nativeAmount: string
 }
 
+export interface QuoteInfo {
+  breakEvenDays?: number
+}
+
 export interface ChangeQuote {
   allocations: QuoteAllocation[]
+  quoteInfo?: QuoteInfo
   approve: () => Promise<void>
 }
 
