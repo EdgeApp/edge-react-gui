@@ -1,5 +1,6 @@
 const { exec } = require('child_process')
 const path = require('path')
+const { ESBuildMinifyPlugin } = require('esbuild-loader')
 
 const webpack = require('webpack')
 
@@ -34,22 +35,20 @@ module.exports = {
               options: { transforms: [] }
             }
           : {
-              loader: 'babel-loader',
+              loader: 'esbuild-loader',
               options: {
-                babelrc: false,
-                configFile: false,
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      targets: { chrome: '67' }
-                    }
-                  ]
-                ],
-                cacheDirectory: true
+                target: 'chrome67',
+                tsconfigRaw: {}
               }
             }
       }
+    ]
+  },
+  optimization: {
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'chrome67'
+      })
     ]
   },
   output: {
