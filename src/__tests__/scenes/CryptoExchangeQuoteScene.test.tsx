@@ -6,6 +6,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { GuiSwapInfo } from '../../types/types'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 const dummySwapInfo: EdgeSwapInfo = {
   pluginId: '',
@@ -88,6 +89,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeQuoteScreenComponent
+        navigation={fakeNavigation}
         route={{
           name: 'exchangeQuote',
           params: { swapInfo, onApprove: () => undefined }
