@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
 import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
@@ -147,6 +147,7 @@ export type Action =
   | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY'; data: { pluginId: string; currencyCode: string; denomination: EdgeDenomination } }
   | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'; data: { mostRecentWallets: MostRecentWallet[] } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN'; data: string | undefined }
+  | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE'; data: EdgeSwapPluginType | undefined }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK'; data: boolean }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT'; data: { walletsSort: SortOption } }
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'; data: { pinLoginEnabled: boolean } }
