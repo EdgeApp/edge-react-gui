@@ -212,37 +212,39 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     return false
   }
 
-  getQuote = () => {
+  handleNext = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
 
-    if (this.props.fromCurrencyCode === '' || this.props.toCurrencyCode === '') {
-      Keyboard.dismiss()
+    if (zeroString(data.primaryNativeAmount)) {
+      showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
       return
     }
 
-    if (!zeroString(data.primaryNativeAmount)) {
-      const { exchangeInfo } = this.state
-      if (exchangeInfo != null) {
-        const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
-        if (disableSrc) {
-          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
-          return
-        }
+    if (this.checkExceedsAmount()) return
 
-        const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
-        if (disableDest) {
-          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
-          return
-        }
+    this.getQuote(data)
+  }
+
+  getQuote = (data: SetNativeAmountInfo) => {
+    const { exchangeInfo } = this.state
+    if (exchangeInfo != null) {
+      const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
+      if (disableSrc) {
+        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
+        return
       }
-      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState)
-      Keyboard.dismiss()
-      return
+
+      const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
+      if (disableDest) {
+        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
+        return
+      }
     }
-    showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
+    this.props.getQuoteForTransaction(data, this.resetState)
+    Keyboard.dismiss()
   }
 
   resetState = () => {
@@ -295,7 +297,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !this.props.calculatingMax && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.getQuote} />
+    return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -396,7 +398,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             onCryptoExchangeAmountChanged={this.fromAmountChanged}
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
-            onNext={this.getQuote}
+            onNext={this.handleNext}
           >
             {this.props.hasMaxSpend && (
               <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
@@ -416,7 +418,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             onCryptoExchangeAmountChanged={this.toAmountChanged}
             isFocused={isToFocused}
             focusMe={this.focusToWallet}
-            onNext={this.getQuote}
+            onNext={this.handleNext}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
