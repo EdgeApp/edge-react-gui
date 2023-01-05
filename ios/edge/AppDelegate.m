@@ -115,6 +115,7 @@ static void InitializeFlipper(UIApplication *application) {
         message = [message stringByAppendingFormat:@", %@", problemUsers[i]];
       }
     }
+    printf("Background notification: %s\n", [message UTF8String]);
 
     dispatch_async(dispatch_get_main_queue(), ^(void) {
       application.applicationIconBadgeNumber = problemUsers.count;
