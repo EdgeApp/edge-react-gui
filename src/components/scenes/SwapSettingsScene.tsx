@@ -54,8 +54,8 @@ export class SwapSettings extends React.Component<Props, State> {
     }
 
     const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
-    const cexIds = exchangeIds.filter(id => exchanges[id].swapInfo.swapPluginType !== 'DEX')
-    const dexIds = exchangeIds.filter(id => exchanges[id].swapInfo.swapPluginType === 'DEX')
+    const cexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex !== true)
+    const dexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex === true)
     this.sortedCexIds = cexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
     this.sortedDexIds = dexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
