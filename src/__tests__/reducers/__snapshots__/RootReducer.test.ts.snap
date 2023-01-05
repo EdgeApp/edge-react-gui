@@ -35,8 +35,6 @@ Object {
     "otpErrorShown": false,
   },
   "cryptoExchange": Object {
-    "calculatingMax": false,
-    "forceUpdateGuiCounter": 0,
     "fromBalanceMessage": "",
     "fromCurrencyCode": null,
     "fromDisplayAmount": "0",

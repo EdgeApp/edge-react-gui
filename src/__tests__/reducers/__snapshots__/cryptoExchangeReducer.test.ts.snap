@@ -2,8 +2,6 @@
 
 exports[`initialState 1`] = `
 Object {
-  "calculatingMax": false,
-  "forceUpdateGuiCounter": 0,
   "fromBalanceMessage": "",
   "fromCurrencyCode": null,
   "fromDisplayAmount": "0",

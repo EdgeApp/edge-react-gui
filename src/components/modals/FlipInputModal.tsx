@@ -191,7 +191,6 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           secondaryCurrencyInfo={{ ...secondaryInfo }}
           exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
           overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-          forceUpdateGuiCounter={0}
           onExchangeAmountChanged={this.handleExchangeAmountChange}
           onError={this.handleAmountChangeError}
           onNext={this.handleCloseModal}

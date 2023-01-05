@@ -29,7 +29,6 @@ describe('ExchangedFlipInput', () => {
         primaryCurrencyInfo={fakeCurrencyInfo}
         secondaryCurrencyInfo={fakeCurrencyInfo}
         exchangeSecondaryToPrimaryRatio="0"
-        forceUpdateGuiCounter={11}
         keyboardVisible
         onExchangeAmountChanged={amounts => ['123123', '123123', 'BTC']}
         isEditable
