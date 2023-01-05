@@ -40,7 +40,8 @@ interface State {
 }
 
 export class SwapSettings extends React.Component<Props, State> {
-  sortedIds: string[]
+  sortedCexIds: string[]
+  sortedDexIds: string[]
 
   constructor(props: Props) {
     super(props)
@@ -53,7 +54,10 @@ export class SwapSettings extends React.Component<Props, State> {
     }
 
     const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
-    this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const cexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex !== true)
+    const dexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex === true)
+    this.sortedCexIds = cexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    this.sortedDexIds = dexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
   async componentWillUnmount() {
@@ -108,7 +112,10 @@ export class SwapSettings extends React.Component<Props, State> {
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
           </View>
-          {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
+          <SettingsHeaderRow label={s.strings.swap_options_header_decentralized} />
+          {this.sortedDexIds.map(pluginId => this.renderPlugin(pluginId))}
+          <SettingsHeaderRow label={s.strings.swap_options_header_centralized} />
+          {this.sortedCexIds.map(pluginId => this.renderPlugin(pluginId))}
           <SettingsHeaderRow label={s.strings.swap_preferred_header} />
           {this.renderPreferredArea()}
         </ScrollView>
