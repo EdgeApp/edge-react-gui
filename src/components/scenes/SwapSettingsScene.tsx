@@ -104,11 +104,11 @@ export class SwapSettings extends React.Component<Props, State> {
 
     // Process Items
     const cexItems = Object.keys(exchanges)
-      .filter(pluginId => exchanges[pluginId].swapInfo.swapPluginType !== 'DEX')
+      .filter(pluginId => exchanges[pluginId].swapInfo.isDex !== true)
       .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
 
     const dexItems = Object.keys(exchanges)
-      .filter(pluginId => exchanges[pluginId].swapInfo.swapPluginType === 'DEX')
+      .filter(pluginId => exchanges[pluginId].swapInfo.isDex === true)
       .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
 
     const exchangeItems = [...dexItems, ...cexItems]
