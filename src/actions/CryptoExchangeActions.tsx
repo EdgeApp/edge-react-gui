@@ -34,7 +34,7 @@ import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, dec
 import { updateSwapCount } from './RequestReviewActions'
 
 export interface SetNativeAmountInfo {
-  whichWallet: 'from' | 'to'
+  whichWallet: 'from' | 'to' | 'max'
   primaryNativeAmount: string
 }
 

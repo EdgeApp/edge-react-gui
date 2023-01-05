@@ -20,7 +20,7 @@ import { fetchInfo } from '../../util/network'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
@@ -212,6 +212,21 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     return false
   }
 
+  handleMax = () => {
+    const data: SetNativeAmountInfo = {
+      whichWallet: 'max',
+      primaryNativeAmount: '0'
+    }
+
+    if (this.props.toCurrencyCode === '') {
+      showWarning(`${s.strings.loan_select_receiving_wallet}`)
+      Keyboard.dismiss()
+      return
+    }
+
+    this.getQuote(data)
+  }
+
   handleNext = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
@@ -400,9 +415,9 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend && (
-              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
-            )}
+            {this.props.hasMaxSpend ? (
+              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} />
+            ) : null}
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
