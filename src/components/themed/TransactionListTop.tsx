@@ -16,19 +16,19 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
-import { getPluginFromPolicy } from '../../util/stakeUtils'
+import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
@@ -67,6 +67,7 @@ interface State {
   input: string
   stakePolicies: StakePolicy[] | null
   stakePlugins: StakePlugin[] | null
+  lockedNativeAmount: string
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -78,6 +79,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     super(props)
     this.state = {
       input: '',
+      lockedNativeAmount: '0',
       stakePolicies: null,
       stakePlugins: null
     }
@@ -111,11 +113,44 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           })
           stakePolicies = [...stakePolicies, ...filteredStatePolicies]
         }
-        this.setState({ stakePolicies, stakePlugins })
+        const newState = { stakePolicies, stakePlugins }
+        this.setState(newState)
+        this.updatePositions(newState)
       })
     } else {
-      this.setState({ stakePolicies: [], stakePlugins: [] })
+      const newState = { stakePolicies: [], stakePlugins: [] }
+      this.setState(newState)
+      this.updatePositions(newState)
     }
+  }
+
+  getTotalPosition = (currencyCode: string, positions: PositionAllocation[]): string => {
+    const { pluginId } = this.props.wallet.currencyInfo
+    const amount = positions.filter(p => p.currencyCode === currencyCode && p.pluginId === pluginId).reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
+    return amount
+  }
+
+  updatePositions = async ({ stakePlugins = [], stakePolicies = [] }: { stakePlugins?: StakePlugin[]; stakePolicies?: StakePolicy[] }) => {
+    let lockedNativeAmount = '0'
+    for (const stakePolicy of stakePolicies) {
+      const { stakePolicyId } = stakePolicy
+      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
+      if (stakePlugin == null) continue
+      const amount = await stakePlugin
+        .fetchStakePosition({ stakePolicyId, wallet: this.props.wallet })
+        .then(async stakePosition => {
+          const { staked, earned } = getPositionAllocations(stakePosition)
+          return this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+        })
+        .catch(err => {
+          console.error(err)
+          showWarning(s.strings.stake_unable_to_query_locked)
+        })
+      if (amount == null) return
+
+      lockedNativeAmount = add(lockedNativeAmount, amount)
+    }
+    this.setState({ lockedNativeAmount })
   }
 
   handleOpenWalletListModal = () => {
@@ -198,7 +233,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const nativeLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const walletBalanceLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const nativeLocked = add(walletBalanceLocked, this.state.lockedNativeAmount)
     if (nativeLocked === '0') return null
 
     const stakingCryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeLocked)
