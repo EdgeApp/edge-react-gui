@@ -1155,6 +1155,7 @@ const strings = {
   stake_break_even_days_s: '%1$s days',
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
   stake_earn_button_label: 'Earn',
+  stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',
