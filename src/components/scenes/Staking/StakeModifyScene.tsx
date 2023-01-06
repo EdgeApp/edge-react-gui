@@ -158,12 +158,19 @@ export const StakeModifyScene = (props: Props) => {
 
   // @ts-expect-error
   const handleSlideComplete = reset => {
+    const message = {
+      stake: s.strings.stake_change_stake_success,
+      unstake: s.strings.stake_change_unstake_success,
+      claim: s.strings.stake_change_claim_success,
+      unstakeExact: ''
+    }
+
     if (changeQuote != null) {
       setSliderLocked(true)
       changeQuote
         .approve()
         .then(success => {
-          Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings[`stake_change_${modification}_success`]} onPress={() => {}} />)
+          Airship.show(bridge => <FlashNotification bridge={bridge} message={message[modification]} onPress={() => {}} />)
           navigation.pop()
         })
         .catch(err => {
@@ -438,7 +445,8 @@ export const StakeModifyScene = (props: Props) => {
     () => ({
       stake: getPolicyTitleName(stakePolicy),
       claim: s.strings.stake_claim_rewards,
-      unstake: s.strings.stake_unstake_claim
+      unstake: s.strings.stake_unstake_claim,
+      unstakeExact: '' // Only for internal use
     }),
     [stakePolicy]
   )
