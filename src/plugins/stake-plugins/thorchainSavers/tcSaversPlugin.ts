@@ -566,6 +566,10 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // User can only request to withdraw the original stakedAmount. The earned amount
     // is always withdrawn as well so add the two together.
     totalUnstakeNativeAmount = toFixed(add(nativeAmount, earnedAmount), 0, 0)
+  } else if (action === 'unstakeExact') {
+    // If action === unstakeExact
+    // Only unstake the exact amount specified in the request.nativeAmount
+    totalUnstakeNativeAmount = nativeAmount
   } else {
     // If action === claim
     // The user will be explicitly unstaking the earned amount
@@ -706,7 +710,8 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 const changeQuoteFuncs = {
   stake: stakeRequest,
   unstake: unstakeRequest,
-  claim: unstakeRequest
+  claim: unstakeRequest,
+  unstakeExact: unstakeRequest
 }
 
 const headers = {
@@ -721,7 +726,7 @@ const headers = {
 // total amount of the largest staked address
 // ----------------------------------------------------------------------------
 const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, asset: string, ninerealmsClientId: string): Promise<string> => {
-  const { currencyCode, stakePolicyId, wallet } = request
+  const { nativeAmount, stakePolicyId, wallet } = request
   const saversResponse = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } })
   if (!saversResponse.ok) {
     const responseText = await saversResponse.text()
@@ -738,8 +743,8 @@ const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuo
   const stakePosition = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
   const { allocations } = stakePosition
 
-  const addressBalance = wallet.balances[currencyCode]
-  const unstakeQuote = await unstakeRequestInner(opts, { ...request, action: 'unstake' }, { addressBalance, allocations, primaryAddress })
+  const addressBalance = nativeAmount
+  const unstakeQuote = await unstakeRequestInner(opts, { ...request, action: 'unstakeExact' }, { addressBalance, allocations, primaryAddress })
 
   const networkFee = unstakeQuote.allocations.find(a => a.allocationType === 'networkFee')
   const stakeFee = unstakeQuote.allocations.find(a => a.allocationType === 'deductedFee')
