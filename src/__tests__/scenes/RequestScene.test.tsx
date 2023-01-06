@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { RequestComponent } from '../../components/scenes/RequestScene'
+import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
@@ -11,7 +11,7 @@ describe('Request', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
-      <RequestComponent
+      <RequestSceneComponent
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode={null as any}
@@ -19,7 +19,6 @@ describe('Request', () => {
         exchangeSecondaryToPrimaryRatio={null as any}
         primaryCurrencyInfo={null as any}
         secondaryCurrencyInfo={null as any}
-        useLegacyAddress={null as any}
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}
@@ -38,7 +37,7 @@ describe('Request', () => {
     }
 
     const actual = renderer.render(
-      <RequestComponent
+      <RequestSceneComponent
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode="BTC"
@@ -46,7 +45,6 @@ describe('Request', () => {
         exchangeSecondaryToPrimaryRatio={{} as any}
         primaryCurrencyInfo={{ displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
         secondaryCurrencyInfo={{} as any}
-        useLegacyAddress={false}
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}

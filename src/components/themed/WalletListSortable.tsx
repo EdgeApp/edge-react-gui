@@ -38,12 +38,12 @@ export function WalletListSortable(props: Props) {
 
   return (
     <SortableListView
-      // @ts-expect-error
-      style={StyleSheet.absoltueFill}
+      style={StyleSheet.absoluteFill}
       data={currencyWallets}
       order={walletOrder}
       onRowMoved={handleRowMoved}
       renderRow={(wallet: EdgeCurrencyWallet | undefined) => <WalletListSortableRow wallet={wallet} />}
+      disableAnimatedScrolling
     />
   )
 }
