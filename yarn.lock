@@ -7085,10 +7085,10 @@ edge-currency-accountbased@^0.21.2:
     xrpl "^2.1.1"
     yaob "^0.3.6"
 
-edge-currency-monero@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.5.4.tgz#608506fe0ed3f4dff83da9f5b4edfcf82d2839cd"
-  integrity sha512-ePQZK3td/+fwx0RF4+BesRZRdbq1EO8iS9fo1sO774rdKzRvGeiY1E0s0MaVaYzgcOYt0sxhe7FK+nX+7qXP+Q==
+edge-currency-monero@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.5.5.tgz#e0df95e54c57338f969081a82df9ce6a2cf1742f"
+  integrity sha512-gfjyhew2pxAZpG1ZmGCKs8sYG6TDojxwSJGIlmxgCddOJEYUNwTYoUP3YByW25f0zdknix7I70c0906ME8dFEQ==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -13449,10 +13449,10 @@ react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1,
   dependencies:
     prop-types "^15.5.9"
 
-react-native-mymonero-core@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.2.5.tgz#866511f55ea20c9b0d33a4ddaf0d947cf88226b1"
-  integrity sha512-h3NyHXPf5xqznbG+zEG87odl5XBMAka9C02aSyQlWdBav4Uu/p8YrKD+Ji8+yJooy6579LtyDuHXTTqc8PywwA==
+react-native-mymonero-core@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.2.7.tgz#fa379e2e352b4f2ef5068e7aba2721477cab0599"
+  integrity sha512-4OK0y61/I1Isg6cBbcz3JjEBU1EZskNtnHuX7LescYx1za3Gi9djz2PtKN0wH3phWDedeTuLyqDVnNL+IRPhNA==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
