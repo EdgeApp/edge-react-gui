@@ -5,6 +5,8 @@ import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
 import { MAX_AMOUNT } from '../../../../constants/valueConstants'
+import { waitForWalletSync } from '../../../../controllers/loan-manager/util/waitForLoanAccountSync'
+import { logbv, loggv, logyv } from '../../../../foo/scratch.foo'
 import { snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
 import { asTxInfo, CallInfo, makeApprovableCall, makeSideEffectApprovableAction, makeTxCalls, TxInfo } from '../../common/ApprovableCall'
@@ -28,6 +30,9 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
   return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
     const { aaveNetwork, asTokenContractAddress } = blueprint
     const walletAddress = (await wallet.getReceiveAddress()).publicAddress
+
+    // Ensure that balance and rates are available for aTokens
+    await wallet.currencyConfig.changeAlwaysEnabledTokenIds([...wallet.currencyConfig.alwaysEnabledTokenIds, ...aaveNetwork.alwaysEnabledTokenIds])
 
     const REFERRAL_CODE = 0 // No referral code is used for AAVE contract calls
     const INTEREST_RATE_MODE = 2 // Only variable is supported for now
@@ -142,6 +147,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               nativeAmount: aBalance.toString()
             }
           })
+          logyv(collaterals, 'oldCollaterals')
+
           const debts: BorrowDebt[] = reserveTokenBalances.map(({ address, vBalance, variableApr }) => {
             return {
               tokenId: addressToTokenId(address),
@@ -149,7 +156,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               apr: variableApr
             }
           })
-          instance.collaterals = collaterals
+          // instance.collaterals = collaterals
           instance.debts = debts
           instance.syncRatio = 1
 
@@ -179,12 +186,27 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       isRunning: false,
       syncRatio: 0,
 
+      isFunded(): boolean {
+        return aaveNetwork.alwaysEnabledTokenIds.some(tokenId => {
+          const currencyCode = getToken(tokenId).currencyCode
+          return !zeroString(wallet.balances[currencyCode])
+        })
+      },
+
       async startEngine() {
         if (instance.isRunning) return
+
+        await waitForWalletSync(wallet)
         instance.isRunning = true
-        startNetworkSyncLoop()
+
+        if (instance.isFunded()) {
+          startNetworkSyncLoop()
+        }
+        instance.syncRatio = 1
       },
+
       async stopEngine() {
+        cleanupWalletEvents()
         instance.isRunning = false
       },
 
@@ -510,6 +532,45 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         return composeApprovableActions(...actions)
       }
     })
+
+    // Handle wallet events:
+    // const aTokenCurrencyCodes = aaveNetwork.alwaysEnabledTokenIds.map(tokenId => {
+    //   return getToken(tokenId).currencyCode
+    // })
+
+    const cleanupWalletEvents = wallet.watch('balances', balances => {
+      instance.collaterals = aaveNetwork.alwaysEnabledTokenIds.reduce<BorrowCollateral[]>((collaterals: BorrowCollateral[], aTokenId) => {
+        // Convert the aTokenId into the corresponding undeposited wallet balance
+        // tokenId for the corresponding asset
+        // i.e. given tokenId of aWBTC, find tokenId of WBTC
+        const aTokenCurrencyCode = getToken(aTokenId).currencyCode
+        const mappedCode = aTokenCurrencyCode.replace(aaveNetwork.aTokenPrefixCode, '')
+        logbv(aaveNetwork.aTokenPrefixCode, 'aTokenPrefixCode')
+        logbv(aTokenCurrencyCode, 'aTokenCurrencyCode')
+        logbv(mappedCode, 'mappedCode')
+
+        const balanceTokenId = Object.keys(wallet.currencyConfig.allTokens).find(
+          tokenId => wallet.currencyConfig.allTokens[tokenId].currencyCode === aTokenCurrencyCode.replace(aaveNetwork.aTokenPrefixCode, '')
+        )
+        if (balanceTokenId != null)
+          collaterals.push({
+            tokenId: balanceTokenId,
+            nativeAmount: balances[aTokenCurrencyCode]
+          })
+        return collaterals
+      }, [])
+
+      if (instance.currencyWallet.name === 'B') loggv(instance.collaterals, 'newCollaterals')
+    })
+
+    const reserveTokenBalances = await aaveNetwork.getReserveTokenBalances(walletAddress)
+    const collaterals: BorrowCollateral[] = reserveTokenBalances.map(({ address, aBalance }) => {
+      return {
+        tokenId: addressToTokenId(address),
+        nativeAmount: aBalance.toString()
+      }
+    })
+    if (instance.currencyWallet.name === 'B') logyv(collaterals, 'oldCollaterals')
 
     // Return instance:
     return instance

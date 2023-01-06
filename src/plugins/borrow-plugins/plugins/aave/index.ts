@@ -26,7 +26,17 @@ const aaveMaticNetwork = makeAaveNetworkFactory({
   enabledTokens: {
     USDC: true,
     WBTC: true
-  }
+  },
+  alwaysEnabledTokenIds: [
+    // '1d2a0e5ec8e5bbdca5cb219e649b565d8e5c3360', // amAAVE
+    // '27f8d03b3a2196956ed754badc28d73be8830a6e', // amDAI
+    // '1a13f4ca1d028320a707d99520abfefca3998b7f', // amUSDC
+    // '60d55f02a771d515e077c9c2403a1ef324885cec', // amUSDT
+    '5c2ed810328349100a66b82b78a1791b101c9d61', // amWBTC
+    '28424507fefb6f7f8e9d3860f56504e4e5f5f390' // amWETH
+    // '8df3aad3a84da6b69a4da8aec3ea40d9091b2ac4' // amWMATIC
+  ],
+  aTokenPrefixCode: 'am'
 })
 
 const aaveMaticBlueprint: BorrowPluginBlueprint = {
@@ -61,7 +71,9 @@ const aaveEthNetwork = makeAaveNetworkFactory({
   enabledTokens: {
     USDC: true,
     WBTC: true
-  }
+  },
+  alwaysEnabledTokenIds: [],
+  aTokenPrefixCode: 'a'
 })
 
 const aaveEthBlueprint: BorrowPluginBlueprint = {
@@ -113,7 +125,9 @@ const aaveKovanNetwork = makeAaveNetworkFactory({
     WBTC: true,
     YFI: true,
     ZRX: true
-  }
+  },
+  alwaysEnabledTokenIds: [],
+  aTokenPrefixCode: 'a'
 })
 
 const aaveKovBlueprint: BorrowPluginBlueprint = {

@@ -1,5 +1,6 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
+import { logbv } from '../../../foo/scratch.foo'
 import { BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { ThunkAction } from '../../../types/reduxTypes'
 import { makeCleanStore } from '../../../util/CleanStore'
@@ -98,6 +99,7 @@ export function loadLoanAccounts(account: EdgeAccount): ThunkAction<Promise<void
     for (const key of Object.keys(loanAccountMapRecord.data)) {
       const loanAccountEntry = loanAccountMapRecord.data[key]
       const wallet = await account.waitForCurrencyWallet(loanAccountEntry.walletId)
+      logbv(`Finished waiting for: ${wallet.name}`)
       const borrowPlugin = borrowPluginMap[loanAccountEntry.borrowPluginId]
 
       // Instantiate loan account from loanAccountEntry
@@ -213,7 +215,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
 
           await waitForBorrowEngineSync(borrowEngine) // If it exists in loan manager, it should be started
 
-          if (!checkLoanHasFunds(loanAccount) && existingLoanAccount.closed) {
+          if (loanAccount.borrowEngine.isFunded()) {
             // Cleanup and remove loan account if it's marked as closed
             await existingLoanAccount.borrowEngine.stopEngine()
             await dispatch(deleteLoanAccount(loanAccountId))

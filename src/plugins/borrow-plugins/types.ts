@@ -88,6 +88,7 @@ export interface BorrowEngine {
 
   // Engine State
   readonly watch: Subscriber<BorrowEngine>
+  isFunded: () => boolean
   isRunning: boolean
   syncRatio: number
 

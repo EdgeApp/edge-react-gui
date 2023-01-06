@@ -10,6 +10,11 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
+console.log = () => {}
+console.info = () => {}
+// console.error = () => {}
+console.warn = () => {}
+
 Bugsnag.start({
   // @ts-expect-error
   apiKey: ENV.BUGSNAG_API_KEY,
@@ -51,7 +56,7 @@ console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
 if (ENV.DISABLE_WARNINGS) {
-  LogBox.ignoreLogs(IGNORED_WARNINGS)
+  LogBox.ignoreAllLogs()
 }
 
 // Disable the font scaling

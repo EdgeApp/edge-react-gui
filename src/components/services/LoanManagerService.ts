@@ -140,7 +140,7 @@ export const LoanManagerService = (props: Props) => {
     routine()
 
     // Refresh every 10 minutes
-    const intervalId = setInterval(routine, 10 * 60 * 1000)
+    const intervalId = setInterval(routine, 3000)
 
     return () => {
       clearInterval(intervalId)

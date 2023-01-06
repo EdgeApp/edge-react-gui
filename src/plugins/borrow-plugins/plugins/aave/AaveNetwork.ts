@@ -1,5 +1,6 @@
 import { BigNumber, ethers } from 'ethers'
 
+import { logyv } from '../../../../foo/scratch.foo'
 import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
 import ERC20_ABI from './abi/ERC20_ABI.json'
 import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
@@ -17,7 +18,12 @@ export interface AaveNetworkBlueprint {
     protocolDataProvider: string
     paraSwapRepayAdapter: string
   }
+  // Tokens we allow the user to interact with within Edge
   enabledTokens: { [currencyCode: string]: boolean }
+
+  // All deposited collateral assets we need the core to fetch data for
+  alwaysEnabledTokenIds: string[]
+  aTokenPrefixCode: string
 }
 
 export interface AaveNetwork {
@@ -27,6 +33,9 @@ export interface AaveNetwork {
   lendingPool: ethers.Contract
   protocolDataProvider: ethers.Contract
   paraSwapRepayAdapter: ethers.Contract
+
+  alwaysEnabledTokenIds: string[]
+  aTokenPrefixCode: string
 
   // Helpers
   getAllReservesTokens: () => Promise<Array<{ symbol: string; address: string }>>
@@ -59,7 +68,7 @@ interface FunctionCache {
 const RAY = BigNumber.from('10').pow('27')
 
 export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNetwork => {
-  const { provider, contractAddresses, enabledTokens } = blueprint
+  const { provider, contractAddresses, enabledTokens, alwaysEnabledTokenIds, aTokenPrefixCode } = blueprint
 
   const fnCache: FunctionCache = {
     getReserveTokenContracts: {},
@@ -75,6 +84,8 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     lendingPool,
     protocolDataProvider,
     paraSwapRepayAdapter,
+    alwaysEnabledTokenIds,
+    aTokenPrefixCode,
 
     //
     // Helpers
@@ -95,6 +106,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
 
       const reserveTokenAddresses = await protocolDataProvider.getReserveTokensAddresses(address)
       const [aTokenAddress, sTokenAddress, vTokenAddress] = reserveTokenAddresses
+      // logyv(aTokenAddress)
       const aToken = new ethers.Contract(aTokenAddress, A_TOKEN_ABI, provider)
       const sToken = new ethers.Contract(sTokenAddress, STABLE_DEBT_TOKEN_ABI, provider)
       const vToken = new ethers.Contract(vTokenAddress, VARIABLE_DEBT_TOKEN_ABI, provider)
