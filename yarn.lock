@@ -6998,10 +6998,37 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.33, edge-core-js@^0.19.36:
+edge-core-js@^0.19.36:
   version "0.19.36"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.36.tgz#8404fb4f181c2017ab6df9ea21564481e27f0427"
   integrity sha512-a4D/ozsXLYW1AesXx4hZ2ZKvrFK5QIdlgm1e1LlZ/ZGkXYqY43skHnTnz0HMnL3rAbG7756xwqIEv5iBD0E6uQ==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^4.0.0"
+    cleaners "^0.3.11"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.7"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^4.2.0"
+    redux-keto "^0.3.5"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.0"
+    yaob "^0.3.8"
+    yavent "^0.1.3"
+
+edge-core-js@^0.19.37:
+  version "0.19.37"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.37.tgz#f10ed23353458f9acda1b831d74c6a7cb24b88ed"
+  integrity sha512-zGfuL+b+C7qXAO1K3jL8czMoM/8D8Otd4fnFMjI8a2cbKY3OsmJWqciAPTER6HH9smwR5zCr7WRv0vTyB1fVmQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7075,10 +7102,10 @@ edge-currency-monero@^0.5.4:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.3.tgz#bb5e58e4169e9f620c875baa2ccdea0fd899e7bb"
-  integrity sha512-GYBBaWAN5fu2bcngKfxzCmBIxn4NOvAgRqqXQCHlnn4U7xND+EXDPat9OL3Je00hKbcBOBSrS6wzA8ordLh2eA==
+edge-currency-plugins@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.4.tgz#0374a6e99c916bf6f99a2481dead63ba2429549c"
+  integrity sha512-c7S8Q0JhtPkC7SnioH5f5VRZWXsDum4tJeVUE02KoxlzBCj8LLRtvU+IbWB5478DGZ3SooppBgJJtxfc+LEI0w==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -7095,7 +7122,7 @@ edge-currency-plugins@^1.3.3:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.33"
+    edge-core-js "^0.19.37"
     edge-sync-client "^0.2.7"
     memlet "^0.1.7"
     uri-js "^4.4.0"
