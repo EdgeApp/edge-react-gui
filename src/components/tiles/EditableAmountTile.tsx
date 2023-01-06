@@ -1,4 +1,4 @@
-import { div, toFixed } from 'biggystring'
+import { div, round, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
@@ -43,7 +43,7 @@ export const EditableAmountTile = (props: Props) => {
     const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, exchangeAmount)
     cryptoAmountSyntax = `${displayAmount ?? '0'} ${displayDenomination.name}`
     if (fiatAmount) {
-      fiatAmountSyntax = `${fiatSymbol} ${toFixed(fiatAmount, 2, 2) ?? '0'}`
+      fiatAmountSyntax = `${fiatSymbol} ${toFixed(round(fiatAmount, -2), 2, 2) ?? '0'}`
     }
   } else {
     cryptoAmountSyntax = `0 ${displayDenomination.name}`
