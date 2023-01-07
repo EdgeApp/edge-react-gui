@@ -1,5 +1,49 @@
 # edge-react-gui
 
+## 3.0.0 (2023-01-06)
+
+- Updated dark mode theme:
+  - New asset icons
+  - Enhanced contrast
+  - Haptic feedback
+- Enhanced Thorchain Savers interface and usability fixes
+- Add optional spam filter to hide low fiat value (>0.001) transactions
+- Add confirmation toast to Delete Account
+- Allow changing fees for payment protocol payments
+- Add ability to wipe local logs from device
+- Prevent infinite hanging on loading screen if there are no active wallets
+- Only set necessary amounts when calling Approve (erc20)
+- Notify Bugsnag after displaying warning/error airship messages
+- Fix incorrect modal size when returning to app from webview
+- Disable FoxExchange
+- Disable Switchain
+- Update translations
+- Various visual fixes
+- Upgrade edge-core-js to v0.19.35
+  - fixed: Clean swap quotes before logging to prevent circular reference error
+  - fixed: Export more accurate TypeScript definitions for our React Native components.
+- Upgrade edge-currency-accountbased to v0.21.0
+  - Add Piratechain (ARRR)
+  - ZEC: Add getBirthdayHeight plugin method
+  - Revamp checkpoint creation script to query treestate directly from lightwalletd nodes
+  - Upgrade react-native-zcash to v0.3.2
+- Upgrade edge-currency-plugins to v1.3.3
+  - fix: Upgrade dependencies to fix vulnerabilities and some data-layer issues.
+  - fix: Report the correct balance for old Airbitz-created addresses.
+- Upgrade edge-exchange-plugins to v0.16.16
+  - LetsExchange: Update asInfoReply cleaner to support numbers or strings
+  - Add BTC/ARRR tests
+  - LetsExchange: Fix max amount logic
+  - Fix: Transfer plugin throwing error
+  - Change: Allow per asset spreads to be specified by currency code
+  - Fix: Remove extra slash in path to Thorswap API to prevent 301 redirects
+  - Change: Limit Thorchain token approvals to amount needed for deposit
+  - Change: Add ability to tweak Thorchain volatility % based on asset pair via info server
+  - TombSwap: Restrict token allowances to only what is needed for each smart contract call.
+- Upgrade edge-login-ui-rn to v0.10.17
+  - Fixed: Add flexGrow to username dropdown in PasswordLoginScene
+  - Fixed: No longer allow a user to bypass password requirements with an empty password
+
 ## 2.28.0 (2022-12-18)
 
 - Add Tron (TRX) with TRC20 support
