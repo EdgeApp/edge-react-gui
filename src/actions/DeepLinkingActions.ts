@@ -143,7 +143,6 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'other': {
       if (!hasCurrentWallet) return false
       const currencyName = link.protocol
-      // @ts-expect-error
       const currencyCode = CURRENCY_NAMES[currencyName]
 
       // If we don't know what this is, fake a barcode scan:
@@ -197,7 +196,10 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   Actions.push('walletListScene', {})
 }
 
-const CURRENCY_NAMES = {
+/**
+ * Maps from URL protocols to currency codes.
+ */
+const CURRENCY_NAMES: { [protocol: string]: string | undefined } = {
   bitcoin: 'BTC',
   bitcoincash: 'BCH',
   ethereum: 'ETH',

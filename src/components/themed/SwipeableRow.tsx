@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { I18nManager, Insets, StyleSheet, View } from 'react-native'
+import { I18nManager, Insets, LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   AnimationCallback,
@@ -73,8 +73,7 @@ export interface SwipableRowRef {
 export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Props, ref) => {
   // Tracks the width of the row:
   const width = useSharedValue(0)
-  // @ts-expect-error
-  const handleLayout = event => {
+  const handleLayout = (event: LayoutChangeEvent) => {
     width.value = event.nativeEvent.layout.width
   }
 
