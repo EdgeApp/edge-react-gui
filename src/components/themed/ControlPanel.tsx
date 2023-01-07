@@ -3,8 +3,10 @@
 import { EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -42,6 +44,9 @@ import { DividerLine } from './DividerLine'
 interface Props {
   navigation: NavigationProp<'controlPanel'>
 }
+
+const xButtonGradientStart = { x: 0, y: 0 }
+const xButtonGradientEnd = { x: 0, y: 0.75 }
 
 const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
@@ -276,6 +281,12 @@ export function ControlPanel(props: Props) {
       pressHandler: async () => dispatch(logoutRequest()),
       iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
+    },
+    // Dummy row that goes under the transparent close button
+    {
+      pressHandler: async () => {},
+      iconName: '',
+      title: ''
     }
   ]
 
@@ -286,6 +297,13 @@ export function ControlPanel(props: Props) {
       title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
     })
   }
+
+  const handlePressClose = () => {
+    Actions.drawerClose()
+  }
+
+  const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color
+  const xButtonBottomColor = theme.modal
 
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} background="none">
@@ -360,7 +378,7 @@ export function ControlPanel(props: Props) {
         {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
-          <ScrollView>
+          <ScrollView overScrollMode="always">
             {rowDatas.map(rowData => (
               <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
@@ -377,6 +395,18 @@ export function ControlPanel(props: Props) {
           </ScrollView>
           {/* === Navigation Rows End === */}
         </View>
+        {/* === Translucent X Close Button Start === */}
+        <LinearGradient
+          colors={[xButtonTopColor, xButtonBottomColor]}
+          style={styles.closeButtonContainer}
+          start={xButtonGradientStart}
+          end={xButtonGradientEnd}
+        >
+          <TouchableOpacity onPress={handlePressClose}>
+            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        </LinearGradient>
+        {/* === Translucent X Close Button End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
     </SceneWrapper>
@@ -425,6 +455,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderLeftWidth: theme.sideMenuBorderWidth,
     height: theme.rem(10.5)
   },
+  closeButtonContainer: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    height: theme.rem(3),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   bottomPanel: {
     flex: 1,
     flexGrow: 1,
@@ -438,7 +476,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   rowsContainer: {
     flex: 1,
     flexGrow: 1,
-    marginBottom: theme.rem(1.5)
+    marginBottom: theme.rem(0)
   },
   rowContainer: {
     display: 'flex',
