@@ -9,6 +9,7 @@ import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
+import { assetOverrides } from '../../util/serverState'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
@@ -231,13 +232,13 @@ interface CreateWalletListOpts {
 
 export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
   const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets } = opts
-  const out: WalletCreateItem[] = []
+  const walletList: WalletCreateItem[] = []
 
   // Add top-level wallet types:
   const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
   for (const createWalletCurrency of createWalletCurrencies) {
     const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
-    out.push({
+    walletList.push({
       key: `create-${walletType}-${pluginId}`,
       currencyCode,
       displayName: currencyName,
@@ -260,7 +261,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       // Fix for when the token code and chain code are the same (like EOS/TLOS)
       if (currencyCode === currencyInfo.currencyCode) continue
 
-      out.push({
+      walletList.push({
         key: `create-${currencyInfo.pluginId}-${tokenId}`,
         currencyCode,
         displayName,
@@ -280,7 +281,8 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       tokenId
     })
   }
-  return out.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
+  const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
+  return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 
 export const filterWalletCreateItemListBySearchText = (createWalletList: WalletCreateItem[], searchText: string): WalletCreateItem[] => {
