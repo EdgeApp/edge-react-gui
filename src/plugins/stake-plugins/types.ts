@@ -68,13 +68,16 @@ export interface StakePolicy {
   stakeWarning?: string | null
   unstakeWarning?: string | null
   claimWarning?: string | null
+
+  // Do not allow Max button when staking
+  disableMaxStake?: boolean
 }
 
 // -----------------------------------------------------------------------------
 // Change Quote
 // -----------------------------------------------------------------------------
 export interface ChangeQuoteRequest {
-  action: 'stake' | 'unstake' | 'claim'
+  action: 'stake' | 'unstake' | 'claim' | 'unstakeExact'
   stakePolicyId: string
   currencyCode: string
   nativeAmount: string
@@ -82,14 +85,19 @@ export interface ChangeQuoteRequest {
 }
 
 export interface QuoteAllocation {
-  allocationType: 'stake' | 'unstake' | 'claim' | 'fee'
+  allocationType: 'stake' | 'unstake' | 'claim' | 'networkFee' | 'deductedFee' | 'futureUnstakeFee'
   pluginId: string
   currencyCode: string
   nativeAmount: string
 }
 
+export interface QuoteInfo {
+  breakEvenDays?: number
+}
+
 export interface ChangeQuote {
   allocations: QuoteAllocation[]
+  quoteInfo?: QuoteInfo
   approve: () => Promise<void>
 }
 

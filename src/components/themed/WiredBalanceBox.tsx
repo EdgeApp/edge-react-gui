@@ -7,6 +7,7 @@ import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
+import { triggerHaptic } from '../../util/haptic'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -26,6 +27,11 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & ThemeProps
 
 export class BalanceBox extends React.PureComponent<Props> {
+  handleToggleAccountBalanceVisibility = () => {
+    triggerHaptic('impactLight')
+    this.props.toggleAccountBalanceVisibility()
+  }
+
   render() {
     const { defaultIsoFiat, fiatAmount, showBalance, exchangeRates, theme } = this.props
     const fiatSymbol = defaultIsoFiat ? getSymbolFromCurrency(defaultIsoFiat) : ''
@@ -44,7 +50,7 @@ export class BalanceBox extends React.PureComponent<Props> {
 
     return (
       <SceneHeader underline>
-        <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
+        <TouchableOpacity onPress={this.handleToggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>

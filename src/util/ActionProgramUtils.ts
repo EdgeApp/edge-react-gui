@@ -132,7 +132,8 @@ export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Prom
   const loanParallelActions: ActionOp[] = []
   sequenceActions.push({
     type: 'par',
-    actions: loanParallelActions
+    actions: loanParallelActions,
+    displayKey: 'borrow'
   })
 
   const borrowToken = getToken(borrowEngineWallet, destination.tokenId)
@@ -241,10 +242,7 @@ export const makeAaveCloseAction = async ({
   const { currencyWallet: wallet } = borrowEngine
   const { fiatCurrencyCode: isoFiatCurrencyCode } = wallet
 
-  const seqAction: SeqActionOp = {
-    type: 'seq',
-    actions: []
-  }
+  const evmActions: ActionOp[] = []
 
   // Only accept this request if the user has only singular debt/collateral assets
   const collaterals = borrowEngine.collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
@@ -361,7 +359,7 @@ export const makeAaveCloseAction = async ({
 
       // Repay with balance actions
       if (!zeroString(repayWithBalanceNativeAmount))
-        seqAction.actions.push({
+        evmActions.push({
           type: 'loan-repay',
           nativeAmount: repayWithBalanceNativeAmount,
           borrowPluginId,
@@ -371,7 +369,7 @@ export const makeAaveCloseAction = async ({
 
       // Repay with collateral actions
       if (!zeroString(repayWithCollateralNativeAmount))
-        seqAction.actions.push({
+        evmActions.push({
           type: 'loan-repay',
           nativeAmount: repayWithCollateralNativeAmount,
           borrowPluginId,
@@ -382,7 +380,7 @@ export const makeAaveCloseAction = async ({
     }
 
     // Withdraw action
-    seqAction.actions.push({
+    evmActions.push({
       type: 'loan-withdraw',
       borrowPluginId,
       nativeAmount: MAX_AMOUNT.toString(),
@@ -391,5 +389,16 @@ export const makeAaveCloseAction = async ({
     })
   }
 
-  return seqAction.actions.length > 0 ? seqAction : null
+  return evmActions.length > 0
+    ? {
+        type: 'seq',
+        actions: [
+          {
+            type: 'par',
+            actions: evmActions,
+            displayKey: 'close'
+          }
+        ]
+      }
+    : null
 }

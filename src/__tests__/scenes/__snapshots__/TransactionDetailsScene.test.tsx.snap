@@ -4,8 +4,8 @@ exports[`TransactionDetailsScene should render 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -110,7 +110,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -129,7 +129,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -144,6 +145,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -235,7 +237,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -269,7 +271,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -284,6 +287,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -376,7 +380,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -395,7 +399,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -410,6 +415,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -490,7 +496,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -524,7 +530,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -539,6 +546,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -684,7 +692,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -703,7 +711,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -718,6 +727,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -809,7 +819,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -828,7 +838,8 @@ exports[`TransactionDetailsScene should render 1`] = `
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -843,6 +854,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -908,7 +920,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "includeFontPadding": false,
                 },
                 Object {
-                  "color": "#66EDA8",
+                  "color": "#00f1a2",
                   "fontSize": 22,
                   "marginVertical": 28,
                   "textAlign": "center",
@@ -974,9 +986,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                 Array [
                   Object {
                     "alignItems": "center",
-                    "borderColor": "#66EDA8",
+                    "borderColor": "#00f1a2",
                     "borderRadius": 6,
-                    "borderWidth": 1,
+                    "borderWidth": 1.5,
                     "flexDirection": "row",
                     "justifyContent": "center",
                     "minHeight": 67,
@@ -1008,7 +1020,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
@@ -1034,8 +1046,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
 <BVLinearGradient
   colors={
     Array [
-      4279050565,
-      4278994026,
+      4278585612,
+      4279971643,
     ]
   }
   endPoint={
@@ -1140,7 +1152,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -1159,7 +1171,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1174,6 +1187,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1265,7 +1279,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1299,7 +1313,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1314,6 +1329,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1406,7 +1422,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -1425,7 +1441,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1440,6 +1457,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1520,7 +1538,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             }
             accessible={true}
-            focusable={false}
+            focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -1554,7 +1572,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1569,6 +1588,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1714,7 +1734,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -1733,7 +1753,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1748,6 +1769,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1839,7 +1861,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#66EDA8",
+                        "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -1858,7 +1880,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   
                 </Text>
                 <Text
-                  adjustsFontSizeToFit={true}
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
@@ -1873,6 +1896,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
+                        "paddingRight": 22,
                       },
                       null,
                     ]
@@ -1938,7 +1962,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "includeFontPadding": false,
                 },
                 Object {
-                  "color": "#66EDA8",
+                  "color": "#00f1a2",
                   "fontSize": 22,
                   "marginVertical": 28,
                   "textAlign": "center",
@@ -2004,9 +2028,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 Array [
                   Object {
                     "alignItems": "center",
-                    "borderColor": "#66EDA8",
+                    "borderColor": "#00f1a2",
                     "borderRadius": 6,
-                    "borderWidth": 1,
+                    "borderWidth": 1.5,
                     "flexDirection": "row",
                     "justifyContent": "center",
                     "minHeight": 67,
@@ -2038,7 +2062,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,

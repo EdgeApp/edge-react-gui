@@ -1,7 +1,7 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -110,10 +110,12 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       return (
         <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
           <Card marginRem={[0, 0, 1]}>
-            <View style={styles.programStatusContainer}>
+            <Space isSideways>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
-              <EdgeText>{runningProgramMessage}</EdgeText>
-            </View>
+              <EdgeText style={styles.programStatusText} numberOfLines={2}>
+                {runningProgramMessage}
+              </EdgeText>
+            </Space>
           </Card>
         </TouchableOpacity>
       )
@@ -272,12 +274,6 @@ export const LoanDetailsSceneComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: theme.rem(1)
-  },
   actionLabel: {
     fontFamily: theme.fontFaceMedium,
     alignSelf: 'center'
@@ -297,8 +293,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   breakdownSubText: {
     fontSize: theme.rem(0.75)
   },
-  programStatusContainer: {
-    flexDirection: 'row'
+  programStatusText: {
+    flexShrink: 1
+  },
+  sceneHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: theme.rem(1)
   }
 }))
 

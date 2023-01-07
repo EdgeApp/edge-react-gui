@@ -258,7 +258,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const regionCode = { countryCode }
     if (plugin.nativePlugin != null) {
-      executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
+      await executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
     } else {
       // Launch!
       navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {

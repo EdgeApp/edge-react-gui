@@ -9,11 +9,15 @@ import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
+import { useRefresher } from '../../hooks/useRefresher'
 import { rootReducer } from '../../reducers/RootReducer'
+import { config } from '../../theme/appConfig'
 import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { errorAlert } from '../../util/middleware/errorAlert'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
+import { fetchInfo } from '../../util/network'
+import { asAssetOverrides, assetOverrides } from '../../util/serverState'
 import { Main } from '../Main.ui'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
@@ -34,6 +38,8 @@ interface Props {
   context: EdgeContext
 }
 
+const REFRESH_INFO_SERVER_MS = 60000
+
 /**
  * Provides various global services to the application,
  * including the Redux store, pop-up menus, modals, etc.
@@ -42,6 +48,27 @@ export function Services(props: Props) {
   const { context } = props
   const [account, setAccount] = React.useState<EdgeAccount | undefined>()
   const theme = useTheme()
+  const appId = config.appId ?? 'edge'
+
+  useRefresher(
+    async () => {
+      try {
+        const response = await fetchInfo(`v1/assetOverrides/${appId}`)
+        if (!response.ok) {
+          const text = await response.text()
+          console.warn(`Failed to fetch assetOverrides: ${text}`)
+          return
+        }
+        const replyJson = await response.json()
+        const overrides = asAssetOverrides(replyJson)
+        assetOverrides.disable = overrides.disable
+      } catch (e: any) {
+        console.warn(`Failed to fetch assetOverrides: ${e.message}`)
+      }
+    },
+    undefined,
+    REFRESH_INFO_SERVER_MS
+  )
 
   // The `useRef` hook might make more sense, but it requires an initial value,
   // and we don't want to create dummy stores on each render.

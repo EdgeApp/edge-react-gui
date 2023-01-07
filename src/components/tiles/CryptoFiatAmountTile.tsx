@@ -9,7 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { Tile, TileType } from './Tile'
 
 interface Props {
   denomination: EdgeDenomination
@@ -18,10 +18,12 @@ interface Props {
   title: string
   walletId: string
   tokenId?: string
+  type?: TileType
+  onPress?: () => void
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId } = props
+  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'static', onPress } = props
   const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -39,7 +41,7 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
-    <Tile type="static" title={title} contentPadding={false}>
+    <Tile type={type} title={title} contentPadding={false} onPress={onPress}>
       <EdgeText>
         {cryptoAmountText}
         (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)

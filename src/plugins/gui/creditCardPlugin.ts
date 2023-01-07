@@ -40,12 +40,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   for (const providerFactory of providerFactories) {
     // @ts-expect-error
     priorityArray[0][providerFactory.pluginId] = true
-    let apiKeys
     // @ts-expect-error
-    if (ENV.PLUGIN_API_KEYS[providerFactory.pluginId] != null) {
-      // @ts-expect-error
-      apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
-    }
+    const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
+    if (apiKeys == null) continue
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }

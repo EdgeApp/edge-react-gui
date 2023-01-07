@@ -5,6 +5,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import s from '../../locales/strings'
+import { triggerHaptic } from '../../util/haptic'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -15,13 +16,15 @@ const textHeights = {
   large: 0
 }
 
+export type TileType = 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable' | 'delete'
+
 interface OwnProps {
   body?: string
   children?: React.ReactNode
   error?: boolean
   onPress?: () => void
   title: string
-  type: 'copy' | 'editable' | 'questionable' | 'loading' | 'static' | 'touchable'
+  type: TileType
   contentPadding?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
 }
@@ -34,10 +37,18 @@ export class TileComponent extends React.PureComponent<Props> {
     showToast(s.strings.fragment_copied)
   }
 
+  handlePress = () => {
+    triggerHaptic('impactLight')
+    if (this.props.type === 'copy') {
+      this.copy()
+    } else {
+      if (this.props.onPress != null) this.props.onPress()
+    }
+  }
+
   render() {
     const { body, title, contentPadding = true, children, theme, type, maximumHeight = 'medium', error } = this.props
     const styles = getStyles(theme)
-    const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     const numberOfLines = textHeights[maximumHeight]
 
     if (type === 'loading') {
@@ -54,14 +65,17 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback onPress={this.handlePress} disabled={type === 'static'}>
         <View>
           <View style={styles.container}>
             <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
               {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
               {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+              {type === 'delete' && <FontAwesomeIcon name="times" style={styles.editIcon} />}
               {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
-              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+              <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+                {title}
+              </EdgeText>
               {typeof body === 'string' && (
                 <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
                   {body}
@@ -109,7 +123,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingBottom: theme.rem(0.25),
+    paddingRight: theme.rem(1)
   },
   textHeaderError: {
     color: theme.dangerText,

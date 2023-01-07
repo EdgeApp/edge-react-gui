@@ -76,7 +76,7 @@ exports[`Transaction List Row should render props 1`] = `
               "shadowRadius": 11,
             },
             Object {
-              "backgroundColor": "#0C446A",
+              "backgroundColor": "#1b2f3b",
             },
           ]
         }

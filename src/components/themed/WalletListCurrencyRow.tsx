@@ -3,6 +3,7 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
+import { triggerHaptic } from '../../util/haptic'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -35,11 +36,17 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const { currencyCode } = token == null ? wallet.currencyInfo : token
 
   const handlePress = useHandler(() => {
+    triggerHaptic('impactLight')
     if (onPress != null) onPress(wallet.id, currencyCode, tokenId)
   })
 
+  const handleLongPress = useHandler(() => {
+    triggerHaptic('impactLight')
+    if (onLongPress != null) onLongPress()
+  })
+
   return (
-    <TouchableOpacity style={styles.row} onLongPress={onLongPress} onPress={handlePress}>
+    <TouchableOpacity style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
       <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
     </TouchableOpacity>
   )

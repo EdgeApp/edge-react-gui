@@ -103,7 +103,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
       resizeMode="cover"
       source={
         Object {
-          "uri": "https://content.edge.app/currencyIcons/bitcoin/bitcoin.png",
+          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
         }
       }
       style={

@@ -44,11 +44,11 @@ exports[`WalletListFooter should render with loading props 1`] = `
       style={
         Array [
           Object {
-            "color": "#66EDA8",
+            "color": "#00f1a2",
             "fontSize": 34,
           },
           Object {
-            "color": "#66EDA8",
+            "color": "#00f1a2",
             "fontFamily": "Quicksand-Medium",
             "margin": 6,
           },
@@ -77,7 +77,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
           },
           Array [
             Object {
-              "color": "#66EDA8",
+              "color": "#00f1a2",
               "fontFamily": "Quicksand-Medium",
               "margin": 6,
             },
@@ -120,11 +120,11 @@ exports[`WalletListFooter should render with loading props 1`] = `
       style={
         Array [
           Object {
-            "color": "#66EDA8",
+            "color": "#00f1a2",
             "fontSize": 34,
           },
           Object {
-            "color": "#66EDA8",
+            "color": "#00f1a2",
             "fontFamily": "Quicksand-Medium",
             "margin": 6,
           },
@@ -153,7 +153,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
           },
           Array [
             Object {
-              "color": "#66EDA8",
+              "color": "#00f1a2",
               "fontFamily": "Quicksand-Medium",
               "margin": 6,
             },

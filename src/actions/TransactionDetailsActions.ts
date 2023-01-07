@@ -1,23 +1,6 @@
-import { EdgeMetadata, EdgeTransaction } from 'edge-core-js'
-
 import { showError } from '../components/services/AirshipInstance'
 import { getSyncedSubcategories, setSubcategoriesRequest } from '../modules/Core/Account/settings'
-import { getSelectedCurrencyWallet } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { refreshTransactionsRequest } from './TransactionListActions'
-
-export function setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const wallet = getSelectedCurrencyWallet(state)
-    wallet
-      .saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
-      .then(() => {
-        dispatch(refreshTransactionsRequest(wallet.id, [transaction]))
-      })
-      .catch(showError)
-  }
-}
 
 export function getSubcategories(): ThunkAction<void> {
   return (dispatch, getState) => {

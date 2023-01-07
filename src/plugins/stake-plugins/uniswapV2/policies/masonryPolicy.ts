@@ -176,7 +176,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 return await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
               case 'claim':
                 return await multipass(p => poolContract.connect(p).earned(signerAddress))
-              case 'fee':
+              case 'networkFee':
                 // Don't do anything with fee
                 break
               default:
@@ -334,7 +334,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // Calculate the networkFee as the gasLimit * gasPrice in the native token
       const networkFee = gasLimitAcc().mul(gasPrice).toString()
       allocations.push({
-        allocationType: 'fee',
+        allocationType: 'networkFee',
         pluginId: policyInfo.parentPluginId,
         currencyCode: policyInfo.parentCurrencyCode,
         nativeAmount: networkFee

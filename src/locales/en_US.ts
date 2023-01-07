@@ -5,6 +5,9 @@ const strings = {
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
   action_queue_display_unknown_message: `Edge is unable to identify the type of action being completed.`,
+  // close
+  aciton_queue_display_close_title: 'Closing Loan',
+  action_queue_display_close_message: `Edge is paying principal in full and withdrawing the remaining collateral.`,
   // seq
   action_queue_display_seq_title: `Action steps`,
   action_queue_display_seq_message: `Doing a sequence of actions.`,
@@ -19,7 +22,7 @@ const strings = {
   action_queue_display_fiat_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
   // loan_borrow
   action_queue_display_loan_borrow_title: `Take out loan`,
-  action_queue_display_loan_borrow_message: `A %1$s loan has been requested and is on its way to your wallet.`,
+  action_queue_display_loan_borrow_message_1s: `A %1$s loan has been requested and is on its way to your wallet.`,
   // loan_deposit
   action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
   action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
@@ -352,6 +355,7 @@ const strings = {
   settings_exchange_settings: 'Exchange Settings',
   settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
   settings_notifications_switch: 'Enable Price Alerts',
+  settings_hide_spam_transactions: 'Hide spam transactions',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
@@ -465,6 +469,7 @@ const strings = {
   string_first_eboost_wallet_name: 'My eBoost',
   string_first_celo_wallet_name: 'My Celo',
   string_first_solana_wallet_name: 'My Solana',
+  string_first_piratechain_wallet_name: 'My Pirate',
   string_first_zcash_wallet_name: 'My Zcash',
   string_first_tron_wallet_name: 'My Tron',
   string_first_doge_wallet_name: 'My Doge',
@@ -689,6 +694,7 @@ const strings = {
   save: 'Save',
   four_digit_pin: '4 Digit PIN',
   pin: 'PIN',
+  spending_limits_enter_pin: 'Enter PIN',
 
   hang_tight: 'Hang tight',
   trying_to_find: 'Searching for the best exchange rate...',
@@ -1051,6 +1057,7 @@ const strings = {
   send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
+  send_add_destination_address: 'Add Destination Address',
 
   // Request Scene
   request_balance: 'You have %s',
@@ -1131,6 +1138,18 @@ const strings = {
   stake_error_insufficient_s: 'Insufficient %s',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
+  stake_estimated_staking_fee: 'Estimated Staking Fee',
+  stake_estimated_unstaking_fee: 'Estimated Unstaking Fee',
+  stake_staking_fee_message: 'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
+  stake_unstaking_fee_message: 'The specified Unstaking Fee will be deducted from the amount withdrawn reducing the amount received.',
+  stake_future_unstaking_fee: 'Future Unstake Fee Estimate',
+  stake_future_unstaking_fee_message:
+    'When you unstake these funds, you will incur the estimated unstake fee specified. This amount is only an estimate and is based on the funds currently staked in the pool. The actual fees incurred may be different at the time you unstake.',
+  stake_break_even_time: 'Time to Break Even from Fees',
+  stake_break_even_time_message:
+    'Based on the total fees incurred to stake and unstake your requested amount, this is the estimated amount of time you need to keep funds staked to earn enough rewards to pay for the fees incurred. This time frame is only an estimate as is subject to change based on change in rewards APY and the total amount of funds in the staking pool.',
+  stake_break_even_days_s: '%1$s days',
+  stake_break_even_days_months_s: '%1$s days (%2$s months)',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',

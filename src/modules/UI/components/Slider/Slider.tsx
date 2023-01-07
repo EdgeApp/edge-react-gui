@@ -8,6 +8,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../../component
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import { useHandler } from '../../../../hooks/useHandler'
 import s from '../../../../locales/strings'
+import { triggerHaptic } from '../../../../util/haptic'
 
 const COMPLETE_POINT: number = 3
 
@@ -59,6 +60,7 @@ export const SliderComponent = (props: Props) => {
     setCompleted(false)
   })
   const complete = () => {
+    triggerHaptic('impactMedium')
     onSlidingComplete(() => resetSlider())
     setCompleted(true)
   }

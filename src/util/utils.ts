@@ -212,6 +212,12 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
+// multiplier / exchange rate / ( 1 / unit )
+// 100000000 / $16500 / (1/$0.001) = ~6 sats
+export const calculateSpamThreshold = (rate: string, denom: EdgeDenomination) => {
+  return div(div(denom.multiplier, rate), '1000')
+}
+
 export interface PrecisionAdjustParams {
   exchangeSecondaryToPrimaryRatio: string
   secondaryExchangeMultiplier: string

@@ -301,7 +301,9 @@ export const testDark: Theme = {
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderBackground: [palette.edgeNavy, palette.edgeMint],
+  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
+  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
