@@ -7023,33 +7023,6 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.36:
-  version "0.19.36"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.36.tgz#8404fb4f181c2017ab6df9ea21564481e27f0427"
-  integrity sha512-a4D/ozsXLYW1AesXx4hZ2ZKvrFK5QIdlgm1e1LlZ/ZGkXYqY43skHnTnz0HMnL3rAbG7756xwqIEv5iBD0E6uQ==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^4.0.0"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.7"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^4.2.0"
-    redux-keto "^0.3.5"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.8"
-    yavent "^0.1.3"
-
 edge-core-js@^0.19.37:
   version "0.19.37"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.37.tgz#f10ed23353458f9acda1b831d74c6a7cb24b88ed"
@@ -7156,10 +7129,10 @@ edge-currency-plugins@^1.3.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.16.16:
-  version "0.16.16"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.16.tgz#8c8530e47e12757efc51d00e16d00939db1e5e45"
-  integrity sha512-YGnvNzpGnh2b+LQHqPly0IJEN/1FKnQ9byPuNCKRjK647sqJYmXIVvxa8s5OJw5C/HmGmxuuKamjNT/y26IzkA==
+edge-exchange-plugins@^0.16.17:
+  version "0.16.17"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.17.tgz#405d80eaada8dcb3494a451bf74943a6ea791d81"
+  integrity sha512-vDGM2iVkGAxXV7YSyTZuCkEb1JPCGo8shAT3+YQj/66MpPaRMcovaCI6gMuWW4wMRxqFYBps4cq0ofV52wM9dg==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"

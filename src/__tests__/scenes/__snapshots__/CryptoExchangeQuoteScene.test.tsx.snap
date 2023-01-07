@@ -46,7 +46,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       fiatCurrencyCode="USD"
       walletName=""
     />
-    <View
+    <TouchableOpacity
+      onPress={[Function]}
       style={
         Object {
           "alignItems": "center",
@@ -92,7 +93,13 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       >
          ChangeNow
       </WithTheme(EdgeTextComponent)>
-    </View>
+      <Icon
+        allowFontScaling={false}
+        color="#00f1a2"
+        name="chevron-forward"
+        size={22}
+      />
+    </TouchableOpacity>
     <Alert
       marginRem={
         Array [

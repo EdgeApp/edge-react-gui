@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 
@@ -11,6 +11,7 @@ import {
   setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
   setDeveloperModeOn as setDeveloperModeOnAccountSettings,
   setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
+  setPreferredSwapPluginType as setPreferredSwapPluginTypeAccountSettings,
   setSpamFilterOn as setSpamFilterOnAccountSettings,
   setSpendingLimits as setSpendingLimitsAccountSettings
 } from '../modules/Core/Account/settings'
@@ -112,6 +113,21 @@ export function setPreferredSwapPluginId(pluginId: string | undefined): ThunkAct
         dispatch({
           type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
           data: pluginId
+        })
+      )
+      .catch(showError)
+  }
+}
+
+export function setPreferredSwapPluginType(swapPluginType: EdgeSwapPluginType | undefined): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    setPreferredSwapPluginTypeAccountSettings(account, swapPluginType)
+      .then(() =>
+        dispatch({
+          type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE',
+          data: swapPluginType
         })
       )
       .catch(showError)

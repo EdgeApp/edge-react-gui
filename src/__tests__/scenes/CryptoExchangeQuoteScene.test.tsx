@@ -1,10 +1,18 @@
 import { describe, expect, it } from '@jest/globals'
+import { EdgeSwapInfo } from 'edge-core-js'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { GuiSwapInfo } from '../../types/types'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
+
+const dummySwapInfo: EdgeSwapInfo = {
+  pluginId: '',
+  displayName: '',
+  supportEmail: ''
+}
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
@@ -36,6 +44,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
 
     const swapInfo: GuiSwapInfo = {
       quote: {
+        swapInfo: dummySwapInfo,
         request: fakeRequest,
         isEstimate: true,
         fromNativeAmount: '10000',
@@ -80,6 +89,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeQuoteScreenComponent
+        navigation={fakeNavigation}
         route={{
           name: 'exchangeQuote',
           params: { swapInfo, onApprove: () => undefined }
