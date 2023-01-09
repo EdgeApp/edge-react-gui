@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../../components/services/ThemeContext'
 import { EdgeText } from '../../../../components/themed/EdgeText'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../../../constants/animationConstants'
 import { useHandler } from '../../../../hooks/useHandler'
 import s from '../../../../locales/strings'
 import { triggerHaptic } from '../../../../util/haptic'
@@ -113,7 +114,7 @@ export const SliderComponent = (props: Props) => {
   }, [resetSlider, reset, showSpinner])
 
   return (
-    <View style={[parentStyle, styles.sliderContainer]}>
+    <Animated.View style={[parentStyle, styles.sliderContainer]} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
       <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
         <Animated.View style={[styles.progress, progressStyle]} />
 
@@ -128,7 +129,7 @@ export const SliderComponent = (props: Props) => {
           <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
         )}
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

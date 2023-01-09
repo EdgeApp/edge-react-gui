@@ -3,6 +3,7 @@ import { lt, lte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -10,6 +11,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -306,11 +308,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     ) : (
       <SceneWrapper background="header" hasTabs={false}>
         <View style={styles.container}>
-          <View style={styles.requestContainer}>
+          <Animated.View style={styles.requestContainer} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
-          </View>
-          <View style={styles.balanceContainer}>
+          </Animated.View>
+          <Animated.View style={styles.balanceContainer} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
             <EdgeText>{displayBalanceString}</EdgeText>
             <EdgeText style={styles.exchangeRate}>
               <FiatText
@@ -320,29 +322,31 @@ export class RequestSceneComponent extends React.Component<Props, State> {
                 wallet={wallet}
               />
             </EdgeText>
-          </View>
+          </Animated.View>
 
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <Card>
-            <ExchangedFlipInput
-              ref={this.flipInputRef}
-              headerText={flipInputHeaderText}
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-              overridePrimaryExchangeAmount=""
-              onExchangeAmountChanged={this.onExchangeAmountChanged}
-              keyboardVisible={false}
-              isFiatOnTop
-              isFocus={false}
-              onNext={this.onNext}
-              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
-              headerCallback={this.handleOpenWalletListModal}
-              onError={this.onError}
-            />
-          </Card>
+          <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+            <Card>
+              <ExchangedFlipInput
+                ref={this.flipInputRef}
+                headerText={flipInputHeaderText}
+                primaryCurrencyInfo={primaryCurrencyInfo}
+                secondaryCurrencyInfo={secondaryCurrencyInfo}
+                exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+                overridePrimaryExchangeAmount=""
+                onExchangeAmountChanged={this.onExchangeAmountChanged}
+                keyboardVisible={false}
+                isFiatOnTop
+                isFocus={false}
+                onNext={this.onNext}
+                topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+                headerCallback={this.handleOpenWalletListModal}
+                onError={this.onError}
+              />
+            </Card>
+          </Animated.View>
 
           {Platform.OS === 'ios' ? (
             <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
@@ -370,13 +374,15 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
-            <View style={styles.rightChevronContainer}>
-              <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
-              <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-            </View>
-            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-          </TouchableOpacity>
+          <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+            <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+              <View style={styles.rightChevronContainer}>
+                <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
+                <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </View>
+              <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
 
         <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />

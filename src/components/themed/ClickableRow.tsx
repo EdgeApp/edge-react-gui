@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInLeftAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -38,16 +40,20 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
 
     if (highlight) {
       return (
-        <TouchableHighlight onPress={onPress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
-          {this.renderContent()}
-        </TouchableHighlight>
+        <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
+          <TouchableHighlight onPress={onPress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
+            {this.renderContent()}
+          </TouchableHighlight>
+        </Animated.View>
       )
     }
 
     return (
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-        {this.renderContent()}
-      </TouchableOpacity>
+      <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+          {this.renderContent()}
+        </TouchableOpacity>
+      </Animated.View>
     )
   }
 }

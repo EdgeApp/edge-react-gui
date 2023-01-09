@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import Animated from 'react-native-reanimated'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { fadeInLeftAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
@@ -25,16 +27,18 @@ export function RadioListModal(props: Props) {
     const radio = selected === name ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
 
     return (
-      <TouchableOpacity onPress={() => bridge.resolve(name)}>
-        <View style={styles.row}>
-          <View style={styles.iconContainer}>
-            {typeof icon === 'number' || typeof icon === 'string' ? <Image resizeMode="contain" source={imageIcon} style={styles.icon} /> : icon}
+      <Animated.View key={`${name}-${text}`} layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
+        <TouchableOpacity onPress={() => bridge.resolve(name)}>
+          <View style={styles.row}>
+            <View style={styles.iconContainer}>
+              {typeof icon === 'number' || typeof icon === 'string' ? <Image resizeMode="contain" source={imageIcon} style={styles.icon} /> : icon}
+            </View>
+            <EdgeText style={styles.rowText}>{name}</EdgeText>
+            {text != null ? <Text style={styles.text}>{text}</Text> : null}
+            <IonIcon name={radio.icon} color={radio.color} size={theme.rem(1.25)} />
           </View>
-          <EdgeText style={styles.rowText}>{name}</EdgeText>
-          {text != null ? <Text style={styles.text}>{text}</Text> : null}
-          <IonIcon name={radio.icon} color={radio.color} size={theme.rem(1.25)} />
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Animated.View>
     )
   }
 

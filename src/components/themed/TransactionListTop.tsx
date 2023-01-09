@@ -2,6 +2,7 @@ import { add, gt, mul, round } from 'biggystring'
 import { EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -9,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -188,32 +190,32 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return (
-      <View style={styles.balanceBoxContainer}>
-        <View style={styles.balanceBoxRow}>
-          <View style={styles.balanceBoxBalanceContainer}>
-            <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-              <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={wallet.id} />
-                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
-                <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
-                <Fontello name="control-panel-settings" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
-              {isAccountBalanceVisible ? (
-                <>
-                  <EdgeText style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
-                    {cryptoAmountFormat + ' ' + displayDenomination.name}
-                  </EdgeText>
-                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}</EdgeText>
-                </>
-              ) : (
-                <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
-              )}
+      <View style={styles.balanceBoxRow}>
+        <View style={styles.balanceBoxBalanceContainer}>
+          <View style={styles.balanceBoxWalletNameCurrencyContainer}>
+            <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+              <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={wallet.id} />
+              <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+              <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
+              <Fontello name="control-panel-settings" size={theme.rem(1.5)} color={theme.iconTappable} />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
+            {isAccountBalanceVisible ? (
+              <View key="showing">
+                <EdgeText style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+                  {cryptoAmountFormat + ' ' + displayDenomination.name}
+                </EdgeText>
+                <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}</EdgeText>
+              </View>
+            ) : (
+              <View key="hidden">
+                <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -225,7 +227,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, currencyCode, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
+    const { theme, currencyCode, wallet, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible } = this.props
     const styles = getStyles(theme)
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
@@ -244,6 +246,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const stakingFiatBalance = mul(stakingExchangeAmount, exchangeRate)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
+    if (!isAccountBalanceVisible) {
+      return null
+    }
     return (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
@@ -352,10 +357,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const styles = getStyles(theme)
 
     return (
-      <>
+      <Animated.View layout={LAYOUT_ANIMATION}>
         <View style={styles.container}>
           {!isEmpty && (
-            <View style={styles.searchContainer}>
+            <Animated.View layout={LAYOUT_ANIMATION} style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <OutlinedTextInput
                   returnKeyType="search"
@@ -374,35 +379,41 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
                 </TouchableOpacity>
               )}
-            </View>
+            </Animated.View>
           )}
 
           {!searching && (
-            <>
+            <Animated.View layout={LAYOUT_ANIMATION}>
               {this.renderBalanceBox()}
               {isStakingAvailable && this.renderStakedBalance()}
-              <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
-                  <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
-                  <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
-                </TouchableOpacity>
+              <Animated.View style={styles.buttonsContainer} layout={LAYOUT_ANIMATION}>
+                <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+                  <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
+                    <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
+                    <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
+                  </TouchableOpacity>
+                </Animated.View>
+                <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+                  <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
+                    <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
+                    <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
+                  </TouchableOpacity>
+                </Animated.View>
                 {!isStakePoliciesLoaded ? (
                   <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
                 ) : (
                   isStakingAvailable && (
-                    <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-                      <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
-                      {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
-                    </TouchableOpacity>
+                    <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+                      <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                        <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
+                        <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
+                        {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
+                      </TouchableOpacity>
+                    </Animated.View>
                   )
                 )}
-              </View>
-            </>
+              </Animated.View>
+            </Animated.View>
           )}
           {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
@@ -411,7 +422,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
           </SceneHeader>
         )}
-      </>
+      </Animated.View>
     )
   }
 }
@@ -425,10 +436,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   // Balance Box
-  balanceBoxContainer: {
-    marginTop: theme.rem(1.5)
-  },
   balanceBoxRow: {
+    marginTop: theme.rem(1.5),
+    minHeight: theme.rem(6),
     flexDirection: 'row'
   },
   balanceBoxBalanceContainer: {

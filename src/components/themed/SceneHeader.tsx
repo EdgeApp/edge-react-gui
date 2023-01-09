@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -19,7 +21,7 @@ export const SceneHeaderComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
-    <>
+    <Animated.View layout={LAYOUT_ANIMATION}>
       <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
         <View style={styles.titleContainer}>
           {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
@@ -28,7 +30,7 @@ export const SceneHeaderComponent = (props: Props) => {
         {children}
       </View>
       <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
-    </>
+    </Animated.View>
   )
 }
 

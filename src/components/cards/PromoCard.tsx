@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import Animated from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { MessageTweak } from '../../types/TweakTypes'
@@ -48,17 +50,19 @@ export class PromoCardComponent extends React.PureComponent<Props> {
     if (messageSummary == null) return null
     const { message } = messageSummary
     return (
-      <ButtonBox marginRem={1} onPress={this.handlePress}>
-        <View style={styles.container}>
-          {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
-          <EdgeText numberOfLines={0} style={styles.text}>
-            {message.message}
-          </EdgeText>
-          <TouchableOpacity onPress={this.handleClose}>
-            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
-          </TouchableOpacity>
-        </View>
-      </ButtonBox>
+      <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+        <ButtonBox marginRem={1} onPress={this.handlePress}>
+          <View style={styles.container}>
+            {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+            <EdgeText numberOfLines={0} style={styles.text}>
+              {message.message}
+            </EdgeText>
+            <TouchableOpacity onPress={this.handleClose}>
+              <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+            </TouchableOpacity>
+          </View>
+        </ButtonBox>
+      </Animated.View>
     )
   }
 }

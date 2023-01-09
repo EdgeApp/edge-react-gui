@@ -2,10 +2,12 @@ import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import Animated from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
+import { fadeInLeftAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
@@ -130,15 +132,17 @@ export function WalletListMenuModal(props: Props) {
       )}
 
       {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-          <AntDesignIcon
-            // @ts-expect-error
-            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
-            size={theme.rem(1)}
-            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-          />
-          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-        </TouchableOpacity>
+        <Animated.View key={option.value} layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
+          <TouchableOpacity onPress={() => optionAction(option.value)} style={styles.row}>
+            <AntDesignIcon
+              // @ts-expect-error
+              name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+              size={theme.rem(1)}
+              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+            />
+            <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+          </TouchableOpacity>
+        </Animated.View>
       ))}
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>

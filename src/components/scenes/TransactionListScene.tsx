@@ -2,9 +2,11 @@ import { lt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
+import Animated from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
+import { LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
@@ -218,25 +220,27 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
         {SHOW_FLIP_INPUT_TESTER ? (
           <ExchangedFlipInputTester />
         ) : (
-          <SectionList
-            sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
-            renderItem={this.renderTransaction}
-            renderSectionHeader={this.renderSectionHeader}
-            initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-            onEndReached={this.handleScrollEnd}
-            onEndReachedThreshold={SCROLL_THRESHOLD}
-            keyExtractor={this.keyExtractor}
-            ListEmptyComponent={this.renderEmptyComponent}
-            ListHeaderComponent={this.renderTop}
-            contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
-            refreshControl={
-              transactions.length !== 0 ? (
-                <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
-              ) : undefined
-            }
-            keyboardShouldPersistTaps="handled"
-            getItemLayout={this.getItemLayout}
-          />
+          <Animated.View layout={LAYOUT_ANIMATION}>
+            <SectionList
+              sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
+              renderItem={this.renderTransaction}
+              renderSectionHeader={this.renderSectionHeader}
+              initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+              onEndReached={this.handleScrollEnd}
+              onEndReachedThreshold={SCROLL_THRESHOLD}
+              keyExtractor={this.keyExtractor}
+              ListEmptyComponent={this.renderEmptyComponent}
+              ListHeaderComponent={this.renderTop}
+              contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+              refreshControl={
+                transactions.length !== 0 ? (
+                  <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+                ) : undefined
+              }
+              keyboardShouldPersistTaps="handled"
+              getItemLayout={this.getItemLayout}
+            />
+          </Animated.View>
         )}
       </SceneWrapper>
     )

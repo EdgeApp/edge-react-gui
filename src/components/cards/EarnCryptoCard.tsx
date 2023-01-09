@@ -2,8 +2,10 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -48,7 +50,7 @@ export const EarnCryptoCard = (props: Props) => {
   const currencyCode = getCurrencyCode(wallet, tokenId)
 
   return (
-    <>
+    <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
         <Card paddingRem={0} marginRem={[1, 0.5, -0.5, 0.5]}>
           <TouchableOpacity onPress={handlePress} style={styles.container}>
@@ -59,7 +61,7 @@ export const EarnCryptoCard = (props: Props) => {
           </TouchableOpacity>
         </Card>
       )}
-    </>
+    </Animated.View>
   )
 }
 

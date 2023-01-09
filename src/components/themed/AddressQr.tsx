@@ -1,7 +1,8 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'
@@ -26,9 +27,9 @@ export const AddressQr = (props: Props) => {
   )
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={styles.container} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
       <QrCode data={encodedUri} onPress={() => onPress(encodedUri)} marginRem={0} />
-    </View>
+    </Animated.View>
   )
 }
 

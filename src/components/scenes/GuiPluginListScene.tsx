@@ -5,10 +5,12 @@ import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import Animated from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { updateOneSetting } from '../../actions/SettingsActions'
+import { fadeInLeftAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
@@ -303,7 +305,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <View style={styles.pluginRowContainer}>
+      <Animated.View style={styles.pluginRowContainer} layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
         <TouchableOpacity onPress={async () => this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
             <Image
@@ -324,7 +326,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </View>
           ) : null}
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     )
   }
 

@@ -3,9 +3,11 @@ import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import Animated from 'react-native-reanimated'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux'
@@ -141,12 +143,14 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletId={request.toWallet.id}
             walletName={getWalletName(request.toWallet)}
           />
-          <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={this.handlePoweredByTap}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>
-            <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
-            <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
-            <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+            <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={this.handlePoweredByTap}>
+              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>
+              <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
+              <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
+              <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
+            </TouchableOpacity>
+          </Animated.View>
           {quote.isEstimate && (
             <Alert
               title={s.strings.estimated_quote}

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInLeftAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -15,12 +17,12 @@ export const LineTextDividerComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
-    <View style={styles.container}>
+    <Animated.View style={styles.container} layout={LAYOUT_ANIMATION} entering={fadeInLeftAnimation()}>
       <View style={styles.line} />
       {title ? <EdgeText style={[styles.title, lowerCased ? styles.lowerCase : null]}>{title}</EdgeText> : null}
       {children}
       <View style={styles.line} />
-    </View>
+    </Animated.View>
   )
 }
 
