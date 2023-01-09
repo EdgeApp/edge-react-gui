@@ -51,53 +51,62 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 import { FormScene } from '../FormScene'
 
-export type LoanManageType = 'loan-manage-deposit' | 'loan-manage-withdraw' | 'loan-manage-borrow' | 'loan-manage-repay'
+export type LoanManageType = 'loan-manage-borrow' | 'loan-manage-deposit' | 'loan-manage-repay' | 'loan-manage-withdraw'
 
 // User input display strings
 const MANAGE_ACTION_DATA_MAP: {
-  [key: string]: { headerText: string; amountCard: string; srcDestCard: string; supportUrl: string; programType: LoanProgramType }
+  [key: string]: {
+    actionSide: 'debts' | 'collaterals'
+    amountCard: string
+    headerText: string
+    isFundDestWallet: boolean
+    programType: LoanProgramType
+    srcDestCard: string
+    supportUrl: string
+  }
 } = {
-  'loan-manage-deposit': {
-    headerText: s.strings.loan_add_collateral,
-    amountCard: s.strings.loan_fragment_deposit,
-    srcDestCard: s.strings.loan_fund_source,
-    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'add-collateral'),
-    programType: 'loan-deposit'
-  },
-  'loan-manage-withdraw': {
-    headerText: s.strings.loan_withdraw_collateral,
-    amountCard: s.strings.loan_fragment_withdraw,
-    srcDestCard: s.strings.loan_fund_destination,
-    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'withdraw-collateral'),
-    programType: 'loan-withdraw'
-  },
   'loan-manage-borrow': {
-    headerText: s.strings.loan_borrow_more,
+    actionSide: 'debts',
     amountCard: s.strings.loan_fragment_loan,
+    headerText: s.strings.loan_borrow_more,
+    isFundDestWallet: true,
+    programType: 'loan-borrow',
     srcDestCard: s.strings.loan_fund_destination,
-    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-more'),
-    programType: 'loan-borrow'
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-more')
+  },
+  'loan-manage-deposit': {
+    actionSide: 'collaterals',
+    amountCard: s.strings.loan_fragment_deposit,
+    headerText: s.strings.loan_add_collateral,
+    isFundDestWallet: false,
+    programType: 'loan-deposit',
+    srcDestCard: s.strings.loan_fund_source,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'add-collateral')
   },
   'loan-manage-repay': {
-    headerText: s.strings.loan_make_payment,
+    actionSide: 'debts',
     amountCard: s.strings.loan_fragment_repay,
+    headerText: s.strings.loan_make_payment,
+    isFundDestWallet: false,
+    programType: 'loan-repay',
     srcDestCard: s.strings.loan_fund_source,
-    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment'),
-    programType: 'loan-repay'
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment')
+  },
+  'loan-manage-withdraw': {
+    actionSide: 'collaterals',
+    amountCard: s.strings.loan_fragment_withdraw,
+    headerText: s.strings.loan_withdraw_collateral,
+    isFundDestWallet: true,
+    programType: 'loan-withdraw',
+    srcDestCard: s.strings.loan_fund_destination,
+    supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'withdraw-collateral')
   }
 }
 
-const sceneTypeMap = {
-  'loan-manage-borrow': 'debts',
-  'loan-manage-repay': 'debts',
-  'loan-manage-withdraw': 'collaterals',
-  'loan-manage-deposit': 'collaterals'
-} as const
-
 interface Props {
+  loanAccount: LoanAccount
   navigation: NavigationProp<'loanManage'>
   route: RouteProp<'loanManage'>
-  loanAccount: LoanAccount
 }
 
 export const LoanManageSceneComponent = (props: Props) => {
@@ -138,12 +147,11 @@ export const LoanManageSceneComponent = (props: Props) => {
   )
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
-  const hardAllowedDebtAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
+  const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
-  const sceneType = sceneTypeMap[loanManageType]
-  const isSceneTypeDebts = sceneType === 'debts'
-  const defaultTokenId = isSceneTypeDebts ? hardDebtTokenId : hardCollateralTokenId
+  const isActionSideDebts = manageActionData.actionSide === 'debts'
+  const defaultTokenId = isActionSideDebts ? hardDebtTokenId : hardCollateralTokenId
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
@@ -166,10 +174,15 @@ export const LoanManageSceneComponent = (props: Props) => {
   })
 
   const [bankAccountsMap] = useAsyncValue<PaymentMethodsMap>(async (): Promise<PaymentMethodsMap> => {
-    if (account == null) return {}
-    const wyreClient = await makeWyreClient({ account })
-    if (!wyreClient.isAccountSetup) return {}
-    return await wyreClient.getPaymentMethods()
+    try {
+      if (account == null) return {}
+      const wyreClient = await makeWyreClient({ account })
+      if (!wyreClient.isAccountSetup) return {}
+      return await wyreClient.getPaymentMethods()
+    } catch (e: any) {
+      console.warn(`Failed to get Wyre payment methods: ${e}`)
+      return {}
+    }
   }, [account])
 
   // New debt/collateral amount
@@ -180,9 +193,9 @@ export const LoanManageSceneComponent = (props: Props) => {
   const newDebt = { nativeAmount: actionNativeAmount, tokenId: selectedAsset.tokenId, apr: newDebtApr }
 
   // LTV exceeded checks
-  const pendingDebts = isSceneTypeDebts ? [...debts, pendingDebtOrCollateral] : debts
+  const pendingDebts = isActionSideDebts ? [...debts, pendingDebtOrCollateral] : debts
   const pendingDebtsFiatValue = useTotalFiatAmount(borrowEngineWallet, pendingDebts)
-  const pendingCollaterals = isSceneTypeDebts ? collaterals : [...collaterals, pendingDebtOrCollateral]
+  const pendingCollaterals = isActionSideDebts ? collaterals : [...collaterals, pendingDebtOrCollateral]
   const pendingCollateralsFiatValue = useTotalFiatAmount(borrowEngineWallet, pendingCollaterals)
 
   // TODO: When new asset support is added, we need to implement calculation of aggregated liquidation thresholds
@@ -260,7 +273,8 @@ export const LoanManageSceneComponent = (props: Props) => {
                 borrowPluginId,
                 nativeAmount: actionNativeAmount,
                 walletId: borrowEngineWallet.id,
-                tokenId: selectedAsset.tokenId
+                tokenId: hardAllowedDebtAssets[0].tokenId,
+                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : undefined
               }
             ]
           }
@@ -343,15 +357,31 @@ export const LoanManageSceneComponent = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
-        showCreateWallet
-        createWalletId={isSceneTypeDebts ? borrowEngineWallet.id : undefined}
+        showCreateWallet={manageActionData.isFundDestWallet}
+        createWalletId={manageActionData.isFundDestWallet ? borrowEngineWallet.id : undefined}
         showBankOptions={loanManageType === 'loan-manage-borrow'}
         excludeWalletIds={getWalletPickerExcludeWalletIds(wallets, loanManageType, borrowEngineWallet)}
-        allowedAssets={isSceneTypeDebts ? hardAllowedDebtAsset : hardAllowedCollateralAssets}
+        allowedAssets={isActionSideDebts ? hardAllowedDebtAssets : hardAllowedCollateralAssets}
+        customAssets={
+          // For repay, allow selection of a deposited collateral asset if there
+          // are no other collateral asset balances
+          loanManageType === 'loan-manage-repay' &&
+          collaterals.find(collateral => collateral.tokenId !== hardCollateralTokenId && !zeroString(collateral.nativeAmount)) == null
+            ? [
+                {
+                  wallet: borrowEngineWallet,
+                  nativeBalance: collaterals.find(collateral => collateral.tokenId === hardCollateralTokenId)?.nativeAmount ?? '0',
+                  referenceTokenId: hardCollateralTokenId ?? '',
+                  displayName: sprintf(s.strings.loan_deposited_collateral_s, 'WBTC'),
+                  currencyCode: 'WBTC'
+                }
+              ]
+            : undefined
+        }
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId }) => {
+      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId, customAsset }) => {
         if (isBankSignupRequest) {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
@@ -359,6 +389,8 @@ export const LoanManageSceneComponent = (props: Props) => {
             deepPath: '',
             deepQuery: {}
           })
+        } else if (customAsset != null) {
+          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardAllowedDebtAssets[0].tokenId, customAsset: customAsset })
         } else if (wyreAccountId != null) {
           const paymentMethod = bankAccountsMap[wyreAccountId]
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
@@ -406,21 +438,21 @@ export const LoanManageSceneComponent = (props: Props) => {
       </Space>
       <Space vertical around={0.25}>
         <TotalDebtCollateralTile
-          title={isSceneTypeDebts ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
+          title={isActionSideDebts ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isSceneTypeDebts ? debts : collaterals}
+          debtsOrCollaterals={isActionSideDebts ? debts : collaterals}
           key="currentAmount"
         />
         <TotalDebtCollateralTile
-          title={isSceneTypeDebts ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
+          title={isActionSideDebts ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isSceneTypeDebts ? pendingDebts : pendingCollaterals}
+          debtsOrCollaterals={isActionSideDebts ? pendingDebts : pendingCollaterals}
           key="newAmount"
         />
         <TotalDebtCollateralTile
-          title={isSceneTypeDebts ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
+          title={isActionSideDebts ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
           wallet={borrowEngineWallet}
-          debtsOrCollaterals={isSceneTypeDebts ? collaterals : debts}
+          debtsOrCollaterals={isActionSideDebts ? collaterals : debts}
           key="counterAsset"
         />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeMap[borrowEngineWallet.currencyInfo.currencyCode]?.nativeAmount ?? '0'} key="fee" />
@@ -429,7 +461,7 @@ export const LoanManageSceneComponent = (props: Props) => {
           borrowEngine={borrowEngine}
           tokenId={selectedAsset.tokenId}
           nativeAmount={actionNativeAmount}
-          type={sceneType}
+          type={manageActionData.actionSide}
           direction={amountChange}
           key="ltv"
         />
