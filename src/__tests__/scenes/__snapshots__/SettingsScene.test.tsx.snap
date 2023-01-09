@@ -439,90 +439,67 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "height": 0,
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
             }
           }
         >
-          <View
-            accessible={true}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginBottom": 1,
-                "minHeight": 67,
-                "padding": 11,
+                "color": "#87939E",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
+            Delete Account
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
                 Object {
-                  "color": "#E85466",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
-                  "textAlign": "left",
-                }
-              }
-            >
-              Delete Account
-            </Text>
-            <Text
-              style={
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
-                  "color": "#87939E",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "rgba(255, 255, 255, .75)",
                   "fontSize": 22,
-                  "paddingHorizontal": 11,
-                  "textAlign": "left",
-                }
-              }
-            >
-              
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "rgba(255, 255, 255, .75)",
-                    "fontSize": 22,
-                    "marginHorizontal": 11,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <BVLinearGradient
           colors={
@@ -2082,90 +2059,67 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </Text>
         </View>
         <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "height": 73,
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
             }
           }
         >
-          <View
-            accessible={true}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+          <Text
             style={
               Object {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginBottom": 1,
-                "minHeight": 67,
-                "padding": 11,
+                "color": "#E85466",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
               }
             }
           >
-            <Text
-              style={
+            Delete Account
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
                 Object {
-                  "color": "#E85466",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "paddingHorizontal": 11,
-                  "textAlign": "left",
-                }
-              }
-            >
-              Delete Account
-            </Text>
-            <Text
-              style={
+                  "color": undefined,
+                  "fontSize": 12,
+                },
                 Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#00f1a2",
                   "fontSize": 22,
-                  "paddingHorizontal": 11,
-                  "textAlign": "left",
-                }
-              }
-            >
-              
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={
-                Array [
-                  Object {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  Object {
-                    "color": "#00f1a2",
-                    "fontSize": 22,
-                    "marginHorizontal": 11,
-                  },
-                  Object {
-                    "fontFamily": "FontAwesome5Free-Solid",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  Object {
-                    "fontWeight": "900",
-                  },
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+                  "marginHorizontal": 11,
+                },
+                Object {
+                  "fontFamily": "FontAwesome5Free-Solid",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {
+                  "fontWeight": "900",
+                },
+              ]
+            }
+          >
+            
+          </Text>
         </View>
         <BVLinearGradient
           colors={
