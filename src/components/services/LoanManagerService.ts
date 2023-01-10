@@ -11,7 +11,10 @@ import { waitForBorrowEngineSync } from '../../controllers/loan-manager/util/wai
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import s from '../../locales/strings'
+import { BorrowEngine } from '../../plugins/borrow-plugins/types'
+import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { makePeriodicTask } from '../../util/PeriodicTask'
 import { makePushClient } from '../../util/PushClient/PushClient'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
 
@@ -41,9 +44,10 @@ export const LoanManagerService = (props: Props) => {
   const dispatch = useDispatch()
   const clientId: string = useSelector(state => state.core.context.clientId)
   const loanAccountMap: LoanAccountMap = useSelector(state => state.loanManager.loanAccounts)
-
-  const state = useSelector(state => state)
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const allTokens = useAllTokens(account)
+
+  const [cachedLoanAssetsMap, setCachedLoanAssetsMap] = useState<{ [loanAccountId: string]: string }>({})
 
   //
   // Initialization
@@ -64,6 +68,9 @@ export const LoanManagerService = (props: Props) => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
           dispatch(deleteLoanAccount(loanAccount))
+
+          cachedLoanAssetsMap[loanAccount.id] = ''
+          setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
         }
       }
     }
@@ -71,81 +78,148 @@ export const LoanManagerService = (props: Props) => {
     return () => {
       clearInterval(intervalId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, loanAccountMap])
 
   //
   // Update Liquidation Threshold Push Event
   //
-  React.useEffect(() => {
-    const routine = async () => {
-      for (const loanAccount of Object.values(loanAccountMap)) {
-        const { borrowEngine } = loanAccount
-        await waitForBorrowEngineSync(borrowEngine)
-        const { debts, collaterals } = borrowEngine
-        const filteredDebts = debts.filter(debt => !zeroString(debt.nativeAmount))
-        const filteredCollaterals = collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
-        const onlyOneCollateral = filteredCollaterals.length === 1
-        // TODO: Find a less crude way to determine if a token is USD-based
-        const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
+  const getCurrencyCode = React.useCallback(
+    (borrowEngine: BorrowEngine, tokenId?: string): string => {
+      const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
+      const token = tokenId != null ? tokens[tokenId] : undefined
+      return token?.currencyCode ?? borrowEngine.currencyWallet.currencyInfo.currencyCode
+    },
+    [allTokens]
+  )
 
-        if (onlyOneCollateral && onlyUsdBasedDebts) {
-          const getExchangeAmount = (tokenId: string | undefined, nativeAmount: string): string => {
-            const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
-            const token = tokenId != null ? tokens[tokenId] : undefined
-            const denom = token != null ? token.denominations[0] : borrowEngine.currencyWallet.currencyInfo.denominations[0]
-            return div(nativeAmount, denom.multiplier, DECIMAL_PRECISION)
+  // Cache changes to specific watched properties of the loan accounts to detect
+  // deltas
+  useAsyncEffect(async () => {
+    for (const loanAccountId of Object.keys(loanAccountMap)) {
+      await waitForBorrowEngineSync(loanAccountMap[loanAccountId].borrowEngine)
+      const { borrowEngine } = loanAccountMap[loanAccountId]
+      const { debts, collaterals } = borrowEngine
+
+      // Cache accounts only if we can support liquidation price calculations
+      const filteredDebts = debts.filter(debt => !zeroString(debt.nativeAmount))
+      const filteredCollaterals = collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
+      const onlyOneCollateral = filteredCollaterals.length === 1
+      // TODO: Find a less crude way to determine if a token is USD-based
+      const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
+
+      if (onlyOneCollateral && onlyUsdBasedDebts) {
+        // Only trigger push events after the exchange rates are available for
+        // all loan assets on this account
+        const loanAssetTokenIds = [...filteredDebts, ...filteredCollaterals].map(loanAsset => loanAsset.tokenId)
+        if (loanAssetTokenIds.every(tokenId => tokenId == null || !zeroString(exchangeRates[`${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`]))) {
+          if (debts.length > 0) {
+            // If it's the first time the account has been seen, we want to
+            // avoid a notification if it already exceeds the liquidation price
+            // right when the app is booted. Newly created loans can never
+            // exceed the liquidation price.
+            if (cachedLoanAssetsMap[loanAccountId] == null) {
+              cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
+              await uploadLiquidationPushEvents(loanAccountId, false)
+            }
+            // If we already have a cache of this account and the LTV changed,
+            // upload a push notification even if the liquidation price has been
+            // exceeded
+            else if (JSON.stringify([...debts, ...collaterals]) !== cachedLoanAssetsMap[loanAccountId]) {
+              cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
+              await uploadLiquidationPushEvents(loanAccountId, true)
+            }
+          } else {
+            // Ensure push event is cleared if account is closed or debts no
+            // longer exist
+            await uploadLiquidationPushEvents(loanAccountId, false)
           }
-          const getCurrencyCode = (tokenId?: string): string => {
-            const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
-            const token = tokenId != null ? tokens[tokenId] : undefined
-            return token?.currencyCode ?? borrowEngine.currencyWallet.currencyInfo.currencyCode
-          }
-
-          const debtFiatAmounts = filteredDebts.map(debt => {
-            const debtExchangeAmount = getExchangeAmount(debt.tokenId, debt.nativeAmount)
-            // We assume all debts are stable-coins and therefore USD equivalent
-            return debtExchangeAmount
-          })
-          const debtFiatTotal = debtFiatAmounts.reduce((sum, debtFiatAmount) => add(sum, debtFiatAmount), '0')
-
-          const collateral = filteredCollaterals[0]
-          const collateralCurrencyCode = getCurrencyCode(collateral.tokenId)
-          const collateralExchangeAmount = getExchangeAmount(collateral.tokenId, collateral.nativeAmount)
-
-          const thresholdRate = parseFloat(div(debtFiatTotal, mul(collateralExchangeAmount, ALERT_THRESHOLD_LTV), DECIMAL_PRECISION))
-
-          const pushClient = makePushClient(account, clientId)
-
-          const eventId = `${loanAccount.id}:ltv_alert`
-          const trigger: PushTrigger = {
-            type: 'price-level',
-            currencyPair: `${collateralCurrencyCode}_iso:USD`,
-            belowRate: thresholdRate
-          }
-          const pushMessage: PushMessage = {
-            title: s.strings.loan_notification_ltv_threshold_alert_title,
-            body: s.strings.loan_notification_ltv_threshold_alert_message
-          }
-          const newPushEvent: NewPushEvent = { eventId, trigger, pushMessage }
-          const loginUpdatePayload: LoginUpdatePayload = {
-            createEvents: [newPushEvent]
-          }
-
-          await pushClient.uploadPushEvents(loginUpdatePayload)
         }
       }
+      setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
     }
+  }, [loanAccountMap, exchangeRates])
 
-    // Run immediately
-    routine()
+  const uploadLiquidationPushEvents = React.useCallback(
+    async (loanAccountId: string, isSkipPriceCheck: boolean) => {
+      const uploadLiquidationEvent = async (currencyPair: string, thresholdRate: number) => {
+        const eventId = `${loanAccountId}:ltv_alert`
+        const trigger: PushTrigger = {
+          type: 'price-level',
+          currencyPair,
+          belowRate: thresholdRate
+        }
+        const pushMessage: PushMessage = {
+          title: s.strings.loan_notification_ltv_threshold_alert_title,
+          body: s.strings.loan_notification_ltv_threshold_alert_message
+        }
+        const newPushEvent: NewPushEvent = { eventId, trigger, pushMessage }
+        const loginUpdatePayload: LoginUpdatePayload = {
+          createEvents: [newPushEvent]
+        }
 
-    // Refresh every 10 minutes
-    const intervalId = setInterval(routine, 10 * 60 * 1000)
+        const pushClient = makePushClient(account, clientId)
+        await pushClient.uploadPushEvents(loginUpdatePayload)
+      }
 
+      // TODO: Implement a true way to clear the push event
+      if (cachedLoanAssetsMap[loanAccountId] === '') {
+        uploadLiquidationEvent('WBTC', 0)
+        return
+      }
+
+      await waitForBorrowEngineSync(loanAccountMap[loanAccountId].borrowEngine)
+      const { borrowEngine } = loanAccountMap[loanAccountId]
+      const { debts, collaterals } = borrowEngine
+      const filteredDebts = debts.filter(debt => !zeroString(debt.nativeAmount))
+      const filteredCollaterals = collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
+      const onlyOneCollateral = filteredCollaterals.length === 1
+      // TODO: Find a less crude way to determine if a token is USD-based
+      const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
+
+      if (onlyOneCollateral && onlyUsdBasedDebts) {
+        const getExchangeAmount = (tokenId: string | undefined, nativeAmount: string): string => {
+          const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
+          const token = tokenId != null ? tokens[tokenId] : undefined
+          const denom = token != null ? token.denominations[0] : borrowEngine.currencyWallet.currencyInfo.denominations[0]
+          return div(nativeAmount, denom.multiplier, DECIMAL_PRECISION)
+        }
+
+        const debtFiatAmounts = filteredDebts.map(debt => {
+          const debtExchangeAmount = getExchangeAmount(debt.tokenId, debt.nativeAmount)
+          // We assume all debts are stable-coins and therefore USD equivalent
+          return debtExchangeAmount
+        })
+        const debtFiatTotal = debtFiatAmounts.reduce((sum, debtFiatAmount) => add(sum, debtFiatAmount), '0')
+
+        const collateral = filteredCollaterals[0]
+        const collateralCurrencyCode = getCurrencyCode(borrowEngine, collateral.tokenId)
+        const collateralExchangeAmount = getExchangeAmount(collateral.tokenId, collateral.nativeAmount)
+
+        const thresholdRate = parseFloat(div(debtFiatTotal, mul(collateralExchangeAmount, ALERT_THRESHOLD_LTV), DECIMAL_PRECISION))
+        const currencyPair = `${collateralCurrencyCode}_iso:USD`
+
+        if (isSkipPriceCheck || parseFloat(exchangeRates[currencyPair]) > thresholdRate) {
+          await uploadLiquidationEvent(currencyPair, thresholdRate)
+        }
+      }
+    },
+    [account, allTokens, cachedLoanAssetsMap, clientId, exchangeRates, getCurrencyCode, loanAccountMap]
+  )
+
+  // Always periodically send fresh push events in case price bounces around
+  // the liquidation threshold while the app is open
+  React.useEffect(() => {
+    const task = makePeriodicTask(async () => {
+      for (const loanAccountId of Object.keys(loanAccountMap)) {
+        await uploadLiquidationPushEvents(loanAccountId, true)
+      }
+    }, 10 * 60 * 1000)
+    task.start({ wait: true })
     return () => {
-      clearInterval(intervalId)
+      task.stop()
     }
-  }, [account, allTokens, clientId, loanAccountMap, state])
+  }, [loanAccountMap, uploadLiquidationPushEvents])
 
   return null
 }
