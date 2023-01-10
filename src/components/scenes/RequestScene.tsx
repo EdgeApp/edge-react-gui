@@ -143,19 +143,19 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     if (receiveAddress.segwitAddress != null) {
       addresses.push({
         addressString: receiveAddress.segwitAddress,
-        label: s.strings.request_qr_your_receiving_segwit_address
+        label: s.strings.request_qr_your_segwit_address
       })
     }
     // Handle publicAddress
     addresses.push({
       addressString: receiveAddress.publicAddress,
-      label: receiveAddress.segwitAddress != null ? s.strings.request_qr_your_receiving_wrapped_segwit_address : s.strings.request_qr_your_receiving_wallet_address
+      label: receiveAddress.segwitAddress != null ? s.strings.request_qr_your_wrapped_segwit_address : s.strings.request_qr_your_wallet_address
     })
     // Handle legacyAddress
     if (receiveAddress.legacyAddress != null) {
       addresses.push({
         addressString: receiveAddress.legacyAddress,
-        label: s.strings.request_qr_your_receiving_legacy_address
+        label: s.strings.request_qr_your_legacy_address
       })
     }
 
@@ -387,7 +387,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           />
           <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
-              <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
+              <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
               <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
             </View>
             <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
