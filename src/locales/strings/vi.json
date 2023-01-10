@@ -113,7 +113,7 @@
   "fragment_create_wallet_instructions": "Tap on wallet to edit name",
   "fragment_create_wallet_select_valid": "Vui lòng chọn dữ liệu hợp lệ",
   "fragment_request_copy_title": "Sao chép",
-  "fragment_request_subtitle": "Yêu cầu",
+  "fragment_request_subtitle": "Receive",
   "fragment_request_address_uri_copied": "Request address URI copied to clipboard",
   "fragment_copied": "Successfully copied to clipboard",
   "request_minimum_notification_title": "Yêu cầu tỷ số tối thiểu",
