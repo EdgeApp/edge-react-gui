@@ -113,7 +113,7 @@
   "fragment_create_wallet_instructions": "Tap on wallet to edit name",
   "fragment_create_wallet_select_valid": "Пожалуйста, выберите допустимые данные",
   "fragment_request_copy_title": "Копировать",
-  "fragment_request_subtitle": "Запрос",
+  "fragment_request_subtitle": "Receive",
   "fragment_request_address_uri_copied": "Request address URI copied to clipboard",
   "fragment_copied": "Успешно скопировано в буфер обмена",
   "request_minimum_notification_title": "Необходим минимальный баланс",
