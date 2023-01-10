@@ -70,7 +70,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
       <ConfirmContinueModal
         bridge={bridge}
         title={s.strings.loan_status_cancel_txs}
-        body={sprintf(s.strings.loan_status_cancel_txs_modal_msg, config.appName)}
+        body={sprintf(s.strings.loan_status_cancel_txs_modal_1s, config.appName)}
         isSkippable
       />
     ))

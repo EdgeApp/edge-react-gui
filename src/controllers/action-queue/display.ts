@@ -126,7 +126,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
         ...baseDisplayInfo,
         title: s.strings.action_display_title_swap,
         message: sprintf(
-          s.strings.action_queue_display_swap_message,
+          s.strings.action_queue_display_swap_message_4s,
           fromCurrencyCode,
           config.appName,
           toCurrencyCode,
@@ -142,8 +142,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_fiat_buy_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_fiat_buy_message, currencyCode, 'Wyre')
+        title: sprintf(s.strings.action_queue_display_fiat_buy_title_1s, currencyCode),
+        message: sprintf(s.strings.action_queue_display_fiat_buy_message_3s, currencyCode, 'Wyre')
       }
     }
     case 'wyre-sell': {
@@ -154,7 +154,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_fiat_sell_title,
-        message: sprintf(s.strings.action_queue_display_fiat_sell_message, currencyCode, 'Wyre')
+        message: sprintf(s.strings.action_queue_display_fiat_sell_message_2s, currencyCode, 'Wyre')
       }
     }
     case 'loan-borrow': {
@@ -177,8 +177,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_loan_deposit_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_loan_deposit_message, currencyCode, borrowPluginDisplayName)
+        title: sprintf(s.strings.action_queue_display_loan_deposit_title_1s, currencyCode),
+        message: sprintf(s.strings.action_queue_display_loan_deposit_message_2s, currencyCode, borrowPluginDisplayName)
       }
     }
     case 'loan-repay': {
@@ -204,7 +204,7 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       return {
         ...baseDisplayInfo,
         title: s.strings.action_queue_display_loan_withdraw_title,
-        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, currencyCode)
+        message: sprintf(s.strings.action_queue_display_loan_withdraw_message_1s, currencyCode)
       }
     }
     case 'broadcast-tx': {

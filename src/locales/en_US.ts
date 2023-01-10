@@ -15,17 +15,17 @@ const strings = {
   action_queue_display_par_title: `Action group`,
   action_queue_display_par_message: `Doing multiple actions at once.`,
   // fiat_buy
-  action_queue_display_fiat_buy_title: `Purchase %s`,
-  action_queue_display_fiat_buy_message: `Purchase %1$s from %3$s.`,
+  action_queue_display_fiat_buy_title_1s: `Purchase %s`,
+  action_queue_display_fiat_buy_message_3s: `Purchase %1$s from %3$s.`,
   // fiat_sell
   action_queue_display_fiat_sell_title: `Deposit funds to bank`,
-  action_queue_display_fiat_sell_message: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
+  action_queue_display_fiat_sell_message_2s: `Your %1$s is being sold by our partners and deposited into your bank account through %2$s.`,
   // loan_borrow
   action_queue_display_loan_borrow_title: `Take out loan`,
   action_queue_display_loan_borrow_message_1s: `A %1$s loan has been requested and is on its way to your wallet.`,
   // loan_deposit
-  action_queue_display_loan_deposit_title: `Depositing %1$s as collateral`,
-  action_queue_display_loan_deposit_message: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
+  action_queue_display_loan_deposit_title_1s: `Depositing %1$s as collateral`,
+  action_queue_display_loan_deposit_message_2s: `Edge has sent your %1$s tokens to %2$s and is awaiting confirmation of the transfer.`,
   // loan_repay
   action_queue_display_loan_repay_title: `Repay loan principal`,
   action_queue_display_loan_repay_message: `Make a payment towards your loan principal.`,
@@ -34,10 +34,10 @@ const strings = {
   action_queue_display_loan_repay_with_collateral_message: `Make a payment towards your loan principal using your collateral on AAVE.`,
   // loan_withdraw
   action_queue_display_loan_withdraw_title: `Withdraw collateral from loan`,
-  action_queue_display_loan_withdraw_message: `Withdraw %1$s from loan.`,
+  action_queue_display_loan_withdraw_message_1s: `Withdraw %1$s from loan.`,
   // swap
-  action_queue_display_swap_title: `Swap %1$s into %2$s`,
-  action_queue_display_swap_message: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).`,
+  action_queue_display_swap_title_2s: `Swap %1$s into %2$s`,
+  action_queue_display_swap_message_4s: `To use %1$s as collateral, %2$s must swap %1$s into %3$s to put it on the same network as %4$s (%5$s).`,
 
   // Action Queue Push Notifications
   action_queue_push_notification_title: `Action Complete`,
@@ -985,9 +985,8 @@ const strings = {
   loan_actions_title: 'Actions',
   loan_active_loans_title: 'Active Loans',
   loan_add_collateral: 'Add Collateral',
-  loan_add_from: 'Add from %s',
   loan_amount_borrow: 'Amount to Borrow',
-  loan_amount_exceeds_s_collateral: 'Total loan value exceeds %1$s of total collateral value.',
+  loan_amount_exceeds_collateral_1s: 'Total loan value exceeds %1$s of total collateral value.',
   loan_amount_fees_exceeds_collateral: 'Total collateral value plus fees exceeds wallet balance.',
   loan_available_equity: 'Available Equity',
   loan_borrow_details_title: 'Borrow Details',
@@ -1013,9 +1012,9 @@ const strings = {
   loan_current_principal: 'Current Principal',
   loan_dashboard_title: 'Loan Dashboard',
   loan_debt_destination: 'Loan Destination',
-  loan_deposited_collateral_s: 'Deposited %1$s Collateral',
+  loan_deposited_collateral_1s: 'Deposited %1$s Collateral',
   loan_details_title: 'Loan Details',
-  loan_enter_s_amount_s: 'Enter %1$s Amount (%2$s)',
+  loan_enter_amount_2s: 'Enter %1$s Amount (%2$s)',
   fragment_error: 'Error',
   loan_estimate_fee: 'Estimated Fee',
   loan_exchange_rate: 'Exchange Rate',
@@ -1027,10 +1026,10 @@ const strings = {
   loan_fragment_withdraw: 'Withdrawal',
   loan_fund_source: 'Fund Source',
   loan_fund_destination: 'Fund Destination',
-  loan_insufficient_funds_warning: 'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.',
+  loan_insufficient_funds_warning_2s: 'You must have %1$s and sufficient funds in associated %2$s wallet in order to proceed with the loan.',
   loan_interest_rate: 'Interest Rate',
   loan_loading_loans: 'Loading Loans...',
-  loan_loan_amount_input_message_s: 'Loan must be less than %1$s of your total collateral value',
+  loan_loan_amount_input_message_1s: 'Loan must be less than %1$s of your total collateral value',
   loan_loan_breakdown_title: 'Loan Breakdown',
   loan_loan_to_value_ratio: 'Loan to Value Ratio',
   loan_make_payment: 'Make Payment',
@@ -1040,8 +1039,8 @@ const strings = {
   loan_new_principal: 'New Principal',
   loan_principal_value: 'Principal Value',
   loan_remaining_principal: 'Remaining Principal',
-  loan_apr_s: 'APR: %1$s',
-  loan_s_apr: '%1$s APR',
+  loan_apr_1s: 'APR: %1$s',
+  loan_apr_card_1s: '%1$s APR',
   loan_select_receiving_wallet: 'Please select a receiving wallet',
   loan_select_source_collateral: 'Please select a source of collateral',
   loan_withdraw_collateral: 'Withdraw Collateral',
@@ -1051,7 +1050,7 @@ const strings = {
 
   loan_aave_fragment: 'AAVE',
   loan_status_cancel_txs: 'Cancel Transactions',
-  loan_status_cancel_txs_modal_msg:
+  loan_status_cancel_txs_modal_1s:
     "Canceling transactions will stop the current process, but cannot reverse the steps that have already been done. If you'd like to revert the actions, those steps will have to be taken manually.\n\nIf you have any questions, please contact us or email %1$s",
   loan_status_title: 'Loan Status',
   loan_status_failed_title: 'Failed to process actions',

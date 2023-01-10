@@ -312,7 +312,7 @@ export const LoanCreateScene = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   const collateralWarningMsg = React.useMemo(
-    () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
+    () => sprintf(s.strings.loan_insufficient_funds_warning_2s, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
     [srcAssetName, srcCurrencyCode, srcWalletName]
   )
   const renderWarning = useHandler(() => {
@@ -350,8 +350,8 @@ export const LoanCreateScene = (props: Props) => {
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
             iconUri={iconUri}
-            inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, displayLtvLimit)}
-            title={sprintf(s.strings.loan_enter_s_amount_s, s.strings.loan_fragment_loan, fiatCurrencyCode)}
+            inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_1s, displayLtvLimit)}
+            title={sprintf(s.strings.loan_enter_amount_2s, s.strings.loan_fragment_loan, fiatCurrencyCode)}
             tokenId={destTokenId}
             onAmountChanged={handleBorrowAmountChanged}
           />

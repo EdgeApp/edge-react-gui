@@ -18,7 +18,7 @@ const AprCardComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const aprValue = apr == null || apr === 0 ? '-- ' : toPercentString(apr)
-  const displayApr = React.useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
+  const displayApr = React.useMemo(() => sprintf(s.strings.loan_apr_card_1s, aprValue), [aprValue])
 
   return (
     <View style={styles.cardContainer}>

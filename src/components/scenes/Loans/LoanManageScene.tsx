@@ -375,7 +375,7 @@ export const LoanManageSceneComponent = (props: Props) => {
                   wallet: borrowEngineWallet,
                   nativeBalance: collaterals.find(collateral => collateral.tokenId === hardCollateralTokenId)?.nativeAmount ?? '0',
                   referenceTokenId: hardCollateralTokenId ?? '',
-                  displayName: sprintf(s.strings.loan_deposited_collateral_s, 'WBTC'),
+                  displayName: sprintf(s.strings.loan_deposited_collateral_1s, 'WBTC'),
                   currencyCode: 'WBTC'
                 }
               ]
@@ -425,8 +425,8 @@ export const LoanManageSceneComponent = (props: Props) => {
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
-          inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
-          title={sprintf(s.strings.loan_enter_s_amount_s, manageActionData.amountCard, fiatCurrencyCode)}
+          inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_1s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
+          title={sprintf(s.strings.loan_enter_amount_2s, manageActionData.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
@@ -466,7 +466,7 @@ export const LoanManageSceneComponent = (props: Props) => {
             numberOfLines={0}
             marginRem={[1.5, 0.5, -0.75, 0.5]}
             title={s.strings.exchange_insufficient_funds_title}
-            message={sprintf(s.strings.loan_amount_exceeds_s_collateral, toPercentString(hardLtvRatio))}
+            message={sprintf(s.strings.loan_amount_exceeds_collateral_1s, toPercentString(hardLtvRatio))}
             type="error"
           />
         )}

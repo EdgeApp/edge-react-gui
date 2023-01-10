@@ -239,7 +239,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             if (zeroString(debt.nativeAmount)) return null
             const token = getToken(wallet, debt.tokenId)
             const currencyCode = token?.currencyCode ?? 'N/A'
-            const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
+            const aprText = sprintf(s.strings.loan_apr_1s, toPercentString(debt.apr))
             return (
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space isSideways>
