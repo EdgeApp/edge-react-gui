@@ -139,16 +139,19 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const receiveAddress = await wallet.getReceiveAddress()
     const addresses: AddressInfo[] = []
 
+    // Handle segwitAddress
     if (receiveAddress.segwitAddress != null) {
       addresses.push({
         addressString: receiveAddress.segwitAddress,
         label: s.strings.request_qr_your_receiving_segwit_address
       })
     }
+    // Handle publicAddress
     addresses.push({
       addressString: receiveAddress.publicAddress,
-      label: s.strings.request_qr_your_receiving_wallet_address
+      label: receiveAddress.segwitAddress != null ? s.strings.request_qr_your_receiving_wrapped_segwit_address : s.strings.request_qr_your_receiving_wallet_address
     })
+    // Handle legacyAddress
     if (receiveAddress.legacyAddress != null) {
       addresses.push({
         addressString: receiveAddress.legacyAddress,

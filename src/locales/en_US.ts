@@ -317,6 +317,7 @@ const strings = {
   request_qr_email_title: 'Pay with %1$s:',
   request_email_subject: '%1$s %2$s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  request_qr_your_receiving_wrapped_segwit_address: 'Your Receiving Wrapped-Segwit Address',
   request_qr_your_receiving_legacy_address: 'Your Receiving Legacy Address',
   request_qr_your_receiving_segwit_address: 'Your Receiving Segwit Address',
   request_review_question_title: 'Enjoying %1$s?',
