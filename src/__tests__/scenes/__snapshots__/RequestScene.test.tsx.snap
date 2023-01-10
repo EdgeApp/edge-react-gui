@@ -182,7 +182,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <WithTheme(EdgeTextComponent)>
-          Your Receiving Wallet Address
+          Your Wallet Address
         </WithTheme(EdgeTextComponent)>
         <Icon
           allowFontScaling={false}
