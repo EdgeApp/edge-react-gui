@@ -91,14 +91,16 @@ Object {
     "isConnected": true,
   },
   "nextUsername": null,
+  "notificationSettings": Object {
+    "ignoreMarketing": false,
+    "ignorePriceChanges": false,
+    "plugins": Object {},
+  },
   "pendingDeepLink": null,
   "permissions": Object {
     "camera": "denied",
     "contacts": "denied",
     "location": "denied",
-  },
-  "priceChangeNotifications": Object {
-    "ignorePriceChanges": false,
   },
   "sortedWalletList": Array [],
   "ui": Object {

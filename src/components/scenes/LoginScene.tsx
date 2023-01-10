@@ -1,6 +1,7 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
+import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
 import { ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
@@ -9,11 +10,13 @@ import { BlurView } from 'rn-id-blurview'
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
+import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
 import { connect } from '../../types/reactRedux'
+import { Dispatch } from '../../types/reduxTypes'
 import { GuiTouchIdInfo } from '../../types/types'
 import { pickRandom } from '../../util/utils'
 import { showHelpModal } from '../modals/HelpModal'
@@ -35,6 +38,7 @@ interface StateProps {
 }
 interface DispatchProps {
   deepLinkHandled: () => void
+  dispatch: Dispatch
   handleSendLogs: () => void
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void
   logout: () => void
@@ -45,6 +49,8 @@ interface State {
   counter: number
   passwordRecoveryKey?: string
   backgroundImage: ImageSourcePropType | null
+  needsUpdate: boolean
+  notificationPermissionsInfo?: NotificationPermissionsInfo
 }
 
 let firstRun = true
@@ -55,9 +61,8 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       counter: 0,
-      // @ts-expect-error
-      needsUpdate: false,
-      backgroundImage: null
+      backgroundImage: null,
+      needsUpdate: false
     }
   }
 
@@ -139,9 +144,22 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     showHelpModal()
   }
 
-  onLogin = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
+  onLogin = async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     this.setState({ passwordRecoveryKey: undefined })
     this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
+
+    const { notificationPermissionsInfo } = this.state
+    if (notificationPermissionsInfo) {
+      const newSettings = await this.props.dispatch(setDeviceSettings(notificationPermissionsInfo.notificationOptIns))
+      this.props.dispatch({
+        type: 'NOTIFICATION_SETTINGS_UPDATE',
+        data: serverSettingsToNotificationSettings(newSettings)
+      })
+    }
+  }
+
+  onNotificationPermit = (notificationPermissionsInfo: NotificationPermissionsInfo) => {
+    this.setState({ notificationPermissionsInfo })
   }
 
   render() {
@@ -158,6 +176,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           context={context}
           recoveryLogin={passwordRecoveryKey}
           onLogin={this.onLogin}
+          onNotificationPermit={this.onNotificationPermit}
           fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}
           key={String(counter)}
           appName={config.appNameShort}
@@ -200,6 +219,7 @@ export const LoginScene = connect<StateProps, DispatchProps, {}>(
     deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
     },
+    dispatch,
     handleSendLogs() {
       dispatch(showSendLogsModal())
     },

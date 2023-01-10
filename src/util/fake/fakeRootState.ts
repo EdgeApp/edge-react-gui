@@ -241,7 +241,8 @@ export const fakeRootState = {
   },
   nextUsername: null,
   pendingDeepLink: null,
-  priceChangeNotifications: {
+  notificationSettings: {
+    ignoreMarketing: false,
     ignorePriceChanges: false,
     plugins: {
       monero: {

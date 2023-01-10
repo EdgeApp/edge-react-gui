@@ -24,7 +24,8 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
   return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
-export interface PriceChangeNotificationSettings {
+export interface NotificationSettings {
+  ignoreMarketing: boolean
   ignorePriceChanges: boolean
   plugins: {
     [pluginId: string]: {
@@ -43,6 +44,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
     let v2Settings: ReturnType<typeof asDevicePayload> = {
       loginIds: [],
       events: [],
+      ignoreMarketing: false,
       ignorePriceChanges: false
     }
     try {
@@ -138,16 +140,20 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
     }
 
     dispatch({
-      type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
-      data: serverSettingsToState(v2Settings)
+      type: 'NOTIFICATION_SETTINGS_UPDATE',
+      data: serverSettingsToNotificationSettings(v2Settings)
     })
   }
 }
 
-export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
-  const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges, plugins: {} }
+export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<typeof asDevicePayload>): NotificationSettings => {
+  const data: NotificationSettings = {
+    ignoreMarketing: serverSettings.ignoreMarketing,
+    ignorePriceChanges: serverSettings.ignorePriceChanges,
+    plugins: {}
+  }
 
-  for (const event of settings.events) {
+  for (const event of serverSettings.events) {
     if (event.state !== 'waiting') continue
     const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
     if (trigger == null) continue
