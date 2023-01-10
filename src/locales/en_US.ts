@@ -161,7 +161,7 @@ const strings = {
   fragment_create_wallet_instructions: 'Tap on wallet to edit name',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
-  fragment_request_subtitle: 'Request',
+  fragment_request_subtitle: 'Receive',
   fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
