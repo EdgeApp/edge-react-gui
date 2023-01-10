@@ -113,7 +113,7 @@
   "fragment_create_wallet_instructions": "Tap on wallet to edit name",
   "fragment_create_wallet_select_valid": "유효한 데이터를 선택하십시오.",
   "fragment_request_copy_title": "복사",
-  "fragment_request_subtitle": "요청",
+  "fragment_request_subtitle": "Receive",
   "fragment_request_address_uri_copied": "Request address URI copied to clipboard",
   "fragment_copied": "Successfully copied to clipboard",
   "request_minimum_notification_title": "최소 잔액 필요",
