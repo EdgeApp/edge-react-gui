@@ -113,7 +113,7 @@
   "fragment_create_wallet_instructions": "Tap on wallet to edit name",
   "fragment_create_wallet_select_valid": "Bitte wählen sie gültige Daten aus",
   "fragment_request_copy_title": "Kopieren",
-  "fragment_request_subtitle": "Anfordern",
+  "fragment_request_subtitle": "Receive",
   "fragment_request_address_uri_copied": "Request address URI copied to clipboard",
   "fragment_copied": "Erfolgreich in die Zwischenablage kopiert",
   "request_minimum_notification_title": "Mindest-Guthaben benötigt",
