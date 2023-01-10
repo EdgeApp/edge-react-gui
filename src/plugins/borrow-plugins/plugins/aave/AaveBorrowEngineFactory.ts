@@ -1,4 +1,4 @@
-import { add, div, gt, lt, min, mul } from 'biggystring'
+import { add, div, gt, gte, lt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
@@ -438,7 +438,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
               priceWithSlippage,
               priceRoute.destAmount,
               2, // 1 = stable, 2 = variable
-              164, // buyAllBalanceOffset 164 = Augustus V5 buy. Function call to handle the slight interest accrued after the tx is broadcasted
+              gte(request.nativeAmount, debt.nativeAmount) ? 164 : 0, // buyAllBalanceOffset 164 = Augustus V5 buy. Function call to handle the slight interest accrued after the tx is broadcasted when closing the full principal
               ethers.utils.defaultAbiCoder.encode(['bytes', 'address'], [swapTxParams.data, swapTxParams.to]),
               {
                 amount: '0',
