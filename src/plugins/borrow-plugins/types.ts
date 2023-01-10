@@ -44,6 +44,12 @@ export interface WithdrawRequest {
   toWallet?: EdgeCurrencyWallet
 }
 
+// Calculate projected LTV:
+export interface CalculateLtvRequest {
+  collaterals: BorrowCollateral[]
+  debts: BorrowDebt[]
+}
+
 export interface BroadcastTx {
   walletId: string
   networkFee: EdgeNetworkFee
@@ -95,9 +101,6 @@ export interface BorrowEngine {
   startEngine: () => Promise<void>
   stopEngine: () => Promise<void>
 
-  // Returns the APR for borrow a particular token
-  getAprQuote: (tokenId?: string) => Promise<number>
-
   // Collateral modification
   deposit: (request: DepositRequest) => Promise<ApprovableAction>
   withdraw: (request: WithdrawRequest) => Promise<ApprovableAction>
@@ -105,6 +108,14 @@ export interface BorrowEngine {
   // Debt modification
   borrow: (request: BorrowRequest) => Promise<ApprovableAction>
   repay: (request: RepayRequest) => Promise<ApprovableAction>
+
+  // Utilities:
+
+  // Returns the APR for borrow a particular token
+  getAprQuote: (tokenId?: string) => Promise<number>
+
+  // Calculates projected LTV after making a debt or collateral modification
+  calculateProjectedLtv: (request: CalculateLtvRequest) => Promise<string>
 }
 
 // -----------------------------------------------------------------------------

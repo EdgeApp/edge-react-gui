@@ -1,0 +1,3 @@
+[
+  "function getAssetPrice(address asset) public override view returns (uint256)"
+]
