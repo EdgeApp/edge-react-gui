@@ -846,7 +846,6 @@ const SendComponent = (props: Props) => {
       }
       if (spendInfo.spendTargets[0].nativeAmount == null) {
         flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
-        return
       }
       if (pinSpendingLimitsEnabled) {
         const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
