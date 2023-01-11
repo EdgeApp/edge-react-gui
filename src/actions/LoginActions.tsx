@@ -26,8 +26,8 @@ import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
-import { attachToUser } from './DeviceIdActions'
 import { expiredFioNamesCheckDates } from './FioActions'
+import { registerNotificationsV2 } from './NotificationActions'
 import { trackAccountEvent } from './TrackingActions'
 import { updateWalletsRequest } from './WalletActions'
 
@@ -122,7 +122,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
     const { context } = state.core
 
     // Sign up for push notifications:
-    dispatch(attachToUser())
+    await dispatch(registerNotificationsV2())
 
     const walletInfos = account.allKeys
     const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)

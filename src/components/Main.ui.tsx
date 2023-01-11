@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
-import { registerDevice } from '../actions/DeviceIdActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
@@ -112,8 +111,6 @@ const RouterWithRedux = connect<
 )(Router)
 
 interface DispatchProps {
-  registerDevice: () => void
-
   // Navigation actions:
   logout: (username?: string) => void
 
@@ -134,7 +131,6 @@ export class MainComponent extends React.Component<Props> {
 
   componentDidMount() {
     logEvent('AppStart')
-    this.props.registerDevice()
   }
 
   render() {
@@ -1129,10 +1125,6 @@ export class MainComponent extends React.Component<Props> {
 export const Main = connect<{}, DispatchProps, {}>(
   state => ({}),
   dispatch => ({
-    registerDevice() {
-      dispatch(registerDevice())
-    },
-
     // Navigation actions:
     logout(username?: string): void {
       dispatch(logoutRequest(username))
