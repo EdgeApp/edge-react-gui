@@ -74,7 +74,7 @@ public class MessagesWorker extends Worker {
     Context context = getApplicationContext();
     NotificationManager notificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    Log.i(workId, "Background notification: ".append(message));
+    Log.i(workId, "Background notification: " + message);
 
     // If on Oreo then notification requires a notification channel:
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
