@@ -32,7 +32,7 @@ package co.edgesecure.app;
 
 public class EdgeApiKey {
   public static final String apiKey = "${apiKey}";
-  public static final String pushServer = "${pushServer};"
+  public static final String pushServer = "${pushServer}";
 }
 `
   fs.writeFileSync(androidPath, androidSource)
