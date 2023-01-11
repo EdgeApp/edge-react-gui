@@ -349,9 +349,10 @@ export const Actions = {
 type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 
 /**
- * The of the `navigation` prop passed to each scene.
+ * The of the `navigation` prop passed to each scene,
+ * but without any scene-specific stuff.
  */
-export interface NavigationProp<Name extends keyof ParamList> {
+export interface NavigationBase {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => () => void
   isFocused: () => boolean
@@ -360,7 +361,6 @@ export interface NavigationProp<Name extends keyof ParamList> {
   navigate: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
   push: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
   replace: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  setParams: (params: ParamList[Name]) => void
 
   // Returning:
   goBack: () => void
@@ -374,6 +374,13 @@ export interface NavigationProp<Name extends keyof ParamList> {
 
   // Internals nobody should need to touch:
   state: unknown
+}
+
+/**
+ * The of the `navigation` prop passed to each scene.
+ */
+export interface NavigationProp<Name extends keyof ParamList> extends NavigationBase {
+  setParams: (params: ParamList[Name]) => void
 }
 
 /**
