@@ -113,7 +113,7 @@
   "fragment_create_wallet_instructions": "Tocca il portafoglio per modificare il nome",
   "fragment_create_wallet_select_valid": "Si prega di selezionare dati validi",
   "fragment_request_copy_title": "Copia",
-  "fragment_request_subtitle": "Receive",
+  "fragment_request_subtitle": "Ricevi",
   "fragment_request_address_uri_copied": "Indirizzo di richiesta URI copiato negli appunti",
   "fragment_copied": "Copia negli appunti completata con successo",
   "request_minimum_notification_title": "Saldo minimo richiesto",
