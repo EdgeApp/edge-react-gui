@@ -50,14 +50,11 @@ describe('CryptoExchangeComponent', () => {
         pluginId="ChangeNow"
         fromCurrencyCode="BTC"
         toCurrencyCode="ETH"
-        forceUpdateGuiCounter={0}
-        calculatingMax
         hasMaxSpend
         insufficient={false}
         genericError={null}
         onSelectWallet={async (walletId, currencyCode, direction) => undefined}
         getQuoteForTransaction={(fromWalletNativeAmount, onApprove) => undefined}
-        exchangeMax={async () => undefined}
         theme={getTheme()}
       />
     )

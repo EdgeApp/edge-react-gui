@@ -6,7 +6,6 @@ import {
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
   EdgeCurrencyWallet,
-  EdgeSpendInfo,
   EdgeSwapQuote,
   EdgeSwapRequest,
   EdgeSwapResult
@@ -18,7 +17,6 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import s from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
@@ -34,7 +32,7 @@ import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, dec
 import { updateSwapCount } from './RequestReviewActions'
 
 export interface SetNativeAmountInfo {
-  whichWallet: 'from' | 'to'
+  whichWallet: 'from' | 'to' | 'max'
   primaryNativeAmount: string
 }
 
@@ -126,43 +124,6 @@ export function exchangeTimerExpired(swapInfo: GuiSwapInfo, onApprove: () => voi
       Actions.popTo('exchangeScene')
       dispatch(processSwapQuoteError(error))
     }
-  }
-}
-
-export function exchangeMax(): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { fromWalletId } = state.cryptoExchange
-    if (fromWalletId == null) {
-      return
-    }
-    const { currencyWallets } = state.core.account
-    const wallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
-    const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-    if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).noMaxSpend) {
-      const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
-      Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
-      return
-    }
-    const dummyPublicAddress = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).dummyPublicAddress
-    dispatch({ type: 'START_CALC_MAX' })
-    let primaryNativeAmount = '0'
-
-    try {
-      const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
-      const edgeSpendInfo: EdgeSpendInfo = {
-        networkFeeOption: 'standard',
-        currencyCode,
-        spendTargets: [{ publicAddress }]
-      }
-      if (currencyCode === 'BTC') {
-        edgeSpendInfo.networkFeeOption = 'high'
-      }
-      primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
-    } catch (error: any) {
-      showError(error)
-    }
-    dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
   }
 }
 

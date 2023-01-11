@@ -171,11 +171,6 @@ const asConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  SWITCHAIN_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
   THORCHAIN_INIT: asCorePluginInit(
     asObject({
       ninerealmsClientId: asOptional(asString, ''),

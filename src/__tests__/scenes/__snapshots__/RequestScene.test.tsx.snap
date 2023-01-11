@@ -85,7 +85,6 @@ exports[`Request should render with loaded props 1`] = `
     <WithTheme(CardComponent)>
       <ExchangedFlipInput
         exchangeSecondaryToPrimaryRatio={Object {}}
-        forceUpdateGuiCounter={0}
         headerCallback={[Function]}
         headerText="Receive to My Bitcoin"
         isEditable={true}

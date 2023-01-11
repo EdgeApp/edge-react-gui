@@ -30,7 +30,6 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
       <WithTheme(CardComponent)>
         <ExchangedFlipInput
           exchangeSecondaryToPrimaryRatio="1000"
-          forceUpdateGuiCounter={0}
           headerText="Exchange Header"
           isEditable={true}
           isFiatOnTop={true}

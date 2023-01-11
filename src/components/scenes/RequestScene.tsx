@@ -332,7 +332,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
               overridePrimaryExchangeAmount=""
-              forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
               isFiatOnTop

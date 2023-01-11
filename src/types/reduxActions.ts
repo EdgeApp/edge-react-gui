@@ -50,7 +50,6 @@ type NoDataActionName =
   | 'SHIFT_COMPLETE'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
   | 'UI/SEND_CONFIRMATION/RESET'
   | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
@@ -105,7 +104,6 @@ export type Action =
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY'; data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR'; data: string }
-  | { type: 'SET_FROM_WALLET_MAX'; data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
   | {

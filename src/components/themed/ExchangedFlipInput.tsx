@@ -23,7 +23,6 @@ export interface ExchangedFlipInputOwnProps {
   // Exchange rate
   exchangeSecondaryToPrimaryRatio: string
 
-  forceUpdateGuiCounter: number
   keyboardVisible: boolean
 
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
@@ -138,7 +137,6 @@ export class ExchangedFlipInput extends React.Component<Props> {
       JSON.stringify(this.props.primaryCurrencyInfo) !== JSON.stringify(nextProps.primaryCurrencyInfo) ||
       JSON.stringify(this.props.secondaryCurrencyInfo) !== JSON.stringify(nextProps.secondaryCurrencyInfo) ||
       this.props.exchangeSecondaryToPrimaryRatio !== nextProps.exchangeSecondaryToPrimaryRatio ||
-      this.props.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter ||
       this.props.headerCallback !== nextProps.headerCallback ||
       this.props.headerText !== nextProps.headerText ||
       this.props.inputAccessoryViewID !== nextProps.inputAccessoryViewID ||
@@ -183,7 +181,7 @@ export class ExchangedFlipInput extends React.Component<Props> {
         headerCallback={this.props.headerCallback}
         primaryInfo={this.cache.primaryInfo}
         secondaryInfo={this.cache.secondaryInfo}
-        forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
+        forceUpdateGuiCounter={0}
         onAmountChanged={this.onAmountChanged}
         onError={this.props.onError}
         keyboardVisible={this.props.keyboardVisible}

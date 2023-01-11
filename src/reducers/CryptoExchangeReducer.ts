@@ -23,9 +23,7 @@ export interface CryptoExchangeState {
   genericShapeShiftError: string | null
 
   // Activity flags:
-  forceUpdateGuiCounter: number
   shiftPendingTransaction: boolean
-  calculatingMax: boolean
 }
 
 const dummyCurrencyInfo: GuiCurrencyInfo = {
@@ -59,13 +57,10 @@ const initialState: CryptoExchangeState = {
 
   insufficientError: false,
   genericShapeShiftError: null,
-  forceUpdateGuiCounter: 0,
-  shiftPendingTransaction: false,
-  calculatingMax: false
+  shiftPendingTransaction: false
 }
 
 function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
-  let forceUpdateGuiCounter
   switch (action.type) {
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
       return {
@@ -140,24 +135,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       return {
         ...state,
         shiftPendingTransaction: false
-      }
-    }
-
-    case 'START_CALC_MAX': {
-      return {
-        ...state,
-        calculatingMax: true
-      }
-    }
-
-    case 'SET_FROM_WALLET_MAX': {
-      forceUpdateGuiCounter = state.forceUpdateGuiCounter
-      forceUpdateGuiCounter++
-      return {
-        ...state,
-        fromNativeAmount: action.data,
-        calculatingMax: false,
-        forceUpdateGuiCounter
       }
     }
 
