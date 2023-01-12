@@ -41,10 +41,10 @@ interface Props {
 const REFRESH_INFO_SERVER_MS = 60000
 
 /**
- * Provides various global services to the application,
+ * Provides various global providers to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export function Services(props: Props) {
+export function Providers(props: Props) {
   const { context } = props
   const [account, setAccount] = React.useState<EdgeAccount | undefined>()
   const theme = useTheme()
