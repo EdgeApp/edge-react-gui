@@ -39,6 +39,7 @@ import { scale } from '../util/scaling'
 import { logEvent } from '../util/tracking'
 import { AirshipToast } from './common/AirshipToast'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
+import { withServices } from './hoc/withServices'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
@@ -143,7 +144,7 @@ export class MainComponent extends React.Component<Props> {
             // @ts-expect-error
             panHandlers={null}
           >
-            <Scene key="login" component={withNavigation(LoginScene)} initial />
+            <Scene key="login" component={withNavigation(withServices(LoginScene))} initial />
             <Scene
               key="edgeLogin"
               component={withNavigation(ifLoggedIn(EdgeLoginScene))}

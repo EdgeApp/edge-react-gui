@@ -16,7 +16,6 @@ import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
 import { Main } from '../Main.ui'
 import { Airship } from './AirshipInstance'
-import { Services } from './Services'
 import { useTheme } from './ThemeContext'
 
 interface Props {
@@ -72,7 +71,6 @@ export function Providers(props: Props) {
             <Main />
           </Airship>
         </MenuProvider>
-        <Services />
       </LoginUiProvider>
     </Provider>
   )
