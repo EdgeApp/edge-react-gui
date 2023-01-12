@@ -1,8 +1,8 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index 0ceb9106a..0e848b333 100644
+index 426e4ecc1..864388b78 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
-@@ -483,8 +483,8 @@
+@@ -492,8 +492,8 @@
  					"-ObjC",
  					"-lc++",
  				);
@@ -13,7 +13,7 @@ index 0ceb9106a..0e848b333 100644
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
-@@ -524,8 +524,8 @@
+@@ -534,8 +534,8 @@
  					"-ObjC",
  					"-lc++",
  				);
