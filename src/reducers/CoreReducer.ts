@@ -24,7 +24,7 @@ const accountHack: any = {
   currencyConfig: {},
   currencyWallets: {}
 }
-const defaultAccount: EdgeAccount = accountHack
+export const defaultAccount: EdgeAccount = accountHack
 
 export const core = combineReducers<CoreState, Action>({
   account(state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
