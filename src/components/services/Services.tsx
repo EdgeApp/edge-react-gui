@@ -63,7 +63,7 @@ export function Services(props: Props) {
       <AutoLogout />
       <ContactsLoader />
       <DeepLinkingManager navigation={navigation} />
-      {account == null ? null : <AccountCallbackManager account={account} />}
+      {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
       <PermissionsManager />
