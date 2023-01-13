@@ -22,7 +22,7 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -60,7 +60,7 @@ interface DispatchProps {
   lockSettings: () => void
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void
-  showRestoreWalletsModal: () => void
+  showRestoreWalletsModal: (navigation: NavigationBase) => void
   showUnlockSettingsModal: () => void
   toggleDeveloperMode: (developerModeOn: boolean) => void
   toggleSpamFilter: (spamFilterOn: boolean) => void
@@ -334,7 +334,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
@@ -387,8 +387,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
       dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
     },
-    showRestoreWalletsModal() {
-      dispatch(showRestoreWalletsModal())
+    showRestoreWalletsModal(navigation: NavigationBase) {
+      dispatch(showRestoreWalletsModal(navigation))
     },
     showUnlockSettingsModal() {
       dispatch(showUnlockSettingsModal())
