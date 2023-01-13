@@ -858,7 +858,6 @@
   "wallet_list_sort_currencyName": "Ordina per nome valuta",
   "wallet_list_sort_highest": "Ordina per valore più alto",
   "wallet_list_sort_lowest": "Ordina per valore più basso",
-  "wyre_metadata_sell_notes_4s": "Vendi %1$s sulla catena %2$s da %3$s a Wyre all'indirizzo: %4$s. Per assistenza, contatta support@sendwyre.com.",
   "select_fio_address_address_from": "Invia dal FIO Crypto Handle",
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "Errore FIO memo",
