@@ -7,7 +7,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { activatePromotion } from './AccountReferralActions'
 import { launchBitPay } from './BitPayActions'
 import { loginWithEdge } from './EdgeLoginActions'
@@ -69,7 +69,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      Actions.push('edgeLogin', {})
+      navigation.push('edgeLogin', {})
       return true
 
     // The login scene always handles this one:
@@ -83,7 +83,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push('pluginView', {
+      navigation.push('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query
@@ -105,7 +105,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      Actions.push('exchangeScene', {})
+      navigation.push('exchangeScene', {})
       return true
     }
 
@@ -113,7 +113,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        Actions.push('walletListScene', {})
+        navigation.push('walletListScene', {})
         showError(s.strings.azteco_btc_only)
         return false
       }
