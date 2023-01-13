@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-gesture-handler/RNGestureHandler.podspec b/node_modules/react-native-gesture-handler/RNGestureHandler.podspec
+index 100d320..05b796d 100644
+--- a/node_modules/react-native-gesture-handler/RNGestureHandler.podspec
++++ b/node_modules/react-native-gesture-handler/RNGestureHandler.podspec
+@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
+   s.source_files = "ios/**/*.{h,m,mm}"
+   s.requires_arc = true
+ 
+-  if fabric_enabled
++  if false
+     # folly_version must match the version used in React Native
+     # See folly_version in react-native/React/FBReactNativeSpec/FBReactNativeSpec.podspec
+     folly_version = '2021.06.28.00-v2'
