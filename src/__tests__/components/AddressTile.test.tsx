@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext'
 import { AddressTileComponent } from '../../components/tiles/AddressTile'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('AddressTileComponent', () => {
   it('should render with loading props', () => {
@@ -31,6 +32,7 @@ describe('AddressTileComponent', () => {
         addressTileRef={{}}
         isCameraOpen
         theme={getTheme()}
+        navigation={fakeNavigation}
       />
     )
 

@@ -131,7 +131,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'bitPay': {
-      launchBitPay(account, link.uri, { currencyWallets }).catch(showError)
+      launchBitPay(navigation, account, link.uri, { currencyWallets }).catch(showError)
       return true
     }
 

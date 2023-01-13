@@ -374,7 +374,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderAddressTile() {
     const {
       route,
-      guiMakeSpendInfo: { lockInputs }
+      guiMakeSpendInfo: { lockInputs },
+      navigation
     } = this.props
     const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
@@ -391,6 +392,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           lockInputs={lockInputs || lockTilesMap.address}
           isCameraOpen={!!isCameraOpen}
           ref={ref => (this.addressTile = ref)}
+          navigation={navigation}
         />
       )
     }

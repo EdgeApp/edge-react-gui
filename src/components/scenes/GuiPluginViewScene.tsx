@@ -8,7 +8,7 @@ import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
-import { RouteProp } from '../../types/routerTypes'
+import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -115,6 +115,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 // Plugin scene --------------------------------------------------------
 
 interface OwnProps {
+  navigation: NavigationBase
   route: RouteProp<'pluginView'>
 }
 
@@ -142,9 +143,8 @@ class GuiPluginView extends React.Component<Props, State> {
   _promoMessage: string | undefined
   _webview: WebView | null = null
 
-  // @ts-expect-error
-  constructor(props) {
-    const { route, dispatch, state } = props
+  constructor(props: Props) {
+    const { route, dispatch, state, navigation } = props
     const { deepPath, deepQuery, plugin } = route.params
     super(props)
     setPluginScene(this)
@@ -157,7 +157,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
+    this._edgeProvider = new EdgeProvider(navigation, plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false

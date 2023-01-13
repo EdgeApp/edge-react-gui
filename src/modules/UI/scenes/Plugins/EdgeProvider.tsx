@@ -17,7 +17,7 @@ import { Airship, showError, showToast } from '../../../../components/services/A
 import s from '../../../../locales/strings'
 import { GuiPlugin } from '../../../../types/GuiPluginTypes'
 import { Dispatch, RootState } from '../../../../types/reduxTypes'
-import { Actions } from '../../../../types/routerTypes'
+import { Actions, NavigationBase } from '../../../../types/routerTypes'
 import { EdgeTokenId, GuiMakeSpendInfo } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
@@ -90,6 +90,7 @@ export class EdgeProvider extends Bridgeable {
   _plugin: GuiPlugin
   _dispatch: Dispatch
   _state: RootState
+  _navigation: NavigationBase
 
   // Public properties:
   deepPath: string | undefined
@@ -101,6 +102,7 @@ export class EdgeProvider extends Bridgeable {
   selectedCurrencyCode: string
 
   constructor(
+    navigation: NavigationBase,
     plugin: GuiPlugin,
     state: RootState,
     dispatch: Dispatch,
@@ -113,6 +115,7 @@ export class EdgeProvider extends Bridgeable {
     this._plugin = plugin
     this._dispatch = dispatch
     this._state = state
+    this._navigation = navigation
 
     this.deepPath = deepPath
     this.deepQuery = deepQuery
@@ -383,7 +386,7 @@ export class EdgeProvider extends Bridgeable {
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchBitPay(this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(showError)
+      await launchBitPay(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(showError)
       return
     }
 

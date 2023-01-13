@@ -19,7 +19,7 @@ import {
   BpVerificationPayment,
   BpVerificationResponse
 } from '../types/BitPayTypes'
-import { Actions } from '../types/routerTypes'
+import { Actions, NavigationBase } from '../types/routerTypes'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
 /**
@@ -69,6 +69,7 @@ const bitPaySupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
 export async function launchBitPay(
+  navigation: NavigationBase,
   account: EdgeAccount,
   uri: string,
   params: {
@@ -193,7 +194,7 @@ export async function launchBitPay(
     lockTilesMap: { amount: true, address: true },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
-      Actions.pop()
+      navigation.pop()
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
       const unsignedHex = edgeTransaction.otherParams?.unsignedTx
@@ -243,10 +244,10 @@ export async function launchBitPay(
 
   // Send confirmation scene
   if (Actions.currentScene === 'send2') {
-    Actions.pop()
-    Actions.push('send2', sendParams)
+    navigation.pop()
+    navigation.push('send2', sendParams)
   } else {
-    Actions.push('send2', sendParams)
+    navigation.push('send2', sendParams)
   }
 }
 

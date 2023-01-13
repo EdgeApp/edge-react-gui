@@ -245,6 +245,7 @@ const SendComponent = (props: Props) => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={openCamera}
           fioToAddress={fioAddress}
+          navigation={navigation}
         />
       )
     }
