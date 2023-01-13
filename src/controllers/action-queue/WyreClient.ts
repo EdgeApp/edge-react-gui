@@ -29,6 +29,7 @@ interface WyreClient {
 
 const { baseUri } = ENV.WYRE_CLIENT_INIT
 
+// Deprecated: Create generic "fiat ramp API" for future fiat on/off-ramp partner
 export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient> => {
   const { account } = opt
   const dataStore = account.dataStore

@@ -61,22 +61,22 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
 
   const out: CreateWalletType[] = []
   for (const currencyInfo of infos) {
-    const { currencyCode, pluginId } = currencyInfo
+    const { currencyCode, displayName, pluginId, walletType } = currencyInfo
     // Prevent plugins that are "watch only" from being allowed to create new wallets
     if (keysOnlyModePlugins.includes(pluginId)) continue
     // Prevent currencies that needs activation from being created from a modal
     if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
     // FIO disable changes
-    if (pluginId === 'bitcoin') {
+    if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
       out.push({
-        currencyName: 'Bitcoin (Segwit)',
-        walletType: 'wallet:bitcoin-bip49',
+        currencyName: `${displayName} (Segwit)`,
+        walletType: `${walletType}-bip49`,
         pluginId,
         currencyCode
       })
       out.push({
-        currencyName: 'Bitcoin (no Segwit)',
-        walletType: 'wallet:bitcoin-bip44',
+        currencyName: `${displayName} (no Segwit)`,
+        walletType: `${walletType}-bip44`,
         pluginId,
         currencyCode
       })

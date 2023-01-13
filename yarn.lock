@@ -3749,9 +3749,9 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-"altcoin-js@https://github.com/EdgeApp/altcoin-js.git#master":
+"altcoin-js@git+https://github.com/EdgeApp/altcoin-js.git#master":
   version "5.1.10"
-  resolved "https://github.com/EdgeApp/altcoin-js.git#02c16e9686c87a3fee7ae4144e89bcf43d47c8d1"
+  resolved "git+https://github.com/EdgeApp/altcoin-js.git#02c16e9686c87a3fee7ae4144e89bcf43d47c8d1"
   dependencies:
     bech32 "^1.1.4"
     big-integer "^1.6.44"
@@ -6955,37 +6955,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^0.19.33:
-  version "0.19.34"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.34.tgz#f8074a4ea40aae194b05f8a9448ca7e352fe1c73"
-  integrity sha512-+MXfuO96c59pFdl1cTDjdIZLplBwFWkBOsOdSEwG6+zJwtgpw+155fMpqsry9nGbxmabGxGFVdjCkhpGXArSNg==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^4.0.0"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.7"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^4.2.0"
-    redux-keto "^0.3.5"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.8"
-    yavent "^0.1.3"
-
-edge-core-js@^0.19.35:
-  version "0.19.35"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.35.tgz#4578f15ef6f533e57b034caf130842f0001f3d85"
-  integrity sha512-2AFZXLRcWZXn6Fx7Pxz2eYLuHQRLHtOeEK5nXHBm5pTwbMnDzHNX+mvjtG54cdtKEy7Wm2KBwo4WP0Am1kZzRA==
+edge-core-js@^0.19.37:
+  version "0.19.37"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.37.tgz#f10ed23353458f9acda1b831d74c6a7cb24b88ed"
+  integrity sha512-zGfuL+b+C7qXAO1K3jL8czMoM/8D8Otd4fnFMjI8a2cbKY3OsmJWqciAPTER6HH9smwR5zCr7WRv0vTyB1fVmQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7059,10 +7032,10 @@ edge-currency-monero@^0.5.4:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.3.tgz#bb5e58e4169e9f620c875baa2ccdea0fd899e7bb"
-  integrity sha512-GYBBaWAN5fu2bcngKfxzCmBIxn4NOvAgRqqXQCHlnn4U7xND+EXDPat9OL3Je00hKbcBOBSrS6wzA8ordLh2eA==
+edge-currency-plugins@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.5.tgz#b307445ffcbcaa122f22b9f1cb134e1322f3e678"
+  integrity sha512-+D6SMXOdvm+458feOq3mItDCNXB2N2TxxuAyWD7TyIzzmgkmnkYhJY+hbzjuAnlzgUxavbUV7w/yyxpLPAcp0w==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -7079,7 +7052,7 @@ edge-currency-plugins@^1.3.3:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.33"
+    edge-core-js "^0.19.37"
     edge-sync-client "^0.2.7"
     memlet "^0.1.7"
     uri-js "^4.4.0"
@@ -7088,10 +7061,10 @@ edge-currency-plugins@^1.3.3:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.16.16:
-  version "0.16.16"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.16.tgz#8c8530e47e12757efc51d00e16d00939db1e5e45"
-  integrity sha512-YGnvNzpGnh2b+LQHqPly0IJEN/1FKnQ9byPuNCKRjK647sqJYmXIVvxa8s5OJw5C/HmGmxuuKamjNT/y26IzkA==
+edge-exchange-plugins@^0.16.17:
+  version "0.16.17"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.16.17.tgz#405d80eaada8dcb3494a451bf74943a6ea791d81"
+  integrity sha512-vDGM2iVkGAxXV7YSyTZuCkEb1JPCGo8shAT3+YQj/66MpPaRMcovaCI6gMuWW4wMRxqFYBps4cq0ofV52wM9dg==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"

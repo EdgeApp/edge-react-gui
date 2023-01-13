@@ -1,4 +1,4 @@
-import { add, gt, mul } from 'biggystring'
+import { add, gt, mul, round } from 'biggystring'
 import { EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
@@ -16,19 +16,19 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
-import { getPluginFromPolicy } from '../../util/stakeUtils'
+import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
 import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
@@ -67,6 +67,7 @@ interface State {
   input: string
   stakePolicies: StakePolicy[] | null
   stakePlugins: StakePlugin[] | null
+  lockedNativeAmount: string
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -78,6 +79,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     super(props)
     this.state = {
       input: '',
+      lockedNativeAmount: '0',
       stakePolicies: null,
       stakePlugins: null
     }
@@ -111,11 +113,44 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           })
           stakePolicies = [...stakePolicies, ...filteredStatePolicies]
         }
-        this.setState({ stakePolicies, stakePlugins })
+        const newState = { stakePolicies, stakePlugins }
+        this.setState(newState)
+        this.updatePositions(newState)
       })
     } else {
-      this.setState({ stakePolicies: [], stakePlugins: [] })
+      const newState = { stakePolicies: [], stakePlugins: [] }
+      this.setState(newState)
+      this.updatePositions(newState)
     }
+  }
+
+  getTotalPosition = (currencyCode: string, positions: PositionAllocation[]): string => {
+    const { pluginId } = this.props.wallet.currencyInfo
+    const amount = positions.filter(p => p.currencyCode === currencyCode && p.pluginId === pluginId).reduce((prev, curr) => add(prev, curr.nativeAmount), '0')
+    return amount
+  }
+
+  updatePositions = async ({ stakePlugins = [], stakePolicies = [] }: { stakePlugins?: StakePlugin[]; stakePolicies?: StakePolicy[] }) => {
+    let lockedNativeAmount = '0'
+    for (const stakePolicy of stakePolicies) {
+      const { stakePolicyId } = stakePolicy
+      const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
+      if (stakePlugin == null) continue
+      const amount = await stakePlugin
+        .fetchStakePosition({ stakePolicyId, wallet: this.props.wallet })
+        .then(async stakePosition => {
+          const { staked, earned } = getPositionAllocations(stakePosition)
+          return this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+        })
+        .catch(err => {
+          console.error(err)
+          showWarning(s.strings.stake_unable_to_query_locked)
+        })
+      if (amount == null) return
+
+      lockedNativeAmount = add(lockedNativeAmount, amount)
+    }
+    this.setState({ lockedNativeAmount })
   }
 
   handleOpenWalletListModal = () => {
@@ -198,7 +233,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const nativeLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const walletBalanceLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const nativeLocked = add(walletBalanceLocked, this.state.lockedNativeAmount)
     if (nativeLocked === '0') return null
 
     const stakingCryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeLocked)
@@ -227,6 +263,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     // Special case for FIO because it uses it's own staking plugin
     const isStakingSupported = SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && (isStakingPolicyAvailable || currencyCode === 'FIO')
     return isStakingSupported
+  }
+
+  getBestApy = (): string | undefined => {
+    const { stakePolicies } = this.state
+    if (stakePolicies == null || stakePolicies.length === 0) return
+    const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
+    if (bestApy === 0) return
+    return round(bestApy.toString(), -1) + '%'
   }
 
   handleOnChangeText = (input: string) => {
@@ -304,6 +348,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
+    const bestApy = this.getBestApy()
     const styles = getStyles(theme)
 
     return (
@@ -351,7 +396,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   isStakingAvailable && (
                     <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
                       <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{s.strings.fragment_stake_label}</EdgeText>
+                      <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
+                      {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
                     </TouchableOpacity>
                   )
                 )}
@@ -433,6 +479,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     color: theme.textLink,
     fontFamily: theme.fontFaceMedium,
+    marginLeft: theme.rem(0.25)
+  },
+  apyText: {
+    fontSize: theme.rem(0.75),
+    color: theme.textLink,
+    fontFamily: theme.fontFaceMedium,
+    marginTop: theme.rem(-0.5),
     marginLeft: theme.rem(0.25)
   },
 

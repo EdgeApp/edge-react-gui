@@ -93,21 +93,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Simplex'
   },
-  wyre: {
-    pluginId: 'wyre',
-    storeId: 'co.edgesecure.wyre',
-    baseUri: hostedUri + 'co.edgesecure.wyre/index.html',
-    lockUriPath: true,
-    displayName: 'Wyre',
-    permissions: ['camera'],
-    fixCurrencyCodes: {
-      ETH: { pluginId: 'ethereum' },
-      BTC: { pluginId: 'bitcoin' },
-      DAI: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
-      USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
-    }
-    // supportEmail: 'support@sendwyre.com'
-  },
   bity: {
     pluginId: 'bity',
     storeId: 'com.bity',

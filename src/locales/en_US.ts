@@ -162,7 +162,7 @@ const strings = {
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
-  fragment_request_address_copied: 'Request address successfully copied to clipboard',
+  fragment_request_address_uri_copied: 'Request address URI copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
@@ -316,7 +316,10 @@ const strings = {
     'Please extract the private keys and import into a %1$s supporting wallet. If you need assistance please submit a support ticket below.',
   request_qr_email_title: 'Pay with %1$s:',
   request_email_subject: '%1$s %2$s Request',
-  request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  request_qr_your_wallet_address: 'Your Wallet Address',
+  request_qr_your_wrapped_segwit_address: 'Your Wrapped-Segwit Address',
+  request_qr_your_legacy_address: 'Your Legacy Address',
+  request_qr_your_segwit_address: 'Your Segwit Address',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
@@ -358,6 +361,10 @@ const strings = {
   settings_hide_spam_transactions: 'Hide spam transactions',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
+  swap_preferred_dex: 'Prefer Decentralized',
+  swap_preferred_cex: 'Prefer Centralized',
+  swap_options_header_decentralized: 'Decentralized\nNo personal info required',
+  swap_options_header_centralized: 'Centralized\nMay require personal info',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
   swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion always prefers:',
   settings_button_clear_logs: 'Clear Logs',
@@ -961,9 +968,6 @@ const strings = {
   wallet_list_sort_highest: 'Sort by highest value',
   wallet_list_sort_lowest: 'Sort by lowest value',
 
-  // Wyre Metadata
-  wyre_metadata_sell_notes_4s: `Sell %1$s on chain %2$s from %3$s to Wyre at address: %4$s. For assistance, please contact support@sendwyre.com.`,
-
   // Select Fio Address
   select_fio_address_address_from: 'Send from FIO Crypto Handle',
   select_fio_address_address_memo: 'FIO Memo',
@@ -1150,6 +1154,8 @@ const strings = {
     'Based on the total fees incurred to stake and unstake your requested amount, this is the estimated amount of time you need to keep funds staked to earn enough rewards to pay for the fees incurred. This time frame is only an estimate as is subject to change based on change in rewards APY and the total amount of funds in the staking pool.',
   stake_break_even_days_s: '%1$s days',
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
+  stake_earn_button_label: 'Earn',
+  stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',

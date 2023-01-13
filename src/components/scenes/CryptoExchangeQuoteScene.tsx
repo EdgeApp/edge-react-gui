@@ -1,14 +1,15 @@
 import { div, gte } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -26,6 +27,7 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface OwnProps {
+  navigation: NavigationProp<'exchangeQuote'>
   route: RouteProp<'exchangeQuote'>
 }
 interface StateProps {
@@ -95,6 +97,10 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     ))
   }
 
+  handlePoweredByTap = () => {
+    this.props.navigation.navigate('exchangeSettings', {})
+  }
+
   render() {
     const { account, fromDenomination, fromWalletCurrencyName, toDenomination, toWalletCurrencyName, pending, theme, route } = this.props
     const { swapInfo } = route.params
@@ -135,11 +141,12 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletId={request.toWallet.id}
             walletName={getWalletName(request.toWallet)}
           />
-          <View style={styles.pluginRowPoweredByRow}>
+          <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={this.handlePoweredByTap}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>
             <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
-          </View>
+            <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
+          </TouchableOpacity>
           {quote.isEstimate && (
             <Alert
               title={s.strings.estimated_quote}

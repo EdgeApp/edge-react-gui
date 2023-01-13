@@ -164,8 +164,11 @@ exports[`Request should render with loaded props 1`] = `
         </TouchableOpacity>
       </View>
     </InputAccessoryView>
-    <QrCode
-      onPress={[Function]}
+    <Carousel
+      items={Array []}
+      keyExtractor={[Function]}
+      onChangeItem={[Function]}
+      renderItem={[Function]}
     />
     <TouchableOpacity
       onPress={[Function]}
@@ -179,7 +182,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <WithTheme(EdgeTextComponent)>
-          Your Receiving Wallet Address
+          Your Wallet Address
         </WithTheme(EdgeTextComponent)>
         <Icon
           allowFontScaling={false}
@@ -195,7 +198,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        
+        Loading…
       </WithTheme(EdgeTextComponent)>
     </TouchableOpacity>
   </View>

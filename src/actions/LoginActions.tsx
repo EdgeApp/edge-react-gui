@@ -145,6 +145,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
       passwordReminder: passwordReminderInitialState,
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,
+      preferredSwapPluginType: undefined,
       spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',

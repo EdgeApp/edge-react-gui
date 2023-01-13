@@ -802,8 +802,8 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
 }
 
 const getPrimaryAddress = async (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<{ primaryAddress: string; addressBalance: string }> => {
-  const { publicAddress, nativeBalance, segwitAddress, segwitNativeBalance } = await wallet.getReceiveAddress({ forceIndex: 0, currencyCode })
-  const primaryAddress = segwitAddress ?? publicAddress
+  const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({ forceIndex: 0, currencyCode })
+  const primaryAddress = publicAddress
   let addressBalance = '0'
 
   if (wallet.displayPublicSeed?.toLowerCase() === primaryAddress.toLowerCase()) {
@@ -811,7 +811,7 @@ const getPrimaryAddress = async (wallet: EdgeCurrencyWallet, currencyCode: strin
     // the wallet balance
     addressBalance = await wallet.balances[currencyCode]
   } else {
-    addressBalance = segwitAddress != null ? segwitNativeBalance ?? '0' : nativeBalance ?? '0'
+    addressBalance = nativeBalance ?? '0'
   }
 
   return { primaryAddress, addressBalance }
