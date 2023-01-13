@@ -20,7 +20,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { GuiWallet } from '../../types/types'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
@@ -37,6 +37,7 @@ export interface AccountPaymentParams {
 
 interface OwnProps {
   route: RouteProp<'createWalletAccountSelect'>
+  navigation: NavigationBase
 }
 
 interface StateProps {
@@ -53,7 +54,7 @@ interface StateProps {
 interface DispatchProps {
   createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
   fetchAccountActivationInfo: (walletType: string) => void
-  createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => void
+  createAccountTransaction: (navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) => void
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => void
   setWalletAccountActivationQuoteError: (message: string) => void
 }
@@ -122,13 +123,13 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onPressSubmit = async () => {
-    const { createAccountTransaction, route } = this.props
+    const { createAccountTransaction, route, navigation } = this.props
     const { accountName } = route.params
     const { walletId } = this.state
     const createdWallet = await this.state.createdWallet
     const createdWalletId = createdWallet.id
     // will grab data from state in actions
-    createAccountTransaction(createdWalletId, accountName, walletId)
+    createAccountTransaction(navigation, createdWalletId, accountName, walletId)
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
@@ -418,8 +419,8 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     }
   },
   dispatch => ({
-    createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string) {
-      dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId))
+    createAccountTransaction(navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) {
+      dispatch(createAccountTransaction(navigation, createdWalletId, accountName, paymentWalletId))
     },
     fetchAccountActivationInfo(walletType: string) {
       dispatch(fetchAccountActivationInfo(walletType))
