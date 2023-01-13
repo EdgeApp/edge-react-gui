@@ -106,6 +106,7 @@
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
+    "deprecated-react-native-prop-types": "^4.0.0",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^0.19.37",
