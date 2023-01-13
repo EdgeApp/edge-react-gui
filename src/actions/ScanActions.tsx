@@ -15,7 +15,7 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
@@ -231,7 +231,7 @@ export function parseScannedUri(
       if (parsedUri.token) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-        return Actions.push('editToken', {
+        return navigation.push('editToken', {
           currencyCode: currencyCode.toUpperCase(),
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
@@ -243,7 +243,7 @@ export function parseScannedUri(
       // LEGACY ADDRESS URI
       if (parsedUri.legacyAddress != null) {
         const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-        Actions.push('send', {
+        navigation.push('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -281,7 +281,7 @@ export function parseScannedUri(
         nativeAmount
       }
 
-      Actions.push('send', {
+      navigation.push('send', {
         guiMakeSpendInfo,
         selectedWalletId,
         selectedCurrencyCode: currencyCode
@@ -378,7 +378,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
+export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
       const state = getState()
@@ -421,10 +421,10 @@ export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCu
         ))
       }
       if (threeButtonModal === 'buy') {
-        Actions.jump('pluginListBuy', { direction: 'buy' })
+        navigation.navigate('pluginListBuy', { direction: 'buy' })
       } else if (threeButtonModal === 'exchange') {
         dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-        Actions.jump('exchangeScene', {})
+        navigation.navigate('exchangeScene', {})
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

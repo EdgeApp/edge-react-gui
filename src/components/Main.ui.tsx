@@ -34,7 +34,7 @@ import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { Permission } from '../reducers/PermissionsReducer'
 import { connect } from '../types/reactRedux'
-import { Actions, withNavigation } from '../types/routerTypes'
+import { Actions, NavigationBase, withNavigation } from '../types/routerTypes'
 import { scale } from '../util/scaling'
 import { logEvent } from '../util/tracking'
 import { AirshipToast } from './common/AirshipToast'
@@ -116,7 +116,7 @@ interface DispatchProps {
   logout: (username?: string) => void
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void
+  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
   checkEnabledExchanges: () => void
   dispatchDisableScan: () => void
   dispatchEnableScan: () => void
@@ -509,7 +509,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
               }}
               onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
@@ -532,7 +532,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SendScene2))}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
+                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
               }}
               onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
@@ -1132,8 +1132,8 @@ export const Main = connect<{}, DispatchProps, {}>(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode))
+    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
     },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
