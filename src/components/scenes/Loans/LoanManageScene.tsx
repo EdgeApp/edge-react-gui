@@ -12,7 +12,7 @@ import { makeActionProgram } from '../../../controllers/action-queue/ActionProgr
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, ActionProgram } from '../../../controllers/action-queue/types'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
-import { makeWyreClient, PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
+import { PaymentMethodsMap } from '../../../controllers/action-queue/WyreClient'
 import { runLoanActionProgram } from '../../../controllers/loan-manager/redux/actions'
 import { LoanProgramType } from '../../../controllers/loan-manager/store'
 import { LoanAccount } from '../../../controllers/loan-manager/types'
@@ -166,11 +166,8 @@ export const LoanManageSceneComponent = (props: Props) => {
   })
 
   const [bankAccountsMap] = useAsyncValue<PaymentMethodsMap>(async (): Promise<PaymentMethodsMap> => {
-    if (account == null) return {}
-    const wyreClient = await makeWyreClient({ account })
-    if (!wyreClient.isAccountSetup) return {}
-    return await wyreClient.getPaymentMethods()
-  }, [account])
+    return {}
+  }, [])
 
   // New debt/collateral amount
   const amountChange = loanManageType === 'loan-manage-borrow' || loanManageType === 'loan-manage-deposit' ? 'increase' : 'decrease'
@@ -351,7 +348,7 @@ export const LoanManageSceneComponent = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId }) => {
+      .then(async ({ walletId, currencyCode, isBankSignupRequest, fiatAccountId: wyreAccountId }) => {
         if (isBankSignupRequest) {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
