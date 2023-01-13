@@ -264,26 +264,6 @@
     "paymentTypeLogoKey": "credit"
   },
   {
-    "id": "wyre",
-    "pluginId": "wyre",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Fee: 1-2%\nSettlement: 1 - 5 days",
-    "title": "ACH (deprecated)",
-    "partnerIconPath": "wyre-logo-square-small.png",
-    "forCountries": [
-      "US"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-      "DAI",
-      "USDC"
-    ],
-    "paymentTypeLogoKey": "bank"
-  },
-  {
     "id": "bity",
     "pluginId": "bity",
     "forCountries": [
@@ -557,7 +537,7 @@
       "BCH",
       "DASH",
       "DOGE",
-      "LTC"      
+      "LTC"
     ],
     "paymentTypeLogoKey": "giftcard"
   },
@@ -581,10 +561,6 @@
   {
     "id": "bits of gold",
     "sortIndex": 1
-  },
-  {
-    "id": "wyre",
-    "sortIndex": 3
   },
   {
     "id": "bity",
