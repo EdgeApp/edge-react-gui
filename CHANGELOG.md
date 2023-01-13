@@ -1,5 +1,32 @@
 # edge-react-gui
 
+## 3.1.0 (2023-01-13)
+
+- Add Bech32 address support
+- Add support for non-segwit DGB and LTC
+- Thorchain Savers: Show estimate fees and estimate break-even time
+- Show current APR on Earn button
+- Split swap providers into centralized and decentralized (DEX) groups
+- Allow user to prefer provider type
+- Show error when attempting to unstake small (lower than tx fee) amounts
+- Show staked amounts to the wallet transaction history scene
+- Add shortcut to Exchange Settings by tapping on Powered By logo
+- Deprecate Wyre
+- Upgrade edge-core-js to v0.19.37
+  - added: Always-enabled tokens. The currency engine checks these for balances and transactions, but they do not appear in the per-wallet enabled token lists.
+    - EdgeCurrencyConfig.alwaysEnabledTokenIds
+    - EdgeCurrencyConfig.changeAlwaysEnabledTokenIds
+  - added: EdgeCurrencyTools.checkPublicKey, which provides a mechanism for currency plugins to refresh their cached public keys if necessary.
+  - added: EdgeSwapInfo.isDex and EdgeSwapRequestOptions.preferType, to always prefer DEX swaps over centralized swaps.
+  - changed: Always select the "transfer" plugin if it returns a quote, regardless of price.
+  - added: Accelerate Transaction API
+- Upgrade edge-currency-plugins to v1.3.5
+  - Fixed: Incorrect types path in package.json
+  - Added: Support bech32 addresses as segwitAddress for EdgeFreshAddress
+  - Added: RBF flags for Bitcoin and Litecoin
+- Upgrade edge-exchange-plugins to v0.16.17
+  - Add: isDex and swapPlugType to plugins and quotes
+
 ## 3.0.0 (2023-01-06)
 
 - Updated dark mode theme:
