@@ -10,9 +10,13 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { SpendingLimits } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 
+interface OwnProps {
+  navigation: NavigationBase
+}
 interface StateProps {
   transactionSpendingLimit: {
     amount: number
@@ -21,9 +25,9 @@ interface StateProps {
   currencySymbol: string
 }
 interface DispatchProps {
-  onSubmit: (spendingLimits: SpendingLimits, password: string) => unknown
+  onSubmit: (navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) => unknown
 }
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   password: string
@@ -101,9 +105,10 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { password, transactionIsEnabled, transactionAmount } = this.state
-    const { onSubmit } = this.props
+    const { navigation, onSubmit } = this.props
 
     onSubmit(
+      navigation,
       {
         transaction: {
           isEnabled: transactionIsEnabled,
@@ -138,14 +143,14 @@ const styles = StyleSheet.create({
   }
 })
 
-export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
+export const SpendingLimitsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     currencySymbol: getSymbolFromCurrency(state.ui.settings.defaultFiat),
     transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
   }),
   dispatch => ({
-    onSubmit(spendingLimits: SpendingLimits, password: string) {
-      dispatch(setSpendingLimits(spendingLimits, password))
+    onSubmit(navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) {
+      dispatch(setSpendingLimits(navigation, spendingLimits, password))
     }
   })
 )(SpendingLimitsComponent)
