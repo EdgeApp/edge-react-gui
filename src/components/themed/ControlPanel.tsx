@@ -147,7 +147,7 @@ export function ControlPanel(props: Props) {
         Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | undefined) => {
             if (result) {
-              dispatch(parseScannedUri(result))
+              dispatch(parseScannedUri(navigation, result))
             }
           })
           .catch(showError)
@@ -164,7 +164,7 @@ export function ControlPanel(props: Props) {
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
         if (result) {
-          dispatch(parseScannedUri(result))
+          dispatch(parseScannedUri(navigation, result))
         }
       })
       .catch(showError)

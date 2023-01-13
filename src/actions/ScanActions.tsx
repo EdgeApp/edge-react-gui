@@ -15,7 +15,7 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { Actions, NavigationBase } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
@@ -169,7 +169,12 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   return approve
 }
 
-export function parseScannedUri(data: string, customErrorTitle?: string, customErrorDescription?: string): ThunkAction<Promise<unknown>> {
+export function parseScannedUri(
+  navigation: NavigationBase,
+  data: string,
+  customErrorTitle?: string,
+  customErrorDescription?: string
+): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
     if (!data) return
     const state = getState()
@@ -208,7 +213,7 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
         case 'edgeLogin':
         case 'bitPay':
         default:
-          dispatch(launchDeepLink(deepLink))
+          dispatch(launchDeepLink(navigation, deepLink))
           return
       }
     } catch (error: any) {

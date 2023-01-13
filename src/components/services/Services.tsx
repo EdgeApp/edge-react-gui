@@ -62,7 +62,7 @@ export function Services(props: Props) {
       {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
       <AutoLogout />
       <ContactsLoader />
-      <DeepLinkingManager />
+      <DeepLinkingManager navigation={navigation} />
       {account == null ? null : <AccountCallbackManager account={account} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
