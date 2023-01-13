@@ -5,6 +5,7 @@ import { useRefresher } from '../../hooks/useRefresher'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { fetchInfo } from '../../util/network'
 import { asAssetOverrides, assetOverrides } from '../../util/serverState'
 import { AccountCallbackManager } from './AccountCallbackManager'
@@ -20,7 +21,9 @@ import { PermissionsManager } from './PermissionsManager'
 import { SortedWalletList } from './SortedWalletList'
 import { WalletLifecycle } from './WalletLifecycle'
 
-interface Props {}
+interface Props {
+  navigation: NavigationBase
+}
 
 const REFRESH_INFO_SERVER_MS = 60000
 
@@ -28,8 +31,9 @@ const REFRESH_INFO_SERVER_MS = 60000
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
  */
-export function Services(_props: Props) {
+export function Services(props: Props) {
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
+  const { navigation } = props
 
   const appId = config.appId ?? 'edge'
 
@@ -61,7 +65,7 @@ export function Services(_props: Props) {
       <DeepLinkingManager />
       {account == null ? null : <AccountCallbackManager account={account} />}
       {account == null ? null : <SortedWalletList account={account} />}
-      <EdgeContextCallbackManager />
+      <EdgeContextCallbackManager navigation={navigation} />
       <PermissionsManager />
       {account == null ? null : <LoanManagerService account={account} />}
       <NetworkActivity />
