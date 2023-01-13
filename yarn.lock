@@ -3161,11 +3161,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/invariant@^2.2.35":
-  version "2.2.35"
-  resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.35.tgz#cd3ebf581a6557452735688d8daba6cf0bd5a3be"
-  integrity sha512-DxX1V9P8zdJPYQat1gHyY0xj3efl8gnMVjiM9iCY6y27lj+PoQWkgjt8jDqmovPqULkKVpKRg8J36iQiA+EtEg==
-
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -7382,16 +7377,14 @@ edge-exchange-plugins@^0.17.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.18:
+"edge-login-ui-rn@file:./edge-login-ui-rn-0.10.18.tgz":
   version "0.10.18"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.18.tgz#f1b114e711e676835ec659eea5632b29c86ff67f"
-  integrity sha512-NSu8rfylyukWyixnI8/FKoMVaW9GAzrxB8p5TaleW1KJYSYJTrLH7X5DC++kfSc9QPyWSNjZY3UXGXFR2k9Q2w==
+  resolved "file:./edge-login-ui-rn-0.10.18.tgz#d754071ac39838a25c2cb755d2ae949214ac3285"
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
     react-native-airship "^0.2.9"
-    react-native-gesture-handler "^2.5.0"
     react-native-keyboard-aware-scroll-view "^0.9.5"
     react-native-linear-gradient "^2.0.0"
     react-native-localize "^2.0.2"
@@ -7399,7 +7392,6 @@ edge-login-ui-rn@^0.10.18:
     react-native-material-textfield "https://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-patina "^0.1.6"
     react-native-permissions "^3.0.1"
-    react-native-reanimated "^2.0.0"
     react-native-share "^5.1.4"
     react-native-svg "^12.1.0"
     react-native-vector-icons "^7.1.0"
@@ -13586,10 +13578,10 @@ react-native-fs@^2.19.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@^2.4.1, react-native-gesture-handler@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.5.0.tgz#61385583570ed0a45a9ed142425e35f8fe8274fb"
-  integrity sha512-djZdcprFf08PZC332D+AeG5wcGeAPhzfCJtB3otUgOgTlvjVXmg/SLFdPJSpzLBqkRAmrC77tM79QgKbuLxkfw==
+react-native-gesture-handler@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.8.0.tgz#ef9857871c10663c95a51546225b6e00cd4740cf"
+  integrity sha512-poOSfz/w0IyD6Qwq7aaIRRfEaVTl1ecQFoyiIbpOpfNTjm2B1niY2FLrdVQIOtIOe+K9nH55Qal04nr4jGkHdQ==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -13678,14 +13670,14 @@ react-native-popup-menu@0.13.3:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
 
-react-native-reanimated@^2.0.0, react-native-reanimated@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.8.0.tgz#93c06ca84d91fb3865110b0857c49a24e316130e"
-  integrity sha512-kJvf/UWLBMaGCs9X66MKq5zdFMgwx8D0nHnolbHR7s8ZnbLdb7TlQ/yuzIXqn/9wABfnwtNRI3CyaP1aHWMmZg==
+react-native-reanimated@3.0.0-rc.10:
+  version "3.0.0-rc.10"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.0.0-rc.10.tgz#40e5b628759aa81f94317fd0301231292b4eacf5"
+  integrity sha512-0P2jSO+dXHRxSzqSxNp08VaUy89nqeUIvqBS0wlI8lsli8CJcqulL3pjNqTGzBkxXjt13mGdIzJv4u9lSjHPzg==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
-    "@types/invariant" "^2.2.35"
+    convert-source-map "^1.7.0"
     invariant "^2.2.4"
     lodash.isequal "^4.5.0"
     setimmediate "^1.0.5"

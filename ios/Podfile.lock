@@ -567,7 +567,7 @@ PODS:
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.5.0):
+  - RNGestureHandler (2.8.0):
     - React-Core
   - RNLocalize (2.2.1):
     - React-Core
@@ -577,7 +577,7 @@ PODS:
     - React
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (2.8.0):
+  - RNReanimated (3.0.0-rc.10):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1169,12 +1169,12 @@ SPEC CHECKSUMS:
   RNFBApp: fd23737680ed2bdde41ca27d8bfb171b6d668c6b
   RNFBMessaging: cd273b4dcacf98c83a25ce1711c8c85511573990
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
+  RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
   RNLocalize: cbcb55d0e19c78086ea4eea20e03fe8000bbbced
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 141c77b0aea69a9ae44041d8dd9f07ae33340bb6
+  RNReanimated: 3eb05867410b44acaa81dd423945af3093305bd4
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
