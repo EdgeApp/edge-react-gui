@@ -337,6 +337,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
+        navigation={this.props.navigation}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}

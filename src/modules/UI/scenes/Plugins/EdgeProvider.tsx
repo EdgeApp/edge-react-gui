@@ -155,7 +155,13 @@ export class EdgeProvider extends Bridgeable {
     }
 
     const selectedWallet = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} showCreateWallet allowedAssets={allowedAssets} headerTitle={s.strings.choose_your_wallet} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this._navigation}
+        showCreateWallet
+        allowedAssets={allowedAssets}
+        headerTitle={s.strings.choose_your_wallet}
+      />
     ))
 
     const { walletId, currencyCode } = selectedWallet

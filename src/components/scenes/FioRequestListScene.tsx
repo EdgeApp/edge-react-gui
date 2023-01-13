@@ -369,7 +369,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const allowedAssets = [{ pluginId, tokenId }]
 
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedAssets={allowedAssets} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.fio_src_wallet} allowedAssets={allowedAssets} />
     ))
     if (walletId && currencyCode) {
       onSelectWallet(walletId, currencyCode)

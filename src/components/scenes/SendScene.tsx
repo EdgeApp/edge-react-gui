@@ -80,7 +80,7 @@ interface DispatchProps {
     resetSlider: () => void
   ) => Promise<void>
   onChangePin: (pin: string) => void
-  selectWallet: (walletId: string, currencyCode: string) => void
+  selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
@@ -187,15 +187,20 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { selectWallet, route } = this.props
+    const { navigation, selectWallet, route } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={navigation}
+        headerTitle={s.strings.fio_src_wallet}
+        allowedCurrencyCodes={route.params.allowedCurrencyCodes}
+      />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
-        selectWallet(walletId, currencyCode)
+        selectWallet(navigation, walletId, currencyCode)
         this.setState({
           ...this.state,
           ...this.setWallets(this.props, walletId, currencyCode),
@@ -718,8 +723,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     },
-    selectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWallet(walletId, currencyCode))
+    selectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      dispatch(selectWallet(navigation, walletId, currencyCode))
     },
     getExchangeDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))

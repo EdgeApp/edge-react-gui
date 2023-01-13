@@ -249,6 +249,7 @@ export const LoanCreateScene = (props: Props) => {
     Airship.show((bridge: AirshipBridge<WalletListResult>) => (
       <WalletListModal
         bridge={bridge}
+        navigation={navigation}
         headerTitle={s.strings.select_wallet}
         showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}

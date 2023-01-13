@@ -57,7 +57,7 @@ export function WalletListSwipeable(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
-    dispatch(selectWallet(walletId, currencyCode))
+    dispatch(selectWallet(navigation, walletId, currencyCode))
       .then(() => navigation.navigate('transactionList', { walletId, currencyCode }))
       .finally(onReset)
   })

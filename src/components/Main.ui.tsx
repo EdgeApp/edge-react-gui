@@ -149,8 +149,7 @@ export class MainComponent extends React.Component<Props> {
               key="edgeLogin"
               component={withNavigation(ifLoggedIn(EdgeLoginScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_edge_login} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -254,8 +253,7 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSetup"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.create_wallet_create_account} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -266,8 +264,7 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSelect"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.create_wallet_account_activate} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -281,8 +278,7 @@ export class MainComponent extends React.Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title=" " />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title=" " />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -365,8 +361,7 @@ export class MainComponent extends React.Component<Props> {
                 key="transactionsExport"
                 component={withNavigation(ifLoggedIn(TransactionsExportScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_export_transactions} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -389,7 +384,7 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginViewBuy"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
-                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title={props.route.params.plugin.displayName} />}
                 // @ts-expect-error
                 renderLeftButton={renderPluginBackButton()}
                 // @ts-expect-error
@@ -421,7 +416,7 @@ export class MainComponent extends React.Component<Props> {
                 key="pluginViewSell"
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
-                renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+                renderTitle={props => <HeaderTitle navigation={props.navigation} title={props.route.params.plugin.displayName} />}
                 // @ts-expect-error
                 renderLeftButton={renderPluginBackButton()}
                 // @ts-expect-error
@@ -494,8 +489,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioRequestConfirmation"
               component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.fio_confirm_request_header} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -554,8 +548,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_password_recovery} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -593,8 +586,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
               onEnter={() => this.props.showReEnableOtpModal()}
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_settings} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -604,8 +596,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePassword"
               component={withNavigation(ifLoggedIn(ChangePasswordScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_change_password} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -615,8 +606,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePin"
               component={withNavigation(ifLoggedIn(ChangePinScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_change_pin} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -626,8 +616,7 @@ export class MainComponent extends React.Component<Props> {
               key="otpSetup"
               component={withNavigation(ifLoggedIn(OtpSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_otp} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_otp} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -637,8 +626,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_password_recovery} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -648,8 +636,7 @@ export class MainComponent extends React.Component<Props> {
               key="spendingLimits"
               component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.spending_limits} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -659,8 +646,7 @@ export class MainComponent extends React.Component<Props> {
               key="exchangeSettings"
               component={withNavigation(ifLoggedIn(SwapSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.settings_exchange_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -680,8 +666,7 @@ export class MainComponent extends React.Component<Props> {
               key="promotionSettings"
               component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_promotion_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -700,8 +685,7 @@ export class MainComponent extends React.Component<Props> {
               key="notificationSettings"
               component={withNavigation(ifLoggedIn(NotificationScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.settings_notifications} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -730,7 +714,7 @@ export class MainComponent extends React.Component<Props> {
               key="pluginView"
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={props.route.params.plugin.displayName} />}
               // @ts-expect-error
               renderLeftButton={renderPluginBackButton()}
               // @ts-expect-error
@@ -743,8 +727,7 @@ export class MainComponent extends React.Component<Props> {
               key="termsOfService"
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_terms_of_service} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -786,8 +769,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_fio_address_confirmation} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -813,8 +795,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioDomainRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_register_fio_domain} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -851,7 +832,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressDetails"
               component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={props.route.params.fioAddressName} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -861,8 +842,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioConnectToWalletsConfirm"
               component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_fio_connect_to_wallet} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -876,8 +856,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressSettings"
               component={withNavigation(FioAddressSettingsScene)}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_fio_address_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -891,7 +870,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressRegisterSuccess"
               component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
               navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={props.route.params.fioName} />}
               // @ts-expect-error
               renderRightButton={<SideMenuButton />}
               // @ts-expect-error
@@ -904,8 +883,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioDomainSettings"
               component={withNavigation(FioDomainSettingsScene)}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
+              renderTitle={props => <HeaderTitle navigation={props.navigation} title={s.strings.title_fio_domain_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error

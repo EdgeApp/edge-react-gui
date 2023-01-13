@@ -140,10 +140,11 @@ export function ControlPanel(props: Props) {
         allowedAssets={allowedAssets}
         allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
         showCreateWallet
+        navigation={navigation}
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(walletId, currencyCode))
+        dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
         Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | undefined) => {
             if (result) {

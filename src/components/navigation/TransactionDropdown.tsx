@@ -8,24 +8,25 @@ import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { Actions, NavigationBase } from '../../types/routerTypes'
 import { convertNativeToDisplay } from '../../util/utils'
 import { Airship } from '../services/AirshipInstance'
 import { FlashNotification } from './FlashNotification'
 
 let showing = false
 
-export function showTransactionDropdown(tx: EdgeTransaction) {
+export function showTransactionDropdown(navigation: NavigationBase, tx: EdgeTransaction) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
-    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} />).then(() => {
+    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} navigation={navigation} tx={tx} />).then(() => {
       showing = false
     })
   }
 }
 
 interface OwnProps {
+  navigation: NavigationBase
   bridge: AirshipBridge<void>
   tx: EdgeTransaction
 }
@@ -35,20 +36,20 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  selectWallet: (walletId: string, currencyCode: string) => void
+  selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
-  const { bridge, message, tx, selectWallet } = props
+  const { bridge, message, tx, selectWallet, navigation } = props
 
   return (
     <FlashNotification
       bridge={bridge}
       onPress={() => {
         bridge.resolve()
-        selectWallet(tx.walletId, tx.currencyCode)
+        selectWallet(navigation, tx.walletId, tx.currencyCode)
         Actions.push('transactionDetails', {
           edgeTransaction: tx,
           walletId: tx.walletId
@@ -85,8 +86,8 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
     }
   },
   dispatch => ({
-    selectWallet: (walletId: string, currencyCode: string) => {
-      dispatch(selectWallet(walletId, currencyCode))
+    selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => {
+      dispatch(selectWallet(navigation, walletId, currencyCode))
     }
   })
 )(TransactionDropdown)

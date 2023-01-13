@@ -119,7 +119,7 @@ export async function launchBitPay(
       throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     } else {
       const walletListResult = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
+        <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
       ))
       const { walletId, currencyCode } = walletListResult
       selectedCurrencyCode = currencyCode

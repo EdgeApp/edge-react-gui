@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
@@ -11,6 +12,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 
 interface OwnProps {
+  navigation: NavigationBase
   showWalletNameOnly?: boolean
   title?: string
 }
@@ -21,17 +23,17 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          this.props.onSelectWallet(walletId, currencyCode)
+          this.props.onSelectWallet(this.props.navigation, walletId, currencyCode)
         }
       }
     )
@@ -87,8 +89,8 @@ export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
     }
   })
 )(withTheme(HeaderTitleComponent))

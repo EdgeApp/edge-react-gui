@@ -99,7 +99,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'requestAddress': {
-      doRequestAddress(state.core.account, dispatch, link)
+      doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
     }
 
@@ -156,7 +156,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       for (const walletId of walletIds) {
         const wallet = byId[walletId]
         if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(wallet.id, wallet.currencyCode))
+        dispatch(selectWallet(navigation, wallet.id, wallet.currencyCode))
         dispatch(parseScannedUri(navigation, link.uri))
         return true
       }

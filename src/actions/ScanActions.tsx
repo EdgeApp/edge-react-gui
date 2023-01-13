@@ -44,7 +44,7 @@ import { launchDeepLink } from './DeepLinkingActions'
  * - Disallow reqaddr's that specify other reqaddr's in the 'redir' query (prevent
  *    infinite redirect loops).
  */
-export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
+export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
   dispatch({ type: 'DISABLE_SCAN' })
   const { assets, post, redir, payer } = link
   try {
@@ -98,7 +98,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
     const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
     )).then(async ({ walletId, currencyCode }) => {
       if (walletId != null && currencyCode != null) {
         const { currencyWallets } = account
@@ -209,7 +209,7 @@ export function parseScannedUri(
           // Handle this link type below:
           break
         case 'requestAddress':
-          return await doRequestAddress(account, dispatch, deepLink)
+          return await doRequestAddress(navigation, account, dispatch, deepLink)
         case 'edgeLogin':
         case 'bitPay':
         default:
