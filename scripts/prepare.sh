@@ -25,12 +25,6 @@ npx jetify
 # Copy the API key to native code:
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
-# Update zcash checkpoints for iOS
-cp -r node_modules/edge-currency-accountbased/android/src/main/assets/saplingtree/mainnet ios/Pods/ZcashLightClientKit/Sources/ZcashLightClientKit/Resources/saplingtree-checkpoints/mainnet
-
-# Update piratechain checkpoints for iOS
-cp -r node_modules/edge-currency-accountbased/android/src/main/assets/piratesaplingtree/mainnet ios/Pods/PirateLightClientKit/Sources/PirateLightClientKit/Resources/piratesaplingtree-checkpoints/mainnet
-
 # Copy Firebase configs
 if [ ! -f "ios/edge/GoogleService-Info.plist" ]; then
   cp ios/edge/GoogleService-Info.sample.plist ios/edge/GoogleService-Info.plist
