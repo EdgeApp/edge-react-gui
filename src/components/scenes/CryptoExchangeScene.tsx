@@ -13,6 +13,7 @@ import s from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -29,6 +30,10 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
+
+interface OwnProps {
+  navigation: NavigationProp<'exchangeScene'>
+}
 
 interface StateProps {
   account: EdgeAccount
@@ -64,7 +69,7 @@ interface StateProps {
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
-  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
+  getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
 }
 
 const asDisableAsset = asObject({
@@ -88,7 +93,7 @@ const asExchangeInfo = asObject({
 type DisableAsset = ReturnType<typeof asDisableAsset>
 type ExchangeInfo = ReturnType<typeof asExchangeInfo>
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
   whichWalletFocus: 'from' | 'to' // Which wallet FlipInput was last focused and edited
@@ -226,6 +231,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   getQuote = (data: SetNativeAmountInfo) => {
+    const { navigation } = this.props
     const { exchangeInfo } = this.state
     if (exchangeInfo != null) {
       const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
@@ -240,7 +246,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
         return
       }
     }
-    this.props.getQuoteForTransaction(data, this.resetState)
+    this.props.getQuoteForTransaction(navigation, data, this.resetState)
     Keyboard.dismiss()
   }
 
@@ -439,7 +445,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
+export const CryptoExchangeScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
@@ -510,8 +516,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     }
   },
   dispatch => ({
-    getQuoteForTransaction(fromWalletNativeAmount, onApprove) {
-      dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove))
+    getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove) {
+      dispatch(getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove))
     },
     async onSelectWallet(walletId, currencyCode, direction) {
       await dispatch(selectWalletForExchange(walletId, currencyCode, direction))
