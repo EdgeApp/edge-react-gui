@@ -2,6 +2,7 @@ import { EdgeAccount } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
+import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
@@ -20,7 +21,7 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
@@ -71,15 +72,15 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (items: WalletCreateItem[]) => {
-        Actions.replace('edge', {})
+        navigation.replace('edge', {})
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
         await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
         await updateWalletsRequest()(dispatch, getState)
       }
 
-      Actions.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
+      navigation.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
     } else {
-      Actions.push('edge', {})
+      navigation.push('edge', {})
     }
 
     // Show a notice for deprecated electrum server settings
@@ -115,7 +116,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
-      Actions.push('securityAlerts', {})
+      navigation.push('securityAlerts', {})
     }
 
     const state = getState()
