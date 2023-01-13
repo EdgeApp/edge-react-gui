@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
-import { makeWyreClient, PaymentMethod } from '../../../controllers/action-queue/WyreClient'
+import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
@@ -146,10 +146,8 @@ export const LoanCreateScene = (props: Props) => {
   const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
 
   useAsyncEffect(async () => {
-    const wyreClient = await makeWyreClient({ account })
-    if (wyreClient.isAccountSetup) {
-      setBankAccountsMap(await wyreClient.getPaymentMethods())
-    }
+    // TODO: Re-enable when new fiat ramp partner is avialable:
+    setBankAccountsMap(undefined)
   }, [account])
   const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
 
@@ -260,7 +258,7 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, wyreAccountId }) => {
+      .then(async ({ walletId, currencyCode, isBankSignupRequest, fiatAccountId }) => {
         if (isBankSignupRequest) {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
@@ -268,10 +266,10 @@ export const LoanCreateScene = (props: Props) => {
             deepPath: '',
             deepQuery: {}
           })
-        } else if (wyreAccountId != null) {
+        } else if (fiatAccountId != null) {
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
-          setDestBankId(wyreAccountId)
+          setDestBankId(fiatAccountId)
           setDestWallet(borrowEngineWallet)
           setDestTokenId(hardDestTokenAddr)
         } else if (walletId != null && currencyCode != null) {
