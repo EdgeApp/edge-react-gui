@@ -60,7 +60,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       <WithTheme(EdgeTextComponent)
         style={
           Object {
-            "color": "#A4C7DF",
+            "color": "#A5D4FF",
             "fontSize": 17,
           }
         }
@@ -85,7 +85,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       <WithTheme(EdgeTextComponent)
         style={
           Object {
-            "color": "#A4C7DF",
+            "color": "#A5D4FF",
             "fontSize": 17,
           }
         }

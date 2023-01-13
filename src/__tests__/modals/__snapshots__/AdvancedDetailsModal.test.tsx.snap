@@ -44,7 +44,7 @@ Array [
     style={
       Object {
         "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
+        "backgroundColor": "#30353a",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -94,7 +94,7 @@ Array [
           Array [
             Object {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -167,7 +167,7 @@ Array [
                         "fontSize": 12,
                       },
                       Object {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -194,12 +194,12 @@ Array [
                     Array [
                       Object {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       Object {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -219,7 +219,7 @@ Array [
                     Array [
                       Object {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -238,7 +238,7 @@ Array [
             <View
               style={
                 Object {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomColor": "#e2722640",
                   "borderBottomWidth": 1,
                   "height": 1,
                   "marginLeft": 22,
@@ -273,7 +273,7 @@ Array [
         style={
           Array [
             Object {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 28,
             },
             undefined,

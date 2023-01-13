@@ -4,7 +4,7 @@ exports[`ClickableRow should render with loading props 1`] = `
 <TouchableHighlight
   onLongPress={[Function]}
   onPress={[Function]}
-  underlayColor="#06090c"
+  underlayColor="#111316"
 >
   <WithTheme(GradientComponent)
     style={
@@ -29,7 +29,7 @@ exports[`ClickableRow should render with loading props 1`] = `
           "paddingTop": 247,
         },
         Object {
-          "borderBottomColor": "rgba(255, 255, 255, .1)",
+          "borderBottomColor": "#e2722640",
           "borderBottomWidth": 1,
         },
         Object {

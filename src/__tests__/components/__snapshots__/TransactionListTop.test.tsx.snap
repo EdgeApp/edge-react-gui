@@ -164,7 +164,7 @@ Array [
                 Array [
                   Object {
                     "alignSelf": "flex-start",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "padding": 0,
                   },
@@ -195,7 +195,7 @@ Array [
                 Object {
                   "bottom": -28,
                   "color": "#E85466",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "left": 28,
                   "position": "absolute",
@@ -213,7 +213,7 @@ Array [
               Array [
                 Object {
                   "bottom": -10,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "position": "absolute",
                   "right": 28,
@@ -277,7 +277,7 @@ Array [
                 Object {
                   "alignSelf": "stretch",
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "padding": 0,
                 },
@@ -467,7 +467,7 @@ Array [
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -488,7 +488,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -527,7 +527,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -569,12 +569,12 @@ Array [
                 Array [
                   Object {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   Object {
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 45,
                   },
                   null,
@@ -591,7 +591,7 @@ Array [
                 Array [
                   Object {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -643,7 +643,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -666,13 +666,13 @@ Array [
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -710,7 +710,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -733,13 +733,13 @@ Array [
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -751,7 +751,7 @@ Array [
         </Text>
       </View>
       <ActivityIndicator
-        color="#00f1a2"
+        color="#e27226"
         style={
           Object {
             "alignItems": "center",
@@ -761,113 +761,6 @@ Array [
           }
         }
       />
-    </View>
-    <View
-      style={
-        Object {
-          "width": "100%",
-        }
-      }
-    >
-      <View
-        style={
-          Array [
-            Object {
-              "borderColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-            },
-            null,
-            Object {
-              "marginBottom": -11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 22,
-            },
-            Object {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-          ]
-        }
-      >
-        <View
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "opacity": 1,
-              "padding": 11,
-            }
-          }
-        >
-          <View
-            style={
-              Array [
-                Object {
-                  "overflow": "hidden",
-                },
-                Object {
-                  "height": 45,
-                  "margin": 11,
-                  "width": 45,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              resizeMode="contain"
-              source={
-                Object {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
-              }
-              style={
-                Object {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={0}
-            style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "marginLeft": 11,
-                },
-                null,
-              ]
-            }
-          >
-            Spend USD → Earn BTC
-          </Text>
-        </View>
-      </View>
     </View>
   </View>,
   <View
@@ -901,12 +794,12 @@ Array [
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           Object {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
           },
           null,
         ]
@@ -926,8 +819,8 @@ Array [
     <BVLinearGradient
       colors={
         Array [
-          452984831,
-          452984831,
+          4293030438,
+          4293030438,
         ]
       }
       endPoint={

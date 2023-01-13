@@ -92,14 +92,14 @@ exports[`WalletListRow should render with loading props 1`] = `
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           Object {
             "flexBasis": "auto",
             "flexShrink": 1,
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
           },
           null,
         ]
@@ -115,12 +115,12 @@ exports[`WalletListRow should render with loading props 1`] = `
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           Object {
-            "color": "#A4C7DF",
+            "color": "#A5D4FF",
             "fontSize": 17,
           },
           null,

@@ -23,7 +23,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -41,7 +41,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -59,7 +59,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -77,7 +77,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -118,7 +118,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -136,7 +136,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -154,7 +154,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -172,7 +172,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -213,7 +213,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -231,7 +231,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -249,7 +249,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -267,7 +267,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -308,7 +308,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -326,7 +326,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -344,7 +344,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -362,7 +362,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           Object {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }

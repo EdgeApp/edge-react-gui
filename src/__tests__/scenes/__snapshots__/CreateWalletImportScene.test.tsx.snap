@@ -4,8 +4,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -83,12 +83,12 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 27,
               },
               null,
@@ -117,7 +117,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       }
     >
       <ImportKeySvg
-        color="#00f1a2"
+        color="#e27226"
         height={36}
         width={83}
       />
@@ -130,7 +130,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -285,7 +285,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             Array [
               Object {
                 "alignSelf": "flex-start",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
@@ -316,7 +316,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             Object {
               "bottom": -28,
               "color": "#E85466",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 17,
               "left": 28,
               "position": "absolute",
@@ -334,7 +334,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           Array [
             Object {
               "bottom": -10,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 17,
               "position": "absolute",
               "right": 28,
@@ -374,7 +374,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             Object {
               "alignSelf": "stretch",
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "padding": 0,
             },
@@ -441,7 +441,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           Array [
             Object {
               "alignItems": "center",
-              "borderColor": "#00f1a2",
+              "borderColor": "#e27226",
               "borderRadius": 6,
               "borderWidth": 1.5,
               "flexDirection": "row",
@@ -475,8 +475,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           numberOfLines={1}
           style={
             Object {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Regular",
+              "color": "#3fa6f2",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "marginHorizontal": 0,
               "paddingBottom": 11,

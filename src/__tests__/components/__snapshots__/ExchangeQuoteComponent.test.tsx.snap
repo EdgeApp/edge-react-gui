@@ -63,7 +63,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
               }
             }
           >
@@ -81,7 +81,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "textAlign": "right",
               }
             }
@@ -113,7 +113,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "color": "#A4C7DF",
+                "color": "#A5D4FF",
                 "flex": 1,
                 "fontSize": 17,
                 "marginTop": 6,
@@ -134,7 +134,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "color": "#A4C7DF",
+                "color": "#A5D4FF",
                 "fontSize": 17,
                 "marginTop": 6,
               }

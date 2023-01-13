@@ -131,7 +131,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       walletId=""
     />
     <ActivityIndicator
-      color="#00f1a2"
+      color="#e27226"
       style={
         Object {
           "marginVertical": 34,
