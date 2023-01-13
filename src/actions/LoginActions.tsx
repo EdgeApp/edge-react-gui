@@ -20,7 +20,7 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { Actions, NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
@@ -50,7 +50,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   return { walletId: '', currencyCode: '' }
 }
 
-export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
+export function initializeAccount(navigation: NavigationBase, account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await getSyncedSettings(account)
@@ -201,7 +201,7 @@ export function initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdI
       })
 
       dispatch(refreshAccountReferral())
-      dispatch(expiredFioNamesCheckDates())
+      dispatch(expiredFioNamesCheckDates(navigation))
       await updateWalletsRequest()(dispatch, getState)
     } catch (error: any) {
       showError(error)
