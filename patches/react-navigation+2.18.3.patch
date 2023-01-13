@@ -1,3 +1,36 @@
+diff --git a/node_modules/react-navigation/src/createNavigationContainer.js b/node_modules/react-navigation/src/createNavigationContainer.js
+index 3cfc5e3..85c51cd 100644
+--- a/node_modules/react-navigation/src/createNavigationContainer.js
++++ b/node_modules/react-navigation/src/createNavigationContainer.js
+@@ -59,6 +59,7 @@ let _reactNavigationIsHydratingState = false;
+ export default function createNavigationContainer(Component) {
+   class NavigationContainer extends React.Component {
+     subs = null;
++    eventListener = null
+ 
+     static router = Component.router;
+     static navigationOptions = null;
+@@ -200,7 +201,7 @@ export default function createNavigationContainer(Component) {
+         }
+       }
+       _statefulContainerCount++;
+-      Linking.addEventListener('url', this._handleOpenURL);
++      this.eventListener = Linking.addEventListener('url', this._handleOpenURL);
+ 
+       // Pull out anything that can impact state
+       const { persistenceKey, uriPrefix, enableURLHandling } = this.props;
+@@ -293,7 +294,10 @@ export default function createNavigationContainer(Component) {
+ 
+     componentWillUnmount() {
+       this._isMounted = false;
+-      Linking.removeEventListener('url', this._handleOpenURL);
++      if (this.eventListener != null) {
++        this.eventListener.removeEventListener('url', this._handleOpenURL);
++        this.eventListener = null
++      }
+       this.subs && this.subs.remove();
+ 
+       if (this._isStateful()) {
 diff --git a/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js b/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js
 index 268547d..ca181ff 100644
 --- a/node_modules/react-navigation/src/navigators/createKeyboardAwareNavigator.js
