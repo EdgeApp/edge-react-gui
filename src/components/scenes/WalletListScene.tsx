@@ -116,13 +116,15 @@ export function WalletListScene(props: Props) {
     )
   }, [handleSort, navigation, searchText, searching, sorting])
 
+  const handlePressDone = useHandler(() => setSorting(false))
+
   return (
     <SceneWrapper>
       <WiredProgressBar />
       {sorting && (
         <View style={styles.headerContainer}>
           <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
+          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
             <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
           </TouchableOpacity>
         </View>
