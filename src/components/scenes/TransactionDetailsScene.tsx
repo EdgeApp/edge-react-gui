@@ -18,7 +18,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp, RouteProp } from '../../types/routerTypes'
+import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
@@ -38,7 +38,7 @@ import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
-  navigation: NavigationProp<'transactionDetails'>
+  navigation: NavigationBase
   route: RouteProp<'transactionDetails'>
   wallet: EdgeCurrencyWallet
 }
@@ -438,7 +438,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { wallet, theme, route } = this.props
+    const { wallet, theme, route, navigation } = this.props
     const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
     const { direction, acceleratedTx, amountFiat, contactName, thumbnailPath, notes, category } = this.state
@@ -518,7 +518,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <MainButton onPress={Actions.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+            <MainButton onPress={navigation.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
           </View>
         </ScrollView>
       </SceneWrapper>

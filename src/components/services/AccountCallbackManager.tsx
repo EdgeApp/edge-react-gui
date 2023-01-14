@@ -9,7 +9,7 @@ import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
-import { Actions, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
@@ -64,8 +64,8 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          Actions.push('securityAlerts', {})
+        if (hasAlerts && navigation.state.currentScene !== 'securityAlerts') {
+          navigation.push('securityAlerts', {})
         }
       }),
 
@@ -78,7 +78,7 @@ export function AccountCallbackManager(props: Props) {
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
-  }, [account])
+  }, [account, navigation])
 
   // Subscribe to each wallet that comes online:
   useWalletsSubscriber(account, wallet => {

@@ -10,7 +10,7 @@ import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/Wallet
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -25,8 +25,7 @@ interface Option {
 
 interface Props {
   bridge: AirshipBridge<void>
-  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
-
+  navigation: NavigationBase
   // Wallet identity:
   tokenId?: string
   walletId: string

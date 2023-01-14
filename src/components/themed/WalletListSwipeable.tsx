@@ -5,7 +5,7 @@ import { selectWallet } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -17,7 +17,7 @@ import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
 interface Props {
   footer?: React.ComponentType<{}> | React.ReactElement
   header?: React.ComponentType<{}> | React.ReactElement
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationBase
   searching: boolean
   searchText: string
   showSlidingTutorial?: boolean

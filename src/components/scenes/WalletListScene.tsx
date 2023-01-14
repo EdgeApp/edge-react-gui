@@ -6,7 +6,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -23,7 +23,7 @@ import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 import { WiredProgressBar } from '../themed/WiredProgressBar'
 
 interface Props {
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationBase
 }
 
 export function WalletListScene(props: Props) {
@@ -65,7 +65,7 @@ export function WalletListScene(props: Props) {
   useAsyncEffect(
     async () => {
       if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
       } else {
         const userTutorialList = await getWalletListSlideTutorial(disklet)
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
@@ -105,6 +105,7 @@ export function WalletListScene(props: Props) {
   const header = React.useMemo(() => {
     return (
       <WalletListHeader
+        navigation={navigation}
         sorting={sorting}
         searching={searching}
         searchText={searchText}
@@ -113,7 +114,7 @@ export function WalletListScene(props: Props) {
         onChangeSearchingState={setSearching}
       />
     )
-  }, [handleSort, searchText, searching, sorting])
+  }, [handleSort, navigation, searchText, searching, sorting])
 
   return (
     <SceneWrapper>

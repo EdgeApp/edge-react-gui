@@ -14,7 +14,7 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { NavigationBase, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateActionProgram } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
@@ -39,7 +39,7 @@ const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
 }
 
 interface Props {
-  navigation: NavigationProp<'loanCreateConfirmation'>
+  navigation: NavigationBase
   route: RouteProp<'loanCreateConfirmation'>
 }
 
@@ -171,8 +171,8 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
         if (seq != null && seq.actions.length > 1) {
           // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
-          Actions.popTo('loanCreate')
-          Actions.replace('loanDetails', { loanAccountId: loanAccount.id })
+          navigation.popTo('loanCreate')
+          navigation.replace('loanDetails', { loanAccountId: loanAccount.id })
 
           navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
         } else {

@@ -12,7 +12,7 @@ import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { GuiContact, TransactionListTx } from '../../types/types'
 import {
   DECIMAL_PRECISION,
@@ -29,13 +29,14 @@ import { showError } from '../services/AirshipInstance'
 import { TransactionRow } from './TransactionRow'
 
 interface Props {
+  navigation: NavigationBase
   walletId: string
   currencyCode: string
   transaction: TransactionListTx
 }
 
 export function TransactionListRow(props: Props) {
-  const { currencyCode, walletId, transaction } = props
+  const { navigation, currencyCode, walletId, transaction } = props
   const { metadata } = transaction
   const { name, amountFiat: defaultAmountFiat = 0 } = metadata ?? {}
 
@@ -95,7 +96,7 @@ export function TransactionListRow(props: Props) {
     if (transaction == null) {
       return showError(s.strings.transaction_details_error_invalid)
     }
-    Actions.push('transactionDetails', {
+    navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       walletId,
       thumbnailPath,

@@ -4,11 +4,11 @@ import { sprintf } from 'sprintf-js'
 import { PriceChangePayload } from '../../controllers/action-queue/types/pushPayloadTypes'
 import s from '../../locales/strings'
 import { ThunkAction } from '../../types/reduxTypes'
-import { Actions } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { Airship } from '../services/AirshipInstance'
 import { ButtonsModal } from './ButtonsModal'
 
-export function launchPriceChangeBuySellSwapModal(data: PriceChangePayload): ThunkAction<Promise<void>> {
+export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, data: PriceChangePayload): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { pluginId, body } = data
@@ -28,11 +28,11 @@ export function launchPriceChangeBuySellSwapModal(data: PriceChangePayload): Thu
     ))
 
     if (threeButtonModal === 'buy') {
-      Actions.jump('pluginListBuy', { direction: 'buy' })
+      navigation.navigate('pluginListBuy', { direction: 'buy' })
     } else if (threeButtonModal === 'sell') {
-      Actions.jump('pluginListSell', { direction: 'sell' })
+      navigation.navigate('pluginListSell', { direction: 'sell' })
     } else if (threeButtonModal === 'exchange') {
-      Actions.jump('exchangeScene', {})
+      navigation.navigate('exchangeScene', {})
     }
   }
 }

@@ -11,7 +11,7 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -21,9 +21,9 @@ import { Card } from './Card'
 export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards)
 
 interface Props {
+  navigation: NavigationBase
   wallet: EdgeCurrencyWallet
   tokenId?: string
-  navigation: NavigationProp<'transactionList'>
 }
 
 export const EarnCryptoCard = (props: Props) => {

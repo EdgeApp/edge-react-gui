@@ -26,7 +26,7 @@ import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { Actions, NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { NavigationBase, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -105,7 +105,7 @@ const MANAGE_ACTION_DATA_MAP: {
 
 interface Props {
   loanAccount: LoanAccount
-  navigation: NavigationProp<'loanManage'>
+  navigation: NavigationBase
   route: RouteProp<'loanManage'>
 }
 
@@ -333,7 +333,7 @@ export const LoanManageSceneComponent = (props: Props) => {
         const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
         if (seq != null && seq.actions.length > 1) {
           // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
-          Actions.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
+          navigation.replace('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
         } else {
           navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
         }

@@ -5,6 +5,7 @@ import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
@@ -29,7 +30,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
+import { NavigationBase, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -42,7 +43,7 @@ import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 
 interface Props {
-  navigation: NavigationProp<'controlPanel'>
+  navigation: NavigationBase
 }
 
 const xButtonGradientStart = { x: 0, y: 0 }
@@ -157,11 +158,11 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
-    handleGoToScene('loanDashboard', {})
+    handleGoToScene(navigation, 'loanDashboard', {})
   }
 
   const handleLoginQr = () => {
-    Actions.drawerClose()
+    navigation.closeDrawer()
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
         if (result) {
@@ -181,16 +182,14 @@ export function ControlPanel(props: Props) {
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
-  const handleGoToScene = (scene: keyof ParamList, sceneProps: any) => {
-    const { currentScene, drawerClose } = Actions
-
-    if (currentScene !== scene) {
+  const handleGoToScene = (navigation: NavigationBase, scene: keyof ParamList, sceneProps: any) => {
+    if (Actions.currentScene !== scene) {
       navigation.navigate(scene, sceneProps)
     } else if (sceneProps) {
-      navigation.setParams(sceneProps)
+      navigation.replace(scene, sceneProps)
     }
 
-    drawerClose()
+    navigation.closeDrawer()
   }
 
   const handleBottomPanelLayout = (event: any) => {
@@ -246,17 +245,17 @@ export function ControlPanel(props: Props) {
     title: string
   }> = [
     {
-      pressHandler: () => handleGoToScene('fioAddressList', {}),
+      pressHandler: () => handleGoToScene(navigation, 'fioAddressList', {}),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      pressHandler: () => handleGoToScene('fioRequestList', {}),
+      pressHandler: () => handleGoToScene(navigation, 'fioRequestList', {}),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
-      pressHandler: () => handleGoToScene('wcConnections', {}),
+      pressHandler: () => handleGoToScene(navigation, 'wcConnections', {}),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
@@ -268,13 +267,13 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
-      pressHandler: () => handleGoToScene('termsOfService', {}),
+      pressHandler: () => handleGoToScene(navigation, 'termsOfService', {}),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      pressHandler: () => handleGoToScene('settingsOverviewTab', {}),
+      pressHandler: () => handleGoToScene(navigation, 'settingsOverviewTab', {}),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
@@ -293,14 +292,14 @@ export function ControlPanel(props: Props) {
 
   if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
-      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      pressHandler: () => handleGoToScene(navigation, 'pluginViewSell', { plugin: guiPlugins.ionia }),
       iconNameFontAwesome: 'hand-holding-usd',
       title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
     })
   }
 
   const handlePressClose = () => {
-    Actions.drawerClose()
+    navigation.closeDrawer()
   }
 
   const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color
