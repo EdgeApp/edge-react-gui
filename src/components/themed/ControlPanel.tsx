@@ -287,7 +287,6 @@ export function ControlPanel(props: Props) {
     // Dummy row that goes under the transparent close button
     {
       pressHandler: async () => {},
-      iconName: '',
       title: ''
     }
   ]
