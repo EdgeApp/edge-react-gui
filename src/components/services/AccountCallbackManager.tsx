@@ -65,7 +65,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          Actions.push('securityAlerts', {})
+          navigation.push('securityAlerts', {})
         }
       }),
 
@@ -78,7 +78,7 @@ export function AccountCallbackManager(props: Props) {
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
-  }, [account])
+  }, [account, navigation])
 
   // Subscribe to each wallet that comes online:
   useWalletsSubscriber(account, wallet => {

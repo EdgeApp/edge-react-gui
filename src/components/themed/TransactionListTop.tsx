@@ -20,7 +20,7 @@ import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stak
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -286,14 +286,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
+    const { navigation } = this.props
+
     triggerHaptic('impactLight')
-    Actions.push('request', {})
+    navigation.push('request', {})
   }
 
   handleSend = (): void => {
+    const { navigation } = this.props
+
     triggerHaptic('impactLight')
     const { wallet, tokenId } = this.props
-    Actions.push('send2', { walletId: wallet.id, tokenId })
+    navigation.push('send2', { walletId: wallet.id, tokenId })
   }
 
   handleSearchDone = () => {
@@ -311,7 +315,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
-      Actions.push('fioStakingOverview', {
+      navigation.push('fioStakingOverview', {
         currencyCode,
         walletId: wallet.id
       })

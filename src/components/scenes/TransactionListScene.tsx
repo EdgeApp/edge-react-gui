@@ -155,14 +155,14 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
 
   renderEmptyComponent = () => {
-    const { tokenId, numTransactions, wallet } = this.props
+    const { navigation, tokenId, numTransactions, wallet } = this.props
 
     if (this.isUnsupported()) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
     } else if (numTransactions > 0) {
       return <EmptyLoader />
     } else {
-      return <BuyCrypto wallet={wallet} tokenId={tokenId} />
+      return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
     }
   }
 
@@ -176,11 +176,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   renderTransaction = (transaction: FlatListItem<TransactionListTx>) => {
-    const { wallet, currencyCode, spamThreshold } = this.props
+    const { navigation, wallet, currencyCode, spamThreshold } = this.props
     if (spamThreshold != null && isReceivedTransaction(transaction.item) && lt(transaction.item.nativeAmount, spamThreshold)) {
       return null
     }
-    return <TransactionListRow walletId={wallet.id} currencyCode={currencyCode} transaction={transaction.item} />
+    return <TransactionListRow navigation={navigation} walletId={wallet.id} currencyCode={currencyCode} transaction={transaction.item} />
   }
 
   renderTop = () => {

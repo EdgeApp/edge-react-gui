@@ -525,7 +525,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectFioAddress() {
-    const { isSendUsingFioAddress, route } = this.props
+    const { navigation, isSendUsingFioAddress, route } = this.props
     const { fioSender } = this.state
     const { hiddenTilesMap = {}, guiMakeSpendInfo } = route.params
     const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
@@ -534,6 +534,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     return (
       <View>
         <SelectFioAddress
+          navigation={navigation}
           selected={fioSender.fioAddress}
           memo={fioSender.memo}
           memoError={fioSender.memoError}

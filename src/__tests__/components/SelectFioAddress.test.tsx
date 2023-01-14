@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext'
 import { SelectFioAddressComponent } from '../../components/themed/SelectFioAddress'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('SelectFioAddress', () => {
   it('should render with loading props', () => {
@@ -26,6 +27,7 @@ describe('SelectFioAddress', () => {
 
     const actual = renderer.render(
       <SelectFioAddressComponent
+        navigation={fakeNavigation}
         selected="string"
         memo="TX"
         memoError="memo error"
