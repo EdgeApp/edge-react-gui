@@ -40,7 +40,9 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       ignorePriceChanges: false
     }
     try {
-      const deviceToken = await messaging().getToken()
+      const deviceToken = await messaging()
+        .getToken()
+        .catch(() => '')
 
       const body = {
         apiKey: ENV.AIRBITZ_API_KEY,
@@ -165,7 +167,9 @@ export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promis
   return async (dispatch, getState) => {
     const state = getState()
 
-    const deviceToken = await messaging().getToken()
+    const deviceToken = await messaging()
+      .getToken()
+      .catch(() => '')
 
     const body = {
       apiKey: ENV.AIRBITZ_API_KEY,
