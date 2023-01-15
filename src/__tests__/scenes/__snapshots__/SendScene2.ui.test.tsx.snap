@@ -5,7 +5,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -764,7 +764,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -1725,7 +1725,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -2612,7 +2612,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -3373,7 +3373,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -4112,7 +4112,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -4725,7 +4725,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -5585,7 +5585,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -6418,7 +6418,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={
@@ -7224,7 +7224,7 @@ exports[`SendScene2 Render SendScene 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={

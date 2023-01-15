@@ -5,7 +5,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
   colors={
     Array [
       4279377189,
-      4278585612,
+      4279112730,
     ]
   }
   endPoint={

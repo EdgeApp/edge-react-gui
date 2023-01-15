@@ -24,7 +24,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "addButtonFont": "Quicksand-Medium",
       "backgroundGradientColors": Array [
         "#121d25",
-        "#06090c",
+        "#0E141A",
       ],
       "backgroundGradientEnd": Object {
         "x": 0,
