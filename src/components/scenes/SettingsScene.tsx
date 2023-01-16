@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeContext, EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -105,16 +105,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     if (!this.props.supportsTouchId) return
 
     const biometryType = await getSupportedBiometryType()
+    if (Platform.OS !== 'ios') this.setState({ touchIdText: s.strings.settings_button_use_biometric })
     switch (biometryType) {
       case 'FaceID':
         this.setState({ touchIdText: s.strings.settings_button_use_faceID })
         break
       case 'TouchID':
         this.setState({ touchIdText: s.strings.settings_button_use_touchID })
-        break
-      // @ts-expect-error This is supposed to handle Android:
-      case 'Fingerprint':
-        this.setState({ touchIdText: s.strings.settings_button_use_biometric })
         break
 
       case false:
