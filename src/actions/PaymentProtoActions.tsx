@@ -8,7 +8,7 @@ import { SendScene2Params } from '../components/scenes/SendScene2'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { BitPayError } from '../types/BitPayError'
+import { BitPayError } from '../types/PaymentProtoError'
 import {
   BpInstructionOutput,
   BpInvoiceInstruction,
@@ -18,7 +18,7 @@ import {
   BpTransaction,
   BpVerificationPayment,
   BpVerificationResponse
-} from '../types/BitPayTypes'
+} from '../types/PaymentProtoTypes'
 import { Actions, NavigationBase } from '../types/routerTypes'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 

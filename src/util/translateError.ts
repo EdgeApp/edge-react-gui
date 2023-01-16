@@ -1,7 +1,7 @@
 import { asEither, asObject, asString } from 'cleaners'
 
 import ENV from '../../env.json'
-import { BitPayError, translateBitPayError } from '../types/BitPayError'
+import { BitPayError, translateBitPayError } from '../types/PaymentProtoError'
 import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
 
 const asErrorMessage = asEither(

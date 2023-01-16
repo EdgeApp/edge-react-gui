@@ -9,7 +9,7 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
-import { launchBitPay } from '../../../../actions/BitPayActions'
+import { launchBitPay } from '../../../../actions/PaymentProtoActions'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../../../components/modals/WalletListModal'
