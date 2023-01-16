@@ -118,8 +118,6 @@ interface DispatchProps {
   // Things to do when we enter certain scenes:
   checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
   checkEnabledExchanges: () => void
-  dispatchDisableScan: () => void
-  dispatchEnableScan: () => void
   requestPermission: (permission: Permission) => void
   showReEnableOtpModal: () => void
 }
@@ -502,7 +500,6 @@ export class MainComponent extends React.Component<Props> {
               onEnter={props => {
                 this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
               }}
-              onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -525,7 +522,6 @@ export class MainComponent extends React.Component<Props> {
               onEnter={props => {
                 this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
               }}
-              onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -1110,12 +1106,6 @@ export const Main = connect<{}, DispatchProps, {}>(
     },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
-    },
-    dispatchDisableScan() {
-      dispatch({ type: 'DISABLE_SCAN' })
-    },
-    dispatchEnableScan() {
-      dispatch({ type: 'ENABLE_SCAN' })
     },
     requestPermission(permission: Permission) {
       requestPermission(permission)

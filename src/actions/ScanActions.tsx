@@ -45,7 +45,6 @@ import { launchDeepLink } from './DeepLinkingActions'
  *    infinite redirect loops).
  */
 export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
-  dispatch({ type: 'DISABLE_SCAN' })
   const { assets, post, redir, payer } = link
   try {
     // Check if all required fields are provided in the request
@@ -225,8 +224,7 @@ export function parseScannedUri(
       const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
 
       // Check if the URI requires a warning to the user
-      const approved = await addressWarnings(parsedUri, currencyCode)
-      if (!approved) return dispatch({ type: 'ENABLE_SCAN' })
+      await addressWarnings(parsedUri, currencyCode)
 
       if (parsedUri.token) {
         // TOKEN URI
@@ -289,7 +287,6 @@ export function parseScannedUri(
       // dispatch(sendConfirmationUpdateTx(parsedUri))
     } catch (error: any) {
       // INVALID URI
-      dispatch({ type: 'DISABLE_SCAN' })
       setTimeout(
         () =>
           Alert.alert(
@@ -297,8 +294,7 @@ export function parseScannedUri(
             customErrorDescription || s.strings.scan_invalid_address_error_description,
             [
               {
-                text: s.strings.string_ok,
-                onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+                text: s.strings.string_ok
               }
             ]
           ),
@@ -335,7 +331,6 @@ function privateKeyModalActivated(privateKeys: string[]): ThunkAction<Promise<vo
         }}
       />
     ))
-    dispatch({ type: 'ENABLE_SCAN' })
   }
 }
 
