@@ -1,11 +1,9 @@
 import { asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
-import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
 import { SendScene2Params } from '../components/scenes/SendScene2'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { PaymentProtoError } from '../types/PaymentProtoError'
@@ -20,7 +18,34 @@ import {
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
 import { Actions, NavigationBase } from '../types/routerTypes'
+import { EdgeTokenId, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { pickWallet } from './ModalHelpers'
+
+// Maps payment protocol chain ids to Edge currency pluginIds
+const CHAIN_MAP: StringMap = {
+  BCH: 'bitcoincash',
+  BTC: 'bitcoin',
+  DOGE: 'dogecoin',
+  ETH: 'ethereum',
+  LTC: 'litecoin',
+  MATIC: 'polygon'
+}
+
+const EDGE_TO_PROTOCOL_MAP: { [pluginId: string]: StringMap } = {
+  ethereum: {
+    MATIC: 'MATIC_e'
+  },
+  polygon: {
+    ETH: 'ETH_m',
+    USDC: 'USDC_m'
+  }
+}
+
+const CURRENCY_MAP: StringMap = Object.values(EDGE_TO_PROTOCOL_MAP).reduce((prev, curr) => {
+  const next = Object.entries(curr).reduce((p, [key, val]) => ({ ...p, [val]: key }), {})
+  return { ...prev, ...next }
+}, {})
 
 /**
  * Performs the fetch commands to the Payment Protocol.
@@ -56,9 +81,9 @@ async function fetchPaymentProtoJsonResponse(uri: string, init: object): Promise
   return await fetchResponse.json()
 }
 
-const paymentProtoSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPaymentProtocolSupported ?? false)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
+const paymentProtoSupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
+  pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPaymentProtocolSupported ?? false
+)
 
 /**
  * Handles the Payment Protocol scanned or deeplink URI.
@@ -74,10 +99,11 @@ export async function launchPaymentProto(
   uri: string,
   params: {
     wallet?: EdgeCurrencyWallet
-    currencyWallets?: { [walletId: string]: EdgeCurrencyWallet }
     metadata?: EdgeMetadata
   }
 ): Promise<void> {
+  const { currencyWallets } = account
+  const { wallet } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -87,62 +113,69 @@ export async function launchPaymentProto(
   const paymentId = optionsResponse.paymentId
   const options = optionsResponse.paymentOptions
   const isTestPaymentProto = uri.toLowerCase().includes('test.bitpay.com')
-  const paymentCurrencies: string[] = options
-    .map<any>(po => po.currency)
-    .filter(
-      currency =>
-        // Omit 'BTC' if using Payment Protocol testnet, since our testnet BTC has its own currency code.
-        paymentProtoSupportedCurrencyCodes.includes(currency) && !(isTestPaymentProto && currency === 'BTC')
-    )
+  const paymentAssets: EdgeTokenId[] = []
+  const paymentCurrencies: string[] = []
 
-  // Add our test BTC currency code for Payment Protocol testnet
-  if (isTestPaymentProto) {
-    paymentCurrencies.push('TESTBTC')
+  for (const option of options) {
+    const { chain, currency } = option
+    if (isTestPaymentProto && currency === 'BTC') continue
+    const pluginId = CHAIN_MAP[chain]
+    if (pluginId == null) continue
+    if (paymentProtoSupportedPluginIds.find(id => id === pluginId) == null) continue
+
+    if (chain === currency) {
+      paymentAssets.push({ pluginId })
+      paymentCurrencies.push(chain)
+    } else {
+      const edgeCurrencyCode = CURRENCY_MAP[currency] ?? currency
+      const tokenId = getTokenId(account, pluginId, edgeCurrencyCode)
+      if (tokenId == null) continue
+      paymentAssets.push({ pluginId, tokenId })
+      paymentCurrencies.push(`${chain}-${currency}`)
+    }
   }
 
   // Select payment wallet, if this wasn't called directly from a wallet's
   // send scene
   let selectedWallet: EdgeCurrencyWallet | undefined
   let selectedCurrencyCode: string | undefined
-  if (params.wallet) {
+  if (wallet != null) {
     // Ensure the core wallet is accepted by this invoice as a payment option
-    selectedCurrencyCode = params.wallet.currencyInfo.currencyCode
-    if (!paymentCurrencies.includes(selectedCurrencyCode)) {
-      throw new PaymentProtoError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
-    }
-    selectedWallet = params.wallet
+    const asset = paymentAssets.find(({ pluginId, tokenId }) => {
+      const pluginIdMatches = pluginId === wallet.currencyInfo.pluginId
+      if (!pluginIdMatches) return false
+      if (tokenId == null) return true
+      const tokenIdMatches = wallet.enabledTokenIds.includes(tokenId)
+      return tokenIdMatches
+    })
+    if (asset == null) throw new PaymentProtoError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
+    selectedWallet = wallet
   } else {
-    // Check if user owns any wallets that are accepted by the invoice
-    const { currencyWallets = {} } = params
-    const matchingWallets: string[] = Object.keys(currencyWallets).filter(key => paymentCurrencies.includes(currencyWallets[key].currencyInfo.currencyCode))
-    if (matchingWallets.length === 0) {
+    const walletListResult = await pickWallet({ account, assets: paymentAssets, navigation })
+    if (walletListResult == null) {
       throw new PaymentProtoError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
-    } else {
-      const walletListResult = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
-      ))
-      const { walletId, currencyCode } = walletListResult
-      selectedCurrencyCode = currencyCode
-      if (!walletId || !currencyCode || !params.currencyWallets) {
-        // No wallet selected
-        return
-      } else {
-        selectedWallet = params.currencyWallets[walletId]
-      }
     }
+
+    const { walletId, currencyCode } = walletListResult
+    selectedWallet = currencyWallets[walletId ?? '']
+    selectedCurrencyCode = currencyCode
   }
   if (selectedWallet == null) return
 
-  // Normalize our test BTC currency code with the Payment Protocol Testnet's expectation
-  const requestCurrencyCode = isTestPaymentProto && selectedCurrencyCode === 'TESTBTC' ? 'BTC' : selectedCurrencyCode
+  const chain = selectedWallet.currencyInfo.currencyCode
+  const mappedCurrencyCode =
+    EDGE_TO_PROTOCOL_MAP[selectedWallet.currencyInfo.pluginId] != null
+      ? EDGE_TO_PROTOCOL_MAP[selectedWallet.currencyInfo.pluginId][selectedCurrencyCode ?? '']
+      : undefined
+  const currency = chain === selectedCurrencyCode ? chain : mappedCurrencyCode ?? selectedCurrencyCode
 
   // Fetch the invoice (payment-request) instructions
   const initOpts = {
     method: 'POST',
     headers: { 'Content-Type': 'application/payment-request', 'x-paypro-version': '2' },
     body: JSON.stringify({
-      chain: requestCurrencyCode,
-      currency: requestCurrencyCode
+      chain,
+      currency
     })
   }
   responseJson = await fetchPaymentProtoJsonResponse(uri, initOpts)
@@ -205,8 +238,8 @@ export async function launchPaymentProto(
       if (unsignedHex === '' || signedHex === '') throw new PaymentProtoError('EmptyVerificationHexReq', { errorData })
 
       const verificationPaymentRequest = {
-        chain: requestCurrencyCode,
-        currency: requestCurrencyCode,
+        chain,
+        currency,
         transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
       }
       responseJson = await fetchPaymentProtoJsonResponse(uri, {
@@ -233,8 +266,8 @@ export async function launchPaymentProto(
           'x-paypro-version': '2'
         },
         body: JSON.stringify({
-          chain: requestCurrencyCode,
-          currency: requestCurrencyCode,
+          chain,
+          currency,
           transactions: [{ tx: edgeTransaction.signedTx, weightedSize: signedHex.length / 2 }]
         })
       })

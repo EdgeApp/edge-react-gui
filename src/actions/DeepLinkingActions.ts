@@ -131,7 +131,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'paymentProto': {
-      launchPaymentProto(navigation, account, link.uri, { currencyWallets }).catch(showError)
+      launchPaymentProto(navigation, account, link.uri, {}).catch(showError)
       return true
     }
 
