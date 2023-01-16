@@ -41,8 +41,8 @@ export interface AztecoLink {
   uri: string
 }
 
-export interface BitPayLink {
-  type: 'bitPay'
+export interface PaymentProtoLink {
+  type: 'paymentProto'
   uri: string
 }
 
@@ -93,7 +93,7 @@ export interface DevLink {
 
 export type DeepLink =
   | AztecoLink
-  | BitPayLink
+  | PaymentProtoLink
   | EdgeLoginLink
   | PasswordRecoveryLink
   | PluginLink

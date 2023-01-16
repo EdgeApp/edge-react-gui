@@ -1,9 +1,9 @@
 /**
- * Response for the BitPay 'application/payment-option'.
- * These are the supported payment options to the BitPay v2 protocol.
+ * Response for the Payment Protocol 'application/payment-option'.
+ * These are the supported payment options to the v2 Payment Protocol.
  */
 
-export interface BpOption {
+export interface PaymentProtoOption {
   chain: string
   currency: string
   network: string
@@ -14,38 +14,38 @@ export interface BpOption {
   selected: boolean
 }
 
-export interface BpOptionsResponse {
+export interface PaymentProtoOptionsResponse {
   time: Date
   expires: Date
   memo: string
   paymentUrl: string
   paymentId: string
-  paymentOptions: BpOption[]
+  paymentOptions: PaymentProtoOption[]
 }
 
 /**
- * Response for the BitPay 'application/payment-request'.
- * This tells us how to fulfill a BitPay invoice: Payment address, network
+ * Response for the Payment Protocol 'application/payment-request'.
+ * This tells us how to fulfill a Payment Protocol invoice: Payment address, network
  * fee requirements, etc.
  */
 
-export interface BpInstructionOutput {
+export interface PaymentProtoInstructionOutput {
   amount: number
   address: string
   invoiceID?: string
 }
 
-export interface BpInvoiceInstruction {
+export interface PaymentProtoInvoiceInstruction {
   type: string
   requiredFeeRate?: number
-  outputs?: BpInstructionOutput[]
+  outputs?: PaymentProtoInstructionOutput[]
   value?: number
   to?: string
   data?: string
   gasPrice?: number
 }
 
-export interface BpInvoiceResponse {
+export interface PaymentProtoInvoiceResponse {
   time: Date
   expires: Date
   memo: string
@@ -53,27 +53,27 @@ export interface BpInvoiceResponse {
   paymentId: string
   chain: string
   network: string
-  instructions: BpInvoiceInstruction[]
+  instructions: PaymentProtoInvoiceInstruction[]
   currency?: string
 }
 
 /**
- * Response format for the BitPay 'application/payment-verification'.
- * This tells us whether BitPay thinks our tx is valid, ensuring our broadcast
+ * Response format for the JSON Payment Protocol 'application/payment-verification'.
+ * This tells us whether the Payment Protocol thinks our tx is valid, ensuring our broadcast
  * will be accepted by them.
  */
 
-export interface BpTransaction {
+export interface PaymentProtoTransaction {
   tx: string
 }
 
-export interface BpVerificationPayment {
+export interface PaymentProtoVerificationPayment {
   currency: string
   chain: string
-  transactions: BpTransaction[]
+  transactions: PaymentProtoTransaction[]
 }
 
-export interface BpVerificationResponse {
-  payment: BpVerificationPayment
+export interface PaymentProtoVerificationResponse {
+  payment: PaymentProtoVerificationPayment
   memo: string
 }

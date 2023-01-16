@@ -211,7 +211,7 @@ export function parseScannedUri(
         case 'requestAddress':
           return await doRequestAddress(navigation, account, dispatch, deepLink)
         case 'edgeLogin':
-        case 'bitPay':
+        case 'paymentProto':
         default:
           dispatch(launchDeepLink(navigation, deepLink))
           return

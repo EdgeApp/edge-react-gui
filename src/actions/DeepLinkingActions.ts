@@ -10,7 +10,7 @@ import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { activatePromotion } from './AccountReferralActions'
 import { loginWithEdge } from './EdgeLoginActions'
-import { launchBitPay } from './PaymentProtoActions'
+import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, parseScannedUri } from './ScanActions'
 import { selectWallet } from './WalletActions'
 
@@ -130,8 +130,8 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       return true
     }
 
-    case 'bitPay': {
-      launchBitPay(navigation, account, link.uri, { currencyWallets }).catch(showError)
+    case 'paymentProto': {
+      launchPaymentProto(navigation, account, link.uri, { currencyWallets }).catch(showError)
       return true
     }
 

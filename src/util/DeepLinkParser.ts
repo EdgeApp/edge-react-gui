@@ -30,16 +30,16 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     return parseDownloadLink(url)
   }
 
-  // Handle bitpay.com links.
+  // Handle payment protocol links.
   // We always want to bypass the plugin, even if a scheme (i.e. bitcoin:) is
   // defined because it is valid for the user to accept any supported currency
   // besides the specific currency defined in the uri's scheme.
-  // Even if a specific currency is found in the protocol, the BitPay protocol
+  // Even if a specific currency is found in the protocol, the payment protocol
   // does not care what currency the payment steps start with.
   if (betterUrl.query.r != null && betterUrl.query.r.includes('http')) {
     // If the URI started with 'bitcoin:', etc.
     uri = betterUrl.query.r
-    return { type: 'bitPay', uri }
+    return { type: 'paymentProto', uri }
   }
 
   // Handle the edge:// scheme:

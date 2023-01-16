@@ -8,25 +8,25 @@ import { SendScene2Params } from '../components/scenes/SendScene2'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { BitPayError } from '../types/PaymentProtoError'
+import { PaymentProtoError } from '../types/PaymentProtoError'
 import {
-  BpInstructionOutput,
-  BpInvoiceInstruction,
-  BpInvoiceResponse,
-  BpOption,
-  BpOptionsResponse,
-  BpTransaction,
-  BpVerificationPayment,
-  BpVerificationResponse
+  PaymentProtoInstructionOutput,
+  PaymentProtoInvoiceInstruction,
+  PaymentProtoInvoiceResponse,
+  PaymentProtoOption,
+  PaymentProtoOptionsResponse,
+  PaymentProtoTransaction,
+  PaymentProtoVerificationPayment,
+  PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
 import { Actions, NavigationBase } from '../types/routerTypes'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
 /**
- * Performs the fetch commands to BitPay.
+ * Performs the fetch commands to the Payment Protocol.
  * Throws errors when response is not OK.
  */
-async function fetchBitPayJsonResponse(uri: string, init: object): Promise<Response> {
+async function fetchPaymentProtoJsonResponse(uri: string, init: object): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
@@ -50,25 +50,25 @@ async function fetchBitPayJsonResponse(uri: string, init: object): Promise<Respo
     // Only show the text in the error response if not a web page.
     const rawText = await fetchResponse.text()
     const text = !rawText.includes('doctype html') ? `: ${rawText}` : ''
-    throw new BitPayError('FetchFailed', { header, statusCode, text, errorData: { uri, method, body, rawText } })
+    throw new PaymentProtoError('FetchFailed', { header, statusCode, text, errorData: { uri, method, body, rawText } })
   }
 
   return await fetchResponse.json()
 }
 
-const bitPaySupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isBitPayProtocolSupported ?? false)
+const paymentProtoSupportedCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
+  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPaymentProtocolSupported ?? false)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 /**
- * Handles the BitPay scanned or deeplink URI.
+ * Handles the Payment Protocol scanned or deeplink URI.
  * 1. Get payment options
  * 2. Prompt user to select supported payment option wallet OR
  *    validate calling core wallet is an accepted payment option
- * 3. Make preliminary transaction hexes to pass onto BitPay for verification
+ * 3. Make preliminary transaction hexes to pass onto the Payment Protocol for verification
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
-export async function launchBitPay(
+export async function launchPaymentProto(
   navigation: NavigationBase,
   account: EdgeAccount,
   uri: string,
@@ -79,24 +79,24 @@ export async function launchBitPay(
   }
 ): Promise<void> {
   // Fetch payment options
-  let responseJson = await fetchBitPayJsonResponse(uri, {
+  let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
     headers: { Accept: 'application/payment-options', 'x-paypro-version': '2' }
   })
-  const optionsResponse = asBpOptionsResponse(responseJson)
+  const optionsResponse = asPaymentProtoOptionsResponse(responseJson)
   const paymentId = optionsResponse.paymentId
   const options = optionsResponse.paymentOptions
-  const isTestBp = uri.toLowerCase().includes('test.bitpay.com')
+  const isTestPaymentProto = uri.toLowerCase().includes('test.bitpay.com')
   const paymentCurrencies: string[] = options
     .map<any>(po => po.currency)
     .filter(
       currency =>
-        // Omit 'BTC' if using BitPay testnet, since our testnet BTC has its own currency code.
-        bitPaySupportedCurrencyCodes.includes(currency) && !(isTestBp && currency === 'BTC')
+        // Omit 'BTC' if using Payment Protocol testnet, since our testnet BTC has its own currency code.
+        paymentProtoSupportedCurrencyCodes.includes(currency) && !(isTestPaymentProto && currency === 'BTC')
     )
 
-  // Add our test BTC currency code for BitPay testnet
-  if (isTestBp) {
+  // Add our test BTC currency code for Payment Protocol testnet
+  if (isTestPaymentProto) {
     paymentCurrencies.push('TESTBTC')
   }
 
@@ -108,7 +108,7 @@ export async function launchBitPay(
     // Ensure the core wallet is accepted by this invoice as a payment option
     selectedCurrencyCode = params.wallet.currencyInfo.currencyCode
     if (!paymentCurrencies.includes(selectedCurrencyCode)) {
-      throw new BitPayError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
+      throw new PaymentProtoError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
     }
     selectedWallet = params.wallet
   } else {
@@ -116,7 +116,7 @@ export async function launchBitPay(
     const { currencyWallets = {} } = params
     const matchingWallets: string[] = Object.keys(currencyWallets).filter(key => paymentCurrencies.includes(currencyWallets[key].currencyInfo.currencyCode))
     if (matchingWallets.length === 0) {
-      throw new BitPayError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
+      throw new PaymentProtoError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     } else {
       const walletListResult = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={paymentCurrencies} />
@@ -133,8 +133,8 @@ export async function launchBitPay(
   }
   if (selectedWallet == null) return
 
-  // Normalize our test BTC currency code with BitPay Testnet's expectation
-  const requestCurrencyCode = isTestBp && selectedCurrencyCode === 'TESTBTC' ? 'BTC' : selectedCurrencyCode
+  // Normalize our test BTC currency code with the Payment Protocol Testnet's expectation
+  const requestCurrencyCode = isTestPaymentProto && selectedCurrencyCode === 'TESTBTC' ? 'BTC' : selectedCurrencyCode
 
   // Fetch the invoice (payment-request) instructions
   const initOpts = {
@@ -145,18 +145,18 @@ export async function launchBitPay(
       currency: requestCurrencyCode
     })
   }
-  responseJson = await fetchBitPayJsonResponse(uri, initOpts)
+  responseJson = await fetchPaymentProtoJsonResponse(uri, initOpts)
 
   // Validate invoice data
-  const invoiceResponse = asBpInvoiceResponse(responseJson)
+  const invoiceResponse = asPaymentProtoInvoiceResponse(responseJson)
   let errorData: any = { uri, initOpts, responseJson, invoiceResponse }
   if (invoiceResponse.instructions.length > 1) {
-    throw new BitPayError('MultiInstructionInvoice', { errorData })
+    throw new PaymentProtoError('MultiInstructionInvoice', { errorData })
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
   errorData = { ...errorData, invoiceInstruction }
   if (!invoiceInstruction.outputs || invoiceInstruction.outputs.length === 0) {
-    throw new BitPayError('EmptyOutputInvoice', { errorData })
+    throw new PaymentProtoError('EmptyOutputInvoice', { errorData })
   }
 
   const metadata = params.metadata ?? {}
@@ -202,14 +202,14 @@ export async function launchBitPay(
       errorData = { ...errorData, spendInfo, walletId: selectedWallet?.id, edgeTransaction }
 
       if (selectedWallet == null) throw new Error('Missing selectedWallet')
-      if (unsignedHex === '' || signedHex === '') throw new BitPayError('EmptyVerificationHexReq', { errorData })
+      if (unsignedHex === '' || signedHex === '') throw new PaymentProtoError('EmptyVerificationHexReq', { errorData })
 
       const verificationPaymentRequest = {
         chain: requestCurrencyCode,
         currency: requestCurrencyCode,
         transactions: [{ tx: unsignedHex, weightedSize: signedHex.length / 2 }]
       }
-      responseJson = await fetchBitPayJsonResponse(uri, {
+      responseJson = await fetchPaymentProtoJsonResponse(uri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/payment-verification',
@@ -219,14 +219,14 @@ export async function launchBitPay(
       })
 
       // Verify that the transaction data reply matches
-      const verificationPaymentResponse = asBpVerificationResponse(responseJson).payment
+      const verificationPaymentResponse = asPaymentProtoVerificationResponse(responseJson).payment
       if (verificationPaymentResponse.transactions.length !== 1 || unsignedHex !== verificationPaymentResponse.transactions[0].tx) {
         errorData = { ...errorData, verificationPaymentRequest, verificationPaymentResponse }
         errorData.responseJson = responseJson
-        throw new BitPayError('TxVerificationMismatch', { errorData })
+        throw new PaymentProtoError('TxVerificationMismatch', { errorData })
       }
 
-      await fetchBitPayJsonResponse(uri, {
+      await fetchPaymentProtoJsonResponse(uri, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/payment',
@@ -252,10 +252,10 @@ export async function launchBitPay(
 }
 
 /**
- * BitPay Cleaners
+ * Payment Protocol Cleaners
  */
 
-const asBpOption: Cleaner<BpOption> = asObject({
+const asPaymentProtoOption: Cleaner<PaymentProtoOption> = asObject({
   chain: asString,
   currency: asString,
   network: asString,
@@ -266,32 +266,32 @@ const asBpOption: Cleaner<BpOption> = asObject({
   selected: asBoolean
 })
 
-const asBpOptionsResponse: Cleaner<BpOptionsResponse> = asObject({
+const asPaymentProtoOptionsResponse: Cleaner<PaymentProtoOptionsResponse> = asObject({
   time: asDate,
   expires: asDate,
   memo: asString,
   paymentUrl: asString,
   paymentId: asString,
-  paymentOptions: asArray(asBpOption)
+  paymentOptions: asArray(asPaymentProtoOption)
 })
 
-const asBpInstructionOutput: Cleaner<BpInstructionOutput> = asObject({
+const asPaymentProtoInstructionOutput: Cleaner<PaymentProtoInstructionOutput> = asObject({
   amount: asNumber,
   address: asString,
   invoiceID: asOptional(asString)
 })
 
-const asBpInvoiceInstruction: Cleaner<BpInvoiceInstruction> = asObject({
+const asPaymentProtoInvoiceInstruction: Cleaner<PaymentProtoInvoiceInstruction> = asObject({
   type: asString,
   requiredFeeRate: asMaybe(asNumber),
-  outputs: asOptional(asArray(asBpInstructionOutput)),
+  outputs: asOptional(asArray(asPaymentProtoInstructionOutput)),
   value: asMaybe(asNumber),
   to: asOptional(asString),
   data: asOptional(asString),
   gasPrice: asMaybe(asNumber)
 })
 
-const asBpInvoiceResponse: Cleaner<BpInvoiceResponse> = asObject({
+const asPaymentProtoInvoiceResponse: Cleaner<PaymentProtoInvoiceResponse> = asObject({
   time: asDate,
   expires: asDate,
   memo: asString,
@@ -299,21 +299,21 @@ const asBpInvoiceResponse: Cleaner<BpInvoiceResponse> = asObject({
   paymentId: asString,
   chain: asString,
   network: asString,
-  instructions: asArray(asBpInvoiceInstruction),
+  instructions: asArray(asPaymentProtoInvoiceInstruction),
   currency: asOptional(asString)
 })
 
-const asBpTransaction: Cleaner<BpTransaction> = asObject({
+const asPaymentProtoTransaction: Cleaner<PaymentProtoTransaction> = asObject({
   tx: asString
 })
 
-const asBpVerificationPayment: Cleaner<BpVerificationPayment> = asObject({
+const asPaymentProtoVerificationPayment: Cleaner<PaymentProtoVerificationPayment> = asObject({
   currency: asString,
   chain: asString,
-  transactions: asArray(asBpTransaction)
+  transactions: asArray(asPaymentProtoTransaction)
 })
 
-const asBpVerificationResponse: Cleaner<BpVerificationResponse> = asObject({
-  payment: asBpVerificationPayment,
+const asPaymentProtoVerificationResponse: Cleaner<PaymentProtoVerificationResponse> = asObject({
+  payment: asPaymentProtoVerificationPayment,
   memo: asString
 })
