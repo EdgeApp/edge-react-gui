@@ -11,7 +11,6 @@ import { upgradeCurrencyCodes, WalletListModal, WalletListResult } from '../comp
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
@@ -184,22 +183,6 @@ export function parseScannedUri(
     const edgeWallet = currencyWallets[selectedWalletId]
     const currencyCode = state.ui.wallets.selectedCurrencyCode
 
-    let fioAddress
-    if (account && account.currencyConfig) {
-      const fioPlugin = account.currencyConfig.fio
-      if (fioPlugin != null) {
-        const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-        try {
-          const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
-          fioAddress = data.toLowerCase()
-          data = publicAddress
-        } catch (e: any) {
-          if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-            return showError(e)
-          }
-        }
-      }
-    }
     // Check for things other than coins:
     try {
       const deepLink = parseDeepLink(data)
@@ -263,13 +246,6 @@ export function parseScannedUri(
           nativeAmount
         }
       ]
-
-      if (fioAddress != null) {
-        spendTargets[0].otherParams = {
-          fioAddress,
-          isSendUsingFioAddress: true
-        }
-      }
 
       const guiMakeSpendInfo: GuiMakeSpendInfo = {
         spendTargets,
