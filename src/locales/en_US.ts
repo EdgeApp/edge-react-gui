@@ -686,9 +686,11 @@ const strings = {
   unique_identifier_memo: 'Memo',
   unique_identifier_memo_id: 'Memo ID',
   unique_identifier_destination_tag: 'Destination Tag',
+  unique_identifier_note: 'Note',
   unique_identifier_dropdown_option_memo: 'Add Memo',
   unique_identifier_dropdown_option_memo_id: 'Add Memo ID',
   unique_identifier_dropdown_option_destination_tag: 'Add Destination Tag',
+  unique_identifier_dropdown_option_note: 'Add Note',
   unique_identifier_modal_description: 'Please enter the %s value to be sent to the recipient of this transaction',
   unique_identifier_modal_confirm: 'Confirm',
 
