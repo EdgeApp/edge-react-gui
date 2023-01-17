@@ -131,16 +131,6 @@ export class MainComponent extends React.Component<Props> {
           panHandlers={null}
         >
           <Scene key="login" component={withNavigation(withServices(LoginScene))} initial />
-          <Scene
-            key="edgeLogin"
-            component={withNavigation(ifLoggedIn(EdgeLoginScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_edge_login} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<HeaderTextButton type="help" placement="right" />}
-          />
           <Drawer
             hideTabBar
             drawerBackgroundColor="none"
@@ -448,6 +438,17 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
         </Tabs>
+
+        <Scene
+          key="edgeLogin"
+          component={withNavigation(ifLoggedIn(EdgeLoginScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_edge_login} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="help" placement="right" />}
+        />
 
         <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
 
