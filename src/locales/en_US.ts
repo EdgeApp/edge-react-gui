@@ -192,6 +192,7 @@ const strings = {
   fragment_transaction_list_tx_dropped: 'Dropped',
   fragment_transaction_list_tx_synchronizing: 'Synchronizing',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
+  fragment_transaction_list_unconfirmed_rbf: 'Awaiting confirmation, may be cancelled',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_buy_and_earn_crypto_message: 'Buy or Earn %s',

@@ -59,6 +59,7 @@ describe('Transaction List Row', () => {
       networkFee: '0',
       currencyCode: 'XMR',
       wallet,
+      walletId: 'lmnop',
       otherParams: {},
       SVGMetadataElement: { name: 'ShapeShift', category: '', notes: 'Exchanged …' },
       dateString: 'Oct 14, 2018',
