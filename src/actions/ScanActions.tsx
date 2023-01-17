@@ -20,7 +20,6 @@ import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
-import { launchDeepLink } from './DeepLinkingActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -167,45 +166,17 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   return approve
 }
 
-export function parseScannedUri(
+export function handleWalletUris(
   navigation: NavigationBase,
-  data: string,
-  customErrorTitle?: string,
-  customErrorDescription?: string
+  coreWallet: EdgeCurrencyWallet,
+  parsedUri: EdgeParsedUri,
+  fioAddress?: string
 ): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
-    if (!data) return
-    const state = getState()
-    const { account } = state.core
-    const { currencyWallets } = account
-
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[selectedWalletId]
-    const currencyCode = state.ui.wallets.selectedCurrencyCode
-
-    // Check for things other than coins:
-    try {
-      const deepLink = parseDeepLink(data)
-      switch (deepLink.type) {
-        case 'other':
-          // Handle this link type below:
-          break
-        case 'requestAddress':
-          return await doRequestAddress(navigation, account, dispatch, deepLink)
-        case 'edgeLogin':
-        case 'paymentProto':
-        default:
-          dispatch(launchDeepLink(navigation, deepLink))
-          return
-      }
-    } catch (error: any) {
-      return showError(error)
-    }
+    const currencyCode = parsedUri.currencyCode ?? coreWallet.currencyInfo.currencyCode
 
     // Coin operations
     try {
-      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
-
       // Check if the URI requires a warning to the user
       await addressWarnings(parsedUri, currencyCode)
 
@@ -217,7 +188,7 @@ export function parseScannedUri(
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
           networkLocation: { contractAddress },
-          walletId: selectedWalletId
+          walletId: coreWallet.id
         })
       }
 
@@ -226,7 +197,7 @@ export function parseScannedUri(
         const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
         navigation.push('send', {
           guiMakeSpendInfo,
-          selectedWalletId,
+          selectedWalletId: coreWallet.id,
           selectedCurrencyCode: currencyCode
         })
 
@@ -257,23 +228,18 @@ export function parseScannedUri(
 
       navigation.push('send', {
         guiMakeSpendInfo,
-        selectedWalletId,
+        selectedWalletId: coreWallet.id,
         selectedCurrencyCode: currencyCode
       })
-      // dispatch(sendConfirmationUpdateTx(parsedUri))
     } catch (error: any) {
       // INVALID URI
       setTimeout(
         () =>
-          Alert.alert(
-            customErrorTitle || s.strings.scan_invalid_address_error_title,
-            customErrorDescription || s.strings.scan_invalid_address_error_description,
-            [
-              {
-                text: s.strings.string_ok
-              }
-            ]
-          ),
+          Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
+            {
+              text: s.strings.string_ok
+            }
+          ]),
         500
       )
     }

@@ -1,5 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
+import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
@@ -12,8 +11,7 @@ import { activatePromotion } from './AccountReferralActions'
 import { loginWithEdge } from './EdgeLoginActions'
 import { pickWallet } from './ModalHelpers'
 import { launchPaymentProto } from './PaymentProtoActions'
-import { doRequestAddress, parseScannedUri } from './ScanActions'
-import { selectWallet } from './WalletActions'
+import { doRequestAddress, handleWalletUris } from './ScanActions'
 
 /**
  * The app has just received some of link,
@@ -53,10 +51,9 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Pr
 /**
  * Launches a link if it app is able to do so.
  */
-async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink, coreWallet?: EdgeCurrencyWallet): Promise<boolean> {
+export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account } = state.core
   const { activeWalletIds, currencyWallets, username } = account
-  const { byId = {} } = state.ui.wallets
 
   // Wait for all wallets to load before handling deep links
   const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
@@ -146,32 +143,47 @@ async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state:
     }
 
     case 'other': {
-      const currencyName = link.protocol
-      const currencyCode = CURRENCY_NAMES[currencyName]
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri }> = []
 
-      // If we don't know what this is, fake a barcode scan:
-      if (currencyCode == null) {
-        dispatch(parseScannedUri(navigation, link.uri))
+      // Try to parse with all wallets
+      for (const wallet of Object.values(currencyWallets)) {
+        const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
+        if (parsedUri != null) {
+          matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri })
+        }
+      }
+
+      if (matchingWalletIdsAndUris.length === 0) {
+        if (!allWalletsLoaded) return false
+
+        showError(s.strings.alert_deep_link_no_wallet_for_uri)
         return true
       }
 
-      // See if we have a wallet that can handle this currency:
-      const walletIds = Object.keys(byId)
-      for (const walletId of walletIds) {
-        const wallet = byId[walletId]
-        if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(navigation, wallet.id, wallet.currencyCode))
-        dispatch(parseScannedUri(navigation, link.uri))
+      if (matchingWalletIdsAndUris.length === 1) {
+        const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
+        dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
         return true
       }
 
-      // Keep waiting while wallets are loading:
-      if (!allWalletsLoaded) return false
+      const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
+      const walletListResult = await pickWallet({ account, allowedWalletIds, navigation })
+      if (walletListResult == null) {
+        showError(s.strings.scan_camera_no_matching_wallet)
+        return true
+      }
 
-      // Show an error:
-      const currency = convertCurrencyStringFromCurrencyCode(currencyCode)
-      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, currency)
-      showError(noWalletMessage)
+      // User backed out of choosing a wallet
+      if (walletListResult.walletId == null) return true
+      const widUri = matchingWalletIdsAndUris.find(({ walletId }) => walletId === walletListResult.walletId)
+
+      if (widUri == null) {
+        // This should never happen. The picked wallet should come from the list of matching wallet IDs
+        showError('Internal Error: Missing wallet ID for chosen wallet')
+        return true
+      }
+      const { parsedUri, walletId } = widUri
+      dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
       return true
     }
 
@@ -198,35 +210,4 @@ async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrency
     showError(s.strings.azteco_service_unavailable)
   }
   navigation.push('walletListScene', {})
-}
-
-/**
- * Maps from URL protocols to currency codes.
- */
-const CURRENCY_NAMES: { [protocol: string]: string | undefined } = {
-  bitcoin: 'BTC',
-  bitcoincash: 'BCH',
-  ethereum: 'ETH',
-  litecoin: 'LTC',
-  dash: 'DASH',
-  rsk: 'RBTC'
-}
-
-function convertCurrencyStringFromCurrencyCode(code: string): string {
-  switch (code) {
-    case 'BTC':
-      return 'Bitcoin'
-    case 'BCH':
-      return 'Bitcoin Cash'
-    case 'ETH':
-      return 'Ethereum'
-    case 'LTC':
-      return 'Litecoin'
-    case 'DASH':
-      return 'Dash'
-    case 'RBTC':
-      return 'RSK'
-    default:
-      return code
-  }
 }

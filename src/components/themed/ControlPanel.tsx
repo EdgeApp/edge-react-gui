@@ -14,8 +14,8 @@ import { sprintf } from 'sprintf-js'
 
 import ENV from '../../../env.json'
 import { deleteLocalAccount } from '../../actions/AccountActions'
+import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
-import { parseScannedUri } from '../../actions/ScanActions'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
@@ -31,6 +31,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -148,7 +149,8 @@ export function ControlPanel(props: Props) {
         Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | undefined) => {
             if (result) {
-              dispatch(parseScannedUri(navigation, result))
+              const deepLink = parseDeepLink(result)
+              dispatch(launchDeepLink(navigation, deepLink))
             }
           })
           .catch(showError)
@@ -165,7 +167,8 @@ export function ControlPanel(props: Props) {
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
         if (result) {
-          dispatch(parseScannedUri(navigation, result))
+          const deepLink = parseDeepLink(result)
+          dispatch(launchDeepLink(navigation, deepLink))
         }
       })
       .catch(showError)
