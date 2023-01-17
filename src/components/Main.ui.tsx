@@ -142,13 +142,13 @@ export class MainComponent extends React.Component<Props> {
             renderRightButton={<HeaderTextButton type="help" placement="right" />}
           />
           <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
-          {this.renderTabView()}
+          {this.renderMainApp()}
         </Stack>
       </Router>
     )
   }
 
-  renderTabView = () => {
+  renderMainApp = () => {
     return (
       <Drawer
         hideTabBar
