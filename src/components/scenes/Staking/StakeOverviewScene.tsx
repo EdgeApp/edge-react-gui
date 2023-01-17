@@ -77,7 +77,7 @@ export const StakeOverviewScene = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [wallet, stakePolicyId, updateCounter])
+  }, [wallet, stakePolicyId, updateCounter, stakePlugin])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
