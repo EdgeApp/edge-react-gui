@@ -142,27 +142,9 @@ export class MainComponent extends React.Component<Props> {
             renderRightButton={<HeaderTextButton type="help" placement="right" />}
           />
           <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
-          {this.renderTransactionDetailsView()}
           {this.renderTabView()}
         </Stack>
       </Router>
-    )
-  }
-
-  renderTransactionDetailsView = () => {
-    return (
-      <Scene
-        key="transactionDetails"
-        component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
-        navTransparent
-        onEnter={() => this.props.requestPermission('contacts')}
-        clone
-        renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
-        // @ts-expect-error
-        renderLeftButton={<BackButton onPress={this.handleBack} />}
-        // @ts-expect-error
-        renderRightButton={<SideMenuButton />}
-      />
     )
   }
 
@@ -264,6 +246,19 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 renderTitle={() => <HeaderTitle title=" " />}
+                // @ts-expect-error
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                // @ts-expect-error
+                renderRightButton={<SideMenuButton />}
+              />
+
+              <Scene
+                key="transactionDetails"
+                component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+                navTransparent
+                onEnter={() => this.props.requestPermission('contacts')}
+                clone
+                renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
