@@ -15,7 +15,7 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
@@ -44,7 +44,7 @@ import { launchDeepLink } from './DeepLinkingActions'
  * - Disallow reqaddr's that specify other reqaddr's in the 'redir' query (prevent
  *    infinite redirect loops).
  */
-export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
+export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
   dispatch({ type: 'DISABLE_SCAN' })
   const { assets, post, redir, payer } = link
   try {
@@ -98,7 +98,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
     const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
     )).then(async ({ walletId, currencyCode }) => {
       if (walletId != null && currencyCode != null) {
         const { currencyWallets } = account
@@ -169,7 +169,12 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   return approve
 }
 
-export function parseScannedUri(data: string, customErrorTitle?: string, customErrorDescription?: string): ThunkAction<Promise<unknown>> {
+export function parseScannedUri(
+  navigation: NavigationBase,
+  data: string,
+  customErrorTitle?: string,
+  customErrorDescription?: string
+): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
     if (!data) return
     const state = getState()
@@ -204,11 +209,11 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
           // Handle this link type below:
           break
         case 'requestAddress':
-          return await doRequestAddress(account, dispatch, deepLink)
+          return await doRequestAddress(navigation, account, dispatch, deepLink)
         case 'edgeLogin':
         case 'bitPay':
         default:
-          dispatch(launchDeepLink(deepLink))
+          dispatch(launchDeepLink(navigation, deepLink))
           return
       }
     } catch (error: any) {
@@ -226,7 +231,7 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
       if (parsedUri.token) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-        return Actions.push('editToken', {
+        return navigation.push('editToken', {
           currencyCode: currencyCode.toUpperCase(),
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
@@ -238,7 +243,7 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
       // LEGACY ADDRESS URI
       if (parsedUri.legacyAddress != null) {
         const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-        Actions.push('send', {
+        navigation.push('send', {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -276,7 +281,7 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
         nativeAmount
       }
 
-      Actions.push('send', {
+      navigation.push('send', {
         guiMakeSpendInfo,
         selectedWalletId,
         selectedCurrencyCode: currencyCode
@@ -373,7 +378,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
+export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
       const state = getState()
@@ -416,10 +421,10 @@ export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCu
         ))
       }
       if (threeButtonModal === 'buy') {
-        Actions.jump('pluginListBuy', { direction: 'buy' })
+        navigation.navigate('pluginListBuy', { direction: 'buy' })
       } else if (threeButtonModal === 'exchange') {
         dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-        Actions.jump('exchangeScene', {})
+        navigation.navigate('exchangeScene', {})
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

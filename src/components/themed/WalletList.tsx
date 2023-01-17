@@ -7,6 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
@@ -20,6 +21,8 @@ import { WalletListLoadingRow } from './WalletListLoadingRow'
 import { WalletListSectionHeader } from './WalletListSectionHeader'
 
 interface Props {
+  navigation: NavigationBase
+
   // Filtering:
   allowedAssets?: EdgeTokenId[]
   excludeAssets?: EdgeTokenId[]
@@ -55,6 +58,8 @@ interface Section {
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
+    navigation,
+
     // Filtering:
     allowedAssets,
     excludeAssets,
@@ -79,9 +84,9 @@ export function WalletList(props: Props) {
     () =>
       onPress ??
       ((walletId: string, currencyCode: string) => {
-        dispatch(selectWallet(walletId, currencyCode))
+        dispatch(selectWallet(navigation, walletId, currencyCode))
       }),
-    [dispatch, onPress]
+    [dispatch, navigation, onPress]
   )
 
   // Subscribe to the common wallet list:

@@ -245,6 +245,7 @@ const SendComponent = (props: Props) => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={openCamera}
           fioToAddress={fioAddress}
+          navigation={navigation}
         />
       )
     }
@@ -374,7 +375,7 @@ const SendComponent = (props: Props) => {
   }
 
   const handleWalletPress = useHandler(() => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} />)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} navigation={navigation} />)
       .then((result: WalletListResult) => {
         if (result.walletId == null || result.currencyCode == null) {
           return

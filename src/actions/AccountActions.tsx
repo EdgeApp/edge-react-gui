@@ -5,16 +5,16 @@ import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 
-export function handleOtpError(otpError: OtpError): ThunkAction<void> {
+export function handleOtpError(navigation: NavigationBase, otpError: OtpError): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account, otpErrorShown } = state.core
 
     if (account.loggedIn && !otpErrorShown) {
       dispatch({ type: 'OTP_ERROR_SHOWN' })
-      Actions.push('otpRepair', {
+      navigation.push('otpRepair', {
         otpError
       })
     }

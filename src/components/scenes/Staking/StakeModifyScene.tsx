@@ -194,6 +194,7 @@ export const StakeModifyScene = (props: Props) => {
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
+        navigation={navigation}
         walletId={walletId}
         currencyCode={currencyCode}
         onAmountChanged={() => {}}

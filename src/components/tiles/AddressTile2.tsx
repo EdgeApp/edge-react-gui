@@ -12,6 +12,7 @@ import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { BitPayError } from '../../types/BitPayError'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -35,6 +36,7 @@ interface OwnProps {
   lockInputs?: boolean
   isCameraOpen: boolean
   fioToAddress?: string
+  navigation: NavigationBase
 }
 interface StateProps {
   account: EdgeAccount
@@ -85,7 +87,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   onChangeAddress = async (address: string) => {
     if (address == null || address === '') return
-    const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
+    const { onChangeAddress, coreWallet, currencyCode, fioPlugin, navigation } = this.props
 
     this.setState({ loading: true })
     let fioAddress
@@ -126,7 +128,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchBitPay(this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
+        await launchBitPay(navigation, this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
 
         return
       }
@@ -145,7 +147,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          await launchBitPay(navigation, this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)

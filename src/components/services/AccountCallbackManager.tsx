@@ -9,13 +9,14 @@ import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { Actions, NavigationBase } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
 interface Props {
   account: EdgeAccount
+  navigation: NavigationBase
 }
 
 // Tracks items that need a refresh:
@@ -32,7 +33,7 @@ const notDirty: DirtyList = {
 }
 
 export function AccountCallbackManager(props: Props) {
-  const { account } = props
+  const { account, navigation } = props
   const dispatch = useDispatch()
   const [dirty, setDirty] = React.useState<DirtyList>(notDirty)
 
@@ -90,13 +91,13 @@ export function AccountCallbackManager(props: Props) {
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
         dispatch(refreshTransactionsRequest(wallet.id, transactions))
-        dispatch(newTransactionsRequest(wallet.id, transactions))
+        dispatch(newTransactionsRequest(navigation, wallet.id, transactions))
         addWallet(wallet)
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
         if (isReceivedTransaction(transactions[finalTxIndex])) {
-          dispatch(checkPasswordRecovery())
+          dispatch(checkPasswordRecovery(navigation))
         }
       }),
 

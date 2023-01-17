@@ -14,7 +14,7 @@ import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
-import { Services } from './Services'
+import { Providers } from './Providers'
 
 interface Props {}
 
@@ -133,7 +133,7 @@ export function EdgeCoreManager(props: Props) {
           onError={handleError}
         />
       )}
-      {context == null ? <LoadingScene /> : <Services key={`redux${counter.current}`} context={context} />}
+      {context == null ? <LoadingScene /> : <Providers key={`redux${counter.current}`} context={context} />}
     </>
   )
 }

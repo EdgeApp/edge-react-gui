@@ -5,7 +5,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils'
 
 const levels = ['20', '200', '2000', '20000', '200000'] as const
@@ -14,7 +14,7 @@ const levels = ['20', '200', '2000', '20000', '200000'] as const
  * Show a modal if the user's balance is over one of the limits &
  * they don't have recovery set up.
  */
-export function checkPasswordRecovery(): ThunkAction<void> {
+export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -31,7 +31,7 @@ export function checkPasswordRecovery(): ThunkAction<void> {
       // Mark this level as shown:
       dispatch({ type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: level })
       setPasswordRecoveryRemindersAsync(account, level).catch(showError)
-      showReminderModal().catch(showError)
+      showReminderModal(navigation).catch(showError)
       return
     }
   }
@@ -39,7 +39,7 @@ export function checkPasswordRecovery(): ThunkAction<void> {
 /**
  * Actually show the password reminder modal.
  */
-async function showReminderModal() {
+async function showReminderModal(navigation: NavigationBase) {
   const reply = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -51,5 +51,5 @@ async function showReminderModal() {
       }}
     />
   ))
-  if (reply === 'ok') Actions.push('passwordRecovery', {})
+  if (reply === 'ok') navigation.push('passwordRecovery', {})
 }
