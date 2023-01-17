@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,7 @@ import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { GuiMakeSpendInfo } from '../types/types'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils'
@@ -171,9 +171,11 @@ export function handleWalletUris(
   coreWallet: EdgeCurrencyWallet,
   parsedUri: EdgeParsedUri,
   fioAddress?: string
-): ThunkAction<Promise<unknown>> {
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const currencyCode = parsedUri.currencyCode ?? coreWallet.currencyInfo.currencyCode
+    const { account } = getState().core
+    const { legacyAddress, metadata, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
+    const currencyCode: string = parsedUri.currencyCode ?? coreWallet.currencyInfo.currencyCode
 
     // Coin operations
     try {
@@ -192,45 +194,31 @@ export function handleWalletUris(
         })
       }
 
-      // LEGACY ADDRESS URI
-      if (parsedUri.legacyAddress != null) {
-        const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-        navigation.push('send', {
-          guiMakeSpendInfo,
-          selectedWalletId: coreWallet.id,
-          selectedCurrencyCode: currencyCode
-        })
-
-        return
-      }
-
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
         return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
       }
 
       // PUBLIC ADDRESS URI
-      const nativeAmount = parsedUri.nativeAmount || ''
-      const spendTargets: EdgeSpendTarget[] = [
-        {
-          publicAddress: parsedUri.publicAddress,
-          nativeAmount
-        }
-      ]
-
-      const guiMakeSpendInfo: GuiMakeSpendInfo = {
-        spendTargets,
-        lockInputs: false,
-        metadata: parsedUri.metadata,
-        uniqueIdentifier: parsedUri.uniqueIdentifier,
-        nativeAmount
+      let tokenId: string | undefined
+      if (currencyCode !== coreWallet.currencyInfo.currencyCode) {
+        tokenId = getTokenId(account, coreWallet.currencyInfo.pluginId, currencyCode)
+      }
+      const spendInfo: EdgeSpendInfo = {
+        metadata,
+        spendTargets: [
+          {
+            // Prioritize legacyAddress first since the existence of a legacy address means that a legacy address
+            // was scanned. Plugins may translate a legacy address into a publicAddress and provide that as well
+            publicAddress: legacyAddress ?? publicAddress,
+            memo: uniqueIdentifier,
+            nativeAmount
+          }
+        ],
+        tokenId
       }
 
-      navigation.push('send', {
-        guiMakeSpendInfo,
-        selectedWalletId: coreWallet.id,
-        selectedCurrencyCode: currencyCode
-      })
+      navigation.push('send2', { walletId: coreWallet.id, spendInfo })
     } catch (error: any) {
       // INVALID URI
       setTimeout(
