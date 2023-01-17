@@ -43,7 +43,7 @@ import { withServices } from './hoc/withServices'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
-import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton'
+import { handlePluginBack, PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
 import { HeaderTitle } from './navigation/HeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
@@ -385,7 +385,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton}
+                renderLeftButton={PluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -394,7 +394,7 @@ export class MainComponent extends React.Component<Props> {
                 key="guiPluginEnterAmount"
                 component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
                 navTransparent
-                renderLeftButton={renderPluginBackButton}
+                renderLeftButton={PluginBackButton}
                 hideTabBar
               />
             </Stack>
@@ -415,7 +415,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                renderLeftButton={renderPluginBackButton}
+                renderLeftButton={PluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -712,7 +712,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              renderLeftButton={renderPluginBackButton}
+              renderLeftButton={PluginBackButton}
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="exit" placement="right" />}
             />
@@ -1014,7 +1014,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               // @ts-expect-error
               renderTitle={<EdgeLogoHeader />}
-              renderLeftButton={renderPluginBackButton}
+              renderLeftButton={PluginBackButton}
               // @ts-expect-error
               renderRightButton={<SideMenuButton />}
             />
