@@ -5,7 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
 import { triggerHaptic } from '../../util/haptic'
@@ -45,6 +47,11 @@ const TransactionRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const wallet = currencyWallets[transaction.walletId]
+  const { canReplaceByFee = false } = wallet.currencyInfo
+
   const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
   const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
 
@@ -67,6 +74,8 @@ const TransactionRowComponent = (props: Props) => {
   const pendingText =
     currentConfirmations === 'confirmed'
       ? transaction.time
+      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
+      ? s.strings.fragment_transaction_list_unconfirmed_rbf
       : currentConfirmations === 'unconfirmed'
       ? s.strings.fragment_wallet_unconfirmed
       : currentConfirmations === 'dropped'
