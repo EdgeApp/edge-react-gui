@@ -98,19 +98,6 @@ import { WcDisconnectScene } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance'
 import { MenuTab } from './themed/MenuTab'
 
-const RouterWithRedux = connect<
-  {},
-  {},
-  {
-    children?: React.ReactNode
-    backAndroidHandler?: () => boolean
-  }
->(
-  state => ({}),
-  dispatch => ({})
-  // @ts-expect-error
-)(Router)
-
 interface DispatchProps {
   // Navigation actions:
   logout: (username?: string) => void
@@ -136,31 +123,29 @@ export class MainComponent extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        <RouterWithRedux backAndroidHandler={this.handleBack}>
-          <Stack
-            key="root"
-            hideNavBar
+      <Router backAndroidHandler={this.handleBack}>
+        <Stack
+          key="root"
+          hideNavBar
+          // @ts-expect-error
+          panHandlers={null}
+        >
+          <Scene key="login" component={withNavigation(withServices(LoginScene))} initial />
+          <Scene
+            key="edgeLogin"
+            component={withNavigation(ifLoggedIn(EdgeLoginScene))}
+            navTransparent
+            renderTitle={() => <HeaderTitle title={s.strings.title_edge_login} />}
             // @ts-expect-error
-            panHandlers={null}
-          >
-            <Scene key="login" component={withNavigation(withServices(LoginScene))} initial />
-            <Scene
-              key="edgeLogin"
-              component={withNavigation(ifLoggedIn(EdgeLoginScene))}
-              navTransparent
-              renderTitle={() => <HeaderTitle title={s.strings.title_edge_login} />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
-            />
-            <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
-            {this.renderTransactionDetailsView()}
-            {this.renderTabView()}
-          </Stack>
-        </RouterWithRedux>
-      </>
+            renderLeftButton={<BackButton onPress={this.handleBack} />}
+            // @ts-expect-error
+            renderRightButton={<HeaderTextButton type="help" placement="right" />}
+          />
+          <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
+          {this.renderTransactionDetailsView()}
+          {this.renderTabView()}
+        </Stack>
+      </Router>
     )
   }
 
