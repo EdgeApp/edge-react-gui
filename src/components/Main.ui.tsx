@@ -141,7 +141,6 @@ export class MainComponent extends React.Component<Props> {
             // @ts-expect-error
             renderRightButton={<HeaderTextButton type="help" placement="right" />}
           />
-          <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
           <Drawer
             hideTabBar
             drawerBackgroundColor="none"
@@ -449,6 +448,8 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
         </Tabs>
+
+        <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
 
         <Stack key="request" hideTabBar>
           <Scene
