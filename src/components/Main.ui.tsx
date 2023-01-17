@@ -385,8 +385,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={renderPluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -395,8 +394,7 @@ export class MainComponent extends React.Component<Props> {
                 key="guiPluginEnterAmount"
                 component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
                 navTransparent
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={renderPluginBackButton}
                 hideTabBar
               />
             </Stack>
@@ -417,8 +415,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={renderPluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -715,8 +712,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
+              renderLeftButton={renderPluginBackButton}
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="exit" placement="right" />}
             />
@@ -1018,8 +1014,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               // @ts-expect-error
               renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
+              renderLeftButton={renderPluginBackButton}
               // @ts-expect-error
               renderRightButton={<SideMenuButton />}
             />
