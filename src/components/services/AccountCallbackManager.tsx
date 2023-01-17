@@ -1,6 +1,7 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Actions } from 'react-native-router-flux'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
@@ -9,7 +10,7 @@ import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
-import { Actions, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
@@ -65,7 +66,7 @@ export function AccountCallbackManager(props: Props) {
 
       watchSecurityAlerts(account, hasAlerts => {
         if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          Actions.push('securityAlerts', {})
+          navigation.push('securityAlerts', {})
         }
       }),
 
@@ -78,7 +79,7 @@ export function AccountCallbackManager(props: Props) {
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
-  }, [account])
+  }, [account, navigation])
 
   // Subscribe to each wallet that comes online:
   useWalletsSubscriber(account, wallet => {

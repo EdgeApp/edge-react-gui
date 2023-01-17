@@ -11,7 +11,7 @@ import { ModalMessage } from '../components/themed/ModalParts'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { NavigationProp } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -33,7 +33,7 @@ export type WalletListMenuKey =
   | string // for split keys like splitBCH, splitETH, etc.
 
 export function walletListMenuAction(
-  navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
+  navigation: NavigationBase,
   walletId: string,
   option: WalletListMenuKey,
   tokenId?: string

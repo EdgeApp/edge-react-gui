@@ -502,6 +502,7 @@ const SendComponent = (props: Props) => {
     const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
     return (
       <SelectFioAddress2
+        navigation={navigation}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
         memoError={fioSender.memoError}
@@ -830,6 +831,7 @@ const SendComponent = (props: Props) => {
     return () => {
       if (onBack != null) onBack()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Calculate the transaction

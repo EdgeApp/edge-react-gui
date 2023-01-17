@@ -6,7 +6,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -14,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationBase
 }
 
 export const WalletListFooter = (props: Props) => {

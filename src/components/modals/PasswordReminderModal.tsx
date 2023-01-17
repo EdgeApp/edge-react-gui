@@ -5,7 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeTextField } from '../themed/EdgeTextField'
@@ -15,6 +15,7 @@ import { ThemedModal } from '../themed/ThemedModal'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
+  navigation: NavigationProp<'walletList'>
 }
 
 interface StateProps {
@@ -52,7 +53,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     if (!this.state.spinning) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
-      setTimeout(() => Actions.jump('changePassword', {}), 10)
+      setTimeout(() => this.props.navigation.navigate('changePassword', {}), 10)
     }
   }
 

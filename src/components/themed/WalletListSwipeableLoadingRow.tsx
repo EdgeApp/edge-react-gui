@@ -4,7 +4,7 @@ import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
@@ -13,7 +13,7 @@ import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
 interface Props {
-  navigation: NavigationProp<'walletList'>
+  navigation: NavigationBase
   walletId: string
 }
 

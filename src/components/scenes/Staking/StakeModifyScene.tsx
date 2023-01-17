@@ -135,7 +135,7 @@ export const StakeModifyScene = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [modification, stakePolicyId, changeQuoteRequest, wallet, existingAllocations, stakePolicy])
+  }, [modification, stakePolicyId, changeQuoteRequest, wallet, existingAllocations, stakePolicy, stakePlugin])
 
   //
   // Handlers

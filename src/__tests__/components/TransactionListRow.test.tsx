@@ -6,6 +6,7 @@ import { createStore } from 'redux'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
 import { rootReducer } from '../../reducers/RootReducer'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {
@@ -46,6 +47,7 @@ describe('TransactionListRow', () => {
     const renderer = TestRenderer.create(
       <Provider store={store}>
         <TransactionListRow
+          navigation={fakeNavigation}
           walletId="lmnop"
           currencyCode="BTC"
           transaction={{

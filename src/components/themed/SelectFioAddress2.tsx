@@ -7,7 +7,7 @@ import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -18,6 +18,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
+  navigation: NavigationBase
   selected: string
   memo: string
   memoError: string
@@ -140,7 +141,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
-    const { fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
+    const { navigation, fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
     if (!fioWallet) {
       if (fioAddresses && fioAddress.length) {
         const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
@@ -179,7 +180,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
           />
         ))
         if (answer === 'ok') {
-          return Actions.push('fioAddressSettings', {
+          return navigation.push('fioAddressSettings', {
             showAddBundledTxs: true,
             fioWallet,
             fioAddressName: fioAddress
