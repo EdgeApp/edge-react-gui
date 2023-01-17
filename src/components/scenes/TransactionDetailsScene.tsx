@@ -18,7 +18,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiContact, GuiWallet } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
@@ -38,7 +38,7 @@ import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: NavigationProp<'transactionDetails'>
   route: RouteProp<'transactionDetails'>
   wallet: EdgeCurrencyWallet
 }

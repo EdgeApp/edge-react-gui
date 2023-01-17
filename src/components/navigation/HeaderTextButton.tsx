@@ -2,7 +2,7 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import s from '../../locales/strings'
-import { NavigationBase } from '../../types/routerTypes'
+import { Actions } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -11,7 +11,6 @@ import { EdgeText } from '../themed/EdgeText'
 interface Props {
   type: 'exit' | 'help'
   placement: 'left' | 'right'
-  navigation: NavigationBase
 }
 
 const title = {
@@ -22,9 +21,9 @@ const title = {
 class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> {
   handlePress = () => {
     triggerHaptic('impactLight')
-    const { type, navigation } = this.props
+    const { type } = this.props
     if (type === 'exit') {
-      navigation.pop()
+      Actions.pop()
     } else if (type === 'help') {
       showHelpModal()
     }

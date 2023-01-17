@@ -5,7 +5,6 @@ import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
@@ -30,7 +29,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, ParamList } from '../../types/routerTypes'
+import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -43,7 +42,7 @@ import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 
 interface Props {
-  navigation: NavigationBase
+  navigation: NavigationProp<'controlPanel'>
 }
 
 const xButtonGradientStart = { x: 0, y: 0 }
@@ -182,7 +181,7 @@ export function ControlPanel(props: Props) {
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
-  const handleGoToScene = (navigation: NavigationBase, scene: keyof ParamList, sceneProps: any) => {
+  const handleGoToScene = (navigation: NavigationProp<'controlPanel'>, scene: keyof ParamList, sceneProps: any) => {
     if (Actions.currentScene !== scene) {
       navigation.navigate(scene, sceneProps)
     } else if (sceneProps) {

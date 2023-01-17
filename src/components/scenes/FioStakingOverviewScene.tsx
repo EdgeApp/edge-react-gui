@@ -13,7 +13,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { convertNativeToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -24,7 +24,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: NavigationProp<'fioStakingOverview'>
   route: RouteProp<'fioStakingOverview'>
 }
 interface StateProps {
@@ -83,10 +83,10 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.jump('fioStakingChange', { change: 'add', currencyCode, walletId })
+    navigation.navigate('fioStakingChange', { change: 'add', currencyCode, walletId })
   }
   const handlePressUnstake = () => {
-    navigation.jump('fioStakingChange', { change: 'remove', currencyCode, walletId })
+    navigation.navigate('fioStakingChange', { change: 'remove', currencyCode, walletId })
   }
 
   const renderItems = () =>

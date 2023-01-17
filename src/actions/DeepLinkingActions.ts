@@ -148,7 +148,6 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       // If we don't know what this is, fake a barcode scan:
       if (currencyCode == null) {
         dispatch(parseScannedUri(navigation, link.uri))
-        dispatch(parseScannedUri(navigation, link.uri))
         return true
       }
 

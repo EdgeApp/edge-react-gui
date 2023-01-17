@@ -14,7 +14,7 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import s from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateActionProgram } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
@@ -39,7 +39,7 @@ const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
 }
 
 interface Props {
-  navigation: NavigationBase
+  navigation: NavigationProp<'loanCreateConfirmation'>
   route: RouteProp<'loanCreateConfirmation'>
 }
 

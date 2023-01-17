@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
+import { Actions } from '../../types/routerTypes'
 import { BackButton } from './BackButton'
 
 // The scene holds a ref to the webview:
@@ -13,7 +13,7 @@ export function setPluginScene(plugin: PluginScene | undefined) {
   currentPlugin = plugin
 }
 
-export function renderPluginBackButton() {
+export function PluginBackButton() {
   return <BackButton onPress={() => handlePluginBack()} />
 }
 

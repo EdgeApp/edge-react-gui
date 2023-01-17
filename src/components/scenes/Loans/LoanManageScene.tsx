@@ -26,7 +26,7 @@ import { toPercentString } from '../../../locales/intl'
 import s from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -105,7 +105,7 @@ const MANAGE_ACTION_DATA_MAP: {
 
 interface Props {
   loanAccount: LoanAccount
-  navigation: NavigationBase
+  navigation: NavigationProp<'loanManage'>
   route: RouteProp<'loanManage'>
 }
 

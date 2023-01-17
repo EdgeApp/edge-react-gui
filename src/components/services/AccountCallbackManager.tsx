@@ -1,6 +1,7 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Actions } from 'react-native-router-flux'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
@@ -64,7 +65,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        if (hasAlerts && navigation.state.currentScene !== 'securityAlerts') {
+        if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
           navigation.push('securityAlerts', {})
         }
       }),
