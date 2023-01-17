@@ -141,6 +141,7 @@
   "fragment_transaction_list_tx_dropped": "ドロップ",
   "fragment_transaction_list_tx_synchronizing": "同期中",
   "fragment_transaction_list_confirmation_progress": "%s/%s確認",
+  "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transactions",
   "transaction_list_buy_crypto_message": "%sを購入",
   "transaction_list_buy_and_earn_crypto_message": "Buy or Earn %s",
