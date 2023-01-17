@@ -25,16 +25,6 @@ npx jetify
 # Copy the API key to native code:
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
-# Create zcash checkpoints
-mkdir -p android/app/src/main/assets/saplingtree/mainnet
-cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ android/app/src/main/assets/saplingtree/mainnet 2>/dev/null || :
-cp -R node_modules/edge-currency-accountbased/lib/zcash/zecCheckpoints/ ios/Pods/ZcashLightClientKit/Sources/ZcashLightClientKit/Resources/saplingtree-checkpoints/mainnet 2>/dev/null || :
-
-# Create piratechain checkpoints
-mkdir -p android/app/src/main/assets/piratesaplingtree/mainnet
-cp -R node_modules/edge-currency-accountbased/lib/zcash/arrrCheckpoints/ android/app/src/main/assets/piratesaplingtree/mainnet 2>/dev/null || :
-cp -R node_modules/edge-currency-accountbased/lib/zcash/arrrCheckpoints/ ios/Pods/PirateLightClientKit/Sources/PirateLightClientKit/Resources/piratesaplingtree-checkpoints/mainnet 2>/dev/null || :
-
 # Copy Firebase configs
 if [ ! -f "ios/edge/GoogleService-Info.plist" ]; then
   cp ios/edge/GoogleService-Info.sample.plist ios/edge/GoogleService-Info.plist
@@ -50,13 +40,11 @@ node -r sucrase/register ./scripts/stringifyBridge.ts
 # Copy pre-built buy/sell plugins:
 node -r sucrase/register ./scripts/copy-plugin.ts
 
-# Copy edge-core-js WebView contents:
+# Bundle currency, swap, & rate plugins:
 core_assets="./android/app/src/main/assets/edge-core"
 if [ -d "$core_assets" ]; then
   rm -r "$core_assets"
 fi
 mkdir -p "$core_assets"
-
-# Bundle currency, swap, & rate plugins:
 echo Webpacking plugins...
 node ./node_modules/.bin/webpack

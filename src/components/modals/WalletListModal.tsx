@@ -5,7 +5,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { makeWyreClient, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
+import { PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
@@ -35,7 +35,7 @@ export interface WalletListResult {
 
   // Wyre buy/sell
   isBankSignupRequest?: boolean
-  wyreAccountId?: string
+  fiatAccountId?: string
 
   // Custom asset selection
   customAsset?: CustomAsset
@@ -108,10 +108,9 @@ export function WalletListModal(props: Props) {
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
-  const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap> => {
-    const wyreClient = await makeWyreClient({ account })
-    if (!wyreClient.isAccountSetup) return {}
-    return await wyreClient.getPaymentMethods()
+  const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
+    // TODO: Re-enable once new fiat ramp partner is re-integrated
+    return null
   }, [account])
 
   // #endregion State
@@ -142,8 +141,8 @@ export function WalletListModal(props: Props) {
   const handleCancel = useHandler(() => {
     bridge.resolve({})
   })
-  const handlePaymentMethodPress = useHandler((paymentMethodId: string) => () => {
-    bridge.resolve({ wyreAccountId: paymentMethodId })
+  const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
+    bridge.resolve({ fiatAccountId })
   })
   const handleWalletListPress = useHandler((walletId: string, currencyCode: string, _tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
@@ -196,8 +195,9 @@ export function WalletListModal(props: Props) {
   })
 
   const renderBankSection = () => {
+    if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
-    if (bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
+    if (Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
     return (
       <View>
         <FlatList
