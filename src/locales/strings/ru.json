@@ -141,6 +141,7 @@
   "fragment_transaction_list_tx_dropped": "Выброшено",
   "fragment_transaction_list_tx_synchronizing": "Синхронизация",
   "fragment_transaction_list_confirmation_progress": "%s из %s подтверждений",
+  "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transactions",
   "transaction_list_buy_crypto_message": "Купить %s",
   "transaction_list_buy_and_earn_crypto_message": "Buy or Earn %s",
