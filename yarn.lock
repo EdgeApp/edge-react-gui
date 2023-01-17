@@ -3729,12 +3729,7 @@ aes-js@3.0.0:
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.0.0.tgz#e21df10ad6c2053295bcbb8dab40b09dbea87e4d"
   integrity sha1-4h3xCtbCBTKVvLuNq0Cwnb6ofk0=
 
-aes-js@^0.2.3:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-0.2.4.tgz#94b881ab717286d015fa219e08fb66709dda5a3d"
-  integrity sha512-Ohbx4dcH7PB0E4Z/CpRT0qygXN2TVDJ4B43xtdoz77/tRU6s61umfZoQpek17Sz6ROrWsjisfWqqddWq8q75Ew==
-
-aes-js@^3.1.0, aes-js@^3.1.2:
+aes-js@^3.1.0, aes-js@^3.1.1, aes-js@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.1.2.tgz#db9aabde85d5caabbfc0d4f2a4446960f627146a"
   integrity sha512-e5pEa2kBnBOgR4Y/p20pskXI74UEz7de8ZGVo58asOtvSVG5YAbJeELPZxOmt+Bnz3rX753YKhfIn4X4l1PPRQ==
@@ -5188,7 +5183,7 @@ bluebird@~3.4.1:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.7.tgz#f72d760be09b7f76d08ed8fae98b289a8d05fab3"
   integrity sha1-9y12C+Cbf3bQjtj66Ysomo0F+rM=
 
-bn.js@4.11.6, bn.js@4.11.8, bn.js@5.2.0, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.11.0, bn.js@^4.11.3, bn.js@^4.11.6, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.11.9, bn.js@^4.8.0, bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2, bn.js@^5.2.0, bn.js@^5.2.1:
+bn.js@4.11.6, bn.js@4.11.8, bn.js@5.2.0, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.11.0, bn.js@^4.11.3, bn.js@^4.11.6, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.11.9, bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2, bn.js@^5.2.0, bn.js@^5.2.1:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
@@ -5434,7 +5429,7 @@ bs58@4.0.1, bs58@^2.0.1, bs58@^4.0.0, bs58@^4.0.1:
   dependencies:
     base-x "^3.0.2"
 
-bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2:
+bs58check@2.1.2, bs58check@<3.0.0, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/bs58check/-/bs58check-2.1.2.tgz#53b018291228d82a5aa08e7d796fdafda54aebfc"
   integrity sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==
@@ -6997,7 +6992,7 @@ ecurve@^1.0.6:
     bigi "^1.1.0"
     safe-buffer "^5.0.1"
 
-ed25519-hd-key@^1.2.0:
+ed25519-hd-key@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/ed25519-hd-key/-/ed25519-hd-key-1.3.0.tgz#e0bd2be4c07e15c753d5ed3aca30744e321b7c78"
   integrity sha512-IWwAyiiuJQhgu3L8NaHb68eJxTu2pgCwxIBdgpLJdKpYZM46+AXePSVTr7fkNKaUOfOL4IrjEUaQvyVRIDP7fg==
@@ -7040,10 +7035,10 @@ edge-core-js@^0.19.37:
     yaob "^0.3.8"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.22.0:
-  version "0.22.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.22.0.tgz#e6a55494302c5158379aaf511a67a7ab36320840"
-  integrity sha512-VoWSc5XgEeA1N8WN8978avD63rS3YrNhIlrqOCI024MngBvB7GByU/OCrAnK4Om1meK9WjL9e95mFYvj77a+tA==
+edge-currency-accountbased@^0.22.1:
+  version "0.22.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.22.1.tgz#183c444dd1acab898c7137e378a2e4338fb2b6b7"
+  integrity sha512-vWxdqpSofj1JlV4cj8gV4GxkJrSmU06PppQ4LnL1IkEPGc+3eCq8XCwVfxS7+keilIQ9+a4j8kzKEh06bDQ02A==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7056,14 +7051,14 @@ edge-currency-accountbased@^0.22.0:
     biggystring "^4.0.0"
     bip39 "^3.0.2"
     cleaners "^0.3.12"
-    ed25519-hd-key "^1.2.0"
-    eosjs "^21.0.3"
+    ed25519-hd-key "^1.3.0"
+    eosjs "^21.0.4"
     eosjs-api "https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
     eosjs-ecc "^4.0.7"
     eth-sig-util "^3.0.1"
     ethereumjs-abi "^0.6.8"
     ethereumjs-util "^5.2.0"
-    ethereumjs-wallet "https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+    ethereumjs-wallet "^0.6.5"
     eztz.js "https://github.com/EdgeApp/eztz.git#edge-fixes"
     rfc4648 "^1.5.0"
     stellar-sdk "^0.11.0"
@@ -7307,7 +7302,7 @@ eosjs-ecc@^4.0.7:
     ecurve "1.0.5"
     randombytes "2.0.5"
 
-eosjs@^21.0.3:
+eosjs@^21.0.4:
   version "21.0.4"
   resolved "https://registry.yarnpkg.com/eosjs/-/eosjs-21.0.4.tgz#67794a9fbc3c7659de19a7926c2c13cce4515571"
   integrity sha512-XbuIoidplA1hHIejy7VQ+hmBfC6T28kYFaQMsn6G1DMTg1CFwUzxwzUvZg/dGNPuf7hgPxOpaQvAUsdidTgGhQ==
@@ -7966,17 +7961,6 @@ ethereumjs-tx@^1.3.7:
     ethereum-common "^0.0.18"
     ethereumjs-util "^5.0.0"
 
-ethereumjs-util@^4.4.0:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-4.5.1.tgz#f4bf9b3b515a484e3cc8781d61d9d980f7c83bd0"
-  integrity sha512-WrckOZ7uBnei4+AKimpuF1B3Fv25OmoRgmYCpGsP7u8PFxXAmAgiJSYT2kRWnt6fVIlKaQlZvuwXp7PIrmn3/w==
-  dependencies:
-    bn.js "^4.8.0"
-    create-hash "^1.1.2"
-    elliptic "^6.5.2"
-    ethereum-cryptography "^0.1.3"
-    rlp "^2.0.0"
-
 ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.1, ethereumjs-util@^5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.2.1.tgz#a833f0e5fca7e5b361384dc76301a721f537bf65"
@@ -8014,17 +7998,20 @@ ethereumjs-util@^7.0.10, ethereumjs-util@^7.1.0, ethereumjs-util@^7.1.5:
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-"ethereumjs-wallet@https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef":
-  version "0.6.0"
-  resolved "https://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
+ethereumjs-wallet@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/ethereumjs-wallet/-/ethereumjs-wallet-0.6.5.tgz#685e9091645cee230ad125c007658833991ed474"
+  integrity sha512-MDwjwB9VQVnpp/Dc1XzA6J1a3wgHQ4hSvA1uWNatdpOrtCbPVuQSKSyRnjLvS0a+KKMw2pvQ9Ybqpb3+eW8oNA==
   dependencies:
-    aes-js "^0.2.3"
-    bs58check "^1.0.8"
-    ethereumjs-util "^4.4.0"
-    hdkey "^0.7.0"
-    scrypt.js "^0.2.0"
-    utf8 "^2.1.1"
-    uuid "^2.0.1"
+    aes-js "^3.1.1"
+    bs58check "^2.1.2"
+    ethereum-cryptography "^0.1.3"
+    ethereumjs-util "^6.0.0"
+    randombytes "^2.0.6"
+    safe-buffer "^5.1.2"
+    scryptsy "^1.2.1"
+    utf8 "^3.0.0"
+    uuid "^3.3.2"
 
 ethers@^5.6.0, ethers@^5.7.0:
   version "5.7.1"
@@ -9185,7 +9172,7 @@ hashjs@^1.2.0:
   resolved "https://registry.yarnpkg.com/hashjs/-/hashjs-1.2.0.tgz#a40e2d69de57826774643029c7b1bb4f2390baaa"
   integrity sha1-pA4tad5Xgmd0ZDApx7G7TyOQuqo=
 
-hdkey@1.1.1, hdkey@^0.7.0, hdkey@^1.1.1:
+hdkey@1.1.1, hdkey@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/hdkey/-/hdkey-1.1.1.tgz#c2b3bfd5883ff9529b72f2f08b28be0972a9f64a"
   integrity sha512-DvHZ5OuavsfWs5yfVJZestsnc3wzPvLWNk6c2nRUfo6X+OtxypGt20vDDf7Ba+MJzjL3KS1og2nw2eBbLCOUTA==
@@ -13218,7 +13205,7 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-randombytes@2.0.5, randombytes@2.1.0, randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
+randombytes@2.0.5, randombytes@2.1.0, randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.0.6, randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
@@ -14390,7 +14377,7 @@ scrypt-js@^2.0.3:
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-2.0.4.tgz#32f8c5149f0797672e551c07e230f834b6af5f16"
   integrity sha512-4KsaGcPnuhtCZQCxFxN3GVYIhKFPTdLd8PLC552XwbMndtD0cjRFAhDuuydXQ0h08ZfPgzqe6EKHozpuH74iDw==
 
-scrypt.js@0.3.0, scrypt.js@^0.2.0:
+scrypt.js@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/scrypt.js/-/scrypt.js-0.3.0.tgz#6c62d61728ad533c8c376a2e5e3e86d41a95c4c0"
   integrity sha512-42LTc1nyFsyv/o0gcHtDztrn+aqpkaCNt5Qh7ATBZfhEZU7IC/0oT/qbBH+uRNoAPvs2fwiOId68FDEoSRA8/A==
@@ -16058,11 +16045,6 @@ utf8@3.0.0, utf8@^3.0.0:
   resolved "https://registry.yarnpkg.com/utf8/-/utf8-3.0.0.tgz#f052eed1364d696e769ef058b183df88c87f69d1"
   integrity sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==
 
-utf8@^2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/utf8/-/utf8-2.1.2.tgz#1fa0d9270e9be850d9b05027f63519bf46457d96"
-  integrity sha512-QXo+O/QkLP/x1nyi54uQiG0XrODxdysuQvE5dtVqv7F5K2Qb6FsN+qbr6KhF5wQ20tfcV3VQp0/2x1e1MRSPWg==
-
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
@@ -16085,7 +16067,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@3.3.2, uuid@7.0.3, uuid@^2.0.1, uuid@^3.0.0, uuid@^3.2.1, uuid@^3.3.2, uuid@^3.3.3, uuid@^7.0.3, uuid@^8.3.2:
+uuid@3.3.2, uuid@7.0.3, uuid@^3.0.0, uuid@^3.2.1, uuid@^3.3.2, uuid@^3.3.3, uuid@^7.0.3, uuid@^8.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
