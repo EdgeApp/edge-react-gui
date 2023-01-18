@@ -86,6 +86,8 @@ export const edgeLight: Theme = {
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 0, y: 1 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: `rgba(123,123,123,.2)`,

@@ -4,14 +4,14 @@ exports[`TransactionDetailsScene should render 1`] = `
 <BVLinearGradient
   colors={
     Array [
+      4279377189,
       4278585612,
-      4279971643,
     ]
   }
   endPoint={
     Object {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 1,
     }
   }
   locations={null}
@@ -1046,14 +1046,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
 <BVLinearGradient
   colors={
     Array [
+      4279377189,
       4278585612,
-      4279971643,
     ]
   }
   endPoint={
     Object {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 1,
     }
   }
   locations={null}

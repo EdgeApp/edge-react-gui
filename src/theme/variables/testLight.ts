@@ -85,6 +85,8 @@ export const testLight: Theme = {
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 0, y: 1 },
   backgroundImageServerUrls: [],
   backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
