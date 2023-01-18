@@ -32,7 +32,7 @@ import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface OwnProps {
-  navigation: NavigationProp<'exchangeScene'>
+  navigation: NavigationProp<'exchange'>
 }
 
 interface StateProps {

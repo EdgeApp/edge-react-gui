@@ -136,7 +136,7 @@ export function sendConfirmationUpdateTx(
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene', {})
+              navigation.navigate('exchange', {})
               break
             case 'cancel':
             case undefined:

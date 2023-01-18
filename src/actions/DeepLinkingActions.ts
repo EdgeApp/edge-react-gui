@@ -105,7 +105,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
 
     case 'swap': {
       if (!hasCurrentWallet) return false
-      navigation.push('exchangeScene', {})
+      navigation.push('exchange', {})
       return true
     }
 
@@ -113,7 +113,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
       if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        navigation.push('walletListScene', {})
+        navigation.push('walletList', {})
         showError(s.strings.azteco_btc_only)
         return false
       }
@@ -193,7 +193,7 @@ async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrency
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  navigation.push('walletListScene', {})
+  navigation.push('walletList', {})
 }
 
 /**

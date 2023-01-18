@@ -269,7 +269,6 @@ export interface ParamList {
   }
   send2: SendScene2Params
   settingsOverview: {}
-  settingsOverviewTab: {}
   spendingLimits: {}
   stakeModify: {
     stakePlugin: StakePlugin

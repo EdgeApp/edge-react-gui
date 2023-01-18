@@ -36,7 +36,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
 
     switch (route) {
       case 'walletList':
-        return navigation.navigate('walletListScene', {})
+        return navigation.navigate('walletList', {})
       case 'pluginListBuy':
         return navigation.navigate('pluginListBuy', { direction: 'buy' })
       case 'pluginListSell':
@@ -58,6 +58,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
     const end = theme.tabBarBackgroundEnd
     let routes = state.routes
 
+    console.log(routes)
     if (config.extraTab == null) {
       routes = routes.slice(0, -1)
     }

@@ -323,7 +323,7 @@ const SendComponent = (props: Props) => {
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene', {})
+              navigation.navigate('exchange', {})
               break
             default:
               break

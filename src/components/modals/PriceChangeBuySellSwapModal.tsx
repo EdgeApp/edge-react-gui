@@ -32,7 +32,7 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     } else if (threeButtonModal === 'sell') {
       navigation.navigate('pluginListSell', { direction: 'sell' })
     } else if (threeButtonModal === 'exchange') {
-      navigation.navigate('exchangeScene', {})
+      navigation.navigate('exchange', {})
     }
   }
 }

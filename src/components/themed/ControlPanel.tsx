@@ -272,7 +272,7 @@ export function ControlPanel(props: Props) {
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      pressHandler: () => handleGoToScene(navigation, 'settingsOverviewTab', {}),
+      pressHandler: () => handleGoToScene(navigation, 'settingsOverview', {}),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
