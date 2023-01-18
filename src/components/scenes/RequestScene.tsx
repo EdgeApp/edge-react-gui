@@ -292,6 +292,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const requestAddress = selectedAddress?.addressString ?? s.strings.loading
     const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(wallet))
     const { keysOnlyMode = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+    const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance
     const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
@@ -370,10 +371,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+          <TouchableOpacity disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
               <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
-              <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
             </View>
             <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
           </TouchableOpacity>

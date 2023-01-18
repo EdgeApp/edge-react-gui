@@ -184,25 +184,6 @@ Settlement: 10 - 30 minutes",
   Object {
     "cryptoCodes": Array [
       "BTC",
-      "ETH",
-      "DAI",
-      "USDC",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 1-2%
-Settlement: 1 - 5 days",
-    "partnerIconPath": "wyre-logo-square-small.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": Array [
-      "bank",
-    ],
-    "pluginId": "wyre",
-    "title": "ACH (deprecated)",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
     ],
     "deepPath": "/",
     "deepQuery": Object {},
@@ -253,25 +234,6 @@ Array [
     ],
     "pluginId": "moonpay",
     "title": "ACH Bank Transfer",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "ETH",
-      "DAI",
-      "USDC",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1 - 5 days
-Monthly Limit: $150000",
-    "partnerIconPath": "wyre-logo-square-small.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": Array [
-      "bank",
-    ],
-    "pluginId": "wyre",
-    "title": "ACH (deprecated)",
   },
   Object {
     "cryptoCodes": Array [

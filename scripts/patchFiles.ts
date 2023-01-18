@@ -9,7 +9,10 @@ const _rootProjectDir = join(__dirname, '../')
 
 let _currentPath = __dirname
 
-main().catch(e => console.log(e.message))
+main().catch(error => {
+  console.error(error)
+  process.exit(1)
+})
 
 async function main() {
   if (argv.length < 4) {
@@ -31,12 +34,7 @@ async function main() {
     chdir(guiDir)
     patchFiles.forEach(f => {
       const file = join(patchDir, f)
-      try {
-        call(`git apply ${file} 2> /dev/null`)
-      } catch (e) {
-        call(`git apply --reverse ${file}`)
-        call(`git apply ${file}`)
-      }
+      call(`git apply ${file}`)
     })
   }
 

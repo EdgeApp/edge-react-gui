@@ -170,6 +170,7 @@ exports[`Request should render with loaded props 1`] = `
       renderItem={[Function]}
     />
     <TouchableOpacity
+      disabled={false}
       onPress={[Function]}
     >
       <View

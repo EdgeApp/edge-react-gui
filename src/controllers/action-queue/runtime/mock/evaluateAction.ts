@@ -96,21 +96,11 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       }
     }
 
+    case 'wyre-buy': {
+      throw new Error(`Using obsolete wyre-buy action`)
+    }
     case 'wyre-sell': {
-      const { walletId } = actionOp
-      const wallet = await account.waitForCurrencyWallet(walletId)
-
-      return mockExecutableAction(context, (): ExecutionOutput => {
-        return {
-          effect: {
-            type: 'tx-confs',
-            txId: mockDelayTimestamp(3000, 5000),
-            walletId: walletId,
-            confirmations: 1
-          },
-          broadcastTxs: mockBroadcastTxs(wallet)
-        }
-      })
+      throw new Error(`Using obsolete wyre-sell action`)
     }
 
     case 'loan-borrow': {
@@ -195,9 +185,6 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
     }
 
     case 'broadcast-tx': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
   }

@@ -162,13 +162,7 @@ export const makeAaveBorrowAction = async (params: AaveBorrowActionParams): Prom
 
   // Construct the Withdraw to Bank action
   if (destination.paymentMethodId != null) {
-    loanParallelActions.push({
-      type: 'wyre-sell',
-      wyreAccountId: destination.paymentMethodId,
-      nativeAmount: destination.nativeAmount,
-      tokenId: destination.tokenId ?? defaultTokenId,
-      walletId: borrowEngineWallet.id
-    })
+    throw new Error('fiat-sell not implemented yet.')
   }
 
   return actionOp

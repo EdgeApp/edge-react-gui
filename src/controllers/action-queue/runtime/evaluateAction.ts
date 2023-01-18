@@ -1,14 +1,11 @@
 import { add, mul } from 'biggystring'
-import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
 import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
 import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
 import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
-import { makeWyreClient } from '../WyreClient'
 
 /**
  * Evaluates an ActionProgram against an ActionProgramState and returns the
@@ -145,61 +142,27 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       }
     }
 
-    case 'wyre-sell': {
-      const { wyreAccountId, nativeAmount, tokenId, walletId } = actionOp
-      const wallet = account.currencyWallets[walletId]
-      const parentCurrencyCode = wallet.currencyInfo.currencyCode
-      const currencyCode = getCurrencyCode(wallet, tokenId)
+    // TODO: Remove once we implement action-queue disk data deletion
+    case 'wyre-buy': {
+      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+        console.error(`Using obsolete wyre-buy action`)
 
-      const wyreClient = await makeWyreClient({
-        account
-      })
-
-      const paymentAddress = await wyreClient.getCryptoPaymentAddress(wyreAccountId, walletId)
-
-      const makeExecutionOutput = async (_dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<ExecutionOutput> => {
-        // Get any pending txs for this wallet
-        const pendingTxs = pendingTxMap[walletId]
-
-        const unsignedTx = await wallet.makeSpend({
-          currencyCode,
-          // Always skip checks instead of inheriting from dryrun param because
-          // USDC balance isn't available when using this action op specifically
-          // in the case of being contained in a par, preceeded by a borrow, and
-          // with this par being the first op of the ActionProgram.
-          skipChecks: true,
-          spendTargets: [
-            {
-              nativeAmount,
-              publicAddress: paymentAddress
-            }
-          ],
-          metadata: {
-            name: 'Wyre',
-            category: 'Exchange:Sell',
-            notes: sprintf(s.strings.wyre_metadata_sell_notes_4s, currencyCode, parentCurrencyCode, wallet.name, paymentAddress)
-          },
-          pendingTxs
-        })
-        const signedTx = await wallet.signTx(unsignedTx)
-        const networkFee = {
-          currencyCode: wallet.currencyInfo.currencyCode,
-          nativeAmount: signedTx.parentNetworkFee ?? signedTx.networkFee ?? '0'
-        }
         return {
-          effect: {
-            type: 'tx-confs',
-            txId: signedTx.txid,
-            walletId,
-            confirmations: 1
-          },
-          broadcastTxs: [
-            {
-              walletId: walletId,
-              networkFee,
-              tx: signedTx
-            }
-          ]
+          effect: { type: 'done' },
+          broadcastTxs: []
+        }
+      }
+
+      return makeExecutableAction(context, makeExecutionOutput)
+    }
+    // TODO: Remove once we implement action-queue disk data deletion
+    case 'wyre-sell': {
+      const makeExecutionOutput = async (): Promise<ExecutionOutput> => {
+        console.error(`Using obsolete wyre-sell action`)
+
+        return {
+          effect: { type: 'done' },
+          broadcastTxs: []
         }
       }
 
@@ -360,9 +323,6 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
     }
 
     case 'broadcast-tx': {
-      throw new Error(`No implementation for action type ${actionOp.type}`)
-    }
-    case 'wyre-buy': {
       throw new Error(`No implementation for action type ${actionOp.type}`)
     }
   }
