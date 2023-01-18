@@ -150,294 +150,77 @@ export class MainComponent extends React.Component<Props> {
 
   renderMainApp = () => {
     return (
-      <Scene key="AllMyTabs" hideNavBar>
+      <Stack key="AllMyTabs" hideNavBar>
         <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
-          <Stack key="walletList">
-            <Scene
-              key="walletListScene"
-              component={withNavigation(ifLoggedIn(WalletListScene))}
-              navTransparent
-              // @ts-expect-error
-              renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="createWalletImport"
-              component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-
-            <Scene
-              key="createWalletSelectCrypto"
-              component={withNavigation(ifLoggedIn(CreateWalletSelectCryptoScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-
-            <Scene
-              key="createWalletSelectFiat"
-              component={withNavigation(ifLoggedIn(CreateWalletSelectFiatScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-
-            <Scene
-              key="createWalletCompletion"
-              component={withNavigation(ifLoggedIn(CreateWalletCompletionScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={this.renderEmptyButton()}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-
-            <Scene
-              key="createWalletAccountSetup"
-              component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
-              navTransparent
-              renderTitle={() => <HeaderTitle title={s.strings.create_wallet_create_account} />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
-            />
-
-            <Scene
-              key="createWalletAccountSelect"
-              component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
-              navTransparent
-              renderTitle={() => <HeaderTitle title={s.strings.create_wallet_account_activate} />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
-            />
-
-            <Scene
-              key="transactionList"
-              component={withNavigation(ifLoggedIn(TransactionList))}
-              onEnter={() => {
-                this.props.requestPermission('contacts')
-              }}
-              navTransparent
-              renderTitle={() => <HeaderTitle title=" " />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="transactionDetails"
-              component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
-              navTransparent
-              onEnter={() => this.props.requestPermission('contacts')}
-              clone
-              renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="stakeModify"
-              navTransparent
-              component={withNavigation(ifLoggedIn(StakeModifyScene))}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="stakeOptions"
-              navTransparent
-              component={withNavigation(ifLoggedIn(StakeOptionsScene))}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="stakeOverview"
-              navTransparent
-              component={withNavigation(ifLoggedIn(StakeOverviewScene))}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="fioStakingOverview"
-              navTransparent
-              component={ifLoggedIn(FioStakingOverviewScene)}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="fioStakingChange"
-              navTransparent
-              component={ifLoggedIn(FioStakingChangeScene)}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-
-            <Scene
-              key="manageTokens"
-              component={withNavigation(ifLoggedIn(ManageTokensScene))}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-              navTransparent
-              // @ts-expect-error
-              renderTitle=""
-              animation="fade"
-              duration={600}
-            />
-            <Scene
-              key="editToken"
-              component={withNavigation(ifLoggedIn(EditTokenScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-            <Scene
-              key="transactionsExport"
-              component={withNavigation(ifLoggedIn(TransactionsExportScene))}
-              navTransparent
-              renderTitle={() => <HeaderTitle title={s.strings.title_export_transactions} />}
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-          </Stack>
-          <Stack key="pluginListBuy">
-            <Scene
-              key="pluginListBuy"
-              component={withNavigation(ifLoggedIn(GuiPluginListScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-              route={{ params: { direction: 'buy' } }}
-            />
-            <Scene
-              key="pluginViewBuy"
-              component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
-              navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              renderLeftButton={PluginBackButton}
-              // @ts-expect-error
-              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
-              hideTabBar
-            />
-            <Scene
-              key="guiPluginEnterAmount"
-              component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
-              navTransparent
-              renderLeftButton={PluginBackButton}
-              hideTabBar
-            />
-          </Stack>
-          <Stack key="pluginListSell">
-            <Scene
-              key="pluginListSell"
-              component={withNavigation(ifLoggedIn(GuiPluginListScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-              onLeft={Actions.pop}
-              route={{ params: { direction: 'sell' } }}
-            />
-            <Scene
-              key="pluginViewSell"
-              component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
-              navTransparent
-              renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              renderLeftButton={PluginBackButton}
-              // @ts-expect-error
-              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
-              hideTabBar
-            />
-          </Stack>
-          <Stack key="exchange">
-            <Scene
-              key="exchangeScene"
-              component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-              onEnter={() => this.props.checkEnabledExchanges()}
-            />
-            <Scene
-              key="exchangeQuoteProcessing"
-              component={withNavigation(ifLoggedIn(CryptoExchangeQuoteProcessingScreen))}
-              navTransparent
-              hideTabBar
-              // @ts-expect-error
-              renderLeftButton={this.renderEmptyButton()}
-              // @ts-expect-error
-              renderRightButton={this.renderEmptyButton()}
-            />
-            <Scene
-              key="exchangeQuote"
-              component={withNavigation(ifLoggedIn(CryptoExchangeQuote))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-            />
-            <Scene
-              key="exchangeSuccess"
-              component={withNavigation(ifLoggedIn(CryptoExchangeSuccessScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={this.renderEmptyButton()}
-            />
-          </Stack>
-          <Stack key="extraTab">
-            <Scene
-              key="extraTab"
-              component={withNavigation(ifLoggedIn(ExtraTabScene))}
-              navTransparent
-              // @ts-expect-error
-              renderLeftButton={<HeaderTextButton type="help" placement="left" />}
-              // @ts-expect-error
-              renderRightButton={<SideMenuButton />}
-            />
-          </Stack>
+          <Scene
+            key="walletList"
+            component={withNavigation(ifLoggedIn(WalletListScene))}
+            navTransparent
+            // @ts-expect-error
+            renderTitle={<EdgeLogoHeader />}
+            // @ts-expect-error
+            renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+            // @ts-expect-error
+            renderRightButton={<SideMenuButton />}
+          />
+          <Scene
+            key="pluginListBuy"
+            component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+            navTransparent
+            // @ts-expect-error
+            renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+            // @ts-expect-error
+            renderRightButton={<SideMenuButton />}
+            onLeft={Actions.pop}
+            route={{ params: { direction: 'buy' } }}
+          />
+          <Scene
+            key="pluginListSell"
+            component={withNavigation(ifLoggedIn(GuiPluginListScene))}
+            navTransparent
+            // @ts-expect-error
+            renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+            // @ts-expect-error
+            renderRightButton={<SideMenuButton />}
+            onLeft={Actions.pop}
+            route={{ params: { direction: 'sell' } }}
+          />
+          <Scene
+            key="exchange"
+            component={withNavigation(ifLoggedIn(CryptoExchangeScene))}
+            navTransparent
+            // @ts-expect-error
+            renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+            // @ts-expect-error
+            renderRightButton={<SideMenuButton />}
+            onEnter={() => this.props.checkEnabledExchanges()}
+          />
+          <Scene
+            key="extraTab"
+            component={withNavigation(ifLoggedIn(ExtraTabScene))}
+            navTransparent
+            // @ts-expect-error
+            renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+            // @ts-expect-error
+            renderRightButton={<SideMenuButton />}
+          />
         </Tabs>
+
+        {this.renderCreateScenes()}
+        {this.renderExchangeScenes()}
+        {this.renderFiatPluginScenes()}
+        {this.renderFioAddressScenes()}
+        {this.renderFioDomainScenes()}
+        {this.renderFioRequestScenes()}
+        {this.renderLoanScenes()}
+        {this.renderManageTokenScenes()}
+        {this.renderRequestScenes()}
+        {this.renderSendScenes()}
+        {this.renderSend2Scenes()}
+        {this.renderSettingsScenes()}
+        {this.renderStakingScenes()}
+        {this.renderTransactionScenes()}
+        {this.renderWalletConnectScenes()}
 
         <Scene
           key="edgeLogin"
@@ -450,580 +233,829 @@ export class MainComponent extends React.Component<Props> {
           renderRightButton={<HeaderTextButton type="help" placement="right" />}
         />
 
-        <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
-
-        <Stack key="request" hideTabBar>
-          <Scene
-            key="request"
-            component={withNavigation(ifLoggedIn(RequestScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-          />
-          <Scene
-            key="fioRequestConfirmation"
-            component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.fio_confirm_request_header} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-          />
-        </Stack>
-
-        <Stack key="send" hideTabBar>
-          <Scene
-            key="send"
-            component={withNavigation(ifLoggedIn(SendScene))}
-            navTransparent
-            onEnter={props => {
-              this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
-            }}
-            onExit={this.props.dispatchDisableScan}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-          />
-          <Scene
-            key="changeMiningFee"
-            component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<HeaderTextButton type="help" placement="right" />}
-          />
-        </Stack>
-
-        <Stack key="send2" hideTabBar>
-          <Scene
-            key="send2"
-            component={withNavigation(ifLoggedIn(SendScene2))}
-            navTransparent
-            onEnter={props => {
-              this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
-            }}
-            onExit={this.props.dispatchDisableScan}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-          />
-          <Scene
-            key="changeMiningFee2"
-            component={withNavigation(ifLoggedIn(ChangeMiningFeeScene2))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<HeaderTextButton type="help" placement="right" />}
-          />
-        </Stack>
-
-        <Stack key="passwordRecovery" hideTabBar>
-          <Scene
-            key="passwordRecovery"
-            component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-          />
-        </Stack>
-
-        <Stack key="otpRepair" hideNavBar>
-          <Scene key="otpRepair" component={withNavigation(ifLoggedIn(OtpRepairScene))} navTransparent />
-        </Stack>
-
-        <Stack key="securityAlerts" hideNavBar>
-          <Scene key="securityAlerts" component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
-        </Stack>
-
-        <Stack key="manageTokens" hideTabBar>
-          <Scene
-            key="manageTokens_notused"
-            component={withNavigation(ifLoggedIn(ManageTokensScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle=""
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-        </Stack>
-
-        <Stack
-          key="settingsOverviewTab"
+        <Scene key="otpRepair" component={withNavigation(ifLoggedIn(OtpRepairScene))} navTransparent />
+        <Scene
+          key="manageTokens_notused"
+          component={withNavigation(ifLoggedIn(ManageTokensScene))}
+          navTransparent
           // @ts-expect-error
-          hideDrawerButton
-        >
-          <Scene
-            key="settingsOverview"
-            component={withNavigation(ifLoggedIn(SettingsScene))}
-            navTransparent
-            onEnter={() => this.props.showReEnableOtpModal()}
-            renderTitle={() => <HeaderTitle title={s.strings.title_settings} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-          />
-          <Scene
-            key="changePassword"
-            component={withNavigation(ifLoggedIn(ChangePasswordScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_change_password} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="changePin"
-            component={withNavigation(ifLoggedIn(ChangePinScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_change_pin} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="otpSetup"
-            component={withNavigation(ifLoggedIn(OtpSettingsScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_otp} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="passwordRecovery"
-            component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="spendingLimits"
-            component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.spending_limits} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="exchangeSettings"
-            component={withNavigation(ifLoggedIn(SwapSettingsScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.settings_exchange_settings} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="currencySettings"
-            component={withNavigation(ifLoggedIn(CurrencySettingsScene))}
-            navTransparent
-            renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="promotionSettings"
-            component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_promotion_settings} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="defaultFiatSetting"
-            component={withNavigation(ifLoggedIn(DefaultFiatSettingScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-          />
-          <Scene
-            key="notificationSettings"
-            component={withNavigation(ifLoggedIn(NotificationScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.settings_notifications} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="currencyNotificationSettings"
-            component={withNavigation(ifLoggedIn(CurrencyNotificationScene))}
-            navTransparent
-            renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-        </Stack>
-
-        <Stack
+          renderTitle=""
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="passwordRecovery"
+          component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+        />
+        <Scene
           key="pluginView"
+          component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+          navTransparent
+          renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+          renderLeftButton={PluginBackButton}
           // @ts-expect-error
-          hideDrawerButton
-        >
-          <Scene
-            key="pluginView"
-            component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
-            navTransparent
-            renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-            renderLeftButton={PluginBackButton}
-            // @ts-expect-error
-            renderRightButton={<HeaderTextButton type="exit" placement="right" />}
-          />
-        </Stack>
+          renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+        />
+        <Scene key="securityAlerts" component={withNavigation(ifLoggedIn(SecurityAlertsScene))} navTransparent />
+        <Scene
+          key="termsOfService"
+          component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_terms_of_service} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+      </Stack>
+    )
+  }
 
-        <Stack key="termsOfService">
-          <Scene
-            key="termsOfService"
-            component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_terms_of_service} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderCreateScenes = () => {
+    return (
+      <>
+        <Scene key="createWalletSelectCrypto" component={withNavigation(CreateWalletSelectCryptoScene)} navTransparent />
+        <Scene
+          key="createWalletImport"
+          component={withNavigation(ifLoggedIn(CreateWalletImportScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="createWalletSelectCrypto"
+          component={withNavigation(ifLoggedIn(CreateWalletSelectCryptoScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="createWalletSelectFiat"
+          component={withNavigation(ifLoggedIn(CreateWalletSelectFiatScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="createWalletCompletion"
+          component={withNavigation(ifLoggedIn(CreateWalletCompletionScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={this.renderEmptyButton()}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="createWalletAccountSetup"
+          component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.create_wallet_create_account} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="help" placement="right" />}
+        />
+        <Scene
+          key="createWalletAccountSelect"
+          component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.create_wallet_account_activate} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="help" placement="right" />}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressList">
-          <Scene
-            key="fioAddressList"
-            component={withNavigation(ifLoggedIn(FioAddressListScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderExchangeScenes = () => {
+    return (
+      <>
+        <Scene
+          key="exchangeQuoteProcessing"
+          component={withNavigation(ifLoggedIn(CryptoExchangeQuoteProcessingScreen))}
+          navTransparent
+          hideTabBar
+          // @ts-expect-error
+          renderLeftButton={this.renderEmptyButton()}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="exchangeQuote"
+          component={withNavigation(ifLoggedIn(CryptoExchangeQuote))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+        />
+        <Scene
+          key="exchangeSuccess"
+          component={withNavigation(ifLoggedIn(CryptoExchangeSuccessScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={this.renderEmptyButton()}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressRegister">
-          <Scene
-            key="fioAddressRegister"
-            component={withNavigation(ifLoggedIn(FioAddressRegisterScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderFiatPluginScenes = () => {
+    return (
+      <>
+        <Scene
+          key="pluginViewSell"
+          component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+          navTransparent
+          renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+          renderLeftButton={PluginBackButton}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+          hideTabBar
+        />
+        <Scene
+          key="pluginViewBuy"
+          component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
+          navTransparent
+          renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
+          renderLeftButton={PluginBackButton}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="exit" placement="right" />}
+          hideTabBar
+        />
+        <Scene
+          key="guiPluginEnterAmount"
+          component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
+          navTransparent
+          renderLeftButton={PluginBackButton}
+          hideTabBar
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressRegisterSelectWallet">
-          <Scene
-            key="fioAddressRegisterSelectWallet"
-            component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_confirmation} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderFioAddressScenes = () => {
+    return (
+      <>
+        <Scene
+          key="fioAddressDetails"
+          component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
+          navTransparent
+          renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="fioAddressList"
+          component={withNavigation(ifLoggedIn(FioAddressListScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioAddressSettings"
+          component={withNavigation(FioAddressSettingsScene)}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioAddressRegisterSuccess"
+          component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
+          navTransparent
+          renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          // @ts-expect-error
+          renderLeftButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="fioAddressRegister"
+          component={withNavigation(ifLoggedIn(FioAddressRegisterScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioAddressRegisterSelectWallet"
+          component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioConnectToWalletsConfirm"
+          component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioDomainRegister">
-          <Scene
-            key="fioDomainRegister"
-            component={withNavigation(ifLoggedIn(FioDomainRegisterScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="fioDomainRegisterSelectWallet"
-            component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_register_fio_domain} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="fioDomainConfirm"
-            component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderFioDomainScenes = () => {
+    return (
+      <>
+        <Scene
+          key="fioNameConfirm"
+          component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioDomainRegister"
+          component={withNavigation(ifLoggedIn(FioDomainRegisterScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioDomainConfirm"
+          component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioDomainSettings"
+          component={withNavigation(FioDomainSettingsScene)}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_fio_domain_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioDomainRegisterSelectWallet"
+          component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_register_fio_domain} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioDomainSettings"
+          component={withNavigation(FioDomainSettingsScene)}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_fio_domain_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioNameConfirm">
-          <Scene
-            key="fioNameConfirm"
-            component={withNavigation(ifLoggedIn(FioNameConfirmScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderFioRequestScenes = () => {
+    return (
+      <>
+        <Scene
+          key="fioRequestList"
+          component={withNavigation(ifLoggedIn(FioRequestListScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="fioRequestApproved"
+          component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+          navTransparent
+          onEnter={() => this.props.requestPermission('contacts')}
+          clone
+          renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="fioSentRequestDetails"
+          component={withNavigation(ifLoggedIn(FioSentRequestDetailsScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressDetails">
-          <Scene
-            key="fioAddressDetails"
-            component={withNavigation(ifLoggedIn(FioAddressDetailsScene))}
-            navTransparent
-            renderTitle={props => <HeaderTitle title={props.route.params.fioAddressName} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-          />
-          <Scene
-            key="fioConnectToWalletsConfirm"
-            component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderLoanScenes = () => {
+    return (
+      <>
+        <Scene
+          key="loanDashboard"
+          component={withNavigation(ifLoggedIn(LoanDashboardScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="loanCreate"
+          component={withNavigation(ifLoggedIn(LoanCreateScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="loanCreateConfirmation"
+          component={withNavigation(ifLoggedIn(LoanCreateConfirmationScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="loanDetails"
+          component={withNavigation(ifLoggedIn(LoanDetailsScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="loanManage"
+          component={withNavigation(ifLoggedIn(LoanManageScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          renderLeftButton={PluginBackButton}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="loanClose"
+          component={withNavigation(ifLoggedIn(LoanCloseScene))}
+          navTransparent
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="loanStatus"
+          component={withNavigation(ifLoggedIn(LoanStatusScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressSettings">
-          <Scene
-            key="fioAddressSettings"
-            component={withNavigation(FioAddressSettingsScene)}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_settings} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderManageTokenScenes = () => {
+    return (
+      <>
+        <Scene
+          key="manageTokens"
+          component={withNavigation(ifLoggedIn(ManageTokensScene))}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          navTransparent
+          // @ts-expect-error
+          renderTitle=""
+          animation="fade"
+          duration={600}
+        />
+        <Scene
+          key="editToken"
+          component={withNavigation(ifLoggedIn(EditTokenScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioAddressRegisterSuccess">
-          <Scene
-            key="fioAddressRegisterSuccess"
-            component={withNavigation(ifLoggedIn(FioAddressRegisteredScene))}
-            navTransparent
-            renderTitle={props => <HeaderTitle title={props.route.params.fioName} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            // @ts-expect-error
-            renderLeftButton={this.renderEmptyButton()}
-          />
-        </Stack>
+  renderRequestScenes = () => {
+    return (
+      <>
+        <Scene
+          key="request"
+          component={withNavigation(ifLoggedIn(RequestScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          // @ts-expect-error
+          renderTitle={<EdgeLogoHeader />}
+        />
+        <Scene
+          key="fioRequestConfirmation"
+          component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.fio_confirm_request_header} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioDomainSettings">
-          <Scene
-            key="fioDomainSettings"
-            component={withNavigation(FioDomainSettingsScene)}
-            navTransparent
-            renderTitle={() => <HeaderTitle title={s.strings.title_fio_domain_settings} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderSendScenes = () => {
+    return (
+      <>
+        <Scene
+          key="send"
+          component={withNavigation(ifLoggedIn(SendScene))}
+          navTransparent
+          onEnter={props => {
+            this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+          }}
+          onExit={this.props.dispatchDisableScan}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+        />
+        <Scene
+          key="changeMiningFee"
+          component={withNavigation(ifLoggedIn(ChangeMiningFeeScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="help" placement="right" />}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioRequestList">
-          <Scene
-            key="fioRequestList"
-            component={withNavigation(ifLoggedIn(FioRequestListScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="fioRequestApproved"
-            component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
-            navTransparent
-            onEnter={() => this.props.requestPermission('contacts')}
-            clone
-            renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-          />
-        </Stack>
+  renderSend2Scenes = () => {
+    return (
+      <>
+        <Scene
+          key="send2"
+          component={withNavigation(ifLoggedIn(SendScene2))}
+          navTransparent
+          onEnter={props => {
+            this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
+          }}
+          onExit={this.props.dispatchDisableScan}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+        />
+        <Scene
+          key="changeMiningFee2"
+          component={withNavigation(ifLoggedIn(ChangeMiningFeeScene2))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<HeaderTextButton type="help" placement="right" />}
+        />
+      </>
+    )
+  }
 
-        <Stack key="fioSentRequestDetails">
-          <Scene
-            key="fioSentRequestDetails"
-            component={withNavigation(ifLoggedIn(FioSentRequestDetailsScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={this.renderEmptyButton()}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderSettingsScenes = () => {
+    return (
+      <>
+        <Scene
+          key="settingsOverview"
+          component={withNavigation(ifLoggedIn(SettingsScene))}
+          navTransparent
+          onEnter={() => this.props.showReEnableOtpModal()}
+          renderTitle={() => <HeaderTitle title={s.strings.title_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="changePassword"
+          component={withNavigation(ifLoggedIn(ChangePasswordScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_change_password} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="changePin"
+          component={withNavigation(ifLoggedIn(ChangePinScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_change_pin} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="otpSetup"
+          component={withNavigation(ifLoggedIn(OtpSettingsScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_otp} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="passwordRecovery"
+          component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="spendingLimits"
+          component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.spending_limits} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="exchangeSettings"
+          component={withNavigation(ifLoggedIn(SwapSettingsScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.settings_exchange_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="currencySettings"
+          component={withNavigation(ifLoggedIn(CurrencySettingsScene))}
+          navTransparent
+          renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="promotionSettings"
+          component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_promotion_settings} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="defaultFiatSetting"
+          component={withNavigation(ifLoggedIn(DefaultFiatSettingScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+        <Scene
+          key="notificationSettings"
+          component={withNavigation(ifLoggedIn(NotificationScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.settings_notifications} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="currencyNotificationSettings"
+          component={withNavigation(ifLoggedIn(CurrencyNotificationScene))}
+          navTransparent
+          renderTitle={props => <CurrencySettingsTitle currencyInfo={props.route.params.currencyInfo} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+          onLeft={Actions.pop}
+        />
+      </>
+    )
+  }
 
-        <Stack key="wcConnections">
-          <Scene
-            key="wcConnections"
-            component={withNavigation(ifLoggedIn(WcConnectionsScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="wcDisconnect"
-            component={withNavigation(ifLoggedIn(WcDisconnectScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="wcConnect"
-            component={withNavigation(ifLoggedIn(WcConnectScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
+  renderStakingScenes = () => {
+    return (
+      <>
+        <Scene
+          key="fioStakingOverview"
+          navTransparent
+          component={ifLoggedIn(FioStakingOverviewScene)}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="fioStakingChange"
+          navTransparent
+          component={ifLoggedIn(FioStakingChangeScene)}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="stakeModify"
+          navTransparent
+          component={withNavigation(ifLoggedIn(StakeModifyScene))}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="stakeOptions"
+          navTransparent
+          component={withNavigation(ifLoggedIn(StakeOptionsScene))}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="stakeOverview"
+          navTransparent
+          component={withNavigation(ifLoggedIn(StakeOverviewScene))}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+      </>
+    )
+  }
 
-        <Stack key="loan">
-          <Scene
-            key="loanDashboard"
-            component={withNavigation(ifLoggedIn(LoanDashboardScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="loanCreate"
-            component={withNavigation(ifLoggedIn(LoanCreateScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="loanCreateConfirmation"
-            component={withNavigation(ifLoggedIn(LoanCreateConfirmationScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="loanDetails"
-            component={withNavigation(ifLoggedIn(LoanDetailsScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="loanManage"
-            component={withNavigation(ifLoggedIn(LoanManageScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            renderLeftButton={PluginBackButton}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-          />
-          <Scene
-            key="loanClose"
-            component={withNavigation(ifLoggedIn(LoanCloseScene))}
-            navTransparent
-            // @ts-expect-error
-            renderTitle={<EdgeLogoHeader />}
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-          <Scene
-            key="loanStatus"
-            component={withNavigation(ifLoggedIn(LoanStatusScene))}
-            navTransparent
-            // @ts-expect-error
-            renderLeftButton={<BackButton onPress={this.handleBack} />}
-            // @ts-expect-error
-            renderRightButton={<SideMenuButton />}
-            onLeft={Actions.pop}
-          />
-        </Stack>
-      </Scene>
+  renderTransactionScenes = () => {
+    return (
+      <>
+        <Scene
+          key="transactionList"
+          component={withNavigation(ifLoggedIn(TransactionList))}
+          onEnter={() => {
+            this.props.requestPermission('contacts')
+          }}
+          navTransparent
+          renderTitle={() => <HeaderTitle title=" " />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+        <Scene
+          key="transactionDetails"
+          component={withNavigation(ifLoggedIn(TransactionDetailsScene))}
+          navTransparent
+          onEnter={() => this.props.requestPermission('contacts')}
+          clone
+          renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.route.params.edgeTransaction} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+        />
+
+        <Scene
+          key="transactionsExport"
+          component={withNavigation(ifLoggedIn(TransactionsExportScene))}
+          navTransparent
+          renderTitle={() => <HeaderTitle title={s.strings.title_export_transactions} />}
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={this.renderEmptyButton()}
+        />
+      </>
+    )
+  }
+
+  renderWalletConnectScenes = () => {
+    return (
+      <>
+        <Scene
+          key="wcConnections"
+          component={withNavigation(ifLoggedIn(WcConnectionsScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="wcDisconnect"
+          component={withNavigation(ifLoggedIn(WcDisconnectScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+        <Scene
+          key="wcConnect"
+          component={withNavigation(ifLoggedIn(WcConnectScene))}
+          navTransparent
+          // @ts-expect-error
+          renderLeftButton={<BackButton onPress={this.handleBack} />}
+          // @ts-expect-error
+          renderRightButton={<SideMenuButton />}
+          onLeft={Actions.pop}
+        />
+      </>
     )
   }
 
@@ -1041,7 +1073,7 @@ export class MainComponent extends React.Component<Props> {
     if (this.isCurrentScene('login')) {
       return false
     }
-    if (this.isCurrentScene('walletListScene')) {
+    if (this.isCurrentScene('walletList')) {
       if (this.backPressedOnce) {
         this.props.logout()
       } else {
@@ -1053,7 +1085,7 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
-      Actions.popTo('exchangeScene')
+      Actions.popTo('exchange')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
@@ -1062,7 +1094,7 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        Actions.jump('walletListScene', {})
+        Actions.jump('walletList', {})
         return true
       }
     }
