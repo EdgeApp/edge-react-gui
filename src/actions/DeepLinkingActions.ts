@@ -136,7 +136,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'price-change': {
-      dispatch(launchPriceChangeBuySellSwapModal(link))
+      dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
       return true
     }
 
