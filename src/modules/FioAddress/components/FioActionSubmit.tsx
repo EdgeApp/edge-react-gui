@@ -13,6 +13,7 @@ import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
+import { NavigationBase } from '../../../types/routerTypes'
 import { getAvailableBalance, getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
@@ -36,6 +37,7 @@ interface OwnProps {
   fioWallet: EdgeCurrencyWallet
   addressTitles?: boolean
   showPaymentWalletPicker?: boolean
+  navigation: NavigationBase
 }
 
 interface State {
@@ -117,7 +119,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { fioWallet } = this.props
     const allowedCurrencyCodes: string[] = [fioWallet.currencyInfo.currencyCode]
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {

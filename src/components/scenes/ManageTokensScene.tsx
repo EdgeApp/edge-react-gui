@@ -93,7 +93,7 @@ export function ManageTokensScene(props: Props) {
       .map(pluginId => ({ pluginId }))
 
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} navigation={navigation} />
     ))
 
     if (walletId != null && currencyCode != null) {

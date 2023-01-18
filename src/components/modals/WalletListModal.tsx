@@ -12,6 +12,7 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { makeCurrencyCodeTable } from '../../util/utils'
@@ -43,6 +44,7 @@ export interface WalletListResult {
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
+  navigation: NavigationBase
 
   // Filtering:
   allowedAssets?: EdgeTokenId[]
@@ -74,6 +76,7 @@ const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
 export function WalletListModal(props: Props) {
   const {
     bridge,
+    navigation,
 
     // Filtering:
     allowedAssets,
@@ -256,6 +259,7 @@ export function WalletListModal(props: Props) {
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
         onPress={handleWalletListPress}
+        navigation={navigation}
       />
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>

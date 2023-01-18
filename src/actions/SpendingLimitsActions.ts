@@ -3,10 +3,10 @@ import { Alert } from 'react-native'
 import s from '../locales/strings'
 import { setSpendingLimits as setSpendingLimitsSettingsApi } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { SpendingLimits } from '../types/types'
 
-export function setSpendingLimits(spendingLimits: SpendingLimits, password: string): ThunkAction<void> {
+export function setSpendingLimits(navigation: NavigationBase, spendingLimits: SpendingLimits, password: string): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -19,7 +19,7 @@ export function setSpendingLimits(spendingLimits: SpendingLimits, password: stri
           type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
           data: { spendingLimits }
         })
-        Actions.pop()
+        navigation.pop()
       })
     })
   }

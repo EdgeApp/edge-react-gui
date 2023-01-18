@@ -12,7 +12,7 @@ import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryBu
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 interface OwnProps {
@@ -25,7 +25,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  accept: () => void
+  accept: (navigation: NavigationBase) => void
 }
 
 type Props = StateProps & DispatchProps & OwnProps
@@ -77,7 +77,7 @@ export class EdgeLoginSceneComponent extends React.Component<Props> {
           <SecondaryButton style={styles.cancel} onPress={handleDecline}>
             <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
           </SecondaryButton>
-          <PrimaryButton style={styles.submit} onPress={this.props.accept}>
+          <PrimaryButton style={styles.submit} onPress={() => this.props.accept(navigation)}>
             <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
           </PrimaryButton>
         </View>
@@ -235,8 +235,8 @@ export const EdgeLoginScene = connect<StateProps, DispatchProps, OwnProps>(
     lobby: state.core.edgeLogin.lobby
   }),
   dispatch => ({
-    accept() {
-      dispatch(lobbyLogin())
+    accept(navigation: NavigationBase) {
+      dispatch(lobbyLogin(navigation))
     }
   })
 )(EdgeLoginSceneComponent)

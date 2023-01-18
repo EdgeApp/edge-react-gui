@@ -33,7 +33,7 @@ export const WalletListFooter = (props: Props) => {
       .map(pluginId => ({ pluginId }))
 
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} showCreateWallet />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} showCreateWallet />
     ))
       .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {

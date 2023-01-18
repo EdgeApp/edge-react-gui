@@ -6,7 +6,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 
 export function loginWithEdge(lobbyId: string): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -23,7 +23,7 @@ export function loginWithEdge(lobbyId: string): ThunkAction<void> {
   }
 }
 
-export function lobbyLogin(): ThunkAction<Promise<void>> {
+export function lobbyLogin(navigation: NavigationBase): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { lobby } = state.core.edgeLogin
@@ -35,7 +35,7 @@ export function lobbyLogin(): ThunkAction<Promise<void>> {
     try {
       await loginRequest.approve()
       dispatch({ type: 'INVALIDATE_EDGE_LOBBY' })
-      Actions.pop()
+      navigation.pop()
       setTimeout(() => {
         Alert.alert(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
       }, 750)

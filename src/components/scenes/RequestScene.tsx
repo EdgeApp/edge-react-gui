@@ -16,7 +16,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -54,7 +54,7 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => void
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
@@ -247,10 +247,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={this.props.navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          this.props.onSelectWallet(walletId, currencyCode)
+          this.props.onSelectWallet(this.props.navigation, walletId, currencyCode)
         }
       }
     )
@@ -632,8 +632,8 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
     }
   })
 )(withTheme(RequestSceneComponent))

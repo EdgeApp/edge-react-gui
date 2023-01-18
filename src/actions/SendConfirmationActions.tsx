@@ -14,7 +14,7 @@ import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutSt
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
@@ -36,6 +36,7 @@ export interface FioSenderInfo {
 }
 
 function updateAmount(
+  navigation: NavigationBase,
   nativeAmount: string,
   exchangeAmount: string,
   fiatPerCrypto: string,
@@ -47,11 +48,12 @@ function updateAmount(
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
-    dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
+    dispatch(sendConfirmationUpdateTx(navigation, { nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
   }
 }
 
 export function sendConfirmationUpdateTx(
+  navigation: NavigationBase,
   guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
   forceUpdateGui: boolean = true,
   selectedWalletId?: string,
@@ -94,7 +96,7 @@ export function sendConfirmationUpdateTx(
       })
 
     if (maxSpendSet && isFeeChanged) {
-      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+      return dispatch(updateMaxSpend(navigation, walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
     }
     await edgeWallet
       .makeSpend(spendInfo)
@@ -130,11 +132,11 @@ export function sendConfirmationUpdateTx(
           ))
           switch (result) {
             case 'buy':
-              Actions.jump('pluginListBuy', { direction: 'buy' })
+              navigation.navigate('pluginListBuy', { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              Actions.jump('exchangeScene', {})
+              navigation.navigate('exchangeScene', {})
               break
             case 'cancel':
             case undefined:
@@ -155,7 +157,12 @@ export function sendConfirmationUpdateTx(
   }
 }
 
-export function updateMaxSpend(selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo): ThunkAction<void> {
+export function updateMaxSpend(
+  navigation: NavigationBase,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string,
+  guiMakeSpendInfo?: GuiMakeSpendInfo
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
@@ -189,13 +196,14 @@ export function updateMaxSpend(selectedWalletId?: string, selectedCurrencyCode?:
           data: true
         })
 
-        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
+        dispatch(updateAmount(navigation, nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
       })
       .catch(showError)
   }
 }
 
 export function signBroadcastAndSave(
+  navigation: NavigationBase,
   fioSender: FioSenderInfo | undefined,
   walletId: string | undefined,
   selectedCurrencyCode: string | undefined,
@@ -387,7 +395,7 @@ export function signBroadcastAndSave(
       if (guiMakeSpendInfo.onDone) {
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
       } else {
-        Actions.replace('transactionDetails', {
+        navigation.replace('transactionDetails', {
           edgeTransaction: edgeSignedTransaction,
           walletId: wallet.id
         })

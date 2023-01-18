@@ -22,7 +22,7 @@ import s from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { Actions, NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -36,9 +36,9 @@ export interface SetNativeAmountInfo {
   primaryNativeAmount: string
 }
 
-export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function getQuoteForTransaction(navigation: NavigationBase, info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    Actions.push('exchangeQuoteProcessing', {})
+    navigation.push('exchangeQuoteProcessing', {})
 
     const state = getState()
     const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -64,13 +64,13 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
 
       const swapInfo = await fetchSwapQuote(state, request)
 
-      Actions.push('exchangeQuote', {
+      navigation.push('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      Actions.popTo('exchangeScene')
+      navigation.popTo('exchangeScene')
       const insufficientFunds = asMaybeInsufficientFundsError(error)
       if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
         const { currencyCode, networkFee = '' } = insufficientFunds
@@ -90,7 +90,7 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
         ))
         switch (result) {
           case 'buy':
-            Actions.jump('pluginListBuy', { direction: 'buy' })
+            navigation.navigate('pluginListBuy', { direction: 'buy' })
             return
           case 'exchange':
             dispatch({ type: 'SHIFT_COMPLETE' })
@@ -108,20 +108,20 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
   }
 }
 
-export function exchangeTimerExpired(swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     if (Actions.currentScene !== 'exchangeQuote') return
-    Actions.push('exchangeQuoteProcessing', {})
+    navigation.push('exchangeQuoteProcessing', {})
 
     try {
       swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-      Actions.push('exchangeQuote', {
+      navigation.push('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      Actions.popTo('exchangeScene')
+      navigation.popTo('exchangeScene')
       dispatch(processSwapQuoteError(error))
     }
   }
@@ -281,7 +281,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
   }
 }
 
-export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -324,7 +324,7 @@ export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      Actions.push('exchangeSuccess', {})
+      navigation.push('exchangeSuccess', {})
 
       // Dispatch the success action and callback
       dispatch({ type: 'SHIFT_COMPLETE' })

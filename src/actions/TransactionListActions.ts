@@ -5,6 +5,7 @@ import { showTransactionDropdown } from '../components/navigation/TransactionDro
 import { showError } from '../components/services/AirshipInstance'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { TransactionListTx } from '../types/types'
 import { calculateSpamThreshold, isReceivedTransaction, unixToLocaleDateTime, zeroString } from '../util/utils'
 import { checkFioObtData } from './FioActions'
@@ -143,7 +144,7 @@ export function refreshTransactionsRequest(walletId: string, transactions: EdgeT
   }
 }
 
-export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
+export function newTransactionsRequest(navigation: NavigationBase, walletId: string, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
   return (dispatch, getState) => {
     const edgeTransaction: EdgeTransaction = edgeTransactions[0]
     const state = getState()
@@ -178,7 +179,7 @@ export function newTransactionsRequest(walletId: string, edgeTransactions: EdgeT
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
     if (!isReceivedTransaction(edgeTransaction)) return
     if (spamFilterOn && !zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom))) {
-      showTransactionDropdown(edgeTransaction)
+      showTransactionDropdown(navigation, edgeTransaction)
     }
   }
 }

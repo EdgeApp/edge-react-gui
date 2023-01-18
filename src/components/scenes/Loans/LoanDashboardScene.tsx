@@ -98,7 +98,13 @@ export const LoanDashboardScene = (props: Props) => {
 
       // Only show the wallet picker if the user owns more than one polygon wallet.
       const { walletId: newWalletId } = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} excludeWalletIds={Object.keys(loanAccountsMap)} />
+        <WalletListModal
+          bridge={bridge}
+          navigation={navigation}
+          headerTitle={s.strings.select_wallet}
+          allowedAssets={allowedAssets}
+          excludeWalletIds={Object.keys(loanAccountsMap)}
+        />
       ))
       newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
     } else if (hardPluginWalletIds.length === 1) {
