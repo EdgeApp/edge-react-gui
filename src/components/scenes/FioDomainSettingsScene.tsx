@@ -177,6 +177,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
             fioWallet={fioWallet}
             showPaymentWalletPicker
+            navigation={this.props.navigation}
           />
         )}
         {showRenew && (
@@ -188,9 +189,12 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             successMessage={s.strings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
             showPaymentWalletPicker
+            navigation={this.props.navigation}
           />
         )}
-        {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
+        {showTransfer && (
+          <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
+        )}
         {!showRenew && !showVisibility && !showTransfer && (
           <>
             <MainButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />

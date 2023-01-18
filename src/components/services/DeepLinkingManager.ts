@@ -9,14 +9,18 @@ import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingA
 import { pushMessagePayloadToEdgeUri } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { showError } from './AirshipInstance'
 
-interface Props {}
+interface Props {
+  navigation: NavigationBase
+}
 
 export function DeepLinkingManager(props: Props) {
   const dispatch = useDispatch()
   const pendingDeepLink = useSelector(state => state.pendingDeepLink)
+  const { navigation } = props
 
   // We don't actually read these, but we need them to trigger updates:
   const accountReferralLoaded = useSelector(state => state.account.accountReferralLoaded)
@@ -27,13 +31,13 @@ export function DeepLinkingManager(props: Props) {
     if (pendingDeepLink == null) return
 
     // Wait a bit, since logging in can sometimes stomp us:
-    requestAnimationFrame(() => dispatch(retryPendingDeepLink()))
-  }, [accountReferralLoaded, dispatch, pendingDeepLink, wallets])
+    requestAnimationFrame(() => dispatch(retryPendingDeepLink(navigation)))
+  }, [accountReferralLoaded, dispatch, navigation, pendingDeepLink, wallets])
 
   // @ts-expect-error
   const handleUrl = url => {
     try {
-      dispatch(launchDeepLink(parseDeepLink(url)))
+      dispatch(launchDeepLink(navigation, parseDeepLink(url)))
     } catch (error: any) {
       showError(error)
     }

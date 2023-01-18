@@ -11,6 +11,7 @@ exports[`MenuTab should render with loading props 1`] = `
       "navigate": [Function],
       "openDrawer": [Function],
       "pop": [Function],
+      "popTo": [Function],
       "popToTop": [Function],
       "push": [Function],
       "replace": [Function],

@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CryptoExchangeComponent', () => {
   it('should render with loading props', () => {
@@ -56,6 +57,7 @@ describe('CryptoExchangeComponent', () => {
         onSelectWallet={async (walletId, currencyCode, direction) => undefined}
         getQuoteForTransaction={(fromWalletNativeAmount, onApprove) => undefined}
         theme={getTheme()}
+        navigation={fakeNavigation}
       />
     )
 

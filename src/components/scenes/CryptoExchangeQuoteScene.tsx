@@ -9,7 +9,7 @@ import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoE
 import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -39,8 +39,8 @@ interface StateProps {
   toWalletCurrencyName: string
 }
 interface DispatchProps {
-  shift: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
-  timeExpired: (swapInfo: GuiSwapInfo, onApprove: () => void) => void
+  shift: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => void
+  timeExpired: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => void
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -51,14 +51,14 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   calledApprove: true
 
   componentDidMount = () => {
-    const { route, account, timeExpired } = this.props
+    const { route, account, timeExpired, navigation } = this.props
     const { swapInfo, onApprove } = route.params
     const { pluginId } = swapInfo.quote
     const swapConfig = account.swapConfig[pluginId]
 
     logEvent('SwapQuote')
     swapVerifyTerms(swapConfig).then(result => {
-      if (!result) timeExpired(swapInfo, onApprove)
+      if (!result) timeExpired(navigation, swapInfo, onApprove)
     }, showError)
   }
 
@@ -71,19 +71,19 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   }
 
   doShift = () => {
-    const { shift, route } = this.props
+    const { shift, route, navigation } = this.props
     const { swapInfo, onApprove } = route.params
     this.calledApprove = true
-    shift(swapInfo, onApprove)
+    shift(navigation, swapInfo, onApprove)
   }
 
   renderTimer = () => {
-    const { timeExpired, route } = this.props
+    const { timeExpired, route, navigation } = this.props
     const { swapInfo, onApprove } = route.params
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={() => timeExpired(swapInfo, onApprove)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={() => timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
   }
 
   showExplanationForEstimate = () => {
@@ -202,11 +202,11 @@ export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
       state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   }),
   dispatch => ({
-    shift(swapInfo, onApprove) {
-      dispatch(shiftCryptoCurrency(swapInfo, onApprove))
+    shift(navigation, swapInfo, onApprove) {
+      dispatch(shiftCryptoCurrency(navigation, swapInfo, onApprove))
     },
-    timeExpired(swapInfo, onApprove) {
-      dispatch(exchangeTimerExpired(swapInfo, onApprove))
+    timeExpired(navigation, swapInfo, onApprove) {
+      dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))
     }
   })
 )(withTheme(CryptoExchangeQuoteScreenComponent))

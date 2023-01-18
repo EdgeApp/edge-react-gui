@@ -156,7 +156,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleOpenWalletListModal = () => {
     triggerHaptic('impactLight')
     const { navigation } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           navigation.setParams({ currencyCode, walletId })
@@ -523,7 +523,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { wallet, currencyCode } = props
+  const { wallet, currencyCode, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -540,7 +540,7 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(toggleAccountBalanceVisibility())
   })
   const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(walletId, currencyCode))
+    dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
   })
 
   return (
