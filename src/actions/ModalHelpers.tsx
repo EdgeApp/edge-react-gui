@@ -12,13 +12,15 @@ import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 // If only one wallet exists for that asset, auto pick that wallet
 export const pickWallet = async ({
   account,
+  allowedWalletIds,
   assets,
   headerTitle = s.strings.select_wallet,
   navigation,
   showCreateWallet
 }: {
   account: EdgeAccount
-  assets: EdgeTokenId[]
+  allowedWalletIds?: string[]
+  assets?: EdgeTokenId[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
@@ -27,8 +29,8 @@ export const pickWallet = async ({
 
   const walletIdMap: BooleanMap = {}
 
-  // Check if user owns any wallets that are accepted by the invoice
-  const matchingAssets = assets.filter(asset => {
+  // Check if user owns any wallets that
+  const matchingAssets = (assets ?? []).filter(asset => {
     const matchingWalletIds: string[] = Object.keys(currencyWallets).filter(key => {
       const { pluginId, tokenId } = asset
       const currencyWallet = currencyWallets[key]
@@ -52,15 +54,22 @@ export const pickWallet = async ({
     return matchingWalletIds.length === 0
   })
 
-  if (matchingAssets.length === 0) return
+  if (assets != null && matchingAssets.length === 0) return
 
-  if (matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
+  if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
     // Only one matching wallet and asset. Auto pick the wallet
     const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
     return { walletId, currencyCode }
   } else {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={navigation}
+        headerTitle={headerTitle}
+        allowedWalletIds={allowedWalletIds}
+        allowedAssets={assets}
+        showCreateWallet={showCreateWallet}
+      />
     ))
     return walletListResult
   }

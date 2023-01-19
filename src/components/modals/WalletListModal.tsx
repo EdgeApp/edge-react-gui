@@ -48,6 +48,7 @@ interface Props {
 
   // Filtering:
   allowedAssets?: EdgeTokenId[]
+  allowedWalletIds?: string[]
   allowKeysOnlyMode?: boolean
   customAssets?: CustomAsset[]
   excludeAssets?: EdgeTokenId[]
@@ -81,6 +82,7 @@ export function WalletListModal(props: Props) {
     // Filtering:
     allowedAssets,
     allowKeysOnlyMode = false,
+    allowedWalletIds,
     customAssets,
     excludeAssets,
     excludeWalletIds,
@@ -250,6 +252,7 @@ export function WalletListModal(props: Props) {
       />
       <WalletList
         allowedAssets={allowedAssets ?? legacyAllowedAssets}
+        allowedWalletIds={allowedWalletIds}
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
