@@ -7,6 +7,8 @@ import s from '../locales/strings'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
+import { EdgeTokenId } from '../types/types'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { activatePromotion } from './AccountReferralActions'
 import { loginWithEdge } from './EdgeLoginActions'
 import { pickWallet } from './ModalHelpers'
@@ -143,13 +145,21 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri }> = []
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId?: string }> = []
 
       // Try to parse with all wallets
       for (const wallet of Object.values(currencyWallets)) {
         const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
         if (parsedUri != null) {
-          matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri })
+          if (parsedUri.currencyCode != null && parsedUri.currencyCode !== wallet.currencyInfo.currencyCode) {
+            // Check if the user has this token enabled
+            const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, parsedUri.currencyCode)
+            if (tokenId != null) {
+              matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
+            }
+          } else {
+            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri })
+          }
         }
       }
 
@@ -167,7 +177,14 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
-      const walletListResult = await pickWallet({ account, allowedWalletIds, navigation })
+      const assets: EdgeTokenId[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
+        const wallet = currencyWallets[walletId]
+        const { pluginId } = wallet.currencyInfo
+
+        if (cc == null) return { pluginId }
+        return { pluginId, tokenId }
+      })
+      const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
       if (walletListResult == null) {
         showError(s.strings.scan_camera_no_matching_wallet)
         return true
