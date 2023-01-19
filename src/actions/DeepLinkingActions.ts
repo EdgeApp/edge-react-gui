@@ -10,6 +10,7 @@ import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { activatePromotion } from './AccountReferralActions'
 import { loginWithEdge } from './EdgeLoginActions'
+import { pickWallet } from './ModalHelpers'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, parseScannedUri } from './ScanActions'
 import { selectWallet } from './WalletActions'
@@ -18,12 +19,11 @@ import { selectWallet } from './WalletActions'
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
 
-    const handled = handleLink(navigation, dispatch, state, link)
-
+    const handled = await handleLink(navigation, dispatch, state, link)
     // If we couldn't handle the link, save it for later:
     if (!handled) {
       dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
@@ -36,14 +36,13 @@ export function launchDeepLink(navigation: NavigationBase, link: DeepLink): Thun
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { pendingDeepLink } = state
     if (pendingDeepLink == null) return
 
-    const handled = handleLink(navigation, dispatch, state, pendingDeepLink)
-
+    const handled = await handleLink(navigation, dispatch, state, pendingDeepLink)
     // If we handled the link, clear it:
     if (handled) {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
@@ -54,14 +53,13 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
+async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink, coreWallet?: EdgeCurrencyWallet): Promise<boolean> {
   const { account } = state.core
   const { activeWalletIds, currencyWallets, username } = account
-  const { byId = {}, selectedWalletId } = state.ui.wallets
-  const hasCurrentWallet = byId[selectedWalletId] != null
+  const { byId = {} } = state.ui.wallets
 
   // Wait for all wallets to load before handling deep links
-  if (activeWalletIds.length !== Object.keys(currencyWallets).length) return false
+  const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
 
   // We can't handle any links without an account:
   if (username == null) return false
@@ -99,30 +97,36 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'requestAddress': {
+      if (!allWalletsLoaded) return false
       doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
     }
 
     case 'swap': {
-      if (!hasCurrentWallet) return false
       navigation.push('exchangeScene', {})
       return true
     }
 
     case 'azteco': {
-      if (!hasCurrentWallet) return false
-      const edgeWallet = currencyWallets[selectedWalletId]
-      if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        navigation.push('walletListScene', {})
-        showError(s.strings.azteco_btc_only)
-        return false
+      if (!allWalletsLoaded) return false
+      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin' }], navigation, showCreateWallet: true })
+      if (result == null) {
+        // pickWallet returning undefined means user has no matching wallet.
+        // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
+        // the option to create one.
+        return true
       }
+      const { walletId } = result
+
+      // User backed out of choosing a wallet
+      if (walletId == null) return true
+      const edgeWallet = currencyWallets[walletId]
       launchAzteco(navigation, edgeWallet, link.uri).catch(showError)
       return true
     }
 
     case 'walletConnect': {
-      if (!hasCurrentWallet) return false
+      if (!allWalletsLoaded) return false
       const { uri, isSigning } = link
       navigation.push('wcConnections', {})
       // Hack around our router's horrible bugs:
@@ -131,6 +135,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'paymentProto': {
+      if (!allWalletsLoaded) return false
       launchPaymentProto(navigation, account, link.uri, {}).catch(showError)
       return true
     }
@@ -141,7 +146,6 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
     }
 
     case 'other': {
-      if (!hasCurrentWallet) return false
       const currencyName = link.protocol
       const currencyCode = CURRENCY_NAMES[currencyName]
 
@@ -162,7 +166,7 @@ function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootS
       }
 
       // Keep waiting while wallets are loading:
-      if (walletIds.length !== activeWalletIds.length) return false
+      if (!allWalletsLoaded) return false
 
       // Show an error:
       const currency = convertCurrencyStringFromCurrencyCode(currencyCode)

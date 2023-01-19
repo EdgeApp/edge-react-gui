@@ -119,7 +119,6 @@ const strings = {
   azteco_success: `You've redeemed an Azteco bitcoin card. Funds should arrive shortly.`,
   azteco_invalid_code: 'Invalid Azteco code.',
   azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
-  azteco_btc_only: 'Please choose a BTC wallet and scan again.',
 
   // Request for Address Protocol
   reqaddr_error_unsupported_chains: '%1$s does not support the following chains listed in the request: %2$s',

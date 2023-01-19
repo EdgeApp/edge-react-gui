@@ -5,21 +5,27 @@ import { WalletListModal, WalletListResult } from '../components/modals/WalletLi
 import { Airship } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId } from '../types/types'
+import { BooleanMap, EdgeTokenId } from '../types/types'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 
-// Given a list of assets, shows a modal for a user to pick a wallet for that asset
+// Given a list of assets, shows a modal for a user to pick a wallet for that asset.
+// If only one wallet exists for that asset, auto pick that wallet
 export const pickWallet = async ({
   account,
   assets,
   headerTitle = s.strings.select_wallet,
-  navigation
+  navigation,
+  showCreateWallet
 }: {
   account: EdgeAccount
   assets: EdgeTokenId[]
   headerTitle?: string
   navigation: NavigationBase
+  showCreateWallet?: boolean
 }): Promise<WalletListResult | undefined> => {
   const { currencyWallets } = account
+
+  const walletIdMap: BooleanMap = {}
 
   // Check if user owns any wallets that are accepted by the invoice
   const matchingAssets = assets.filter(asset => {
@@ -30,18 +36,32 @@ export const pickWallet = async ({
 
       // No wallet with matching pluginId, fail this asset
       if (!pluginIdMatch) return false
-      if (tokenId == null) return true
+      if (tokenId == null) {
+        walletIdMap[key] = true
+        return true
+      }
       // See if this wallet has a matching token enabled
       const tokenIdMatch = currencyWallet.enabledTokenIds.find(tid => tokenId)
-      return tokenIdMatch != null
+      if (tokenIdMatch != null) {
+        const cc = getCurrencyCode(currencyWallet, tokenIdMatch)
+        walletIdMap[`${key}:${cc}`] = true
+        return true
+      }
+      return false
     })
     return matchingWalletIds.length === 0
   })
 
   if (matchingAssets.length === 0) return
 
-  const walletListResult = await Airship.show<WalletListResult>(bridge => (
-    <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} />
-  ))
-  return walletListResult
+  if (matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
+    // Only one matching wallet and asset. Auto pick the wallet
+    const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
+    return { walletId, currencyCode }
+  } else {
+    const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
+    ))
+    return walletListResult
+  }
 }
