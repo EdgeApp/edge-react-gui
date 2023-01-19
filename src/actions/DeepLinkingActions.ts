@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
+import { pickWallet } from '../components/modals/WalletListModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
@@ -11,7 +12,6 @@ import { EdgeTokenId } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { activatePromotion } from './AccountReferralActions'
 import { loginWithEdge } from './EdgeLoginActions'
-import { pickWallet } from './ModalHelpers'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 

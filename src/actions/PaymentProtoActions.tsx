@@ -2,6 +2,7 @@ import { asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, as
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
+import { pickWallet } from '../components/modals/WalletListModal'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -20,7 +21,6 @@ import {
 import { Actions, NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
-import { pickWallet } from './ModalHelpers'
 
 // Maps payment protocol chain ids to Edge currency pluginIds
 const CHAIN_MAP: StringMap = {
