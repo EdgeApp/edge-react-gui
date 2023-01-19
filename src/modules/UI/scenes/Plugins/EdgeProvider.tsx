@@ -28,9 +28,8 @@ import s from '../../../../locales/strings'
 import { GuiPlugin } from '../../../../types/GuiPluginTypes'
 import { Dispatch, RootState } from '../../../../types/reduxTypes'
 import { Actions, NavigationBase } from '../../../../types/routerTypes'
-import { EdgeTokenId } from '../../../../types/types'
+import { EdgeTokenId, MapObject } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
-import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../../util/CurrencyWalletHelpers'
 import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
@@ -227,19 +226,14 @@ export class EdgeProvider extends Bridgeable {
     const currencyCode = this.selectedCurrencyCode
     const walletName = getWalletName(edgeWallet)
     const receiveAddress = await edgeWallet.getReceiveAddress()
-    const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
 
-    const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
     const returnObject: WalletDetails = {
       name: walletName,
       pluginId: edgeWallet.currencyInfo.pluginId,
       receiveAddress,
       chainCode: this.selectedChainCode,
       currencyCode,
-      fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
-      // @ts-expect-error
-      currencyIcon: icons.symbolImage,
-      currencyIconDark: icons.symbolImageDarkMono
+      fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', '')
     }
     return Promise.resolve(returnObject)
   }
@@ -274,9 +268,9 @@ export class EdgeProvider extends Bridgeable {
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(
       Object.keys(data).map(async key => {
-        if (data[key] != null) {
-          // @ts-expect-error
-          return store.setItem(this._plugin.storeId, key, data[key])
+        const val = data[key]
+        if (val != null) {
+          return store.setItem(this._plugin.storeId, key, val)
         } else {
           return store.deleteItem(this._plugin.storeId, key)
         }
@@ -289,13 +283,12 @@ export class EdgeProvider extends Bridgeable {
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
-  async readData(keys: string[]): Promise<Object> {
+  async readData(keys: string[]): Promise<MapObject<string | undefined>> {
     const { account } = this._state.core
     const store = account.dataStore
-    const returnObj = {}
-    for (let i = 0; i < keys.length; i++) {
-      // @ts-expect-error
-      returnObj[keys[i]] = await store.getItem(this._plugin.storeId, keys[i]).catch(e => undefined)
+    const returnObj: MapObject<string | undefined> = {}
+    for (const key of keys) {
+      returnObj[key] = await store.getItem(this._plugin.storeId, key).catch(e => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
@@ -468,8 +461,6 @@ export class EdgeProvider extends Bridgeable {
                 trackConversion('EdgeProviderConversion', {
                   pluginId: this._plugin.storeId,
                   orderId,
-                  // @ts-expect-error
-                  account: this._state.core.account,
                   currencyCode: transaction.currencyCode,
                   exchangeAmount: Number(abs(exchangeAmount))
                 })
@@ -500,8 +491,7 @@ export class EdgeProvider extends Bridgeable {
   // window.fetch.catch(console log then throw)
   async deprecatedAndNotSupportedDouble(request: any, firstURL: string, url2: string): Promise<unknown> {
     console.log('Bity firstURL: ' + firstURL)
-    // @ts-expect-error
-    const response = await window.fetch(firstURL, request).catch(e => {
+    const response = await fetch(firstURL, request).catch(e => {
       console.log(`throw from fetch firstURL: ${firstURL}`, e)
       throw e
     })
@@ -517,7 +507,7 @@ export class EdgeProvider extends Bridgeable {
       credentials: 'include'
     }
     // @ts-expect-error
-    const response2 = await window.fetch(secondURL, request2).catch(e => {
+    const response2 = await fetch(secondURL, request2).catch(e => {
       console.log(`throw from fetch secondURL: ${secondURL}`, e)
       throw e
     })
@@ -540,8 +530,7 @@ export class EdgeProvider extends Bridgeable {
         body: signedTransaction
       }
       console.log('Bity thirdURL: ' + thirdURL)
-      // @ts-expect-error
-      const signedTransactionResponse = await window.fetch(thirdURL, request).catch(e => {
+      const signedTransactionResponse = await fetch(thirdURL, request).catch(e => {
         console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
         throw e
       })
@@ -557,7 +546,7 @@ export class EdgeProvider extends Bridgeable {
         const detailUrl = firstURL + '/' + orderData.id
         console.log('detailURL: ' + detailUrl)
         // @ts-expect-error
-        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest).catch(e => {
+        const bankDetailResponse = await fetch(detailUrl, bankDetailsRequest).catch(e => {
           console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
           throw e
         })
@@ -571,8 +560,7 @@ export class EdgeProvider extends Bridgeable {
     return orderData
   }
 
-  // @ts-expect-error
-  async openSafariView(url: string): Promise<unknown> {
+  async openSafariView(url: string): Promise<void> {
     if (Platform.OS === 'ios') SafariView.show({ url })
     else CustomTabs.openURL(url)
   }
@@ -600,8 +588,7 @@ export class EdgeProvider extends Bridgeable {
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
-  // @ts-expect-error
-  fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
+  fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return
