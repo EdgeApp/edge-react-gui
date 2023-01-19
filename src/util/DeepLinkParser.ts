@@ -127,7 +127,8 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     }
 
     case 'wc': {
-      const uri = url.query.replace(/.*uri=/, '')
+      const uriEncoded = url.query.replace(/.*uri=/, '')
+      const uri = decodeURIComponent(uriEncoded)
       const { key } = parseQuery(new URL(uri).query)
       const isSigning = key == null
       return { type: 'walletConnect', isSigning, uri }
