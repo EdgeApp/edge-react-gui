@@ -25,6 +25,7 @@ interface Props {
 
   // Filtering:
   allowedAssets?: EdgeTokenId[]
+  allowedWalletIds?: string[]
   excludeAssets?: EdgeTokenId[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
@@ -62,6 +63,7 @@ export function WalletList(props: Props) {
 
     // Filtering:
     allowedAssets,
+    allowedWalletIds,
     excludeAssets,
     excludeWalletIds,
     filterActivation,
@@ -97,6 +99,7 @@ export function WalletList(props: Props) {
   // Filter the common wallet list:
   const filteredWalletList = React.useMemo(() => {
     const excludeWalletSet = new Set<string>(excludeWalletIds)
+    const allowedWalletSet = new Set<string>(allowedWalletIds ?? [])
 
     return sortedWalletList.filter(item => {
       const { tokenId, wallet } = item
@@ -106,6 +109,11 @@ export function WalletList(props: Props) {
 
       // Remove excluded walletIds:
       if (excludeWalletSet.has(wallet.id)) return false
+
+      // Remove walletIds not in the allowed set:
+      if (allowedWalletIds != null) {
+        if (!allowedWalletSet.has(wallet.id)) return false
+      }
 
       // Apply the currency filters:
       const { pluginId } = wallet.currencyInfo

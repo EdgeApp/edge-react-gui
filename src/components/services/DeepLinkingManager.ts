@@ -31,7 +31,9 @@ export function DeepLinkingManager(props: Props) {
     if (pendingDeepLink == null) return
 
     // Wait a bit, since logging in can sometimes stomp us:
-    requestAnimationFrame(() => dispatch(retryPendingDeepLink(navigation)))
+    requestAnimationFrame(() => {
+      dispatch(retryPendingDeepLink(navigation))
+    })
   }, [accountReferralLoaded, dispatch, navigation, pendingDeepLink, wallets])
 
   // @ts-expect-error

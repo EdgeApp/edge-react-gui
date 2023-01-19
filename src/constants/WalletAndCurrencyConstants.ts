@@ -135,7 +135,7 @@ interface SpecialCurrencyInfo {
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
   isPrivateKeySweepable?: boolean
-  isBitPayProtocolSupported?: boolean
+  isPaymentProtocolSupported?: boolean
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
@@ -177,7 +177,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   bitcointestnet: {
     hasSegwit: true,
@@ -190,7 +190,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   bitcoincash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -204,7 +204,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   bitcoinsv: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -215,7 +215,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   digibyte: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -227,7 +227,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   litecoin: {
     hasSegwit: true,
@@ -242,7 +242,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   rsk: {
     initWalletName: s.strings.string_first_rsk_wallet_name,
@@ -369,7 +369,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isCustomTokensSupported: true,
-    isBitPayProtocolSupported: false
+    isPaymentProtocolSupported: false
   },
   tron: {
     initWalletName: s.strings.string_first_tron_wallet_name,
@@ -382,7 +382,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isBitPayProtocolSupported: false
+    isPaymentProtocolSupported: false
   },
   kovan: {
     initWalletName: s.strings.string_first_ethereum_wallet_name,
@@ -395,7 +395,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isBitPayProtocolSupported: false
+    isPaymentProtocolSupported: false
   },
   ethereumclassic: {
     initWalletName: s.strings.string_first_ethereum_classic_wallet_name,
@@ -417,7 +417,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
-    isBitPayProtocolSupported: false,
+    isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true
   },
   tezos: {
@@ -512,7 +512,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   ravencoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -523,7 +523,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   dogecoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -536,7 +536,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   zcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -547,7 +547,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   smartcash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -558,7 +558,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true,
+    isPaymentProtocolSupported: true,
     keysOnlyMode: true
   },
   vertcoin: {
@@ -570,7 +570,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   bitcoingold: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -582,7 +582,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isPrivateKeySweepable: true,
     isSplittingDisabled: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   feathercoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -593,7 +593,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   groestlcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -604,7 +604,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   qtum: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
@@ -615,7 +615,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
-    isBitPayProtocolSupported: true
+    isPaymentProtocolSupported: true
   },
   eboost: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,

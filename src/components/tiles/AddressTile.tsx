@@ -6,12 +6,12 @@ import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import { launchBitPay } from '../../actions/BitPayActions'
+import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ENS_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
-import { BitPayError } from '../../types/BitPayError'
+import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { GuiMakeSpendInfo } from '../../types/types'
@@ -129,7 +129,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchBitPay(navigation, this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
+        await launchPaymentProto(navigation, this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
 
         return
       }
@@ -144,11 +144,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
       const parsedLink = { ...parseDeepLink(address) }
-      if (parsedLink.type === 'bitPay') {
+      if (parsedLink.type === 'paymentProto') {
         if (ercTokenStandard === 'ERC20') {
-          showError(new BitPayError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
+          showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchBitPay(navigation, this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          await launchPaymentProto(navigation, this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)

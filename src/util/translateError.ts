@@ -1,7 +1,7 @@
 import { asEither, asObject, asString } from 'cleaners'
 
 import ENV from '../../env.json'
-import { BitPayError, translateBitPayError } from '../types/BitPayError'
+import { PaymentProtoError, translatePaymentProtoError } from '../types/PaymentProtoError'
 import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
 
 const asErrorMessage = asEither(
@@ -31,7 +31,7 @@ export function makeErrorLog(error: unknown): string {
  */
 export function translateError(error: unknown): string {
   // GUI Error types:
-  if (error instanceof BitPayError) return translateBitPayError(error)
+  if (error instanceof PaymentProtoError) return translatePaymentProtoError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)
 
   return asErrorMessage(error)

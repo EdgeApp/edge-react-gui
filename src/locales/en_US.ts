@@ -119,7 +119,6 @@ const strings = {
   azteco_success: `You've redeemed an Azteco bitcoin card. Funds should arrive shortly.`,
   azteco_invalid_code: 'Invalid Azteco code.',
   azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
-  azteco_btc_only: 'Please choose a BTC wallet and scan again.',
 
   // Request for Address Protocol
   reqaddr_error_unsupported_chains: '%1$s does not support the following chains listed in the request: %2$s',
@@ -711,6 +710,7 @@ const strings = {
   mining_fee: 'Max network fee',
   scan_camera_missing_qrcode: 'No QR code detected in images provided.',
   scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
+  scan_camera_no_matching_wallet: 'You have no matching wallets to handle this link',
   open_settings: 'Open Settings',
   ss_geolock: 'Location restricted. Unable to complete exchange.',
   ss_unable: 'No enabled exchanges support %1$s to %2$s.',
@@ -728,6 +728,7 @@ const strings = {
   swap_terms_statement:
     'This exchange may require you to verify your identity to complete this trade. Please review the terms below and tap Accept to continue or Reject to stop receiving quotes from this exchange.',
   alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
+  alert_deep_link_no_wallet_for_uri: 'No wallets exist that support this link.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
   create_wallet_failed: 'Failed to create wallet',

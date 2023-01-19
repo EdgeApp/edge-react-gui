@@ -9,7 +9,7 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
-import { launchBitPay } from '../../../../actions/BitPayActions'
+import { launchPaymentProto } from '../../../../actions/PaymentProtoActions'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../../../components/modals/WalletListModal'
@@ -392,7 +392,9 @@ export class EdgeProvider extends Bridgeable {
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchBitPay(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(showError)
+      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(
+        showError
+      )
       return
     }
 
