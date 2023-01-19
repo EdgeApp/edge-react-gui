@@ -365,7 +365,6 @@ export interface NavigationBase {
   // Returning:
   goBack: () => void
   pop: () => void
-  popTo: (sceneKey: string) => void
   popToTop: () => void
 
   // Drawer:
@@ -435,9 +434,6 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
       },
       pop() {
         props.navigation.pop()
-      },
-      popTo(name) {
-        props.navigation.popTo(name)
       },
       popToTop() {
         props.navigation.popToTop()

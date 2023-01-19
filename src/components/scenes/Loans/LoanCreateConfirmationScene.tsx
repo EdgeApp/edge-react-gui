@@ -167,16 +167,13 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         await dispatch(saveLoanAccount(loanAccount))
         await dispatch(runLoanActionProgram(loanAccount, actionProgram, 'loan-create'))
 
-        // Route to LoanStatusScene only if Action Program contains multiple ops
+        navigation.popToTop()
+        navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
+
+        // Further route to LoanStatusScene only if Action Program contains multiple ops
         const seq = actionProgram.actionOp.type === 'seq' ? actionProgram.actionOp : null
         if (seq != null && seq.actions.length > 1) {
-          // HACK: Until Main.ui fully deprecates Actions usage, use this hack to handle back button routing.
-          navigation.popTo('loanCreate')
-          navigation.replace('loanDetails', { loanAccountId: loanAccount.id })
-
           navigation.navigate('loanStatus', { actionQueueId: actionProgram.programId, loanAccountId: loanAccount.id })
-        } else {
-          navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
         }
       } catch (e: any) {
         showError(e)

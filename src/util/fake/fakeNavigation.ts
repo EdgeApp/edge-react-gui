@@ -15,7 +15,6 @@ export const fakeNavigation: NavigationProp<any> = {
 
   goBack() {},
   pop() {},
-  popTo: () => {},
   popToTop() {},
 
   closeDrawer() {},
