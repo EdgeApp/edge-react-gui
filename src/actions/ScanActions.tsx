@@ -168,14 +168,14 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
 
 export function handleWalletUris(
   navigation: NavigationBase,
-  coreWallet: EdgeCurrencyWallet,
+  wallet: EdgeCurrencyWallet,
   parsedUri: EdgeParsedUri,
   fioAddress?: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const { account } = getState().core
     const { legacyAddress, metadata, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
-    const currencyCode: string = parsedUri.currencyCode ?? coreWallet.currencyInfo.currencyCode
+    const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
     // Coin operations
     try {
@@ -190,7 +190,7 @@ export function handleWalletUris(
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
           networkLocation: { contractAddress },
-          walletId: coreWallet.id
+          walletId: wallet.id
         })
       }
 
@@ -201,8 +201,8 @@ export function handleWalletUris(
 
       // PUBLIC ADDRESS URI
       let tokenId: string | undefined
-      if (currencyCode !== coreWallet.currencyInfo.currencyCode) {
-        tokenId = getTokenId(account, coreWallet.currencyInfo.pluginId, currencyCode)
+      if (currencyCode !== wallet.currencyInfo.currencyCode) {
+        tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
       }
       const spendInfo: EdgeSpendInfo = {
         metadata,
@@ -218,7 +218,7 @@ export function handleWalletUris(
         tokenId
       }
 
-      navigation.push('send2', { walletId: coreWallet.id, spendInfo })
+      navigation.push('send2', { walletId: wallet.id, spendInfo })
     } catch (error: any) {
       // INVALID URI
       setTimeout(
