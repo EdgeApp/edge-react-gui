@@ -1,6 +1,5 @@
 import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -221,15 +220,14 @@ export function handleWalletUris(
       navigation.push('send2', { walletId: wallet.id, spendInfo })
     } catch (error: any) {
       // INVALID URI
-      setTimeout(
-        () =>
-          Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
-            {
-              text: s.strings.string_ok
-            }
-          ]),
-        500
-      )
+      await Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          buttons={{ ok: { label: s.strings.string_ok } }}
+          message={s.strings.scan_invalid_address_error_description}
+          title={s.strings.scan_invalid_address_error_title}
+        />
+      ))
     }
   }
 }
