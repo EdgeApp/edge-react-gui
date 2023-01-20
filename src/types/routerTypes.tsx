@@ -413,7 +413,9 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.push(name, { route: { name, params } })
       },
       replace(name, params) {
-        Actions.replace(name, params)
+        Flux.Actions.replace(name, { route: { name, params } })
+        // TODO: Replace FLux.Actions.replace with props.navigation.replace
+        // which will require debugging why it doesn't work for certain scenes.
         // props.navigation.replace(name, { route: { name, params } })
       },
       setParams(params) {
