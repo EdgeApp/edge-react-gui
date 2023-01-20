@@ -374,7 +374,15 @@ export interface NavigationBase {
   toggleDrawer: () => void
 
   // Internals nobody should need to touch:
-  state: unknown
+  getState: () => unknown
+
+  // Coming soon:
+  // canGoBack() {},
+  // dispatch() {},
+  // getParent() {},
+  // jumpTo() {},
+  // reset() {},
+  // setOptions() {},
 }
 
 /**
@@ -413,7 +421,9 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.push(name, { route: { name, params } })
       },
       replace(name, params) {
-        Actions.replace(name, params)
+        Flux.Actions.replace(name, { route: { name, params } })
+        // TODO: Replace Flux.Actions.replace with props.navigation.replace
+        // which will require debugging why it doesn't work for certain scenes.
         // props.navigation.replace(name, { route: { name, params } })
       },
       setParams(params) {
@@ -443,7 +453,7 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.toggleDrawer()
       },
 
-      get state() {
+      getState() {
         return props.navigation.state
       }
     }
