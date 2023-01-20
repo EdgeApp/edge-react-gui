@@ -381,6 +381,11 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
+    uniqueIdentifierInfo: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_note,
+      identifierName: s.strings.unique_identifier_note,
+      keyboardType: 'default'
+    },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
