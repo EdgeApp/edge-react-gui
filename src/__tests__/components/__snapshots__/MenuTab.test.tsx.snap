@@ -6,6 +6,7 @@ exports[`MenuTab should render with loading props 1`] = `
     Object {
       "addListener": [Function],
       "closeDrawer": [Function],
+      "getState": [Function],
       "goBack": [Function],
       "isFocused": [Function],
       "navigate": [Function],
@@ -16,7 +17,6 @@ exports[`MenuTab should render with loading props 1`] = `
       "push": [Function],
       "replace": [Function],
       "setParams": [Function],
-      "state": Object {},
       "toggleDrawer": [Function],
     }
   }

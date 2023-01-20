@@ -55,7 +55,7 @@ const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
 
 export function ControlPanel(props: Props) {
   const { navigation } = props
-  const state: any = navigation.state
+  const state: any = navigation.getState()
   const { isDrawerOpen } = state
   const dispatch = useDispatch()
   const theme = useTheme()

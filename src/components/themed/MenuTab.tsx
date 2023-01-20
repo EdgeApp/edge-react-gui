@@ -51,7 +51,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
   render() {
     const { theme } = this.props
     const styles = getStyles(theme)
-    const state: any = this.props.navigation.state
+    const state: any = this.props.navigation.getState()
     const activeTabIndex = state.index
     const colors = theme.tabBarBackground
     const start = theme.tabBarBackgroundStart
