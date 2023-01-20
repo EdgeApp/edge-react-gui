@@ -170,6 +170,7 @@ const CoinRankingComponent = (props: Props) => {
       }
     }
     return out
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSize, searchText])
   // Do not re-render on change of coinRankings. This is intended to be asynchronously accessed by each individual
   // row.
