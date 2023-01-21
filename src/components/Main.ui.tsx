@@ -422,7 +422,7 @@ export class MainComponent extends React.Component<Props> {
             </Stack>
             <Stack key="coinRanking">
               <Scene
-                key="coinRankingScene"
+                key="coinRanking"
                 component={withNavigation(ifLoggedIn(CoinRankingScene))}
                 navTransparent
                 // @ts-expect-error
