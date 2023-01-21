@@ -52,6 +52,7 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
+import { CoinRankingDetailsScene } from './scenes/CoinRankingDetailsScene'
 import { CoinRankingScene } from './scenes/CoinRankingScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
@@ -429,6 +430,17 @@ export class MainComponent extends React.Component<Props> {
                 renderTitle={<EdgeLogoHeader />}
                 // @ts-expect-error
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                // @ts-expect-error
+                renderRightButton={<SideMenuButton />}
+              />
+              <Scene
+                key="coinRankingDetails"
+                component={withNavigation(ifLoggedIn(CoinRankingDetailsScene))}
+                navTransparent
+                // @ts-expect-error
+                renderTitle={<EdgeLogoHeader />}
+                // @ts-expect-error
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
                 renderRightButton={<SideMenuButton />}
               />

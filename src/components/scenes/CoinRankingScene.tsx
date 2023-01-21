@@ -7,6 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
+import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
@@ -27,7 +28,7 @@ const LISTINGS_REFRESH_INTERVAL = 30000
 enableDebugLogType(LOG_COINRANK & 0)
 
 interface Props {
-  // navigation: NavigationProp<'coinRanking'>
+  navigation: NavigationProp<'coinRanking'>
   // route: RouteProp<'coinRanking'>
 }
 
@@ -48,6 +49,7 @@ type Timeout = ReturnType<typeof setTimeout>
 const CoinRankingComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { navigation } = props
   const mounted = React.useRef<boolean>(true)
   const textInput = React.useRef<OutlinedTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
@@ -69,7 +71,16 @@ const CoinRankingComponent = (props: Props) => {
     const key = `${index}-${item}-${rank}-${currencyCode}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
-    return <CoinRankRow index={item} key={key} coinRanking={coinRanking} percentChangeTimeFrame={percentChangeTimeFrame} assetSubText={assetSubText} />
+    return (
+      <CoinRankRow
+        navigation={navigation}
+        index={item}
+        key={key}
+        coinRanking={coinRanking}
+        percentChangeTimeFrame={percentChangeTimeFrame}
+        assetSubText={assetSubText}
+      />
+    )
   })
 
   const handleEndReached = useHandler(() => {

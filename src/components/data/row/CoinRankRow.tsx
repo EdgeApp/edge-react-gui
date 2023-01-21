@@ -1,16 +1,20 @@
 import { lt, round } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
+import { useHandler } from '../../../hooks/useHandler'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
 import { useState } from '../../../types/reactHooks'
+import { NavigationProp } from '../../../types/routerTypes'
+import { triggerHaptic } from '../../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../../util/logger'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
 interface Props {
+  navigation: NavigationProp<'coinRanking'>
   index: number
   percentChangeTimeFrame: PercentChangeTimeFrame
   assetSubText: AssetSubText
@@ -23,7 +27,7 @@ const REFRESH_INTERVAL_RANGE = 10000
 type Timeout = ReturnType<typeof setTimeout>
 
 const CoinRankRowComponent = (props: Props) => {
-  const { index, percentChangeTimeFrame, assetSubText, coinRanking } = props
+  const { navigation, index, percentChangeTimeFrame, assetSubText, coinRanking } = props
   const { coinRankingDatas } = coinRanking
 
   const mounted = React.useRef<boolean>(true)
@@ -32,6 +36,11 @@ const CoinRankRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const [coinRow, setCoinRow] = useState<CoinRankingData | undefined>(coinRankingDatas[index])
+
+  const handlePress = useHandler(() => {
+    triggerHaptic('impactLight')
+    navigation.navigate('coinRankingDetails', { coinRankingData: coinRankingDatas[index] })
+  })
 
   React.useEffect(() => {
     const newTimer = () => {
@@ -126,7 +135,7 @@ const CoinRankRowComponent = (props: Props) => {
   const percentString = `${plusMinus}${percentChangeString}%`
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <View style={styles.rank}>
         <EdgeText>{rank}</EdgeText>
       </View>
@@ -147,7 +156,7 @@ const CoinRankRowComponent = (props: Props) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

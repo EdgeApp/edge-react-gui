@@ -10,6 +10,7 @@ import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { CoinRankingData } from './coinrankTypes'
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
@@ -59,6 +60,9 @@ export interface ParamList {
   changePassword: {}
   changePin: {}
   coinRanking: {}
+  coinRankingDetails: {
+    coinRankingData: CoinRankingData
+  }
   createWalletAccountSelect: {
     accountName: string
     existingWalletId?: string
