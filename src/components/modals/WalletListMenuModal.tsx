@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
-import { getSpecialCurrencyInfo, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants'
+import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -43,6 +43,75 @@ const icons = {
   resync: 'sync',
   viewXPub: 'eye'
 }
+
+/**
+ * Customizes which coins get which options on the wallet list scene.
+ */
+export const WALLET_LIST_MENU: Array<{
+  pluginIds?: string[]
+  label: string
+  value: WalletListMenuKey
+}> = [
+  {
+    label: s.strings.string_rename,
+    value: 'rename'
+  },
+  {
+    label: s.strings.string_resync,
+    value: 'resync'
+  },
+  {
+    label: s.strings.fragment_wallets_export_transactions,
+    value: 'exportWalletTransactions'
+  },
+  {
+    label: s.strings.string_master_private_key,
+    value: 'getSeed'
+  },
+  {
+    pluginIds: Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported),
+    label: s.strings.string_add_edit_tokens,
+    value: 'manageTokens'
+  },
+  {
+    pluginIds: [
+      'bitcoincash',
+      'bitcoinsv',
+      'bitcoin',
+      'bitcoingold',
+      'dash',
+      'digibyte',
+      'dogecoin',
+      'eboost',
+      'eos',
+      'zcoin',
+      'feathercoin',
+      'groestlcoin',
+      'litecoin',
+      'qtum',
+      'ravencoin',
+      'smartcash',
+      'bitcointestnet',
+      'telos',
+      'ufo',
+      'vertcoin',
+      'wax',
+      'monero',
+      'piratechain',
+      'zcash'
+    ],
+    label: s.strings.fragment_wallets_view_xpub,
+    value: 'viewXPub'
+  },
+  {
+    label: s.strings.string_get_raw_keys,
+    value: 'getRawKeys'
+  },
+  {
+    label: s.strings.string_archive_wallet,
+    value: 'delete'
+  }
+]
 
 const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet; tokenId?: string; account: EdgeAccount }): Promise<Option[]> => {
   const { wallet, tokenId, account } = params
