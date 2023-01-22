@@ -5,7 +5,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
-import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
@@ -69,7 +69,6 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getSeed'
   },
   {
-    pluginIds: Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported),
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },
@@ -175,6 +174,11 @@ export function WalletListMenuModal(props: Props) {
       const { pluginIds, label, value } = option
 
       if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
+
+      // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
+      if (value === 'manageTokens') {
+        if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+      }
       result.push({ label, value })
     }
     setOptions(result)
