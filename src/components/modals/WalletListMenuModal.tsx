@@ -1,4 +1,3 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -7,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -113,55 +113,6 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
-const getWalletOptions = async (params: { wallet: EdgeCurrencyWallet; tokenId?: string; account: EdgeAccount }): Promise<Option[]> => {
-  const { wallet, tokenId, account } = params
-
-  if (wallet == null) {
-    return [
-      { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
-      { label: s.strings.string_archive_wallet, value: 'rawDelete' }
-    ]
-  }
-
-  if (tokenId != null) {
-    return [
-      {
-        label: s.strings.string_resync,
-        value: 'resync'
-      },
-      {
-        label: s.strings.fragment_wallets_export_transactions,
-        value: 'exportWalletTransactions'
-      },
-      {
-        label: s.strings.fragment_wallets_delete_wallet,
-        value: 'delete'
-      }
-    ]
-  }
-
-  const result: Option[] = []
-
-  const splittable = await account.listSplittableWalletTypes(wallet.id)
-
-  const currencyInfos = getCurrencyInfos(account)
-  for (const splitWalletType of splittable) {
-    const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-    if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-    result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
-  }
-
-  const { pluginId } = wallet.currencyInfo
-  for (const option of WALLET_LIST_MENU) {
-    const { pluginIds, label, value } = option
-
-    if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
-
-    result.push({ label, value })
-  }
-  return result
-}
-
 export function WalletListMenuModal(props: Props) {
   const { bridge, tokenId, navigation, walletId } = props
 
@@ -181,8 +132,53 @@ export function WalletListMenuModal(props: Props) {
     bridge.resolve()
   }
 
-  React.useEffect(() => {
-    getWalletOptions({ wallet, tokenId, account }).then(options => setOptions(options))
+  useAsyncEffect(async () => {
+    if (wallet == null) {
+      setOptions([
+        { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
+        { label: s.strings.string_archive_wallet, value: 'rawDelete' }
+      ])
+      return
+    }
+
+    if (tokenId != null) {
+      setOptions([
+        {
+          label: s.strings.string_resync,
+          value: 'resync'
+        },
+        {
+          label: s.strings.fragment_wallets_export_transactions,
+          value: 'exportWalletTransactions'
+        },
+        {
+          label: s.strings.fragment_wallets_delete_wallet,
+          value: 'delete'
+        }
+      ])
+      return
+    }
+
+    const result: Option[] = []
+
+    const splittable = await account.listSplittableWalletTypes(wallet.id)
+
+    const currencyInfos = getCurrencyInfos(account)
+    for (const splitWalletType of splittable) {
+      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
+    }
+
+    const { pluginId } = wallet.currencyInfo
+    for (const option of WALLET_LIST_MENU) {
+      const { pluginIds, label, value } = option
+
+      if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
+      result.push({ label, value })
+    }
+    setOptions(result)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
