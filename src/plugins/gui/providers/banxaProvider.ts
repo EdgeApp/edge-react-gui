@@ -398,6 +398,7 @@ const addToAllowedCurrencies = (pluginId: string, currencyCode: string, coin: Ba
 
 const typeMap = {
   WORLDPAYAPPLE: 'applepay',
+  WORLDPAYGOOGLE: 'googlepay',
   WORLDPAYCREDIT: 'credit',
   CHECKOUTCREDIT: 'credit'
 }
