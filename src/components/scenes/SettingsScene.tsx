@@ -104,18 +104,21 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   async loadBiometryType(): Promise<void> {
     if (!this.props.supportsTouchId) return
 
-    const biometryType = await getSupportedBiometryType()
-    if (Platform.OS !== 'ios') this.setState({ touchIdText: s.strings.settings_button_use_biometric })
-    switch (biometryType) {
-      case 'FaceID':
-        this.setState({ touchIdText: s.strings.settings_button_use_faceID })
-        break
-      case 'TouchID':
-        this.setState({ touchIdText: s.strings.settings_button_use_touchID })
-        break
+    if (Platform.OS === 'ios') {
+      const biometryType = await getSupportedBiometryType()
+      switch (biometryType) {
+        case 'FaceID':
+          this.setState({ touchIdText: s.strings.settings_button_use_faceID })
+          break
+        case 'TouchID':
+          this.setState({ touchIdText: s.strings.settings_button_use_touchID })
+          break
 
-      case false:
-        break
+        case false:
+          break
+      }
+    } else {
+      this.setState({ touchIdText: s.strings.settings_button_use_biometric })
     }
   }
 
