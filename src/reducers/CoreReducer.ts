@@ -3,16 +3,12 @@ import { EdgeAccount, EdgeContext } from 'edge-core-js/types'
 import { combineReducers } from 'redux'
 
 import { Action } from '../types/reduxTypes'
-import { edgeLogin, EdgeLoginState } from './EdgeLoginReducer'
 
 export interface CoreState {
   readonly account: EdgeAccount
   readonly context: EdgeContext
   readonly disklet: Disklet
   readonly otpErrorShown: boolean
-
-  // Nested reducers:
-  readonly edgeLogin: EdgeLoginState
 }
 
 const flowHack: any = {}
@@ -55,8 +51,5 @@ export const core = combineReducers<CoreState, Action>({
       default:
         return state
     }
-  },
-
-  // Nested reducers:
-  edgeLogin
+  }
 })

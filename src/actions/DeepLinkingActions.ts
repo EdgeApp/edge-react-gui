@@ -11,7 +11,6 @@ import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { activatePromotion } from './AccountReferralActions'
-import { loginWithEdge } from './EdgeLoginActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 
@@ -67,8 +66,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
   switch (link.type) {
     case 'edgeLogin':
-      dispatch(loginWithEdge(link.lobbyId))
-      navigation.push('edgeLogin', {})
+      navigation.push('edgeLogin', { lobbyId: link.lobbyId })
       return true
 
     // The login scene always handles this one:

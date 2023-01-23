@@ -27,11 +27,6 @@ Object {
     },
     "context": Object {},
     "disklet": Object {},
-    "edgeLogin": Object {
-      "error": null,
-      "isProcessing": false,
-      "lobby": null,
-    },
     "otpErrorShown": false,
   },
   "cryptoExchange": Object {

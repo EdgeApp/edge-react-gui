@@ -96,7 +96,9 @@ export interface ParamList {
     currencyInfo: EdgeCurrencyInfo
   }
   defaultFiatSetting: {}
-  edgeLogin: {}
+  edgeLogin: {
+    lobbyId: string
+  }
   editToken: {
     currencyCode?: string
     displayName?: string
