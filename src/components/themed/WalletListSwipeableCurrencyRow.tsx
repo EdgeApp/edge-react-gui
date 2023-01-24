@@ -7,7 +7,6 @@ import { selectWallet } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
@@ -65,13 +64,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true))
+    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
     navigation.navigate('request', {})
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true)).then(async () => {
+    dispatch(selectWallet(navigation, wallet.id, currencyCode, true)).then(async () => {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
       if (
@@ -90,7 +89,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(wallet.id, currencyCode, true))
+    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
     navigation.navigate('send2', {
       walletId: wallet.id,
       tokenId,
@@ -148,9 +147,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       onRightSwipe={handleSend}
       slopOpts={slopOpts}
     >
-      <Gradient>
-        <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
-      </Gradient>
+      <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
     </SwipeableRow>
   )
 }

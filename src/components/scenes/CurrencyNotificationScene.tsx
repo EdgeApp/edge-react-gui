@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { newPriceChangeEvent, serverSettingsToState, setDeviceSettings } from '../../actions/NotificationActions'
+import { newPriceChangeEvent, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
@@ -26,7 +26,7 @@ export const CurrencyNotificationScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
-  const settings = useSelector((state: RootState) => state.priceChangeNotifications)
+  const settings = useSelector((state: RootState) => state.notificationSettings)
 
   const toggleHourlySetting = useHandler(async () => {
     const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings.plugins[pluginId].hourlyChange, !!settings.plugins[pluginId].dailyChange)
@@ -43,8 +43,8 @@ export const CurrencyNotificationScene = (props: Props) => {
       try {
         const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
         dispatch({
-          type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
-          data: serverSettingsToState(newSettings)
+          type: 'NOTIFICATION_SETTINGS_UPDATE',
+          data: serverSettingsToNotificationSettings(newSettings)
         })
       } catch (e: any) {
         showError(`Failed to reach notification server: ${e}`)

@@ -3,18 +3,22 @@ import * as React from 'react'
 
 import { handleOtpError } from '../../actions/AccountActions'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { makeErrorLog, translateError } from '../../util/translateError'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 import { Airship, yellowText } from './AirshipInstance'
 
+interface OwnProps {
+  navigation: NavigationBase
+}
 interface StateProps {
   context: EdgeContext
 }
 interface DispatchProps {
-  onOtpError: (otpError: OtpError) => void
+  onOtpError: (navigation: NavigationBase, otpError: OtpError) => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => unknown> = []
@@ -30,7 +34,7 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
         const otpError = asMaybeOtpError(error)
         if (otpError != null) {
-          return this.props.onOtpError(otpError)
+          return this.props.onOtpError(this.props.navigation, otpError)
         }
 
         if (!errorShown) {
@@ -61,14 +65,14 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   }
 }
 
-export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, {}>(
+export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     context: state.core.context
   }),
   dispatch => ({
-    onOtpError(otpError: OtpError) {
-      dispatch(handleOtpError(otpError))
+    onOtpError(navigation: NavigationBase, otpError: OtpError) {
+      dispatch(handleOtpError(navigation, otpError))
     }
   })
 )(EdgeContextCallbackManagerComponent)

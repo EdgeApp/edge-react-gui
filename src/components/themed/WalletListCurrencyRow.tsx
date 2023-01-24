@@ -4,10 +4,11 @@ import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
-import { CurrencyRow } from '../data/row/CurrencyRow'
+import { CurrencyRow, CustomAsset } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
+  customAsset?: CustomAsset
   showRate?: boolean
   token?: EdgeToken
   tokenId?: string
@@ -15,11 +16,12 @@ interface Props {
 
   // Callbacks:
   onLongPress?: () => void
-  onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
+  onPress?: (walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => void
 }
 
 const WalletListCurrencyRowComponent = (props: Props) => {
   const {
+    customAsset,
     showRate = false,
     token,
     tokenId,
@@ -33,11 +35,11 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   // Currency code and wallet name for display:
-  const { currencyCode } = token == null ? wallet.currencyInfo : token
+  const currencyCode = customAsset?.currencyCode ?? token?.currencyCode ?? wallet.currencyInfo.currencyCode
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    if (onPress != null) onPress(wallet.id, currencyCode, tokenId)
+    if (onPress != null) onPress(wallet.id, currencyCode, tokenId, customAsset)
   })
 
   const handleLongPress = useHandler(() => {
@@ -47,7 +49,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
-      <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />
+      <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} customAsset={customAsset} wallet={wallet} />
     </TouchableOpacity>
   )
 }

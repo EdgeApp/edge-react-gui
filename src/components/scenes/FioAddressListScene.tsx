@@ -8,7 +8,6 @@ import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -173,9 +172,9 @@ export class FioAddressList extends React.Component<Props, LocalState> {
         </SceneWrapper>
 
         <Fade visible={initLoading} noFadeIn>
-          <Gradient style={styles.initLoadingContainer}>
+          <View style={styles.initLoadingContainer}>
             <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
-          </Gradient>
+          </View>
         </Fade>
       </>
     )
@@ -197,7 +196,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0,
     left: 0,
     position: 'absolute',
-    backgroundColor: theme.backgroundGradientColors[1],
     width: '100%',
     height: PLATFORM.deviceHeight
   },

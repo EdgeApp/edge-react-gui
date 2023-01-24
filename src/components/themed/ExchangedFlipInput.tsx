@@ -2,7 +2,7 @@ import { div, log10, mul } from 'biggystring'
 import * as React from 'react'
 
 import { GuiCurrencyInfo } from '../../types/types'
-import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, precisionAdjust, zeroString } from '../../util/utils'
 import { FlipInput, FlipInputFieldInfo } from './FlipInput'
 
 export interface ExchangedFlipInputAmounts {
@@ -23,7 +23,6 @@ export interface ExchangedFlipInputOwnProps {
   // Exchange rate
   exchangeSecondaryToPrimaryRatio: string
 
-  forceUpdateGuiCounter: number
   keyboardVisible: boolean
 
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
@@ -42,7 +41,7 @@ export interface ExchangedFlipInputOwnProps {
 
 type Props = ExchangedFlipInputOwnProps
 
-interface State {
+interface Cache {
   overridePrimaryDecimalAmount: string // This should be a decimal amount in display denomination (ie. mBTC)
   exchangeSecondaryToPrimaryRatio: string
   primaryInfo: FlipInputFieldInfo
@@ -61,7 +60,7 @@ function getSecondaryDisplayToExchangeRatio(props: Props): string {
   return div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
 }
 
-function propsToState(props: Props): State {
+function propsToCache(props: Props): Cache {
   // Calculate secondaryToPrimaryRatio for FlipInput. FlipInput takes a ratio in display amounts which may be
   // different than exchange amounts. ie. USD / mBTC
   // nextProps.exchangeSecondaryToPrimaryRatio // ie. 1/10000
@@ -114,8 +113,9 @@ function propsToState(props: Props): State {
   return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
-export class ExchangedFlipInput extends React.Component<Props, State> {
+export class ExchangedFlipInput extends React.Component<Props> {
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  cache: Cache
 
   static defaultProps = {
     isEditable: true
@@ -123,26 +123,34 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = propsToState(props)
+    this.cache = propsToCache(props)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    this.setState(propsToState(nextProps))
+    this.cache = propsToCache(nextProps)
   }
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    let diffElement2: string = ''
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryCurrencyInfo: true,
-      secondaryCurrencyInfo: true
-    })
-    if (!diffElement) {
-      diffElement2 = getObjectDiff(this.state, nextState, {
-        primaryInfo: true,
-        secondaryInfo: true
-      })
-    }
-    return !!diffElement || !!diffElement2
+  shouldComponentUpdate(nextProps: Props) {
+    // It is important that we do not re-render when the user enters text,
+    // so we need to diff our props to avoid this case:
+    return (
+      JSON.stringify(this.props.primaryCurrencyInfo) !== JSON.stringify(nextProps.primaryCurrencyInfo) ||
+      JSON.stringify(this.props.secondaryCurrencyInfo) !== JSON.stringify(nextProps.secondaryCurrencyInfo) ||
+      this.props.exchangeSecondaryToPrimaryRatio !== nextProps.exchangeSecondaryToPrimaryRatio ||
+      this.props.headerCallback !== nextProps.headerCallback ||
+      this.props.headerText !== nextProps.headerText ||
+      this.props.inputAccessoryViewID !== nextProps.inputAccessoryViewID ||
+      this.props.isEditable !== nextProps.isEditable ||
+      this.props.isFiatOnTop !== nextProps.isFiatOnTop ||
+      this.props.isFocus !== nextProps.isFocus ||
+      this.props.keyboardVisible !== nextProps.keyboardVisible ||
+      this.props.onBlur !== nextProps.onBlur ||
+      this.props.onError !== nextProps.onError ||
+      this.props.onFocus !== nextProps.onFocus ||
+      this.props.topReturnKeyType !== nextProps.topReturnKeyType ||
+      this.props.onNext !== nextProps.onNext ||
+      this.props.overridePrimaryExchangeAmount !== nextProps.overridePrimaryExchangeAmount
+    )
   }
 
   onAmountChanged = (decimalAmount: string): void => {
@@ -155,7 +163,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
     if (!this.props.isFiatOnTop) {
       return false
     }
-    return !zeroString(this.state.exchangeSecondaryToPrimaryRatio)
+    return !zeroString(this.cache.exchangeSecondaryToPrimaryRatio)
   }
 
   toggleCryptoOnBottom = () => {
@@ -167,13 +175,13 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
   render() {
     return (
       <FlipInput
-        overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
-        exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
+        overridePrimaryDecimalAmount={this.cache.overridePrimaryDecimalAmount}
+        exchangeSecondaryToPrimaryRatio={this.cache.exchangeSecondaryToPrimaryRatio}
         headerText={this.props.headerText}
         headerCallback={this.props.headerCallback}
-        primaryInfo={this.state.primaryInfo}
-        secondaryInfo={this.state.secondaryInfo}
-        forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
+        primaryInfo={this.cache.primaryInfo}
+        secondaryInfo={this.cache.secondaryInfo}
+        forceUpdateGuiCounter={0}
         onAmountChanged={this.onAmountChanged}
         onError={this.props.onError}
         keyboardVisible={this.props.keyboardVisible}

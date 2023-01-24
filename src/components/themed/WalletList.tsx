@@ -7,6 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
@@ -20,8 +21,11 @@ import { WalletListLoadingRow } from './WalletListLoadingRow'
 import { WalletListSectionHeader } from './WalletListSectionHeader'
 
 interface Props {
+  navigation: NavigationBase
+
   // Filtering:
   allowedAssets?: EdgeTokenId[]
+  allowedWalletIds?: string[]
   excludeAssets?: EdgeTokenId[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
@@ -55,8 +59,11 @@ interface Section {
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
+    navigation,
+
     // Filtering:
     allowedAssets,
+    allowedWalletIds,
     excludeAssets,
     excludeWalletIds,
     filterActivation,
@@ -79,9 +86,9 @@ export function WalletList(props: Props) {
     () =>
       onPress ??
       ((walletId: string, currencyCode: string) => {
-        dispatch(selectWallet(walletId, currencyCode))
+        dispatch(selectWallet(navigation, walletId, currencyCode))
       }),
-    [dispatch, onPress]
+    [dispatch, navigation, onPress]
   )
 
   // Subscribe to the common wallet list:
@@ -92,6 +99,7 @@ export function WalletList(props: Props) {
   // Filter the common wallet list:
   const filteredWalletList = React.useMemo(() => {
     const excludeWalletSet = new Set<string>(excludeWalletIds)
+    const allowedWalletSet = new Set<string>(allowedWalletIds ?? [])
 
     return sortedWalletList.filter(item => {
       const { tokenId, wallet } = item
@@ -101,6 +109,11 @@ export function WalletList(props: Props) {
 
       // Remove excluded walletIds:
       if (excludeWalletSet.has(wallet.id)) return false
+
+      // Remove walletIds not in the allowed set:
+      if (allowedWalletIds != null) {
+        if (!allowedWalletSet.has(wallet.id)) return false
+      }
 
       // Apply the currency filters:
       const { pluginId } = wallet.currencyInfo

@@ -41,6 +41,7 @@ export interface DeviceUpdatePayload {
   createEvents?: NewPushEvent[]
   removeEvents?: string[]
 
+  ignoreMarketing?: boolean
   ignorePriceChanges?: boolean
   loginIds?: Uint8Array[]
 }
@@ -83,6 +84,7 @@ export const asDeviceUpdatePayload = asObject<DeviceUpdatePayload>({
   createEvents: asOptional(asArray(asNewPushEvent), []),
   removeEvents: asOptional(asArray(asString), []),
 
+  ignoreMarketing: asOptional(asBoolean),
   ignorePriceChanges: asOptional(asBoolean),
   loginIds: asOptional(asArray(asBase64))
 })
@@ -123,6 +125,7 @@ export const asPushEventStatus = asObject<Omit<PushEvent, 'created' | 'deviceId'
  */
 export const asDevicePayload = asObject({
   events: asArray(asPushEventStatus),
+  ignoreMarketing: asBoolean,
   ignorePriceChanges: asBoolean,
   loginIds: asArray(asBase64)
 })

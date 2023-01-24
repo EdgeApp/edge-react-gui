@@ -25,8 +25,7 @@ export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
 
     const { fioAddresses, fioDomains, fioWalletsById } = await refreshFioNames(fioWallets)
 
-    // @ts-expect-error
-    window.requestAnimationFrame(() => {
+    global.requestAnimationFrame(() => {
       dispatch({
         type: 'FIO/SET_FIO_ADDRESSES',
         data: { fioAddresses }

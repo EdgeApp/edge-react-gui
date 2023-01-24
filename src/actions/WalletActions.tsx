@@ -8,13 +8,13 @@ import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
-export function selectWallet(walletId: string, currencyCode: string, alwaysActivate?: boolean): ThunkAction<Promise<void>> {
+export function selectWallet(navigation: NavigationBase, walletId: string, currencyCode: string, alwaysActivate?: boolean): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
@@ -30,7 +30,7 @@ export function selectWallet(walletId: string, currencyCode: string, alwaysActiv
       const currentWalletId = state.ui.wallets.selectedWalletId
       const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
       if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-        await dispatch(selectEOSWallet(walletId, currencyCode))
+        await dispatch(selectEOSWallet(navigation, walletId, currencyCode))
       }
       return
     }
@@ -46,7 +46,7 @@ export function selectWallet(walletId: string, currencyCode: string, alwaysActiv
 }
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-function selectEOSWallet(walletId: string, currencyCode: string): ThunkAction<Promise<void>> {
+function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
@@ -79,7 +79,7 @@ function selectEOSWallet(walletId: string, currencyCode: string): ThunkAction<Pr
       const selectedWalletType = makeCreateWalletType(currencyInfo)
       const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
       if (specialCurrencyInfo.skipAccountNameValidation) {
-        Actions.push('createWalletAccountSelect', {
+        navigation.push('createWalletAccountSelect', {
           selectedFiat: selectedFiat,
           selectedWalletType,
           accountName: walletName,
@@ -93,7 +93,7 @@ function selectEOSWallet(walletId: string, currencyCode: string): ThunkAction<Pr
           isReactivation: true,
           existingWalletId: walletId
         }
-        Actions.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
+        navigation.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
       }
 
       Airship.show<'ok' | undefined>(bridge => (
@@ -108,9 +108,9 @@ function selectEOSWallet(walletId: string, currencyCode: string): ThunkAction<Pr
   }
 }
 
-export function selectWalletFromModal(walletId: string, currencyCode: string): ThunkAction<void> {
+export function selectWalletFromModal(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<void> {
   return (dispatch, getState) => {
-    dispatch(selectWallet(walletId, currencyCode))
+    dispatch(selectWallet(navigation, walletId, currencyCode))
   }
 }
 

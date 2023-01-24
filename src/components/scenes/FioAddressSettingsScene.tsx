@@ -175,9 +175,18 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
             fioWallet={fioWallet}
             addressTitles
             showPaymentWalletPicker
+            navigation={this.props.navigation}
           />
         )}
-        {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} addressTitles />}
+        {showTransfer && (
+          <FioActionSubmit
+            goTo={this.goToTransfer}
+            getOperationFee={this.getTransferFee}
+            fioWallet={fioWallet}
+            addressTitles
+            navigation={this.props.navigation}
+          />
+        )}
         {!showAddBundledTxs && !showTransfer && (
           <>
             <MainButton label={s.strings.title_fio_add_bundled_txs} onPress={this.onAddBundledTxsPress} marginRem={[1.5, 1, 0.25]} />

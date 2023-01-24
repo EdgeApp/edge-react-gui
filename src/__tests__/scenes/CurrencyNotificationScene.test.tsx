@@ -9,7 +9,7 @@ import { rootReducer } from '../../reducers/RootReducer'
 
 describe('CurrencyNotificationComponent', () => {
   const mockStore: any = {
-    priceChangeNotifications: {
+    notificationSettings: {
       plugins: {
         bitcoin: {
           eventId: '123id',

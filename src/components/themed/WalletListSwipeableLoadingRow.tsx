@@ -3,7 +3,6 @@ import { Text, TouchableOpacity } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -53,9 +52,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
 
   return (
     <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-      <Gradient>
-        <WalletListLoadingRow onLongPress={handleMenu} />
-      </Gradient>
+      <WalletListLoadingRow onLongPress={handleMenu} />
     </SwipeableRow>
   )
 }

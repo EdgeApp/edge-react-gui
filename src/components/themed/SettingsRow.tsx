@@ -10,6 +10,9 @@ interface Props {
   // Show with a dim style when set. Defaults to false:
   disabled?: boolean
 
+  // Show with red text when set. Defaults to false:
+  dangerous?: boolean
+
   // Insert a text label after the other children when set:
   label?: string
 
@@ -27,7 +30,7 @@ interface Props {
  * which can be some combination of React children and a plain text label.
  */
 const SettingsRowComponent = (props: Props) => {
-  const { children, disabled = false, label = '', right, onPress } = props
+  const { children, disabled = false, dangerous = false, label = '', right, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -37,7 +40,7 @@ const SettingsRowComponent = (props: Props) => {
     <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
-        <Text style={disabled ? styles.disabledText : styles.text}>{label}</Text>
+        <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </>
     </TouchableHighlight>
@@ -70,6 +73,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     disabledText: {
       ...commonText,
       color: theme.deactivatedText
+    },
+    dangerText: {
+      ...commonText,
+      color: theme.dangerText
     },
     spinner: {
       height: theme.rem(1.5),

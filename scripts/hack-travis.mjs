@@ -19,6 +19,6 @@ editFile('package.json', text =>
 editFile('scripts/prepare.sh', text =>
   text //
     .replace('node -r sucrase/register ./scripts/copy-plugin.ts', '')
-    .replace(/cp -R node_modules\/edge-currency-accountbased.*/g, '')
+    .replace(/cp -r node_modules\/edge-currency-accountbased.*/g, '')
     .replace(/node .\/node_modules\/.bin\/webpack/, '')
 )

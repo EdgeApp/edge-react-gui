@@ -37,7 +37,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       buttonText="Select Source Wallet"
       fiatPerCrypto="500"
       focusMe={[Function]}
-      forceUpdateGuiCounter={0}
       headerText="Exchange from BTC Wallet"
       isFocused={true}
       launchWalletSelector={[Function]}
@@ -90,7 +89,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       buttonText="Select Receiving Wallet"
       fiatPerCrypto="500"
       focusMe={[Function]}
-      forceUpdateGuiCounter={0}
       headerText="Exchange to ETH Wallet"
       isFocused={false}
       launchWalletSelector={[Function]}
@@ -129,14 +127,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         }
       }
       walletId=""
-    />
-    <ActivityIndicator
-      color="#00f1a2"
-      style={
-        Object {
-          "marginVertical": 34,
-        }
-      }
     />
     <View
       style={

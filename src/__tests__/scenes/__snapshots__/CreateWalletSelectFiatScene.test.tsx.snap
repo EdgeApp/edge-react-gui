@@ -4,14 +4,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279377189,
+      4279112730,
     ]
   }
   endPoint={
     Object {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 1,
     }
   }
   locations={null}
@@ -187,7 +187,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "overflow": "hidden",
                     },
                     Object {
-                      "backgroundColor": "#1b2f3b",
+                      "backgroundColor": "#0E141A",
                       "borderRadius": 22,
                       "height": 45,
                       "marginLeft": 6,

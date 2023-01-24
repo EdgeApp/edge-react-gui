@@ -10,21 +10,14 @@ import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controlle
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import s from '../locales/strings'
-import { notif1 } from '../modules/notifServer'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
 import { fetchPush } from '../util/network'
 import { getDenomFromIsoCode } from '../util/utils'
 
-export const fetchSettings = async (userId: string, currencyCode: string) => {
-  const deviceId = getUniqueId()
-  const deviceIdEncoded = encodeURIComponent(deviceId)
-  const encodedUserId = encodeURIComponent(userId)
-  return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
-}
-
-export interface PriceChangeNotificationSettings {
+export interface NotificationSettings {
+  ignoreMarketing: boolean
   ignorePriceChanges: boolean
   plugins: {
     [pluginId: string]: {
@@ -43,6 +36,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
     let v2Settings: ReturnType<typeof asDevicePayload> = {
       loginIds: [],
       events: [],
+      ignoreMarketing: false,
       ignorePriceChanges: false
     }
     try {
@@ -101,7 +95,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         }
 
         try {
-          v1Settings = await notif1.get(`/user?userId=${encodedUserId}`)
+          v1Settings = await legacyGet(`/user?userId=${encodedUserId}`)
         } catch (e: any) {
           // Failure is ok we'll just create new settings
         }
@@ -114,7 +108,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         } else {
           // v1 settings do exist let's migrate them to v2
           const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
-            activeCurrencyInfos.map(async info => fetchSettings(userId, info.currencyCode))
+            activeCurrencyInfos.map(async info => fetchLegacySettings(userId, info.currencyCode))
           )
 
           for (const [i, setting] of currencySettings.entries()) {
@@ -138,16 +132,20 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
     }
 
     dispatch({
-      type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE',
-      data: serverSettingsToState(v2Settings)
+      type: 'NOTIFICATION_SETTINGS_UPDATE',
+      data: serverSettingsToNotificationSettings(v2Settings)
     })
   }
 }
 
-export const serverSettingsToState = (settings: ReturnType<typeof asDevicePayload>): PriceChangeNotificationSettings => {
-  const data: PriceChangeNotificationSettings = { ignorePriceChanges: settings.ignorePriceChanges, plugins: {} }
+export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<typeof asDevicePayload>): NotificationSettings => {
+  const data: NotificationSettings = {
+    ignoreMarketing: serverSettings.ignoreMarketing,
+    ignorePriceChanges: serverSettings.ignorePriceChanges,
+    plugins: {}
+  }
 
-  for (const event of settings.events) {
+  for (const event of serverSettings.events) {
     if (event.state !== 'waiting') continue
     const trigger = asMaybe(asPriceChangeTrigger)(event.trigger)
     if (trigger == null) continue
@@ -243,4 +241,26 @@ export const newPriceChangeEvent = (
   }
 
   return event
+}
+
+export const fetchLegacySettings = async (userId: string, currencyCode: string) => {
+  const deviceId = getUniqueId()
+  const deviceIdEncoded = encodeURIComponent(deviceId)
+  const encodedUserId = encodeURIComponent(userId)
+  return legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
+}
+
+async function legacyGet(path: string) {
+  const response = await fetchPush(`v1/${path}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Api-Key': ENV.AIRBITZ_API_KEY
+    }
+  })
+  if (response != null && response.ok) {
+    return await response.json()
+  } else {
+    throw new Error('Error accessing notification server')
+  }
 }

@@ -6,7 +6,6 @@ import {
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
   EdgeCurrencyWallet,
-  EdgeSpendInfo,
   EdgeSwapQuote,
   EdgeSwapRequest,
   EdgeSwapResult
@@ -18,13 +17,12 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import s from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { Actions, NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -34,13 +32,13 @@ import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, dec
 import { updateSwapCount } from './RequestReviewActions'
 
 export interface SetNativeAmountInfo {
-  whichWallet: 'from' | 'to'
+  whichWallet: 'from' | 'to' | 'max'
   primaryNativeAmount: string
 }
 
-export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function getQuoteForTransaction(navigation: NavigationBase, info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    Actions.push('exchangeQuoteProcessing', {})
+    navigation.push('exchangeQuoteProcessing', {})
 
     const state = getState()
     const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -66,13 +64,13 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
 
       const swapInfo = await fetchSwapQuote(state, request)
 
-      Actions.push('exchangeQuote', {
+      navigation.push('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      Actions.popTo('exchangeScene')
+      navigation.navigate('exchangeScene', {})
       const insufficientFunds = asMaybeInsufficientFundsError(error)
       if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
         const { currencyCode, networkFee = '' } = insufficientFunds
@@ -92,7 +90,7 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
         ))
         switch (result) {
           case 'buy':
-            Actions.jump('pluginListBuy', { direction: 'buy' })
+            navigation.navigate('pluginListBuy', { direction: 'buy' })
             return
           case 'exchange':
             dispatch({ type: 'SHIFT_COMPLETE' })
@@ -110,59 +108,22 @@ export function getQuoteForTransaction(info: SetNativeAmountInfo, onApprove: () 
   }
 }
 
-export function exchangeTimerExpired(swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     if (Actions.currentScene !== 'exchangeQuote') return
-    Actions.push('exchangeQuoteProcessing', {})
+    navigation.push('exchangeQuoteProcessing', {})
 
     try {
       swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-      Actions.push('exchangeQuote', {
+      navigation.push('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      Actions.popTo('exchangeScene')
+      navigation.navigate('exchangeScene', {})
       dispatch(processSwapQuoteError(error))
     }
-  }
-}
-
-export function exchangeMax(): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { fromWalletId } = state.cryptoExchange
-    if (fromWalletId == null) {
-      return
-    }
-    const { currencyWallets } = state.core.account
-    const wallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
-    const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
-    if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).noMaxSpend) {
-      const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
-      Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
-      return
-    }
-    const dummyPublicAddress = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).dummyPublicAddress
-    dispatch({ type: 'START_CALC_MAX' })
-    let primaryNativeAmount = '0'
-
-    try {
-      const publicAddress = dummyPublicAddress || (await wallet.getReceiveAddress()).publicAddress
-      const edgeSpendInfo: EdgeSpendInfo = {
-        networkFeeOption: 'standard',
-        currencyCode,
-        spendTargets: [{ publicAddress }]
-      }
-      if (currencyCode === 'BTC') {
-        edgeSpendInfo.networkFeeOption = 'high'
-      }
-      primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
-    } catch (error: any) {
-      showError(error)
-    }
-    dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
   }
 }
 
@@ -320,7 +281,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
   }
 }
 
-export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -363,7 +324,7 @@ export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      Actions.push('exchangeSuccess', {})
+      navigation.push('exchangeSuccess', {})
 
       // Dispatch the success action and callback
       dispatch({ type: 'SHIFT_COMPLETE' })
@@ -372,17 +333,14 @@ export function shiftCryptoCurrency(swapInfo: GuiSwapInfo, onApprove: () => void
       updateSwapCount(state)
 
       const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
-      const trackConversionOpts: { [key: string]: any } = {
-        account,
-        pluginId,
-        currencyCode: toCurrencyCode,
-        exchangeAmount: Number(exchangeAmount)
-      }
-      if (result.orderId != null) {
-        trackConversionOpts.orderId = result.orderId
-      }
-      // @ts-expect-error
-      dispatch(trackConversion('SwapSuccess', trackConversionOpts))
+      dispatch(
+        trackConversion('SwapSuccess', {
+          pluginId,
+          currencyCode: toCurrencyCode,
+          exchangeAmount: Number(exchangeAmount),
+          orderId: result.orderId
+        })
+      )
     } catch (error: any) {
       console.log(error)
       logEvent('SwapFailed')

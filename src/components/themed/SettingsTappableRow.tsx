@@ -15,6 +15,9 @@ interface Props {
   // Show with a dim style when set. Defaults to false:
   disabled?: boolean
 
+  // Show with red text when set. Defaults to false:
+  dangerous?: boolean
+
   // Insert a text label after the other children when set:
   label?: string
 
@@ -29,7 +32,7 @@ interface Props {
  * The default icon is a navigation arrow, but other options are available.
  */
 const SettingsTappableRowComponent = (props: Props) => {
-  const { action = 'navigate', children, disabled, label, onPress } = props
+  const { action = 'navigate', children, disabled, dangerous, label, onPress } = props
   const theme = useTheme()
   const style = {
     color: disabled ? theme.iconDeactivated : theme.iconTappable,
@@ -48,7 +51,7 @@ const SettingsTappableRowComponent = (props: Props) => {
       <AntDesignIcon name={action} style={style} />
     )
   return (
-    <SettingsRow disabled={disabled} label={label} right={rightIcon} onPress={onPress}>
+    <SettingsRow disabled={disabled} dangerous={dangerous} label={label} right={rightIcon} onPress={onPress}>
       {children}
     </SettingsRow>
   )

@@ -9,6 +9,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -29,6 +30,7 @@ export const EarnCryptoCard = (props: Props) => {
   const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
     navigation.navigate('pluginViewBuy', {
@@ -37,7 +39,7 @@ export const EarnCryptoCard = (props: Props) => {
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  if (!IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (!IONIA_SUPPORTED_FIATS.includes(defaultFiat) || hideIoniaRewards) {
     return null
   }
 

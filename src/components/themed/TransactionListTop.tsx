@@ -20,7 +20,7 @@ import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stak
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -156,7 +156,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleOpenWalletListModal = () => {
     triggerHaptic('impactLight')
     const { navigation } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           navigation.setParams({ currencyCode, walletId })
@@ -247,7 +247,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
-          {sprintf(s.strings.staking_status, stakingCryptoAmountFormat + ' ' + currencyCode, fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode)}
+          {sprintf(
+            s.strings.staking_status,
+            stakingCryptoAmountFormat + ' ' + displayDenomination.name,
+            fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode
+          )}
         </EdgeText>
       </View>
     )
@@ -286,14 +290,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
+    const { navigation } = this.props
+
     triggerHaptic('impactLight')
-    Actions.push('request', {})
+    navigation.push('request', {})
   }
 
   handleSend = (): void => {
+    const { navigation } = this.props
+
     triggerHaptic('impactLight')
     const { wallet, tokenId } = this.props
-    Actions.push('send2', { walletId: wallet.id, tokenId })
+    navigation.push('send2', { walletId: wallet.id, tokenId })
   }
 
   handleSearchDone = () => {
@@ -311,7 +319,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
-      Actions.push('fioStakingOverview', {
+      navigation.push('fioStakingOverview', {
         currencyCode,
         walletId: wallet.id
       })
@@ -523,7 +531,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { wallet, currencyCode } = props
+  const { wallet, currencyCode, navigation } = props
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -540,7 +548,7 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(toggleAccountBalanceVisibility())
   })
   const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(walletId, currencyCode))
+    dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
   })
 
   return (

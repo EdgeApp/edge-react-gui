@@ -245,6 +245,7 @@ const SendComponent = (props: Props) => {
           lockInputs={lockTilesMap.address}
           isCameraOpen={openCamera}
           fioToAddress={fioAddress}
+          navigation={navigation}
         />
       )
     }
@@ -374,7 +375,7 @@ const SendComponent = (props: Props) => {
   }
 
   const handleWalletPress = useHandler(() => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} />)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} navigation={navigation} />)
       .then((result: WalletListResult) => {
         if (result.walletId == null || result.currencyCode == null) {
           return
@@ -501,6 +502,7 @@ const SendComponent = (props: Props) => {
     const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
     return (
       <SelectFioAddress2
+        navigation={navigation}
         selected={fioSender.fioAddress}
         memo={fioSender.memo}
         memoError={fioSender.memoError}
@@ -846,7 +848,14 @@ const SendComponent = (props: Props) => {
       }
       if (spendInfo.spendTargets[0].nativeAmount == null) {
         flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
-        return
+      }
+      if (pinSpendingLimitsEnabled) {
+        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
+        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
+        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+        const fiatAmount = mul(totalExchangeAmount, rate)
+        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
+        setSpendingLimitExceeded(exceeded)
       }
       if (pinSpendingLimitsEnabled) {
         const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING

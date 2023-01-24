@@ -17,7 +17,7 @@ import {
 } from '../modules/Core/Account/settings'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
@@ -229,7 +229,7 @@ export function showUnlockSettingsModal(): ThunkAction<Promise<void>> {
   }
 }
 
-export function showRestoreWalletsModal(): ThunkAction<Promise<void>> {
+export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -257,7 +257,7 @@ export function showRestoreWalletsModal(): ThunkAction<Promise<void>> {
       )
       logActivity(`Restore Wallets: ${account.username}`)
 
-      Actions.jump('walletList', {})
+      navigation.navigate('walletList', {})
     }
   }
 }

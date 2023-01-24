@@ -19,11 +19,6 @@ interface TermsUri {
 }
 
 const pluginData: { [pluginId: string]: TermsUri } = {
-  switchain: {
-    termsUri: 'https://www.switchain.com/tos',
-    privacyUri: 'https://www.switchain.com/policy',
-    kycUri: 'https://www.switchain.com/policy'
-  },
   changenow: {
     termsUri: 'https://changenow.io/terms-of-use',
     privacyUri: 'https://changenow.io/privacy-policy',

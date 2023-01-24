@@ -14,7 +14,7 @@ import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
@@ -133,7 +133,12 @@ export function checkHandleAvailability(walletType: string, accountName: string)
   }
 }
 
-export function createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string): ThunkAction<Promise<void>> {
+export function createAccountTransaction(
+  navigation: NavigationBase,
+  createdWalletId: string,
+  accountName: string,
+  paymentWalletId: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // check available funds
     const state = getState()
@@ -177,7 +182,7 @@ export function createAccountTransaction(createdWalletId: string, accountName: s
               notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              Actions.popTo('walletListScene')
+              navigation.navigate('walletListScene', {})
               setTimeout(() => {
                 Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
               }, 750)
@@ -187,19 +192,19 @@ export function createAccountTransaction(createdWalletId: string, accountName: s
         alternateBroadcast:
           createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
       }
-      Actions.push('send', {
+      navigation.push('send', {
         guiMakeSpendInfo,
         selectedWalletId: paymentWalletId,
         selectedCurrencyCode: currencyCode
       })
     } else {
       // if handle is now unavailable
-      dispatch(createHandleUnavailableModal(createdWalletId, accountName))
+      dispatch(createHandleUnavailableModal(navigation, createdWalletId, accountName))
     }
   }
 }
 
-export function createHandleUnavailableModal(newWalletId: string, accountName: string): ThunkAction<Promise<void>> {
+export function createHandleUnavailableModal(navigation: NavigationBase, newWalletId: string, accountName: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -216,7 +221,7 @@ export function createHandleUnavailableModal(newWalletId: string, accountName: s
         buttons={{ ok: { label: s.strings.string_ok } }}
       />
     ))
-    Actions.pop()
+    navigation.pop()
   }
 }
 

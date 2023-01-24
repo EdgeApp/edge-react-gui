@@ -1,7 +1,7 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
-import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
+import { NotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
@@ -33,11 +33,9 @@ type NoDataActionName =
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
-  | 'DISABLE_SCAN'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'EDGE_LOBBY_ACCEPT_FAILED'
-  | 'ENABLE_SCAN'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'INVALIDATE_EDGE_LOBBY'
   | 'OTP_ERROR_SHOWN'
@@ -50,7 +48,6 @@ type NoDataActionName =
   | 'SHIFT_COMPLETE'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
   | 'UI/SEND_CONFIRMATION/RESET'
   | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
@@ -87,7 +84,7 @@ export type Action =
   | { type: 'LOGOUT'; data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN'; data: { messageId: string; source: TweakSource } }
   | { type: 'PERMISSIONS/UPDATE'; data: Partial<PermissionsState> }
-  | { type: 'PRICE_CHANGE_NOTIFICATIONS_UPDATE'; data: PriceChangeNotificationSettings }
+  | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS'; data: HandleAvailableStatus }
@@ -105,7 +102,6 @@ export type Action =
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY'; data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR'; data: string }
-  | { type: 'SET_FROM_WALLET_MAX'; data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
   | {

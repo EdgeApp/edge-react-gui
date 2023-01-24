@@ -17,6 +17,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { deviceHeight } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -36,6 +37,7 @@ export interface FlipInputModalResult {
 }
 
 interface OwnProps {
+  navigation: NavigationBase
   bridge: AirshipBridge<FlipInputModalResult>
   walletId: string
   currencyCode: string
@@ -72,7 +74,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateMaxSpend: (walletId: string, currencyCode: string) => void
+  updateMaxSpend: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
   updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
 }
 
@@ -133,11 +135,12 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   handleSendMaxAmount = () => {
+    const { navigation } = this.props
     if (this.props.onMaxSet != null) {
       this.props.onMaxSet()
       return this.handleCloseModal()
     }
-    return this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+    return this.props.updateMaxSpend(navigation, this.props.walletId, this.props.currencyCode)
   }
 
   renderErrorMessge = () => {
@@ -191,7 +194,6 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           secondaryCurrencyInfo={{ ...secondaryInfo }}
           exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
           overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-          forceUpdateGuiCounter={0}
           onExchangeAmountChanged={this.handleExchangeAmountChange}
           onError={this.handleAmountChangeError}
           onNext={this.handleCloseModal}
@@ -392,8 +394,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    updateMaxSpend(walletId: string, currencyCode: string) {
-      dispatch(updateMaxSpend(walletId, currencyCode))
+    updateMaxSpend(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      dispatch(updateMaxSpend(navigation, walletId, currencyCode))
     },
     updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))

@@ -17,21 +17,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Fetches messages in the background. The name of this class gets stored in the OS so it can
@@ -52,7 +40,8 @@ public class MessagesWorker extends Worker {
 
     // Snag the users:
     try {
-      Iterable<String> problemUsers = fetchMessages();
+      EdgeCore core = new EdgeCore(workId, context);
+      Iterable<String> problemUsers = core.fetchPendingLogins();
 
       // Send a notification:
       StringBuilder builder = new StringBuilder();
@@ -69,6 +58,9 @@ public class MessagesWorker extends Worker {
       } else {
         cancelNotification();
       }
+
+      // Update the push server:
+      updateFirebaseToken(core);
     } catch (Exception e) {
       Log.e(workId, e.toString());
       return Result.failure();
@@ -77,80 +69,16 @@ public class MessagesWorker extends Worker {
     return Result.success();
   }
 
-  /** Fetches messages from the auth server, and returns an array of 2fa reset users. */
-  private Iterable<String> fetchMessages() throws JSONException, IOException {
-    Context context = getApplicationContext();
-    File basePath = context.getFilesDir();
-    File loginsPath = new File(basePath, "logins");
-    File[] files = loginsPath.listFiles();
-
-    // Load the files:
-    HashMap<String, String> loginIds = new HashMap();
-    for (File file : files) {
-      try {
-        JSONObject json = new JSONObject(readFile(file));
-        if (!json.has("loginAuthBox")) continue;
-        String loginId = json.getString("loginId");
-        String username = json.getString("username");
-        loginIds.put(loginId, username);
-      } catch (Exception e) {
-        continue;
-      }
-    }
-
-    // Prepare our payload:
-    JSONObject payloadJson = new JSONObject();
-    payloadJson.put("loginIds", new JSONArray(loginIds.keySet()));
-
-    // Do the request:
-    String uri = "https://auth.airbitz.co/api/v2/messages";
-    JSONObject replyJson = new JSONObject(authFetch(uri, payloadJson.toString()));
-
-    // Validate the response:
-    int statusCode = replyJson.getInt("status_code");
-    if (statusCode != 0) throw new JSONException("Incorrect status code");
-    JSONArray messages = replyJson.getJSONArray("results");
-
-    // Find messages with problems:
-    ArrayList<String> problemUsers = new ArrayList();
-    int messagesLength = messages.length();
-    for (int i = 0; i < messagesLength; ++i) {
-      JSONObject message = messages.getJSONObject(i);
-      String loginId = message.getString("loginId");
-      String username = loginIds.get(loginId);
-      if (username == null) continue;
-
-      JSONArray pendingVouchers = message.optJSONArray("pendingVouchers");
-      boolean hasVoucher = pendingVouchers != null && pendingVouchers.length() > 0;
-      boolean hasReset = message.optBoolean("otpResetPending", false);
-
-      if (hasVoucher || hasReset) {
-        problemUsers.add(username);
-      }
-    }
-
-    return problemUsers;
-  }
-
-  /** Reads a file from disk. */
-  private String readFile(File file) throws IOException {
-    FileInputStream stream = new FileInputStream(file);
-    try {
-      return readInputStream(stream);
-    } finally {
-      stream.close();
-    }
-  }
-
   /** Show a local notification. */
   private void sendNotification(String title, String message) {
     Context context = getApplicationContext();
     NotificationManager notificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    Log.i(workId, "Background notification: " + message);
 
     // If on Oreo then notification requires a notification channel:
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-      int importance = 3; // NotificationManager.IMPORTANCE_DEFAULT
+      int importance = NotificationManager.IMPORTANCE_DEFAULT;
       NotificationChannel channel = new NotificationChannel("default", "Default", importance);
       notificationManager.createNotificationChannel(channel);
     }
@@ -212,57 +140,19 @@ public class MessagesWorker extends Worker {
     manager.enqueue(messagesWorkRequest);
   }
 
-  /** Does a request / reply with the auth server. */
-  public String authFetch(String uri, String body) throws IOException {
-    HttpsURLConnection connection = null;
-    try {
-      // Set up the HTTPS connection:
-      connection = (HttpsURLConnection) new URL(uri).openConnection();
-      SSLContext context = SSLContext.getInstance("TLS");
-      context.init(null, null, null);
-      connection.setSSLSocketFactory(context.getSocketFactory());
+  private void updateFirebaseToken(EdgeCore core) {
+    OnSuccessListener listener =
+        new OnSuccessListener<String>() {
+          @Override
+          public void onSuccess(String token) {
+            try {
+              core.updatePushToken(token);
+            } catch (Exception e) {
+            }
+          }
+        };
 
-      // Add the auth server headers:
-      byte[] bodyData = body.getBytes("UTF-8");
-      connection.setRequestProperty("Accept", "application/json");
-      connection.setRequestProperty("Content-Type", "application/json");
-      connection.setRequestProperty("Authorization", "Token " + EdgeApiKey.apiKey);
-      connection.setRequestProperty("Content-Length", Integer.toString(bodyData.length));
-      connection.setRequestMethod("POST");
-      connection.setDoInput(true);
-      connection.setDoOutput(true);
-      connection.setUseCaches(false);
-
-      // Send the body:
-      OutputStream wr = connection.getOutputStream();
-      wr.write(bodyData);
-      wr.flush();
-      wr.close();
-      connection.connect();
-
-      String logMessage =
-          new StringBuilder(uri).append(" ").append(connection.getResponseCode()).toString();
-      Log.i(workId, logMessage);
-
-      // Read the reply body:
-      return readInputStream(connection.getInputStream());
-    } catch (Exception e) {
-      throw new IOException("Could not reach auth server " + uri, e);
-    } finally {
-      if (connection != null) connection.disconnect();
-    }
-  }
-
-  /** Reads an input stream into a string, as utf-8. */
-  private static String readInputStream(InputStream stream) throws IOException {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-    int size;
-    byte[] data = new byte[4096];
-    while ((size = stream.read(data)) > 0) {
-      out.write(data, 0, size);
-    }
-
-    return out.toString("UTF-8");
+    FirebaseMessaging messaging = FirebaseMessaging.getInstance();
+    messaging.getToken().addOnSuccessListener(listener);
   }
 }

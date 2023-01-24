@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext'
 import { WalletListHeaderComponent } from '../../components/themed/WalletListHeader'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('WalletListHeader', () => {
   it('should render with loading props', () => {
@@ -11,6 +12,7 @@ describe('WalletListHeader', () => {
 
     const actual = renderer.render(
       <WalletListHeaderComponent
+        navigation={fakeNavigation}
         sorting
         searching
         searchText="string"

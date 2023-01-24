@@ -30,7 +30,7 @@ interface Props {
 /**
  * The main wallet list used in a scene.
  */
-export function WalletListSwipeable(props: Props) {
+function WalletListSwipeableComponent(props: Props) {
   const {
     footer,
     header,
@@ -57,7 +57,7 @@ export function WalletListSwipeable(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
-    dispatch(selectWallet(walletId, currencyCode))
+    dispatch(selectWallet(navigation, walletId, currencyCode))
       .then(() => navigation.navigate('transactionList', { walletId, currencyCode }))
       .finally(onReset)
   })
@@ -108,11 +108,13 @@ export function WalletListSwipeable(props: Props) {
   })
 
   const handleItemLayout = useRowLayout()
+  const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
+  const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
   return (
     <FlatList
-      contentOffset={{ x: 0, y: searching ? 0 : theme.rem(4.5) }}
-      data={[...searchedWalletList, ...createWalletList]}
+      contentOffset={flatListContentOffset}
+      data={data}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}
@@ -122,3 +124,5 @@ export function WalletListSwipeable(props: Props) {
     />
   )
 }
+
+export const WalletListSwipeable = React.memo(WalletListSwipeableComponent)

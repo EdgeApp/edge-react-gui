@@ -2,7 +2,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings'
 
-export type BitPayErrorCode =
+export type PaymentProtoErrorCode =
   | 'CurrencyNotSupported'
   | 'EmptyOutputInvoice'
   | 'EmptyVerificationHexReq'
@@ -14,9 +14,9 @@ export type BitPayErrorCode =
   | 'TxVerificationMismatch'
 
 /**
- * Options passed to the BitPayError constructor.
+ * Options passed to the PaymentProtoError constructor.
  */
-interface BitPayErrorOptions {
+interface PaymentProtoErrorOptions {
   header?: string
   statusCode?: string
   text?: string
@@ -24,7 +24,8 @@ interface BitPayErrorOptions {
 }
 
 /**
- * BitPay Error class is designed to control every error being thrown by BitPay
+ * PaymentProtoError class is designed to control every error being thrown by the
+ * JSON Payment Protocol
  * @param code - Error Code
  * - CurrencyNotSupported - The invoice only wants coins the app doesn't support.
  * - EmptyOutputInvoice - Invoice response contained no target output
@@ -35,23 +36,24 @@ interface BitPayErrorOptions {
  * - MultiOutputInvoice - Invoice response asking for multiple outputs
  * - MultiInstructionInvoice - Invoice response gives multiple payment instructions
  * - NoPaymentOption - User holds no currencies that are accepted by the invoice
- * - TxVerificationMismatch - BitPay's tx verification response doesn't match our request
+ * - TxVerificationMismatch - Payment Protocol's tx verification response doesn't
+ *   match our request
  * @param header: Headers attached to the fetch request
  * @param statusCode: Numeric status code from fetch
  * @param text: Text data from failed fetch
  * @param errorData: Any other debug data of interest
  */
-export class BitPayError extends Error {
-  code: BitPayErrorCode
+export class PaymentProtoError extends Error {
+  code: PaymentProtoErrorCode
   header: string
   statusCode: string
   text: string
   errorData: any
 
-  constructor(code: BitPayErrorCode, options: BitPayErrorOptions) {
+  constructor(code: PaymentProtoErrorCode, options: PaymentProtoErrorOptions) {
     const { header = '', statusCode = '', text = '', errorData = {} } = options
     super(code)
-    this.name = 'BitPayError'
+    this.name = 'PaymentProtoError'
     this.code = code
     this.header = header
     this.statusCode = statusCode
@@ -60,7 +62,7 @@ export class BitPayError extends Error {
   }
 }
 
-export function translateBitPayError(error: BitPayError): string {
+export function translatePaymentProtoError(error: PaymentProtoError): string {
   switch (error.code) {
     case 'CurrencyNotSupported':
       return sprintf(s.strings.error_paymentprotocol_currency_not_supported, error.text)

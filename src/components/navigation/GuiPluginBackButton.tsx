@@ -13,8 +13,8 @@ export function setPluginScene(plugin: PluginScene | undefined) {
   currentPlugin = plugin
 }
 
-export function renderPluginBackButton() {
-  return <BackButton onPress={handlePluginBack} />
+export function PluginBackButton() {
+  return <BackButton onPress={() => handlePluginBack()} />
 }
 
 export function handlePluginBack() {

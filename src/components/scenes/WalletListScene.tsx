@@ -65,7 +65,7 @@ export function WalletListScene(props: Props) {
   useAsyncEffect(
     async () => {
       if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
       } else {
         const userTutorialList = await getWalletListSlideTutorial(disklet)
         const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
@@ -105,6 +105,7 @@ export function WalletListScene(props: Props) {
   const header = React.useMemo(() => {
     return (
       <WalletListHeader
+        navigation={navigation}
         sorting={sorting}
         searching={searching}
         searchText={searchText}
@@ -113,7 +114,9 @@ export function WalletListScene(props: Props) {
         onChangeSearchingState={setSearching}
       />
     )
-  }, [handleSort, searchText, searching, sorting])
+  }, [handleSort, navigation, searchText, searching, sorting])
+
+  const handlePressDone = useHandler(() => setSorting(false))
 
   return (
     <SceneWrapper>
@@ -121,7 +124,7 @@ export function WalletListScene(props: Props) {
       {sorting && (
         <View style={styles.headerContainer}>
           <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={() => setSorting(false)}>
+          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
             <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
           </TouchableOpacity>
         </View>
