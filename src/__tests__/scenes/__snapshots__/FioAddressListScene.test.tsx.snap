@@ -985,10 +985,9 @@ exports[`FioAddressList should render with loading props 1`] = `
     noFadeIn={true}
     visible={true}
   >
-    <WithTheme(GradientComponent)
+    <View
       style={
         Object {
-          "backgroundColor": "#0E141A",
           "flex": 1,
           "height": 1334,
           "left": 0,
@@ -1009,7 +1008,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           }
         }
       />
-    </WithTheme(GradientComponent)>
+    </View>
   </Fade>
 </React.Fragment>
 `;
