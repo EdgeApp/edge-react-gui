@@ -247,7 +247,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
-          {sprintf(s.strings.staking_status, stakingCryptoAmountFormat + ' ' + currencyCode, fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode)}
+          {sprintf(
+            s.strings.staking_status,
+            stakingCryptoAmountFormat + ' ' + displayDenomination.name,
+            fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode
+          )}
         </EdgeText>
       </View>
     )
