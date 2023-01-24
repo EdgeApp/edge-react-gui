@@ -197,6 +197,7 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 let inboundAddressesLastUpdate: number = 0
 
 export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
+  asInitOptions(opts.initOptions)
   const fetchResponse = await fetchInfo(`v1/apyValues`)
     .then(async res => {
       if (!res.ok) {
