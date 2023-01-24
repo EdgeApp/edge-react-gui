@@ -75,6 +75,9 @@ export interface Theme {
 
   // Background
   backgroundGradientColors: string[]
+  backgroundGradientStart: { x: number; y: number }
+  backgroundGradientEnd: { x: number; y: number }
+
   backgroundImageServerUrls: string[]
   backgroundImage?: ImageSourcePropType
   backgroundLoadingOverlay: string

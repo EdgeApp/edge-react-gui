@@ -23,9 +23,17 @@ exports[`MenuTab should render with loading props 1`] = `
     Object {
       "addButtonFont": "Quicksand-Medium",
       "backgroundGradientColors": Array [
-        "#06090c",
-        "#1b2f3b",
+        "#121d25",
+        "#0E141A",
       ],
+      "backgroundGradientEnd": Object {
+        "x": 0,
+        "y": 1,
+      },
+      "backgroundGradientStart": Object {
+        "x": 0,
+        "y": 0,
+      },
       "backgroundImage": undefined,
       "backgroundImageServerUrls": Array [
         "https://content.edge.app",

@@ -7,7 +7,6 @@ import { selectWallet } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
@@ -148,9 +147,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       onRightSwipe={handleSend}
       slopOpts={slopOpts}
     >
-      <Gradient>
-        <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
-      </Gradient>
+      <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
     </SwipeableRow>
   )
 }

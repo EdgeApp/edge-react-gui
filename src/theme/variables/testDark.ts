@@ -94,6 +94,8 @@ export const testDark: Theme = {
 
   // Background
   backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 0, y: 1 },
   backgroundImageServerUrls: ['https://content-test.edge.app'],
   backgroundImage,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',

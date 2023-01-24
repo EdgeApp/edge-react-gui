@@ -178,10 +178,10 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Prop
 
   // Derived styles:
   const leftStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: rtl * pan.value > 0 ? 0 : pan.value }]
+    width: rtl * pan.value > 0 ? rtl * pan.value : 0
   }))
   const rightStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: -rtl * pan.value > 0 ? 0 : pan.value }]
+    width: rtl * -pan.value > 0 ? Math.abs(pan.value) : 0
   }))
   const childStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: pan.value }]
@@ -190,8 +190,8 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Prop
   return (
     <GestureDetector gesture={panGesture}>
       <View style={styles.container} onLayout={handleLayout}>
-        {renderLeft == null ? null : <Animated.View style={[styles.underlay, leftStyle]}>{renderLeft(leftActive)}</Animated.View>}
-        {renderRight == null ? null : <Animated.View style={[styles.underlay, rightStyle]}>{renderRight(rightActive)}</Animated.View>}
+        {renderLeft == null ? null : <Animated.View style={[styles.underlay, styles.underlayLeft, leftStyle]}>{renderLeft(leftActive)}</Animated.View>}
+        {renderRight == null ? null : <Animated.View style={[styles.underlay, styles.underlayRight, rightStyle]}>{renderRight(rightActive)}</Animated.View>}
         <Animated.View style={[styles.childContainer, childStyle]}>{children}</Animated.View>
       </View>
     </GestureDetector>
@@ -206,7 +206,18 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   underlay: {
+    overflow: 'hidden',
     flexDirection: 'row',
-    ...StyleSheet.absoluteFillObject
+    position: 'absolute',
+    top: 0,
+    bottom: 0
+  },
+  underlayLeft: {
+    justifyContent: 'flex-start',
+    left: 0
+  },
+  underlayRight: {
+    right: 0,
+    justifyContent: 'flex-end'
   }
 })
