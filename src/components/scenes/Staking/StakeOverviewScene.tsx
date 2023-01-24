@@ -1,4 +1,3 @@
-import { toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -120,7 +119,6 @@ const StakeOverviewSceneComponent = (props: Props) => {
       </SceneWrapper>
     )
 
-  const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
   return (
     <SceneWrapper scroll background="theme">
       {sceneHeader}
@@ -128,7 +126,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
-          text={sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}
+          apy={stakePolicy.apy}
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>

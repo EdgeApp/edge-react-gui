@@ -1,7 +1,10 @@
+import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { sprintf } from 'sprintf-js'
 
+import s from '../../locales/strings'
 import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
@@ -11,11 +14,11 @@ import { EdgeText } from '../themed/EdgeText'
 interface StakingReturnsCardParams {
   fromCurrencyLogos: string[]
   toCurrencyLogos: string[]
-  text: string
+  apy: number
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text, stakeProviderInfo }: StakingReturnsCardParams) {
+export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, stakeProviderInfo }: StakingReturnsCardParams) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -27,6 +30,12 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text, s
         <View style={styles.arrowBottomLine} />
       </View>
     )
+  }
+
+  const renderEstimatedReturn = () => {
+    if (apy <= 0) return null
+    const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
+    return <EdgeText>{sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
   }
 
   const renderStakeProvider = () => {
@@ -55,7 +64,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, text, s
           <View style={styles.middleLine} />
         </View>
         <View style={styles.textContainer}>
-          <EdgeText>{text}</EdgeText>
+          {renderEstimatedReturn()}
           {renderStakeProvider()}
         </View>
       </View>
