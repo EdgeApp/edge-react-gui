@@ -10,7 +10,7 @@ import { getDisplayDenominationFromState } from '../../../selectors/Denomination
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -119,6 +119,8 @@ const StakeOverviewSceneComponent = (props: Props) => {
       </SceneWrapper>
     )
 
+  const unstakeText = getUnstakeText(stakePolicy)
+
   return (
     <SceneWrapper scroll background="theme">
       {sceneHeader}
@@ -142,15 +144,17 @@ const StakeOverviewSceneComponent = (props: Props) => {
         onPress={handleModifyPress('stake')}
         marginRem={[0.5, 0.5, 0.25, 0.5]}
       />
+      {stakePolicy.rewardsNotClaimable ? null : (
+        <MainButton
+          label={s.strings.stake_claim_rewards}
+          disabled={!stakePosition?.canClaim}
+          type="secondary"
+          onPress={handleModifyPress('claim')}
+          marginRem={[0.25, 0.5, 0.25, 0.5]}
+        />
+      )}
       <MainButton
-        label={s.strings.stake_claim_rewards}
-        disabled={!stakePosition?.canClaim}
-        type="secondary"
-        onPress={handleModifyPress('claim')}
-        marginRem={[0.25, 0.5, 0.25, 0.5]}
-      />
-      <MainButton
-        label={s.strings.stake_unstake_claim}
+        label={unstakeText}
         disabled={!stakePosition?.canUnstake}
         type="escape"
         onPress={handleModifyPress('unstake')}

@@ -13,7 +13,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -399,7 +399,9 @@ const StakeModifySceneComponent = (props: Props) => {
         }
         {
           // Render claim amount tile
-          modification === 'claim' || modification === 'unstake' ? stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset)) : null
+          stakePolicy.rewardsNotClaimable || (modification !== 'claim' && modification !== 'unstake')
+            ? null
+            : stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset))
         }
         {
           // Render stake/unstake fee tiles
@@ -424,15 +426,16 @@ const StakeModifySceneComponent = (props: Props) => {
     )
   }
 
-  const sceneTitleMap = React.useMemo(
-    () => ({
+  const sceneTitleMap = React.useMemo(() => {
+    const unstakeText = getUnstakeText(stakePolicy)
+
+    return {
       stake: getPolicyTitleName(stakePolicy),
       claim: s.strings.stake_claim_rewards,
-      unstake: s.strings.stake_unstake_claim,
+      unstake: unstakeText,
       unstakeExact: '' // Only for internal use
-    }),
-    [stakePolicy]
-  )
+    }
+  }, [stakePolicy])
 
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
   const icon = React.useMemo(
