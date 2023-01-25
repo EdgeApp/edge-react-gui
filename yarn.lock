@@ -7395,10 +7395,37 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.37, edge-core-js@^0.19.39:
+edge-core-js@^0.19.37:
   version "0.19.39"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.39.tgz#224c791c04ccd33cbbf2f8f46fc15c64dc41f866"
   integrity sha512-mxxXvI5F8q4VLwH8Xsyr5zlularlqTL/fydCM05/mzMpF/7e/+Ol3NgvkO1se50M3ipfGtq1LW6Gu2RzkPXgrA==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^4.0.0"
+    cleaners "^0.3.11"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.7"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^4.2.0"
+    redux-keto "^0.3.5"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.0"
+    yaob "^0.3.9"
+    yavent "^0.1.3"
+
+edge-core-js@^0.19.40:
+  version "0.19.40"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.40.tgz#8bab812f1d22767e256bad8fc490b9c02c708f0e"
+  integrity sha512-sbyYXuWi+mak/FIjq8rfGu5OoCBvjiINV0/KGX1hzgSBMq9sVLIHGhAgXJTXMFhHSDy+oV5RlXGC+Cmaghle5g==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
