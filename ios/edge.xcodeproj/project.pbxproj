@@ -252,6 +252,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = H46J7F6453;
 						LastSwiftMigration = 1200;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -471,6 +472,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 23012401;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = H46J7F6453;
@@ -497,6 +500,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.cryptobaseatmwal.app;
 				PRODUCT_NAME = "CryptobaseATM Wall";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -513,6 +517,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 23012401;
 				DEVELOPMENT_TEAM = H46J7F6453;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -539,6 +545,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.cryptobaseatmwal.app;
 				PRODUCT_NAME = "CryptobaseATM Wall";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -573,7 +580,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -628,7 +635,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;

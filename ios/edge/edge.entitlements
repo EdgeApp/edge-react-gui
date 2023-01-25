@@ -5,10 +5,6 @@
 	<key>aps-environment</key>
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
-	<array>
-		<string>applinks:www.edge.app</string>
-		<string>applinks:dl.edge.app</string>
-		<string>applinks:deep.edge.app</string>
-	</array>
+	<array/>
 </dict>
 </plist>
