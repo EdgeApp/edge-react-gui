@@ -139,17 +139,15 @@ const StakeModifySceneComponent = (props: Props) => {
     if (changeQuoteRequest != null) {
       if (modification === 'unstake') {
         const allocationToMod = existingStaked.find(positionAllocation => positionAllocation.currencyCode === modCurrencyCode)
-        const modChangeQuoteRequest = { ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod?.nativeAmount }
-        // @ts-expect-error
-        setChangeQuoteRequest(modChangeQuoteRequest)
+        if (allocationToMod == null) throw new Error(`Existing stake not found for ${modCurrencyCode}`)
+        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod.nativeAmount })
       } else if (modification === 'stake' && existingStaked.length === 1) {
         setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
       }
     }
   }
 
-  // @ts-expect-error
-  const handleSlideComplete = reset => {
+  const handleSlideComplete = (reset: () => void) => {
     const message = {
       stake: s.strings.stake_change_stake_success,
       unstake: s.strings.stake_change_unstake_success,
@@ -275,7 +273,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
-    const earnedAmount = existingAllocations?.earned[0].nativeAmount ?? '0'
+    const earnedAmount = existingAllocations?.earned[0]?.nativeAmount ?? '0'
 
     const isClaim = allocationType === 'claim'
     return (
@@ -369,7 +367,7 @@ const StakeModifySceneComponent = (props: Props) => {
     if (existingAllocations?.staked.length === 1 && changeQuote !== null) {
       const modStakedAmount =
         changeQuoteAllocations.find(allocation => allocation.allocationType === 'stake' && gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
-      const stakedAmount = existingAllocations?.staked[0].nativeAmount ?? '0'
+      const stakedAmount = existingAllocations?.staked[0]?.nativeAmount ?? '0'
 
       const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
 
@@ -419,8 +417,6 @@ const StakeModifySceneComponent = (props: Props) => {
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={wallet.id}
-            // @ts-expect-error
-            currencyCode={networkFeeQuote?.currencyCode}
             denomination={nativeAssetDenomination}
           />
         }

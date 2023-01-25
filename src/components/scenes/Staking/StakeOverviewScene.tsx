@@ -1,5 +1,5 @@
 import { toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -28,6 +28,10 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
+interface DenomMap {
+  [cc: string]: EdgeDenomination
+}
+
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { stakePolicy, stakePlugin } = route.params
@@ -38,8 +42,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
 
-  const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
-    // @ts-expect-error
+  const displayDenomMap: DenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
     denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(wallet.currencyInfo.pluginId, asset.currencyCode))
     return denomMap
   }, {})
@@ -95,12 +98,10 @@ const StakeOverviewSceneComponent = (props: Props) => {
   }
 
   // Renderers
-  // @ts-expect-error
-  const renderCFAT = ({ item }) => {
+  const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
-    // @ts-expect-error
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId
