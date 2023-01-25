@@ -1187,6 +1187,11 @@ const strings = {
   stake_earn_button_label: 'Earn',
   stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
 
+  // Tron resource staking
+  stake_resource_display_name: 'TRON Resources',
+  stake_resource_bandwidth: 'Bandwidth',
+  stake_resource_energy: 'Energy',
+
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',
   fiat_plugin_amount_currencycode: 'Amount %s',

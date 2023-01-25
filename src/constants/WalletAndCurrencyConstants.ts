@@ -386,7 +386,8 @@ export const SPECIAL_CURRENCY_INFO: {
       keyboardType: 'default'
     },
     isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false
+    isPaymentProtocolSupported: false,
+    isStakingSupported: true
   },
   kovan: {
     initWalletName: s.strings.string_first_ethereum_wallet_name,

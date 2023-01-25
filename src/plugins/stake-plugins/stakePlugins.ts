@@ -1,4 +1,5 @@
 import { ENV } from '../../env'
+import { makeTronStakePlugin } from './currency/tronStakePlugin'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
 import { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'
@@ -21,6 +22,9 @@ export const makeStakePlugins = async (): Promise<void> => {
       console.warn(e.message)
     }),
     makeTcSaversPlugin({ initOptions: tcInitOptions }).catch(e => {
+      console.warn(e.message)
+    }),
+    makeTronStakePlugin().catch(e => {
       console.warn(e.message)
     })
   ]
