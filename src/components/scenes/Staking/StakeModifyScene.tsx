@@ -42,7 +42,7 @@ interface Props {
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { modification, stakePlugin, stakePolicy, stakePosition } = route.params
-  const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
+  const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake, mustMaxUnstake } = stakePolicy
   const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 
   // Hooks
@@ -71,12 +71,20 @@ const StakeModifySceneComponent = (props: Props) => {
 
   React.useEffect(() => {
     // Initialize the claim row since the user would never modify the amount
-    if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0')
+    if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0') {
       setChangeQuoteRequest({
         ...changeQuoteRequest,
         currencyCode: stakePolicy.rewardAssets[0].currencyCode,
         nativeAmount: existingAllocations.earned[0].nativeAmount
       })
+    } else if (modification === 'unstake' && mustMaxUnstake) {
+      setChangeQuoteRequest({
+        ...changeQuoteRequest,
+        currencyCode: stakePolicy.rewardAssets[0].currencyCode,
+        nativeAmount: existingAllocations?.staked[0]?.nativeAmount
+      })
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -254,6 +262,8 @@ const StakeModifySceneComponent = (props: Props) => {
         ? changeQuote.allocations.find(
             allocation => allocationType === allocation.allocationType && allocation.pluginId === pluginId && allocation.currencyCode === currencyCode
           )
+        : allocationType === 'unstake' && mustMaxUnstake
+        ? { allocationType, pluginId: asset.pluginId, currencyCode: asset.currencyCode, nativeAmount: existingAllocations?.staked[0]?.nativeAmount ?? '0' }
         : undefined
 
     const quoteCurrencyCode = currencyCode
@@ -280,7 +290,7 @@ const StakeModifySceneComponent = (props: Props) => {
         currencyCode={quoteCurrencyCode}
         exchangeDenomination={quoteDenom}
         displayDenomination={quoteDenom}
-        lockInputs={isClaim}
+        lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
         onPress={handleShowFlipInputModal(quoteCurrencyCode)}
       />
     )

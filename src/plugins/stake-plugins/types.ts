@@ -72,6 +72,7 @@ export interface StakePolicy {
 
   // Do not allow Max button when staking
   disableMaxStake?: boolean
+  mustMaxUnstake?: boolean
 }
 
 // -----------------------------------------------------------------------------
