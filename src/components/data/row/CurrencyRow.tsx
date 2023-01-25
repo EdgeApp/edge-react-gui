@@ -51,7 +51,7 @@ const CurrencyRowComponent = (props: Props) => {
 
   // Optional tokenId override
   const displayTokenId = customAsset?.referenceTokenId ?? tokenId
-  const tickerText = displayTokenId != null && showRate && wallet != null ? <TickerText wallet={wallet} tokenId={displayTokenId} /> : null
+  const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={displayTokenId} /> : null
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={displayTokenId} nativeAmount={balance} withSymbol /> : null
   const fiatText = showBalance ? <FiatText nativeCryptoAmount={balance} tokenId={displayTokenId} wallet={wallet} /> : null
   const icon = <CryptoIcon sizeRem={2} tokenId={displayTokenId} walletId={wallet.id} />
