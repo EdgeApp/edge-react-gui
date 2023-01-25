@@ -30,6 +30,7 @@ import { Dispatch, RootState } from '../../../../types/reduxTypes'
 import { Actions, NavigationBase } from '../../../../types/routerTypes'
 import { EdgeTokenId, MapObject } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
+import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../../util/CurrencyWalletHelpers'
 import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
@@ -43,6 +44,8 @@ interface WalletDetails {
   chainCode: string
   currencyCode: string
   fiatCurrencyCode: string
+  currencyIcon: string
+  currencyIconDark: string
 }
 
 interface EdgeRequestSpendOptions {
@@ -226,6 +229,8 @@ export class EdgeProvider extends Bridgeable {
     const currencyCode = this.selectedCurrencyCode
     const walletName = getWalletName(edgeWallet)
     const receiveAddress = await edgeWallet.getReceiveAddress()
+    const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
+    const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
 
     const returnObject: WalletDetails = {
       name: walletName,
@@ -233,7 +238,9 @@ export class EdgeProvider extends Bridgeable {
       receiveAddress,
       chainCode: this.selectedChainCode,
       currencyCode,
-      fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', '')
+      fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
+      currencyIcon: icons.symbolImage,
+      currencyIconDark: icons.symbolImageDarkMono
     }
     return Promise.resolve(returnObject)
   }
