@@ -723,7 +723,9 @@ const SendComponent = (props: Props) => {
       if (broadcastedTx.metadata == null) {
         broadcastedTx.metadata = {}
       }
-      broadcastedTx.metadata.name = payeeName
+      if (broadcastedTx.metadata?.name == null) {
+        broadcastedTx.metadata.name = payeeName
+      }
 
       if (payeeName != null && fioSender != null) {
         let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}\n`
