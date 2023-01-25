@@ -80,9 +80,10 @@ const TransactionRowComponent = (props: Props) => {
       ? s.strings.fragment_wallet_unconfirmed
       : currentConfirmations === 'dropped'
       ? s.strings.fragment_transaction_list_tx_dropped
-      : currentConfirmations == null
-      ? s.strings.fragment_transaction_list_tx_synchronizing
-      : sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      : typeof currentConfirmations === 'number'
+      ? sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      : s.strings.fragment_transaction_list_tx_synchronizing
+
   const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
 
   // Transaction Category
