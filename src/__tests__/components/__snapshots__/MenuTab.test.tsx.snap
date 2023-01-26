@@ -169,7 +169,7 @@ exports[`MenuTab should render with loading props 1`] = `
         "textShadowRadius": 0,
       },
       "lineDivider": "rgba(255, 255, 255, .1)",
-      "listSectionHeaderBackground": "#0F1A20",
+      "listSectionHeaderBackground": "#11191f",
       "mediumLineWidth": 2,
       "modal": "#121d25",
       "modalBorderColor": "rgba(255, 255, 255, 0)",
