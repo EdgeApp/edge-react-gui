@@ -22,6 +22,7 @@ import { doRequestAddress, handleWalletUris } from './ScanActions'
 export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
+    dispatch({ type: 'DEEP_LINK_HANDLED' })
 
     const handled = await handleLink(navigation, dispatch, state, link)
     // If we couldn't handle the link, save it for later:
@@ -41,11 +42,12 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Pr
     const state = getState()
     const { pendingDeepLink } = state
     if (pendingDeepLink == null) return
+    dispatch({ type: 'DEEP_LINK_HANDLED' })
 
     const handled = await handleLink(navigation, dispatch, state, pendingDeepLink)
     // If we handled the link, clear it:
-    if (handled) {
-      dispatch({ type: 'DEEP_LINK_HANDLED' })
+    if (!handled) {
+      dispatch({ type: 'DEEP_LINK_RECEIVED', data: pendingDeepLink })
     }
   }
 }
