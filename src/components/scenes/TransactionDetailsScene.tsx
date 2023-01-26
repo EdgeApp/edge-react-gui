@@ -1,5 +1,5 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -19,7 +19,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiContact } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
-import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
+import { convertNativeToDisplay, convertNativeToExchange, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -54,13 +54,15 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
   acceleratedTx: EdgeTransaction | null
-  amountFiat: string
+  direction: string
+  thumbnailPath?: string
+
+  // EdgeMetadata:
+  amountFiat: number
   bizId: number
   category: string
-  contactName: string // remove commenting once metaData in Redux
-  direction: string
+  name: string
   notes: string
-  thumbnailPath?: string
 }
 
 interface FiatCryptoAmountUI {
@@ -82,13 +84,13 @@ const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
 class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { thumbnailPath, edgeTransaction } = props.route.params
-    const { metadata } = edgeTransaction
-    const { name: contactName = '', notes = '', amountFiat = 0 } = metadata ?? {}
+    const { amountFiat: defaultAmountFiat = 0, edgeTransaction, thumbnailPath } = props.route.params
+    const { metadata = {} } = edgeTransaction
+    const { name = '', notes = '', amountFiat = defaultAmountFiat } = metadata
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const category = joinCategory(
       splitCategory(
-        metadata?.category,
+        metadata.category,
         // Pick the right default:
         direction === 'receive' ? 'income' : 'expense'
       )
@@ -96,10 +98,10 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
     this.state = {
       acceleratedTx: null,
-      amountFiat: displayFiatAmount(amountFiat),
+      amountFiat,
       bizId: 0,
       category,
-      contactName,
+      name,
       direction,
       notes,
       thumbnailPath
@@ -107,21 +109,19 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    const { amountFiat } = this.state
     const { route, wallet } = this.props
-    const { amountFiat: defaultAmountFiat, edgeTransaction } = route.params
+    const { edgeTransaction } = route.params
 
     this.props.getSubcategories()
 
-    if (Number(this.state.amountFiat.replace(',', '.')) === 0 && defaultAmountFiat != null && defaultAmountFiat !== 0) {
-      this.setState({ amountFiat: displayFiatAmount(defaultAmountFiat) })
-    } else {
+    if (amountFiat === 0) {
       const { currencyCode, date, nativeAmount } = edgeTransaction
       const isoDate = new Date(date * 1000).toISOString()
 
       const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
       const isoRate = await getHistoricalRate(`${currencyCode}_${wallet.fiatCurrencyCode}`, isoDate)
-      const fiatAmount = isoRate * Number(exchangeAmount)
-      this.setState({ amountFiat: displayFiatAmount(fiatAmount) })
+      this.setState({ amountFiat: isoRate * Number(exchangeAmount) })
     }
 
     // Try accelerating transaction to check if transaction can be accelerated
@@ -141,8 +141,10 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.contactName} contacts={this.props.contacts} />
-    )).then(person => this.onSaveTxDetails(person))
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} contacts={this.props.contacts} />
+    )).then(person => {
+      if (person != null) this.onSaveTxDetails({ name: person.contactName })
+    })
   }
 
   openFiatInput = () => {
@@ -151,19 +153,20 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        initialValue={this.state.amountFiat}
+        initialValue={displayFiatAmount(this.state.amountFiat)}
         inputLabel={fiatCurrencyCode}
         returnKeyType="done"
         keyboardType="numeric"
         submitLabel={s.strings.string_save}
         title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
-    )).then(fiatAmount => {
-      const amount = fiatAmount != null ? fiatAmount.replace(',', '.') : ''
-      if (amount != null && amount !== '' && isValidInput(amount)) {
-        const amountFiat = displayFiatAmount(parseFloat(amount))
-        this.onSaveTxDetails({ amountFiat })
-      }
+    )).then(amountText => {
+      if (amountText == null) return
+      const amountFiat = parseFloat(amountText.replace(',', '.'))
+
+      // Check for NaN, Infinity, and 0:
+      if (amountFiat === 0 || JSON.stringify(amountFiat) == null) return
+      this.onSaveTxDetails({ amountFiat })
     })
   }
 
@@ -236,34 +239,25 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     ))
   }
 
-  onSaveTxDetails = (newDetails?: any) => {
-    if (newDetails == null) return
+  onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
     const { route, wallet } = this.props
-    // @ts-expect-error
-    const { contactName, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
     const { edgeTransaction: transaction } = route.params
-    let finalAmountFiat
-    const decimalAmountFiat = Number.parseFloat(amountFiat.replace(',', '.'))
-    if (isNaN(decimalAmountFiat)) {
-      // if invalid number set to previous saved amountFiat
-      finalAmountFiat = transaction.metadata ? transaction.metadata.amountFiat : 0.0
-    } else {
-      // if a valid number or empty string then set to zero (empty) or actual number
-      finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
-    }
+
+    const { name, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
     transaction.metadata = {
-      name: contactName,
+      name,
       category,
       notes,
-      amountFiat: finalAmountFiat,
+      amountFiat,
       bizId
     }
+
     wallet
       .saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata)
       .then(() => this.props.refreshTransaction(wallet.id, transaction))
       .catch(showError)
 
-    this.setState(newDetails)
+    this.setState({ ...this.state, ...newDetails })
   }
 
   // Crypto Amount Logic
@@ -327,7 +321,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { amountFiat } = this.state
 
     const amount = currentFiatAmount ? toFixed(currentFiatAmount, 2, 2) : '0'
-    const fiatAmount = amountFiat.replace(',', '.')
+    const fiatAmount = amountFiat.toFixed(8)
     const difference = amount ? sub(amount, fiatAmount) : '0'
     const percentageFloat = amount && gt(fiatAmount, '0') ? mul(div(difference, fiatAmount, 4), '100') : '0'
     const percentage = toFixed(percentageFloat, 2, 2)
@@ -344,16 +338,16 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { wallet, theme, route, navigation } = this.props
     const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
-    const { direction, acceleratedTx, amountFiat, contactName, thumbnailPath, notes, category } = this.state
+    const { direction, acceleratedTx, amountFiat, name, thumbnailPath, notes, category } = this.state
     const styles = getStyles(theme)
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
-    const fiatValue = displayFiatAmount(parseFloat(amountFiat.replace(',', '.')))
+    const fiatValue = displayFiatAmount(amountFiat)
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
-    const personName = contactName && contactName !== '' ? contactName : personLabel
+    const personName = name !== '' ? name : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
     // spendTargets recipient addresses format
