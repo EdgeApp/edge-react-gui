@@ -82,7 +82,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [wallet, stakePolicyId, updateCounter])
+  }, [wallet, stakePolicyId, stakePlugin, updateCounter])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {

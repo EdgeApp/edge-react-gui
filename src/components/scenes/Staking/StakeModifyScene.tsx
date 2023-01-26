@@ -42,7 +42,7 @@ interface Props {
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { modification, stakePlugin, stakePolicy, stakePosition } = route.params
-  const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
+  const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
   const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 
   // Hooks
@@ -121,7 +121,7 @@ const StakeModifySceneComponent = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [modification, stakePolicyId, changeQuoteRequest, wallet, stakePolicy])
+  }, [changeQuoteRequest, wallet, stakePlugin])
 
   //
   // Handlers
