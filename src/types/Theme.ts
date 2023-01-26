@@ -103,7 +103,9 @@ export interface Theme {
   // listHeaderBackground: string,
   tileBackground: string
   tileBackgroundMuted: string
-  // listSectionHeaderBackground: string,
+
+  // Section Lists
+  listSectionHeaderBackground: string
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard
