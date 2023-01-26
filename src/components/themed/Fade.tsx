@@ -12,12 +12,15 @@ interface Props {
   // Animation duration, in ms:
   duration?: number
 
+  // Delay before beginning the animation, in ms:
+  delay?: number
+
   // No fade in animation on first render:
   noFadeIn?: boolean
 }
 
-export const Fade = ({ children, duration, visible, noFadeIn }: Props) => {
-  const style = useFadeAnimation(visible, { noFadeIn, duration })
+export const Fade = ({ children, duration, delay, visible, noFadeIn }: Props) => {
+  const style = useFadeAnimation(visible, { noFadeIn, duration, delay })
 
   return (
     <Animated.View style={style} pointerEvents={visible ? 'auto' : 'none'}>

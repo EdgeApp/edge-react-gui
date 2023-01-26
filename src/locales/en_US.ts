@@ -135,7 +135,7 @@ const strings = {
   access_wallet_description:
     'This application would like to create or access its wallet in your %1$s account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
-    'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
+    'The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_msg: 'Your exchange has been successfully completed!',
@@ -738,6 +738,7 @@ const strings = {
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
+  edge_login_fail_stale_qr: 'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
