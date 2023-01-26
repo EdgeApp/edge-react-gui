@@ -36,6 +36,7 @@ const palette = {
   edgeMint: '#00f1a2',
   darkAqua: '#1b2f3b',
   navyAqua: '#121d25',
+  navyAquaMiddle: '#11191f',
   navyAquaDarker: '#0E141A',
   blueGray: '#A4C7DF',
   gray: '#87939E',
@@ -115,7 +116,9 @@ export const edgeDark: Theme = {
   // listHeaderBackground: palette.edgeNavy,
   tileBackground: palette.transparent,
   tileBackgroundMuted: palette.transparent,
-  // listSectionHeaderBackground: palette.edgeNavy,
+
+  // Section Lists
+  listSectionHeaderBackground: palette.navyAquaMiddle,
 
   // WalletList
   walletListBackground: palette.navyAqua,

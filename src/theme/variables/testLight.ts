@@ -114,7 +114,9 @@ export const testLight: Theme = {
   // listHeaderBackground: palette.white,
   tileBackground: palette.transparent,
   tileBackgroundMuted: palette.transparent,
-  // listSectionHeaderBackground: palette.white,
+
+  // Section Lists
+  listSectionHeaderBackground: palette.transparent,
 
   // WalletList
   walletListBackground: palette.edgeBlue,
