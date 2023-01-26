@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
-import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakeBelowLimitError } from '../../../plugins/stake-plugins/types'
+import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -43,13 +43,11 @@ const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { modification, stakePlugin, stakePolicy, stakePosition } = route.params
   const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
+  const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 
   // Hooks
   const guiExchangeRates = useSelector(state => state.exchangeRates)
   const nativeAssetDenomination = useSelector(state => getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode))
-
-  // Current Allocation Info
-  const [existingAllocations, setExistingAllocations] = React.useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
@@ -71,11 +69,7 @@ const StakeModifySceneComponent = (props: Props) => {
   // Error message tile contents
   const [errorMessage, setErrorMessage] = React.useState('')
 
-  // Effect that initializes the existing allocations, if any. Used for max amount in FlipInputModal
   React.useEffect(() => {
-    const existingAllocations = getPositionAllocations(stakePosition)
-    setExistingAllocations(existingAllocations)
-
     // Initialize the claim row since the user would never modify the amount
     if (modification === 'claim' && changeQuoteRequest.nativeAmount === '0')
       setChangeQuoteRequest({
@@ -127,13 +121,13 @@ const StakeModifySceneComponent = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [modification, stakePolicyId, changeQuoteRequest, wallet, existingAllocations, stakePolicy])
+  }, [modification, stakePolicyId, changeQuoteRequest, wallet, stakePolicy])
 
   //
   // Handlers
   //
 
-  const existingStaked = existingAllocations?.staked ?? []
+  const existingStaked = existingAllocations.staked ?? []
   const handleMaxButtonPress = (modCurrencyCode: string) => () => {
     // TODO: Move max amountlogic into stake plugin
     if (changeQuoteRequest != null) {
@@ -273,7 +267,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
-    const earnedAmount = existingAllocations?.earned[0]?.nativeAmount ?? '0'
+    const earnedAmount = existingAllocations.earned[0]?.nativeAmount ?? '0'
 
     const isClaim = allocationType === 'claim'
     return (
@@ -364,10 +358,10 @@ const StakeModifySceneComponent = (props: Props) => {
   const renderWarning = () => {
     // Warnings are only shown for single asset staking
     let warningMessage = null
-    if (existingAllocations?.staked.length === 1 && changeQuote !== null) {
+    if (existingAllocations.staked.length === 1 && changeQuote !== null) {
       const modStakedAmount =
         changeQuoteAllocations.find(allocation => allocation.allocationType === 'stake' && gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
-      const stakedAmount = existingAllocations?.staked[0]?.nativeAmount ?? '0'
+      const stakedAmount = existingAllocations.staked[0]?.nativeAmount ?? '0'
 
       const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
 
