@@ -12,6 +12,12 @@ import { getCurrencyIconUris } from './CdnUris'
 const getAssetCurrencyCodes = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') => stakePolicy[assetType].map(asset => asset.currencyCode)
 
 /**
+ * Returns an array of all display names for a particular asset type
+ */
+const getAssetDisplayName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets') =>
+  stakePolicy[assetType].map(asset => asset.displayName ?? asset.currencyCode)
+
+/**
  * Returns staked and earned allocations in a shape that makes sense for the GUI
  */
 export const getPositionAllocations = (stakePosition: StakePosition) => {
@@ -25,7 +31,7 @@ export const getPositionAllocations = (stakePosition: StakePosition) => {
  * Returns the asset display name. Converts multiple assets into their LP name
  */
 export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' | 'rewardAssets'): string => {
-  const assetCurrencyCodes = getAssetCurrencyCodes(stakePolicy, assetType)
+  const assetCurrencyCodes = getAssetDisplayName(stakePolicy, assetType)
   const lpOrAssetCode = assetCurrencyCodes.length > 1 ? `${assetCurrencyCodes.join(' - ')} - LP` : assetCurrencyCodes[0]
   return lpOrAssetCode
 }
@@ -34,8 +40,8 @@ export const getPolicyAssetName = (stakePolicy: StakePolicy, assetType: 'stakeAs
  * Returns the policy title
  */
 export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
-  const stakeCurrencyCodes = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
-  const rewardCurrencyCodes = getAssetCurrencyCodes(stakePolicy, 'rewardAssets')
+  const stakeCurrencyCodes = getAssetDisplayName(stakePolicy, 'stakeAssets')
+  const rewardCurrencyCodes = getAssetDisplayName(stakePolicy, 'rewardAssets')
 
   const stakeName = stakeCurrencyCodes.length > 1 ? `${stakeCurrencyCodes.join(' + ')}` : stakeCurrencyCodes[0]
   const rewardName = rewardCurrencyCodes.length > 1 ? `${rewardCurrencyCodes.join(' + ')}` : rewardCurrencyCodes[0]
@@ -60,9 +66,11 @@ export const getPolicyIconUris = (
   const stakeAssetNames = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
   const rewardAssetNames = getAssetCurrencyCodes(stakePolicy, 'rewardAssets')
 
-  const stakeContractAddresses = stakeAssetNames.map(stakeAssetName => metaTokens.find(metaToken => metaToken.currencyCode === stakeAssetName)?.contractAddress)
+  const stakeContractAddresses = stakeAssetNames.map(
+    (stakeAssetName, i) => stakePolicy.stakeAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === stakeAssetName)?.contractAddress
+  )
   const rewardContractAddresses = rewardAssetNames.map(
-    rewardAssetName => metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
+    (rewardAssetName, i) => stakePolicy.rewardAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
   )
 
   const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress).symbolImage)

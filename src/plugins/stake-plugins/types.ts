@@ -30,6 +30,8 @@ export class StakeBelowLimitError extends Error {
 export interface AssetId {
   pluginId: string
   currencyCode: string
+  displayName?: string
+  cdnName?: string
 }
 
 // Defines what to display so that the user can identify the service provider
