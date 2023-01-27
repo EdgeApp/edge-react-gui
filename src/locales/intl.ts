@@ -22,6 +22,10 @@ const EN_US_LOCALE: IntlLocaleType = {
   decimalSeparator: '.',
   groupingSeparator: ','
 }
+
+const DEFAULT_DATE_FMT: string = 'PPP' // April 29th, 1453
+export const SHORT_DATE_FMT: string = 'PP' // Apr 29, 1453
+
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
 let locale = EN_US_LOCALE
@@ -192,17 +196,18 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
 /**
  * Returns date string depending on locale
  */
-export function formatDate(date: Date, monthShort: boolean = false): string {
+export function formatDate(date: Date, dateFormat: string = DEFAULT_DATE_FMT): string {
   const { localeIdentifier } = locale
 
   try {
+    // TODO: Determine the purpose of this replace() and mapping...
     // @ts-expect-error
     const dateFormattingLocale = locales[localeIdentifier.replace('_', '-')] ?? locales[localeIdentifier.split('-')?.[0]]
-    return format(date, monthShort ? 'PP' : 'PPP', { locale: dateFormattingLocale })
+    return format(date, dateFormat, { locale: dateFormattingLocale })
   } catch (e: any) {
     //
   }
-  return format(date, 'MMM d, yyyy')
+  return format(date, DEFAULT_DATE_FMT)
 }
 
 /**
@@ -223,8 +228,8 @@ export function formatTime(date: Date): string {
 /**
  * Returns 'h:mm am/pm, date' string depending on locale.
  */
-export function formatTimeDate(date: Date, monthShort: boolean = false): string {
-  return `${formatTime(date)}, ${formatDate(date, monthShort)}`
+export function formatTimeDate(date: Date, dateFormat?: string): string {
+  return `${formatTime(date)}, ${formatDate(date, dateFormat)}`
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {
@@ -239,7 +244,7 @@ export function setIntlLocale(l: IntlLocaleType): void {
 }
 
 export function toLocaleDate(date: Date): string {
-  return formatDate(date, true)
+  return formatDate(date, SHORT_DATE_FMT)
 }
 
 export function toLocaleTime(date: Date): string {
@@ -247,7 +252,7 @@ export function toLocaleTime(date: Date): string {
 }
 
 export function toLocaleDateTime(date: Date): string {
-  return toLocaleDate(date) + ' ' + toLocaleTime(date)
+  return formatDate(date, SHORT_DATE_FMT) + ' ' + toLocaleTime(date)
 }
 
 // Remove starting and trailing zeros and separator

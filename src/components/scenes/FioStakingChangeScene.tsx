@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
-import { formatNumber, formatTimeDate } from '../../locales/intl'
+import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../locales/intl'
 import s from '../../locales/strings'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -261,7 +261,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
   const renderRemove = () => {
     const unlockDate = tx?.otherParams?.ui.unlockDate
-    const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, true) : ''
+    const unlockDateFormat = unlockDate ? formatTimeDate(unlockDate, SHORT_DATE_FMT) : ''
     let estReward = '0'
     if (tx != null && tx.otherParams != null && tx.otherParams.ui != null && tx.otherParams.ui.estReward != null) {
       estReward = add(convertNativeToDenomination(currencyDenomination.multiplier)(tx.otherParams.ui.estReward), '0')

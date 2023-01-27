@@ -2,7 +2,7 @@ import { mul } from 'biggystring'
 import * as React from 'react'
 
 import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants'
-import { formatDate, formatNumber } from '../../locales/intl'
+import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../locales/intl'
 import s from '../../locales/strings'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
@@ -73,7 +73,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
         <Tile type="static" title={s.strings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
         <Tile type="static" title={s.strings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
         {this.statusField(selectedFioSentRequest.status)}
-        <Tile type="static" title={s.strings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), true)} />
+        <Tile type="static" title={s.strings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
         <Tile type="static" title={s.strings.unique_identifier_memo} body={selectedFioSentRequest.content.memo} />
       </SceneWrapper>
     )
