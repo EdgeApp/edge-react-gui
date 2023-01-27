@@ -236,6 +236,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
             }
             keyboardShouldPersistTaps="handled"
             getItemLayout={this.getItemLayout}
+            stickySectionHeadersEnabled
           />
         )}
       </SceneWrapper>
