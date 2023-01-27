@@ -309,14 +309,17 @@ export class FioAddressRegister extends React.Component<Props, State> {
   }
 
   selectFioDomain = () => {
+    const { navigation } = this.props
     const { domainsLoading } = this.state
     if (domainsLoading) return
-    Airship.show<FioDomain | undefined>(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then(response => {
-      if (response) {
-        this.setState({ selectedDomain: response })
-        this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
+    Airship.show<FioDomain | undefined>(bridge => <DomainListModal bridge={bridge} navigation={navigation} publicDomains={this.state.publicDomains} />).then(
+      response => {
+        if (response) {
+          this.setState({ selectedDomain: response })
+          this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
+        }
       }
-    })
+    )
   }
 
   renderButton() {

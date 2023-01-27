@@ -9,7 +9,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import s from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { Actions } from '../../../types/routerTypes'
+import { NavigationBase } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../util'
 
@@ -25,9 +25,10 @@ interface StateProps {
 }
 
 interface OwnProps {
+  disabled: boolean
   fioAddressName: string
   fioWallet: EdgeCurrencyWallet | null
-  disabled: boolean
+  navigation: NavigationBase
 }
 
 type Props = StateProps & OwnProps & ThemeProps
@@ -63,7 +64,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   }
 
   _onContinuePress = (): void => {
-    const { fioAddressName, fioWallet, walletItems } = this.props
+    const { fioAddressName, fioWallet, navigation, walletItems } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const walletsToDisconnect: FioConnectionWalletItem[] = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
@@ -88,7 +89,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       })
       // @ts-expect-error
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
-      Actions.push('fioConnectToWalletsConfirm', {
+      navigation.navigate('fioConnectToWalletsConfirm', {
         fioAddressName,
         fioWallet,
         walletsToConnect,
