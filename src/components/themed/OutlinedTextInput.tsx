@@ -272,7 +272,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   const textStyle = numpad ? styles.numberInput : styles.textInput
 
   return (
-    <TouchableWithoutFeedback onPress={() => focus()}>
+    <TouchableWithoutFeedback onPress={() => focus()} accessible={false}>
       <View style={[styles.container, containerStyle]}>
         <Animated.View style={[styles.bottomLine, bottomStyle]} />
         <Animated.View style={[styles.leftCap, leftStyle]} />
@@ -328,6 +328,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
             onChangeText={onChangeText}
             onFocus={handleFocus}
             maxLength={maxLength}
+            accessible
           />
         ) : (
           <TextInput
@@ -346,6 +347,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
             onChangeText={onChangeText}
             onFocus={handleFocus}
             maxLength={maxLength}
+            accessible
           />
         )}
       </View>

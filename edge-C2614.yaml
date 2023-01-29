@@ -1,0 +1,18 @@
+# edge-C2614.yaml
+# Expected Result:
+#  -  Wallet is still found using search bar after entering spaces.
+appId: co.edgesecure.app
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Wallets"    # Same input as in assertVisible or tapOn
+    timeout: 20000        # Timeout in milliseconds
+- assertVisible: "BTC.*"
+- tapOn: "Search Wallets" # See nested components fix here https://maestro.mobile.dev/platform-support/react-native#interacting-with-nested-components-on-ios
+- inputText: "M"
+- inputText: " "
+- inputText: "y"
+- inputText: " "
+- inputText: "B"
+
+- assertVisible: "BTC.*"
