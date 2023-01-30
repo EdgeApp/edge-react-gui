@@ -187,7 +187,6 @@ const asConfig = asObject({
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),
   BETA_FEATURES: asOptional(asBoolean, false),
-  BETA_FEATURES_DEV_MODE_ONLY: asOptional(asBoolean, false),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asNullable(asString),
