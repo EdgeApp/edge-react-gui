@@ -8,7 +8,7 @@ import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { Actions, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { convertNativeToDisplay } from '../../util/utils'
 import { Airship } from '../services/AirshipInstance'
 import { FlashNotification } from './FlashNotification'
@@ -50,7 +50,7 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         selectWallet(navigation, tx.walletId, tx.currencyCode)
-        Actions.push('transactionDetails', {
+        navigation.navigate('transactionDetails', {
           edgeTransaction: tx,
           walletId: tx.walletId
         })

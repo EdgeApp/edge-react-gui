@@ -27,7 +27,7 @@ import { Airship, showError, showToast } from '../../../../components/services/A
 import s from '../../../../locales/strings'
 import { GuiPlugin } from '../../../../types/GuiPluginTypes'
 import { Dispatch, RootState } from '../../../../types/reduxTypes'
-import { Actions, NavigationBase } from '../../../../types/routerTypes'
+import { NavigationBase } from '../../../../types/routerTypes'
 import { EdgeTokenId, MapObject } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
@@ -302,7 +302,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async exitPlugin() {
-    Actions.pop()
+    this._navigation.pop()
   }
 
   async getWalletHistory() {
