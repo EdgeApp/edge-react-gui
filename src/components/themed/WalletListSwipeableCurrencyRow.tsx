@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -64,13 +64,13 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
     navigation.navigate('request', {})
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true)).then(async () => {
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(async () => {
       // Go to the transaction list, but only if the wallet exists
       // and does not need activation:
       if (
@@ -89,7 +89,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
     navigation.navigate('send2', {
       walletId: wallet.id,
       tokenId,
