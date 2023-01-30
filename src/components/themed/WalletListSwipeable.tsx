@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
@@ -57,7 +58,9 @@ function WalletListSwipeableComponent(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
-    dispatch(selectWallet(navigation, walletId, currencyCode))
+    const wallet = account.currencyWallets[walletId]
+    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       .then(() => navigation.navigate('transactionList', { walletId, currencyCode }))
       .finally(onReset)
   })

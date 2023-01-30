@@ -5,7 +5,7 @@ import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getSelectedWallet } from '../../selectors/WalletSelectors'
@@ -95,7 +95,9 @@ export const WcConnectScene = (props: Props) => {
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} navigation={navigation} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
+        const wallet = account.currencyWallets[walletId]
+        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
         setSelectedWallet({ walletId, currencyCode })
         if (dappDetails.subTitleText === '') {
           handleRequestDapp(walletId)

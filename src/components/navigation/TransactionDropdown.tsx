@@ -1,14 +1,15 @@
-import { EdgeTransaction } from 'edge-core-js/types'
+import { EdgeAccount, EdgeTransaction } from 'edge-core-js/types'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions'
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { Actions, NavigationBase } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
 import { Airship } from '../services/AirshipInstance'
 import { FlashNotification } from './FlashNotification'
@@ -32,24 +33,27 @@ interface OwnProps {
 }
 
 interface StateProps {
+  account: EdgeAccount
   message: string
 }
 
 interface DispatchProps {
-  selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
+  selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
-  const { bridge, message, tx, selectWallet, navigation } = props
+  const { account, bridge, message, tx, selectWalletToken, navigation } = props
+  const wallet = account.currencyWallets[tx.walletId]
+  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, tx.currencyCode)
 
   return (
     <FlashNotification
       bridge={bridge}
       onPress={() => {
         bridge.resolve()
-        selectWallet(navigation, tx.walletId, tx.currencyCode)
+        selectWalletToken(navigation, tx.walletId, tokenId)
         Actions.push('transactionDetails', {
           edgeTransaction: tx,
           walletId: tx.walletId
@@ -63,9 +67,10 @@ export function TransactionDropdown(props: Props) {
 const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const { tx } = ownProps
+    const { account } = state.core
 
     if (!state.ui.settings.loginStatus) {
-      return { message: '' }
+      return { account, message: '' }
     }
 
     const { nativeAmount, currencyCode } = tx
@@ -77,17 +82,19 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
       const { symbol, name, multiplier } = displayDenomination
       const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
       return {
+        account,
         message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
       }
     } else {
       return {
+        account,
         message: sprintf(s.strings.bitcoin_received, currencyCode)
       }
     }
   },
   dispatch => ({
-    selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => {
-      dispatch(selectWallet(navigation, walletId, currencyCode))
+    selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => {
+      dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     }
   })
 )(TransactionDropdown)

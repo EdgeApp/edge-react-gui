@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -21,6 +21,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -533,6 +534,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export function TransactionListTop(props: OwnProps) {
   const { wallet, currencyCode, navigation } = props
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
   const theme = useTheme()
 
   const { pluginId } = wallet.currencyInfo
@@ -548,7 +550,9 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(toggleAccountBalanceVisibility())
   })
   const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
+    const wallet = account.currencyWallets[walletId]
+    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
   })
 
   return (

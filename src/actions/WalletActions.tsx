@@ -9,12 +9,19 @@ import s from '../locales/strings'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
-export function selectWallet(navigation: NavigationBase, walletId: string, currencyCode: string, alwaysActivate?: boolean): ThunkAction<Promise<void>> {
+export interface SelectWalletTokenParams {
+  navigation: NavigationBase
+  walletId: string
+  tokenId?: string
+  alwaysActivate?: boolean
+}
+
+export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivate }: SelectWalletTokenParams): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
@@ -23,6 +30,8 @@ export function selectWallet(navigation: NavigationBase, walletId: string, curre
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     if (wallet.paused) wallet.changePaused(false).catch(showError)
 
+    // XXX Still need a darn currencyCode. Hope to deprecate later
+    const currencyCode = getCurrencyCode(wallet, tokenId)
     dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (isAccountActivationRequired) {
@@ -105,12 +114,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
         />
       ))
     }
-  }
-}
-
-export function selectWalletFromModal(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<void> {
-  return (dispatch, getState) => {
-    dispatch(selectWallet(navigation, walletId, currencyCode))
   }
 }
 

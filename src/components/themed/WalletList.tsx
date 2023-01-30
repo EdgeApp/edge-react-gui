@@ -2,14 +2,14 @@ import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, SectionList } from 'react-native'
 
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
-import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers'
+import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { normalizeForSearch } from '../../util/utils'
@@ -86,7 +86,9 @@ export function WalletList(props: Props) {
     () =>
       onPress ??
       ((walletId: string, currencyCode: string) => {
-        dispatch(selectWallet(navigation, walletId, currencyCode))
+        const wallet = account.currencyWallets[walletId]
+        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       }),
     [dispatch, navigation, onPress]
   )
