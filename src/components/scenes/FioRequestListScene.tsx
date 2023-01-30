@@ -542,7 +542,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
               {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SectionList
                 initialNumToRender={10}
-                keyExtractor={item => item.fio_request_id.toString()}
+                keyExtractor={this.listKeyExtractor}
                 renderItem={this.renderSent}
                 renderSectionHeader={this.headerRowUsingTitle}
                 sections={this.sentRequestHeaders()}

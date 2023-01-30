@@ -125,7 +125,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     this.setState({ connectWalletsMap, disconnectWalletsMap })
   }
 
-  keyExtractor = (item: {}, index: number): string => index.toString()
+  keyExtractor = (item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`
 
   renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
     const { walletItems, theme } = this.props
