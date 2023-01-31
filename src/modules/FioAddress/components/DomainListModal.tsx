@@ -146,7 +146,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return null
   }
 
-  keyExtractor = (item: Item, index: number) => index.toString()
+  keyExtractor = (item: Item) => item.value.name
   onSearchFilterChange = (input: string) => this.setState({ input })
   render() {
     const { bridge, theme } = this.props

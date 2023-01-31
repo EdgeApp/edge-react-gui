@@ -99,7 +99,6 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               data={filteredArray}
               initialNumToRender={30}
               keyboardShouldPersistTaps="handled"
-              // @ts-expect-error
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
             />
@@ -129,7 +128,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return isValid
   }
 
-  keyExtractor = (item: GuiFiatType, index: string) => String(index)
+  keyExtractor = (item: GuiFiatType) => `${item.label}${item.value}`
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
