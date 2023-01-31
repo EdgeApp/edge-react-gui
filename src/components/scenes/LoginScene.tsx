@@ -82,7 +82,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
       // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
+    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN)) && firstRun) {
       const { context, initializeAccount } = this.props
       firstRun = false
       if (YOLO_PIN != null) {
