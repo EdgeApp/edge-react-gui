@@ -1,4 +1,4 @@
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
 import { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'

@@ -1,7 +1,7 @@
 import analytics from '@react-native-firebase/analytics'
 import { getUniqueId } from 'react-native-device-info'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 import { fetchReferral } from './network'
 
 export type TrackingEvent =

@@ -1,6 +1,6 @@
 import { asEither, asObject, asString } from 'cleaners'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 import { PaymentProtoError, translatePaymentProtoError } from '../types/PaymentProtoError'
 import { ResolutionError, translateResolutionError } from '../types/ResolutionError'
 

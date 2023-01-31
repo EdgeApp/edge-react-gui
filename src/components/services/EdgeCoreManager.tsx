@@ -8,7 +8,7 @@ import { Alert } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 import SplashScreen from 'react-native-smart-splash-screen'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
