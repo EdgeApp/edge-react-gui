@@ -2,7 +2,7 @@ import { div, eq, gt, toFixed } from 'biggystring'
 import { asMap, asNumber } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'

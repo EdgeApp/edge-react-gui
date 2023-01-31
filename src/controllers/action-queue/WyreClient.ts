@@ -1,7 +1,7 @@
 import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 
 export interface PaymentMethod {
   id: string

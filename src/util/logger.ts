@@ -3,7 +3,7 @@ import dateFormat from 'dateformat'
 import RNFS from 'react-native-fs'
 import { sprintf } from 'sprintf-js'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 
 const NUM_FILES = 20
 export type LogType = 'info' | 'activity'

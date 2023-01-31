@@ -1,6 +1,6 @@
 import URL from 'url-parse'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 import { DeepLink, PromotionLink } from '../types/DeepLinkTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 

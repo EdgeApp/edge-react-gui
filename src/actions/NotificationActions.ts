@@ -5,10 +5,10 @@ import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
-import ENV from '../../env.json'
 import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
+import { ENV } from '../env'
 import s from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
@@ -40,7 +40,9 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       ignorePriceChanges: false
     }
     try {
-      const deviceToken = await messaging().getToken()
+      const deviceToken = await messaging()
+        .getToken()
+        .catch(() => '')
 
       const body = {
         apiKey: ENV.AIRBITZ_API_KEY,
@@ -165,7 +167,9 @@ export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promis
   return async (dispatch, getState) => {
     const state = getState()
 
-    const deviceToken = await messaging().getToken()
+    const deviceToken = await messaging()
+      .getToken()
+      .catch(() => '')
 
     const body = {
       apiKey: ENV.AIRBITZ_API_KEY,

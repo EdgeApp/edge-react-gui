@@ -1,7 +1,6 @@
 import { asMaybe } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
-import ENV from '../../../env.json'
 import {
   asErrorResponse,
   asLoginPayload,
@@ -11,6 +10,7 @@ import {
   wasLoginUpdatePayload,
   wasPushRequestBody
 } from '../../controllers/action-queue/types/pushApiTypes'
+import { ENV } from '../../env'
 import { base58 } from '../encoding'
 
 const { ACTION_QUEUE, AIRBITZ_API_KEY } = ENV

@@ -5,8 +5,8 @@ import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
+import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 

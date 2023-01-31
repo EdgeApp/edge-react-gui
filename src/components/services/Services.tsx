@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { useRefresher } from '../../hooks/useRefresher'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { config } from '../../theme/appConfig'
