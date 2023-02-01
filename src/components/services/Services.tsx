@@ -4,11 +4,9 @@ import { ENV } from '../../env'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { fetchInfo } from '../../util/network'
-import { asAssetOverrides, assetOverrides } from '../../util/serverState'
+import { updateAssetOverrides } from '../../util/serverState'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
 import { AutoLogout } from './AutoLogout'
@@ -36,24 +34,10 @@ export function Services(props: Props) {
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
   const { navigation } = props
 
-  const appId = config.appId ?? 'edge'
-
   useRefresher(
     async () => {
       makeStakePlugins().catch(() => {})
-      try {
-        const response = await fetchInfo(`v1/assetOverrides/${appId}`)
-        if (!response.ok) {
-          const text = await response.text()
-          console.warn(`Failed to fetch assetOverrides: ${text}`)
-          return
-        }
-        const replyJson = await response.json()
-        const overrides = asAssetOverrides(replyJson)
-        assetOverrides.disable = overrides.disable
-      } catch (e: any) {
-        console.warn(`Failed to fetch assetOverrides: ${e.message}`)
-      }
+      updateAssetOverrides()
     },
     undefined,
     REFRESH_INFO_SERVER_MS
