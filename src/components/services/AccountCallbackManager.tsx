@@ -23,13 +23,11 @@ interface Props {
 interface DirtyList {
   rates: boolean
   walletList: boolean
-  wallets: { [walletId: string]: EdgeCurrencyWallet }
 }
 
 const notDirty: DirtyList = {
   rates: false,
-  walletList: false,
-  wallets: {}
+  walletList: false
 }
 
 export function AccountCallbackManager(props: Props) {
@@ -38,11 +36,10 @@ export function AccountCallbackManager(props: Props) {
   const [dirty, setDirty] = React.useState<DirtyList>(notDirty)
 
   // Helper for marking wallets dirty:
-  function addWallet(wallet: EdgeCurrencyWallet) {
+  function setRatesDirty() {
     setDirty(dirty => ({
       ...dirty,
-      rates: true, // We might reconsider this behavior
-      wallets: { ...dirty.wallets, [wallet.id]: wallet }
+      rates: true
     }))
   }
 
@@ -92,7 +89,6 @@ export function AccountCallbackManager(props: Props) {
 
         dispatch(refreshTransactionsRequest(wallet.id, transactions))
         dispatch(newTransactionsRequest(navigation, wallet.id, transactions))
-        addWallet(wallet)
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
@@ -105,7 +101,6 @@ export function AccountCallbackManager(props: Props) {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
 
         dispatch(refreshTransactionsRequest(wallet.id, transactions))
-        addWallet(wallet)
       }),
 
       wallet.on('wcNewContractCall', obj => {
@@ -115,9 +110,8 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       // These ones defer their work until later:
-      wallet.watch('balances', () => addWallet(wallet)),
-      wallet.watch('enabledTokenIds', () => addWallet(wallet)),
-      wallet.watch('name', () => addWallet(wallet))
+      wallet.watch('balances', () => setRatesDirty()),
+      wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
@@ -128,21 +122,10 @@ export function AccountCallbackManager(props: Props) {
     setDirty(notDirty)
 
     // Update wallets:
-    const walletIds = Object.keys(dirty.wallets)
     if (dirty.walletList) {
       // Update all wallets (hammer mode):
       console.log('Updating wallet list')
       await dispatch(updateWalletsRequest())
-      await snooze(1000)
-    } else if (walletIds.length > 0) {
-      // Update individual wallets:
-      console.log(`Updating wallets: ${walletIds.map(id => walletPrefix(dirty.wallets[id])).join(' ')}`)
-      dispatch({
-        type: 'UI/WALLETS/UPSERT_WALLETS',
-        data: {
-          wallets: walletIds.map(id => dirty.wallets[id])
-        }
-      })
       await snooze(1000)
     }
 

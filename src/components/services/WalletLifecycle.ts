@@ -3,13 +3,12 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { connect } from '../../types/reactRedux'
-import { GuiWallet, WalletListItem } from '../../types/types'
+import { WalletListItem } from '../../types/types'
 import { showError } from './AirshipInstance'
 
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext
-  guiWallets: { [walletId: string]: GuiWallet }
   sortedWalletList: WalletListItem[]
 }
 type Props = StateProps
@@ -58,7 +57,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
    * Figures out what has changed and adapts.
    */
   handleChange = () => {
-    const { account, context, guiWallets, sortedWalletList } = this.props
+    const { account, context, sortedWalletList } = this.props
 
     // Check for login / logout:
     if (account !== this.edgeAccount || context !== this.edgeContext) {
@@ -97,7 +96,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       if (complete) return false
 
       const wallet = currencyWallets[walletId]
-      if (wallet == null || guiWallets[walletId] == null) {
+      if (wallet == null) {
         boot.close()
         return false
       }
@@ -111,7 +110,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       const { token, tokenId, wallet, walletId } = walletItem
 
       // Ignore missing wallets, token rows, started wallets, and already-booting wallets:
-      if (token != null || tokenId != null || wallet == null || guiWallets[walletId] == null) continue
+      if (token != null || tokenId != null || wallet == null) continue
       if (!wallet.paused) continue
       if (this.booting.find(boot => boot.walletId === walletId) != null) continue
 
@@ -190,7 +189,6 @@ export const WalletLifecycle = connect<StateProps, {}, {}>(
   state => ({
     account: state.core.account,
     context: state.core.context,
-    guiWallets: state.ui.wallets.byId,
     sortedWalletList: state.sortedWalletList
   }),
   dispatch => ({})

@@ -230,7 +230,6 @@ Object {
       "walletsSort": "manual",
     },
     "wallets": Object {
-      "byId": Object {},
       "fioWallets": Array [],
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
