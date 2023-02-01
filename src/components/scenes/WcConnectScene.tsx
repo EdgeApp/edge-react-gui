@@ -7,8 +7,9 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
+import { useWalletName } from '../../hooks/useWalletName'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -41,17 +42,10 @@ export const WcConnectScene = (props: Props) => {
   const [walletAddress, setWalletAddress] = React.useState('')
 
   const account = useSelector(state => state.core.account)
-  const { walletName, wallet, currencyWallets } = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const guiWallet = getSelectedWallet(state)
-    const wallet = currencyWallets[guiWallet.id]
-    const walletName = guiWallet.name
-    return {
-      walletName,
-      wallet,
-      currencyWallets
-    }
-  })
+  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const wallet = currencyWallets[selectedWalletId]
+  const walletName = useWalletName(wallet)
 
   React.useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))

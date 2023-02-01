@@ -10,21 +10,6 @@ describe('SelectFioAddress', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const fakeWallet: any = {
-      id: '123123',
-      type: 'fioWallet',
-      name: 'myWallet',
-      primaryNativeBalance: '123',
-      nativeBalances: '123',
-      currencyNames: 'Bitcoin ',
-      currencyCode: 'BTC',
-      isoFiatCurrencyCode: {
-        wallet: {
-          fiatCurrencyCode: 'USD'
-        }
-      }
-    }
-
     const actual = renderer.render(
       <SelectFioAddressComponent
         navigation={fakeNavigation}
@@ -53,7 +38,7 @@ describe('SelectFioAddress', () => {
         isSendUsingFioAddress
         fioAddresses={[]}
         fioWallets={[]}
-        selectedWallet={fakeWallet}
+        selectedWalletId="123123"
         refreshAllFioAddresses={() => undefined}
         theme={getTheme()}
       />
