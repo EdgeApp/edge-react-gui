@@ -144,10 +144,9 @@ export function createAccountTransaction(
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
-    const createdWallet = state.ui.wallets.byId[createdWalletId]
     const createdCurrencyWallet = currencyWallets[createdWalletId]
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
-    const createdWalletCurrencyCode = createdWallet.currencyCode
+    const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)

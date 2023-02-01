@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -13,7 +13,7 @@ import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { RootState } from '../../types/reduxTypes'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
-import { GuiWallet } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -24,8 +24,8 @@ import { MainButton } from '../themed/MainButton'
 import { Tile } from '../tiles/Tile'
 
 interface StateProps {
+  account: EdgeAccount
   state: RootState
-  wallets: { [walletId: string]: GuiWallet }
   fioPlugin?: EdgeCurrencyConfig
   fioWallets: EdgeCurrencyWallet[]
   fioDisplayDenomination: EdgeDenomination
@@ -184,13 +184,17 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   render() {
-    const { theme, wallets, route } = this.props
+    const { account, theme, route } = this.props
     const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
     const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, config.appName, loading ? '-' : activationCost)
-    const paymentWalletBody =
-      paymentWallet && paymentWallet.id ? `${wallets[paymentWallet.id].name} (${wallets[paymentWallet.id].currencyCode})` : s.strings.choose_your_wallet
+
+    let paymentWalletBody = s.strings.choose_your_wallet
+    if (paymentWallet != null && paymentWallet.id !== '') {
+      const wallet = account.currencyWallets[paymentWallet.id]
+      paymentWalletBody = `${getWalletName(wallet)} (${wallet.currencyInfo.currencyCode})`
+    }
 
     return (
       <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
@@ -253,11 +257,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
+    account: state.core.account,
     state,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: getDisplayDenomination(state, params.selectedWallet.currencyInfo.pluginId, FIO_STR),
-    wallets: state.ui.wallets.byId,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

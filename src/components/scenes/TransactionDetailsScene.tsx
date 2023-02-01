@@ -19,8 +19,9 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
-import { GuiContact, GuiWallet } from '../../types/types'
+import { GuiContact } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -46,7 +47,7 @@ interface StateProps {
   contacts: GuiContact[]
   currentFiatAmount: string
   destinationDenomination?: EdgeDenomination
-  destinationWallet?: GuiWallet
+  destinationWalletName?: string
   subcategoriesList: string[]
   walletName: string
   walletDefaultDenomProps: EdgeDenomination
@@ -243,7 +244,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   renderExchangeData = (symbolString: string) => {
-    const { destinationDenomination, destinationWallet, walletName, walletDefaultDenomProps, theme, route } = this.props
+    const { destinationDenomination, destinationWalletName, walletName, walletDefaultDenomProps, theme, route } = this.props
     const { edgeTransaction } = route.params
     const { swapData, spendTargets } = edgeTransaction
     const styles = getStyles(theme)
@@ -256,7 +257,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const destinationCurrencyCode = destinationDenomination.name
 
     const createExchangeDataString = (newline: string = '\n') => {
-      const destinationWalletName = destinationWallet ? destinationWallet.name : ''
       const uniqueIdentifier = spendTargets && spendTargets[0].uniqueIdentifier ? spendTargets[0].uniqueIdentifier : ''
       const exchangeAddresses =
         spendTargets && spendTargets.length > 0
@@ -608,10 +608,13 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
     swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
   }
-  const destinationWallet = useSelector(state => (swapData != null ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined))
+  const destinationWallet = useSelector(state => (swapData != null ? state.core.account.currencyWallets[swapData.payoutWalletId] : undefined))
   const destinationDenomination = useSelector(state =>
-    swapData != null && destinationWallet != null ? getDisplayDenomination(state, destinationWallet.pluginId, swapData.payoutCurrencyCode) : undefined
+    swapData != null && destinationWallet != null
+      ? getDisplayDenomination(state, destinationWallet.currencyInfo.pluginId, swapData.payoutCurrencyCode)
+      : undefined
   )
+  const destinationWalletName = destinationWallet ? getWalletName(destinationWallet) : ''
 
   return (
     <TransactionDetailsComponent
@@ -628,7 +631,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       walletName={walletName}
       walletDefaultDenomProps={walletDefaultDenomProps}
       destinationDenomination={destinationDenomination}
-      destinationWallet={destinationWallet}
+      destinationWalletName={destinationWalletName}
     />
   )
 })

@@ -363,7 +363,6 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
     const currencyPlugin = state.core.account.currencyConfig[currencyWallet.currencyInfo.pluginId]
-    const guiWallet = state.ui.wallets.byId[walletId]
     const stakingBalances = {}
 
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
@@ -373,12 +372,12 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
       for (const cCodeKey in STAKING_BALANCES) {
         const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
 
-        const stakingNativeAmount = guiWallet.nativeBalances[stakingCurrencyCode] || '0'
+        const stakingNativeAmount = currencyWallet.balances[stakingCurrencyCode] ?? '0'
         const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
         const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
         const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-        const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
+        const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
         // @ts-expect-error

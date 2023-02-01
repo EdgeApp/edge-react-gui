@@ -12,8 +12,9 @@ import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_B
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { FioAddress, FioRequest, GuiWallet } from '../../types/types'
+import { FioAddress, FioRequest } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { tokenIdsToCurrencyCodes } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -41,7 +42,6 @@ interface LocalState {
 
 interface StateProps {
   account: EdgeAccount
-  wallets: { [walletId: string]: GuiWallet }
   fioAddresses: FioAddress[]
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
   fioWallets: EdgeCurrencyWallet[]
@@ -314,23 +314,26 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    const { wallets = {}, onSelectWallet } = this.props
+    const { account, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string; currencyCode: string }> = []
-    for (const walletKey of Object.keys(wallets)) {
+    for (const walletId of Object.keys(account.currencyWallets)) {
+      const wallet = account.currencyWallets[walletId]
       const { chainCode, tokenCode } = convertFIOToEdgeCodes(
-        wallets[walletKey].pluginId,
+        wallet.currencyInfo.pluginId,
         fioRequest.content.chain_code.toUpperCase(),
         fioRequest.content.token_code.toUpperCase()
       )
-      if (wallets[walletKey].currencyCode.toUpperCase() === tokenCode) {
-        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
+      const walletCurrencyCode = wallet.currencyInfo.currencyCode.toUpperCase()
+      if (walletCurrencyCode === tokenCode) {
+        availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
         }
       }
-      if (wallets[walletKey].currencyCode.toUpperCase() === chainCode && wallets[walletKey].enabledTokens.includes(tokenCode)) {
-        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
+      const enabledTokens = tokenIdsToCurrencyCodes(wallet.currencyConfig, wallet.enabledTokenIds)
+      if (walletCurrencyCode === chainCode && enabledTokens.includes(tokenCode)) {
+        availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
@@ -600,7 +603,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
-    wallets: state.ui.wallets.byId,
     fioWallets: state.ui.wallets.fioWallets,
     fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     currencyWallets: state.core.account.currencyWallets,
