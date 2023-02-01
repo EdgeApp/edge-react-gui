@@ -63,12 +63,6 @@ export type Action =
       type: 'CORE/CONTEXT/ADD_CONTEXT'
       data: { context: EdgeContext; disklet: Disklet }
     }
-  | {
-      type: 'CORE/WALLETS/UPDATE_WALLETS'
-      data: {
-        currencyWallets: { [id: string]: EdgeCurrencyWallet }
-      }
-    }
   | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
@@ -99,6 +93,10 @@ export type Action =
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
+  | {
+      type: 'UPDATE_FIO_WALLETS'
+      data: { fioWallets: EdgeCurrencyWallet[] }
+    }
   | {
       type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
       data: {

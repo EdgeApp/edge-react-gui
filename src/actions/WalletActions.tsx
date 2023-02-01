@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
+import { FIO_WALLET_TYPE, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
@@ -166,12 +166,17 @@ export function updateWalletsRequest(): ThunkAction<Promise<void>> {
       limitRegistrations = false
     }
 
-    dispatch({
-      type: 'CORE/WALLETS/UPDATE_WALLETS',
-      data: {
-        currencyWallets
+    const fioWallets: EdgeCurrencyWallet[] = []
+    for (const walletId of Object.keys(currencyWallets)) {
+      if (currencyWallets[walletId].type === FIO_WALLET_TYPE) {
+        fioWallets.push(currencyWallets[walletId])
       }
+    }
+    dispatch({
+      type: 'UPDATE_FIO_WALLETS',
+      data: { fioWallets }
     })
+
     refreshConnectedWallets(dispatch, getState, currencyWallets)
   }
 }

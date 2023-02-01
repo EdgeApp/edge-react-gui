@@ -1,7 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import { combineReducers, Reducer } from 'redux'
 
-import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import { Action } from '../../types/reduxTypes'
 
 export interface WalletsState {
@@ -81,15 +80,8 @@ const selectedCurrencyCode = (state = '', action: Action): string => {
 
 const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (state = [], action) => {
   switch (action.type) {
-    case 'CORE/WALLETS/UPDATE_WALLETS': {
-      const wallets = action.data.currencyWallets
-      const fioWallets: EdgeCurrencyWallet[] = []
-      for (const walletId of Object.keys(wallets)) {
-        if (wallets[walletId] && wallets[walletId].type === FIO_WALLET_TYPE) {
-          fioWallets.push(wallets[walletId])
-        }
-      }
-
+    case 'UPDATE_FIO_WALLETS': {
+      const { fioWallets } = action.data
       return fioWallets
     }
 
