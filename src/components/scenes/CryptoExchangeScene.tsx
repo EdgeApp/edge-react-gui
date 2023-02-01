@@ -1,5 +1,4 @@
 import { div, gt, gte } from 'biggystring'
-import { asArray, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, View } from 'react-native'
@@ -7,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { asExchangeInfo, DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -71,27 +71,6 @@ interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
   getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
 }
-
-const asDisableAsset = asObject({
-  pluginId: asString,
-
-  // tokenId = undefined will only disable the mainnet coin
-  // tokenId = 'allTokens' will disable all tokens
-  // tokenId = 'allCoins' will disable all tokens and mainnet coin
-  tokenId: asOptional(asString) // May also be 'all' to disable all tokens
-})
-
-const asExchangeInfo = asObject({
-  swap: asObject({
-    disableAssets: asObject({
-      source: asArray(asDisableAsset),
-      destination: asArray(asDisableAsset)
-    })
-  })
-})
-
-type DisableAsset = ReturnType<typeof asDisableAsset>
-type ExchangeInfo = ReturnType<typeof asExchangeInfo>
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 

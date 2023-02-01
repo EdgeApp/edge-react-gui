@@ -1,10 +1,11 @@
 import * as React from 'react'
 
+import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { ENV } from '../../env'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { updateAssetOverrides } from '../../util/serverState'
 import { AccountCallbackManager } from './AccountCallbackManager'
@@ -31,6 +32,7 @@ const REFRESH_INFO_SERVER_MS = 60000
  * which provide some background tasks and exterior functionality for the app.
  */
 export function Services(props: Props) {
+  const dispatch = useDispatch()
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
   const { navigation } = props
 
@@ -38,6 +40,7 @@ export function Services(props: Props) {
     async () => {
       makeStakePlugins().catch(() => {})
       updateAssetOverrides()
+      dispatch(updateExchangeInfo())
     },
     undefined,
     REFRESH_INFO_SERVER_MS

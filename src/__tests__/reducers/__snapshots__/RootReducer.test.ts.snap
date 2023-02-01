@@ -97,6 +97,14 @@ Object {
   },
   "sortedWalletList": Array [],
   "ui": Object {
+    "exchangeInfo": Object {
+      "swap": Object {
+        "disableAssets": Object {
+          "destination": Array [],
+          "source": Array [],
+        },
+      },
+    },
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},
       "expireReminderShown": false,
