@@ -13,6 +13,7 @@ export type TrackingEventName =
   | 'Create_Wallet_From_Search_Failed'
   | 'Create_Wallet_From_Search_Success'
   | 'Create_Wallet_Success'
+  | 'Earn_Spend_Launch'
   | 'EdgeProvider_Conversion_Success'
   | 'Exchange_Shift_Failed'
   | 'Exchange_Shift_Quote'
