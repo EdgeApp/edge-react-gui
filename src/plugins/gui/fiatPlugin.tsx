@@ -5,6 +5,7 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
@@ -21,13 +22,14 @@ import {
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
+  disablePlugins: DisablePluginMap
   guiPlugin: GuiPlugin
   regionCode: FiatPluginRegionCode
   paymentType?: FiatPaymentType
   account: EdgeAccount
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
 }): Promise<void> => {
-  const { guiPlugin, navigation, account, regionCode, paymentType } = params
+  const { disablePlugins, guiPlugin, navigation, account, regionCode, paymentType } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
@@ -77,7 +79,7 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ showUi, account })
+  const plugin = await guiPlugin.nativePlugin({ disablePlugins, showUi, account })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }

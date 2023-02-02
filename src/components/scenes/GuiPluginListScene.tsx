@@ -222,7 +222,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, navigation, route, account } = this.props
+    const { countryCode, disablePlugins, navigation, route, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -260,7 +260,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const regionCode = { countryCode }
     if (plugin.nativePlugin != null) {
-      await executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
+      const filteredDisablePlugins: { [pluginId: string]: true } = {}
+      for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
+        if (value === true) filteredDisablePlugins[key] = true
+      }
+      await executePlugin({ disablePlugins: filteredDisablePlugins, guiPlugin: plugin, regionCode, paymentType, navigation, account })
     } else {
       // Launch!
       navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {

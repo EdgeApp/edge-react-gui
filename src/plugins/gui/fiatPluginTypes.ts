@@ -1,6 +1,7 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
+import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -59,6 +60,7 @@ export interface FiatPluginFactoryArgs {
   // io: {
   //   log: EdgeLog, // scoped logs
   // }
+  disablePlugins: DisablePluginMap
   showUi: FiatPluginUi
   account: EdgeAccount
 }
