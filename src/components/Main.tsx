@@ -109,7 +109,7 @@ const Tab = createBottomTabNavigator<AppParamList>()
 
 export const Main = () => {
   React.useEffect(() => {
-    logEvent('AppStart')
+    logEvent('Start_App')
   }, [])
 
   return (

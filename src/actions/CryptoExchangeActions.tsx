@@ -283,7 +283,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
     try {
-      logEvent('SwapStart')
+      logEvent('Exchange_Shift_Start')
       const { swapInfo } = account.swapConfig[pluginId]
 
       // Build the category string:
@@ -325,7 +325,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
 
       const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
       dispatch(
-        trackConversion('SwapSuccess', {
+        trackConversion('Exchange_Shift_Success', {
           pluginId,
           currencyCode: toCurrencyCode,
           exchangeAmount: Number(exchangeAmount),
@@ -334,7 +334,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
       )
     } catch (error: any) {
       console.log(error)
-      logEvent('SwapFailed')
+      logEvent('Exchange_Shift_Failed')
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         showError(`${s.strings.exchange_failed}. ${error.message}`)

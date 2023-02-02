@@ -56,7 +56,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { pluginId } = swapInfo.quote
     const swapConfig = account.swapConfig[pluginId]
 
-    logEvent('SwapQuote')
+    logEvent('Exchange_Shift_Quote')
     swapVerifyTerms(swapConfig).then(result => {
       if (!result) timeExpired(navigation, swapInfo, onApprove)
     }, showError)
