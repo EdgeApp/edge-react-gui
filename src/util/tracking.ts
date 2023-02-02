@@ -22,6 +22,7 @@ export type TrackingEventName =
   | 'Exchange_Shift_Quote'
   | 'Exchange_Shift_Start'
   | 'Exchange_Shift_Success'
+  | 'Load_Install_Reason_Match'
   | 'Load_Install_Reason_Fail'
   | 'Sell_Quote'
   | 'Sell_Quote_Change_Provider'
@@ -34,7 +35,7 @@ export interface TrackingValues {
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
-  installerId?: string // Account installerId
+  installerId?: string // Account installerId, i.e. referralId
   pluginId?: string // Plugin that provided the conversion
   orderId?: string // Unique order identifier provided by plugin
   error?: string // Any error message string
@@ -79,7 +80,6 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (installerId != null) params.aid = installerId
   if (pluginId != null) params.plugin = pluginId
   if (error != null) params.error = error
-
   // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 
