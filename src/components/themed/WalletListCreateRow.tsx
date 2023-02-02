@@ -14,6 +14,7 @@ import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
+import { logEvent, TrackingEventName } from '../../util/tracking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -23,6 +24,8 @@ import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 export interface WalletListCreateRowProps {
   currencyCode: string
   currencyName: string
+  trackingEventFailed?: TrackingEventName
+  trackingEventSuccess?: TrackingEventName
   createWalletIds?: string[]
   pluginId?: string
   walletType?: string
@@ -34,6 +37,9 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const {
     currencyCode = '',
     currencyName = '',
+    trackingEventFailed,
+    trackingEventSuccess,
+
     createWalletIds = [],
     walletType,
     pluginId,
@@ -55,14 +61,30 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
     } else if (pluginId != null) {
       if (createWalletIds.length < 2) {
-        dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId, createWalletId: createWalletIds[0] })).then(handleRes)
+        dispatch(
+          createAndSelectToken({
+            tokenCode: currencyCode,
+            pluginId,
+            createWalletId: createWalletIds[0],
+            trackingEventFailed: trackingEventFailed,
+            trackingEventSuccess: trackingEventSuccess
+          })
+        ).then(handleRes)
       } else {
         Airship.show(bridge => {
           const renderRow = (wallet: EdgeCurrencyWallet) => (
             <WalletListCurrencyRow
               wallet={wallet}
               onPress={walletId => {
-                dispatch(createAndSelectToken({ tokenCode: currencyCode, pluginId: currencyWallets[walletId].currencyInfo.pluginId, createWalletId: walletId }))
+                dispatch(
+                  createAndSelectToken({
+                    tokenCode: currencyCode,
+                    pluginId: currencyWallets[walletId].currencyInfo.pluginId,
+                    createWalletId: walletId,
+                    trackingEventFailed: trackingEventFailed,
+                    trackingEventSuccess: trackingEventSuccess
+                  })
+                )
                   .then(handleRes)
                   .finally(() => bridge.resolve())
               }}
@@ -101,10 +123,14 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 function createAndSelectToken({
   tokenCode,
   pluginId,
-  createWalletId
+  createWalletId,
+  trackingEventFailed,
+  trackingEventSuccess
 }: {
   tokenCode: string
   pluginId: string
+  trackingEventFailed?: TrackingEventName
+  trackingEventSuccess?: TrackingEventName
   createWalletId?: string
 }): ThunkAction<Promise<string>> {
   return async (dispatch, getState) => {
@@ -138,9 +164,11 @@ function createAndSelectToken({
               })()
             )
       await wallet.enableTokens([tokenCode])
+      if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
       return wallet.id
     } catch (error: any) {
       showError(error)
+      if (trackingEventFailed != null) logEvent(trackingEventFailed, { error: String(error) })
     }
     return ''
   }

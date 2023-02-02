@@ -87,6 +87,8 @@ function WalletListSwipeableComponent(props: Props) {
           walletType={walletType}
           onPress={handleCreateWallet}
           createWalletIds={createWalletIds}
+          trackingEventFailed="Create_Wallet_From_Search_Failed"
+          trackingEventSuccess="Create_Wallet_From_Search_Success"
         />
       )
     }
@@ -111,6 +113,7 @@ function WalletListSwipeableComponent(props: Props) {
   })
 
   const handleItemLayout = useRowLayout()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
