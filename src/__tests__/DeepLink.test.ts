@@ -160,6 +160,14 @@ describe('parseDeepLink', function () {
       'https://recovery.edgesecure.co?token=1234567890a': {
         type: 'passwordRecovery',
         passwordRecoveryKey: '1234567890a'
+      },
+      'https://deep.edge.app/recovery#1234567890a': {
+        type: 'passwordRecovery',
+        passwordRecoveryKey: '1234567890a'
+      },
+      'edge://recovery#1234567890a': {
+        type: 'passwordRecovery',
+        passwordRecoveryKey: '1234567890a'
       }
     })
   })

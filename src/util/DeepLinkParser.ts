@@ -117,6 +117,14 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     }
 
     case 'recovery': {
+      // The new & improved format stores the token as a fragment:
+      if (url.hash != null && url.hash !== '') {
+        return {
+          type: 'passwordRecovery',
+          passwordRecoveryKey: url.hash.replace(/^#/, '')
+        }
+      }
+      // The old format puts the token in the query:
       const { token } = parseQuery(url.query)
       if (token == null) throw new SyntaxError('No recovery token')
       return { type: 'passwordRecovery', passwordRecoveryKey: token }
