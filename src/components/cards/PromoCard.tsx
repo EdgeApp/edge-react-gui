@@ -7,12 +7,19 @@ import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
 import { bestOfMessages } from '../../util/ReferralHelpers'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonBox } from '../themed/ThemedButtons'
 
-export function PromoCard(props: {}) {
+interface Props {
+  navigation: NavigationBase
+}
+
+export function PromoCard(props: Props) {
+  const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -23,7 +30,7 @@ export function PromoCard(props: {}) {
 
   const handlePress = useHandler(() => {
     const uri = messageSummary?.message.uri
-    if (uri != null) dispatch(linkReferralWithCurrencies(uri))
+    if (uri != null) dispatch(linkReferralWithCurrencies(navigation, uri)).catch(showError)
   })
 
   const handleClose = useHandler(() => {

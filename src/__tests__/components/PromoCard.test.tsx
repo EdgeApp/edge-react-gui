@@ -7,6 +7,7 @@ import { createStore } from 'redux'
 import { PromoCard } from '../../components/cards/PromoCard'
 import { rootReducer } from '../../reducers/RootReducer'
 import { MessageTweak } from '../../types/TweakTypes'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('PromoCard', () => {
   const fakeMessage: MessageTweak = {
@@ -34,7 +35,7 @@ describe('PromoCard', () => {
   it('should render', () => {
     const actual = renderer.create(
       <Provider store={store}>
-        <PromoCard />
+        <PromoCard navigation={fakeNavigation} />
       </Provider>
     )
 
