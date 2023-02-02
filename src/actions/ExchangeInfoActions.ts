@@ -1,4 +1,4 @@
-import { asArray, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
 
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -13,13 +13,23 @@ const asDisableAsset = asObject({
   tokenId: asOptional(asString) // May also be 'all' to disable all tokens
 })
 
+const asDisablePluginsMap = asMaybe(asObject(asValue(true)), {})
+export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
+
 export const asExchangeInfo = asObject({
-  swap: asObject({
-    disableAssets: asObject({
-      source: asArray(asDisableAsset),
-      destination: asArray(asDisableAsset)
-    })
-  })
+  swap: asMaybe(
+    asObject({
+      disableAssets: asMaybe(
+        asObject({
+          source: asArray(asDisableAsset),
+          destination: asArray(asDisableAsset)
+        }),
+        { source: [], destination: [] }
+      ),
+      disablePlugins: asDisablePluginsMap
+    }),
+    { disableAssets: { source: [], destination: [] }, disablePlugins: {} }
+  )
 })
 
 export type DisableAsset = ReturnType<typeof asDisableAsset>

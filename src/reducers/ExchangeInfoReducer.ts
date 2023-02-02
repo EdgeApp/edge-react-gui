@@ -1,12 +1,13 @@
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { Action } from '../types/reduxTypes'
 
-const initialState: ExchangeInfo = {
+export const initialState: ExchangeInfo = {
   swap: {
     disableAssets: {
       source: [],
       destination: []
-    }
+    },
+    disablePlugins: {}
   }
 }
 

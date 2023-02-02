@@ -6,18 +6,16 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
-import { asExchangeInfo, DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
-import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
-import { fetchInfo } from '../../util/network'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -37,6 +35,7 @@ interface OwnProps {
 
 interface StateProps {
   account: EdgeAccount
+  exchangeInfo: ExchangeInfo
 
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWalletId: string
@@ -80,7 +79,6 @@ interface State {
   toExchangeAmount: string
   fromAmountNative: string
   toAmountNative: string
-  exchangeInfo: ExchangeInfo | undefined
 }
 
 const defaultFromWalletInfo = {
@@ -113,47 +111,15 @@ const defaultState = {
   fromExchangeAmount: '',
   toExchangeAmount: '',
   fromAmountNative: '',
-  toAmountNative: '',
-  exchangeInfo: undefined
+  toAmountNative: ''
 }
 
-const EXCHANGE_INFO_REFRESH_INTERVAL = 60000
-
 export class CryptoExchangeComponent extends React.Component<Props, State> {
-  componentMounted: boolean
-  // @ts-expect-error
-  timeoutId: ReturnType<typeof setTimeout>
-
   constructor(props: Props) {
     super(props)
     // @ts-expect-error
     const newState: State = defaultState
     this.state = newState
-    this.componentMounted = true
-  }
-
-  // Get exchangeInfo from info server
-  fetchExchangeInfo() {
-    const { appId = 'edge' } = config
-    fetchInfo(`v1/exchangeInfo/${appId}`)
-      .then(async response => {
-        const exchangeInfo = asExchangeInfo(await response.json())
-        if (!this.componentMounted) return
-        this.setState({ exchangeInfo })
-        this.timeoutId = setTimeout(() => {
-          this.fetchExchangeInfo()
-        }, EXCHANGE_INFO_REFRESH_INTERVAL)
-      })
-      .catch(e => console.error(e.message))
-  }
-
-  componentDidMount() {
-    this.fetchExchangeInfo()
-  }
-
-  componentWillUnmount() {
-    this.componentMounted = false
-    if (this.timeoutId != null) clearTimeout(this.timeoutId)
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
@@ -210,8 +176,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   getQuote = (data: SetNativeAmountInfo) => {
-    const { navigation } = this.props
-    const { exchangeInfo } = this.state
+    const { exchangeInfo, navigation } = this.props
     if (exchangeInfo != null) {
       const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
       if (disableSrc) {
@@ -491,6 +456,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, OwnProps>(
     return {
       ...result,
       account,
+      exchangeInfo: state.ui.exchangeInfo,
       insufficient: state.cryptoExchange.insufficientError,
       genericError: state.cryptoExchange.genericShapeShiftError
     }
