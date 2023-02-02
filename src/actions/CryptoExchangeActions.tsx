@@ -334,7 +334,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
       )
     } catch (error: any) {
       console.log(error)
-      logEvent('Exchange_Shift_Failed')
+      logEvent('Exchange_Shift_Failed', { error: String(error) }) // TODO: Do we need to parse/clean all cases?
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         showError(`${s.strings.exchange_failed}. ${error.message}`)
