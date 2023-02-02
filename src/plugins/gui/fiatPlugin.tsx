@@ -11,6 +11,7 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationProp } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
@@ -23,14 +24,16 @@ import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   disablePlugins: DisablePluginMap
-  guiPlugin: GuiPlugin
-  regionCode: FiatPluginRegionCode
-  paymentType?: FiatPaymentType
   account: EdgeAccount
+  direction: 'buy' | 'sell'
+  guiPlugin: GuiPlugin
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
+  paymentType?: FiatPaymentType
+  regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins, guiPlugin, navigation, account, regionCode, paymentType } = params
+  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode } = params
   const { pluginId } = guiPlugin
+  const isBuy = direction === 'buy'
 
   const showUi: FiatPluginUi = {
     showToastSpinner,
@@ -56,6 +59,8 @@ export const executePlugin = async (params: {
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
       const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
       return new Promise((resolve, reject) => {
+        logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+
         navigation.navigate('guiPluginEnterAmount', {
           headerTitle,
           label1,
@@ -65,6 +70,7 @@ export const executePlugin = async (params: {
           convertValue,
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+            logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
             resolve(value)
           }
         })
@@ -86,6 +92,7 @@ export const executePlugin = async (params: {
 
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
+    isBuy,
     regionCode,
     paymentTypes
   }
