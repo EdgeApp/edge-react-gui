@@ -196,7 +196,7 @@ export class MainComponent extends React.Component<Props> {
       >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
-          <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={withNavigation(MenuTab)}>
+          <Tabs key="edgeApp" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={withNavigation(MenuTab)}>
             <Stack key="walletList">
               <Scene
                 key="walletListScene"
@@ -1093,7 +1093,7 @@ export class MainComponent extends React.Component<Props> {
     if (this.isCurrentScene('login')) {
       return false
     }
-    if (this.isCurrentScene('walletListScene')) {
+    if (this.isCurrentScene('walletList')) {
       if (this.backPressedOnce) {
         this.props.logout()
       } else {
@@ -1105,7 +1105,7 @@ export class MainComponent extends React.Component<Props> {
       return true
     }
     if (this.isCurrentScene('exchangeQuote')) {
-      Actions.popTo('exchangeScene')
+      Actions.popTo('exchange')
       return true
     }
     if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
@@ -1114,7 +1114,7 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene('fioAddressRegister')) {
       if (Actions.currentParams.noAddresses) {
-        Actions.jump('walletListScene', {})
+        Actions.jump('walletList', {})
         return true
       }
     }

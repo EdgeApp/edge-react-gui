@@ -102,7 +102,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'swap': {
-      navigation.push('exchangeScene', {})
+      navigation.push('exchange', {})
       return true
     }
 
@@ -226,5 +226,5 @@ async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrency
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  navigation.push('walletListScene', {})
+  navigation.push('walletList', {})
 }

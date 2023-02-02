@@ -42,7 +42,7 @@ export interface ParamList {
   // Top-level router:
   root: {}
   login: {}
-  edge: {}
+  edgeApp: {}
   controlPanel: {}
 
   // Logged-in scenes:
@@ -120,7 +120,6 @@ export interface ParamList {
     onApprove: () => void
   }
   exchangeQuoteProcessing: {}
-  exchangeScene: {}
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
@@ -306,7 +305,6 @@ export interface ParamList {
     currencyCode: string
   }
   walletList: {}
-  walletListScene: {}
   wcConnections: {}
   wcDisconnect: { wcConnectionInfo: WcConnectionInfo }
   wcConnect: {
@@ -412,7 +410,7 @@ export interface RouteProp<Name extends keyof ParamList> {
  */
 export function withNavigation<Props>(Component: React.ComponentType<Props>): React.FunctionComponent<Props> {
   function WithNavigation(props: any) {
-    const navigation: NavigationProp<'edge'> = {
+    const navigation: NavigationProp<'edgeApp'> = {
       addListener(event, callback) {
         const remover = props.navigation.addListener(event, callback)
         return () => remover.remove()

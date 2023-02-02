@@ -72,7 +72,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (items: WalletCreateItem[]) => {
-        navigation.replace('edge', {})
+        navigation.replace('edgeApp', {})
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
         await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
         await updateWalletsRequest()(dispatch, getState)
@@ -80,7 +80,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       navigation.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
     } else {
-      navigation.push('edge', {})
+      navigation.push('edgeApp', {})
     }
 
     // Show a notice for deprecated electrum server settings

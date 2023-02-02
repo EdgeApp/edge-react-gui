@@ -16,7 +16,7 @@ import { EdgeText } from './EdgeText'
 import { VectorIcon } from './VectorIcon'
 
 interface OwnProps {
-  navigation: NavigationProp<'edge'>
+  navigation: NavigationProp<'edgeApp'>
 }
 
 type Props = OwnProps & ThemeProps
@@ -40,7 +40,7 @@ export class MenuTabComponent extends React.PureComponent<Props> {
       case 'coinRanking':
         return navigation.navigate('coinRanking', {})
       case 'walletList':
-        return navigation.navigate('walletListScene', {})
+        return navigation.navigate('walletList', {})
       case 'pluginListBuy':
         return navigation.navigate('pluginListBuy', { direction: 'buy' })
       case 'pluginListSell':
