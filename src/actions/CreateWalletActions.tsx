@@ -161,7 +161,7 @@ export function createAccountTransaction(
         lockInputs: true,
         onBack: () => {
           // Hack. Keyboard pops up for some reason. Close it
-          logEvent('ActivateWalletCancel', {
+          logEvent('Activate_Wallet_Cancel', {
             currencyCode: createdWalletCurrencyCode
           })
         },
@@ -172,7 +172,7 @@ export function createAccountTransaction(
               Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
             }, 750)
           } else if (edgeTransaction) {
-            logEvent('ActivateWalletSuccess', {
+            logEvent('Activate_Wallet_Done', {
               currencyCode: createdWalletCurrencyCode
             })
             const edgeMetadata: EdgeMetadata = {

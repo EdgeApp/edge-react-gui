@@ -4,19 +4,19 @@ import { getUniqueId, getVersion } from 'react-native-device-info'
 import { ENV } from '../env'
 import { fetchReferral } from './network'
 
-export type TrackingEvent =
-  | 'ActivateWalletCancel'
-  | 'ActivateWalletSelect'
-  | 'ActivateWalletStart'
-  | 'ActivateWalletSuccess'
-  | 'EdgeProviderConversion'
-  | 'SwapFailed'
-  | 'SwapQuote'
-  | 'SwapStart'
-  | 'SwapSuccess'
-  | 'SignupWalletsCreated'
-  | 'AppStart'
-  | 'LoadDeviceReferralFail'
+export type TrackingEventName =
+  | 'Activate_Wallet_Cancel'
+  | 'Activate_Wallet_Done'
+  | 'Activate_Wallet_Select'
+  | 'Activate_Wallet_Start'
+  | 'EdgeProvider_Conversion_Success'
+  | 'Exchange_Shift_Failed'
+  | 'Exchange_Shift_Quote'
+  | 'Exchange_Shift_Start'
+  | 'Exchange_Shift_Success'
+  | 'Load_Install_Reason_Fail'
+  | 'Signup_Wallets_Created'
+  | 'Start_App'
 
 export interface TrackingValues {
   accountDate?: string // Account creation date
@@ -42,36 +42,18 @@ if (ENV.USE_FIREBASE) {
 /**
  * Send a raw event to all backends.
  */
-export async function logEvent(event: TrackingEvent, values: TrackingValues = {}) {
+export async function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
   return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
 /**
  * Send a raw event to Firebase.
  */
-async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
+async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   const { accountDate, currencyCode, dollarValue, installerId, pluginId } = values
 
   // @ts-expect-error
   if (!global.firebase) return
-
-  // Adjust event name:
-  const names = {
-    ActivateWalletCancel: 'Activate_Wallet_Cancel',
-    ActivateWalletSelect: 'Activate_Wallet_Select',
-    ActivateWalletStart: 'Activate_Wallet_Start',
-    ActivateWalletSuccess: 'Activate_Wallet_Done',
-    EdgeProviderConversion: 'EdgeProvider_Conversion_Success',
-    SwapFailed: 'Exchange_Shift_Failed',
-    SwapQuote: 'Exchange_Shift_Quote',
-    SwapStart: 'Exchange_Shift_Start',
-    SwapSuccess: 'Exchange_Shift_Success',
-    SignupWalletsCreated: 'Signup_Wallets_Created',
-    AppStart: 'Start_App',
-    LoadDeviceReferralFail: 'Load_Install_Reason_Fail'
-  }
-  const name = names[event]
-  if (!name) return
 
   // Adjust params:
   const params: any = { edgeVersion: getVersion() }
@@ -99,7 +81,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
 /**
  * Send a tracking event to the util server.
  */
-async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
+async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
   fetchReferral(`api/v1/event`, {
     method: 'POST',
     headers: {

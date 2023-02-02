@@ -132,7 +132,7 @@ export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
 
   componentDidMount() {
-    logEvent('AppStart')
+    logEvent('Start_App')
   }
 
   render() {

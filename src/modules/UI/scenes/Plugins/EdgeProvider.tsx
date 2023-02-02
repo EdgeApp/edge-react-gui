@@ -465,7 +465,7 @@ export class EdgeProvider extends Bridgeable {
             .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
             .then(exchangeAmount => {
               this._dispatch(
-                trackConversion('EdgeProviderConversion', {
+                trackConversion('EdgeProvider_Conversion_Success', {
                   pluginId: this._plugin.storeId,
                   orderId,
                   currencyCode: transaction.currencyCode,
