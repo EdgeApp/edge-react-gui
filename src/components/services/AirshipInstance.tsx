@@ -34,8 +34,8 @@ export function showWarning(error: unknown): void {
  * Shows a message to the user.
  * Used when some user-requested operation succeeds.
  */
-export function showToast(message: string): void {
-  Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
+export function showToast(message: string, autoHideMs?: number): void {
+  Airship.show(bridge => <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />)
 }
 
 /**
