@@ -9,6 +9,8 @@ export type TrackingEventName =
   | 'Activate_Wallet_Done'
   | 'Activate_Wallet_Select'
   | 'Activate_Wallet_Start'
+  | 'Create_Wallet_From_Search_Failed'
+  | 'Create_Wallet_From_Search_Success'
   | 'EdgeProvider_Conversion_Success'
   | 'Exchange_Shift_Failed'
   | 'Exchange_Shift_Quote'
@@ -25,6 +27,7 @@ export interface TrackingValues {
   installerId?: string // Account installerId
   pluginId?: string // Plugin that provided the conversion
   orderId?: string // Unique order identifier provided by plugin
+  error?: string // Any error message string
 }
 
 // Set up the global Firebase instance at boot:
@@ -50,7 +53,7 @@ export async function logEvent(event: TrackingEventName, values: TrackingValues 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
 
   // @ts-expect-error
   if (!global.firebase) return
@@ -65,6 +68,8 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   }
   if (installerId != null) params.aid = installerId
   if (pluginId != null) params.plugin = pluginId
+  if (error != null) params.error = error
+
   // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 

@@ -17,13 +17,15 @@ import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
-import { logEvent } from '../util/tracking'
+import { logEvent, TrackingEventName } from '../util/tracking'
 
 export interface CreateWalletOptions {
-  walletName?: string
   walletType: string
   fiatCurrencyCode?: string
   importText?: string // for creating wallet from private seed / key
+  trackingEventFailed?: TrackingEventName
+  trackingEventSuccess?: TrackingEventName
+  walletName?: string
 }
 
 export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText }: CreateWalletOptions) => {
