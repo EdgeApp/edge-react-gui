@@ -49,7 +49,6 @@ export const WcSmartContractModal = (props: Props) => {
 
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const wallet = currencyWallets[walletId]
-  const guiWallet = useSelector(state => state.ui.wallets.byId[walletId])
 
   if (wallet == null) return null
   const walletName = getWalletName(wallet)
@@ -60,10 +59,10 @@ export const WcSmartContractModal = (props: Props) => {
     const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
     if (token != null) amountCurrencyCode = token.currencyCode
   }
-  const { currencyCode: feeCurrencyCode, pluginId, metaTokens } = wallet.currencyInfo
+  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId, metaTokens } = wallet.currencyInfo
 
-  const feeCurrencyStr = `${guiWallet.currencyNames[feeCurrencyCode]} (${feeCurrencyCode})`
-  const feeCurrencyBalance = guiWallet.primaryNativeBalance
+  const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
+  const feeCurrencyBalance = wallet.balances[feeCurrencyCode]
 
   let amountCrypto = '0'
   let networkFeeCrypto = '0'

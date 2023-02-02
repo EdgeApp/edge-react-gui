@@ -6,10 +6,10 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
+import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { FioAddress, FioRequest, GuiWallet } from '../../types/types'
+import { FioAddress, FioRequest } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -32,7 +32,7 @@ interface OwnProps {
 interface StateProps {
   fioAddresses: FioAddress[]
   fioWallets: EdgeCurrencyWallet[]
-  selectedWallet: GuiWallet
+  selectedWalletId: string
   currencyCode: string
 }
 
@@ -115,9 +115,9 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   }
 
   selectAddress = () => {
-    const { currencyCode, selectedWallet } = this.props
+    const { currencyCode, selectedWalletId } = this.props
     Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWalletId} useUserFioAddressesOnly />
     )).then(response => {
       if (response) {
         this.setFioAddress(response)
@@ -265,15 +265,15 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 
 export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const selectedWallet = getSelectedCurrencyWallet(state)
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
     return {
-      loading: !guiWallet || !currencyCode,
+      loading: selectedWallet == null || !currencyCode,
       fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
       fioWallets: state.ui.wallets.fioWallets,
       currencyCode,
-      selectedWallet: guiWallet
+      selectedWalletId: selectedWallet.id
     }
   },
   dispatch => ({

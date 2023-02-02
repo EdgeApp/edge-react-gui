@@ -37,10 +37,6 @@ export function showSplitWalletModal(walletId: string, currencyCode: string): Th
 
       try {
         await account.splitWalletInfo(walletId, walletType)
-        dispatch({
-          type: 'UI/WALLETS/UPSERT_WALLETS',
-          data: { wallets: [edgeWallet] }
-        })
       } catch (error: any) {
         showError(error)
       }

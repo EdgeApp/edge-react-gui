@@ -5,10 +5,10 @@ import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
+import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
-import { GuiExchangeRates, GuiWallet } from '../../types/types'
+import { GuiExchangeRates } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -95,11 +95,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
   state => {
-    const wallet: GuiWallet = getSelectedWallet(state)
+    const wallet = getSelectedCurrencyWallet(state)
     return {
       exchangeRates: state.exchangeRates,
-      fiatSymbol: FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode],
-      isoFiatCurrencyCode: wallet.isoFiatCurrencyCode
+      fiatSymbol: FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode.replace('iso:', '')],
+      isoFiatCurrencyCode: wallet.fiatCurrencyCode
     }
   },
   dispatch => ({})
