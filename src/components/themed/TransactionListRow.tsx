@@ -1,4 +1,4 @@
-import { abs, div, log10 } from 'biggystring'
+import { abs, div, gt, log10 } from 'biggystring'
 import * as React from 'react'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -76,7 +76,7 @@ export function TransactionListRow(props: Props) {
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
-  if (exchangeRate) {
+  if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeDenomination.multiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,

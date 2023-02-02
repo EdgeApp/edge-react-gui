@@ -9,12 +9,19 @@ import s from '../locales/strings'
 import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
-export function selectWallet(navigation: NavigationBase, walletId: string, currencyCode: string, alwaysActivate?: boolean): ThunkAction<Promise<void>> {
+export interface SelectWalletTokenParams {
+  navigation: NavigationBase
+  walletId: string
+  tokenId?: string
+  alwaysActivate?: boolean
+}
+
+export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivate }: SelectWalletTokenParams): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
@@ -23,16 +30,28 @@ export function selectWallet(navigation: NavigationBase, walletId: string, curre
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
     if (wallet.paused) wallet.changePaused(false).catch(showError)
 
+    // XXX Still need a darn currencyCode. Hope to deprecate later
+    const currencyCode = getCurrencyCode(wallet, tokenId)
     dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+
+    if (tokenId != null) {
+      const { unactivatedTokenIds } = wallet
+      if (unactivatedTokenIds.find(unactivatedTokenId => unactivatedTokenId === tokenId) != null) {
+        // XXX TODO: call account.getActivationAssets() and activateWallet to activate tokens
+        return false
+      }
+      return true
+    }
+
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (isAccountActivationRequired) {
       // EOS needs different path in case not activated yet
       const currentWalletId = state.ui.wallets.selectedWalletId
       const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
       if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-        await dispatch(selectEOSWallet(navigation, walletId, currencyCode))
+        return await dispatch(selectEOSWallet(navigation, walletId, currencyCode))
       }
-      return
+      return true
     }
     const currentWalletId = state.ui.wallets.selectedWalletId
     const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
@@ -42,11 +61,12 @@ export function selectWallet(navigation: NavigationBase, walletId: string, curre
         data: { walletId, currencyCode }
       })
     }
+    return true
   }
 }
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<void>> {
+function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
@@ -64,6 +84,7 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { walletId, currencyCode }
       })
+      return true
     } else {
       // Update all wallets' addresses. Hopefully gets the updated address for the next time
       // We enter the EOSIO wallet
@@ -104,13 +125,8 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
           buttons={{ ok: { label: s.strings.string_ok } }}
         />
       ))
+      return false
     }
-  }
-}
-
-export function selectWalletFromModal(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<void> {
-  return (dispatch, getState) => {
-    dispatch(selectWallet(navigation, walletId, currencyCode))
   }
 }
 

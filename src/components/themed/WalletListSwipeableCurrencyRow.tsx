@@ -3,9 +3,8 @@ import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -64,24 +63,17 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
-    navigation.navigate('request', {})
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(activated => {
+      if (activated) {
+        navigation.navigate('request', {})
+      }
+    })
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true)).then(async () => {
-      // Go to the transaction list, but only if the wallet exists
-      // and does not need activation:
-      if (
-        wallet != null &&
-        // It won't need activation if its a token:
-        (tokenId != null ||
-          // Or because it doesn't need activation in the first place:
-          !getSpecialCurrencyInfo(wallet.type).isAccountActivationRequired ||
-          // Or because it is already activated:
-          (await wallet.getReceiveAddress()).publicAddress !== '')
-      ) {
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(async activated => {
+      if (activated) {
         navigation.navigate('transactionList', { walletId: wallet.id, currencyCode })
       }
     })
@@ -89,11 +81,14 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWallet(navigation, wallet.id, currencyCode, true))
-    navigation.navigate('send2', {
-      walletId: wallet.id,
-      tokenId,
-      openCamera: true
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(activated => {
+      if (activated) {
+        navigation.navigate('send2', {
+          walletId: wallet.id,
+          tokenId,
+          openCamera: true
+        })
+      }
     })
   })
 

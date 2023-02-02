@@ -15,7 +15,7 @@ import { sprintf } from 'sprintf-js'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
-import { selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
@@ -31,6 +31,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -145,7 +146,9 @@ export function ControlPanel(props: Props) {
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
+        const wallet = account.currencyWallets[walletId]
+        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
         Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | undefined) => {
             if (result) {
