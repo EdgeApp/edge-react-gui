@@ -341,8 +341,6 @@ const asPaymentProtoTransaction: Cleaner<PaymentProtoTransaction> = asObject({
 })
 
 const asPaymentProtoVerificationPayment: Cleaner<PaymentProtoVerificationPayment> = asObject({
-  currency: asString,
-  chain: asString,
   transactions: asArray(asPaymentProtoTransaction)
 })
 

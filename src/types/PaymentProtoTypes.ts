@@ -68,8 +68,6 @@ export interface PaymentProtoTransaction {
 }
 
 export interface PaymentProtoVerificationPayment {
-  currency: string
-  chain: string
   transactions: PaymentProtoTransaction[]
 }
 
