@@ -1,4 +1,4 @@
-import { asArray, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
+import { asArray, asEither, asMaybe, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -16,7 +16,31 @@ const asDisableAsset = asObject({
 const asDisablePluginsMap = asMaybe(asObject(asValue(true)), {})
 export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
 
+export interface NestedPluginMap {
+  [pluginId: string]: true | NestedPluginMap
+}
+
+const asNestedPlugin: Cleaner<true | NestedPluginMap> = asEither(
+  raw => {
+    if (raw === true) return raw
+    throw new Error('Must be true')
+  },
+  asObject(raw => {
+    if (typeof raw === 'object' && Object.keys(raw).length === 0) throw new Error('Invalid disablePlugins object')
+    return asNestedPlugin(raw)
+  })
+)
+
+const asNestedPluginMap = asMaybe(
+  asObject({
+    disablePlugins: asObject(asNestedPlugin)
+  }),
+  { disablePlugins: {} }
+)
+
 export const asExchangeInfo = asObject({
+  buy: asNestedPluginMap,
+  sell: asNestedPluginMap,
   swap: asMaybe(
     asObject({
       disableAssets: asMaybe(

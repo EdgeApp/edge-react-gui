@@ -98,6 +98,12 @@ Object {
   "sortedWalletList": Array [],
   "ui": Object {
     "exchangeInfo": Object {
+      "buy": Object {
+        "disablePlugins": Object {},
+      },
+      "sell": Object {
+        "disablePlugins": Object {},
+      },
       "swap": Object {
         "disableAssets": Object {
           "destination": Array [],

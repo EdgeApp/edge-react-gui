@@ -26,21 +26,21 @@ describe('Production plugin data', () => {
   })
 
   it('Buy plugins match snapshot on iOS + US', () => {
-    expect(filterGuiPluginJson(buyPluginJson, 'ios', 'US')).toMatchSnapshot()
+    expect(filterGuiPluginJson(buyPluginJson, 'ios', 'US', {})).toMatchSnapshot()
   })
 
   it('Sell plugins match snapshot on iOS + US', () => {
-    expect(filterGuiPluginJson(sellPluginJson, 'ios', 'US')).toMatchSnapshot()
+    expect(filterGuiPluginJson(sellPluginJson, 'ios', 'US', {})).toMatchSnapshot()
   })
 
   it('Buy plugins match snapshot on android + IL', () => {
-    expect(filterGuiPluginJson(buyPluginJson, 'android', 'IL')).toMatchSnapshot()
+    expect(filterGuiPluginJson(buyPluginJson, 'android', 'IL', {})).toMatchSnapshot()
   })
 })
 
 describe('GuiPlugins tools', () => {
   it('filter android + US as expected', () => {
-    const list = filterGuiPluginJson(testJson, 'android', 'US')
+    const list = filterGuiPluginJson(testJson, 'android', 'US', {})
 
     expect(titles(list)).toEqual(['Credit card', 'Wire transfer'])
     expect(pluginIds(list)).toEqual(['phony', 'gox'])
@@ -48,15 +48,23 @@ describe('GuiPlugins tools', () => {
   })
 
   it('filter ios + US as expected', () => {
-    const list = filterGuiPluginJson(testJson, 'ios', 'US')
+    const list = filterGuiPluginJson(testJson, 'ios', 'US', {})
 
     expect(titles(list)).toEqual(['Apple Pay', 'Wire transfer', 'Credit card'])
     expect(pluginIds(list)).toEqual(['phony', 'gox', 'phony'])
     expect(list).toMatchSnapshot()
   })
 
+  it('filter ios + US - gox as expected', () => {
+    const list = filterGuiPluginJson(testJson, 'ios', 'US', { gox: true })
+
+    expect(titles(list)).toEqual(['Apple Pay', 'Credit card'])
+    expect(pluginIds(list)).toEqual(['phony', 'phony'])
+    expect(list).toMatchSnapshot()
+  })
+
   it('filter ios + JP as expected', () => {
-    const list = filterGuiPluginJson(testJson, 'ios', 'JP')
+    const list = filterGuiPluginJson(testJson, 'ios', 'JP', {})
 
     expect(titles(list)).toEqual(['Nice lawsuit'])
     expect(pluginIds(list)).toEqual(['gox'])
@@ -64,7 +72,7 @@ describe('GuiPlugins tools', () => {
   })
 
   it('filter everything for GB', () => {
-    const list = filterGuiPluginJson(testJson, 'ios', 'GB')
+    const list = filterGuiPluginJson(testJson, 'ios', 'GB', {})
 
     expect(titles(list)).toEqual([])
   })
