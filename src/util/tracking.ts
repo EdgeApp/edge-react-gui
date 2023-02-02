@@ -19,7 +19,8 @@ export type TrackingEventName =
   | 'Exchange_Shift_Start'
   | 'Exchange_Shift_Success'
   | 'Load_Install_Reason_Fail'
-  | 'Signup_Wallets_Created'
+  | 'Signup_Wallets_Created_Failed'
+  | 'Signup_Wallets_Created_Success'
   | 'Start_App'
 
 export interface TrackingValues {
