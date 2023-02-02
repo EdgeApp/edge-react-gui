@@ -2,6 +2,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, J
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
+import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
@@ -63,6 +64,7 @@ export interface ParamList {
   coinRankingDetails: {
     coinRankingData: CoinRankingData
   }
+  confirmScene: ConfirmSceneParams
   createWalletAccountSelect: {
     accountName: string
     existingWalletId?: string

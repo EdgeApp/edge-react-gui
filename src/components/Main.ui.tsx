@@ -54,6 +54,7 @@ import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
 import { CoinRankingDetailsScene } from './scenes/CoinRankingDetailsScene'
 import { CoinRankingScene } from './scenes/CoinRankingScene'
+import { ConfirmScene } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene } from './scenes/CreateWalletCompletionScene'
@@ -493,6 +494,16 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
           </Tabs>
+
+          <Stack key="confirmScene" hideTabBar>
+            <Scene
+              key="confirmScene"
+              component={withNavigation(ifLoggedIn(ConfirmScene))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+          </Stack>
 
           <Stack key="request" hideTabBar>
             <Scene
