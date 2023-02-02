@@ -80,8 +80,6 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
     params.items = [name]
     // @ts-expect-error
     global.firebase.analytics().logEvent('purchase', params)
-    // @ts-expect-error
-    global.firebase.analytics().logEvent('ecommerce_purchase', params)
   }
 }
 
