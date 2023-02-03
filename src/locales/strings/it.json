@@ -128,7 +128,7 @@
   "scan_invalid_address_error_title": "Indirizzo non valido",
   "scan_invalid_address_error_description": "Non è un valido indirizzo pubblico",
   "fragment_send_subtitle": "Invia",
-  "fragment_send_myself": "Myself",
+  "fragment_send_myself": "Me stesso",
   "fragment_send_from_label": "Da",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "Scambia",
