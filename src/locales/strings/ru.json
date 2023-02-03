@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "Неверный адрес",
   "scan_invalid_address_error_description": "Не действительный публичный адрес",
   "fragment_send_subtitle": "Отправить",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "От",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "Обмен",
