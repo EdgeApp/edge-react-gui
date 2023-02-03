@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -14,6 +15,7 @@ export interface Props {
 
 export const BackButton = (props: Props) => {
   const { isEmpty = false, onPress } = props
+  const navigation = useNavigation()
   const theme = useTheme()
   const styles = getBackButtonStyles(theme)
 
@@ -21,6 +23,8 @@ export const BackButton = (props: Props) => {
     triggerHaptic('impactLight')
     if (onPress != null) {
       onPress()
+    } else {
+      navigation.goBack()
     }
   }
 
