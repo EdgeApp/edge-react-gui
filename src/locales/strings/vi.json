@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "Địa chỉ không hợp lệ",
   "scan_invalid_address_error_description": "Không phải là một địa chỉ công cộng hợp lệ",
   "fragment_send_subtitle": "Gửi",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "Trao đổi",
