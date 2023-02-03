@@ -27,7 +27,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
+import { Actions, AppParamList, NavigationProp } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -136,7 +136,7 @@ export function ControlPanel(props: Props) {
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
-  const handleGoToScene = (navigation: NavigationProp<'controlPanel'>, scene: keyof ParamList, sceneProps: any) => {
+  const handleGoToScene = (navigation: NavigationProp<'controlPanel'>, scene: keyof AppParamList, sceneProps: any) => {
     if (Actions.currentScene !== scene) {
       navigation.navigate(scene, sceneProps)
     } else if (sceneProps) {

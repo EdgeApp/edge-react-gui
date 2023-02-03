@@ -38,7 +38,7 @@ interface PluginViewParams {
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-export interface ParamList {
+export interface AppParamList {
   // Top-level router:
   root: {}
   login: {}
@@ -319,7 +319,7 @@ export const Actions = {
   get currentParams(): any {
     return Flux.Actions.currentParams
   },
-  get currentScene(): keyof ParamList {
+  get currentScene(): keyof AppParamList {
     return Flux.Actions.currentScene
   },
 
@@ -330,13 +330,13 @@ export const Actions = {
     Flux.Actions.drawerOpen()
   },
 
-  jump<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
+  jump<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): void {
     Flux.Actions.jump(name, { route: { name, params } })
   },
-  push<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
+  push<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): void {
     Flux.Actions.push(name, { route: { name, params } })
   },
-  replace<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
+  replace<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): void {
     Flux.Actions.replace(name, { route: { name, params } })
   },
 
@@ -347,7 +347,7 @@ export const Actions = {
   pop(): void {
     Flux.Actions.pop()
   },
-  popTo(name: keyof ParamList): void {
+  popTo(name: keyof AppParamList): void {
     Flux.Actions.popTo(name)
   }
 }
@@ -364,9 +364,9 @@ export interface NavigationBase {
   isFocused: () => boolean
 
   // Going places:
-  navigate: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  push: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  replace: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
+  navigate: <Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]) => void
+  push: <Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]) => void
+  replace: <Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]) => void
 
   // Returning:
   goBack: () => void
@@ -393,16 +393,16 @@ export interface NavigationBase {
 /**
  * The of the `navigation` prop passed to each scene.
  */
-export interface NavigationProp<Name extends keyof ParamList> extends NavigationBase {
-  setParams: (params: ParamList[Name]) => void
+export interface NavigationProp<Name extends keyof AppParamList> extends NavigationBase {
+  setParams: (params: AppParamList[Name]) => void
 }
 
 /**
  * The of the `route` prop passed to each scene.
  */
-export interface RouteProp<Name extends keyof ParamList> {
+export interface RouteProp<Name extends keyof AppParamList> {
   name: Name
-  params: ParamList[Name]
+  params: AppParamList[Name]
 }
 
 /**
