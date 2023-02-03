@@ -10,7 +10,7 @@ import {
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, TextInput, View } from 'react-native'
+import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -121,6 +121,7 @@ const SendComponent = (props: Props) => {
     alternateBroadcast
   } = route.params
 
+  const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
@@ -259,6 +260,7 @@ const SendComponent = (props: Props) => {
 
     // This works since the spendTarget object is guaranteed to be inside
     // the spendInfo object
+    setProcessingAmountChanged(true)
     setSpendInfo({ ...spendInfo })
     setMaxSpendSetter(0)
     setFieldChanged(newField)
@@ -454,14 +456,29 @@ const SendComponent = (props: Props) => {
 
       return (
         <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={handleFeesChange}>
-          <EdgeText
-            style={{
-              // @ts-expect-error
-              color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
-            }}
-          >
-            {feeSyntax}
-          </EdgeText>
+          {processingAmountChanged ? (
+            <View style={styles.calcFeeView}>
+              <EdgeText
+                style={{
+                  // @ts-expect-error
+                  color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+                }}
+              >
+                {s.strings.send_confirmation_calculating_fee}
+              </EdgeText>
+
+              <ActivityIndicator style={styles.calcFeeSpinner} />
+            </View>
+          ) : (
+            <EdgeText
+              style={{
+                // @ts-expect-error
+                color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
+              }}
+            >
+              {feeSyntax}
+            </EdgeText>
+          )}
         </Tile>
       )
     }
@@ -839,10 +856,12 @@ const SendComponent = (props: Props) => {
   // Calculate the transaction
   useAsyncEffect(async () => {
     try {
+      setProcessingAmountChanged(true)
       if (spendInfo.spendTargets[0].publicAddress == null) {
         setEdgeTransaction(null)
         setSpendingLimitExceeded(false)
         setMaxSpendSetter(0)
+        setProcessingAmountChanged(false)
         return
       }
       if (maxSpendSetter === 1) {
@@ -875,13 +894,14 @@ const SendComponent = (props: Props) => {
       flipInputModalRef.current?.setError(e.message)
       flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
     }
+    setProcessingAmountChanged(false)
   }, [spendInfo, maxSpendSetter, walletId, pinSpendingLimitsEnabled, pinValue])
 
   const showSlider = spendInfo.spendTargets[0].publicAddress != null
   let disableSlider = false
   let disabledText: string | undefined
 
-  if (edgeTransaction == null) {
+  if (edgeTransaction == null || processingAmountChanged) {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true
@@ -912,6 +932,12 @@ const SendComponent = (props: Props) => {
 export const SendScene2 = React.memo(SendComponent)
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  calcFeeView: {
+    flexDirection: 'row'
+  },
+  calcFeeSpinner: {
+    marginLeft: theme.rem(1)
+  },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',
