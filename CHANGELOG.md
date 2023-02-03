@@ -1,5 +1,78 @@
 # edge-react-gui
 
+## 3.2.0 (2023-02-02)
+
+- Add max swap support
+- Banxa: Add Google Pay support
+- Change "Request" text to "Receive"
+- Tron: Add note support
+- HBAR: Fix balance syncing
+- HBAR: Update block explorer
+- XMR: Add max send
+- Use SendScene2 for deeplink and EdgeProvider payments
+- Add exit button to side menu
+- Add marketing notification opt-out switch
+- Round amounts for fiat conversion in SendScene/ExchangedFlipInput instead of truncating
+- Lock send scene slider until all makeSpend requests are resolved
+- Fix treatment of EdgeTransaction confirmations in TransactionRow
+- Fix using label param in URI to tag transactions
+- Fix spending previously entered amount
+- Add edge-currency-accountbased as native module
+- Add background gradient orientation to theme
+- Replace Actions usage with navigation
+- Show "Delete Account" option when settings are locked
+- Update translations
+- Various visual and performance fixes
+- Upgrade edge-core-js to v0.19.40
+  - added: New 'syncing' to confirmations API
+  - fixed: Bug in validateConfirmations function incorrectly inferring a transaction as 'dropped'
+  - fixed: Re-publish with missing files.
+  - changed: Make sensitive account & wallet properties, like keys, non-enumerable.
+  - changed: Use the pluginId as the wallet logging prefix, instead of the currency code.
+- Upgrade edge-currency-accountbased to v0.22.4
+  - Convert library to React Native Module
+    - This package will automatically install itself using React Native autolinking and no longer requires Webpack for integration
+    - Plugins are broken out and can be loaded individually
+    - Move checkpoint files to android folder
+    - Stub away unwanted USB modules
+    - Cleanup old and redundant dependency resolutions
+  - Changed: Implement accelerate transaction feature using new core API
+  - fixed: Adjust build settings to provide better support for iPhone 12.
+  - fixed: Track EVM wallet connections at the EdgeCurrencyTools level, to prevent active connections from disappearing.
+  - ARRR: Remove address explorer url
+  - EVM: Revert getMaxSpendable simplification changes in favor of recursion due to sliding standard fee scale
+  - DOT: Update @polkadot/api to v9.11.3
+  - DOT: Improve type safety and various code cleanups
+  - DOT: Add hard limit of 1 to transaction query progress
+  - HBAR: Update explorer urls
+  - TRX: Fix resource handling
+  - TRX: Fix fee calculation for low value transactions
+  - TRX: Add note support
+  - TRX: Update derivation path to industry standard
+  - XRP: Replace use of autofill with local transaction creation
+  - XRP: Replace currency settings with networkInfo
+  - XRP: Clean up code for type-safety
+  - XRP: Add broadcast failure handling
+  - Replace forked ethereumjs-wallet library
+  - EOS: Fix destructure error when attempting to spend
+  - EVM: Remove recursion from getMaxSpendable
+  - Replace remaining json-schema usage with cleaners
+  - Update checkpoint files
+- Upgrade edge-currency-monero to v0.5.5
+  - Add getMaxSpendable
+  - Upgrade edge-core-js to v0.19.36
+- Upgrade edge-currency-plugins to v1.3.6
+  - Fixed: Reduce the KEEP_ALIVE_MS blockbook server heartbeat time
+- Upgrade edge-exchange-plugins to v0.17.0
+  - Add 'max' support across all swap plugins
+  - Remove legacy address fallback
+  - Godex: Add early exit for unsupported chains
+  - Remove Switchain
+  - Upgrade edge-core-js to v0.19.37
+- Upgrade edge-login-ui-rn to v0.10.19
+  - Upgrade Changed: Orient background gradient using Theme
+  - Added: A new RequestPermissionsModal with toggles to opt-in for marketing and/or price notifications.
+
 ## 3.1.0 (2023-01-13)
 
 - Add Bech32 address support
