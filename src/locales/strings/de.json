@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "Ungültige Adresse",
   "scan_invalid_address_error_description": "Keine gültige Öffentliche-Adresse",
   "fragment_send_subtitle": "Senden",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "Von",
   "fragment_stake_label": "Staken",
   "fragment_transaction_exchange": "Tauschen",
