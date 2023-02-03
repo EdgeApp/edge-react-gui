@@ -15,6 +15,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -84,6 +85,7 @@ interface DispatchProps {
   selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
+  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
 }
 
 interface OwnProps {
@@ -141,6 +143,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
+
+    this.props.checkAndShowGetCryptoModal(this.props.navigation, this.props.route.params.selectedWalletId, this.props.route.params.selectedCurrencyCode)
+
     if (guiMakeSpendInfo != null) {
       this.updateSendConfirmationTx(guiMakeSpendInfo, true)
     }
@@ -736,6 +741,9 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     getDisplayDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
+    },
+    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
     }
   })
 )(withTheme(SendComponent))
