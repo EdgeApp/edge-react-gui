@@ -13,7 +13,7 @@ import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { handlePluginBack, setPluginScene } from '../navigation/GuiPluginBackButton'
+import { setPluginScene } from '../navigation/GuiPluginBackButton'
 import { showError, showToast } from '../services/AirshipInstance'
 import { requestPermissionOnSettings } from '../services/PermissionsManager'
 
@@ -209,7 +209,7 @@ class GuiPluginView extends React.Component<Props, State> {
     for (const permission of permissions) {
       const deniedPermission = await requestPermissionOnSettings(state.core.disklet, permission, displayName, mandatory)
       if (deniedPermission) {
-        handlePluginBack()
+        this.goBack()
         return
       }
     }
@@ -217,6 +217,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
   goBack(): boolean {
     if (this._webview == null || !this._canGoBack) {
+      this.props.navigation.goBack()
       return false
     }
     this._webview.goBack()

@@ -43,7 +43,7 @@ import { withServices } from './hoc/withServices'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
-import { handlePluginBack, PluginBackButton } from './navigation/GuiPluginBackButton'
+import { PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
 import { HeaderTitle } from './navigation/HeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
@@ -1106,10 +1106,6 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene('exchangeQuote')) {
       Actions.popTo('exchange')
-      return true
-    }
-    if (this.isCurrentScene('pluginViewBuy') || this.isCurrentScene('pluginViewSell') || this.isCurrentScene('pluginView')) {
-      handlePluginBack()
       return true
     }
     if (this.isCurrentScene('fioAddressRegister')) {
