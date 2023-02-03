@@ -99,7 +99,7 @@ import { WcConnectionsScene } from './scenes/WcConnectionsScene'
 import { WcConnectScene } from './scenes/WcConnectScene'
 import { WcDisconnectScene } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance'
-import { MenuTab } from './themed/MenuTab'
+import { MenuTabs } from './themed/MenuTabs'
 
 const RouterWithRedux = connect<
   {},
@@ -196,7 +196,7 @@ export class MainComponent extends React.Component<Props> {
       >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
-          <Tabs key="edgeApp" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={withNavigation(MenuTab)}>
+          <Tabs key="edgeApp" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={withNavigation(MenuTabs)}>
             <Stack key="walletList">
               <Scene
                 key="walletListScene"

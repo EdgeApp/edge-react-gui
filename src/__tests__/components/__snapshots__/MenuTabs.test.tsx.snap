@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MenuTab should render with loading props 1`] = `
-<MenuTabComponent
+exports[`MenuTabs should render with loading props 1`] = `
+<MenuTabsComponent
   navigation={
     Object {
       "addListener": [Function],

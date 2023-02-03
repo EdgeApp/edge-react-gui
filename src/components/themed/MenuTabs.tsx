@@ -32,7 +32,7 @@ const title = {
   extraTab: s.strings[extraTabString]
 }
 
-export class MenuTabComponent extends React.PureComponent<Props> {
+export class MenuTabsComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'coinRanking' | 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange' | 'extraTab') => {
     const { navigation } = this.props
 
@@ -120,4 +120,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const MenuTab = withTheme(MenuTabComponent)
+export const MenuTabs = withTheme(MenuTabsComponent)
