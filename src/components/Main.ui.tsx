@@ -3,7 +3,6 @@ import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
-import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene'
@@ -34,7 +33,7 @@ import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { Permission } from '../reducers/PermissionsReducer'
 import { connect } from '../types/reactRedux'
-import { Actions, NavigationBase, withNavigation } from '../types/routerTypes'
+import { Actions, withNavigation } from '../types/routerTypes'
 import { scale } from '../util/scaling'
 import { logEvent } from '../util/tracking'
 import { AirshipToast } from './common/AirshipToast'
@@ -119,7 +118,6 @@ interface DispatchProps {
   logout: (username?: string) => void
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
   checkEnabledExchanges: () => void
   requestPermission: (permission: Permission) => void
   showReEnableOtpModal: () => void
@@ -534,9 +532,6 @@ export class MainComponent extends React.Component<Props> {
               key="send"
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
-              onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
-              }}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -556,9 +551,6 @@ export class MainComponent extends React.Component<Props> {
               key="send2"
               component={withNavigation(ifLoggedIn(SendScene2))}
               navTransparent
-              onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
-              }}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -1138,9 +1130,6 @@ export const Main = connect<{}, DispatchProps, {}>(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
-    },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
     },
