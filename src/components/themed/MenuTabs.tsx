@@ -6,11 +6,12 @@ import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
+import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { NavigationProp } from '../../types/routerTypes'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { VectorIcon } from './VectorIcon'
@@ -19,11 +20,9 @@ interface OwnProps {
   navigation: NavigationProp<'edgeApp'>
 }
 
-type Props = OwnProps & ThemeProps
-
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-const title = {
+const title: { readonly [key: string]: string } = {
   coinRanking: s.strings.title_markets,
   walletList: s.strings.title_wallets,
   pluginListBuy: s.strings.title_buy,
@@ -32,10 +31,18 @@ const title = {
   extraTab: s.strings[extraTabString]
 }
 
-export class MenuTabsComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: 'coinRanking' | 'walletList' | 'pluginListBuy' | 'pluginListSell' | 'exchange' | 'extraTab') => {
-    const { navigation } = this.props
+export const MenuTabs = (props: OwnProps) => {
+  const { navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const state: any = navigation.getState()
+  const activeTabIndex = state.index
+  const colors = theme.tabBarBackground
+  const start = theme.tabBarBackgroundStart
+  const end = theme.tabBarBackgroundEnd
+  let routes = state.routes
 
+  const handleOnPress = useHandler((route: string) => {
     switch (route) {
       case 'coinRanking':
         return navigation.navigate('coinRanking', {})
@@ -50,55 +57,36 @@ export class MenuTabsComponent extends React.PureComponent<Props> {
       case 'extraTab':
         return navigation.navigate('extraTab', undefined)
     }
+  })
+
+  if (config.extraTab == null) {
+    routes = routes.slice(0, -1)
   }
 
-  render() {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-    const state: any = this.props.navigation.getState()
-    const activeTabIndex = state.index
-    const colors = theme.tabBarBackground
-    const start = theme.tabBarBackgroundStart
-    const end = theme.tabBarBackgroundEnd
-    let routes = state.routes
-
-    if (config.extraTab == null) {
-      routes = routes.slice(0, -1)
-    }
-
-    return (
-      <View>
-        <DividerLine colors={theme.tabBarTopOutlineColors} />
-        <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-          {routes.map((element: any, index: number) => {
-            const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
-            const icon = {
-              coinRanking: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
-              walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-              pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-              pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-              exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
-              extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
-            }
-            return (
-              <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
-                {
-                  // @ts-expect-error
-                  icon[element.key]
-                }
-                <EdgeText style={{ ...styles.text, color: color }}>
-                  {
-                    // @ts-expect-error
-                    title[element.key]
-                  }
-                </EdgeText>
-              </TouchableOpacity>
-            )
-          })}
-        </LinearGradient>
-      </View>
-    )
-  }
+  return (
+    <View>
+      <DividerLine colors={theme.tabBarTopOutlineColors} />
+      <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
+        {routes.map((route: any, index: number) => {
+          const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
+          const icon: { readonly [key: string]: JSX.Element } = {
+            coinRanking: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
+            walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+            pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+            pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+            exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+            extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
+          }
+          return (
+            <TouchableOpacity style={styles.content} key={route.key} onPress={() => handleOnPress(route.name)}>
+              {icon[route.name]}
+              <EdgeText style={{ ...styles.text, color: color }}>{title[route.name]}</EdgeText>
+            </TouchableOpacity>
+          )
+        })}
+      </LinearGradient>
+    </View>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -119,5 +107,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(2 / 16)
   }
 }))
-
-export const MenuTabs = withTheme(MenuTabsComponent)
