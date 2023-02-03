@@ -10,12 +10,12 @@ import { BlurView } from 'rn-id-blurview'
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { GuiTouchIdInfo } from '../../types/types'
@@ -212,15 +212,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const LoginScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    account: state.core.account,
-    context: state.core.context,
-    disklet: state.core.disklet,
-    pendingDeepLink: state.pendingDeepLink,
-    username: state.nextUsername == null ? '' : state.nextUsername
-  }),
-  dispatch => ({
+export const LoginScene = (props: OwnProps) => {
+  const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
+  const context = useSelector(state => state.core.context)
+  const disklet = useSelector(state => state.core.disklet)
+  const pendingDeepLink = useSelector(state => state.pendingDeepLink)
+  const username = useSelector(state => state.nextUsername ?? '')
+  const stateProps: StateProps = {
+    account,
+    context,
+    disklet,
+    pendingDeepLink,
+    username
+  }
+  const theme = useTheme()
+  const themeProps: ThemeProps = {
+    theme
+  }
+  const dispatchProps: DispatchProps = {
     deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
     },
@@ -234,5 +244,7 @@ export const LoginScene = connect<StateProps, DispatchProps, OwnProps>(
     logout() {
       dispatch(logoutRequest())
     }
-  })
-)(withTheme(LoginSceneComponent))
+  }
+
+  return <LoginSceneComponent {...props} {...dispatchProps} {...stateProps} {...themeProps} />
+}
