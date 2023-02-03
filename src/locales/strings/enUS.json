@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "Invalid Address",
   "scan_invalid_address_error_description": "Not a valid public address",
   "fragment_send_subtitle": "Send",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "Exchange",

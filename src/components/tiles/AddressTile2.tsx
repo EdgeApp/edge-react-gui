@@ -3,6 +3,7 @@ import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } fr
 import { ethers } from 'ethers'
 import * as React from 'react'
 import { AppState, TouchableOpacity, View } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -13,9 +14,11 @@ import { checkPubAddress } from '../../modules/FioAddress/util'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -166,7 +169,6 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
       // Will throw in case uri is invalid
       await coreWallet.parseUri(uri, currencyCode)
-
       this.setState({
         clipboard: uri,
         loading: false
@@ -209,6 +211,28 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       })
   }
 
+  handleSelfTransfer = async () => {
+    const { account, coreWallet, navigation, currencyCode } = this.props
+    const { currencyWallets } = account
+    const { pluginId } = coreWallet.currencyInfo
+    await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.your_wallets}
+        navigation={navigation}
+        allowedAssets={[{ pluginId, tokenId: getTokenId(account, pluginId, currencyCode) }]}
+        excludeWalletIds={[coreWallet.id]}
+      />
+    )).then(async ({ walletId }) => {
+      if (walletId != null) {
+        const wallet = currencyWallets[walletId]
+        const receiveAddress = await wallet.getReceiveAddress()
+        if (receiveAddress == null) return
+        this.onChangeAddress(receiveAddress.publicAddress)
+      }
+    })
+  }
+
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
@@ -218,11 +242,20 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { fioToAddress, recipientAddress, lockInputs, theme, title } = this.props
+    const { fioToAddress, recipientAddress, lockInputs, theme, title, coreWallet, account } = this.props
+    const { pluginId, currencyCode } = coreWallet.currencyInfo
+    const { currencyWallets } = account
     const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
     const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
+    const tokenId: string | undefined = getTokenId(this.props.account, pluginId, currencyCode)
+    const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
+      if (walletId === coreWallet.id) return false
+      if (currencyWallets[walletId].type !== coreWallet.type) return false
+      if (tokenId == null) return true
+      return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
+    })
     return (
       <View>
         <Tile type={tileType} title={title} onPress={this.handleTilePress}>
@@ -232,16 +265,22 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
                 <EdgeText style={styles.buttonText}>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
               </TouchableOpacity>
+              {canSelfTransfer ? (
+                <TouchableOpacity style={styles.buttonContainer} onPress={this.handleSelfTransfer}>
+                  <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
+                  <EdgeText style={styles.buttonText}>{s.strings.fragment_send_myself}</EdgeText>
+                </TouchableOpacity>
+              ) : null}
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan}>
                 <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
                 <EdgeText style={styles.buttonText}>{s.strings.scan_as_in_scan_barcode}</EdgeText>
               </TouchableOpacity>
-              {copyMessage && (
+              {copyMessage ? (
                 <TouchableOpacity style={styles.buttonContainer} onPress={this.handlePasteFromClipboard}>
                   <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonText}>{s.strings.string_paste}</EdgeText>
                 </TouchableOpacity>
-              )}
+              ) : null}
             </View>
           )}
           {recipientAddress == null || recipientAddress === '' ? null : (
