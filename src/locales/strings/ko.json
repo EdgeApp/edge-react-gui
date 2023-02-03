@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "잘못된 주소",
   "scan_invalid_address_error_description": "잘못된 공용 주소",
   "fragment_send_subtitle": "보내기",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "거래",
