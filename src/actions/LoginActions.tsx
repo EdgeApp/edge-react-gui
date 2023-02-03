@@ -2,7 +2,6 @@ import { EdgeAccount } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
@@ -256,9 +255,9 @@ export const mergeSettings = (
   }
 }
 
-export function logoutRequest(username?: string): ThunkAction<Promise<void>> {
+export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    Actions.popTo('login')
+    navigation.navigate('login', {})
     Airship.clear()
     const state = getState()
     const { account } = state.core

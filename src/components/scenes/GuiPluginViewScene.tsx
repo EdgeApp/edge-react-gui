@@ -116,7 +116,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 
 interface OwnProps {
   navigation: NavigationBase
-  route: RouteProp<'pluginView'>
+  route: RouteProp<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'>
 }
 
 interface DispatchProps {

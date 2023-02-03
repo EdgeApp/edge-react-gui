@@ -1,9 +1,9 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { Actions } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -21,13 +21,14 @@ const title = {
 
 export const HeaderTextButton = (props: Props) => {
   const { placement, type } = props
+  const navigation = useNavigation()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
     if (type === 'exit') {
-      Actions.pop()
+      navigation.goBack()
     } else if (type === 'help') {
       showHelpModal()
     }

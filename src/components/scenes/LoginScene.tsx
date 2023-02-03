@@ -213,6 +213,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const LoginScene = (props: OwnProps) => {
+  const { navigation } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
@@ -242,7 +243,7 @@ export const LoginScene = (props: OwnProps) => {
       dispatch(initializeAccount(navigation, account, touchIdInfo))
     },
     logout() {
-      dispatch(logoutRequest())
+      dispatch(logoutRequest(navigation))
     }
   }
 

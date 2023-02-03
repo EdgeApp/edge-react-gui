@@ -1,22 +1,24 @@
+import { DrawerActions, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
-import { Actions } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 export const SideMenuButton = () => {
+  const navigation = useNavigation()
+
   const theme = useTheme()
   const { container } = getStyles(theme)
-  const onPress = useHandler(() => {
+  const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    Actions.drawerOpen()
+    navigation.dispatch(DrawerActions.openDrawer())
   })
 
   return (
-    <TouchableOpacity onPress={onPress} style={container}>
+    <TouchableOpacity onPress={handlePress} style={container}>
       <Fontello name="hamburgerButton" size={theme.rem(1)} color={theme.icon} />
     </TouchableOpacity>
   )

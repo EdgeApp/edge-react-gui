@@ -1,3 +1,4 @@
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -10,15 +11,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { NavigationProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { VectorIcon } from './VectorIcon'
-
-interface OwnProps {
-  navigation: NavigationProp<'edgeApp'>
-}
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
@@ -31,11 +27,10 @@ const title: { readonly [key: string]: string } = {
   extraTab: s.strings[extraTabString]
 }
 
-export const MenuTabs = (props: OwnProps) => {
-  const { navigation } = props
+export const MenuTabs = (props: BottomTabBarProps) => {
+  const { navigation, state } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const state: any = navigation.getState()
   const activeTabIndex = state.index
   const colors = theme.tabBarBackground
   const start = theme.tabBarBackgroundStart
@@ -67,7 +62,7 @@ export const MenuTabs = (props: OwnProps) => {
     <View>
       <DividerLine colors={theme.tabBarTopOutlineColors} />
       <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-        {routes.map((route: any, index: number) => {
+        {routes.map((route, index: number) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon: { readonly [key: string]: JSX.Element } = {
             coinRanking: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,

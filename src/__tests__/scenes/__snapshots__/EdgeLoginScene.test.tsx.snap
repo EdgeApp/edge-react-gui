@@ -34,18 +34,22 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     navigation={
       Object {
         "addListener": [Function],
-        "closeDrawer": [Function],
+        "canGoBack": [Function],
+        "dispatch": [Function],
+        "getId": [Function],
+        "getParent": [Function],
         "getState": [Function],
         "goBack": [Function],
         "isFocused": [Function],
         "navigate": [Function],
-        "openDrawer": [Function],
         "pop": [Function],
         "popToTop": [Function],
         "push": [Function],
+        "removeListener": [Function],
         "replace": [Function],
+        "reset": [Function],
+        "setOptions": [Function],
         "setParams": [Function],
-        "toggleDrawer": [Function],
       }
     }
     route={

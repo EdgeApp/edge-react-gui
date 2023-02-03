@@ -243,6 +243,7 @@ describe('SendScene2', () => {
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Hide Amount
+    // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <Provider store={store}>
@@ -252,6 +253,7 @@ describe('SendScene2', () => {
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Hide Both
+    // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <Provider store={store}>
@@ -296,6 +298,7 @@ describe('SendScene2', () => {
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Lock Amount
+    // @ts-expect-error
     route.params.lockTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <Provider store={store}>
@@ -305,6 +308,7 @@ describe('SendScene2', () => {
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Lock Both
+    // @ts-expect-error
     route.params.lockTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <Provider store={store}>
