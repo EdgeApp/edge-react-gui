@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "Addresse invalide",
   "scan_invalid_address_error_description": "L'adresse publique n'est pas encore validé",
   "fragment_send_subtitle": "Envoyer",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "Échanger",
