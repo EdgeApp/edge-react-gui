@@ -271,6 +271,7 @@
   "search_wallets": "Search Wallets",
   "search_tokens": "Search Tokens",
   "select_wallet": "Select Wallet",
+  "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "滑动以确认",
   "send_confirmation_balance": "Balance",
   "send_confirmation_eos_error_cpu": "可用于发送 EOS 交易的CPU不足。请等待1-3天让CPU充值。",
