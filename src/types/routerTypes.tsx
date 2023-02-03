@@ -401,6 +401,7 @@ export interface NavigationProp<Name extends keyof AppParamList> extends Navigat
  * The of the `route` prop passed to each scene.
  */
 export interface RouteProp<Name extends keyof AppParamList> {
+  key: string
   name: Name
   params: AppParamList[Name]
 }

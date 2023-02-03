@@ -8,8 +8,10 @@ import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWal
 import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CreateWalletSelectCrypto', () => {
+  const nonce = fakeNonce(0)
   const mockState: any = {
     core: {
       account: {
@@ -65,6 +67,7 @@ describe('CreateWalletSelectCrypto', () => {
   it('should render with loading props', () => {
     const navigation = fakeNavigation
     const route: RouteProp<'createWalletSelectCrypto'> = {
+      key: `createWalletSelectCrypto-${nonce()}`,
       name: 'createWalletSelectCrypto',
       params: {}
     }

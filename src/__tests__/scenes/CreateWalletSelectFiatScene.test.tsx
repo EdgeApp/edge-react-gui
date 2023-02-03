@@ -8,8 +8,10 @@ import { CreateWalletSelectFiatScene } from '../../components/scenes/CreateWalle
 import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CreateWalletSelectFiatComponent', () => {
+  const nonce = fakeNonce(0)
   const mockState: any = {
     ui: {
       settings: {
@@ -51,6 +53,7 @@ describe('CreateWalletSelectFiatComponent', () => {
   it('should render with loading props', () => {
     const navigation = fakeNavigation
     const route: RouteProp<'createWalletSelectFiat'> = {
+      key: `createWalletSelectFiat-${nonce()}`,
       name: 'createWalletSelectFiat',
       params: {
         createWalletList: [

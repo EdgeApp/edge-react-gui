@@ -50,6 +50,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     }
     route={
       Object {
+        "key": "edgeLogin-1",
         "name": "edgeLogin",
         "params": Object {
           "lobbyId": "AmNsSBDVeF2837",
