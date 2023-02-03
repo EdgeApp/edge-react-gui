@@ -128,6 +128,7 @@
   "scan_invalid_address_error_title": "无效地址",
   "scan_invalid_address_error_description": "不是一个有效的公用地址",
   "fragment_send_subtitle": "发送",
+  "fragment_send_myself": "Myself",
   "fragment_send_from_label": "From",
   "fragment_stake_label": "Stake",
   "fragment_transaction_exchange": "交易",
