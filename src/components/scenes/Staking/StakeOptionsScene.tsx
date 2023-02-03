@@ -27,10 +27,10 @@ interface Props {
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { stakePlugins, walletId, currencyCode, stakePolicies } = route.params
-  const { account } = useSelector(state => state.core)
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
   const pluginId = wallet?.currencyInfo.pluginId
   const tokenId = pluginId ? getTokenId(account, pluginId, currencyCode) : undefined
 

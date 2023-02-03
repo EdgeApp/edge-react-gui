@@ -24,8 +24,8 @@ interface Props {
 
 export const EdgeLoginScene = (props: Props) => {
   const { navigation, route } = props
-  const { account } = useSelector(state => state.core)
   const { lobbyId } = route.params
+  const account = useSelector(state => state.core.account)
   const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
   const [isApproved, setIsApproved] = React.useState<boolean>(false)
   const isLobby = lobby != null

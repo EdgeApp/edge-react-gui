@@ -45,15 +45,8 @@ const StakeModifySceneComponent = (props: Props) => {
   const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
 
   // Hooks
-  const { guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
-    const guiExchangeRates = state.exchangeRates
-
-    const nativeAssetDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    return {
-      guiExchangeRates,
-      nativeAssetDenomination
-    }
-  })
+  const guiExchangeRates = useSelector(state => state.exchangeRates)
+  const nativeAssetDenomination = useSelector(state => getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode))
 
   // Current Allocation Info
   const [existingAllocations, setExistingAllocations] = React.useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
