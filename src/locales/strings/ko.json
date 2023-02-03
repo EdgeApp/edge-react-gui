@@ -271,6 +271,7 @@
   "search_wallets": "Search Wallets",
   "search_tokens": "Search Tokens",
   "select_wallet": "Select Wallet",
+  "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "슬라이드해서 확인",
   "send_confirmation_balance": "Balance",
   "send_confirmation_eos_error_cpu": "EOS 거래를 위한 CPU 가 충분하지 않습니다. CPU 가 재충전될 때까지 1-3일정도 기다려 주시기 바랍니다.",
