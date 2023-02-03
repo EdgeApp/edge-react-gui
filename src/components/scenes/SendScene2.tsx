@@ -104,6 +104,8 @@ const SendComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const makeSpendCounter = React.useRef<number>(0)
+
   const initialMount = React.useRef<boolean>(true)
   const pinInputRef = React.useRef<TextInput>(null)
   const flipInputModalRef = React.useRef<FlipInputModalRef>(null)
@@ -878,15 +880,17 @@ const SendComponent = (props: Props) => {
         const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
         setSpendingLimitExceeded(exceeded)
       }
-      if (pinSpendingLimitsEnabled) {
-        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
-        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
-        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = mul(totalExchangeAmount, rate)
-        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
-        setSpendingLimitExceeded(exceeded)
-      }
+
+      makeSpendCounter.current++
+      const localMakeSpendCounter = makeSpendCounter.current
       const edgeTx = await coreWallet.makeSpend(spendInfo)
+      if (localMakeSpendCounter < makeSpendCounter.current) {
+        // This makeSpend result is out of date. Throw it away since a newer one is in flight.
+        // This is not REALLY needed since useAsyncEffect seems to serialize calls into the effect
+        // function, but if this code ever gets refactored to not use useAsyncEffect, this
+        // check MUST remain
+        return
+      }
       setEdgeTransaction(edgeTx)
       const { parentNetworkFee, networkFee } = edgeTx
       const feeNativeAmount = parentNetworkFee ?? networkFee
