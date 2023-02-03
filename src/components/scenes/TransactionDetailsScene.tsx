@@ -1,10 +1,8 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import Mailer from 'react-native-mail'
-import SafariView from 'react-native-safari-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -13,7 +11,6 @@ import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDe
 import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
-import { useWalletName } from '../../hooks/useWalletName'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
@@ -21,7 +18,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiContact } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, isValidInput, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -30,12 +26,12 @@ import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
-import { RawTextModal } from '../modals/RawTextModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
+import { SwapDetailsTiles } from '../themed/SwapDetailsTiles'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
@@ -46,10 +42,7 @@ interface OwnProps {
 interface StateProps {
   contacts: GuiContact[]
   currentFiatAmount: string
-  destinationDenomination?: EdgeDenomination
-  destinationWalletName?: string
   subcategoriesList: string[]
-  walletName: string
   walletDefaultDenomProps: EdgeDenomination
 }
 interface DispatchProps {
@@ -243,96 +236,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     ))
   }
 
-  renderExchangeData = (symbolString: string) => {
-    const { destinationDenomination, destinationWalletName, walletName, walletDefaultDenomProps, theme, route } = this.props
-    const { edgeTransaction } = route.params
-    const { swapData, spendTargets } = edgeTransaction
-    const styles = getStyles(theme)
-
-    if (!swapData || !spendTargets || !destinationDenomination) return null
-
-    const { plugin, isEstimate, orderId, payoutAddress, refundAddress } = swapData
-    const sourceAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(spendTargets[0].nativeAmount)
-    const destinationAmount = convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
-    const destinationCurrencyCode = destinationDenomination.name
-
-    const createExchangeDataString = (newline: string = '\n') => {
-      const uniqueIdentifier = spendTargets && spendTargets[0].uniqueIdentifier ? spendTargets[0].uniqueIdentifier : ''
-      const exchangeAddresses =
-        spendTargets && spendTargets.length > 0
-          ? spendTargets.map((target, index) => `${target.publicAddress}${index + 1 !== spendTargets.length ? newline : ''}`).toString()
-          : ''
-
-      return `${s.strings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${s.strings.transaction_details_exchange_order_id}: ${
-        orderId || ''
-      }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
-        s.strings.fragment_send_from_label
-      }: ${sourceAmount} ${symbolString}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
-        s.strings.transaction_details_exchange_destination_wallet
-      }: ${destinationWalletName}${newline}${isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}${newline}${newline}${
-        s.strings.transaction_details_exchange_exchange_address
-      }:${newline}  ${exchangeAddresses}${newline}${s.strings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
-        s.strings.transaction_details_exchange_payout_address
-      }:${newline}  ${payoutAddress}${newline}${s.strings.transaction_details_exchange_refund_address}:${newline}  ${refundAddress || ''}${newline}`
-    }
-
-    const openExchangeDetails = () => {
-      Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={s.strings.transaction_details_exchange_details} />)
-    }
-
-    const openUrl = () => {
-      const url = swapData.orderUri
-      if (Platform.OS === 'ios') {
-        return (
-          SafariView.isAvailable()
-            // @ts-expect-error
-            .then(SafariView.show({ url }))
-            .catch(error => {
-              // @ts-expect-error
-              Linking.openURL(url)
-              console.log(error)
-            })
-        )
-      }
-      // @ts-expect-error
-      Linking.openURL(url)
-    }
-
-    const openEmail = () => {
-      const email = swapData.plugin.supportEmail
-      const body = createExchangeDataString('<br />')
-
-      Mailer.mail(
-        {
-          subject: sprintf(s.strings.transaction_details_exchange_support_request, swapData.plugin.displayName),
-          // @ts-expect-error
-          recipients: [email],
-          body,
-          isHTML: true
-        },
-        (error, event) => {
-          if (error) showError(error)
-        }
-      )
-    }
-
-    return (
-      <>
-        <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
-          <View style={styles.tileColumn}>
-            <EdgeText style={styles.tileTextBottom}>{s.strings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
-            <EdgeText style={styles.tileTextBottom}>{s.strings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
-            <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</EdgeText>
-          </View>
-        </Tile>
-        {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
-        {swapData.plugin.supportEmail ? (
-          <Tile type="touchable" title={s.strings.transaction_details_exchange_support} onPress={openEmail} body={swapData.plugin.supportEmail} />
-        ) : null}
-      </>
-    )
-  }
-
   onSaveTxDetails = (newDetails?: any) => {
     if (newDetails == null) return
     const { route, wallet } = this.props
@@ -510,7 +413,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
               <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-            {this.renderExchangeData(crypto.symbolString)}
+            {edgeTransaction.swapData == null ? null : <SwapDetailsTiles swapData={edgeTransaction.swapData} transaction={edgeTransaction} wallet={wallet} />}
             {acceleratedTx == null ? null : (
               <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
             )}
@@ -586,11 +489,10 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const walletName = useWalletName(wallet)
   const contacts = useSelector(state => state.contacts)
   const subcategoriesList = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
 
-  const { currencyCode, swapData } = edgeTransaction
+  const { currencyCode } = edgeTransaction
   const { currencyInfo } = wallet
 
   const nativeAmount = getAbsoluteAmount(edgeTransaction)
@@ -605,17 +507,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const cryptoAmount = convertNativeToExchange(exchangeDenom.multiplier)(nativeAmount)
   const currentFiatAmount = useSelector(state => convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.fiatCurrencyCode, cryptoAmount))
 
-  if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
-    swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
-  }
-  const destinationWallet = useSelector(state => (swapData != null ? state.core.account.currencyWallets[swapData.payoutWalletId] : undefined))
-  const destinationDenomination = useSelector(state =>
-    swapData != null && destinationWallet != null
-      ? getDisplayDenomination(state, destinationWallet.currencyInfo.pluginId, swapData.payoutCurrencyCode)
-      : undefined
-  )
-  const destinationWalletName = destinationWallet ? getWalletName(destinationWallet) : ''
-
   return (
     <TransactionDetailsComponent
       navigation={navigation}
@@ -628,10 +519,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       setNewSubcategory={async newSubcategory => dispatch(setNewSubcategory(newSubcategory))}
       theme={theme}
       wallet={wallet}
-      walletName={walletName}
       walletDefaultDenomProps={walletDefaultDenomProps}
-      destinationDenomination={destinationDenomination}
-      destinationWalletName={destinationWalletName}
     />
   )
 })
