@@ -271,6 +271,7 @@
   "search_wallets": "Wallets durchsuchen",
   "search_tokens": "Tokens suchen",
   "select_wallet": "Wallet wählen",
+  "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "Wischen zum bestätigen",
   "send_confirmation_balance": "Saldo",
   "send_confirmation_eos_error_cpu": "Nicht genügend CPU zur Verfügung, um EOS-Transaktion zu senden. Bitte warten Sie 1-3 Tage, bis die CPU-Ressourcen sich wieder erholt haben.",
