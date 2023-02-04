@@ -21,5 +21,11 @@ export const fakeNavigation: NavigationProp<any> = {
   openDrawer() {},
   toggleDrawer() {},
 
-  state: {}
+  getState() {
+    return {
+      drawerOpen: false,
+      index: 0,
+      routes: []
+    }
+  }
 }

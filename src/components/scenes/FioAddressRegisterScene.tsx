@@ -296,7 +296,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   selectFioWallet = () => {
     const allowedCurrencyCodes: string[] = [FIO_STR]
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         if (currencyCode === FIO_STR) {

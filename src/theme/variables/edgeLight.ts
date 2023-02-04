@@ -86,6 +86,8 @@ export const edgeLight: Theme = {
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 0, y: 1 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: `rgba(123,123,123,.2)`,
@@ -113,7 +115,9 @@ export const edgeLight: Theme = {
   // listHeaderBackground: palette.white,
   tileBackground: palette.transparent,
   tileBackgroundMuted: palette.transparent,
-  // listSectionHeaderBackground: palette.white,
+
+  // Section Lists
+  listSectionHeaderBackground: palette.transparent,
 
   // WalletList
   walletListBackground: palette.edgeBlue,

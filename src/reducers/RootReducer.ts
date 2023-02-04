@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { PriceChangeNotificationSettings } from '../actions/NotificationActions'
+import { NotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
 import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
 import { ui, UiState } from '../modules/UI/reducer'
@@ -27,8 +27,8 @@ export interface RootState {
   // Deep link waiting to be fulfilled:
   readonly pendingDeepLink: DeepLink | null
 
-  // Hourly and daily price change notification settings
-  readonly priceChangeNotifications: PriceChangeNotificationSettings
+  // Notification settings for price change/marketing/etc
+  readonly notificationSettings: NotificationSettings
 
   // The user's sorted wallet list:
   readonly sortedWalletList: WalletListItem[]
@@ -86,13 +86,9 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  priceChangeNotifications(
-    // @ts-expect-error
-    state: PriceChangeNotificationSettings = { ignorePriceChanges: false },
-    action: Action
-  ): PriceChangeNotificationSettings {
+  notificationSettings(state: NotificationSettings = { ignoreMarketing: false, ignorePriceChanges: false, plugins: {} }, action: Action): NotificationSettings {
     switch (action.type) {
-      case 'PRICE_CHANGE_NOTIFICATIONS_UPDATE':
+      case 'NOTIFICATION_SETTINGS_UPDATE':
         return action.data
       default:
         return state

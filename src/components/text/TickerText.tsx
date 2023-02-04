@@ -35,7 +35,7 @@ const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, as
  * Returns a text string that displays the crypto-fiat exchange rate and the
  * daily % change from a wallet asset
  **/
-export const TickerText = ({ wallet, tokenId }: Props) => {
+export const TickerText = React.memo(({ wallet, tokenId }: Props) => {
   const { currencyCode, denomination, isoFiatCurrencyCode, assetToFiatRate, usdToWalletFiatRate, assetToYestFiatRate } = useTokenDisplayData({
     tokenId,
     wallet
@@ -52,19 +52,17 @@ export const TickerText = ({ wallet, tokenId }: Props) => {
 
   const theme = useTheme()
   const { percentString, deltaColorStyle } = getPercentDeltaString(currencyCode, assetToFiatRate, assetToYestFiatRate, usdToWalletFiatRate, theme)
+  const style = React.useMemo(
+    () => ({
+      color: deltaColorStyle,
+      textAlign: 'left',
+      flexShrink: 1,
+      marginLeft: theme.rem(0.75),
+      alignSelf: 'center'
+    }),
+    [deltaColorStyle]
+  )
 
   const tickerText = `${fiatText} ${percentString}`
-  return (
-    <EdgeText
-      style={{
-        color: deltaColorStyle,
-        textAlign: 'left',
-        flexShrink: 1,
-        marginLeft: theme.rem(0.75),
-        alignSelf: 'center'
-      }}
-    >
-      {tickerText}
-    </EdgeText>
-  )
-}
+  return <EdgeText style={style}>{tickerText}</EdgeText>
+})

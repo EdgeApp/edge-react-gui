@@ -30,16 +30,16 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     return parseDownloadLink(url)
   }
 
-  // Handle bitpay.com links.
+  // Handle payment protocol links.
   // We always want to bypass the plugin, even if a scheme (i.e. bitcoin:) is
   // defined because it is valid for the user to accept any supported currency
   // besides the specific currency defined in the uri's scheme.
-  // Even if a specific currency is found in the protocol, the BitPay protocol
+  // Even if a specific currency is found in the protocol, the payment protocol
   // does not care what currency the payment steps start with.
   if (betterUrl.query.r != null && betterUrl.query.r.includes('http')) {
     // If the URI started with 'bitcoin:', etc.
     uri = betterUrl.query.r
-    return { type: 'bitPay', uri }
+    return { type: 'paymentProto', uri }
   }
 
   // Handle the edge:// scheme:
@@ -81,8 +81,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 /**
  * Parse an `edge://` link of some kind.
  */
-// @ts-expect-error
-function parseEdgeProtocol(url: URL): DeepLink {
+function parseEdgeProtocol(url: URL<string>): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
 
   switch (url.host) {
@@ -128,7 +127,8 @@ function parseEdgeProtocol(url: URL): DeepLink {
     }
 
     case 'wc': {
-      const uri = url.query.replace(/.*uri=/, '')
+      const uriEncoded = url.query.replace(/.*uri=/, '')
+      const uri = decodeURIComponent(uriEncoded)
       const { key } = parseQuery(new URL(uri).query)
       const isSigning = key == null
       return { type: 'walletConnect', isSigning, uri }
@@ -139,15 +139,14 @@ function parseEdgeProtocol(url: URL): DeepLink {
     }
 
     case 'https': {
-      if (url.includes('bitpay')) return { type: 'other', uri: 'https:' + url.pathname, protocol: 'bitpay' }
+      if (url.href.includes('bitpay')) return { type: 'other', uri: 'https:' + url.pathname, protocol: 'bitpay' }
     }
   }
 
   throw new SyntaxError('Unknown deep link format')
 }
 
-// @ts-expect-error
-function parseDownloadLink(url: URL): PromotionLink {
+function parseDownloadLink(url: URL<string>): PromotionLink {
   const { af } = parseQuery(url.query)
   if (af != null) {
     return { type: 'promotion', installerId: af }
@@ -159,8 +158,7 @@ function parseDownloadLink(url: URL): PromotionLink {
 /**
  * Parse a request for address link.
  */
-// @ts-expect-error
-function parseRequestAddress(url: URL): DeepLink {
+function parseRequestAddress(url: URL<string>): DeepLink {
   const query = parseQuery(url.query)
   const codesString = query.codes ?? undefined
 

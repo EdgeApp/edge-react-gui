@@ -30,7 +30,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        Request
+        Receive
       </WithTheme(EdgeTextComponent)>
       <WithTheme(EdgeTextComponent)
         style={
@@ -85,7 +85,6 @@ exports[`Request should render with loaded props 1`] = `
     <WithTheme(CardComponent)>
       <ExchangedFlipInput
         exchangeSecondaryToPrimaryRatio={Object {}}
-        forceUpdateGuiCounter={0}
         headerCallback={[Function]}
         headerText="Receive to My Bitcoin"
         isEditable={true}
@@ -171,6 +170,7 @@ exports[`Request should render with loaded props 1`] = `
       renderItem={[Function]}
     />
     <TouchableOpacity
+      disabled={false}
       onPress={[Function]}
     >
       <View

@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
-import { CurrencyRow } from '../data/row/CurrencyRow'
+import { CurrencyRow, CustomAsset } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -12,20 +12,21 @@ import { TappableCard } from './TappableCard'
 
 interface TappableAccountCardProps {
   emptyLabel: string
-  onPress: () => void
-  selectedAsset: SelectableAsset
   marginRem?: number[] | number
+  selectedAsset: SelectableAsset
+  onPress: () => void
 }
 
 export interface SelectableAsset {
-  wallet?: EdgeCurrencyWallet
-  tokenId?: string
+  customAsset?: CustomAsset
   paymentMethod?: PaymentMethod
+  tokenId?: string
+  wallet?: EdgeCurrencyWallet
 }
 
 const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
   const { emptyLabel, onPress, selectedAsset, marginRem } = props
-  const { paymentMethod, tokenId, wallet } = selectedAsset
+  const { paymentMethod, tokenId, wallet, customAsset } = selectedAsset
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -38,7 +39,7 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
       {paymentMethod ? (
         <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} />
       ) : wallet ? (
-        <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
+        <CurrencyRow tokenId={tokenId} wallet={wallet} customAsset={customAsset} marginRem={[0, 0.5, 0, 0.5]} />
       ) : null}
     </View>
   )

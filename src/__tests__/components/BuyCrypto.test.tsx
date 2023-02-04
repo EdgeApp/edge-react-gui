@@ -6,6 +6,7 @@ import { createStore } from 'redux'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
 import { rootReducer } from '../../reducers/RootReducer'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('BuyCrypto', () => {
   const mockState: any = {
@@ -25,7 +26,7 @@ describe('BuyCrypto', () => {
 
     const actual = renderer.create(
       <Provider store={store}>
-        <BuyCrypto wallet={fakeWallet} tokenId={undefined} />
+        <BuyCrypto wallet={fakeWallet} tokenId={undefined} navigation={fakeNavigation} />
       </Provider>
     )
 

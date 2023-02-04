@@ -150,7 +150,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
             body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
           />
-          <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} />
+          <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} navigation={this.props.navigation} />
         </View>
       </SceneWrapper>
     )

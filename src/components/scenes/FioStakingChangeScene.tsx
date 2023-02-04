@@ -132,6 +132,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal
         bridge={bridge}
+        navigation={navigation}
         walletId={walletId}
         currencyCode={currencyCode}
         onFeesChange={onFeesChange}

@@ -252,58 +252,6 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
   return daysBetween
 }
 
-// Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
-// between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
-// Returns the element name of the unequal element or '' if objects are equal
-export function getObjectDiff(obj1: any, obj2: any, traverseObjects?: any, ignoreObjects?: any): string {
-  const comparedElements: any = {}
-  for (const e of Object.keys(obj1)) {
-    if (ignoreObjects && ignoreObjects[e]) {
-      continue
-    }
-    comparedElements[e] = true
-    // eslint-disable-next-line no-prototype-builtins
-    if (obj2.hasOwnProperty(e)) {
-      if (obj1[e] !== obj2[e]) {
-        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-          const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
-          if (deepDiff) {
-            // console.log(`getObjectDiff:${e}`)
-            return e
-          }
-        } else {
-          // console.log(`getObjectDiff:${e}`)
-          return e
-        }
-      }
-    } else {
-      // console.log(`getObjectDiff:${e}`)
-      return e
-    }
-  }
-  for (const e of Object.keys(obj2)) {
-    if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
-      continue
-    }
-    // eslint-disable-next-line no-prototype-builtins
-    if (obj1.hasOwnProperty(e)) {
-      if (obj1[e] !== obj2[e]) {
-        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-          const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
-          if (deepDiff) {
-            return e
-          }
-        } else {
-          return e
-        }
-      }
-    } else {
-      return e
-    }
-  }
-  return ''
-}
-
 export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
   const timeout: Promise<T> = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)

@@ -4,15 +4,18 @@ import FastImage from 'react-native-fast-image'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
 import { triggerHaptic } from '../../util/haptic'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
-interface OwnProps {
+interface Props {
   cryptoAmount: string
   denominationSymbol?: string
   fiatAmount: string
@@ -26,104 +29,103 @@ interface OwnProps {
   transaction: TransactionListTx
 }
 
-type Props = OwnProps & ThemeProps
+const TransactionRowComponent = (props: Props) => {
+  const {
+    cryptoAmount,
+    denominationSymbol,
+    fiatAmount,
+    fiatSymbol,
+    isSentTransaction,
+    onLongPress,
+    onPress,
+    requiredConfirmations,
+    selectedCurrencyName,
+    thumbnailPath,
+    transaction
+  } = props
 
-class TransactionRowComponent extends React.PureComponent<Props> {
-  handlePress = () => {
-    const { onPress } = this.props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const wallet = currencyWallets[transaction.walletId]
+  const { canReplaceByFee = false } = wallet.currencyInfo
+
+  const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
+  const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
+
+  // Transaction Text and Icon
+  let transactionText, transactionIcon, transactionStyle
+  if (isSentTransaction) {
+    transactionText =
+      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
+    transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
+    transactionStyle = styles.iconSent
+  } else {
+    transactionText =
+      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
+    transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
+    transactionStyle = styles.iconRequest
+  }
+
+  // Pending Text and Style
+  const currentConfirmations = transaction.confirmations
+  const pendingText =
+    currentConfirmations === 'confirmed'
+      ? transaction.time
+      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
+      ? s.strings.fragment_transaction_list_unconfirmed_rbf
+      : currentConfirmations === 'unconfirmed'
+      ? s.strings.fragment_wallet_unconfirmed
+      : currentConfirmations === 'dropped'
+      ? s.strings.fragment_transaction_list_tx_dropped
+      : typeof currentConfirmations === 'number'
+      ? sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      : s.strings.fragment_transaction_list_tx_synchronizing
+
+  const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
+
+  // Transaction Category
+  let categoryText: string | undefined
+  const category = transaction.metadata?.category
+  if (category != null && category !== '') {
+    categoryText = formatCategory(splitCategory(category))
+  }
+
+  const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
     if (onPress != null) onPress()
-  }
+  })
 
-  handleLongPress = () => {
-    const { onLongPress } = this.props
+  const handleLongPress = useHandler(() => {
     triggerHaptic('impactLight')
     if (onLongPress != null) onLongPress()
-  }
+  })
 
-  render() {
-    // What is this for?
-    // @ts-expect-error
-    global.pcount && global.pcount('TransactionRow:render')
-
-    const {
-      cryptoAmount,
-      denominationSymbol,
-      fiatAmount,
-      fiatSymbol,
-      isSentTransaction,
-      requiredConfirmations,
-      selectedCurrencyName,
-      theme,
-      thumbnailPath,
-      transaction
-    } = this.props
-    const styles = getStyles(theme)
-
-    const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
-    const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
-
-    // Transaction Text and Icon
-    let transactionText, transactionIcon, transactionStyle
-    if (isSentTransaction) {
-      transactionText =
-        transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
-      transactionStyle = styles.iconSent
-    } else {
-      transactionText =
-        transaction.metadata && transaction.metadata.name
-          ? transaction.metadata.name
-          : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
-      transactionStyle = styles.iconRequest
-    }
-
-    // Pending Text and Style
-    const currentConfirmations = transaction.confirmations
-    const pendingText =
-      currentConfirmations === 'confirmed'
-        ? transaction.time
-        : currentConfirmations === 'unconfirmed'
-        ? s.strings.fragment_wallet_unconfirmed
-        : currentConfirmations === 'dropped'
-        ? s.strings.fragment_transaction_list_tx_dropped
-        : currentConfirmations == null
-        ? s.strings.fragment_transaction_list_tx_synchronizing
-        : sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-    const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
-
-    // Transaction Category
-    let categoryText: string | undefined
-    const category = transaction.metadata?.category
-    if (category != null && category !== '') {
-      categoryText = formatCategory(splitCategory(category))
-    }
-
-    return (
-      <ClickableRow paddingRem={[0, 1]} onPress={this.handlePress} onLongPress={this.handleLongPress}>
-        <View style={styles.iconContainer}>
-          <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
-            {thumbnailPath ? null : transactionIcon}
-          </View>
-          <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
+  return (
+    <ClickableRow paddingRem={[0, 1]} onPress={handlePress} onLongPress={handleLongPress}>
+      <View style={styles.iconContainer}>
+        <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
+          {thumbnailPath ? null : transactionIcon}
         </View>
-        <View style={styles.transactionContainer}>
-          <View style={styles.transactionRow}>
-            <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
-            <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
-          </View>
-          <View style={styles.transactionRow}>
-            <View style={styles.categoryAndTimeContainer}>
-              {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
-              <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
-            </View>
-            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-          </View>
+        <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
+      </View>
+      <View style={styles.transactionContainer}>
+        <View style={styles.transactionRow}>
+          <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
+          <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
         </View>
-      </ClickableRow>
-    )
-  }
+        <View style={styles.transactionRow}>
+          <View style={styles.categoryAndTimeContainer}>
+            {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
+            <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
+          </View>
+          <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+        </View>
+      </View>
+    </ClickableRow>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -225,4 +227,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionRow = withTheme(TransactionRowComponent)
+export const TransactionRow = React.memo(TransactionRowComponent)

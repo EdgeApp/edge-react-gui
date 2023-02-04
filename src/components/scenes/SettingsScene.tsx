@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeContext, EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView, Text } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -22,17 +22,16 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
-import { Collapsable } from '../common/Collapsable'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, changeTheme, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { changeTheme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow'
@@ -61,7 +60,7 @@ interface DispatchProps {
   lockSettings: () => void
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void
-  showRestoreWalletsModal: () => void
+  showRestoreWalletsModal: (navigation: NavigationBase) => void
   showUnlockSettingsModal: () => void
   toggleDeveloperMode: (developerModeOn: boolean) => void
   toggleSpamFilter: (spamFilterOn: boolean) => void
@@ -105,21 +104,21 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   async loadBiometryType(): Promise<void> {
     if (!this.props.supportsTouchId) return
 
-    const biometryType = await getSupportedBiometryType()
-    switch (biometryType) {
-      case 'FaceID':
-        this.setState({ touchIdText: s.strings.settings_button_use_faceID })
-        break
-      case 'TouchID':
-        this.setState({ touchIdText: s.strings.settings_button_use_touchID })
-        break
-      // @ts-expect-error This is supposed to handle Android:
-      case 'Fingerprint':
-        this.setState({ touchIdText: s.strings.settings_button_use_biometric })
-        break
+    if (Platform.OS === 'ios') {
+      const biometryType = await getSupportedBiometryType()
+      switch (biometryType) {
+        case 'FaceID':
+          this.setState({ touchIdText: s.strings.settings_button_use_faceID })
+          break
+        case 'TouchID':
+          this.setState({ touchIdText: s.strings.settings_button_use_touchID })
+          break
 
-      case false:
-        break
+        case false:
+          break
+      }
+    } else {
+      this.setState({ touchIdText: s.strings.settings_button_use_biometric })
     }
   }
 
@@ -180,6 +179,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest()
           await this.props.context.deleteLocalAccount(username)
+          showToast(sprintf(s.strings.delete_account_feedback, username))
           return true
         }}
       />
@@ -262,7 +262,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   render() {
     const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
-    const styles = getStyles(theme)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
@@ -289,12 +288,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-
-          <Collapsable minHeightRem={0} maxHeightRem={3.25} isCollapsed={this.props.isLocked}>
-            <SettingsTappableRow disabled={this.props.isLocked} onPress={this.handleDeleteAccount}>
-              <Text style={styles.text}>{s.strings.delete_account_title}</Text>
-            </SettingsTappableRow>
-          </Collapsable>
+          <SettingsTappableRow disabled={this.props.isLocked} dangerous label={s.strings.delete_account_title} onPress={this.handleDeleteAccount} />
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
           <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
@@ -340,7 +334,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
@@ -357,18 +351,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     )
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  text: {
-    flexGrow: 1,
-    flexShrink: 1,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    textAlign: 'left',
-    paddingHorizontal: theme.rem(0.5),
-    color: theme.dangerText
-  }
-}))
 
 export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
@@ -405,8 +387,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
       dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
     },
-    showRestoreWalletsModal() {
-      dispatch(showRestoreWalletsModal())
+    showRestoreWalletsModal(navigation: NavigationBase) {
+      dispatch(showRestoreWalletsModal(navigation))
     },
     showUnlockSettingsModal() {
       dispatch(showUnlockSettingsModal())

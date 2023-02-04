@@ -1,7 +1,7 @@
 import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
-import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
-import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io'
+import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -14,7 +14,7 @@ import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
-import { Services } from './Services'
+import { Providers } from './Providers'
 
 interface Props {}
 
@@ -34,7 +34,7 @@ const contextOptions: EdgeContextOptions = {
   plugins: allPlugins
 }
 
-const nativeIo = detectBundler.isReactNative
+const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
       'edge-currency-monero': makeMoneroIo()
@@ -105,14 +105,16 @@ export function EdgeCoreManager(props: Props) {
     world.makeEdgeContext({ ...contextOptions }).then(handleContext, handleError)
   }
 
-  const pluginUris = ENV.DEBUG_PLUGINS ? ['http://localhost:8101/plugin-bundle.js'] : ['edge-core/plugin-bundle.js']
+  const pluginUris = [
+    ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
+  ]
   return (
     <>
       {ENV.USE_FAKE_CORE ? (
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          // @ts-expect-error
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -124,15 +126,14 @@ export function EdgeCoreManager(props: Props) {
           {...contextOptions}
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          allowDebugging={ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
-          // @ts-expect-error
+          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}
           onError={handleError}
         />
       )}
-      {context == null ? <LoadingScene /> : <Services key={`redux${counter.current}`} context={context} />}
+      {context == null ? <LoadingScene /> : <Providers key={`redux${counter.current}`} context={context} />}
     </>
   )
 }

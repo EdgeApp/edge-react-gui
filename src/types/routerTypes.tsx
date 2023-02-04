@@ -349,9 +349,10 @@ export const Actions = {
 type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 
 /**
- * The of the `navigation` prop passed to each scene.
+ * The of the `navigation` prop passed to each scene,
+ * but without any scene-specific stuff.
  */
-export interface NavigationProp<Name extends keyof ParamList> {
+export interface NavigationBase {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => () => void
   isFocused: () => boolean
@@ -360,7 +361,6 @@ export interface NavigationProp<Name extends keyof ParamList> {
   navigate: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
   push: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
   replace: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  setParams: (params: ParamList[Name]) => void
 
   // Returning:
   goBack: () => void
@@ -373,7 +373,22 @@ export interface NavigationProp<Name extends keyof ParamList> {
   toggleDrawer: () => void
 
   // Internals nobody should need to touch:
-  state: unknown
+  getState: () => unknown
+
+  // Coming soon:
+  // canGoBack() {},
+  // dispatch() {},
+  // getParent() {},
+  // jumpTo() {},
+  // reset() {},
+  // setOptions() {},
+}
+
+/**
+ * The of the `navigation` prop passed to each scene.
+ */
+export interface NavigationProp<Name extends keyof ParamList> extends NavigationBase {
+  setParams: (params: ParamList[Name]) => void
 }
 
 /**
@@ -405,7 +420,10 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.push(name, { route: { name, params } })
       },
       replace(name, params) {
-        props.navigation.replace(name, { route: { name, params } })
+        Flux.Actions.replace(name, { route: { name, params } })
+        // TODO: Replace Flux.Actions.replace with props.navigation.replace
+        // which will require debugging why it doesn't work for certain scenes.
+        // props.navigation.replace(name, { route: { name, params } })
       },
       setParams(params) {
         props.navigation.setParams({ route: { name: Actions.currentScene, params } })
@@ -431,7 +449,7 @@ export function withNavigation<Props>(Component: React.ComponentType<Props>): Re
         props.navigation.toggleDrawer()
       },
 
-      get state() {
+      getState() {
         return props.navigation.state
       }
     }

@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CryptoExchangeComponent', () => {
   it('should render with loading props', () => {
@@ -50,15 +51,13 @@ describe('CryptoExchangeComponent', () => {
         pluginId="ChangeNow"
         fromCurrencyCode="BTC"
         toCurrencyCode="ETH"
-        forceUpdateGuiCounter={0}
-        calculatingMax
         hasMaxSpend
         insufficient={false}
         genericError={null}
         onSelectWallet={async (walletId, currencyCode, direction) => undefined}
         getQuoteForTransaction={(fromWalletNativeAmount, onApprove) => undefined}
-        exchangeMax={async () => undefined}
         theme={getTheme()}
+        navigation={fakeNavigation}
       />
     )
 

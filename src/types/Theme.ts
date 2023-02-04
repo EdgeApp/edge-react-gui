@@ -75,6 +75,9 @@ export interface Theme {
 
   // Background
   backgroundGradientColors: string[]
+  backgroundGradientStart: { x: number; y: number }
+  backgroundGradientEnd: { x: number; y: number }
+
   backgroundImageServerUrls: string[]
   backgroundImage?: ImageSourcePropType
   backgroundLoadingOverlay: string
@@ -100,7 +103,9 @@ export interface Theme {
   // listHeaderBackground: string,
   tileBackground: string
   tileBackgroundMuted: string
-  // listSectionHeaderBackground: string,
+
+  // Section Lists
+  listSectionHeaderBackground: string
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard

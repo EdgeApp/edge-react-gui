@@ -39,7 +39,7 @@ coverage/
 
 # Generated headers
 /android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
-/ios/edge/edgeApiKey.h
+/ios/EdgeApiKey.swift
 
 # Checkpoint jsons
 /android/app/src/main/assets/saplingtree/

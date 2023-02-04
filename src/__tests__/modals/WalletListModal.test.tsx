@@ -8,6 +8,7 @@ import { upgradeCurrencyCodes, WalletListModal } from '../../components/modals/W
 import { rootReducer } from '../../reducers/RootReducer'
 import { EdgeTokenId } from '../../types/types'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('WalletListModal', () => {
   it('should render with loading props', () => {
@@ -15,7 +16,7 @@ describe('WalletListModal', () => {
 
     const renderer = TestRenderer.create(
       <Provider store={store}>
-        <WalletListModal bridge={fakeAirshipBridge} headerTitle="Wallet List" />
+        <WalletListModal bridge={fakeAirshipBridge} navigation={fakeNavigation} headerTitle="Wallet List" />
       </Provider>
     )
 

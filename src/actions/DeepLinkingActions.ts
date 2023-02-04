@@ -1,29 +1,30 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
+import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
+import { pickWallet } from '../components/modals/WalletListModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
+import { EdgeTokenId } from '../types/types'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { activatePromotion } from './AccountReferralActions'
-import { launchBitPay } from './BitPayActions'
 import { loginWithEdge } from './EdgeLoginActions'
-import { doRequestAddress, parseScannedUri } from './ScanActions'
-import { selectWallet } from './WalletActions'
+import { launchPaymentProto } from './PaymentProtoActions'
+import { doRequestAddress, handleWalletUris } from './ScanActions'
 
 /**
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export function launchDeepLink(link: DeepLink): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function launchDeepLink(navigation: NavigationBase, link: DeepLink): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
+    dispatch({ type: 'DEEP_LINK_HANDLED' })
 
-    const handled = handleLink(dispatch, state, link)
-
+    const handled = await handleLink(navigation, dispatch, state, link)
     // If we couldn't handle the link, save it for later:
     if (!handled) {
       dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
@@ -36,17 +37,17 @@ export function launchDeepLink(link: DeepLink): ThunkAction<void> {
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export function retryPendingDeepLink(): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { pendingDeepLink } = state
     if (pendingDeepLink == null) return
+    dispatch({ type: 'DEEP_LINK_HANDLED' })
 
-    const handled = handleLink(dispatch, state, pendingDeepLink)
-
+    const handled = await handleLink(navigation, dispatch, state, pendingDeepLink)
     // If we handled the link, clear it:
-    if (handled) {
-      dispatch({ type: 'DEEP_LINK_HANDLED' })
+    if (!handled) {
+      dispatch({ type: 'DEEP_LINK_RECEIVED', data: pendingDeepLink })
     }
   }
 }
@@ -54,14 +55,12 @@ export function retryPendingDeepLink(): ThunkAction<void> {
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
+export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account } = state.core
   const { activeWalletIds, currencyWallets, username } = account
-  const { byId = {}, selectedWalletId } = state.ui.wallets
-  const hasCurrentWallet = byId[selectedWalletId] != null
 
   // Wait for all wallets to load before handling deep links
-  if (activeWalletIds.length !== Object.keys(currencyWallets).length) return false
+  const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
 
   // We can't handle any links without an account:
   if (username == null) return false
@@ -69,7 +68,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   switch (link.type) {
     case 'edgeLogin':
       dispatch(loginWithEdge(link.lobbyId))
-      Actions.push('edgeLogin', {})
+      navigation.push('edgeLogin', {})
       return true
 
     // The login scene always handles this one:
@@ -83,7 +82,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push('pluginView', {
+      navigation.push('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query
@@ -99,76 +98,111 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     }
 
     case 'requestAddress': {
-      doRequestAddress(state.core.account, dispatch, link)
+      if (!allWalletsLoaded) return false
+      doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
     }
 
     case 'swap': {
-      if (!hasCurrentWallet) return false
-      Actions.push('exchangeScene', {})
+      navigation.push('exchangeScene', {})
       return true
     }
 
     case 'azteco': {
-      if (!hasCurrentWallet) return false
-      const edgeWallet = currencyWallets[selectedWalletId]
-      if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
-        Actions.push('walletListScene', {})
-        showError(s.strings.azteco_btc_only)
-        return false
+      if (!allWalletsLoaded) return false
+      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin' }], navigation, showCreateWallet: true })
+      if (result == null) {
+        // pickWallet returning undefined means user has no matching wallet.
+        // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
+        // the option to create one.
+        return true
       }
-      launchAzteco(edgeWallet, link.uri).catch(showError)
+      const { walletId } = result
+
+      // User backed out of choosing a wallet
+      if (walletId == null) return true
+      const edgeWallet = currencyWallets[walletId]
+      launchAzteco(navigation, edgeWallet, link.uri).catch(showError)
       return true
     }
 
     case 'walletConnect': {
-      if (!hasCurrentWallet) return false
+      if (!allWalletsLoaded) return false
       const { uri, isSigning } = link
-      Actions.push('wcConnections', {})
+      navigation.push('wcConnections', {})
       // Hack around our router's horrible bugs:
-      if (!isSigning) setTimeout(() => Actions.push('wcConnect', { uri }), 100)
+      if (!isSigning) setTimeout(() => navigation.push('wcConnect', { uri }), 100)
       return true
     }
 
-    case 'bitPay': {
-      launchBitPay(account, link.uri, { currencyWallets }).catch(showError)
+    case 'paymentProto': {
+      if (!allWalletsLoaded) return false
+      launchPaymentProto(navigation, account, link.uri, {}).catch(showError)
       return true
     }
 
     case 'price-change': {
-      dispatch(launchPriceChangeBuySellSwapModal(link))
+      dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
       return true
     }
 
     case 'other': {
-      if (!hasCurrentWallet) return false
-      const currencyName = link.protocol
-      // @ts-expect-error
-      const currencyCode = CURRENCY_NAMES[currencyName]
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId?: string }> = []
 
-      // If we don't know what this is, fake a barcode scan:
-      if (currencyCode == null) {
-        dispatch(parseScannedUri(link.uri))
+      // Try to parse with all wallets
+      for (const wallet of Object.values(currencyWallets)) {
+        const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
+        if (parsedUri != null) {
+          if (parsedUri.currencyCode != null && parsedUri.currencyCode !== wallet.currencyInfo.currencyCode) {
+            // Check if the user has this token enabled
+            const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, parsedUri.currencyCode)
+            if (tokenId != null) {
+              matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
+            }
+          } else {
+            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri })
+          }
+        }
+      }
+
+      if (matchingWalletIdsAndUris.length === 0) {
+        if (!allWalletsLoaded) return false
+
+        showError(s.strings.alert_deep_link_no_wallet_for_uri)
         return true
       }
 
-      // See if we have a wallet that can handle this currency:
-      const walletIds = Object.keys(byId)
-      for (const walletId of walletIds) {
-        const wallet = byId[walletId]
-        if (wallet.currencyCode !== currencyCode) continue
-        dispatch(selectWallet(wallet.id, wallet.currencyCode))
-        dispatch(parseScannedUri(link.uri))
+      if (matchingWalletIdsAndUris.length === 1) {
+        const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
+        dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
         return true
       }
 
-      // Keep waiting while wallets are loading:
-      if (walletIds.length !== activeWalletIds.length) return false
+      const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
+      const assets: EdgeTokenId[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
+        const wallet = currencyWallets[walletId]
+        const { pluginId } = wallet.currencyInfo
 
-      // Show an error:
-      const currency = convertCurrencyStringFromCurrencyCode(currencyCode)
-      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, currency)
-      showError(noWalletMessage)
+        if (cc == null) return { pluginId }
+        return { pluginId, tokenId }
+      })
+      const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
+      if (walletListResult == null) {
+        showError(s.strings.scan_camera_no_matching_wallet)
+        return true
+      }
+
+      // User backed out of choosing a wallet
+      if (walletListResult.walletId == null) return true
+      const widUri = matchingWalletIdsAndUris.find(({ walletId }) => walletId === walletListResult.walletId)
+
+      if (widUri == null) {
+        // This should never happen. The picked wallet should come from the list of matching wallet IDs
+        showError('Internal Error: Missing wallet ID for chosen wallet')
+        return true
+      }
+      const { parsedUri, walletId } = widUri
+      dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
       return true
     }
 
@@ -176,7 +210,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
       // @ts-expect-error
       if (!global.__DEV__) return false
 
-      Actions.push(link.sceneName, {})
+      navigation.push(link.sceneName, {})
       return true
     }
   }
@@ -184,7 +218,7 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   return false
 }
 
-async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
+async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
   const address = await edgeWallet.getReceiveAddress()
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {
@@ -194,33 +228,5 @@ async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promis
   } else {
     showError(s.strings.azteco_service_unavailable)
   }
-  Actions.push('walletListScene', {})
-}
-
-const CURRENCY_NAMES = {
-  bitcoin: 'BTC',
-  bitcoincash: 'BCH',
-  ethereum: 'ETH',
-  litecoin: 'LTC',
-  dash: 'DASH',
-  rsk: 'RBTC'
-}
-
-function convertCurrencyStringFromCurrencyCode(code: string): string {
-  switch (code) {
-    case 'BTC':
-      return 'Bitcoin'
-    case 'BCH':
-      return 'Bitcoin Cash'
-    case 'ETH':
-      return 'Ethereum'
-    case 'LTC':
-      return 'Litecoin'
-    case 'DASH':
-      return 'Dash'
-    case 'RBTC':
-      return 'RSK'
-    default:
-      return code
-  }
+  navigation.push('walletListScene', {})
 }

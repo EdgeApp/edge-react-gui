@@ -3,8 +3,10 @@
 import { EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Share from 'react-native-share'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -12,8 +14,8 @@ import { sprintf } from 'sprintf-js'
 
 import ENV from '../../../env.json'
 import { deleteLocalAccount } from '../../actions/AccountActions'
+import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
-import { parseScannedUri } from '../../actions/ScanActions'
 import { selectWalletFromModal } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
@@ -29,6 +31,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -43,17 +46,21 @@ interface Props {
   navigation: NavigationProp<'controlPanel'>
 }
 
+const xButtonGradientStart = { x: 0, y: 0 }
+const xButtonGradientEnd = { x: 0, y: 0.75 }
+
 const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
 
 export function ControlPanel(props: Props) {
   const { navigation } = props
-  const state: any = navigation.state
+  const state: any = navigation.getState()
   const { isDrawerOpen } = state
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { hideIoniaRewards = false } = config
 
   // ---- Redux State ----
 
@@ -134,14 +141,16 @@ export function ControlPanel(props: Props) {
         allowedAssets={allowedAssets}
         allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
         showCreateWallet
+        navigation={navigation}
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        dispatch(selectWalletFromModal(walletId, currencyCode))
+        dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
         Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
           .then((result: string | undefined) => {
             if (result) {
-              dispatch(parseScannedUri(result))
+              const deepLink = parseDeepLink(result)
+              dispatch(launchDeepLink(navigation, deepLink))
             }
           })
           .catch(showError)
@@ -150,15 +159,16 @@ export function ControlPanel(props: Props) {
   }
 
   const handleBorrow = () => {
-    handleGoToScene('loanDashboard', {})
+    handleGoToScene(navigation, 'loanDashboard', {})
   }
 
   const handleLoginQr = () => {
-    Actions.drawerClose()
+    navigation.closeDrawer()
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
         if (result) {
-          dispatch(parseScannedUri(result))
+          const deepLink = parseDeepLink(result)
+          dispatch(launchDeepLink(navigation, deepLink))
         }
       })
       .catch(showError)
@@ -174,16 +184,14 @@ export function ControlPanel(props: Props) {
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
-  const handleGoToScene = (scene: keyof ParamList, sceneProps: any) => {
-    const { currentScene, drawerClose } = Actions
-
-    if (currentScene !== scene) {
+  const handleGoToScene = (navigation: NavigationProp<'controlPanel'>, scene: keyof ParamList, sceneProps: any) => {
+    if (Actions.currentScene !== scene) {
       navigation.navigate(scene, sceneProps)
     } else if (sceneProps) {
-      navigation.setParams(sceneProps)
+      navigation.replace(scene, sceneProps)
     }
 
-    drawerClose()
+    navigation.closeDrawer()
   }
 
   const handleBottomPanelLayout = (event: any) => {
@@ -239,17 +247,17 @@ export function ControlPanel(props: Props) {
     title: string
   }> = [
     {
-      pressHandler: () => handleGoToScene('fioAddressList', {}),
+      pressHandler: () => handleGoToScene(navigation, 'fioAddressList', {}),
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      pressHandler: () => handleGoToScene('fioRequestList', {}),
+      pressHandler: () => handleGoToScene(navigation, 'fioRequestList', {}),
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
-      pressHandler: () => handleGoToScene('wcConnections', {}),
+      pressHandler: () => handleGoToScene(navigation, 'wcConnections', {}),
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
@@ -261,13 +269,13 @@ export function ControlPanel(props: Props) {
     { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
-      pressHandler: () => handleGoToScene('termsOfService', {}),
+      pressHandler: () => handleGoToScene(navigation, 'termsOfService', {}),
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      pressHandler: () => handleGoToScene('settingsOverviewTab', {}),
+      pressHandler: () => handleGoToScene(navigation, 'settingsOverviewTab', {}),
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
@@ -275,16 +283,28 @@ export function ControlPanel(props: Props) {
       pressHandler: async () => dispatch(logoutRequest()),
       iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
+    },
+    // Dummy row that goes under the transparent close button
+    {
+      pressHandler: async () => {},
+      title: ''
     }
   ]
 
-  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
-      pressHandler: () => handleGoToScene('pluginViewSell', { plugin: guiPlugins.ionia }),
+      pressHandler: () => handleGoToScene(navigation, 'pluginViewSell', { plugin: guiPlugins.ionia }),
       iconNameFontAwesome: 'hand-holding-usd',
       title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
     })
   }
+
+  const handlePressClose = () => {
+    navigation.closeDrawer()
+  }
+
+  const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color
+  const xButtonBottomColor = theme.modal
 
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} background="none">
@@ -359,7 +379,7 @@ export function ControlPanel(props: Props) {
         {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
-          <ScrollView>
+          <ScrollView overScrollMode="always">
             {rowDatas.map(rowData => (
               <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
@@ -376,6 +396,18 @@ export function ControlPanel(props: Props) {
           </ScrollView>
           {/* === Navigation Rows End === */}
         </View>
+        {/* === Translucent X Close Button Start === */}
+        <LinearGradient
+          colors={[xButtonTopColor, xButtonBottomColor]}
+          style={styles.closeButtonContainer}
+          start={xButtonGradientStart}
+          end={xButtonGradientEnd}
+        >
+          <TouchableOpacity onPress={handlePressClose}>
+            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
+          </TouchableOpacity>
+        </LinearGradient>
+        {/* === Translucent X Close Button End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
     </SceneWrapper>
@@ -424,6 +456,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderLeftWidth: theme.sideMenuBorderWidth,
     height: theme.rem(10.5)
   },
+  closeButtonContainer: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
+    height: theme.rem(3),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   bottomPanel: {
     flex: 1,
     flexGrow: 1,
@@ -437,7 +477,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   rowsContainer: {
     flex: 1,
     flexGrow: 1,
-    marginBottom: theme.rem(1.5)
+    marginBottom: theme.rem(0)
   },
   rowContainer: {
     display: 'flex',

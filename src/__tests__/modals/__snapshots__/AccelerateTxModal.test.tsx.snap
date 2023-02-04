@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccelerateTxModalComponent should render with loading props 1`] = `
+<ThemedModal
+  bridge={
+    Object {
+      "on": [Function],
+      "onResult": [Function],
+      "reject": [Function],
+      "remove": [Function],
+      "resolve": [Function],
+    }
+  }
+  onCancel={[Function]}
+>
+  <ModalTitle>
+    Accelerate Transaction
+  </ModalTitle>
+  <ModalMessage>
+    This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.
+  </ModalMessage>
+  <View
+    style={
+      Object {
+        "marginVertical": 11,
+        "maxHeight": 449,
+      }
+    }
+  >
+    <WithTheme(TileComponent)
+      body=" 0.000681 ($ 0.00)"
+      title="Old Fee"
+      type="static"
+    />
+    <WithTheme(TileComponent)
+      body=" 0.001362 ($ 0.00)"
+      title="New Fee"
+      type="static"
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "marginVertical": 11,
+        "maxHeight": 449,
+      }
+    }
+  >
+    <WithTheme(SliderComponent)
+      disabled={false}
+      disabledText="Unable to Accelerate Transaction"
+      onSlidingComplete={[Function]}
+      showSpinner={false}
+    />
+  </View>
+  <ModalCloseArrow
+    onPress={[Function]}
+  />
+</ThemedModal>
+`;

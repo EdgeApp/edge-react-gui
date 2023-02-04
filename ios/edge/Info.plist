@@ -99,6 +99,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This allows you to find nearby places where you can purchase bitcoin.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This allows you to find nearby places where you can purchase bitcoin.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

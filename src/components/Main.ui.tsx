@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
-import { registerDevice } from '../actions/DeviceIdActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
@@ -35,15 +34,16 @@ import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { Permission } from '../reducers/PermissionsReducer'
 import { connect } from '../types/reactRedux'
-import { Actions, withNavigation } from '../types/routerTypes'
+import { Actions, NavigationBase, withNavigation } from '../types/routerTypes'
 import { scale } from '../util/scaling'
 import { logEvent } from '../util/tracking'
 import { AirshipToast } from './common/AirshipToast'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
+import { withServices } from './hoc/withServices'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
-import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton'
+import { handlePluginBack, PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
 import { HeaderTitle } from './navigation/HeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
@@ -112,16 +112,12 @@ const RouterWithRedux = connect<
 )(Router)
 
 interface DispatchProps {
-  registerDevice: () => void
-
   // Navigation actions:
   logout: (username?: string) => void
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void
+  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
   checkEnabledExchanges: () => void
-  dispatchDisableScan: () => void
-  dispatchEnableScan: () => void
   requestPermission: (permission: Permission) => void
   showReEnableOtpModal: () => void
 }
@@ -134,7 +130,6 @@ export class MainComponent extends React.Component<Props> {
 
   componentDidMount() {
     logEvent('AppStart')
-    this.props.registerDevice()
   }
 
   render() {
@@ -147,13 +142,12 @@ export class MainComponent extends React.Component<Props> {
             // @ts-expect-error
             panHandlers={null}
           >
-            <Scene key="login" component={withNavigation(LoginScene)} initial />
+            <Scene key="login" component={withNavigation(withServices(LoginScene))} initial />
             <Scene
               key="edgeLogin"
               component={withNavigation(ifLoggedIn(EdgeLoginScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_edge_login} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -199,7 +193,7 @@ export class MainComponent extends React.Component<Props> {
       >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
-          <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
+          <Tabs key="edge" swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={withNavigation(MenuTab)}>
             <Stack key="walletList">
               <Scene
                 key="walletListScene"
@@ -257,8 +251,7 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSetup"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSetupScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
+                renderTitle={() => <HeaderTitle title={s.strings.create_wallet_create_account} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -269,8 +262,7 @@ export class MainComponent extends React.Component<Props> {
                 key="createWalletAccountSelect"
                 component={withNavigation(ifLoggedIn(CreateWalletAccountSelectScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
+                renderTitle={() => <HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -284,8 +276,7 @@ export class MainComponent extends React.Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title=" " />}
+                renderTitle={() => <HeaderTitle title=" " />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -368,8 +359,7 @@ export class MainComponent extends React.Component<Props> {
                 key="transactionsExport"
                 component={withNavigation(ifLoggedIn(TransactionsExportScene))}
                 navTransparent
-                // @ts-expect-error
-                renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
+                renderTitle={() => <HeaderTitle title={s.strings.title_export_transactions} />}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -393,8 +383,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={PluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -403,8 +392,7 @@ export class MainComponent extends React.Component<Props> {
                 key="guiPluginEnterAmount"
                 component={withNavigation(ifLoggedIn(FiatPluginEnterAmountScene))}
                 navTransparent
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={PluginBackButton}
                 hideTabBar
               />
             </Stack>
@@ -425,8 +413,7 @@ export class MainComponent extends React.Component<Props> {
                 component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
                 navTransparent
                 renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-                // @ts-expect-error
-                renderLeftButton={renderPluginBackButton()}
+                renderLeftButton={PluginBackButton}
                 // @ts-expect-error
                 renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
@@ -497,8 +484,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioRequestConfirmation"
               component={withNavigation(ifLoggedIn(FioRequestConfirmationScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderTitle={() => <HeaderTitle title={s.strings.fio_confirm_request_header} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -512,9 +498,8 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
               }}
-              onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -535,9 +520,8 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SendScene2))}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
+                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
               }}
-              onExit={this.props.dispatchDisableScan}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -557,8 +541,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -596,8 +579,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(SettingsScene))}
               navTransparent
               onEnter={() => this.props.showReEnableOtpModal()}
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_settings} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -607,8 +589,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePassword"
               component={withNavigation(ifLoggedIn(ChangePasswordScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_change_password} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -618,8 +599,7 @@ export class MainComponent extends React.Component<Props> {
               key="changePin"
               component={withNavigation(ifLoggedIn(ChangePinScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_change_pin} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -629,8 +609,7 @@ export class MainComponent extends React.Component<Props> {
               key="otpSetup"
               component={withNavigation(ifLoggedIn(OtpSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_otp} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_otp} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -640,8 +619,7 @@ export class MainComponent extends React.Component<Props> {
               key="passwordRecovery"
               component={withNavigation(ifLoggedIn(ChangeRecoveryScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_password_recovery} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -651,8 +629,7 @@ export class MainComponent extends React.Component<Props> {
               key="spendingLimits"
               component={withNavigation(ifLoggedIn(SpendingLimitsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
+              renderTitle={() => <HeaderTitle title={s.strings.spending_limits} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -662,8 +639,7 @@ export class MainComponent extends React.Component<Props> {
               key="exchangeSettings"
               component={withNavigation(ifLoggedIn(SwapSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
+              renderTitle={() => <HeaderTitle title={s.strings.settings_exchange_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -683,8 +659,7 @@ export class MainComponent extends React.Component<Props> {
               key="promotionSettings"
               component={withNavigation(ifLoggedIn(PromotionSettingsScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_promotion_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -703,8 +678,7 @@ export class MainComponent extends React.Component<Props> {
               key="notificationSettings"
               component={withNavigation(ifLoggedIn(NotificationScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
+              renderTitle={() => <HeaderTitle title={s.strings.settings_notifications} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -734,8 +708,7 @@ export class MainComponent extends React.Component<Props> {
               component={withNavigation(ifLoggedIn(GuiPluginViewScene))}
               navTransparent
               renderTitle={props => <HeaderTitle title={props.route.params.plugin.displayName} />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
+              renderLeftButton={PluginBackButton}
               // @ts-expect-error
               renderRightButton={<HeaderTextButton type="exit" placement="right" />}
             />
@@ -746,8 +719,7 @@ export class MainComponent extends React.Component<Props> {
               key="termsOfService"
               component={withNavigation(ifLoggedIn(TermsOfServiceComponent))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_terms_of_service} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -789,8 +761,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioAddressRegisterSelectWalletScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -816,8 +787,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioDomainRegisterSelectWallet"
               component={withNavigation(ifLoggedIn(FioDomainRegisterSelectWalletScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_register_fio_domain} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -864,8 +834,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioConnectToWalletsConfirm"
               component={withNavigation(ifLoggedIn(FioConnectWalletConfirmScene))}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -879,8 +848,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioAddressSettings"
               component={withNavigation(FioAddressSettingsScene)}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_fio_address_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -907,8 +875,7 @@ export class MainComponent extends React.Component<Props> {
               key="fioDomainSettings"
               component={withNavigation(FioDomainSettingsScene)}
               navTransparent
-              // @ts-expect-error
-              renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
+              renderTitle={() => <HeaderTitle title={s.strings.title_fio_domain_settings} />}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               // @ts-expect-error
@@ -1043,8 +1010,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               // @ts-expect-error
               renderTitle={<EdgeLogoHeader />}
-              // @ts-expect-error
-              renderLeftButton={renderPluginBackButton()}
+              renderLeftButton={PluginBackButton}
               // @ts-expect-error
               renderRightButton={<SideMenuButton />}
             />
@@ -1129,27 +1095,17 @@ export class MainComponent extends React.Component<Props> {
 export const Main = connect<{}, DispatchProps, {}>(
   state => ({}),
   dispatch => ({
-    registerDevice() {
-      dispatch(registerDevice())
-    },
-
     // Navigation actions:
     logout(username?: string): void {
       dispatch(logoutRequest(username))
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode))
+    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
     },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
-    },
-    dispatchDisableScan() {
-      dispatch({ type: 'DISABLE_SCAN' })
-    },
-    dispatchEnableScan() {
-      dispatch({ type: 'ENABLE_SCAN' })
     },
     requestPermission(permission: Permission) {
       requestPermission(permission)

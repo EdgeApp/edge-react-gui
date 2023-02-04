@@ -8,8 +8,9 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { Actions } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { ioniaPluginIds } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -21,17 +22,19 @@ const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !
 interface OwnProps {
   wallet: EdgeCurrencyWallet
   tokenId?: string
+  navigation: NavigationBase
 }
 
 type Props = OwnProps
 
 export const BuyCrypto = (props: Props) => {
-  const { wallet, tokenId } = props
+  const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
-    Actions.push('pluginListBuy', { direction: 'buy' })
+    navigation.push('pluginListBuy', { direction: 'buy' })
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
@@ -39,7 +42,7 @@ export const BuyCrypto = (props: Props) => {
   const { displayName, pluginId } = wallet.currencyInfo
 
   let message = s.strings.transaction_list_buy_crypto_message
-  if (ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (!hideIoniaRewards && ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     message = s.strings.transaction_list_buy_and_earn_crypto_message
   }
 

@@ -14,7 +14,9 @@
 		31BE19EEE2CA4692A7873F5F /* SourceSansPro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D9F41192F8419DA0531DFF /* SourceSansPro-BoldItalic.ttf */; };
 		3D1368BD21DD76BB00DC8CE4 /* edge-core in Resources */ = {isa = PBXBuildFile; fileRef = 3D1368BC21DD76BB00DC8CE4 /* edge-core */; };
 		3D2A4BE322934B0000E1EC61 /* blank.html in Resources */ = {isa = PBXBuildFile; fileRef = 3D2A4BE222934B0000E1EC61 /* blank.html */; };
-		3DC7E8532525AB490061CF16 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7E8522525AB490061CF16 /* Dummy.swift */; };
+		3DB9F75E2964E940004E836A /* EdgeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F75D2964E93F004E836A /* EdgeCore.swift */; };
+		3DB9F7602965F406004E836A /* EdgeApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F75F2965F406004E836A /* EdgeApiKey.swift */; };
+		3DB9F7622966B25E004E836A /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9F7612966B25E004E836A /* Base58.swift */; };
 		50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */; };
 		5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */; };
 		6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */; };
@@ -42,7 +44,7 @@
 
 /* Begin PBXFileReference section */
 		0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../src/assets/fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = edge.app; path = Edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = edge/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = edge/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = edge/Images.xcassets; sourceTree = "<group>"; };
@@ -55,7 +57,9 @@
 		38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-ExtraLightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		3D1368BC21DD76BB00DC8CE4 /* edge-core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "edge-core"; path = "../android/app/src/main/assets/edge-core"; sourceTree = "<group>"; };
 		3D2A4BE222934B0000E1EC61 /* blank.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = blank.html; path = ../android/app/src/main/assets/blank.html; sourceTree = "<group>"; };
-		3DC7E8522525AB490061CF16 /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
+		3DB9F75D2964E93F004E836A /* EdgeCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeCore.swift; sourceTree = "<group>"; };
+		3DB9F75F2965F406004E836A /* EdgeApiKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeApiKey.swift; sourceTree = "<group>"; };
+		3DB9F7612966B25E004E836A /* Base58.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
 		5374C609A9164C53819F3FDD /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
 		550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.debug.xcconfig"; sourceTree = "<group>"; };
 		6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Black.ttf"; path = "../src/assets/fonts/SourceSansPro-Black.ttf"; sourceTree = "<group>"; };
@@ -171,7 +175,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				3DC7E8522525AB490061CF16 /* Dummy.swift */,
+				3DB9F7612966B25E004E836A /* Base58.swift */,
+				3DB9F75F2965F406004E836A /* EdgeApiKey.swift */,
+				3DB9F75D2964E93F004E836A /* EdgeCore.swift */,
 				FD982BC41FABFA020057F035 /* SplashScreenResource */,
 				13B07FAE1A68108700A75B9A /* edge */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -368,6 +374,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ZcashLightClientKit/Resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/edge-core-js/edge-core-js.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/edge-currency-accountbased/edge-currency-accountbased.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -390,6 +397,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/edge-core-js.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/edge-currency-accountbased.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -444,8 +452,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				3DC7E8532525AB490061CF16 /* Dummy.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				3DB9F75E2964E940004E836A /* EdgeCore.swift in Sources */,
+				3DB9F7622966B25E004E836A /* Base58.swift in Sources */,
+				3DB9F7602965F406004E836A /* EdgeApiKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +496,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -527,6 +538,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

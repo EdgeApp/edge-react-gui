@@ -1,4 +1,4 @@
-import { div, log10, mul, toFixed } from 'biggystring'
+import { div, log10, mul, round } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
 import { ActivityIndicator, Platform, ReturnKeyType, TouchableOpacity } from 'react-native'
@@ -107,7 +107,8 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     if (nativeAmount === '') return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
     const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
     const displayAmount = div(nativeAmount, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
-    const fiatAmount = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
+    const fiatAmountLong = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
+    const fiatAmount = round(fiatAmountLong, -2)
     return { fiatAmount, exchangeAmount, displayAmount }
   })
 
@@ -118,7 +119,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     const displayAmountLong = div(nativeAmountLong, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
 
     // Apply cryptoMaxPrecision to remove extraneous sub-penny precision
-    const displayAmount = toFixed(displayAmountLong, 0, cryptoMaxPrecision)
+    const displayAmount = round(displayAmountLong, -cryptoMaxPrecision)
 
     // Convert back to native and exchange amounts after cryptoMaxPrecision has been applied
     const nativeAmount = mul(displayAmount, cryptoDisplayDenom.multiplier)

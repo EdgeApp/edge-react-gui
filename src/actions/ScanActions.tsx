@@ -1,6 +1,5 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -11,17 +10,15 @@ import { upgradeCurrencyCodes, WalletListModal, WalletListResult } from '../comp
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { checkPubAddress } from '../modules/FioAddress/util'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { Actions } from '../types/routerTypes'
-import { GuiMakeSpendInfo } from '../types/types'
+import { NavigationBase } from '../types/routerTypes'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { getPluginIdFromChainCode, makeCurrencyCodeTable, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
-import { launchDeepLink } from './DeepLinkingActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -44,8 +41,7 @@ import { launchDeepLink } from './DeepLinkingActions'
  * - Disallow reqaddr's that specify other reqaddr's in the 'redir' query (prevent
  *    infinite redirect loops).
  */
-export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
-  dispatch({ type: 'DISABLE_SCAN' })
+export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
   const { assets, post, redir, payer } = link
   try {
     // Check if all required fields are provided in the request
@@ -98,7 +94,7 @@ export const doRequestAddress = async (account: EdgeAccount, dispatch: Dispatch,
     const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
     )).then(async ({ walletId, currencyCode }) => {
       if (walletId != null && currencyCode != null) {
         const { currencyWallets } = account
@@ -169,82 +165,32 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
   return approve
 }
 
-export function parseScannedUri(data: string, customErrorTitle?: string, customErrorDescription?: string): ThunkAction<Promise<unknown>> {
+export function handleWalletUris(
+  navigation: NavigationBase,
+  wallet: EdgeCurrencyWallet,
+  parsedUri: EdgeParsedUri,
+  fioAddress?: string
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    if (!data) return
-    const state = getState()
-    const { account } = state.core
-    const { currencyWallets } = account
-
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[selectedWalletId]
-    const currencyCode = state.ui.wallets.selectedCurrencyCode
-
-    let fioAddress
-    if (account && account.currencyConfig) {
-      const fioPlugin = account.currencyConfig.fio
-      if (fioPlugin != null) {
-        const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-        try {
-          const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), edgeWallet.currencyInfo.currencyCode, currencyCode)
-          fioAddress = data.toLowerCase()
-          data = publicAddress
-        } catch (e: any) {
-          if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-            return showError(e)
-          }
-        }
-      }
-    }
-    // Check for things other than coins:
-    try {
-      const deepLink = parseDeepLink(data)
-      switch (deepLink.type) {
-        case 'other':
-          // Handle this link type below:
-          break
-        case 'requestAddress':
-          return await doRequestAddress(account, dispatch, deepLink)
-        case 'edgeLogin':
-        case 'bitPay':
-        default:
-          dispatch(launchDeepLink(deepLink))
-          return
-      }
-    } catch (error: any) {
-      return showError(error)
-    }
+    const { account } = getState().core
+    const { legacyAddress, metadata, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
+    const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
     // Coin operations
     try {
-      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
-
       // Check if the URI requires a warning to the user
-      const approved = await addressWarnings(parsedUri, currencyCode)
-      if (!approved) return dispatch({ type: 'ENABLE_SCAN' })
+      await addressWarnings(parsedUri, currencyCode)
 
       if (parsedUri.token) {
         // TOKEN URI
         const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
-        return Actions.push('editToken', {
+        return navigation.push('editToken', {
           currencyCode: currencyCode.toUpperCase(),
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
           networkLocation: { contractAddress },
-          walletId: selectedWalletId
+          walletId: wallet.id
         })
-      }
-
-      // LEGACY ADDRESS URI
-      if (parsedUri.legacyAddress != null) {
-        const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
-        Actions.push('send', {
-          guiMakeSpendInfo,
-          selectedWalletId,
-          selectedCurrencyCode: currencyCode
-        })
-
-        return
       }
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
@@ -253,52 +199,35 @@ export function parseScannedUri(data: string, customErrorTitle?: string, customE
       }
 
       // PUBLIC ADDRESS URI
-      const nativeAmount = parsedUri.nativeAmount || ''
-      const spendTargets: EdgeSpendTarget[] = [
-        {
-          publicAddress: parsedUri.publicAddress,
-          nativeAmount
-        }
-      ]
-
-      if (fioAddress != null) {
-        spendTargets[0].otherParams = {
-          fioAddress,
-          isSendUsingFioAddress: true
-        }
+      let tokenId: string | undefined
+      if (currencyCode !== wallet.currencyInfo.currencyCode) {
+        tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      }
+      const spendInfo: EdgeSpendInfo = {
+        metadata,
+        spendTargets: [
+          {
+            // Prioritize legacyAddress first since the existence of a legacy address means that a legacy address
+            // was scanned. Plugins may translate a legacy address into a publicAddress and provide that as well
+            publicAddress: legacyAddress ?? publicAddress,
+            memo: uniqueIdentifier,
+            nativeAmount
+          }
+        ],
+        tokenId
       }
 
-      const guiMakeSpendInfo: GuiMakeSpendInfo = {
-        spendTargets,
-        lockInputs: false,
-        metadata: parsedUri.metadata,
-        uniqueIdentifier: parsedUri.uniqueIdentifier,
-        nativeAmount
-      }
-
-      Actions.push('send', {
-        guiMakeSpendInfo,
-        selectedWalletId,
-        selectedCurrencyCode: currencyCode
-      })
-      // dispatch(sendConfirmationUpdateTx(parsedUri))
+      navigation.push('send2', { walletId: wallet.id, spendInfo })
     } catch (error: any) {
       // INVALID URI
-      dispatch({ type: 'DISABLE_SCAN' })
-      setTimeout(
-        () =>
-          Alert.alert(
-            customErrorTitle || s.strings.scan_invalid_address_error_title,
-            customErrorDescription || s.strings.scan_invalid_address_error_description,
-            [
-              {
-                text: s.strings.string_ok,
-                onPress: () => dispatch({ type: 'ENABLE_SCAN' })
-              }
-            ]
-          ),
-        500
-      )
+      await Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          buttons={{ ok: { label: s.strings.string_ok } }}
+          message={s.strings.scan_invalid_address_error_description}
+          title={s.strings.scan_invalid_address_error_title}
+        />
+      ))
     }
   }
 }
@@ -330,7 +259,6 @@ function privateKeyModalActivated(privateKeys: string[]): ThunkAction<Promise<vo
         }}
       />
     ))
-    dispatch({ type: 'ENABLE_SCAN' })
   }
 }
 
@@ -373,7 +301,7 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
+export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
       const state = getState()
@@ -416,10 +344,10 @@ export function checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCu
         ))
       }
       if (threeButtonModal === 'buy') {
-        Actions.jump('pluginListBuy', { direction: 'buy' })
+        navigation.navigate('pluginListBuy', { direction: 'buy' })
       } else if (threeButtonModal === 'exchange') {
         dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-        Actions.jump('exchangeScene', {})
+        navigation.navigate('exchangeScene', {})
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

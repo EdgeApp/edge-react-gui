@@ -301,6 +301,10 @@ class FakeCurrencyEngine {
   }
 
   async saveTx(transaction: EdgeTransaction): Promise<void> {}
+
+  async accelerate(): Promise<null> {
+    return null
+  }
 }
 
 /**

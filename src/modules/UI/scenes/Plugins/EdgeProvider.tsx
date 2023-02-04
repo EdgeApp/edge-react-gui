@@ -1,6 +1,16 @@
 import { abs } from 'biggystring'
 import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
+import {
+  EdgeCurrencyWallet,
+  EdgeMetadata,
+  EdgeNetworkFee,
+  EdgeParsedUri,
+  EdgeReceiveAddress,
+  EdgeSpendInfo,
+  EdgeSpendTarget,
+  EdgeTransaction,
+  JsonObject
+} from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -9,16 +19,16 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
-import { launchBitPay } from '../../../../actions/BitPayActions'
-import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions'
+import { launchPaymentProto } from '../../../../actions/PaymentProtoActions'
+import { trackConversion } from '../../../../actions/TrackingActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance'
 import s from '../../../../locales/strings'
 import { GuiPlugin } from '../../../../types/GuiPluginTypes'
 import { Dispatch, RootState } from '../../../../types/reduxTypes'
-import { Actions } from '../../../../types/routerTypes'
-import { EdgeTokenId, GuiMakeSpendInfo } from '../../../../types/types'
+import { Actions, NavigationBase } from '../../../../types/routerTypes'
+import { EdgeTokenId, MapObject } from '../../../../types/types'
 import { UriQueryMap } from '../../../../types/WebTypes'
 import { getCurrencyIconUris } from '../../../../util/CdnUris'
 import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
@@ -34,6 +44,8 @@ interface WalletDetails {
   chainCode: string
   currencyCode: string
   fiatCurrencyCode: string
+  currencyIcon: string
+  currencyIconDark: string
 }
 
 interface EdgeRequestSpendOptions {
@@ -90,6 +102,7 @@ export class EdgeProvider extends Bridgeable {
   _plugin: GuiPlugin
   _dispatch: Dispatch
   _state: RootState
+  _navigation: NavigationBase
 
   // Public properties:
   deepPath: string | undefined
@@ -101,6 +114,7 @@ export class EdgeProvider extends Bridgeable {
   selectedCurrencyCode: string
 
   constructor(
+    navigation: NavigationBase,
     plugin: GuiPlugin,
     state: RootState,
     dispatch: Dispatch,
@@ -113,6 +127,7 @@ export class EdgeProvider extends Bridgeable {
     this._plugin = plugin
     this._dispatch = dispatch
     this._state = state
+    this._navigation = navigation
 
     this.deepPath = deepPath
     this.deepQuery = deepQuery
@@ -152,7 +167,13 @@ export class EdgeProvider extends Bridgeable {
     }
 
     const selectedWallet = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} showCreateWallet allowedAssets={allowedAssets} headerTitle={s.strings.choose_your_wallet} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this._navigation}
+        showCreateWallet
+        allowedAssets={allowedAssets}
+        headerTitle={s.strings.choose_your_wallet}
+      />
     ))
 
     const { walletId, currencyCode } = selectedWallet
@@ -209,8 +230,8 @@ export class EdgeProvider extends Bridgeable {
     const walletName = getWalletName(edgeWallet)
     const receiveAddress = await edgeWallet.getReceiveAddress()
     const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-
     const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
+
     const returnObject: WalletDetails = {
       name: walletName,
       pluginId: edgeWallet.currencyInfo.pluginId,
@@ -218,7 +239,6 @@ export class EdgeProvider extends Bridgeable {
       chainCode: this.selectedChainCode,
       currencyCode,
       fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
-      // @ts-expect-error
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
@@ -255,9 +275,9 @@ export class EdgeProvider extends Bridgeable {
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(
       Object.keys(data).map(async key => {
-        if (data[key] != null) {
-          // @ts-expect-error
-          return store.setItem(this._plugin.storeId, key, data[key])
+        const val = data[key]
+        if (val != null) {
+          return store.setItem(this._plugin.storeId, key, val)
         } else {
           return store.deleteItem(this._plugin.storeId, key)
         }
@@ -270,13 +290,12 @@ export class EdgeProvider extends Bridgeable {
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
-  async readData(keys: string[]): Promise<Object> {
+  async readData(keys: string[]): Promise<MapObject<string | undefined>> {
     const { account } = this._state.core
     const store = account.dataStore
-    const returnObj = {}
-    for (let i = 0; i < keys.length; i++) {
-      // @ts-expect-error
-      returnObj[keys[i]] = await store.getItem(this._plugin.storeId, keys[i]).catch(e => undefined)
+    const returnObj: MapObject<string | undefined> = {}
+    for (const key of keys) {
+      returnObj[key] = await store.getItem(this._plugin.storeId, key).catch(e => undefined)
     }
     console.log('edgeProvider readData: ', JSON.stringify(returnObj))
     return returnObj
@@ -339,67 +358,125 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend(spendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
+  async requestSpend(providerSpendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+    const { account } = this._state.core
 
-    // Prepare the internal spend request:
-    const info: GuiMakeSpendInfo = {
+    // PUBLIC ADDRESS URI
+    let tokenId: string | undefined
+    if (this.selectedChainCode !== this.selectedCurrencyCode) {
+      tokenId = getTokenId(account, this.selectedWallet.currencyInfo.pluginId, this.selectedCurrencyCode)
+    }
+    const spendTargets: EdgeSpendTarget[] = []
+    for (const target of providerSpendTargets) {
+      let { exchangeAmount, nativeAmount, publicAddress, otherParams } = target
+
+      if (exchangeAmount != null) {
+        nativeAmount = await this.selectedWallet.denominationToNative(exchangeAmount, this.selectedCurrencyCode)
+      }
+      spendTargets.push({ publicAddress, nativeAmount, otherParams, memo: uniqueIdentifier, uniqueIdentifier })
+    }
+
+    const spendInfo: EdgeSpendInfo = {
       customNetworkFee,
       metadata,
-      lockInputs,
-      uniqueIdentifier
+      spendTargets,
+      tokenId
     }
-
-    const edgeSpendTargets: EdgeSpendTarget[] = []
-    for (const spendTarget of spendTargets) {
-      let nativeAmount = ''
-      if (spendTarget.nativeAmount != null) {
-        nativeAmount = spendTarget.nativeAmount
-      } else if (spendTarget.exchangeAmount != null) {
-        nativeAmount = await this.selectedWallet.denominationToNative(spendTarget.exchangeAmount, this.selectedCurrencyCode)
-      }
-
-      const spendTargetObj: EdgeSpendTarget = { ...spendTarget, nativeAmount }
-      if (uniqueIdentifier !== null) spendTargetObj.uniqueIdentifier = uniqueIdentifier
-      edgeSpendTargets.push(spendTargetObj)
-      console.log(
-        `requestSpend ${this.selectedChainCode}-${this.selectedCurrencyCode} and spendTarget.publicAddress ${
-          spendTarget.publicAddress || ''
-        } and uniqueIdentifier ${uniqueIdentifier || ''}`
-      )
-    }
-    info.spendTargets = edgeSpendTargets
-
-    // Launch:
-    return this._makeSpendRequest(info, this.selectedWallet, orderId, this.selectedCurrencyCode)
+    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
   }
 
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     console.log(`requestSpendUri ${uri}`)
-
+    const { account } = this._state.core
     const result: EdgeParsedUri & { paymentProtocolURL?: string } = await this.selectedWallet.parseUri(uri)
     const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
+    const { legacyAddress, publicAddress, nativeAmount } = result
+
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchBitPay(this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(showError)
+      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this.selectedWallet, metadata }).catch(
+        showError
+      )
       return
     }
 
-    // Prepare the internal spend request:
-    const info: GuiMakeSpendInfo = {
-      currencyCode,
-      nativeAmount: result.nativeAmount,
-      publicAddress: result.legacyAddress || result.publicAddress,
-      customNetworkFee,
-      metadata,
-      lockInputs,
-      uniqueIdentifier
+    if (currencyCode !== this.selectedCurrencyCode) {
+      throw new Error('URI currency code mismatch from chooseCurrencyWallet selected code')
     }
 
-    // Launch:
-    return this._makeSpendRequest(info, this.selectedWallet, orderId, this.selectedCurrencyCode)
+    // PUBLIC ADDRESS URI
+    let tokenId: string | undefined
+    if (this.selectedChainCode !== this.selectedCurrencyCode) {
+      tokenId = getTokenId(account, this.selectedWallet.currencyInfo.pluginId, currencyCode)
+    }
+    const spendInfo: EdgeSpendInfo = {
+      customNetworkFee,
+      metadata,
+      spendTargets: [
+        {
+          // Prioritize legacyAddress first since the existence of a legacy address means that a legacy address
+          // was scanned. Plugins may translate a legacy address into a publicAddress and provide that as well
+          publicAddress: legacyAddress ?? publicAddress,
+          memo: uniqueIdentifier,
+          nativeAmount
+        }
+      ],
+      tokenId
+    }
+    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
+  }
+
+  /**
+   * Internal helper to launch the send confirmation scene.
+   */
+  async _requestSpendCommon({
+    lockInputs,
+    orderId,
+    spendInfo
+  }: {
+    lockInputs: boolean
+    orderId?: string
+    spendInfo: EdgeSpendInfo
+  }): Promise<EdgeTransaction | undefined> {
+    return new Promise((resolve, reject) => {
+      const lockTilesMap = lockInputs ? { address: true, amount: true, wallet: true } : undefined
+
+      this._navigation.navigate('send2', {
+        walletId: this.selectedWallet.id,
+        spendInfo,
+        lockTilesMap,
+        onBack: () => resolve(undefined),
+        onDone: (error, transaction) => {
+          if (error != null) {
+            reject(error)
+            return
+          }
+          if (transaction == null) {
+            reject(new Error('Missing transaction'))
+            return
+          }
+          resolve(transaction)
+          this._navigation.pop()
+
+          this.selectedWallet
+            .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
+            .then(exchangeAmount => {
+              this._dispatch(
+                trackConversion('EdgeProviderConversion', {
+                  pluginId: this._plugin.storeId,
+                  orderId,
+                  currencyCode: transaction.currencyCode,
+                  exchangeAmount: Number(abs(exchangeAmount))
+                })
+              )
+            })
+            .catch(e => console.error(e.message))
+        }
+      })
+    })
   }
 
   // log body and signature and pubic address and final message (returned from signMessage)
@@ -414,74 +491,6 @@ export class EdgeProvider extends Bridgeable {
     return signedMessage
   }
 
-  /**
-   * Internal helper to launch the send confirmation scene.
-   */
-  async _makeSpendRequest(
-    guiMakeSpendInfo: GuiMakeSpendInfo,
-    coreWallet: EdgeCurrencyWallet,
-    orderId: string | undefined,
-    selectedCurrencyCode: string
-  ): Promise<EdgeTransaction | undefined> {
-    const transaction: EdgeTransaction | undefined = await new Promise((resolve, reject) => {
-      guiMakeSpendInfo.onDone = (error: Error | null, transaction?: EdgeTransaction) => {
-        error ? reject(error) : resolve(transaction)
-      }
-      guiMakeSpendInfo.onBack = () => {
-        // @ts-expect-error
-        resolve()
-      }
-      Actions.push('send', {
-        guiMakeSpendInfo,
-        selectedWalletId: coreWallet.id,
-        selectedCurrencyCode
-      })
-    })
-
-    if (transaction != null) {
-      const { metadata } = guiMakeSpendInfo
-      if (metadata != null) {
-        await coreWallet.saveTxMetadata(transaction.txid, transaction.currencyCode, metadata)
-      }
-
-      Actions.pop()
-
-      const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-      this._dispatch(
-        trackConversion('EdgeProviderConversion', {
-          pluginId: this._plugin.storeId,
-          orderId,
-          // @ts-expect-error
-          account: this._state.core.account,
-          currencyCode: transaction.currencyCode,
-          exchangeAmount: Number(abs(exchangeAmount))
-        })
-      )
-    }
-    return transaction
-  }
-
-  async trackConversion(opts?: { currencyCode: string; exchangeAmount: number }) {
-    if (opts != null) {
-      const { currencyCode, exchangeAmount } = opts
-      this._dispatch(
-        trackConversion('EdgeProviderConversion', {
-          pluginId: this._plugin.storeId,
-          // @ts-expect-error
-          account: this._state.core.account,
-          currencyCode,
-          exchangeAmount
-        })
-      )
-    } else {
-      this._dispatch(
-        trackAccountEvent('EdgeProviderConversion', {
-          pluginId: this._plugin.storeId
-        })
-      )
-    }
-  }
-
   hasSafariView(): boolean {
     return true
   }
@@ -489,8 +498,7 @@ export class EdgeProvider extends Bridgeable {
   // window.fetch.catch(console log then throw)
   async deprecatedAndNotSupportedDouble(request: any, firstURL: string, url2: string): Promise<unknown> {
     console.log('Bity firstURL: ' + firstURL)
-    // @ts-expect-error
-    const response = await window.fetch(firstURL, request).catch(e => {
+    const response = await fetch(firstURL, request).catch(e => {
       console.log(`throw from fetch firstURL: ${firstURL}`, e)
       throw e
     })
@@ -506,7 +514,7 @@ export class EdgeProvider extends Bridgeable {
       credentials: 'include'
     }
     // @ts-expect-error
-    const response2 = await window.fetch(secondURL, request2).catch(e => {
+    const response2 = await fetch(secondURL, request2).catch(e => {
       console.log(`throw from fetch secondURL: ${secondURL}`, e)
       throw e
     })
@@ -529,8 +537,7 @@ export class EdgeProvider extends Bridgeable {
         body: signedTransaction
       }
       console.log('Bity thirdURL: ' + thirdURL)
-      // @ts-expect-error
-      const signedTransactionResponse = await window.fetch(thirdURL, request).catch(e => {
+      const signedTransactionResponse = await fetch(thirdURL, request).catch(e => {
         console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
         throw e
       })
@@ -546,7 +553,7 @@ export class EdgeProvider extends Bridgeable {
         const detailUrl = firstURL + '/' + orderData.id
         console.log('detailURL: ' + detailUrl)
         // @ts-expect-error
-        const bankDetailResponse = await window.fetch(detailUrl, bankDetailsRequest).catch(e => {
+        const bankDetailResponse = await fetch(detailUrl, bankDetailsRequest).catch(e => {
           console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
           throw e
         })
@@ -560,8 +567,7 @@ export class EdgeProvider extends Bridgeable {
     return orderData
   }
 
-  // @ts-expect-error
-  async openSafariView(url: string): Promise<unknown> {
+  async openSafariView(url: string): Promise<void> {
     if (Platform.OS === 'ios') SafariView.show({ url })
     else CustomTabs.openURL(url)
   }
@@ -589,8 +595,7 @@ export class EdgeProvider extends Bridgeable {
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
-  // @ts-expect-error
-  fixCurrencyCodes?: { [badString: string]: EdgeTokenId } = {},
+  fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {},
   currencyCodes?: ExtendedCurrencyCode[]
 ): EdgeTokenId[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return

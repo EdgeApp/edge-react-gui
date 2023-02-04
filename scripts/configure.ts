@@ -171,11 +171,6 @@ const asConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  SWITCHAIN_INIT: asCorePluginInit(
-    asObject({
-      apiKey: asOptional(asString, '')
-    }).withRest
-  ),
   THORCHAIN_INIT: asCorePluginInit(
     asObject({
       ninerealmsClientId: asOptional(asString, ''),
@@ -203,6 +198,7 @@ const asConfig = asObject({
   // Debug options:
   DEBUG_CORE: asOptional(asBoolean, false),
   DEBUG_PLUGINS: asOptional(asBoolean, false),
+  DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
   DISABLE_WARNINGS: asOptional(asBoolean, false),

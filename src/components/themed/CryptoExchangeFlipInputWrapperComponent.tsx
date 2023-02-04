@@ -24,7 +24,6 @@ interface OwnProps {
   secondaryCurrencyInfo: GuiCurrencyInfo
   tokenId?: string
   fiatPerCrypto: string
-  forceUpdateGuiCounter: number
   overridePrimaryExchangeAmount: string
   isFocused: boolean
   isThinking?: boolean
@@ -92,8 +91,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, name, overridePrimaryExchangeAmount, children, theme } =
-      this.props
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, name, overridePrimaryExchangeAmount, children, theme } = this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -148,7 +146,6 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
             overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            forceUpdateGuiCounter={forceUpdateGuiCounter}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             onError={this.onError}
             keyboardVisible={false}

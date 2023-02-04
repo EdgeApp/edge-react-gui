@@ -9,7 +9,6 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { formatDate } from '../../locales/intl'
 import s from '../../locales/strings'
 import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -304,9 +303,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const styles = getStyles(this.props.theme)
     if (!sectionObj.section.title) return null
     return (
-      <Gradient style={styles.singleDateArea}>
+      <View style={styles.singleDateArea}>
         <EdgeText style={styles.formattedDate}>{sectionObj.section.title}</EdgeText>
-      </Gradient>
+      </View>
     )
   }
 
@@ -369,7 +368,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const allowedAssets = [{ pluginId, tokenId }]
 
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedAssets={allowedAssets} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.fio_src_wallet} allowedAssets={allowedAssets} />
     ))
     if (walletId && currencyCode) {
       onSelectWallet(walletId, currencyCode)

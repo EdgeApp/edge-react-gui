@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -12,9 +13,12 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { EdgeTokenId } from '../../types/types'
+import { NavigationBase } from '../../types/routerTypes'
+import { BooleanMap, EdgeTokenId } from '../../types/types'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { makeCurrencyCodeTable } from '../../util/utils'
+import { CustomAsset } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
@@ -24,33 +28,40 @@ import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
+import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 import { ButtonsModal } from './ButtonsModal'
 
 export interface WalletListResult {
-  walletId?: string
   currencyCode?: string
   tokenId?: string
+  walletId?: string
 
   // Wyre buy/sell
   isBankSignupRequest?: boolean
   fiatAccountId?: string
+
+  // Custom asset selection
+  customAsset?: CustomAsset
 }
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
+  navigation: NavigationBase
 
   // Filtering:
   allowedAssets?: EdgeTokenId[]
+  allowedWalletIds?: string[]
+  allowKeysOnlyMode?: boolean
+  customAssets?: CustomAsset[]
   excludeAssets?: EdgeTokenId[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
-  allowKeysOnlyMode?: boolean
 
   // Visuals:
+  createWalletId?: string
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
-  createWalletId?: string
 
   // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
   // Valid formats include "ETH", "REP", or "ETH-REP",
@@ -68,19 +79,22 @@ const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
 export function WalletListModal(props: Props) {
   const {
     bridge,
+    navigation,
 
     // Filtering:
     allowedAssets,
+    allowKeysOnlyMode = false,
+    allowedWalletIds,
+    customAssets,
     excludeAssets,
     excludeWalletIds,
     filterActivation,
-    allowKeysOnlyMode = false,
 
     // Visuals:
+    createWalletId,
     headerTitle,
     showBankOptions = false,
     showCreateWallet,
-    createWalletId,
 
     // Deprecated:
     allowedCurrencyCodes,
@@ -88,6 +102,8 @@ export function WalletListModal(props: Props) {
   } = props
 
   // #region Constants
+
+  const showCustomAssets = customAssets != null && customAssets.length > 0
 
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
@@ -135,11 +151,11 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, currencyCode: string) => {
+  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, _tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(s.strings.network_alert_title)
-    } else bridge.resolve({ walletId, currencyCode })
+    } else bridge.resolve({ walletId, currencyCode, customAsset })
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
@@ -181,33 +197,50 @@ export function WalletListModal(props: Props) {
     )
   })
 
+  const renderCustomAsset = useHandler(item => {
+    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.tokenId} customAsset={item.item} onPress={handleWalletListPress} />
+  })
+
   const renderBankSection = () => {
     if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
     if (Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
     return (
-      <>
-        <View>
-          <FlatList
-            data={Object.values(bankAccountsMap)}
-            keyboardShouldPersistTaps="handled"
-            renderItem={renderPaymentMethod}
-            getItemLayout={handleItemLayout}
-            keyExtractor={item => item.id}
-            style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
-          />
-        </View>
-        <EdgeText>{s.strings.deposit_to_edge}</EdgeText>
-      </>
+      <View>
+        <FlatList
+          data={Object.values(bankAccountsMap)}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderPaymentMethod}
+          getItemLayout={handleItemLayout}
+          keyExtractor={item => item.id}
+          style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
+        />
+      </View>
     )
   }
+
+  const renderCustomAssetSection = () =>
+    showCustomAssets ? (
+      <View>
+        <FlatList
+          data={customAssets}
+          keyboardShouldPersistTaps="handled"
+          renderItem={renderCustomAsset}
+          getItemLayout={handleItemLayout}
+          keyExtractor={item => item.referenceTokenId}
+          style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
+        />
+      </View>
+    ) : null
 
   // #endregion Renderers
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{headerTitle}</ModalTitle>
+      <ModalTitle center>{headerTitle}</ModalTitle>
       {renderBankSection()}
+      {renderCustomAssetSection()}
+      {showBankOptions || showCustomAssets ? <EdgeText>{s.strings.your_wallets}</EdgeText> : null}
       <OutlinedTextInput
         returnKeyType="search"
         label={s.strings.search_wallets}
@@ -221,6 +254,7 @@ export function WalletListModal(props: Props) {
       />
       <WalletList
         allowedAssets={allowedAssets ?? legacyAllowedAssets}
+        allowedWalletIds={allowedWalletIds}
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
@@ -230,6 +264,7 @@ export function WalletListModal(props: Props) {
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
         onPress={handleWalletListPress}
+        navigation={navigation}
       />
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>
@@ -264,4 +299,71 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeToken
     }
   }
   return out
+}
+
+// Given a list of assets, shows a modal for a user to pick a wallet for that asset.
+// If only one wallet exists for that asset, auto pick that wallet
+export const pickWallet = async ({
+  account,
+  allowedWalletIds,
+  assets,
+  headerTitle = s.strings.select_wallet,
+  navigation,
+  showCreateWallet
+}: {
+  account: EdgeAccount
+  allowedWalletIds?: string[]
+  assets?: EdgeTokenId[]
+  headerTitle?: string
+  navigation: NavigationBase
+  showCreateWallet?: boolean
+}): Promise<WalletListResult | undefined> => {
+  const { currencyWallets } = account
+
+  const walletIdMap: BooleanMap = {}
+
+  // Check if user owns any wallets that
+  const matchingAssets = (assets ?? []).filter(asset => {
+    const matchingWalletIds: string[] = Object.keys(currencyWallets).filter(key => {
+      const { pluginId, tokenId } = asset
+      const currencyWallet = currencyWallets[key]
+      const pluginIdMatch = currencyWallet.currencyInfo.pluginId === pluginId
+
+      // No wallet with matching pluginId, fail this asset
+      if (!pluginIdMatch) return false
+      if (tokenId == null) {
+        walletIdMap[key] = true
+        return true
+      }
+      // See if this wallet has a matching token enabled
+      const tokenIdMatch = currencyWallet.enabledTokenIds.find(tid => tokenId)
+      if (tokenIdMatch != null) {
+        const cc = getCurrencyCode(currencyWallet, tokenIdMatch)
+        walletIdMap[`${key}:${cc}`] = true
+        return true
+      }
+      return false
+    })
+    return matchingWalletIds.length !== 0
+  })
+
+  if (assets != null && matchingAssets.length === 0) return
+
+  if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
+    // Only one matching wallet and asset. Auto pick the wallet
+    const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
+    return { walletId, currencyCode }
+  } else {
+    const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={navigation}
+        headerTitle={headerTitle}
+        allowedWalletIds={allowedWalletIds}
+        allowedAssets={assets}
+        showCreateWallet={showCreateWallet}
+      />
+    ))
+    return walletListResult
+  }
 }

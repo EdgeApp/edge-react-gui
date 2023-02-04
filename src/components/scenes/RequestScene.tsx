@@ -16,11 +16,11 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
-import { convertNativeToDenomination, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils'
+import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -54,7 +54,7 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => void
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSelectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
@@ -115,20 +115,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   componentWillUnmount() {
     if (this.unsubscribeAddressChanged != null) this.unsubscribeAddressChanged()
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    let diffElement2: string = ''
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryCurrencyInfo: true,
-      secondaryCurrencyInfo: true,
-      displayDenomination: true,
-      exchangeDenomination: true
-    })
-    if (!diffElement) {
-      diffElement2 = getObjectDiff(this.state, nextState)
-    }
-    return !!diffElement || !!diffElement2
   }
 
   async getAddressItems() {
@@ -261,10 +247,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={this.props.navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          this.props.onSelectWallet(walletId, currencyCode)
+          this.props.onSelectWallet(this.props.navigation, walletId, currencyCode)
         }
       }
     )
@@ -306,6 +292,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const requestAddress = selectedAddress?.addressString ?? s.strings.loading
     const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(wallet))
     const { keysOnlyMode = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+    const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance
     const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
@@ -346,7 +333,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
               overridePrimaryExchangeAmount=""
-              forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
               isFiatOnTop
@@ -385,10 +371,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+          <TouchableOpacity disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
               <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
-              <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
             </View>
             <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
           </TouchableOpacity>
@@ -646,8 +632,8 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
     }
   })
 )(withTheme(RequestSceneComponent))

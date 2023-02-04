@@ -5,6 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { FlipInputModalComponent } from '../../components/modals/FlipInputModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('FlipInputModalComponent', () => {
   it('should render with loading props', () => {
@@ -15,6 +16,7 @@ describe('FlipInputModalComponent', () => {
     const actual = renderer.render(
       <FlipInputModalComponent
         bridge={fakeAirshipBridge}
+        navigation={fakeNavigation}
         walletId="myWallet"
         wallet={fakeWallet}
         currencyCode="BTC"

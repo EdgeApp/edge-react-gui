@@ -29,7 +29,16 @@ declare module '*.svg' {
 declare module 'csv-stringify/lib/browser/sync' {
   export default function stringify(input: any[], options?: any): string
 }
-declare module 'edge-currency-accountbased/lib/react-native-io'
+
+declare module 'edge-currency-accountbased' {
+  import { EdgeOtherMethods } from 'edge-core-js'
+
+  export function makePluginIo(): EdgeOtherMethods
+
+  export const debugUri: string
+  export const pluginUri: string
+}
+
 declare module 'edge-currency-monero/lib/react-native-io'
 declare module 'react-native-smart-splash-screen'
 declare module 'react-native-sortable-listview'

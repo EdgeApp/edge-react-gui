@@ -1,18 +1,19 @@
-import { div, gt, gte, mul } from 'biggystring'
+import { div, gt, gte } from 'biggystring'
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Keyboard, View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { exchangeMax, getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
+import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -20,7 +21,7 @@ import { fetchInfo } from '../../util/network'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
@@ -29,6 +30,10 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
+
+interface OwnProps {
+  navigation: NavigationProp<'exchangeScene'>
+}
 
 interface StateProps {
   account: EdgeAccount
@@ -55,10 +60,6 @@ interface StateProps {
   fromCurrencyCode: string
   toCurrencyCode: string
 
-  // Number of times To and From wallets were flipped
-  forceUpdateGuiCounter: number
-  calculatingMax: boolean
-
   // Determines if a coin can have Exchange Max option
   hasMaxSpend: boolean
 
@@ -68,8 +69,7 @@ interface StateProps {
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
-  getQuoteForTransaction: (fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
-  exchangeMax: () => Promise<void>
+  getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
 }
 
 const asDisableAsset = asObject({
@@ -93,12 +93,11 @@ const asExchangeInfo = asObject({
 type DisableAsset = ReturnType<typeof asDisableAsset>
 type ExchangeInfo = ReturnType<typeof asExchangeInfo>
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
   whichWalletFocus: 'from' | 'to' // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string
-  forceUpdateGuiCounter: number
   toExchangeAmount: string
   fromAmountNative: string
   toAmountNative: string
@@ -132,7 +131,6 @@ const defaultToWalletInfo = {
 
 const defaultState = {
   whichWalletFocus: 'from',
-  forceUpdateGuiCounter: 0,
   fromExchangeAmount: '',
   toExchangeAmount: '',
   fromAmountNative: '',
@@ -180,21 +178,10 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (props.forceUpdateGuiCounter !== state.forceUpdateGuiCounter) {
-      return {
-        fromAmountNative: mul(props.fromExchangeAmount, props.fromWalletPrimaryInfo.exchangeDenomination.multiplier),
-        fromExchangeAmount: props.fromExchangeAmount,
-        toExchangeAmount: props.toExchangeAmount,
-        forceUpdateGuiCounter: props.forceUpdateGuiCounter
-      }
+    if (state.whichWalletFocus === 'from') {
+      return { toExchangeAmount: props.toExchangeAmount }
     } else {
-      // Check which wallet we are currently editing.
-      // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
-      if (state.whichWalletFocus === 'from') {
-        return { toExchangeAmount: props.toExchangeAmount }
-      } else {
-        return { fromExchangeAmount: props.fromExchangeAmount }
-      }
+      return { fromExchangeAmount: props.fromExchangeAmount }
     }
   }
 
@@ -212,37 +199,55 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     return false
   }
 
-  getQuote = () => {
+  handleMax = () => {
+    const data: SetNativeAmountInfo = {
+      whichWallet: 'max',
+      primaryNativeAmount: '0'
+    }
+
+    if (this.props.toCurrencyCode === '') {
+      showWarning(`${s.strings.loan_select_receiving_wallet}`)
+      Keyboard.dismiss()
+      return
+    }
+
+    this.getQuote(data)
+  }
+
+  handleNext = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
 
-    if (this.props.fromCurrencyCode === '' || this.props.toCurrencyCode === '') {
-      Keyboard.dismiss()
+    if (zeroString(data.primaryNativeAmount)) {
+      showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
       return
     }
 
-    if (!zeroString(data.primaryNativeAmount)) {
-      const { exchangeInfo } = this.state
-      if (exchangeInfo != null) {
-        const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
-        if (disableSrc) {
-          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
-          return
-        }
+    if (this.checkExceedsAmount()) return
 
-        const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
-        if (disableDest) {
-          showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
-          return
-        }
+    this.getQuote(data)
+  }
+
+  getQuote = (data: SetNativeAmountInfo) => {
+    const { navigation } = this.props
+    const { exchangeInfo } = this.state
+    if (exchangeInfo != null) {
+      const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
+      if (disableSrc) {
+        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
+        return
       }
-      if (!this.checkExceedsAmount()) this.props.getQuoteForTransaction(data, this.resetState)
-      Keyboard.dismiss()
-      return
+
+      const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
+      if (disableDest) {
+        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
+        return
+      }
     }
-    showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
+    this.props.getQuoteForTransaction(navigation, data, this.resetState)
+    Keyboard.dismiss()
   }
 
   resetState = () => {
@@ -292,10 +297,10 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
   renderButton = () => {
     const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
-    const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !this.props.calculatingMax && !!parseFloat(primaryNativeAmount)
+    const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.getQuote} />
+    return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -332,6 +337,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
+        navigation={this.props.navigation}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
@@ -391,16 +397,15 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             secondaryCurrencyInfo={fromSecondaryInfo}
             fiatPerCrypto={this.props.fromFiatToCrypto}
             overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
-            forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
             launchWalletSelector={this.launchFromWalletSelector}
             onCryptoExchangeAmountChanged={this.fromAmountChanged}
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
-            onNext={this.getQuote}
+            onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend && (
-              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
-            )}
+            {this.props.hasMaxSpend ? (
+              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} />
+            ) : null}
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -411,14 +416,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             secondaryCurrencyInfo={toSecondaryInfo}
             fiatPerCrypto={this.props.toFiatToCrypto}
             overridePrimaryExchangeAmount={this.state.toExchangeAmount}
-            forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
             launchWalletSelector={this.launchToWalletSelector}
             onCryptoExchangeAmountChanged={this.toAmountChanged}
             isFocused={isToFocused}
             focusMe={this.focusToWallet}
-            onNext={this.getQuote}
+            onNext={this.handleNext}
           />
-          {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderAlert()}
           {this.renderButton()}
           <View style={styles.spacer} />
@@ -443,7 +446,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
+export const CryptoExchangeScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
@@ -509,22 +512,17 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     return {
       ...result,
       account,
-      forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
-      calculatingMax: cryptoExchange.calculatingMax,
       insufficient: state.cryptoExchange.insufficientError,
       genericError: state.cryptoExchange.genericShapeShiftError
     }
   },
   dispatch => ({
-    getQuoteForTransaction(fromWalletNativeAmount, onApprove) {
-      dispatch(getQuoteForTransaction(fromWalletNativeAmount, onApprove))
+    getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove) {
+      dispatch(getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove))
     },
     async onSelectWallet(walletId, currencyCode, direction) {
       await dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-    },
-    async exchangeMax() {
-      await dispatch(exchangeMax())
     }
   })
 )(withTheme(CryptoExchangeComponent))
