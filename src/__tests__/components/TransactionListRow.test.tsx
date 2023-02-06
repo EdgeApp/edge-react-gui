@@ -22,17 +22,17 @@ describe('TransactionListRow', () => {
         { name: 'sats', multiplier: '1', symbol: 's' }
       ]
     }
+    const fakeWallet: any = {
+      id: 'lmnop',
+      pluginId: 'bitcoin',
+      watch: () => {},
+      currencyInfo,
+      fiatCurrencyCode: 'iso:USD'
+    }
+
     const mockStore: any = {
       core: {
         account: {
-          currencyWallets: {
-            lmnop: {
-              pluginId: 'bitcoin',
-              watch: () => {},
-              currencyInfo,
-              fiatCurrencyCode: 'iso:USD'
-            }
-          },
           currencyConfig: {
             bitcoin: {
               allTokens: [],
@@ -48,7 +48,7 @@ describe('TransactionListRow', () => {
       <Provider store={store}>
         <TransactionListRow
           navigation={fakeNavigation}
-          walletId="lmnop"
+          wallet={fakeWallet}
           currencyCode="BTC"
           transaction={{
             walletId: 'lmnop',

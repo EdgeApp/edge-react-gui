@@ -41,6 +41,7 @@ export interface ParamList {
   root: {}
   login: {}
   edge: {}
+  controlPanel: {}
 
   // Logged-in scenes:
   changeMiningFee: {
@@ -57,7 +58,6 @@ export interface ParamList {
   }
   changePassword: {}
   changePin: {}
-  controlPanel: {}
   createWalletAccountSelect: {
     accountName: string
     existingWalletId?: string
@@ -280,7 +280,6 @@ export interface ParamList {
     stakePosition: StakePosition
     modification: ChangeQuoteRequest['action']
   }
-  stakeClaim: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
   stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   termsOfService: {}

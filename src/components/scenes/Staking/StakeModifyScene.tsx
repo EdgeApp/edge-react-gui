@@ -1,4 +1,5 @@
 import { gt, toFixed } from 'biggystring'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -16,6 +17,7 @@ import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '.
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
 import { FlashNotification } from '../../navigation/FlashNotification'
@@ -34,27 +36,17 @@ import { Tile } from '../../tiles/Tile'
 interface Props {
   navigation: NavigationProp<'stakeModify'>
   route: RouteProp<'stakeModify'>
+  wallet: EdgeCurrencyWallet
 }
 
-export const StakeModifyScene = (props: Props) => {
-  // Constants
-  const { navigation } = props
-  const { stakePlugin, walletId, stakePolicy, stakePosition, modification } = props.route.params
+const StakeModifySceneComponent = (props: Props) => {
+  const { navigation, route, wallet } = props
+  const { modification, stakePlugin, stakePolicy, stakePosition } = route.params
   const { stakePolicyId, stakeWarning, unstakeWarning, claimWarning, disableMaxStake } = stakePolicy
 
   // Hooks
-  const { wallet, guiExchangeRates, nativeAssetDenomination } = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const wallet = currencyWallets[walletId]
-    const guiExchangeRates = state.exchangeRates
-
-    const nativeAssetDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    return {
-      wallet,
-      guiExchangeRates,
-      nativeAssetDenomination
-    }
-  })
+  const guiExchangeRates = useSelector(state => state.exchangeRates)
+  const nativeAssetDenomination = useSelector(state => getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode))
 
   // Current Allocation Info
   const [existingAllocations, setExistingAllocations] = React.useState<{ staked: PositionAllocation[]; earned: PositionAllocation[] } | undefined>()
@@ -195,7 +187,7 @@ export const StakeModifyScene = (props: Props) => {
       <FlipInputModal
         bridge={bridge}
         navigation={navigation}
-        walletId={walletId}
+        walletId={wallet.id}
         currencyCode={currencyCode}
         onAmountChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
@@ -321,7 +313,7 @@ export const StakeModifyScene = (props: Props) => {
         type="questionable"
         title={title}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
-        walletId={walletId}
+        walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressStakingFee(modification)}
       />
@@ -346,7 +338,7 @@ export const StakeModifyScene = (props: Props) => {
         type="questionable"
         title={s.strings.stake_future_unstaking_fee}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
-        walletId={walletId}
+        walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressFutureUnstakingFee}
       />
@@ -426,7 +418,7 @@ export const StakeModifyScene = (props: Props) => {
           <CryptoFiatAmountTile
             title={s.strings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
-            walletId={walletId}
+            walletId={wallet.id}
             // @ts-expect-error
             currencyCode={networkFeeQuote?.currencyCode}
             denomination={nativeAssetDenomination}
@@ -525,3 +517,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(2)
   }
 }))
+
+export const StakeModifyScene = withWallet(StakeModifySceneComponent)

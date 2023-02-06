@@ -1662,14 +1662,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         Object {
-                          "color": "#E85466",
+                          "color": "#77C513",
                           "fontSize": 22,
                         },
                         null,
                       ]
                     }
                   >
-                    - 100%
+                    0%
                   </Text>
                 </View>
               </View>

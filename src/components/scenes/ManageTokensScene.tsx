@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -10,10 +11,11 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
@@ -28,17 +30,15 @@ import { Title } from '../themed/Title'
 
 interface Props {
   navigation: NavigationProp<'manageTokens'>
-  route: RouteProp<'manageTokens'>
+  wallet: EdgeCurrencyWallet
 }
 
-export function ManageTokensScene(props: Props) {
-  const { navigation, route } = props
-  const { walletId } = route.params
+function ManageTokensSceneComponent(props: Props) {
+  const { navigation, wallet } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const account = useSelector(state => state.core.account)
-  const wallet = account.currencyWallets[walletId]
   const walletName = useWalletName(wallet)
   const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
@@ -104,7 +104,7 @@ export function ManageTokensScene(props: Props) {
   // Goes to the add token scene:
   const handleAdd = useHandler(() => {
     navigation.navigate('editToken', {
-      walletId
+      walletId: wallet.id
     })
   })
 
@@ -189,3 +189,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 4
   }
 }))
+
+export const ManageTokensScene = withWallet(ManageTokensSceneComponent)
