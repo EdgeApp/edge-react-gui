@@ -36,8 +36,7 @@ export function DeepLinkingManager(props: Props) {
     })
   }, [accountReferralLoaded, dispatch, navigation, pendingDeepLink, wallets])
 
-  // @ts-expect-error
-  const handleUrl = url => {
+  const handleUrl = (url: string) => {
     try {
       dispatch(launchDeepLink(navigation, parseDeepLink(url)))
     } catch (error: any) {
