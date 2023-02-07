@@ -328,6 +328,7 @@ const strings = {
   request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   search_wallets: 'Search Wallets',
   search_tokens: 'Search Tokens',
+  search_assets: 'Search Assets',
   select_wallet: 'Select Wallet',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
@@ -552,6 +553,7 @@ const strings = {
   title_settings: 'Settings',
   title_promotion_settings: 'Promotion Settings',
   title_terms_of_service: 'Terms of Service',
+  title_markets: 'Markets',
   title_wallets: 'Wallets',
   title_buy: 'Buy',
   title_sell: 'Sell',
@@ -1184,6 +1186,12 @@ const strings = {
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
+
+  // Coin ranking view
+  coin_rank_price: 'Price',
+  coin_rank_rank: 'Rank',
+  coin_rank_market_cap_abbreviation: 'MCap',
+  coin_rank_volume_24hr_abbreviation: 'Vol 24h',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
