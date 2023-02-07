@@ -60,8 +60,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonCap = {
     borderColor: theme.lineDivider,
     borderBottomWidth: theme.thinLineWidth,
-    borderTopWidth: theme.thinLineWidth,
-    width: theme.rem(1)
+    borderTopWidth: theme.thinLineWidth
   }
   return {
     container: {

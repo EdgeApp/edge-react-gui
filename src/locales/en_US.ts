@@ -1153,6 +1153,7 @@ const strings = {
   stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
+  stake_unstake: 'Unstake',
   stake_x_to_earn_y: 'Stake %1$s to earn %2$s',
   stake_amount_s_stake: 'Amount of %s to Stake',
   stake_amount_claim: 'Amount of Reward to Claim',
@@ -1185,6 +1186,11 @@ const strings = {
   stake_break_even_days_months_s: '%1$s days (%2$s months)',
   stake_earn_button_label: 'Earn',
   stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
+
+  // Tron resource staking
+  stake_resource_display_name: 'TRON Resources',
+  stake_resource_bandwidth: 'Bandwidth',
+  stake_resource_energy: 'Energy',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',

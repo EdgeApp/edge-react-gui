@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { ENV } from '../../env'
 import { useRefresher } from '../../hooks/useRefresher'
+import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -39,6 +40,7 @@ export function Services(props: Props) {
 
   useRefresher(
     async () => {
+      makeStakePlugins().catch(() => {})
       try {
         const response = await fetchInfo(`v1/assetOverrides/${appId}`)
         if (!response.ok) {

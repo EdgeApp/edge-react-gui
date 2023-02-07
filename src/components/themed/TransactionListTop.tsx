@@ -15,7 +15,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
-import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
+import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
@@ -106,7 +106,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { pluginId } = wallet.currencyInfo
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
-      makeStakePlugins().then(stakePlugins => {
+      getStakePlugins().then(stakePlugins => {
         let stakePolicies: StakePolicy[] = []
         for (const stakePlugin of stakePlugins) {
           const filteredStatePolicies = stakePlugin.policies.filter(stakePolicy => {
