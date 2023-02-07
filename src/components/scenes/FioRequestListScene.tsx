@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { formatDate } from '../../locales/intl'
+import { formatDate, SHORT_DATE_FMT } from '../../locales/intl'
 import s from '../../locales/strings'
 import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
@@ -476,7 +476,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         requestsInSection.push(fioRequest)
         // @ts-expect-error
         previousTimestamp = fioRequest.time_stamp
-        previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
+        previousTitle = formatDate(new Date(fioRequest.time_stamp), SHORT_DATE_FMT)
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }

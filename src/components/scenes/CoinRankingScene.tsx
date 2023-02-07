@@ -5,8 +5,9 @@ import { FlatList } from 'react-native-gesture-handler'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { asCoinrankings, AssetSubText, CoinRowData, PercentChangeTimeFrame } from '../../types/coinrankTypes'
+import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
+import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
@@ -18,7 +19,7 @@ import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
 
-const coinRowData: CoinRowData = { coinRankings: [] }
+const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
 const QUERY_PAGE_SIZE = 30
 const LISTINGS_REFRESH_INTERVAL = 30000
@@ -27,7 +28,7 @@ const LISTINGS_REFRESH_INTERVAL = 30000
 enableDebugLogType(LOG_COINRANK & 0)
 
 interface Props {
-  // navigation: NavigationProp<'coinRanking'>
+  navigation: NavigationProp<'coinRanking'>
   // route: RouteProp<'coinRanking'>
 }
 
@@ -48,6 +49,7 @@ type Timeout = ReturnType<typeof setTimeout>
 const CoinRankingComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { navigation } = props
   const mounted = React.useRef<boolean>(true)
   const textInput = React.useRef<OutlinedTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
@@ -60,16 +62,25 @@ const CoinRankingComponent = (props: Props) => {
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
   const [fiatCode] = useState<string>('iso:USD')
 
-  const { coinRankings } = coinRowData
+  const { coinRankingDatas } = coinRanking
 
   const renderItem = useHandler((itemObj: FlatListItem<number>) => {
     const { index, item } = itemObj
-    const currencyCode = coinRankings[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
-    const rank = coinRankings[index]?.rank ?? 'NO_RANK'
+    const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
+    const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
     const key = `${index}-${item}-${rank}-${currencyCode}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
-    return <CoinRankRow index={item} key={key} coinRowData={coinRowData} percentChangeTimeFrame={percentChangeTimeFrame} assetSubText={assetSubText} />
+    return (
+      <CoinRankRow
+        navigation={navigation}
+        index={item}
+        key={key}
+        coinRanking={coinRanking}
+        percentChangeTimeFrame={percentChangeTimeFrame}
+        assetSubText={assetSubText}
+      />
+    )
   })
 
   const handleEndReached = useHandler(() => {
@@ -135,16 +146,16 @@ const CoinRankingComponent = (props: Props) => {
             break
           }
           const replyJson = await response.json()
-          const listings = asCoinrankings(replyJson)
+          const listings = asCoinranking(replyJson)
           for (let i = 0; i < listings.data.length; i++) {
             const rankIndex = start - 1 + i
             const row = listings.data[i]
-            coinRankings[rankIndex] = row
+            coinRankingDatas[rankIndex] = row
             debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
           }
           start += QUERY_PAGE_SIZE
         }
-        setDataSize(coinRankings.length)
+        setDataSize(coinRankingDatas.length)
       } catch (e: any) {
         console.warn(e.message)
       }
@@ -160,7 +171,7 @@ const CoinRankingComponent = (props: Props) => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
     const out = []
     for (let i = 0; i < dataSize; i++) {
-      const cr = coinRankings[i]
+      const cr = coinRankingDatas[i]
       if (searchText === '') {
         out.push(i)
       } else {
@@ -170,9 +181,11 @@ const CoinRankingComponent = (props: Props) => {
       }
     }
     return out
+
+    // Do not re-render on change of coinRankings. This is intended to be
+    // asynchronously accessed by each individual row.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSize, searchText])
-  // Do not re-render on change of coinRankings. This is intended to be asynchronously accessed by each individual
-  // row.
 
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
