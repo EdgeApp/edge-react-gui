@@ -21,6 +21,8 @@ export interface RootState {
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates
 
+  readonly isLoggedIn: boolean
+
   // Next username to auto-fill at the login screen, or blank if none:
   readonly nextUsername: string | null
 
@@ -59,6 +61,17 @@ export const rootReducer = combineReducers<RootState, Action>({
         return action.data.exchangeRates
       case 'LOGOUT':
         return {}
+      default:
+        return state
+    }
+  },
+
+  isLoggedIn: (state = false, action: Action): boolean => {
+    switch (action.type) {
+      case 'IS_LOGGED_IN':
+        return true
+      case 'LOGOUT':
+        return false
       default:
         return state
     }

@@ -11,6 +11,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
+import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
@@ -144,6 +145,10 @@ const EdgeApp = () => {
     }
   })
 
+  // Login/Logout events:
+  useMount(() => {
+    dispatch({ type: 'IS_LOGGED_IN' })
+  })
   useUnmount(() => {
     dispatch(logoutRequest(navigation))
   })
