@@ -56,13 +56,14 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Pr
  */
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account } = state.core
-  const { activeWalletIds, currencyWallets, username } = account
+  const { activeWalletIds, currencyWallets } = account
+  const isLoggedIn = state.isLoggedIn
 
   // Wait for all wallets to load before handling deep links
   const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
 
-  // We can't handle any links without an account:
-  if (username == null) return false
+  // We can't handle any links without being logged into the app:
+  if (!isLoggedIn) return false
 
   switch (link.type) {
     case 'edgeLogin':
