@@ -1,4 +1,4 @@
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import s from '../../locales/strings'
 import { ActionOp, ActionProgram, ActionProgramCompleteMessage } from './types'
 

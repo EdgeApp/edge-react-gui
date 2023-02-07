@@ -5,62 +5,55 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
-import { connect } from '../../types/reactRedux'
-import { AccountReferral } from '../../types/ReferralTypes'
-import { MessageTweak } from '../../types/TweakTypes'
-import { bestOfMessages, TweakSource } from '../../util/ReferralHelpers'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { useHandler } from '../../hooks/useHandler'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { NavigationBase } from '../../types/routerTypes'
+import { bestOfMessages } from '../../util/ReferralHelpers'
+import { showError } from '../services/AirshipInstance'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonBox } from '../themed/ThemedButtons'
 
-interface StateProps {
-  accountMessages: MessageTweak[]
-  accountReferral: AccountReferral
+interface Props {
+  navigation: NavigationBase
 }
 
-interface DispatchProps {
-  hideMessageTweak: (messageId: string, source: TweakSource) => void
-  linkReferralWithCurrencies: (uri: string) => void
-}
+export function PromoCard(props: Props) {
+  const { navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
-type Props = StateProps & DispatchProps & ThemeProps
+  const accountMessages = useSelector(state => state.account.referralCache.accountMessages)
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const messageSummary = bestOfMessages(accountMessages, accountReferral)
 
-export class PromoCardComponent extends React.PureComponent<Props> {
-  handlePress = () => {
-    const { accountMessages, accountReferral, linkReferralWithCurrencies } = this.props
-    const messageSummary = bestOfMessages(accountMessages, accountReferral)
-    const uri = messageSummary ? messageSummary.message.uri : null
-    if (uri != null) linkReferralWithCurrencies(uri)
-  }
+  const handlePress = useHandler(() => {
+    const uri = messageSummary?.message.uri
+    if (uri != null) dispatch(linkReferralWithCurrencies(navigation, uri)).catch(showError)
+  })
 
-  handleClose = () => {
-    const { accountMessages, accountReferral, hideMessageTweak } = this.props
-    const messageSummary = bestOfMessages(accountMessages, accountReferral)
+  const handleClose = useHandler(() => {
     if (messageSummary != null) {
-      hideMessageTweak(messageSummary.messageId, messageSummary.messageSource)
+      dispatch(hideMessageTweak(messageSummary.messageId, messageSummary.messageSource))
     }
-  }
+  })
 
-  render() {
-    const { accountMessages, accountReferral, theme } = this.props
-    const styles = getStyles(theme)
-    const messageSummary = bestOfMessages(accountMessages, accountReferral)
-    if (messageSummary == null) return null
-    const { message } = messageSummary
-    return (
-      <ButtonBox marginRem={1} onPress={this.handlePress}>
-        <View style={styles.container}>
-          {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
-          <EdgeText numberOfLines={0} style={styles.text}>
-            {message.message}
-          </EdgeText>
-          <TouchableOpacity onPress={this.handleClose}>
-            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
-          </TouchableOpacity>
-        </View>
-      </ButtonBox>
-    )
-  }
+  if (messageSummary == null) return null
+  const { message } = messageSummary
+  return (
+    <ButtonBox marginRem={1} onPress={handlePress}>
+      <View style={styles.container}>
+        {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+        <EdgeText numberOfLines={0} style={styles.text}>
+          {message.message}
+        </EdgeText>
+        <TouchableOpacity onPress={handleClose}>
+          <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+        </TouchableOpacity>
+      </View>
+    </ButtonBox>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -83,18 +76,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.5)
   }
 }))
-
-export const PromoCard = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    accountMessages: state.account.referralCache.accountMessages,
-    accountReferral: state.account.accountReferral
-  }),
-  dispatch => ({
-    hideMessageTweak(messageId: string, source: TweakSource) {
-      dispatch(hideMessageTweak(messageId, source))
-    },
-    linkReferralWithCurrencies(uri) {
-      dispatch(linkReferralWithCurrencies(uri))
-    }
-  })
-)(withTheme(PromoCardComponent))

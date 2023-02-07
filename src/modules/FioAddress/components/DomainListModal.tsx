@@ -13,7 +13,7 @@ import { ThemedModal } from '../../../components/themed/ThemedModal'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { Actions } from '../../../types/routerTypes'
+import { NavigationBase } from '../../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../../types/types'
 
 interface Item {
@@ -31,6 +31,7 @@ interface StateProps {
 
 interface OwnProps {
   bridge: AirshipBridge<FioDomain | undefined>
+  navigation: NavigationBase
   publicDomains: FioDomain[]
 }
 
@@ -58,8 +59,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
   }
 
-  // @ts-expect-error
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
     const { publicDomains, userDomains } = props
 
     const prevDomainsJson = JSON.stringify([...publicDomains, ...userDomains])
@@ -111,8 +111,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
   }
 
   registerNewDomain = () => {
-    this.props.bridge.resolve(undefined)
-    Actions.push('fioDomainRegister', {})
+    const { bridge, navigation } = this.props
+    bridge.resolve(undefined)
+    navigation.navigate('fioDomainRegister', {})
   }
 
   selectItem = (value: any) => this.props.bridge.resolve(value)
@@ -145,7 +146,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return null
   }
 
-  keyExtractor = (item: Item, index: number) => index.toString()
+  keyExtractor = (item: Item) => item.value.name
   onSearchFilterChange = (input: string) => this.setState({ input })
   render() {
     const { bridge, theme } = this.props

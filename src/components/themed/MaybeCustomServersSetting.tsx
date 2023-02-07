@@ -27,34 +27,32 @@ function CustomServersSettingComponent(props: Props) {
   const styles = getStyles(theme)
 
   const titleText = extraInfo == null ? s.strings.settings_custom_nodes_title : sprintf(s.strings.settings_custom_servers_title, extraInfo)
+  const customServerSet = new Set(customServers)
 
   async function handleToggleEnabled(): Promise<void> {
     await onUpdate({
       enableCustomServers: !enableCustomServers,
-      customServers: customServers.length > 0 ? customServers : defaultSetting.customServers
+      customServers: customServerSet.size > 0 ? Array.from(customServerSet) : defaultSetting.customServers
     })
-    logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServers.length}`)
+    logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServerSet.size}`)
   }
 
-  async function handleDeleteNode(i: number): Promise<void> {
-    const deletedNode = customServers[i]
-    const list = [...customServers]
-    list.splice(i, 1)
-
-    await onUpdate({ enableCustomServers, customServers: list })
-    logActivity(`Delete Custom Node: ${deletedNode}`)
+  async function handleDeleteNode(server: string): Promise<void> {
+    customServerSet.delete(server)
+    await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
+    logActivity(`Delete Custom Node: ${server}`)
   }
 
-  function handleEditNode(i?: number): void {
+  function handleEditNode(server?: string): void {
     async function handleSubmit(text: string) {
       let before = 'no_node'
-      const list = [...customServers]
-      if (i == null) list.push(text)
-      else {
-        before = list[i]
-        list[i] = text
+      if (server != null) {
+        customServerSet.delete(server)
+        before = server
+        server = text
       }
-      await onUpdate({ enableCustomServers, customServers: list })
+      customServerSet.add(text)
+      await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
       logActivity(`Edit Custom Node: ${before} -> ${text}`)
       return true
     }
@@ -63,7 +61,7 @@ function CustomServersSettingComponent(props: Props) {
       <TextInputModal
         autoCorrect={false}
         bridge={bridge}
-        initialValue={i == null ? '' : customServers[i]}
+        initialValue={server ?? ''}
         inputLabel={s.strings.settings_custom_node_url}
         title={s.strings.settings_edit_custom_node}
         onSubmit={handleSubmit}
@@ -77,9 +75,9 @@ function CustomServersSettingComponent(props: Props) {
       <SettingsSwitchRow label={s.strings.settings_enable_custom_nodes} value={enableCustomServers} onPress={handleToggleEnabled} />
       {!enableCustomServers ? null : (
         <>
-          {customServers.map((server, i) => (
-            <SettingsTappableRow key={`row${i}`} action="delete" onPress={async () => handleDeleteNode(i)}>
-              <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
+          {Array.from(customServerSet).map(server => (
+            <SettingsTappableRow key={server} action="delete" onPress={async () => handleDeleteNode(server)}>
+              <TouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
                 <Text style={styles.labelText}>{server}</Text>
               </TouchableOpacity>
             </SettingsTappableRow>

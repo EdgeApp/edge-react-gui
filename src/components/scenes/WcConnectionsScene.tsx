@@ -3,6 +3,7 @@ import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -25,26 +26,22 @@ export const WcConnectionsScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
-  const { tempWallet, currencyWallets, wcEnabledWalletIds } = useSelector(state => {
-    const { currencyWallets } = state.core.account
 
-    // Look for all existing WalletConnect-enabled wallets
-    const wcEnabledWalletIds = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
 
-    // Check if the user was already recently using a WalletConnect-enabled wallet.
-    // If not, select another WalletConnect-enabled wallet, if it exists.
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const tempWallet =
-      currencyWallets[selectedWalletId]?.otherMethods?.wcConnect != null
-        ? currencyWallets[selectedWalletId]
-        : wcEnabledWalletIds.length > 0
-        ? currencyWallets[wcEnabledWalletIds[0]]
-        : undefined
+  // Look for all existing WalletConnect-enabled wallets
+  const wcEnabledWalletIds = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
 
-    // Temp wallet is only used for calling its parseUri function.
-    // Actual wallet used for the connection is set later in the WcConnectScene
-    return { tempWallet, currencyWallets, wcEnabledWalletIds }
-  })
+  // Check if the user was already recently using a WalletConnect-enabled wallet.
+  // If not, select another WalletConnect-enabled wallet, if it exists.
+  const tempWallet =
+    currencyWallets[selectedWalletId]?.otherMethods?.wcConnect != null
+      ? currencyWallets[selectedWalletId]
+      : wcEnabledWalletIds.length > 0
+      ? currencyWallets[wcEnabledWalletIds[0]]
+      : undefined
 
   React.useEffect(() => {
     getdAppconnections().then(connections => setConnections(connections))
@@ -100,7 +97,15 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = () => {
-    Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | undefined>(bridge => (
+      <ScanModal
+        bridge={bridge}
+        title={s.strings.scan_qr_label}
+        textModalHint={s.strings.wc_scan_modal_text_modal_hint}
+        textModalMessage=""
+        textModalTitle={s.strings.wc_scan_modal_text_modal_title}
+      />
+    ))
       .then((result: string | undefined) => {
         console.log(result)
         if (result) {

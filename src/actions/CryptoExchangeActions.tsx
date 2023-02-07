@@ -129,7 +129,13 @@ export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSw
 
 async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const { account } = state.core
-  const { preferredSwapPluginType } = state.ui.settings
+  const {
+    exchangeInfo: {
+      swap: { disablePlugins }
+    },
+    settings
+  } = state.ui
+  const { preferredSwapPluginType } = settings
 
   // Find preferred swap provider:
   const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
@@ -144,7 +150,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, {
     preferPluginId,
     preferType: preferredSwapPluginType,
-    disabled: activePlugins.disabled,
+    disabled: { ...activePlugins.disabled, ...disablePlugins },
     promoCodes: activePlugins.promoCodes
   })
 

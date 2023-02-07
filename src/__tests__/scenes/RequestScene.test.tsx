@@ -12,6 +12,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
+        account={null as any}
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode={null as any}
@@ -38,6 +39,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
+        account={null as any}
         navigation={fakeNavigation}
         isConnected={false}
         currencyCode="BTC"

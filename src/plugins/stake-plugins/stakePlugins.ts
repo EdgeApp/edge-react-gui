@@ -1,24 +1,35 @@
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
+import { makeTronStakePlugin } from './currency/tronStakePlugin'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
 import { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'
 
-export const makeStakePlugins = async (): Promise<StakePlugin[]> => {
+// Return the memoized plugins and update them in the background for the next time this function is called
+let loadedPlugins: StakePlugin[]
+
+export const getStakePlugins = async (): Promise<StakePlugin[]> => {
+  if (loadedPlugins == null) {
+    await makeStakePlugins()
+  }
+  return loadedPlugins ?? []
+}
+
+export const makeStakePlugins = async (): Promise<void> => {
   const tcInitOptions = typeof ENV.THORCHAIN_INIT === 'object' ? ENV.THORCHAIN_INIT : {}
 
-  if (Object.keys(tcInitOptions).length === 0) return []
-
-  const results = await Promise.all([
+  const promises = [
     makeUniV2StakePlugin().catch(e => {
       console.warn(e.message)
     }),
     makeTcSaversPlugin({ initOptions: tcInitOptions }).catch(e => {
       console.warn(e.message)
+    }),
+    makeTronStakePlugin().catch(e => {
+      console.warn(e.message)
     })
-  ])
-  const out: StakePlugin[] = []
-  results.forEach(result => {
-    if (result != null) out.push(result)
-  })
-  return out
+  ]
+
+  const results = await Promise.all(promises)
+
+  loadedPlugins = results.filter((result): result is StakePlugin => result != null)
 }

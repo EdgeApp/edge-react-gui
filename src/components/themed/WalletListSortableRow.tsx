@@ -75,7 +75,7 @@ export class WalletListSortableRowComponent extends React.PureComponent<Props> {
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
             <View style={styles.iconContainer}>
-              <CryptoIcon currencyCode={currencyCode} walletId={pluginId} />
+              <CryptoIcon currencyCode={currencyCode} walletId={wallet.id} />
             </View>
             <View style={styles.detailsContainer}>
               <View style={styles.detailsRow}>

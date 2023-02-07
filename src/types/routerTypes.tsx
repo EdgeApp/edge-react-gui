@@ -2,6 +2,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, J
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
 
+import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
@@ -10,6 +11,7 @@ import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
+import { CoinRankingData } from './coinrankTypes'
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
@@ -41,6 +43,7 @@ export interface ParamList {
   root: {}
   login: {}
   edge: {}
+  controlPanel: {}
 
   // Logged-in scenes:
   changeMiningFee: {
@@ -57,7 +60,11 @@ export interface ParamList {
   }
   changePassword: {}
   changePin: {}
-  controlPanel: {}
+  coinRanking: {}
+  coinRankingDetails: {
+    coinRankingData: CoinRankingData
+  }
+  confirmScene: ConfirmSceneParams
   createWalletAccountSelect: {
     accountName: string
     existingWalletId?: string
@@ -96,7 +103,9 @@ export interface ParamList {
     currencyInfo: EdgeCurrencyInfo
   }
   defaultFiatSetting: {}
-  edgeLogin: {}
+  edgeLogin: {
+    lobbyId: string
+  }
   editToken: {
     currencyCode?: string
     displayName?: string
@@ -278,7 +287,6 @@ export interface ParamList {
     stakePosition: StakePosition
     modification: ChangeQuoteRequest['action']
   }
-  stakeClaim: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
   stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   termsOfService: {}

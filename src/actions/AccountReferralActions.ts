@@ -5,7 +5,7 @@ import { Platform } from 'react-native'
 import { getBuildNumber } from 'react-native-device-info'
 import { getLocales } from 'react-native-localize'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 import { pickLanguage } from '../locales/intl'
 import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'

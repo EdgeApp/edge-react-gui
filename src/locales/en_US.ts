@@ -66,6 +66,7 @@ const strings = {
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
+
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
   share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
@@ -135,7 +136,7 @@ const strings = {
   access_wallet_description:
     'This application would like to create or access its wallet in your %1$s account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
-    'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
+    'The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_msg: 'Your exchange has been successfully completed!',
@@ -179,6 +180,7 @@ const strings = {
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_subtitle: 'Send',
+  fragment_send_myself: 'Myself',
   fragment_send_from_label: 'From',
   fragment_stake_label: 'Stake',
   fragment_transaction_exchange: 'Exchange',
@@ -286,6 +288,21 @@ const strings = {
   create_wallet_account_unfinished_activation_title: 'Wallet Not Activated',
   create_wallet_account_unfinished_activation_message:
     'In order to complete activation of this %s wallet, please choose a unique account name and complete the activation payment. If you already made an activation payment, please wait for that payment to confirm before attempting to use this wallet.',
+  activate_wallet_token_transaction_name_category_generic: 'Token Activation',
+  activate_wallet_token_transaction_notes_generic: 'Activate token transaction',
+  activate_wallet_token_transaction_name_xrp: 'XRP Ledger',
+  activate_wallet_token_transaction_notes_xrp: 'Activate XRP token by enabling Trust Line to issuer',
+  activate_wallet_token_scene_title: 'Activate Token',
+  activate_wallet_tokens_scene_title: 'Activate Tokens',
+  activate_wallet_token_scene_tile_title: 'Token to Activate',
+  activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
+  activate_wallet_token_scene_body:
+    'To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.',
+  activate_wallet_tokens_scene_body:
+    'To send and receive the selected tokens you will first need to activate them with one or more blockchain transactions. The transactions in total will cost the following fee shown below. Please confirm using the slider below.',
+  activate_wallet_token_insufficient_funds_s: 'You have insufficient funds to activate this token. You need at least %s to proceed with activation.',
+  activate_wallet_tokens_insufficient_funds_s: 'You have insufficient funds to activate these tokens. You need at least %s to proceed with activation.',
+  activate_wallet_token_success: 'Token successfully activated. It may take a few mins for the activation to be recognized by the network.',
   preparing_fio_wallet: 'Preparing FIO wallet',
   fio_address: 'FIO Address: %s',
   fio_pending_requests: 'Pending Requests',
@@ -327,6 +344,7 @@ const strings = {
   request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   search_wallets: 'Search Wallets',
   search_tokens: 'Search Tokens',
+  search_assets: 'Search Assets',
   select_wallet: 'Select Wallet',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
@@ -551,6 +569,7 @@ const strings = {
   title_settings: 'Settings',
   title_promotion_settings: 'Promotion Settings',
   title_terms_of_service: 'Terms of Service',
+  title_markets: 'Markets',
   title_wallets: 'Wallets',
   title_buy: 'Buy',
   title_sell: 'Sell',
@@ -739,6 +758,7 @@ const strings = {
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
+  edge_login_fail_stale_qr: 'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
@@ -885,8 +905,10 @@ const strings = {
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
-  scan_private_key_modal_title: 'Enter Private Key',
-  scan_private_key_modal_label: 'Private Key',
+  scan_modal_text_modal_title: 'Enter any of the following:',
+  scan_modal_text_modal_message:
+    '1. Edge Login URI to login to another device\n\n2. Wallet Connect URI to connect to a DApp\n\n3. Public address to send money to\n\n4. Private key to sweep\n\nEdge will auto-detect the URI format and allow you to select an appropriate wallet',
+  scan_modal_text_modal_hint: 'Enter Address or Key',
   address_modal_default_header: 'Enter Address',
   open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes
@@ -1071,6 +1093,9 @@ const strings = {
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
   send_add_destination_address: 'Add Destination Address',
+  send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
+  send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
+  send_scan_modal_text_modal_hint: 'Public Address',
 
   // Request Scene
   request_balance: 'You have %s',
@@ -1105,6 +1130,8 @@ const strings = {
   wc_smartcontract_network_fee: 'Network Fee',
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
+  wc_scan_modal_text_modal_title: 'Enter Wallet Connect URI',
+  wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed To Send Tokens',
@@ -1133,6 +1160,7 @@ const strings = {
   stake_stake_more_funds: 'Stake More Funds',
   stake_claim_rewards: 'Claim Rewards',
   stake_unstake_claim: 'Unstake and Claim Rewards',
+  stake_unstake: 'Unstake',
   stake_x_to_earn_y: 'Stake %1$s to earn %2$s',
   stake_amount_s_stake: 'Amount of %s to Stake',
   stake_amount_claim: 'Amount of Reward to Claim',
@@ -1166,6 +1194,11 @@ const strings = {
   stake_earn_button_label: 'Earn',
   stake_unable_to_query_locked: 'Unable to query locked balance. Please try again later.',
 
+  // Tron resource staking
+  stake_resource_display_name: 'TRON Resources',
+  stake_resource_bandwidth: 'Bandwidth',
+  stake_resource_energy: 'Energy',
+
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_buy_currencycode: 'Buy %s',
   fiat_plugin_amount_currencycode: 'Amount %s',
@@ -1182,6 +1215,31 @@ const strings = {
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
+
+  // #region CoinRanking
+
+  coin_rank_price: 'Price',
+  coin_rank_rank: 'Rank',
+  coin_rank_title_market_cap: 'Market Cap',
+  coin_rank_title_hours_1: 'Price % Change (hour)',
+  coin_rank_title_hours_24: 'Price % Change (day)',
+  coin_rank_title_days_7: 'Price % Change (week)',
+  coin_rank_title_days_30: 'Price % Change (month)',
+  coin_rank_title_year_1: 'Price % Change (year)',
+  coin_rank_title_volume_24h: '24h Volume',
+  coin_rank_title_high_24h: '24h High',
+  coin_rank_title_low_24h: '24h Low',
+  coin_rank_title_price_change_24h: 'Price Change (24h)',
+  coin_rank_title_market_cap_change_24h: 'Market Cap Change (24h)',
+  coin_rank_title_circulating_supply: 'Circulating Supply',
+  coin_rank_title_total_supply: 'Total Supply',
+  coin_rank_title_max_supply: 'Max Supply',
+  coin_rank_title_all_time_high: 'All Time High',
+  coin_rank_title_all_time_low: 'All Time Low',
+  coin_rank_market_cap_abbreviation: 'MCap',
+  coin_rank_volume_24hr_abbreviation: 'Vol 24h',
+
+  // #endregion CoinRanking
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

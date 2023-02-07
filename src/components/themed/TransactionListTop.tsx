@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -15,12 +15,13 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
-import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
+import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -105,7 +106,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { pluginId } = wallet.currencyInfo
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
-      makeStakePlugins().then(stakePlugins => {
+      getStakePlugins().then(stakePlugins => {
         let stakePolicies: StakePolicy[] = []
         for (const stakePlugin of stakePlugins) {
           const filteredStatePolicies = stakePlugin.policies.filter(stakePolicy => {
@@ -533,6 +534,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export function TransactionListTop(props: OwnProps) {
   const { wallet, currencyCode, navigation } = props
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
   const theme = useTheme()
 
   const { pluginId } = wallet.currencyInfo
@@ -548,7 +550,9 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(toggleAccountBalanceVisibility())
   })
   const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
-    dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
+    const wallet = account.currencyWallets[walletId]
+    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
   })
 
   return (

@@ -278,10 +278,6 @@ export function walletListMenuAction(
             title={s.strings.fragment_wallets_rename_wallet}
             onSubmit={async name => {
               await wallet.renameWallet(name)
-              dispatch({
-                type: 'UI/WALLETS/UPSERT_WALLETS',
-                data: { wallets: [wallet] }
-              })
               return true
             }}
           />

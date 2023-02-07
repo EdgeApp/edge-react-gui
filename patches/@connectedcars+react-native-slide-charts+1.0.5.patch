@@ -1,0 +1,80 @@
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
+index bb9144e..2dafb12 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/axis/utils/types.ts
+@@ -1,4 +1,4 @@
+-import { ScaleTime, ScaleLinear } from 'd3'
++import { ScaleTime, ScaleLinear } from 'd3-scale'
+ import { TSpanProps, TextAnchor, AlignmentBaseline } from 'react-native-svg'
+ import { GradientProps } from '../../charts/utils/types'
+ 
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
+index 39735cc..328bd81 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/chartComponents/charts/utils/types.ts
+@@ -1,4 +1,4 @@
+-import { ScaleLinear, ScaleTime } from 'd3'
++import { ScaleLinear, ScaleTime } from 'd3-scale'
+ import { YAxisProps, XAxisProps } from '../../axis/utils/types'
+ 
+ export type GradientProps = {
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
+index 716ecb7..d4b9d65 100644
+--- a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts
+@@ -1,5 +1,5 @@
+ import { TextStyle } from 'react-native'
+-import { ScaleTime, ScaleLinear } from 'd3'
++import { ScaleTime, ScaleLinear } from 'd3-scale'
+ 
+ export type ToolTipTextRenderersInput = {
+   x: number
+diff --git a/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig
+new file mode 100644
+index 0000000..716ecb7
+--- /dev/null
++++ b/node_modules/@connectedcars/react-native-slide-charts/src/lib/components/toolTip/utils/types.ts.orig
+@@ -0,0 +1,43 @@
++import { TextStyle } from 'react-native'
++import { ScaleTime, ScaleLinear } from 'd3'
++
++export type ToolTipTextRenderersInput = {
++  x: number
++  y: number
++  scaleX: ScaleTime<number, number> | ScaleLinear<number, number>
++  scaleY: ScaleLinear<number, number>
++  selectedBarNumber: number
++}
++
++type ToolTipPartialProps = {
++  height?: number
++  width?: number
++}
++
++export type ToolTipProps = ToolTipPartialProps & {
++  borderRadius?: number
++  fontSize?: number
++  textStyles?: TextStyle[]
++  toolTipTextRenderers?: Array<
++    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => { text: string }
++  >
++  backgroundColor?: string
++  displayTriangle?: boolean
++  lockTriangleCenter?: boolean
++  displayToolTip?: boolean
++}
++
++export type ToolTipDefaultProps = {
++  borderRadius: number
++  fontSize: number
++  textStyles: TextStyle[]
++  toolTipTextRenderers: Array<
++    (toolTipTextRenderersInput: ToolTipTextRenderersInput) => { text: string }
++  >
++  backgroundColor: string
++  displayTriangle: boolean
++  lockTriangleCenter: boolean
++  displayToolTip: boolean
++}
++
++export type ToolTipComponentProps = ToolTipDefaultProps & ToolTipPartialProps

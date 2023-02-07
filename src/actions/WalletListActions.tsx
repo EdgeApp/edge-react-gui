@@ -9,8 +9,11 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import s from '../locales/strings'
 import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings'
 import { GetState, ThunkAction } from '../types/reduxTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
+import { launchDeepLink } from './DeepLinkingActions'
 
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -41,24 +44,22 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
   }
 }
 
-export function linkReferralWithCurrencies(uri: string): ThunkAction<Promise<void>> {
+export function linkReferralWithCurrencies(navigation: NavigationBase, uri: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    // Fill in any addresses:
     const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
-    if (currencyCodeMatches) {
-      try {
-        for (const match of currencyCodeMatches) {
-          const currencyCode = match.toUpperCase().replace(/%/g, '')
-          const address = await getFirstCurrencyAddress(currencyCode, getState)
-          if (!address) continue
-          uri = uri.replace(match, address)
-        }
-        Linking.openURL(uri)
-      } catch (error: any) {
-        showError(error)
+    if (currencyCodeMatches != null) {
+      for (const match of currencyCodeMatches) {
+        const currencyCode = match.toUpperCase().replace(/%/g, '')
+        const address = await getFirstCurrencyAddress(currencyCode, getState)
+        if (address == null) continue
+        uri = uri.replace(match, address)
       }
-    } else {
-      Linking.openURL(uri)
     }
+
+    const parsed = parseDeepLink(uri)
+    if (parsed.type === 'other') Linking.openURL(uri)
+    else dispatch(launchDeepLink(navigation, parsed))
   }
 }
 

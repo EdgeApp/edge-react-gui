@@ -27,11 +27,6 @@ Object {
     },
     "context": Object {},
     "disklet": Object {},
-    "edgeLogin": Object {
-      "error": null,
-      "isProcessing": false,
-      "lobby": null,
-    },
     "otpErrorShown": false,
   },
   "cryptoExchange": Object {
@@ -102,6 +97,21 @@ Object {
   },
   "sortedWalletList": Array [],
   "ui": Object {
+    "exchangeInfo": Object {
+      "buy": Object {
+        "disablePlugins": Object {},
+      },
+      "sell": Object {
+        "disablePlugins": Object {},
+      },
+      "swap": Object {
+        "disableAssets": Object {
+          "destination": Array [],
+          "source": Array [],
+        },
+        "disablePlugins": Object {},
+      },
+    },
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},
       "expireReminderShown": false,
@@ -235,7 +245,6 @@ Object {
       "walletsSort": "manual",
     },
     "wallets": Object {
-      "byId": Object {},
       "fioWallets": Array [],
       "selectedCurrencyCode": "",
       "selectedWalletId": "",

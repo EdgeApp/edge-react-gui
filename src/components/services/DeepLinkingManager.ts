@@ -4,9 +4,9 @@ import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messag
 import * as React from 'react'
 import { Linking } from 'react-native'
 
-import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions'
 import { pushMessagePayloadToEdgeUri } from '../../controllers/action-queue/types/pushPayloadTypes'
+import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -36,8 +36,7 @@ export function DeepLinkingManager(props: Props) {
     })
   }, [accountReferralLoaded, dispatch, navigation, pendingDeepLink, wallets])
 
-  // @ts-expect-error
-  const handleUrl = url => {
+  const handleUrl = (url: string) => {
     try {
       dispatch(launchDeepLink(navigation, parseDeepLink(url)))
     } catch (error: any) {

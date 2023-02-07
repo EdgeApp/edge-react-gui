@@ -1,5 +1,5 @@
 import { asMaybe, asObject, asString } from 'cleaners'
-import { EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
@@ -10,6 +10,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -20,16 +21,16 @@ import { SceneHeader } from '../themed/SceneHeader'
 interface Props {
   navigation: NavigationProp<'editToken'>
   route: RouteProp<'editToken'>
+  wallet: EdgeCurrencyWallet
 }
 
-export function EditTokenScene(props: Props) {
-  const { navigation, route } = props
-  const { tokenId, walletId } = route.params
+function EditTokenSceneComponent(props: Props) {
+  const { navigation, route, wallet } = props
+  const { tokenId } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const account = useSelector(state => state.core.account)
-  const wallet = account.currencyWallets[walletId]
 
   // Extract our initial state from the token:
   const [currencyCode, setCurrencyCode] = React.useState(route.params.currencyCode ?? '')
@@ -207,3 +208,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 4
   }
 }))
+
+export const EditTokenScene = withWallet(EditTokenSceneComponent)

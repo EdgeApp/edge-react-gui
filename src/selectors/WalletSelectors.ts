@@ -2,13 +2,8 @@ import { mul } from 'biggystring'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
-import { GuiWallet } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { convertNativeToExchange, zeroString } from '../util/utils'
-
-export function getSelectedWallet(state: RootState): GuiWallet {
-  return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
-}
 
 export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet {
   return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]

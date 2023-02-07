@@ -1,4 +1,4 @@
-import ENV from '../../env.json'
+import { ENV } from '../env'
 import { AppConfig } from '../types/types'
 import { edgeConfig } from './edgeConfig'
 import { testConfig } from './testConfig'

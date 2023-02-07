@@ -1,3 +1,135 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PromoCard should render with loading props 1`] = `null`;
+exports[`PromoCard should render 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "marginBottom": 22,
+      "marginLeft": 22,
+      "marginRight": 22,
+      "marginTop": 22,
+      "opacity": 1,
+      "paddingBottom": 11,
+      "paddingLeft": 11,
+      "paddingRight": 11,
+      "paddingTop": 11,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "flexDirection": "row",
+        "padding": 11,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "overflow": "hidden",
+          },
+          Object {
+            "height": 45,
+            "margin": 11,
+            "width": 45,
+          },
+        ]
+      }
+    >
+      <FastImageView
+        resizeMode="contain"
+        source={
+          Object {
+            "uri": "https://edge.app/favicon.ico",
+          }
+        }
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={0}
+      style={
+        Array [
+          Object {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          Object {
+            "flex": 1,
+            "margin": 11,
+          },
+          null,
+        ]
+      }
+    >
+      Show me
+    </Text>
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": "#00f1a2",
+              "fontSize": 22,
+            },
+            Object {
+              "padding": 11,
+            },
+            Object {
+              "fontFamily": "anticon",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+</View>
+`;

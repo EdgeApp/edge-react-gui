@@ -45,6 +45,33 @@ Array [
 ]
 `;
 
+exports[`GuiPlugins tools filter ios + US - gox as expected 1`] = `
+Array [
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "/applePay",
+    "deepQuery": Object {},
+    "description": "",
+    "paymentTypes": Array [
+      "applepay",
+    ],
+    "pluginId": "phony",
+    "title": "Apple Pay",
+  },
+  Object {
+    "cryptoCodes": Array [],
+    "deepPath": "",
+    "deepQuery": Object {},
+    "description": "",
+    "paymentTypes": Array [
+      "credit",
+    ],
+    "pluginId": "phony",
+    "title": "Credit card",
+  },
+]
+`;
+
 exports[`GuiPlugins tools filter ios + US as expected 1`] = `
 Array [
   Object {

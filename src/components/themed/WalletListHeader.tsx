@@ -84,7 +84,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </View>
           </View>
         )}
-        {!searching && <PromoCard />}
+        {searching ? null : <PromoCard navigation={navigation} />}
       </>
     )
   }

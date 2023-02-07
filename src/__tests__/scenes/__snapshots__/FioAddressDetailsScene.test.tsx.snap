@@ -49,6 +49,23 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     disabled={false}
     fioAddressName="Fio@edge"
     fioWallet={null}
+    navigation={
+      Object {
+        "addListener": [Function],
+        "closeDrawer": [Function],
+        "getState": [Function],
+        "goBack": [Function],
+        "isFocused": [Function],
+        "navigate": [Function],
+        "openDrawer": [Function],
+        "pop": [Function],
+        "popToTop": [Function],
+        "push": [Function],
+        "replace": [Function],
+        "setParams": [Function],
+        "toggleDrawer": [Function],
+      }
+    }
   />
 </SceneWrapper>
 `;

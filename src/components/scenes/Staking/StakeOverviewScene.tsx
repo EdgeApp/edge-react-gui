@@ -1,4 +1,4 @@
-import { toFixed } from 'biggystring'
+import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -10,9 +10,10 @@ import { getDisplayDenominationFromState } from '../../../selectors/Denomination
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -23,21 +24,24 @@ import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 interface Props {
   navigation: NavigationProp<'stakeModify'>
   route: RouteProp<'stakeOverview'>
+  wallet: EdgeCurrencyWallet
 }
 
-export const StakeOverviewScene = (props: Props) => {
-  const { navigation } = props
-  const { stakePolicy, stakePlugin, walletId } = props.route.params
+interface DenomMap {
+  [cc: string]: EdgeDenomination
+}
+
+const StakeOverviewSceneComponent = (props: Props) => {
+  const { navigation, route, wallet } = props
+  const { stakePolicy, stakePlugin } = route.params
   const { stakePolicyId } = stakePolicy
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const wallet = account.currencyWallets[walletId]
 
-  const displayDenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap, asset) => {
-    // @ts-expect-error
+  const displayDenomMap: DenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
     denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(wallet.currencyInfo.pluginId, asset.currencyCode))
     return denomMap
   }, {})
@@ -77,26 +81,30 @@ export const StakeOverviewScene = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [wallet, stakePolicyId, updateCounter])
+  }, [wallet, stakePolicyId, stakePlugin, updateCounter])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
     if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
-      navigation.navigate('stakeModify', { stakePlugin, walletId, stakePolicy, stakePosition, modification })
+      navigation.navigate('stakeModify', {
+        modification,
+        stakePlugin,
+        stakePolicy,
+        stakePosition,
+        walletId: wallet.id
+      })
     }
   }
 
   // Renderers
-  // @ts-expect-error
-  const renderCFAT = ({ item }) => {
+  const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
     const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
-    // @ts-expect-error
     const denomination = displayDenomMap[currencyCode]
 
     const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId
-    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={walletId} />
+    return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
   const sceneHeader = React.useMemo(
@@ -111,7 +119,8 @@ export const StakeOverviewScene = (props: Props) => {
       </SceneWrapper>
     )
 
-  const estimatedReturnMsg = stakePolicy.apy > 0 ? toFixed(stakePolicy.apy.toString(), 1, 1) + '% APR' : 'N/A'
+  const unstakeText = getUnstakeText(stakePolicy)
+
   return (
     <SceneWrapper scroll background="theme">
       {sceneHeader}
@@ -119,7 +128,7 @@ export const StakeOverviewScene = (props: Props) => {
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
           toCurrencyLogos={policyIcons.rewardAssetUris}
-          text={sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}
+          apy={stakePolicy.apy}
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
@@ -135,15 +144,17 @@ export const StakeOverviewScene = (props: Props) => {
         onPress={handleModifyPress('stake')}
         marginRem={[0.5, 0.5, 0.25, 0.5]}
       />
+      {stakePolicy.rewardsNotClaimable ? null : (
+        <MainButton
+          label={s.strings.stake_claim_rewards}
+          disabled={!stakePosition?.canClaim}
+          type="secondary"
+          onPress={handleModifyPress('claim')}
+          marginRem={[0.25, 0.5, 0.25, 0.5]}
+        />
+      )}
       <MainButton
-        label={s.strings.stake_claim_rewards}
-        disabled={!stakePosition?.canClaim}
-        type="secondary"
-        onPress={handleModifyPress('claim')}
-        marginRem={[0.25, 0.5, 0.25, 0.5]}
-      />
-      <MainButton
-        label={s.strings.stake_unstake_claim}
+        label={unstakeText}
         disabled={!stakePosition?.canUnstake}
         type="escape"
         onPress={handleModifyPress('unstake')}
@@ -170,3 +181,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   }
 }))
+
+export const StakeOverviewScene = withWallet(StakeOverviewSceneComponent)

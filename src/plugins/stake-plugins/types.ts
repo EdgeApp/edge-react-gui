@@ -30,6 +30,8 @@ export class StakeBelowLimitError extends Error {
 export interface AssetId {
   pluginId: string
   currencyCode: string
+  displayName?: string
+  cdnName?: string
 }
 
 // Defines what to display so that the user can identify the service provider
@@ -56,6 +58,7 @@ export interface StakePolicy {
 
   // The assets which can be earned
   rewardAssets: AssetId[]
+  rewardsNotClaimable?: boolean
 
   // The assets which must be staked
   stakeAssets: AssetId[]
@@ -71,6 +74,7 @@ export interface StakePolicy {
 
   // Do not allow Max button when staking
   disableMaxStake?: boolean
+  mustMaxUnstake?: boolean
 }
 
 // -----------------------------------------------------------------------------

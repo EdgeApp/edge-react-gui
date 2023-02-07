@@ -54,7 +54,7 @@ const asInboundAddresses = asArray(
   })
 )
 
-const asExchangeInfo = asObject({
+const asThorchainExchangeInfo = asObject({
   swap: asObject({
     plugins: asObject({
       thorchain: asObject({
@@ -100,7 +100,7 @@ const asQuoteDeposit = asEither(
 )
 type Savers = ReturnType<typeof asSavers>
 type Pools = ReturnType<typeof asPools>
-type ExchangeInfo = ReturnType<typeof asExchangeInfo>
+type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
 
 const utxoInfo: PolicyCurrencyInfo = {
@@ -197,6 +197,7 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 let inboundAddressesLastUpdate: number = 0
 
 export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
+  asInitOptions(opts.initOptions)
   const fetchResponse = await fetchInfo(`v1/apyValues`)
     .then(async res => {
       if (!res.ok) {
@@ -762,7 +763,7 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
 
       if (exchangeInfoResponse.ok) {
         const responseJson = await exchangeInfoResponse.json()
-        exchangeInfo = asExchangeInfo(responseJson)
+        exchangeInfo = asThorchainExchangeInfo(responseJson)
         exchangeInfoLastUpdate = now
       } else {
         // Error is ok. We just use defaults

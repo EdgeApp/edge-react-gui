@@ -3,7 +3,7 @@ import dateFormat from 'dateformat'
 import RNFS from 'react-native-fs'
 import { sprintf } from 'sprintf-js'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 
 const NUM_FILES = 20
 export type LogType = 'info' | 'activity'
@@ -189,3 +189,15 @@ export async function logToServer(...info: any[]) {
     console.log('Failed logToServer')
   })
 }
+
+// Log function meant to be used in various modules that is disabled by default and enabled
+// by setting enable bits by log type
+let debugLogType = 0
+export const LOG_COINRANK = 0x0001
+export const debugLog = (type: number, ...args: any): void => {
+  // Provides date formatting for the form '01-14 03:43:56.273'
+  const dateTime = new Date().toISOString().slice(5, 23).replace('T', ' ')
+  if (type & debugLogType) console.log(dateTime, ...args)
+}
+
+export const enableDebugLogType = (type: number) => (debugLogType |= type)

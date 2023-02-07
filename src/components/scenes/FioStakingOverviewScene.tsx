@@ -162,18 +162,17 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       }
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
-    const guiWallet = state.ui.wallets.byId[walletId]
 
     const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES.staked}`
 
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
     const stakingCryptoAmountFormat = formatNumber(
-      add(convertNativeToDenomination(currencyDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0'), '0')
+      add(convertNativeToDenomination(currencyDenomination.multiplier)(currencyWallet.balances[stakingCurrencyCode] ?? '0'), '0')
     )
 
     const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
-    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(guiWallet.nativeBalances[stakingCurrencyCode] || '0')
-    const stakingFiatBalance = convertCurrency(state, currencyCode, guiWallet.isoFiatCurrencyCode, stakingDefaultCryptoAmount)
+    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(currencyWallet.balances[stakingCurrencyCode] ?? '0')
+    const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
     return {
@@ -181,8 +180,8 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       stakingCryptoAmountFormat,
       stakingFiatBalanceFormat,
       currencyDenomination,
-      fiatCurrencyCode: guiWallet.fiatCurrencyCode,
-      fiatSymbol: getSymbolFromCurrency(guiWallet.isoFiatCurrencyCode)
+      fiatCurrencyCode: currencyWallet.fiatCurrencyCode.replace('iso:', ''),
+      fiatSymbol: getSymbolFromCurrency(currencyWallet.fiatCurrencyCode)
     }
   },
   dispatch => ({

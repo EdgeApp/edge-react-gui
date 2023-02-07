@@ -9,11 +9,31 @@
 
 import { asBoolean, asMap, asObject } from 'cleaners'
 
-export const asAssetOverrides = asObject({
+import { config } from '../theme/appConfig'
+import { fetchInfo } from './network'
+
+const asAssetOverrides = asObject({
   // Currency pluginIds as key
   disable: asMap(asBoolean)
 })
 
-export type AssetOverrides = ReturnType<typeof asAssetOverrides>
+type AssetOverrides = ReturnType<typeof asAssetOverrides>
 
 export const assetOverrides: AssetOverrides = { disable: {} }
+
+export const updateAssetOverrides = async () => {
+  const appId = config.appId ?? 'edge'
+  try {
+    const response = await fetchInfo(`v1/assetOverrides/${appId}`)
+    if (!response.ok) {
+      const text = await response.text()
+      console.warn(`Failed to fetch assetOverrides: ${text}`)
+      return
+    }
+    const replyJson = await response.json()
+    const overrides = asAssetOverrides(replyJson)
+    assetOverrides.disable = overrides.disable
+  } catch (e: any) {
+    console.warn(`Failed to fetch assetOverrides: ${e.message}`)
+  }
+}

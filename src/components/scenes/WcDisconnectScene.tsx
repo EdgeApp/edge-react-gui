@@ -4,6 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -24,15 +25,14 @@ interface OwnProps {
 type Props = OwnProps
 
 export const WcDisconnectScene = (props: Props) => {
-  const { navigation } = props
-  const { wcConnectionInfo } = props.route.params
-  const { wallet } = useSelector(state => {
-    const { currencyWallets } = state.core.account
-    const wallet = currencyWallets[wcConnectionInfo.walletId]
-    return { wallet }
-  })
+  const { navigation, route } = props
+  const { wcConnectionInfo } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const wallet = currencyWallets[wcConnectionInfo.walletId]
 
   const handleDisconnect = async () => {
     try {

@@ -1,4 +1,5 @@
-import { abs, div, log10 } from 'biggystring'
+import { abs, div, gt, log10 } from 'biggystring'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -30,19 +31,16 @@ import { TransactionRow } from './TransactionRow'
 
 interface Props {
   navigation: NavigationBase
-  walletId: string
+  wallet: EdgeCurrencyWallet
   currencyCode: string
   transaction: TransactionListTx
 }
 
 export function TransactionListRow(props: Props) {
-  const { navigation, currencyCode, walletId, transaction } = props
+  const { navigation, currencyCode, wallet, transaction } = props
   const { metadata } = transaction
   const { name, amountFiat: defaultAmountFiat = 0 } = metadata ?? {}
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const wallet = currencyWallets[walletId]
   const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
@@ -76,7 +74,7 @@ export function TransactionListRow(props: Props) {
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
-  if (exchangeRate) {
+  if (exchangeRate != null && gt(exchangeRate, '0')) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeDenomination.multiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
@@ -98,7 +96,7 @@ export function TransactionListRow(props: Props) {
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
-      walletId,
+      walletId: wallet.id,
       thumbnailPath,
       amountFiat
     })
@@ -125,6 +123,7 @@ export function TransactionListRow(props: Props) {
       selectedCurrencyName={currencyName || currencyCode}
       thumbnailPath={thumbnailPath}
       transaction={transaction}
+      wallet={wallet}
     />
   )
 }

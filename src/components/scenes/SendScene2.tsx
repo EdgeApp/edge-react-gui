@@ -852,6 +852,7 @@ const SendComponent = (props: Props) => {
     return () => {
       if (onBack != null) onBack()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Calculate the transaction
