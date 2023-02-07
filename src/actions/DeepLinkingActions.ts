@@ -103,7 +103,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'swap': {
-      navigation.push('exchange', {})
+      navigation.navigate('exchange', {})
       return true
     }
 
