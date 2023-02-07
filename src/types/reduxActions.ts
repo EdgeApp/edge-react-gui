@@ -1,6 +1,7 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
+import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
@@ -145,6 +146,8 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET'
       data: { currencyCode: string; walletId: string }
     }
+  | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
+  | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | { type: 'UPDATE_SWAP_QUOTE'; data: GuiSwapInfo }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }

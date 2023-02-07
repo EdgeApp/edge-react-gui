@@ -1,5 +1,7 @@
 import { combineReducers, Reducer } from 'redux'
 
+import { ExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { exchangeInfo } from '../../reducers/ExchangeInfoReducer'
 import { fio, FioState } from '../../reducers/FioReducer'
 import { passwordReminder, PasswordReminderState } from '../../reducers/PasswordReminderReducer'
 import { scenes, ScenesState } from '../../reducers/scenes/ScenesReducer'
@@ -8,6 +10,7 @@ import { wallets, WalletsState } from '../../reducers/scenes/WalletsReducer'
 import { Action } from '../../types/reduxTypes'
 
 export interface UiState {
+  readonly exchangeInfo: ExchangeInfo
   readonly fio: FioState
   readonly passwordReminder: PasswordReminderState
   readonly scenes: ScenesState
@@ -16,6 +19,7 @@ export interface UiState {
 }
 
 const uiInner = combineReducers<UiState, Action>({
+  exchangeInfo,
   fio,
   passwordReminder,
   scenes,

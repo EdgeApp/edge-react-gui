@@ -30,7 +30,7 @@ const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
-  const { showUi, account } = params
+  const { disablePlugins, showUi, account } = params
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
@@ -38,6 +38,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   let pluginPriority = {}
 
   for (const providerFactory of providerFactories) {
+    if (disablePlugins[providerFactory.pluginId]) continue
     // @ts-expect-error
     priorityArray[0][providerFactory.pluginId] = true
     // @ts-expect-error
@@ -46,6 +47,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }
+  if (providerPromises.length === 0) throw new Error('No enabled creditCardPlugin providers')
+
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
     assetPromises.push(provider.getSupportedAssets())

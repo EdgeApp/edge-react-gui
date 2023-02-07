@@ -8,6 +8,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
+import { NestedPluginMap } from '../../actions/ExchangeInfoActions'
 import { updateOneSetting } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
@@ -75,6 +76,7 @@ interface StateProps {
   coreDisklet: Disklet
   countryCode: string
   developerModeOn: boolean
+  disablePlugins: NestedPluginMap
 }
 
 interface DispatchProps {
@@ -220,7 +222,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, navigation, route, account } = this.props
+    const { countryCode, disablePlugins, navigation, route, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -258,7 +260,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const regionCode = { countryCode }
     if (plugin.nativePlugin != null) {
-      await executePlugin({ guiPlugin: plugin, regionCode, paymentType, navigation, account })
+      const filteredDisablePlugins: { [pluginId: string]: true } = {}
+      for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
+        if (value === true) filteredDisablePlugins[key] = true
+      }
+      await executePlugin({ disablePlugins: filteredDisablePlugins, guiPlugin: plugin, regionCode, paymentType, navigation, account })
     } else {
       // Launch!
       navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
@@ -329,14 +335,14 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, route } = this.props
     const { direction } = route.params ?? { direction: 'buy' }
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
-    let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode)
+    let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins)
 
     // Filter disabled plugins:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
@@ -452,13 +458,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
+  (state, { route: { params } }) => ({
     account: state.core.account,
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
     coreDisklet: state.core.disklet,
     countryCode: state.ui.settings.countryCode,
-    developerModeOn: state.ui.settings.developerModeOn
+    developerModeOn: state.ui.settings.developerModeOn,
+    disablePlugins: state.ui.exchangeInfo[params.direction].disablePlugins
   }),
   dispatch => ({
     updateCountryCode(countryCode: string) {
