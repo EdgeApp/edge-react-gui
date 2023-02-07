@@ -905,8 +905,10 @@ const strings = {
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
-  scan_private_key_modal_title: 'Enter Private Key',
-  scan_private_key_modal_label: 'Private Key',
+  scan_modal_text_modal_title: 'Enter any of the following:',
+  scan_modal_text_modal_message:
+    '1. Edge Login URI to login to another device\n\n2. Wallet Connect URI to connect to a DApp\n\n3. Public address to send money to\n\n4. Private key to sweep\n\nEdge will auto-detect the URI format and allow you to select an appropriate wallet',
+  scan_modal_text_modal_hint: 'Enter Address or Key',
   address_modal_default_header: 'Enter Address',
   open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes
@@ -1091,6 +1093,9 @@ const strings = {
   send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
   send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
   send_add_destination_address: 'Add Destination Address',
+  send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
+  send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
+  send_scan_modal_text_modal_hint: 'Public Address',
 
   // Request Scene
   request_balance: 'You have %s',
@@ -1125,6 +1130,8 @@ const strings = {
   wc_smartcontract_network_fee: 'Network Fee',
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
+  wc_scan_modal_text_modal_title: 'Enter Wallet Connect URI',
+  wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed To Send Tokens',

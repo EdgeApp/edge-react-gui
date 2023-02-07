@@ -5,6 +5,7 @@ import * as React from 'react'
 import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
@@ -185,7 +186,18 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleScan = () => {
-    Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    const { currencyCode } = this.props
+    const title = sprintf(s.strings.send_scan_modal_text_modal_title_s, currencyCode)
+    const message = sprintf(s.strings.send_scan_modal_text_modal_message_s, currencyCode)
+    Airship.show<string | undefined>(bridge => (
+      <ScanModal
+        bridge={bridge}
+        title={s.strings.scan_qr_label}
+        textModalHint={s.strings.send_scan_modal_text_modal_hint}
+        textModalMessage={message}
+        textModalTitle={title}
+      />
+    ))
       .then((result: string | undefined) => {
         if (result) {
           this.onChangeAddress(result)

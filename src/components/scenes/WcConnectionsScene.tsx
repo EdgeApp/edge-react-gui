@@ -97,7 +97,15 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = () => {
-    Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | undefined>(bridge => (
+      <ScanModal
+        bridge={bridge}
+        title={s.strings.scan_qr_label}
+        textModalHint={s.strings.wc_scan_modal_text_modal_hint}
+        textModalMessage=""
+        textModalTitle={s.strings.wc_scan_modal_text_modal_title}
+      />
+    ))
       .then((result: string | undefined) => {
         console.log(result)
         if (result) {
