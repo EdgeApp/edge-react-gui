@@ -15,12 +15,10 @@ import { sprintf } from 'sprintf-js'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
-import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
 import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -30,13 +28,10 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -50,10 +45,6 @@ interface Props {
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-const SWEEPABLE_CURRENCY_CODES = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isPrivateKeySweepable)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
-
 export function ControlPanel(props: Props) {
   const { navigation } = props
   const state: any = navigation.getState()
@@ -65,7 +56,6 @@ export function ControlPanel(props: Props) {
 
   // ---- Redux State ----
 
-  const account = useSelector(state => state.core.account)
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
@@ -120,52 +110,11 @@ export function ControlPanel(props: Props) {
     dispatch(logoutRequest(username))
   }
 
-  const handleSweep = () => {
-    // Only allow native assets, filtered by sweepable currency codes
-    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
-      .filter(pluginId => {
-        const currencyConfig = account.currencyConfig[pluginId]
-        return SWEEPABLE_CURRENCY_CODES.some(
-          sweepableCurrencyCode => currencyConfig.currencyInfo.currencyCode.toLowerCase() === sweepableCurrencyCode.toLowerCase()
-        )
-      })
-      .map(pluginId =>
-        // Return an "EdgeTokenId" specifying that this must NOT be a token
-        // (implies it must be a supported native asset)
-        ({ pluginId, tokenId: undefined })
-      )
-
-    Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        headerTitle={s.strings.select_wallet}
-        allowedAssets={allowedAssets}
-        allowedCurrencyCodes={SWEEPABLE_CURRENCY_CODES}
-        showCreateWallet
-        navigation={navigation}
-      />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        const wallet = account.currencyWallets[walletId]
-        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-        Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
-          .then((result: string | undefined) => {
-            if (result) {
-              const deepLink = parseDeepLink(result)
-              dispatch(launchDeepLink(navigation, deepLink))
-            }
-          })
-          .catch(showError)
-      }
-    })
-  }
-
   const handleBorrow = () => {
     handleGoToScene(navigation, 'loanDashboard', {})
   }
 
-  const handleLoginQr = () => {
+  const handleScanQr = () => {
     navigation.closeDrawer()
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
@@ -265,11 +214,10 @@ export function ControlPanel(props: Props) {
       title: s.strings.wc_walletconnect_title
     },
     {
-      pressHandler: () => handleLoginQr(),
+      pressHandler: () => handleScanQr(),
       iconName: 'control-panel-scan-qr',
       title: s.strings.drawer_scan_qr_send
     },
-    { pressHandler: handleSweep, iconName: 'control-panel-sweep', title: s.strings.drawer_sweep_private_key },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
       pressHandler: () => handleGoToScene(navigation, 'termsOfService', {}),
