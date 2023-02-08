@@ -4,8 +4,8 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../actions/CryptoExchangeActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
@@ -17,7 +17,7 @@ import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiMakeSpendInfo } from '../types/types'
 import { logActivity } from '../util/logger'
-import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
+import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode } from '../util/utils'
 import { playSendSound } from './SoundActions'
 
 const XRP_DESTINATION_TAG_ERRORS = {
@@ -115,33 +115,7 @@ export function sendConfirmationUpdateTx(
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
-          const { currencyCode, networkFee = '' } = insufficientFunds
-          const multiplier = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode).multiplier
-          const amountString = roundedFee(networkFee, 2, multiplier)
-          const result = await Airship.show<'buy' | 'exchange' | 'cancel' | undefined>(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.buy_crypto_modal_title}
-              message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
-              buttons={{
-                buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-                exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-                cancel: { label: s.strings.buy_crypto_decline }
-              }}
-            />
-          ))
-          switch (result) {
-            case 'buy':
-              navigation.navigate('pluginListBuy', { direction: 'buy' })
-              return
-            case 'exchange':
-              dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene', {})
-              break
-            case 'cancel':
-            case undefined:
-              break
-          }
+          await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={edgeWallet} />)
         }
         const typeHack: any = error
         return dispatch({

@@ -14,7 +14,6 @@ import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { dismissScamWarning } from '../../actions/ScamWarningActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -26,17 +25,18 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
 import { useState } from '../../types/reactHooks'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, roundedFee } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
+import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -100,7 +100,6 @@ const INFINITY_STRING = '999999999999999999999999999999999999999'
 
 const SendComponent = (props: Props) => {
   const { route, navigation } = props
-  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -306,32 +305,7 @@ const SendComponent = (props: Props) => {
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
-          const { currencyCode, networkFee = '' } = insufficientFunds
-          const multiplier = cryptoDisplayDenomination.multiplier
-          const amountString = roundedFee(networkFee, 2, multiplier)
-          const result = await Airship.show<'buy' | 'exchange' | 'cancel' | undefined>(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.buy_crypto_modal_title}
-              message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
-              buttons={{
-                buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-                exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-                cancel: { label: s.strings.buy_crypto_decline }
-              }}
-            />
-          ))
-          switch (result) {
-            case 'buy':
-              navigation.navigate('pluginListBuy', { direction: 'buy' })
-              return
-            case 'exchange':
-              dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene', {})
-              break
-            default:
-              break
-          }
+          await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
       .catch(error => console.log(error))
