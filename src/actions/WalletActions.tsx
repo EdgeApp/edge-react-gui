@@ -47,11 +47,20 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
     const currencyCode = getCurrencyCode(wallet, tokenId)
     dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
 
+    const currentWalletId = state.ui.wallets.selectedWalletId
+    const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
       if (unactivatedTokenIds.find(unactivatedTokenId => unactivatedTokenId === tokenId) != null) {
         activateWalletTokens(dispatch, state, navigation, wallet, [tokenId])
         return false
+      }
+      if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+        dispatch({
+          type: 'UI/WALLETS/SELECT_WALLET',
+          data: { walletId, currencyCode }
+        })
       }
       return true
     }
@@ -59,15 +68,12 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (isAccountActivationRequired) {
       // EOS needs different path in case not activated yet
-      const currentWalletId = state.ui.wallets.selectedWalletId
-      const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
       if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
         return await dispatch(selectEOSWallet(navigation, walletId, currencyCode))
       }
       return true
     }
-    const currentWalletId = state.ui.wallets.selectedWalletId
-    const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+
     if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
       dispatch({
         type: 'UI/WALLETS/SELECT_WALLET',
