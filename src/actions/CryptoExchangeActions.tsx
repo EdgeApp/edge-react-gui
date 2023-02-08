@@ -15,7 +15,7 @@ import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions'
-import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import s from '../locales/strings'
@@ -28,7 +28,7 @@ import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
-import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
+import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
 export interface SetNativeAmountInfo {
@@ -71,37 +71,23 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
       navigation.navigate('exchangeScene', {})
+
       const insufficientFunds = asMaybeInsufficientFundsError(error)
       if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
-        const { currencyCode, networkFee = '' } = insufficientFunds
-        const multiplier = getExchangeDenomination(state, state.core.account.currencyWallets[fromWalletId].currencyInfo.pluginId, currencyCode).multiplier
-        const amountString = roundedFee(networkFee, 2, multiplier)
-        const result = await Airship.show<'buy' | 'exchange' | 'cancel' | undefined>(bridge => (
-          <ButtonsModal
+        const { currencyCode } = insufficientFunds
+        const { currencyWallets } = state.core.account
+        await Airship.show(bridge => (
+          <InsufficientFeesModal
             bridge={bridge}
-            title={s.strings.buy_crypto_modal_title}
-            message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
-            buttons={{
-              buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-              exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-              cancel: { label: s.strings.buy_crypto_decline }
+            coreError={insufficientFunds}
+            navigation={navigation}
+            wallet={currencyWallets[fromWalletId]}
+            onSwap={() => {
+              dispatch({ type: 'SHIFT_COMPLETE' })
+              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
             }}
           />
         ))
-        switch (result) {
-          case 'buy':
-            navigation.navigate('pluginListBuy', { direction: 'buy' })
-            return
-          case 'exchange':
-            dispatch({ type: 'SHIFT_COMPLETE' })
-            if (fromWalletId != null) {
-              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
-            }
-            break
-          case 'cancel':
-          case undefined:
-            break
-        }
       }
       dispatch(processSwapQuoteError(error))
     }
