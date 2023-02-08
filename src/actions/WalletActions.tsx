@@ -1,6 +1,5 @@
-import { div, log10, round } from 'biggystring'
+import { div, log10, lt, round } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
-import { lt } from 'lodash'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
