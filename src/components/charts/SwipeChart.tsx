@@ -111,17 +111,16 @@ const SwipeChartComponent = (params: Props) => {
   const fiatSymbol = React.useMemo(() => getSymbolFromCurrency('iso:USD'), [])
 
   // Min/Max Price Calcs
-  const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
-  const minPrice = Math.min(...prices)
-  const maxPrice = Math.max(...prices)
-
   const sMinPriceString = useSharedValue(``)
   const sMaxPriceString = useSharedValue(``)
 
-  const chartYRange = React.useMemo<[number, number]>(() => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice], [minPrice, maxPrice])
+  const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
+  const minPrice = React.useMemo(() => Math.min(...prices), [prices])
+  const maxPrice = React.useMemo(() => Math.max(...prices), [prices])
+  const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
+  const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
 
-  const minPriceDataPoint = chartData.find(point => point.y === minPrice)
-  const maxPriceDataPoint = chartData.find(point => point.y === maxPrice)
+  const chartYRange = React.useMemo<[number, number]>(() => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice], [minPrice, maxPrice])
 
   // Data fetches
 
@@ -195,8 +194,16 @@ const SwipeChartComponent = (params: Props) => {
     sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
     sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
     setMinMaxLabelCoords()
+
+    // HACK: minPriceDataPoint, maxPriceDataPoint is in the dependency list
+    // below as a low-impact fix to address an intermittent min/max price label
+    // positioning bug - max/min prices were sometimes misaligned with the true
+    // locations on the chart due to the order in which all the logic executed.
+    // TODO: Simplify the logic for calculating and setting positions for the
+    // max/min price label.
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData])
+  }, [chartData, minPriceDataPoint, maxPriceDataPoint])
 
   // #endregion Chart setup
 
