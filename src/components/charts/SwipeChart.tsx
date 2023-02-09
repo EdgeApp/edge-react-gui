@@ -21,6 +21,10 @@ import { EdgeText } from '../themed/EdgeText'
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
 type AlignOrigin = 'center' | 'right' | 'left'
 
+interface ChartDataPoint {
+  x: Date
+  y: number
+}
 type CoinGeckoDataPair = number[]
 interface CoinGeckoMarketChartRange {
   prices: CoinGeckoDataPair[]
@@ -84,6 +88,30 @@ const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xR
   }
 }
 
+// Reduce the number of datapoints to improve loading performance
+const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): ChartDataPoint[] => {
+  // Reduce 'candle' size
+  let everyNPoints = 1
+  switch (timespan) {
+    case 'year': // raw: 1d target: 1w
+      everyNPoints = 7
+      break
+    case 'month': // raw: 1h target: 12h
+      everyNPoints = 12
+      break
+    case 'week': // raw: 1h target: 4h
+      everyNPoints = 4
+      break
+    case 'day': // raw: 5m target: 30m
+      everyNPoints = 6
+      break
+    default:
+      everyNPoints = 1
+  }
+
+  return chartData.filter((dataPoint: ChartDataPoint, index: number) => index % everyNPoints === 0)
+}
+
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -91,7 +119,15 @@ const SwipeChartComponent = (params: Props) => {
 
   // #region Chart setup
 
-  const [chartData, setChartData] = React.useState<Array<{ x: Date; y: number }>>([])
+  const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
+  const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
+    new Map<Timespan, ChartDataPoint[] | undefined>([
+      ['hour', undefined],
+      ['week', undefined],
+      ['month', undefined],
+      ['year', undefined]
+    ])
+  )
   const [selectedTimespan, setSelectedTimespan] = React.useState<Timespan>('month')
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -116,32 +152,56 @@ const SwipeChartComponent = (params: Props) => {
   const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
   const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
 
-  // Fetch chart data, set shared animation transition values
+  // Fetch/cache chart data, set shared animation transition values
   React.useEffect(() => {
     if (!isLoading) {
       setIsLoading(true)
       setChartData([])
       sMinMaxOpacity.value = 0
 
-      // Construct the dataset query
-      const unixNow = Math.trunc(new Date().getTime() / 1000)
-      const fromParam = unixNow - queryFromTimeOffset
-      const fetchUrl = sprintf(DATASET_URL_3S, assetId, fromParam, unixNow)
-      fetch(fetchUrl)
-        .then(async res => res.json())
-        .then((data: any) => {
-          const marketChartRange = asCoinGeckoMarketChartRange(data)
-          setChartData(marketChartRange.prices.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: rawDataPoint[1] })))
-          setIsLoading(false)
+      // Use cached data, if available
+      const cachedChartData = cachedTimespanChartData.get(selectedTimespan)
 
-          // Delay the appearance of the min/max price labels while the chart
-          // price line finishes its entering animation
-          sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.priceLine, withTiming(1, { duration: ANIMATION_DURATION.maxMin }))
-        })
-        .catch(e => {
-          showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-          console.error(e)
-        })
+      const delayShowMinMaxLabels = () => {
+        // Delay the appearance of the min/max price labels while the chart
+        // price line finishes its entering animation
+        sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.priceLine, withTiming(1, { duration: ANIMATION_DURATION.maxMin }))
+      }
+
+      try {
+        if (cachedChartData != null) {
+          // The chart price line animation is slow when transitioning directly
+          // between datasets.
+          // Add a delay so the component can get re-mounted with fresh data
+          // instead.
+          setTimeout(() => {
+            setChartData(cachedChartData)
+            setIsLoading(false)
+            delayShowMinMaxLabels()
+          }, 10)
+        } else {
+          // Construct the dataset query
+          const unixNow = Math.trunc(new Date().getTime() / 1000)
+          const fromParam = unixNow - queryFromTimeOffset
+          const fetchUrl = sprintf(DATASET_URL_3S, assetId, fromParam, unixNow)
+          fetch(fetchUrl)
+            .then(async res => res.json())
+            .then((data: any) => {
+              const marketChartRange = asCoinGeckoMarketChartRange(data)
+              const rawChartData = marketChartRange.prices.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: rawDataPoint[1] }))
+              const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+              setChartData(reducedChartData)
+              cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+              setCachedChartData(cachedTimespanChartData)
+              setIsLoading(false)
+              delayShowMinMaxLabels()
+            })
+        }
+      } catch (e: any) {
+        showWarning(`Failed to retrieve market data for ${currencyCode}.`)
+        console.error(e)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTimespan])
@@ -392,7 +452,14 @@ const SwipeChartComponent = (params: Props) => {
   })
 
   const renderTimespanButton = useHandler((label: string, timespanKey: Timespan, onPress: () => void) => (
-    <MinimalButton key={timespanKey} marginRem={BUTTON_MARGINS} label={label} highlighted={selectedTimespan === timespanKey} onPress={onPress} />
+    <MinimalButton
+      key={timespanKey}
+      marginRem={BUTTON_MARGINS}
+      label={label}
+      highlighted={selectedTimespan === timespanKey}
+      onPress={onPress}
+      disabled={isLoading}
+    />
   ))
 
   const cursorProps = React.useMemo<CursorProps>(
