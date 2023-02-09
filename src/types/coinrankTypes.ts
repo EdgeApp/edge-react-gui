@@ -13,6 +13,7 @@ export const asCoinRankingData = asObject({
   allTimeHighDate: asOptional(asString),
   allTimeLow: asOptional(asNumber),
   allTimeLowDate: asOptional(asString),
+  assetId: asString,
   circulatingSupply: asOptional(asNumber),
   currencyCode: asString,
   currencyName: asString,
