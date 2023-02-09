@@ -1,4 +1,5 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
+import { asArray, asNumber, asObject, asTuple } from 'cleaners'
 import * as React from 'react'
 import { LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -12,32 +13,38 @@ import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
+import { showWarning } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
 
-type Kline = [
-  openTime: number,
-  open: string,
-  high: string,
-  low: string,
-  close: string,
-  volume: string,
-  closeTime: number,
-  quoteAssetVolume: string,
-  numberOfTrades: number,
-  takerBuyBaseAssetVolume: string,
-  takerBuyQuoteAssetVolume: string,
-  ignore: string
-]
-
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
-
 type AlignOrigin = 'center' | 'right' | 'left'
+
+type CoinGeckoDataPair = number[]
+interface CoinGeckoMarketChartRange {
+  prices: CoinGeckoDataPair[]
+  market_caps: CoinGeckoDataPair[]
+  total_volumes: CoinGeckoDataPair[]
+}
+const asCoinGeckoDataPair = asTuple(asNumber, asNumber)
+const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
+  prices: asArray(asCoinGeckoDataPair),
+  market_caps: asArray(asCoinGeckoDataPair),
+  total_volumes: asArray(asCoinGeckoDataPair)
+})
 
 interface Props {
   currencyCode: string
+  assetId: string // The asset's 'id' as defined by CoinGecko
 }
+
+const DATASET_URL_3S = 'https://api.coingecko.com/api/v3/coins/%1$s/market_chart/range?vs_currency=USD&from=%2$s&to=%3$s'
+const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
+const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
+const UNIX_SECONDS_WEEK_OFFSET = 7 * UNIX_SECONDS_DAY_OFFSET
+const UNIX_SECONDS_MONTH_OFFSET = 30 * UNIX_SECONDS_DAY_OFFSET
+const UNIX_SECONDS_YEAR_OFFSET = 365 * UNIX_SECONDS_DAY_OFFSET
 
 const ANIMATION_DURATION = {
   priceLine: 800,
@@ -56,22 +63,8 @@ const PULSE_CURSOR_RADIUS = 6
 
 const BUTTON_MARGINS = [0, 0.5, 0, 0.5]
 
-const BASE_DATASET_URL_MAP: { [location: string]: string } = {
-  us: 'https://api.binance.us/api/v3/',
-  other: 'https://api.binance.com/api/v3/'
-}
-
-const DATASET_QUERY_URL_MAP: { [timespan: string]: string } = {
-  year: `klines?symbol=%sUSD&interval=1w&limit=52`,
-  month: `klines?symbol=%sUSD&interval=12h&limit=62`,
-  week: `klines?symbol=%sUSD&interval=4h&limit=42`,
-  day: `klines?symbol=%sUSD&interval=30m&limit=49`,
-  hour: `klines?symbol=%sUSD&interval=1m&limit=60`
-}
-
 // Gives the formatted timestamp per timespan, using locale-specific formatting,
 // i.e. 'MM/DD' vs 'DD/MM'
-// TODO: Integrate into/refactor intl.ts
 const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xRange: string } => {
   const dateWithYear = formatDate(date, 'P')
   const time = formatDate(date, 'p')
@@ -94,13 +87,13 @@ const formatTimestamp = (date: Date, timespan: Timespan): { xTooltip: string; xR
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { currencyCode } = params
+  const { assetId, currencyCode } = params
 
   // #region Chart setup
 
-  const [location, setLocation] = React.useState<string | undefined>(undefined)
   const [chartData, setChartData] = React.useState<Array<{ x: Date; y: number }>>([])
   const [selectedTimespan, setSelectedTimespan] = React.useState<Timespan>('month')
+  const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
 
   const minPriceLabelPosition = React.useRef<{ x: number; y: number; origin: AlignOrigin }>({ x: 0, y: 0, origin: 'left' })
@@ -120,51 +113,38 @@ const SwipeChartComponent = (params: Props) => {
 
   const chartYRange = React.useMemo<[number, number]>(() => [minPrice - (maxPrice - minPrice) * 0.15, maxPrice], [minPrice, maxPrice])
 
-  const minPriceDataPoint = chartData.find(point => point.y === minPrice)
-  const maxPriceDataPoint = chartData.find(point => point.y === maxPrice)
+  const minPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === minPrice), [chartData, minPrice])
+  const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
 
-  // Data fetches
-
-  // First determine if the user is US-based
+  // Fetch chart data, set shared animation transition values
   React.useEffect(() => {
-    fetch('https://ipapi.co/json/')
-      .then(async response => response.json())
-      .then(data => setLocation(data.country))
-      .catch(e => console.error(e))
-  }, [])
-
-  // Fetch chart data with a base url allowed for the user's location, set
-  // shared animation transition values
-  React.useEffect(() => {
-    if (!isLoading && location != null) {
+    if (!isLoading) {
       setIsLoading(true)
       setChartData([])
       sMinMaxOpacity.value = 0
 
-      const isUSBased = location === 'US'
-      const fetchChartData = (baseUrl: string) => {
-        fetch(baseUrl + sprintf(DATASET_QUERY_URL_MAP[selectedTimespan], currencyCode.toUpperCase()))
-          .then(async res => res.json())
-          .then((data: Kline[]) => {
-            setChartData(data.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: parseFloat(rawDataPoint[4]) })))
-            setIsLoading(false)
+      // Construct the dataset query
+      const unixNow = Math.trunc(new Date().getTime() / 1000)
+      const fromParam = unixNow - queryFromTimeOffset
+      const fetchUrl = sprintf(DATASET_URL_3S, assetId, fromParam, unixNow)
+      fetch(fetchUrl)
+        .then(async res => res.json())
+        .then((data: any) => {
+          const marketChartRange = asCoinGeckoMarketChartRange(data)
+          setChartData(marketChartRange.prices.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: rawDataPoint[1] })))
+          setIsLoading(false)
 
-            // Delay the appearance of the min/max price labels while the chart
-            // price line finishes its entering animation
-            sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.priceLine, withTiming(1, { duration: ANIMATION_DURATION.maxMin }))
-          })
-          .catch(e => console.error(e))
-      }
-
-      try {
-        fetchChartData(isUSBased ? BASE_DATASET_URL_MAP.us : BASE_DATASET_URL_MAP.other)
-      } catch {
-        // redundancy in case the location fetch failed
-        fetchChartData(isUSBased ? BASE_DATASET_URL_MAP.other : BASE_DATASET_URL_MAP.us)
-      }
+          // Delay the appearance of the min/max price labels while the chart
+          // price line finishes its entering animation
+          sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.priceLine, withTiming(1, { duration: ANIMATION_DURATION.maxMin }))
+        })
+        .catch(e => {
+          showWarning(`Failed to retrieve market data for ${currencyCode}.`)
+          console.error(e)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimespan, location])
+  }, [selectedTimespan])
 
   const setMinMaxLabelCoords = () => {
     if (
@@ -365,11 +345,26 @@ const SwipeChartComponent = (params: Props) => {
 
   const handleAlignXTooltipLayout = useHandler(() => nativeAlignLayout('center', rXTooltipView))
 
-  const handleSetTimespanH = useHandler(() => setSelectedTimespan('hour'))
-  const handleSetTimespanD = useHandler(() => setSelectedTimespan('day'))
-  const handleSetTimespanW = useHandler(() => setSelectedTimespan('week'))
-  const handleSetTimespanM = useHandler(() => setSelectedTimespan('month'))
-  const handleSetTimespanY = useHandler(() => setSelectedTimespan('year'))
+  const handleSetTimespanH = useHandler(() => {
+    setSelectedTimespan('hour')
+    setQueryFromTimeOffset(UNIX_SECONDS_HOUR_OFFSET)
+  })
+  const handleSetTimespanD = useHandler(() => {
+    setSelectedTimespan('day')
+    setQueryFromTimeOffset(UNIX_SECONDS_DAY_OFFSET)
+  })
+  const handleSetTimespanW = useHandler(() => {
+    setSelectedTimespan('week')
+    setQueryFromTimeOffset(UNIX_SECONDS_WEEK_OFFSET)
+  })
+  const handleSetTimespanM = useHandler(() => {
+    setSelectedTimespan('month')
+    setQueryFromTimeOffset(UNIX_SECONDS_MONTH_OFFSET)
+  })
+  const handleSetTimespanY = useHandler(() => {
+    setSelectedTimespan('year')
+    setQueryFromTimeOffset(UNIX_SECONDS_YEAR_OFFSET)
+  })
 
   // #region Memoized SlideAreaChart props
 
