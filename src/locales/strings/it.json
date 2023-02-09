@@ -608,7 +608,7 @@
   "password": "Password",
   "buy_crypto_modal_title": "Portafoglio vuoto",
   "buy_crypto_modal_message": "Il tuo portafoglio %s è vuoto. Vuoi comprare %s o scambiare delle criptovalute per %s?",
-  "buy_parent_crypto_modal_message": "%1$s è necessario per inviare questa transazione. Vuoi acquistare %1$s o scambiare un'altra criptovaluta in %1$s?",
+  "buy_parent_crypto_modal_message_2s": "%1$s%2$s is required to send this transaction. Would you like to buy %2$s or exchange another crypto into %2$s?",
   "buy_crypto_decline": "Non ora",
   "buy_crypto_modal_buy_action": "Compra %s",
   "buy_crypto_modal_exchange": "Scambia",
