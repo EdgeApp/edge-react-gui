@@ -51,11 +51,11 @@ const UNIX_SECONDS_MONTH_OFFSET = 30 * UNIX_SECONDS_DAY_OFFSET
 const UNIX_SECONDS_YEAR_OFFSET = 365 * UNIX_SECONDS_DAY_OFFSET
 
 const ANIMATION_DURATION = {
-  priceLine: 800,
-  maxMin: 300,
-  cursorPulse: 1000,
   cursorFadeIn: 300,
-  cursorFadeOut: 500
+  cursorFadeOut: 500,
+  cursorPulse: 1000,
+  maxMinFadeIn: 300,
+  maxMinFadeInDelay: 2000
 }
 
 const Y_AXIS_PROPS: YAxisProps = {
@@ -165,7 +165,7 @@ const SwipeChartComponent = (params: Props) => {
       const delayShowMinMaxLabels = () => {
         // Delay the appearance of the min/max price labels while the chart
         // price line finishes its entering animation
-        sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.priceLine, withTiming(1, { duration: ANIMATION_DURATION.maxMin }))
+        sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
       }
 
       try {
@@ -217,11 +217,11 @@ const SwipeChartComponent = (params: Props) => {
     ) {
       const minXIndex = chartData.indexOf(minPriceDataPoint)
       const minXPosition = (chartWidth.current / (chartData.length - 1)) * minXIndex
-      const minYPosition = chartHeight.current - theme.rem(2.25)
+      const minYPosition = chartHeight.current - theme.rem(2.75)
 
       const maxXIndex = chartData.indexOf(maxPriceDataPoint)
-      const maxXPosition = (chartWidth.current / (chartData.length - 1)) * maxXIndex - theme.rem(0.5)
-      const maxYPosition = theme.rem(0.25)
+      const maxXPosition = (chartWidth.current / (chartData.length - 1)) * maxXIndex
+      const maxYPosition = theme.rem(0)
 
       // We want the alignment origin of the element to be on the right edge if
       // it is located on the right half of the chart so that the contents
@@ -236,7 +236,7 @@ const SwipeChartComponent = (params: Props) => {
     sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
     setMinMaxLabelCoords()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData])
+  }, [chartData, maxPriceDataPoint, minPriceDataPoint])
 
   // #endregion Chart setup
 
@@ -268,10 +268,12 @@ const SwipeChartComponent = (params: Props) => {
   // A delayed fadein for the max/min labels, to ensure the labels don't get
   // rendered before the price line. Also hidden when gesture is active
   const aMinLabelStyle = useAnimatedStyle(() => ({
+    left: minPriceLabelPosition.current.x,
     top: minPriceLabelPosition.current.y,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
   const aMaxLabelStyle = useAnimatedStyle(() => ({
+    left: maxPriceLabelPosition.current.x,
     top: maxPriceLabelPosition.current.y,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
@@ -397,13 +399,11 @@ const SwipeChartComponent = (params: Props) => {
 
   const handleAlignCursorLayout = useHandler(nativeAlignLayout('center', rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
 
-  const handleAlignMinPriceLabelLayout = useHandler(
-    nativeAlignLayout(minPriceLabelPosition.current.origin, rMinPriceView, Math.max(theme.rem(0.5), minPriceLabelPosition.current.x))
-  )
+  const handleAlignMinPriceLabelLayout = useHandler(nativeAlignLayout(minPriceLabelPosition.current.origin, rMinPriceView, minPriceLabelPosition.current.x))
 
   const handleAlignMaxPriceLabelLayout = useHandler(nativeAlignLayout(maxPriceLabelPosition.current.origin, rMaxPriceView, maxPriceLabelPosition.current.x))
 
-  const handleAlignXTooltipLayout = useHandler(() => nativeAlignLayout('center', rXTooltipView))
+  const handleAlignXTooltipLayout = useHandler(nativeAlignLayout('center', rXTooltipView))
 
   const handleSetTimespanH = useHandler(() => {
     setSelectedTimespan('hour')
