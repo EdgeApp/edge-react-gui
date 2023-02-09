@@ -156,7 +156,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <FastImage style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
         </View>
-        <SwipeChart currencyCode={currencyCodeUppercase} />
+        <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} />
         <View style={styles.columns}>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
