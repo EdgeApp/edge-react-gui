@@ -7684,34 +7684,7 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.37:
-  version "0.19.41"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.41.tgz#53b1baab28a3b5d42453501a1cc0832bcd5bf922"
-  integrity sha512-YSsDG2/iweax5aIeW7t9gbBmDakViqLQVz0cV8xBD/VfjIDiod+7IMRdqxaC2ctm5J1wTV5iu2CM/Rf3S604HQ==
-  dependencies:
-    aes-js "^3.1.0"
-    base-x "^1.0.4"
-    biggystring "^4.0.0"
-    cleaners "^0.3.11"
-    currency-codes "^1.1.2"
-    disklet "^0.5.2"
-    edge-sync-client "^0.2.7"
-    elliptic "^6.4.0"
-    ethereumjs-tx "^1.3.7"
-    ethereumjs-util "^5.2.0"
-    hash.js "^1.1.7"
-    hmac-drbg "^1.0.1"
-    node-fetch "^2.6.1"
-    redux "^4.2.0"
-    redux-keto "^0.3.5"
-    redux-pixies "^0.3.6"
-    rfc4648 "^1.4.0"
-    scrypt-js "^2.0.3"
-    serverlet "^0.1.0"
-    yaob "^0.3.9"
-    yavent "^0.1.3"
-
-edge-core-js@^0.19.42:
+edge-core-js@^0.19.37, edge-core-js@^0.19.42:
   version "0.19.42"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.42.tgz#34b6bfe5deec27fc5edd277ad254269d72ed323e"
   integrity sha512-HSikQl7tob3zyRHmpbo1JCL6gYWrYyl+Nf8+ZHECj7g/lJY/FTcMMLv1vsdvIwG5BPmIb92MBJLFUlYYqlkgEg==
@@ -7833,10 +7806,10 @@ edge-exchange-plugins@^0.17.2:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.20:
-  version "0.10.20"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.20.tgz#a971f9ea436a3765045622f9d898b71eab3f8db3"
-  integrity sha512-gGS6dvMlW0kv4z9Dgg/z5LNhst9msAgvF3jfUSKOEZxD0COhl3Tk1yVXSfvC1AckyyMHTjHRamq7h0FMhy0VYA==
+edge-login-ui-rn@^0.10.21:
+  version "0.10.21"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.21.tgz#e655f176cf3c2cbcca62a260c8857f0cf7807253"
+  integrity sha512-9E+R6XN76rLw5BsurkHEPryrP27MHgp927Kt2qRxBjeMKaPQ331PxRgnFpR9DfZiQbd46JSVkj5nfqLW2t6zww==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -14169,7 +14142,7 @@ react-native-mail@^6.1.0, react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
