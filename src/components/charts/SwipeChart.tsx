@@ -368,7 +368,6 @@ const SwipeChartComponent = (params: Props) => {
   })
 
   // Natively align a component based on a specified origin
-  // TODO: Potentially causing intermittent bug with min/max price label positions
   const nativeAlignLayout =
     (origin: AlignOrigin, ref: React.RefObject<View | Animated.View | undefined>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
       if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
@@ -469,7 +468,7 @@ const SwipeChartComponent = (params: Props) => {
       // Offsets to apply to our custom cursor to ensure it stays centered
       // over the vertical line that appears during gestures:
       cursorMarkerWidth: 24, // Pulsing dot dimensions
-      cursorMarkerHeight: theme.rem(3.5),
+      cursorMarkerHeight: Platform.OS === 'android' ? theme.rem(4.25) : theme.rem(3.5),
       cursorWidth: 1, // Vertical line dimensions
 
       renderCursorMarker: renderCursor
@@ -621,8 +620,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       width: '100%',
       justifyContent: 'space-between',
       bottom: 2,
-      paddingLeft: theme.rem(0.5),
-      paddingRight: theme.rem(0.5)
+      paddingLeft: theme.rem(0.25),
+      paddingRight: theme.rem(0.25)
     },
     xTooltip: {
       position: 'absolute',
