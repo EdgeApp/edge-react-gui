@@ -20,8 +20,8 @@ interface StateProps {
 }
 
 interface OwnProps {
-  navigation: NavigationProp<'fioNameConfirm'>
-  route: RouteProp<'fioNameConfirm'>
+  navigation: NavigationProp<'fioDomainConfirm' | 'fioNameConfirm'>
+  route: RouteProp<'fioDomainConfirm' | 'fioNameConfirm'>
 }
 
 type Props = StateProps & OwnProps

@@ -1,5 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 
+import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
+import { DrawerActions } from '@react-navigation/native'
 import { EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
@@ -27,7 +29,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Actions, NavigationProp, ParamList } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -38,17 +40,14 @@ import { FiatText } from '../text/FiatText'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 
-interface Props {
-  navigation: NavigationProp<'controlPanel'>
-}
-
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-export function ControlPanel(props: Props) {
-  const { navigation } = props
-  const state: any = navigation.getState()
-  const { isDrawerOpen } = state
+export function ControlPanel(props: DrawerContentComponentProps) {
+  // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
+  const navigation: NavigationBase = props.navigation as any
+  const isDrawerOpen = useDrawerStatus() === 'open'
+
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -107,15 +106,16 @@ export function ControlPanel(props: Props) {
   }
 
   const handleSwitchAccount = (username: string) => () => {
-    dispatch(logoutRequest(username))
+    dispatch(logoutRequest(navigation, username))
   }
 
   const handleBorrow = () => {
-    handleGoToScene(navigation, 'loanDashboard', {})
+    navigation.navigate('loanDashboard', {})
+    navigation.dispatch(DrawerActions.closeDrawer())
   }
 
   const handleScanQr = () => {
-    navigation.closeDrawer()
+    navigation.dispatch(DrawerActions.closeDrawer())
     Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
       .then((result: string | undefined) => {
         if (result) {
@@ -134,16 +134,6 @@ export function ControlPanel(props: Props) {
       url: Platform.OS === 'ios' ? EDGE_URL : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
-  }
-
-  const handleGoToScene = (navigation: NavigationProp<'controlPanel'>, scene: keyof ParamList, sceneProps: any) => {
-    if (Actions.currentScene !== scene) {
-      navigation.navigate(scene, sceneProps)
-    } else if (sceneProps) {
-      navigation.replace(scene, sceneProps)
-    }
-
-    navigation.closeDrawer()
   }
 
   const handleBottomPanelLayout = (event: any) => {
@@ -199,17 +189,26 @@ export function ControlPanel(props: Props) {
     title: string
   }> = [
     {
-      pressHandler: () => handleGoToScene(navigation, 'fioAddressList', {}),
+      pressHandler: () => {
+        navigation.navigate('fioAddressList', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconName: 'control-panel-fio-names',
       title: s.strings.drawer_fio_names
     },
     {
-      pressHandler: () => handleGoToScene(navigation, 'fioRequestList', {}),
+      pressHandler: () => {
+        navigation.navigate('fioRequestList', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconName: 'control-panel-fio',
       title: s.strings.drawer_fio_requests
     },
     {
-      pressHandler: () => handleGoToScene(navigation, 'wcConnections', {}),
+      pressHandler: () => {
+        navigation.navigate('wcConnections', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconName: 'control-panel-wallet-connect',
       title: s.strings.wc_walletconnect_title
     },
@@ -220,18 +219,24 @@ export function ControlPanel(props: Props) {
     },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
     {
-      pressHandler: () => handleGoToScene(navigation, 'termsOfService', {}),
+      pressHandler: () => {
+        navigation.navigate('termsOfService', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconName: 'control-panel-tos',
       title: s.strings.title_terms_of_service
     },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
     {
-      pressHandler: () => handleGoToScene(navigation, 'settingsOverviewTab', {}),
+      pressHandler: () => {
+        navigation.navigate('settingsOverview', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconName: 'control-panel-settings',
       title: s.strings.settings_title
     },
     {
-      pressHandler: async () => dispatch(logoutRequest()),
+      pressHandler: async () => dispatch(logoutRequest(navigation)),
       iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     },
@@ -244,14 +249,17 @@ export function ControlPanel(props: Props) {
 
   if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
-      pressHandler: () => handleGoToScene(navigation, 'pluginViewSell', { plugin: guiPlugins.ionia }),
+      pressHandler: () => {
+        navigation.navigate('pluginViewSell', { plugin: guiPlugins.ionia })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
       iconNameFontAwesome: 'hand-holding-usd',
       title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
     })
   }
 
   const handlePressClose = () => {
-    navigation.closeDrawer()
+    navigation.dispatch(DrawerActions.closeDrawer())
   }
 
   const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color

@@ -14,6 +14,7 @@ import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
@@ -81,15 +82,18 @@ beforeAll(async () => {
 })
 
 describe('SendScene2', () => {
+  const nonce = fakeNonce(0)
   it('Render SendScene', () => {
     if (btcWallet == null) return
 
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
-        walletId: btcWallet.id
+        walletId: btcWallet.id,
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -112,12 +116,14 @@ describe('SendScene2', () => {
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
         walletId: btcWallet.id,
         spendInfo: {
           spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -140,6 +146,7 @@ describe('SendScene2', () => {
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
         infoTiles: [
@@ -149,7 +156,8 @@ describe('SendScene2', () => {
         walletId: btcWallet.id,
         spendInfo: {
           spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -172,6 +180,7 @@ describe('SendScene2', () => {
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
         walletId: btcWallet.id,
@@ -180,7 +189,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -204,6 +214,7 @@ describe('SendScene2', () => {
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
         hiddenTilesMap: { address: true },
@@ -213,7 +224,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -231,6 +243,7 @@ describe('SendScene2', () => {
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Hide Amount
+    // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <Provider store={store}>
@@ -240,6 +253,7 @@ describe('SendScene2', () => {
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Hide Both
+    // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <Provider store={store}>
@@ -255,6 +269,7 @@ describe('SendScene2', () => {
     const rootState: any = fakeRootState
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
+      key: `send2-${nonce()}`,
       name: 'send2',
       params: {
         lockTilesMap: { address: true },
@@ -264,7 +279,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -282,6 +298,7 @@ describe('SendScene2', () => {
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Lock Amount
+    // @ts-expect-error
     route.params.lockTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <Provider store={store}>
@@ -291,6 +308,7 @@ describe('SendScene2', () => {
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Lock Both
+    // @ts-expect-error
     route.params.lockTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <Provider store={store}>

@@ -4,8 +4,11 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CreateWalletAccountSetup } from '../../components/scenes/CreateWalletAccountSetupScene'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CreateWalletAccountSelect', () => {
+  const nonce = fakeNonce(0)
+
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -13,6 +16,7 @@ describe('CreateWalletAccountSelect', () => {
       <CreateWalletAccountSetup
         navigation={fakeNavigation}
         route={{
+          key: `createWalletAccountSetup-${nonce()}`,
           name: 'createWalletAccountSetup',
           params: {
             accountHandle: '',

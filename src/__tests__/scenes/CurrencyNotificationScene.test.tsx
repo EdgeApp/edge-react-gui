@@ -6,8 +6,10 @@ import { createStore } from 'redux'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene'
 import { rootReducer } from '../../reducers/RootReducer'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CurrencyNotificationComponent', () => {
+  const nonce = fakeNonce(0)
   const mockStore: any = {
     notificationSettings: {
       plugins: {
@@ -28,6 +30,7 @@ describe('CurrencyNotificationComponent', () => {
       <Provider store={store}>
         <CurrencyNotificationScene
           route={{
+            key: `currencyNotificationSettings-${nonce()}`,
             name: 'currencyNotificationSettings',
             params: {
               currencyInfo: {

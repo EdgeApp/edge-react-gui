@@ -14,7 +14,7 @@ import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { errorAlert } from '../../util/middleware/errorAlert'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
-import { Main } from '../Main.ui'
+import { Main } from '../Main'
 import { Airship } from './AirshipInstance'
 import { useTheme } from './ThemeContext'
 

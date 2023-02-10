@@ -190,7 +190,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletList', {})
     }
   })
 

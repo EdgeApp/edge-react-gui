@@ -78,7 +78,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
   }
 
   componentDidMount(): void {
-    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
+    this.willFocusSubscription = this.props.navigation.addListener('focus', () => {
       this.fetchData()
     })
   }

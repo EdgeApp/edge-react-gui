@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Actions } from '../../types/routerTypes'
+import { useHandler } from '../../hooks/useHandler'
 import { BackButton } from './BackButton'
 
 // The scene holds a ref to the webview:
@@ -14,11 +14,8 @@ export function setPluginScene(plugin: PluginScene | undefined) {
 }
 
 export function PluginBackButton() {
-  return <BackButton onPress={() => handlePluginBack()} />
-}
-
-export function handlePluginBack() {
-  if (currentPlugin == null || !currentPlugin.goBack()) {
-    Actions.pop()
-  }
+  const handlePress = useHandler(() => {
+    if (currentPlugin != null) currentPlugin.goBack()
+  })
+  return <BackButton onPress={handlePress} />
 }

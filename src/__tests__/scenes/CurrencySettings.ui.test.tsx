@@ -6,8 +6,10 @@ import { createStore } from 'redux'
 
 import { CurrencySettingsScene } from '../../components/scenes/CurrencySettingsScene'
 import { rootReducer } from '../../reducers/RootReducer'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CurrencySettings', () => {
+  const nonce = fakeNonce(0)
   it('should render', () => {
     const currencyInfo: any = {
       currencyCode: 'BTG',
@@ -32,6 +34,7 @@ describe('CurrencySettings', () => {
       <Provider store={store}>
         <CurrencySettingsScene
           route={{
+            key: `currencySettings-${nonce()}`,
             name: 'currencySettings',
             params: { currencyInfo }
           }}

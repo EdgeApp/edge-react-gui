@@ -2,6 +2,9 @@ import { jest } from '@jest/globals'
 
 jest.useFakeTimers()
 
+let _nonce = 0
+global.nonce = () => _nonce++
+
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'ios',
   isPad: false,

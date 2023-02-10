@@ -5,8 +5,10 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { FioConnectWalletConfirm } from '../../components/scenes/FioConnectWalletConfirmScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('FioConnectWalletConfirm', () => {
+  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -27,6 +29,7 @@ describe('FioConnectWalletConfirm', () => {
         ccWalletMap={['FIO'] as any}
         isConnected
         route={{
+          key: `fioConnectToWalletsConfirm-${nonce()}`,
           name: 'fioConnectToWalletsConfirm',
           params: {
             fioWallet: fakeWallet,

@@ -15,17 +15,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
+import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
 import { useState } from '../../types/reactHooks'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -78,6 +81,8 @@ export interface SendScene2Params {
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
+  // Useful to disable during for test runtime
+  doCheckAndShowGetCryptoModal?: boolean
 }
 
 interface FioSenderInfo {
@@ -100,6 +105,7 @@ const INFINITY_STRING = '999999999999999999999999999999999999999'
 
 const SendComponent = (props: Props) => {
   const { route, navigation } = props
+  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -119,7 +125,8 @@ const SendComponent = (props: Props) => {
     onDone,
     onBack,
     beforeTransaction,
-    alternateBroadcast
+    alternateBroadcast,
+    doCheckAndShowGetCryptoModal = true
   } = route.params
 
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
@@ -822,12 +829,15 @@ const SendComponent = (props: Props) => {
     }
   })
 
-  React.useEffect(() => {
-    return () => {
-      if (onBack != null) onBack()
+  // Mount/Unmount life-cycle events:
+  useMount(() => {
+    if (doCheckAndShowGetCryptoModal) {
+      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
+  useUnmount(() => {
+    if (onBack != null) onBack()
+  })
 
   // Calculate the transaction
   useAsyncEffect(async () => {

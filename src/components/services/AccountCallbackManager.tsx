@@ -9,7 +9,7 @@ import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
-import { Actions, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { isReceivedTransaction, snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
@@ -61,8 +61,8 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       watchSecurityAlerts(account, hasAlerts => {
-        if (hasAlerts && Actions.currentScene !== 'securityAlerts') {
-          navigation.push('securityAlerts', {})
+        if (hasAlerts) {
+          navigation.navigate('securityAlerts', {})
         }
       }),
 

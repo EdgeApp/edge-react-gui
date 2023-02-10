@@ -76,7 +76,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletList', {})
       return
     }
     // Any other combination goes to the completion scene
@@ -135,7 +135,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // If all remaining create items are tokens just go enable them and return home
     if (newWalletItemsCopy.length === 0 && newTokenItems.length > 0) {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletList', {})
       return
     }
 
