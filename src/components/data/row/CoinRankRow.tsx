@@ -137,23 +137,21 @@ const CoinRankRowComponent = (props: Props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
       <View style={styles.rank}>
-        <EdgeText>{rank}</EdgeText>
+        <EdgeText numberOfLines={1} disableFontScaling>
+          {rank}
+        </EdgeText>
       </View>
       <View style={styles.iconRowDataContainer}>
         <FastImage style={styles.icon} source={imageUrlObject} />
         <View style={styles.leftColumn}>
-          <View style={styles.row}>
-            <EdgeText style={styles.currencyCode}>{currencyCode.toUpperCase()}</EdgeText>
-            <EdgeText style={priceStyle}>{percentString}</EdgeText>
-          </View>
+          <EdgeText style={styles.currencyCode}>{currencyCode.toUpperCase()}</EdgeText>
           <EdgeText style={styles.assetSubText}>{assetSubTextString}</EdgeText>
+        </View>
+        <View style={styles.middleColumn}>
+          <EdgeText style={priceStyle}>{percentString}</EdgeText>
         </View>
         <View style={styles.rightColumn}>
           <EdgeText style={priceStyle}>{priceString}</EdgeText>
-          <View style={styles.row}>
-            {/* This is needed to add proper amount of vertical spacing  */}
-            <EdgeText style={styles.invisibleText}>INVIS_TEXT</EdgeText>
-          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -167,21 +165,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row'
   },
   iconRowDataContainer: {
-    paddingLeft: theme.rem(0),
-    paddingRight: theme.rem(0),
+    padding: theme.rem(0.75),
+    paddingLeft: theme.rem(0.25),
     flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    margin: theme.rem(0.75)
+    margin: theme.rem(0)
   },
   currencyCode: {
     width: theme.rem(5)
   },
   rank: {
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    width: theme.rem(2),
-    paddingLeft: theme.rem(1)
+    marginLeft: theme.rem(1),
+    width: theme.rem(2.5)
   },
   icon: {
     width: theme.rem(1.5),
@@ -200,14 +199,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   rightColumn: {
     alignItems: 'flex-end',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  middleColumn: {
+    flexGrow: 1,
+    flexShrink: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     flexDirection: 'column'
   },
   leftColumn: {
     flexDirection: 'column',
-    flexGrow: 1,
     flexShrink: 1,
-    marginRight: theme.rem(0.25),
-    marginLeft: theme.rem(1)
+    marginLeft: theme.rem(1),
+    width: theme.rem(4.5)
   },
   row: {
     flexDirection: 'row',
@@ -217,10 +223,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   assetSubText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
-  },
-  invisibleText: {
-    fontSize: theme.rem(0.75),
-    color: '#0000'
   }
 }))
 
