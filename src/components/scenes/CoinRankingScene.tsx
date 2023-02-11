@@ -269,7 +269,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     rankView: {
       ...baseTextView,
       justifyContent: 'center',
-      width: theme.rem(4.25)
+      width: theme.rem(5.25)
     },
     rankText: {
       ...baseTextStyle
@@ -277,7 +277,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     assetView: {
       ...baseTextView,
       justifyContent: 'center',
-      width: theme.rem(5)
+      width: theme.rem(4.75)
     },
     assetText: {
       ...baseTextStyle,
