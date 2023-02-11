@@ -1,5 +1,5 @@
 import analytics from '@react-native-firebase/analytics'
-import { getUniqueId } from 'react-native-device-info'
+import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
 import { fetchReferral } from './network'
@@ -74,7 +74,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
   if (!name) return
 
   // Adjust params:
-  const params: any = {}
+  const params: any = { edgeVersion: getVersion() }
   if (accountDate != null) params.adate = accountDate
   if (currencyCode != null) params.currency = currencyCode
   if (dollarValue != null) {
