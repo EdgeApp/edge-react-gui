@@ -7846,27 +7846,18 @@ edge-exchange-plugins@^0.17.2:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.10.21:
-  version "0.10.21"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.10.21.tgz#e655f176cf3c2cbcca62a260c8857f0cf7807253"
-  integrity sha512-9E+R6XN76rLw5BsurkHEPryrP27MHgp927Kt2qRxBjeMKaPQ331PxRgnFpR9DfZiQbd46JSVkj5nfqLW2t6zww==
+edge-login-ui-rn@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.11.0.tgz#5a3e30e2c07eed11d2cf845bca7edf3f51f1550a"
+  integrity sha512-wLmYVOG33I9wUI7VPF7EnWRsdy8qi0UV5U5GyfugSIUx72GzEfqPUeZzFLgdNVyokjmnT710iski9ZtN8ZTdEA==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
     react-native-airship "^0.2.9"
-    react-native-gesture-handler "^2.5.0"
     react-native-keyboard-aware-scroll-view "^0.9.5"
-    react-native-linear-gradient "^2.0.0"
-    react-native-localize "^2.0.2"
-    react-native-mail "^6.1.0"
     react-native-material-textfield "https://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-patina "^0.1.6"
-    react-native-permissions "^3.0.1"
-    react-native-reanimated "^2.0.0"
-    react-native-share "^5.1.4"
-    react-native-svg "^12.1.0"
-    react-native-vector-icons "^7.1.0"
     react-redux "^7.2.4"
     redux "~3.5.2"
     redux-thunk "~2.1.0"
@@ -14042,7 +14033,7 @@ react-native-fs@^2.19.0:
     base-64 "^0.1.0"
     utf8 "^3.0.0"
 
-react-native-gesture-handler@^2.4.1, react-native-gesture-handler@^2.5.0:
+react-native-gesture-handler@^2.4.1:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.5.0.tgz#61385583570ed0a45a9ed142425e35f8fe8274fb"
   integrity sha512-djZdcprFf08PZC332D+AeG5wcGeAPhzfCJtB3otUgOgTlvjVXmg/SLFdPJSpzLBqkRAmrC77tM79QgKbuLxkfw==
@@ -14076,22 +14067,22 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.5.6:
+react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-localize@^2.0.2, react-native-localize@^2.2.1:
+react-native-localize@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.2.1.tgz#6fe646833691c6ee8a474df3c8b069402cb1dba8"
   integrity sha512-BuPaQWvxLZG1NrCDGqgAnecDrNQu3LED9/Pyl4H2LwTMHcEngXpE5PfVntW2GiLumdr6nUOkWmMnh8PynZqrsw==
 
-react-native-mail@^6.1.0, react-native-mail@^6.1.1:
+react-native-mail@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
@@ -14112,7 +14103,7 @@ react-native-patina@^0.1.6:
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.6.tgz#eb60194a4e4e427a51391b92a2acebb557f3f3ca"
   integrity sha512-3mtDnDRbkTx3mtS9BsaYgFy5C+RuSTTHLu5VV+8g8lJtvaSdcsflpmf5dh3ZmCSJc2tDORfzU+nuRQ2keVY91Q==
 
-react-native-permissions@^3.0.1, react-native-permissions@^3.3.1:
+react-native-permissions@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.3.1.tgz#8a359d9c0531afcde2f642a459b48c4c1e3e8f2d"
   integrity sha512-Ap9nVWBWJ7lyU6Ye3Qltm2V+Ut6XjDcs+6ZBmK1UUxcCoSSGx/mQg2GbMJLjlnoVtUgVHR3IhyZ0mN9DlMPRFQ==
@@ -14129,7 +14120,7 @@ react-native-popup-menu@0.13.3:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
 
-react-native-reanimated@^2.0.0, react-native-reanimated@^2.8.0:
+react-native-reanimated@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.8.0.tgz#93c06ca84d91fb3865110b0857c49a24e316130e"
   integrity sha512-kJvf/UWLBMaGCs9X66MKq5zdFMgwx8D0nHnolbHR7s8ZnbLdb7TlQ/yuzIXqn/9wABfnwtNRI3CyaP1aHWMmZg==
@@ -14167,11 +14158,6 @@ react-native-screens@^3.19.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-share@^5.1.4:
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-5.1.4.tgz#0b9d51f6ca724728cb0c5b3ed3a883ee54d7a11b"
-  integrity sha512-/eNBTuimOmzeeBbnZkwW6hbzSZvJnhfkx5cSdQkFS45KRHekD9twP6F8QHn+zJxeJGAP+EgpVCXoA7yCrgKrhQ==
-
 react-native-share@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
@@ -14208,7 +14194,7 @@ react-native-svg-transformer@^1.0.0:
     "@svgr/plugin-svgo" "^6.1.2"
     path-dirname "^1.0.2"
 
-react-native-svg@^12.1.0, react-native-svg@^12.3.0:
+react-native-svg@^12.3.0:
   version "12.3.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.3.0.tgz#40f657c5d1ee366df23f3ec8dae76fd276b86248"
   integrity sha512-ESG1g1j7/WLD7X3XRFTQHVv0r6DpbHNNcdusngAODIxG88wpTWUZkhcM3A2HJTb+BbXTFDamHv7FwtRKWQ/ALg==
