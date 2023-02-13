@@ -206,6 +206,14 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     },
     {
       pressHandler: () => {
+        navigation.navigate('fioRequestList', {})
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconName: 'control-panel-fio-names',
+      title: 'RNS Domain'
+    },
+    {
+      pressHandler: () => {
         navigation.navigate('wcConnections', {})
         navigation.dispatch(DrawerActions.closeDrawer())
       },

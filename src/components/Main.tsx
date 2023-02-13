@@ -11,6 +11,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
+import { RnsDomainMintingScene } from '../components/scenes/RnsDomainMintingScene'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import s from '../locales/strings'
@@ -590,6 +591,14 @@ const EdgeAppStack = () => {
         component={ifLoggedIn(FioSentRequestDetailsScene)}
         options={{
           headerRight: () => null
+        }}
+      />
+
+      <Stack.Screen
+        name="rnsDomainMinting"
+        component={ifLoggedIn(RnsDomainMintingScene)}
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
         }}
       />
 

@@ -131,6 +131,7 @@ interface RouteParamList {
     bundledTxs: number
   }
   fioAddressList: {}
+  rnsDomainMinting: {}
   fioAddressRegister: {}
   fioAddressRegisterSelectWallet: {
     fioAddress: string

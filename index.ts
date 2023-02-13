@@ -1,5 +1,7 @@
 import 'react-native-gesture-handler'
+import 'react-native-get-random-values'
 import './src/app'
+import '@ethersproject/shims'
 
 import { AppRegistry } from 'react-native'
 import Animated from 'react-native-reanimated'
