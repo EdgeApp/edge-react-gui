@@ -408,6 +408,9 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   shouldShowMinimumModal = (props: Props): boolean => {
     const { currencyCode, wallet } = props
     if (currencyCode == null || wallet == null) return false
+
+    // No minimums for tokens
+    if (currencyCode !== wallet.currencyInfo.currencyCode) return false
     const { pluginId } = wallet.currencyInfo
 
     if (this.state.minimumPopupModalState[pluginId]) {
