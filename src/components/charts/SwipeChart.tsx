@@ -217,7 +217,7 @@ const SwipeChartComponent = (params: Props) => {
     ) {
       const minXIndex = chartData.indexOf(minPriceDataPoint)
       const minXPosition = (chartWidth.current / (chartData.length - 1)) * minXIndex
-      const minYPosition = chartHeight.current - theme.rem(2.75)
+      const minYPosition = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
 
       const maxXIndex = chartData.indexOf(maxPriceDataPoint)
       const maxXPosition = (chartWidth.current / (chartData.length - 1)) * maxXIndex
