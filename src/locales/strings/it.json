@@ -239,7 +239,7 @@
   "activate_wallet_token_scene_tile_title": "Token da attivare",
   "activate_wallet_tokens_scene_tile_title": "Token da attivare",
   "activate_wallet_token_scene_body": "Per inviare e ricevere il token selezionato dovrai prima attivarlo con una transazione blockchain. Questa transazione costerà la seguente commissione.\n\nSi prega di confermare utilizzando il cursore qui sotto.",
-  "activate_wallet_token_scene_body_xrp_extra": "Token activation will increase the XRP reserve requirement by 2 XRP per token activated.",
+  "activate_wallet_token_scene_body_xrp_extra": "L'attivazione del token aumenterà la riserva di XRP di 2 XRP per ogni token attivato.",
   "activate_wallet_tokens_scene_body": "Per inviare e ricevere i token selezionati dovrai prima attivarli con una o più transazioni blockchain. Le transazioni in totale costeranno la seguente commissione mostrata sotto. Si prega di confermare utilizzando il cursore qui sotto.",
   "activate_wallet_token_insufficient_funds_s": "Non hai fondi sufficienti per attivare questo token. Hai bisogno di almeno %s per procedere con l'attivazione.",
   "activate_wallet_tokens_insufficient_funds_s": "Non hai fondi sufficienti per attivare questi token. Hai bisogno di almeno %s per procedere con l'attivazione.",
