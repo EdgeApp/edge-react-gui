@@ -34,9 +34,9 @@ export const ScanModal = (props: Props) => {
   const {
     bridge,
     title,
-    textModalHint = s.strings.scan_modal_text_modal_hint,
-    textModalMessage = s.strings.scan_modal_text_modal_message,
-    textModalTitle = s.strings.scan_modal_text_modal_title
+    textModalHint = s.strings.enter_any_input_hint,
+    textModalMessage = s.strings.enter_any_body,
+    textModalTitle = s.strings.enter_any_title
   } = props
 
   const theme = useTheme()
