@@ -24,20 +24,15 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
-  title: string
+  textModalAutoFocus?: boolean
+  textModalBody?: React.ReactNode | string
   textModalHint?: string
-  textModalMessage?: string
   textModalTitle?: string
+  title: string
 }
 
 export const ScanModal = (props: Props) => {
-  const {
-    bridge,
-    title,
-    textModalHint = s.strings.enter_any_input_hint,
-    textModalMessage = s.strings.enter_any_body,
-    textModalTitle = s.strings.enter_any_title
-  } = props
+  const { bridge, textModalAutoFocus, textModalBody, textModalHint, textModalTitle, title } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -76,7 +71,7 @@ export const ScanModal = (props: Props) => {
   const handleTextInput = async () => {
     triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
-      <TextInputModal bridge={bridge} inputLabel={textModalHint} message={textModalMessage} title={textModalTitle} />
+      <TextInputModal autoFocus={textModalAutoFocus} bridge={bridge} inputLabel={textModalHint} message={textModalBody} title={textModalTitle} />
     ))
 
     if (uri != null) {

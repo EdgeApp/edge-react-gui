@@ -102,7 +102,6 @@ export const WcConnectionsScene = (props: Props) => {
         bridge={bridge}
         title={s.strings.scan_qr_label}
         textModalHint={s.strings.wc_scan_modal_text_modal_hint}
-        textModalMessage=""
         textModalTitle={s.strings.wc_scan_modal_text_modal_title}
       />
     ))
