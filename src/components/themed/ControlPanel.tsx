@@ -37,6 +37,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
+import { ModalMessage, ModalTitle } from './ModalParts'
 
 interface Props {
   navigation: NavigationProp<'controlPanel'>
@@ -116,7 +117,20 @@ export function ControlPanel(props: Props) {
 
   const handleScanQr = () => {
     navigation.closeDrawer()
-    Airship.show<string | undefined>(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+    Airship.show<string | undefined>(bridge => (
+      <ScanModal
+        bridge={bridge}
+        title={s.strings.scan_qr_label}
+        textModalAutoFocus={false}
+        textModalBody={
+          <ScrollView>
+            <ModalTitle>{s.strings.enter_any_title}</ModalTitle>
+            <ModalMessage>{s.strings.enter_any_body}</ModalMessage>
+          </ScrollView>
+        }
+        textModalHint={s.strings.enter_any_input_hint}
+      />
+    ))
       .then((result: string | undefined) => {
         if (result) {
           const deepLink = parseDeepLink(result)

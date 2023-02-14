@@ -194,7 +194,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         bridge={bridge}
         title={s.strings.scan_qr_label}
         textModalHint={s.strings.send_scan_modal_text_modal_hint}
-        textModalMessage={message}
+        textModalBody={message}
         textModalTitle={title}
       />
     ))
