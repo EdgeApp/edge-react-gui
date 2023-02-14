@@ -119,7 +119,10 @@ export const edgeDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  listSectionHeaderBackground: palette.navyAquaMiddle,
+  // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
+  listSectionHeaderBackgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
+  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // WalletList
   walletListBackground: palette.navyAqua,

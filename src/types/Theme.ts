@@ -105,7 +105,9 @@ export interface Theme {
   tileBackgroundMuted: string
 
   // Section Lists
-  listSectionHeaderBackground: string
+  listSectionHeaderBackgroundGradientColors: string[]
+  listSectionHeaderBackgroundGradientStart?: { x: number; y: number }
+  listSectionHeaderBackgroundGradientEnd?: { x: number; y: number }
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard
