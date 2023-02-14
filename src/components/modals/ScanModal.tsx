@@ -60,6 +60,7 @@ export const ScanModal = (props: Props) => {
     requestPermission('camera')
 
     return () => setScanEnabled(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleBarCodeRead = (result: { data: string }) => {
@@ -122,10 +123,6 @@ export const ScanModal = (props: Props) => {
       }
     )
   }
-
-  // const handleLayout = (setRect: (rect: LayoutRectangle) => void) => (event: LayoutChangeEvent) => {
-  //   setRect(event.nativeEvent.layout)
-  // }
 
   const handleClose = () => {
     triggerHaptic('impactLight')
