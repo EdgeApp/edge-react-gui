@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -15,7 +16,22 @@ export const EmptyLoader = () => {
 }
 
 export const SectionHeader = (props: { title?: string }) => {
-  const styles = getStyles(useTheme())
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  if (theme.listSectionHeaderBackgroundGradientStart != null && theme.listSectionHeaderBackgroundGradientEnd != null) {
+    return (
+      <LinearGradient
+        style={styles.headerContainer}
+        start={theme.listSectionHeaderBackgroundGradientStart}
+        end={theme.listSectionHeaderBackgroundGradientEnd}
+        colors={theme.listSectionHeaderBackgroundGradientColors}
+      >
+        <EdgeText style={styles.headerDate}>{props.title || ''}</EdgeText>
+      </LinearGradient>
+    )
+  }
+
   return (
     <View style={styles.headerContainer}>
       <EdgeText style={styles.headerDate}>{props.title || ''}</EdgeText>
@@ -41,7 +57,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(10)
   },
   headerContainer: {
-    backgroundColor: theme.listSectionHeaderBackground,
+    backgroundColor: theme.listSectionHeaderBackgroundGradientColors[0],
     paddingLeft: theme.rem(1),
     paddingVertical: theme.rem(0.5)
   },
