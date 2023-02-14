@@ -35,6 +35,7 @@ import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
 import { CoinRankingDetailsScene } from './scenes/CoinRankingDetailsScene'
 import { CoinRankingScene } from './scenes/CoinRankingScene'
+import { ConfirmScene } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene } from './scenes/CreateWalletCompletionScene'
@@ -193,6 +194,7 @@ const EdgeAppStack = () => {
           headerShown: false
         }}
       />
+      <Stack.Screen name="confirmScene" component={ifLoggedIn(ConfirmScene)} />
       <Stack.Screen name="createWalletSelectCrypto" component={ifLoggedIn(CreateWalletSelectCryptoScene)} />
       <Stack.Screen name="createWalletSelectFiat" component={ifLoggedIn(CreateWalletSelectFiatScene)} />
       <Stack.Screen

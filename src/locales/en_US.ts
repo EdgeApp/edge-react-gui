@@ -298,6 +298,7 @@ const strings = {
   activate_wallet_tokens_scene_tile_title: 'Tokens to Activate',
   activate_wallet_token_scene_body:
     'To send and receive the selected token you will first need to activate it with a blockchain transaction. This transaction will cost the following fee.\n\nPlease confirm using the slider below.',
+  activate_wallet_token_scene_body_xrp_extra: 'Token activation will increase the XRP reserve requirement by 2 XRP per token activated.',
   activate_wallet_tokens_scene_body:
     'To send and receive the selected tokens you will first need to activate them with one or more blockchain transactions. The transactions in total will cost the following fee shown below. Please confirm using the slider below.',
   activate_wallet_token_insufficient_funds_s: 'You have insufficient funds to activate this token. You need at least %s to proceed with activation.',

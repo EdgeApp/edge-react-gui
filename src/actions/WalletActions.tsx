@@ -258,10 +258,17 @@ const activateWalletTokens = async (
     if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
     fiatFee = round(fiatFee, -3)
     const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${fiatCurrencyCode.replace('iso:', '')})`
+    let bodyText = s.strings.activate_wallet_token_scene_body
+
+    // HACK: XRP causes the reserve requirement to increase per token activated. There's
+    // No good way to parametrize this and abstract away the asset
+    if (wallet.currencyInfo.pluginId === 'ripple') {
+      bodyText += '\n\n' + s.strings.activate_wallet_token_scene_body_xrp_extra
+    }
 
     navigation.navigate('confirmScene', {
       titleText: s.strings.activate_wallet_token_scene_title,
-      bodyText: s.strings.activate_wallet_token_scene_body,
+      bodyText,
       infoTiles: [
         { label: tileTitle, value: tileBody },
         { label: s.strings.mining_fee, value: feeString }
