@@ -4,6 +4,7 @@ import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
+import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
 import { useState } from '../../../types/reactHooks'
@@ -131,7 +132,7 @@ const CoinRankRowComponent = (props: Props) => {
   numDecimals = getNumDecimals(price)
   const priceStyle = negative ? styles.negativeText : styles.positiveText
   const plusMinus = negative ? '' : '+'
-  const priceString = `${fiatSymbol}${round(price.toString(), -numDecimals)}`
+  const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })}`
   const percentString = `${plusMinus}${percentChangeString}%`
 
   return (
