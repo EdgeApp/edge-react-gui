@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { USD_FIAT } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import s from '../../locales/strings'
@@ -104,7 +105,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         return data == null ? 'N/A' : toPercentString(Number(data) / 100)
       case 'price':
       case 'priceChange24h':
-        return formatFiatString({ fiatAmount: baseString })
+        return `${formatFiatString({ fiatAmount: baseString })} ${USD_FIAT.replace('iso:', '')}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':

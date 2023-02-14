@@ -33,6 +33,8 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
+import { CoinRankingDetailsScene } from './scenes/CoinRankingDetailsScene'
+import { CoinRankingScene } from './scenes/CoinRankingScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene } from './scenes/CreateWalletCompletionScene'
@@ -641,6 +643,13 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen name="loanStatus" component={ifLoggedIn(LoanStatusScene)} />
+      <Stack.Screen
+        name="coinRankingDetails"
+        component={ifLoggedIn(CoinRankingDetailsScene)}
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+      />
     </Stack.Navigator>
   )
 }
@@ -684,6 +693,13 @@ const EdgeTabs = () => {
       <Tab.Screen
         name="exchange"
         component={ifLoggedIn(CryptoExchangeScene)}
+        listeners={{
+          focus: () => dispatch(checkEnabledExchanges())
+        }}
+      />
+      <Tab.Screen
+        name="coinRanking"
+        component={ifLoggedIn(CoinRankingScene)}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
