@@ -149,6 +149,11 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  OPTIMISM_INIT: asCorePluginInit(
+    asObject({
+      evmScanApiKey: asOptional(asArray(asString), [])
+    }).withRest
+  ),
   POLYGON_INIT: asCorePluginInit(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), []),

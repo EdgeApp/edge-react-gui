@@ -17,6 +17,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT,
   kovan: ENV.KOVAN_INIT,
+  optimism: ENV.OPTIMISM_INIT,
   polygon: ENV.POLYGON_INIT,
   avalanche: true,
   ripple: true,
