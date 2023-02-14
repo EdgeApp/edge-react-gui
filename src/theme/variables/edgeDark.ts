@@ -36,8 +36,8 @@ const palette = {
   edgeMint: '#00f1a2',
   darkAqua: '#1b2f3b',
   navyAqua: '#121d25',
-  navyAquaMiddle: '#11191f',
-  navyAquaDarker: '#0E141A',
+  navyAquaMiddle: '#11191f', // For vertical gradient
+  navyAquaDarker: '#0E141A', // For vertical gradient
   blueGray: '#A4C7DF',
   gray: '#87939E',
   lightGray: '#D9E3ED',
@@ -88,9 +88,10 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.navyAqua,
 
   // Background
-  backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker],
+  // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
+  backgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
   backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 0, y: 1 },
+  backgroundGradientEnd: { x: 1, y: 0 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
