@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { Slider } from '../../../modules/UI/components/Slider/Slider'
-import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError } from '../../../plugins/stake-plugins/types'
+import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -117,6 +117,10 @@ const StakeModifySceneComponent = (props: Props) => {
             } else {
               setErrorMessage(errMessage)
             }
+          } else if (err instanceof StakePoolFullError) {
+            const { currencyCode } = err
+            const errMessage = sprintf(s.strings.state_error_pool_full_s, currencyCode)
+            setErrorMessage(errMessage)
           } else {
             setErrorMessage(err.message)
           }
