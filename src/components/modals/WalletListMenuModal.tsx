@@ -168,15 +168,6 @@ export function WalletListMenuModal(props: Props) {
 
     const result: Option[] = []
 
-    const splittable = await account.listSplittableWalletTypes(wallet.id)
-
-    const currencyInfos = getCurrencyInfos(account)
-    for (const splitWalletType of splittable) {
-      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
-    }
-
     const { pluginId } = wallet.currencyInfo
     for (const option of WALLET_LIST_MENU) {
       const { pluginIds, label, value } = option
@@ -189,6 +180,16 @@ export function WalletListMenuModal(props: Props) {
       }
       result.push({ label, value })
     }
+
+    const splittable = await account.listSplittableWalletTypes(wallet.id)
+
+    const currencyInfos = getCurrencyInfos(account)
+    for (const splitWalletType of splittable) {
+      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
+    }
+
     setOptions(result)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
