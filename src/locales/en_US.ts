@@ -483,7 +483,7 @@ const strings = {
   string_first_litecoin_wallet_name: 'My Litecoin',
   string_first_monero_wallet_name: 'My Monero',
   string_first_qtum_wallet_name: 'My Qtum',
-  string_first_ripple_wallet_name: 'My Ripple',
+  string_first_ripple_wallet_name: 'My XRP',
   string_first_smartcash_wallet_name: 'My SmartCash',
   string_first_ufo_wallet_name: 'My UFO',
   string_first_vertcoin_wallet_name: 'My Vertcoin',
