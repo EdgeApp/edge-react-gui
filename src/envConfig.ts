@@ -133,6 +133,13 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  LIFI_INIT: asCorePluginInit(
+    asObject({
+      affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      integrator: asOptional(asString, 'edgeapp')
+    }).withRest
+  ),
   KOVAN_INIT: asCorePluginInit(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), []),
@@ -177,8 +184,9 @@ export const asEnvConfig = asObject({
   ),
   THORCHAIN_INIT: asCorePluginInit(
     asObject({
-      ninerealmsClientId: asOptional(asString, ''),
       affiliateFeeBasis: asOptional(asString, '50'),
+      appId: asOptional(asString, 'edge'),
+      ninerealmsClientId: asOptional(asString, ''),
       thorname: asOptional(asString, 'ej')
     }).withRest
   ),
