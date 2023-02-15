@@ -105,6 +105,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         return data == null ? 'N/A' : toPercentString(Number(data) / 100)
       case 'price':
       case 'priceChange24h':
+      case 'high24h':
+      case 'low24h':
         return `${formatFiatString({ fiatAmount: baseString })} ${USD_FIAT.replace('iso:', '')}`
       case 'rank':
         return `#${baseString}`
