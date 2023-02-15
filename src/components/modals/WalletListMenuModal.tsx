@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -202,17 +202,21 @@ export function WalletListMenuModal(props: Props) {
         </View>
       )}
 
-      {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-          <AntDesignIcon
-            // @ts-expect-error
-            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
-            size={theme.rem(1)}
-            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-          />
-          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-        </TouchableOpacity>
-      ))}
+      <View style={styles.scrollViewContainer}>
+        <ScrollView>
+          {options.map((option: Option) => (
+            <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+              <AntDesignIcon
+                // @ts-expect-error
+                name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+                size={theme.rem(1)}
+                style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+              />
+              <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
       <ModalCloseArrow onPress={handleCancel} />
     </ThemedModal>
   )
@@ -232,6 +236,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     margin: theme.rem(0.5)
+  },
+  scrollViewContainer: {
+    marginBottom: theme.rem(-0.75),
+    flexShrink: 1
   },
   warningColor: {
     color: theme.warningText
