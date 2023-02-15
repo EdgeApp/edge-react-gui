@@ -270,23 +270,29 @@ export function logoutRequest(navigation: NavigationBase, username?: string): Th
  * Creates a wallet, with timeout, and maybe also activates it.
  */
 async function safeCreateWallet(account: EdgeAccount, walletType: string, walletName: string, fiatCurrencyCode: string, dispatch: Dispatch) {
-  const wallet = await runWithTimeout(
-    account.createCurrencyWallet(walletType, {
-      name: walletName,
-      fiatCurrencyCode
-    }),
-    20000,
-    new Error(s.strings.error_creating_wallets)
-  )
-  if (account.activeWalletIds.length <= 1) {
-    dispatch({
-      type: 'UI/WALLETS/SELECT_WALLET',
-      data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
-    })
-  }
-  logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
+  try {
+    const wallet = await runWithTimeout(
+      account.createCurrencyWallet(walletType, {
+        name: walletName,
+        fiatCurrencyCode
+      }),
+      20000,
+      new Error(s.strings.error_creating_wallets)
+    )
+    if (account.activeWalletIds.length <= 1) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
+      })
+    }
+    dispatch(trackAccountEvent('Signup_Wallets_Created_Success'))
+    logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
 
-  return wallet
+    return wallet
+  } catch (error) {
+    dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error: String(error) }))
+    throw error
+  }
 }
 
 // The `currencyCodes` are in the format "ETH:DAI",
@@ -354,6 +360,4 @@ async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: stri
   const defaultEdgeTokenIds = currencyCodesToEdgeTokenIds(account, config.defaultWallets)
   // TODO: Run these in parallel once the Core has safer locking:
   await createCustomWallets(account, fiatCurrencyCode, defaultEdgeTokenIds, dispatch)
-
-  dispatch(trackAccountEvent('SignupWalletsCreated'))
 }

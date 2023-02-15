@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiFiatType } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { logEvent } from '../../util/tracking'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -75,7 +76,12 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // If only creating one wallet, do it now and return to home screen
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
-      await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
+      try {
+        await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
+        logEvent('Create_Wallet_Success')
+      } catch (error: any) {
+        logEvent('Create_Wallet_Failed', { error: String(error) })
+      }
       navigation.navigate('walletList', {})
       return
     }

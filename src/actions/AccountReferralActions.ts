@@ -14,6 +14,7 @@ import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralType
 import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak, MessageTweak } from '../types/TweakTypes'
 import { fetchInfo, fetchReferral } from '../util/network'
 import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
+import { logEvent } from '../util/tracking'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
 const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
@@ -81,6 +82,7 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
       accountPlugins: lockStartDates(plugins, creationDate)
     }
 
+    logEvent('Load_Install_Reason_Match', { installerId })
     dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
     await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
 

@@ -100,7 +100,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    logEvent('ActivateWalletSelect')
+    logEvent('Activate_Wallet_Select')
   }
 
   onPressSelect = () => {

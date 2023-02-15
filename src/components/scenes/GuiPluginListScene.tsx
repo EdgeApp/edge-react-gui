@@ -258,16 +258,24 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
-    const regionCode = { countryCode }
+    const direction = route.params.direction
     if (plugin.nativePlugin != null) {
       const filteredDisablePlugins: { [pluginId: string]: true } = {}
       for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
         if (value === true) filteredDisablePlugins[key] = true
       }
-      await executePlugin({ disablePlugins: filteredDisablePlugins, guiPlugin: plugin, regionCode, paymentType, navigation, account })
+      await executePlugin({
+        disablePlugins: filteredDisablePlugins,
+        guiPlugin: plugin,
+        direction,
+        regionCode: { countryCode },
+        paymentType,
+        navigation,
+        account
+      })
     } else {
       // Launch!
-      navigation.navigate(route.params.direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
+      navigation.navigate(direction === 'buy' ? 'pluginViewBuy' : 'pluginViewSell', {
         plugin,
         deepPath,
         deepQuery

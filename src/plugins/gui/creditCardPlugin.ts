@@ -10,6 +10,7 @@ import { EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
+import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -67,7 +68,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { regionCode, paymentTypes } = params
+      const { isBuy, regionCode, paymentTypes } = params
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
       const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
@@ -118,6 +119,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
+        isBuy,
 
         label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
@@ -233,6 +235,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
+
+                logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
+
                 if (sourceFieldNum === 1) {
                   enterAmountMethods.setValue2(bestQuote.cryptoAmount)
                 } else {
