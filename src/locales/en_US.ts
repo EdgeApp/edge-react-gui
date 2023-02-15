@@ -1180,6 +1180,7 @@ const strings = {
   stake_error_insufficient_s: 'Insufficient %s',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
+  state_error_pool_full_s: 'The %1$s asset pool is currency full. Please try again later.',
   stake_estimated_staking_fee: 'Estimated Staking Fee',
   stake_estimated_unstaking_fee: 'Estimated Unstaking Fee',
   stake_staking_fee_message: 'The specified Staking Fee will be deducted from the amount deposited reducing the amount staked.',
