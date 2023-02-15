@@ -48,6 +48,7 @@ import { CryptoExchangeSuccessScene } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene } from './scenes/DefaultFiatSettingScene'
+import { EdgeLoginScene } from './scenes/EdgeLoginScene'
 import { EditTokenScene } from './scenes/EditTokenScene'
 import { ExtraTabScene } from './scenes/ExtraTabScene'
 import { FioAddressDetailsScene } from './scenes/FioAddressDetailsScene'
@@ -483,6 +484,8 @@ const EdgeAppStack = () => {
           title: s.strings.title_terms_of_service
         }}
       />
+
+      <Stack.Screen name="edgeLogin" component={ifLoggedIn(EdgeLoginScene)} />
 
       <Stack.Screen name="fioAddressList" component={ifLoggedIn(FioAddressListScene)} />
 
