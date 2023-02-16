@@ -193,7 +193,18 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "textShadowRadius": 0,
               },
               "lineDivider": "rgba(255, 255, 255, .1)",
-              "listSectionHeaderBackground": "#11191f",
+              "listSectionHeaderBackgroundGradientColors": Array [
+                "#06090c",
+                "#1b2f3b",
+              ],
+              "listSectionHeaderBackgroundGradientEnd": Object {
+                "x": 1,
+                "y": 0,
+              },
+              "listSectionHeaderBackgroundGradientStart": Object {
+                "x": 0,
+                "y": 0,
+              },
               "mediumLineWidth": 2,
               "modal": "#121d25",
               "modalBorderColor": "rgba(255, 255, 255, 0)",
@@ -626,7 +637,18 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "textShadowRadius": 0,
               },
               "lineDivider": "rgba(255, 255, 255, .1)",
-              "listSectionHeaderBackground": "#11191f",
+              "listSectionHeaderBackgroundGradientColors": Array [
+                "#06090c",
+                "#1b2f3b",
+              ],
+              "listSectionHeaderBackgroundGradientEnd": Object {
+                "x": 1,
+                "y": 0,
+              },
+              "listSectionHeaderBackgroundGradientStart": Object {
+                "x": 0,
+                "y": 0,
+              },
               "mediumLineWidth": 2,
               "modal": "#121d25",
               "modalBorderColor": "rgba(255, 255, 255, 0)",

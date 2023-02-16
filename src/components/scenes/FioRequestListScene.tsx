@@ -24,6 +24,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { FioRequestRow } from '../themed/FioRequestRow'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SectionHeader } from '../themed/TransactionListComponents'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -300,13 +301,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   headerRowUsingTitle = (sectionObj: { section: { title: string } }) => {
-    const styles = getStyles(this.props.theme)
     if (!sectionObj.section.title) return null
-    return (
-      <View style={styles.singleDateArea}>
-        <EdgeText style={styles.formattedDate}>{sectionObj.section.title}</EdgeText>
-      </View>
-    )
+    return <SectionHeader title={sectionObj.section.title} />
   }
 
   selectPendingRequest = (fioRequest: FioRequest) => {
@@ -593,10 +589,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(0.5),
     paddingLeft: theme.rem(1),
     paddingRight: theme.rem(1.5)
-  },
-  formattedDate: {
-    color: theme.primaryText,
-    fontSize: theme.rem(0.75)
   }
 }))
 
