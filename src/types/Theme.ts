@@ -142,6 +142,7 @@ export interface Theme {
   dangerText: string
   textLink: string
   deactivatedText: string
+  emphasizedText: string
   // listHeaderText: string,
 
   // Header
