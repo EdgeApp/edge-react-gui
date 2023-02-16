@@ -8,12 +8,12 @@ import { useEffect } from 'react'
  *
  * **_This hook should only be used within scene components_**
  */
-export const useBackEvent = (handler: () => boolean) => {
+export const useBackEvent = (handler: (actionType: string) => boolean) => {
   const navigation = useNavigation()
   useEffect(
     () =>
       navigation.addListener('beforeRemove', ev => {
-        if (!handler()) {
+        if (!handler(ev.data.action.type)) {
           ev.preventDefault()
         }
       }),
