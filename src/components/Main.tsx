@@ -1,21 +1,21 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
 import { useDispatch } from 'react-redux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
-import { logoutRequest } from '../actions/LoginActions'
+import { logout } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
-import { AppParamList, NavigationBase } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
@@ -131,9 +131,11 @@ export const Main = () => {
 const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
   const dispatch = useDispatch()
-  const navigation = useNavigation<NavigationBase>()
 
-  useBackEvent(() => {
+  useBackEvent(actionType => {
+    if (actionType === 'RESET') {
+      return true
+    }
     if (backPressedOnce.current) {
       return true
     } else {
@@ -154,7 +156,7 @@ const EdgeApp = () => {
     dispatch({ type: 'IS_LOGGED_IN' })
   })
   useUnmount(() => {
-    dispatch(logoutRequest(navigation))
+    dispatch(logout())
   })
 
   return (
