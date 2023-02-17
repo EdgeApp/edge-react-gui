@@ -257,7 +257,17 @@ export const mergeSettings = (
 
 export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    navigation.navigate('login', {})
+    // Must use reset in order to avoid being prevented by the useBackEvent:
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login' }]
+    })
+    await dispatch(logout(username))
+  }
+}
+
+export function logout(username?: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     Airship.clear()
     const state = getState()
     const { account } = state.core
