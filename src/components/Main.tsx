@@ -19,7 +19,6 @@ import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
-import { withServices } from './hoc/withServices'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
@@ -121,7 +120,7 @@ export const Main = () => {
           headerShown: false
         }}
       >
-        <Stack.Screen name="login" component={withServices(LoginScene)} />
+        <Stack.Screen name="login" component={LoginScene} />
         <Stack.Screen name="edgeApp" component={EdgeApp} />
       </Stack.Navigator>
     </NavigationContainer>
