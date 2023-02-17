@@ -1,6 +1,7 @@
 import * as NavigationCore from '@react-navigation/core'
 import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { PluginListProps } from '../components/scenes/GuiPluginListScene'
@@ -44,7 +45,9 @@ interface PluginViewParams {
 
 interface RouteParamList {
   // Top-level router:
-  login: {}
+  login: {
+    loginUiInitialRoute?: InitialRouteName
+  }
   edgeApp: {}
   edgeAppStack: {}
   edgeTabs: {}
