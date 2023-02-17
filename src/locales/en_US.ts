@@ -434,6 +434,7 @@ const strings = {
   settings_notifications: 'Notifications',
   settings_currency_notifications_percent_change_hour: '%1$s%% change within 1 hour',
   settings_currency_notifications_percent_change_hours: '%1$s%% change within %2$s hours',
+  skip: 'Skip',
   staking_change_add_header: 'Stake %s',
   staking_change_add_amount_title: 'Amount to stake',
   staking_change_explaner1: 'Stake your coins to earn passive income on your funds',
@@ -1432,7 +1433,22 @@ const strings = {
   currency_label_VND: 'Dong',
   currency_label_YER: 'Yemeni Rial',
   currency_label_ZMW: 'Zambian Kwacha',
-  currency_label_ZWL: 'Zimbabwe Dollar'
+  currency_label_ZWL: 'Zimbabwe Dollar',
+
+  // Getting Started Scene
+  getting_started_button_sign_in: `Already have an account? Sign in`,
+  getting_started_slide_1_footnote: `Users can access seed phrases within the app at their discretion.`,
+  getting_started_slide_1_message: `Say goodbye to writing down insecure backups on paper. With client-side encryption, automatic account backup and 2FA, Edge simplifies self-custody for everyone.`,
+  getting_started_slide_1_title: `We've Got You\n*Covered*`,
+  getting_started_slide_2_message: `Edge has zero access to user funds, which means no account freezes or asset forfeiture. Buy, sell, and trade with peace of mind.`,
+  getting_started_slide_2_title: `They're Your Assets\nYou're in *Control*`,
+  getting_started_slide_3_message: `Edge holds none of your personal information, not even an email address or phone number. We do not track blockchain transactions in your account and we’re open source to prove it.`,
+  getting_started_slide_3_title: `Your Privacy is\nOur *Priority*`,
+  getting_started_slide_4_message: `Reach our support team, made up of real humans, by live phone call, live chat, and email every day of the week.`,
+  getting_started_slide_4_title: `*Help* Is Here If\nYou Need It`,
+  getting_started_welcome_message: `Edge is the open source tool you need\nto invest, secure, and put your crypto in action.`,
+  getting_started_welcome_prompt: `Swipe to Learn More`,
+  getting_started_welcome_title: `Welcome to\nFinancial Freedom`
 }
 
 // eslint-disable-next-line import/no-default-export

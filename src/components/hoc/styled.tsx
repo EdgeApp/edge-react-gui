@@ -6,7 +6,7 @@ import { ThemeProps, useTheme } from '../services/ThemeContext'
 interface StyleProps {
   style?: StyleProp<any>
 }
-type ValidStyles = ImageStyle | TextStyle | ViewStyle
+type ValidStyles = ImageStyle | TextStyle | ViewStyle | ValidStyles[]
 
 export function styled<BaseProps extends StyleProps>(Component: React.ComponentType<BaseProps>) {
   function makeStyledComponent<Props extends object>(getStyles: (props: Omit<BaseProps, 'style'> & Props & ThemeProps) => ValidStyles) {

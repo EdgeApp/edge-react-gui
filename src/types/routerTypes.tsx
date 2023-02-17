@@ -52,6 +52,7 @@ interface RouteParamList {
   edgeAppStack: {}
   edgeTabs: {}
   controlPanel: {}
+  gettingStarted: {}
 
   // Tabs
   walletsTab: {}
