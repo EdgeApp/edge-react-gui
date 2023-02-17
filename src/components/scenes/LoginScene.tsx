@@ -20,6 +20,7 @@ import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { GuiTouchIdInfo } from '../../types/types'
 import { pickRandom } from '../../util/utils'
+import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { UpdateModal } from '../modals/UpdateModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -212,7 +213,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const LoginScene = (props: OwnProps) => {
+export const LoginScene = withServices((props: OwnProps) => {
   const { navigation } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
@@ -248,4 +249,4 @@ export const LoginScene = (props: OwnProps) => {
   }
 
   return <LoginSceneComponent {...props} {...dispatchProps} {...stateProps} {...themeProps} />
-}
+})
