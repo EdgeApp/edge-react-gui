@@ -1,0 +1,43 @@
+# ID: C431
+# Title: Account will successfully creates and goes to wallets list screen
+appId: co.edgesecure.app
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    when: 
+        visible: "Security Alerts"
+    file:  ../common/cancel.yaml
+- tapOn: "Create account"
+- tapOn:
+    text: "Get Started"
+    index: 1
+- inputText: "test-"
+- inputRandomText
+- pressKey: "Enter"
+- extendedWaitUntil:
+    notVisible: "Choose Username"
+    timeout: 10000
+- inputText: "Test123456"
+- pressKey: "Enter"
+- inputText: "Test123456"
+- pressKey: "Enter"
+- inputText: "1111"
+- pressKey: "Enter"
+- tapOn: "Next"
+- evalScript: ${output.counter = 0}
+- repeat:
+    while:
+      true: ${output.counter < 4}
+    commands:
+      - tapOn: 
+            text: "I understand that .*"
+            index: ${output.counter}
+      - evalScript: ${output.counter = output.counter + 1}
+- tapOn: "Confirm"
+- tapOn: "View account information"
+- tapOn: "Create"
+- assertVisible: "Choose Wallets to Add"
+- tapOn: # Temporary workaround for <Fade> components blocking accessibility
+    point: "50%,95%" 
+- assertVisible: "Slide wallets .*"

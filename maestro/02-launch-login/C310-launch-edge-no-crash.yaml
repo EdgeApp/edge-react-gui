@@ -1,0 +1,6 @@
+# ID: C431
+# Title: Launch Edge without crashing
+appId: co.edgesecure.app
+---
+- runFlow:
+    file: ../common/launch-no-crash.yaml

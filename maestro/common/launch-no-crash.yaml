@@ -1,0 +1,8 @@
+# Launches the app and waits for the Edge logo to appear.
+appId: co.edgesecure.app
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Edge Logo"
+    timeout: 30000
+- assertNotVisible: "Oops!"

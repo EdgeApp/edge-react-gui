@@ -1,0 +1,6 @@
+appId: co.edgesecure.app
+---
+- runFlow:
+    file: C310-launch-edge-no-crash.yaml
+- runFlow:
+    file: C431-create-account.yaml
