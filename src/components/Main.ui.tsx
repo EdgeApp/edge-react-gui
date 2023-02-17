@@ -319,7 +319,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key="fioStakingOverview"
                 navTransparent
-                component={ifLoggedIn(FioStakingOverviewScene)}
+                component={withNavigation(ifLoggedIn(FioStakingOverviewScene))}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -329,7 +329,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key="fioStakingChange"
                 navTransparent
-                component={ifLoggedIn(FioStakingChangeScene)}
+                component={withNavigation(ifLoggedIn(FioStakingChangeScene))}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
