@@ -20,7 +20,7 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
@@ -70,14 +70,23 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const defaultSelection = currencyCodesToEdgeTokenIds(account, currencyCodes)
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
-      const newAccountFlow = async (items: WalletCreateItem[]) => {
-        navigation.replace('edgeApp', {})
+      const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
+        navigation.replace('edgeTabs', {
+          screen: 'walletList',
+          params: {}
+        })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
         await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
         await updateWalletsRequest()(dispatch, getState)
       }
 
-      navigation.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
+      navigation.navigate('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'createWalletSelectCrypto',
+          params: { newAccountFlow, defaultSelection }
+        }
+      })
     } else {
       navigation.push('edgeApp', {})
     }

@@ -93,7 +93,7 @@ interface RouteParamList {
     fiatCode: string
   }
   createWalletSelectCrypto: {
-    newAccountFlow?: (items: WalletCreateItem[]) => Promise<void>
+    newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
     defaultSelection?: EdgeTokenId[]
   }
   createWalletSelectFiat: {
