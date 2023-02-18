@@ -89,7 +89,8 @@ describe('SendScene2', () => {
     const route: RouteProp<'send2'> = {
       name: 'send2',
       params: {
-        walletId: btcWallet.id
+        walletId: btcWallet.id,
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -117,7 +118,8 @@ describe('SendScene2', () => {
         walletId: btcWallet.id,
         spendInfo: {
           spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -149,7 +151,8 @@ describe('SendScene2', () => {
         walletId: btcWallet.id,
         spendInfo: {
           spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -180,7 +183,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -213,7 +217,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 
@@ -264,7 +269,8 @@ describe('SendScene2', () => {
             { publicAddress: 'some pub address', nativeAmount: '1234' },
             { publicAddress: 'some pub address 2', nativeAmount: '12345' }
           ]
-        }
+        },
+        doCheckAndShowGetCryptoModal: false
       }
     }
 

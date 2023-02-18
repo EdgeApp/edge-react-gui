@@ -5,11 +5,13 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationProp } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
@@ -21,14 +23,17 @@ import {
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
-  guiPlugin: GuiPlugin
-  regionCode: FiatPluginRegionCode
-  paymentType?: FiatPaymentType
   account: EdgeAccount
+  direction: 'buy' | 'sell'
+  disablePlugins: DisablePluginMap
+  guiPlugin: GuiPlugin
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
+  paymentType?: FiatPaymentType
+  regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { guiPlugin, navigation, account, regionCode, paymentType } = params
+  const { account, direction, disablePlugins, guiPlugin, navigation, paymentType, regionCode } = params
   const { pluginId } = guiPlugin
+  const isBuy = direction === 'buy'
 
   const showUi: FiatPluginUi = {
     showToastSpinner,
@@ -54,6 +59,8 @@ export const executePlugin = async (params: {
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
       const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
       return new Promise((resolve, reject) => {
+        logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+
         navigation.navigate('guiPluginEnterAmount', {
           headerTitle,
           label1,
@@ -63,6 +70,7 @@ export const executePlugin = async (params: {
           convertValue,
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+            logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
             resolve(value)
           }
         })
@@ -77,13 +85,14 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ showUi, account })
+  const plugin = await guiPlugin.nativePlugin({ disablePlugins, showUi, account })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }
 
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
+    isBuy,
     regionCode,
     paymentTypes
   }

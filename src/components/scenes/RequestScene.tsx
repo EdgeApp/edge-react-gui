@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt, lte } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
@@ -8,7 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
-import { selectWalletFromModal } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -43,6 +43,7 @@ interface OwnProps {
   navigation: NavigationProp<'request'>
 }
 interface StateProps {
+  account: EdgeAccount
   currencyCode?: string
   wallet?: EdgeCurrencyWallet
   exchangeSecondaryToPrimaryRatio?: string
@@ -54,7 +55,7 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => void
-  onSelectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
+  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
@@ -247,10 +248,13 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
+    const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={this.props.navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          this.props.onSelectWallet(this.props.navigation, walletId, currencyCode)
+          const wallet = account.currencyWallets[walletId]
+          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+          this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
         }
       }
     )
@@ -404,6 +408,9 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   shouldShowMinimumModal = (props: Props): boolean => {
     const { currencyCode, wallet } = props
     if (currencyCode == null || wallet == null) return false
+
+    // No minimums for tokens
+    if (currencyCode !== wallet.currencyInfo.currencyCode) return false
     const { pluginId } = wallet.currencyInfo
 
     if (this.state.minimumPopupModalState[pluginId]) {
@@ -619,6 +626,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
     return {
+      account,
       currencyCode,
       wallet,
       exchangeSecondaryToPrimaryRatio,
@@ -632,8 +640,8 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     },
-    onSelectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(navigation, walletId, currencyCode))
+    onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
+      dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     }
   })
 )(withTheme(RequestSceneComponent))

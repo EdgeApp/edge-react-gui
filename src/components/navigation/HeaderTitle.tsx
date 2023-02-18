@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -44,11 +46,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const walletId = state.ui.wallets.selectedWalletId
-    const selectedWallet = state.ui.wallets.byId[walletId]
+    const selectedWallet = getSelectedCurrencyWallet(state)
 
     return {
-      selectedWalletName: selectedWallet ? selectedWallet.name : null,
+      selectedWalletName: selectedWallet != null ? getWalletName(selectedWallet) : null,
       selectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode
     }
   },

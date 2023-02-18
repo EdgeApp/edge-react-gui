@@ -7,11 +7,11 @@ import { ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { BlurView } from 'rn-id-blurview'
 
-import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
+import { ENV } from '../../env'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
@@ -82,7 +82,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
       // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (YOLO_USERNAME != null && (YOLO_PASSWORD != null || YOLO_PIN != null) && firstRun) {
+    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN)) && firstRun) {
       const { context, initializeAccount } = this.props
       firstRun = false
       if (YOLO_PIN != null) {

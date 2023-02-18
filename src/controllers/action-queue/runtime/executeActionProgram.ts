@@ -1,4 +1,4 @@
-import ENV from '../../../../env.json'
+import { ENV } from '../../../env'
 import { logActivity } from '../../../util/logger'
 import { effectCanBeATrigger, prepareNewPushEvents, uploadPushEvents } from '../push'
 import { ActionEffect, ActionProgram, ActionProgramState, EffectCheckResult, ExecutionContext, ExecutionResults } from '../types'

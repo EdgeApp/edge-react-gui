@@ -1,6 +1,7 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
+import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -16,6 +17,7 @@ export interface FiatPluginGetMethodsResponse {
 }
 export interface FiatPluginEnterAmountParams {
   headerTitle: string
+  isBuy: boolean
   label1: string
   label2: string
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
@@ -59,6 +61,7 @@ export interface FiatPluginFactoryArgs {
   // io: {
   //   log: EdgeLog, // scoped logs
   // }
+  disablePlugins: DisablePluginMap
   showUi: FiatPluginUi
   account: EdgeAccount
 }
@@ -68,6 +71,7 @@ export interface FiatPluginRegionCode {
   stateCode?: string
 }
 export interface FiatPluginStartParams {
+  isBuy: boolean
   paymentTypes: FiatPaymentTypes
   regionCode: FiatPluginRegionCode
 }

@@ -15,8 +15,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { sprintf } from 'sprintf-js'
 
 import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
-import { selectWallet } from '../../actions/WalletActions'
+import { selectWalletToken } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -24,6 +25,7 @@ import { getDisplayDenominationFromState, getExchangeDenominationFromState } fro
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
@@ -80,9 +82,10 @@ interface DispatchProps {
     resetSlider: () => void
   ) => Promise<void>
   onChangePin: (pin: string) => void
-  selectWallet: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
+  selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
+  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
 }
 
 interface OwnProps {
@@ -140,6 +143,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
+
+    this.props.checkAndShowGetCryptoModal(this.props.navigation, this.props.route.params.selectedWalletId, this.props.route.params.selectedCurrencyCode)
+
     if (guiMakeSpendInfo != null) {
       this.updateSendConfirmationTx(guiMakeSpendInfo, true)
     }
@@ -187,7 +193,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { navigation, selectWallet, route } = this.props
+    const { account, navigation, selectWalletToken, route } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show<WalletListResult>(bridge => (
@@ -200,7 +206,10 @@ class SendComponent extends React.PureComponent<Props, State> {
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
-        selectWallet(navigation, walletId, currencyCode)
+        const wallet = account.currencyWallets[walletId]
+        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+
+        selectWalletToken(navigation, walletId, tokenId)
         this.setState({
           ...this.state,
           ...this.setWallets(this.props, walletId, currencyCode),
@@ -724,14 +733,17 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     },
-    selectWallet(navigation: NavigationBase, walletId: string, currencyCode: string) {
-      dispatch(selectWallet(navigation, walletId, currencyCode))
+    selectWalletToken(navigation: NavigationBase, walletId: string, tokenId?: string) {
+      dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     },
     getExchangeDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
     },
     getDisplayDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
+    },
+    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
     }
   })
 )(withTheme(SendComponent))

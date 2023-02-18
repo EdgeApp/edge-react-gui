@@ -180,7 +180,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     if (spamThreshold != null && isReceivedTransaction(transaction.item) && lt(transaction.item.nativeAmount, spamThreshold)) {
       return null
     }
-    return <TransactionListRow navigation={navigation} walletId={wallet.id} currencyCode={currencyCode} transaction={transaction.item} />
+    return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
   }
 
   renderTop = () => {

@@ -17,13 +17,15 @@ import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
-import { logEvent } from '../util/tracking'
+import { logEvent, TrackingEventName } from '../util/tracking'
 
 export interface CreateWalletOptions {
-  walletName?: string
   walletType: string
   fiatCurrencyCode?: string
   importText?: string // for creating wallet from private seed / key
+  trackingEventFailed?: TrackingEventName
+  trackingEventSuccess?: TrackingEventName
+  walletName?: string
 }
 
 export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText }: CreateWalletOptions) => {
@@ -144,10 +146,9 @@ export function createAccountTransaction(
     const state = getState()
     const { account } = state.core
     const { currencyWallets } = account
-    const createdWallet = state.ui.wallets.byId[createdWalletId]
     const createdCurrencyWallet = currencyWallets[createdWalletId]
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
-    const createdWalletCurrencyCode = createdWallet.currencyCode
+    const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
@@ -162,7 +163,7 @@ export function createAccountTransaction(
         lockInputs: true,
         onBack: () => {
           // Hack. Keyboard pops up for some reason. Close it
-          logEvent('ActivateWalletCancel', {
+          logEvent('Activate_Wallet_Cancel', {
             currencyCode: createdWalletCurrencyCode
           })
         },
@@ -173,7 +174,7 @@ export function createAccountTransaction(
               Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
             }, 750)
           } else if (edgeTransaction) {
-            logEvent('ActivateWalletSuccess', {
+            logEvent('Activate_Wallet_Done', {
               currencyCode: createdWalletCurrencyCode
             })
             const edgeMetadata: EdgeMetadata = {

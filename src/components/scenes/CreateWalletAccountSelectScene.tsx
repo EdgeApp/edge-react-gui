@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -21,7 +21,7 @@ import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
-import { GuiWallet } from '../../types/types'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { fixFiatCurrencyCode } from '../../util/utils'
@@ -41,7 +41,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  wallets: { [walletId: string]: GuiWallet }
+  account: EdgeAccount
   paymentCurrencyCode: string
   amount: string
   supportedCurrencies: { [currencyCode: string]: boolean }
@@ -63,7 +63,6 @@ type Props = OwnProps & DispatchProps & StateProps
 
 interface State {
   isCreatingWallet: boolean
-  walletName: string
   walletId: string
   error: string
   createdWallet: Promise<EdgeCurrencyWallet>
@@ -87,7 +86,6 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       isCreatingWallet: true,
       error: '',
       walletId: '',
-      walletName: '',
       createdWallet
     }
     props.fetchAccountActivationInfo(selectedWalletType.walletType)
@@ -102,7 +100,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    logEvent('ActivateWalletSelect')
+    logEvent('Activate_Wallet_Select')
   }
 
   onPressSelect = () => {
@@ -133,15 +131,10 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, wallets, route } = this.props
+    const { fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, route } = this.props
     const { accountName, selectedWalletType } = route.params
     setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
-    const paymentWallet = wallets[walletId]
-    const walletName = paymentWallet.name
-    this.setState({
-      walletId,
-      walletName
-    })
+    this.setState({ walletId })
     const createdWallet = await this.state.createdWallet
     const paymentInfo: AccountPaymentParams = {
       requestedAccountName: accountName,
@@ -181,13 +174,13 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const { wallets, paymentCurrencyCode, amount, activationCost, paymentDenominationSymbol, route } = this.props
+    const { account, paymentCurrencyCode, amount, activationCost, paymentDenominationSymbol, route } = this.props
     const { walletId, createdWallet, isCreatingWallet } = this.state
     const { accountName, selectedWalletType, selectedFiat } = route.params
 
-    const wallet = wallets[walletId]
+    const wallet = account.currencyWallets[walletId]
     if (!wallet) return null
-    const { name } = wallet
+    const name = getWalletName(wallet)
 
     // @ts-expect-error
     const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
@@ -202,7 +195,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              <CryptoIcon currencyCode={wallet.currencyCode} sizeRem={1.5} />
+              <CryptoIcon pluginId={wallet.currencyInfo.pluginId} sizeRem={1.5} />
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -243,7 +236,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { route, activationCost, walletAccountActivationQuoteError } = this.props
     const { selectedWalletType } = route.params
     const { walletId } = this.state
 
@@ -255,20 +248,6 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       `${activationCost} ${selectedWalletType.currencyCode}`
     )
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
-    // only included supported types of payment in WalletListModal
-    const supportedCurrenciesList: string[] = []
-    for (const currency of Object.keys(supportedCurrencies)) {
-      if (supportedCurrencies[currency]) {
-        supportedCurrenciesList.push(currency)
-      }
-    }
-
-    const walletsCopy = { ...wallets }
-    for (const id of Object.keys(walletsCopy)) {
-      if (!supportedCurrenciesList.includes(walletsCopy[id].currencyCode)) {
-        delete walletsCopy[id]
-      }
-    }
 
     return (
       <SafeAreaView>
@@ -390,7 +369,6 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     const { currencyWallets } = state.core.account
     const { existingWalletId } = params
 
-    const wallets = state.ui.wallets.byId
     const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
     const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const { supportedCurrencies, activationCost } = handleActivationInfo
@@ -408,11 +386,11 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     }
     const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
     return {
+      account: state.core.account,
       paymentCurrencyCode: currencyCode,
       amount,
       supportedCurrencies,
       activationCost,
-      wallets,
       paymentDenominationSymbol,
       existingCoreWallet,
       walletAccountActivationQuoteError

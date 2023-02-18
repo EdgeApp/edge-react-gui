@@ -24,11 +24,15 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
+  textModalAutoFocus?: boolean
+  textModalBody?: React.ReactNode | string
+  textModalHint?: string
+  textModalTitle?: string
   title: string
 }
 
 export const ScanModal = (props: Props) => {
-  const { bridge, title } = props
+  const { bridge, textModalAutoFocus, textModalBody, textModalHint, textModalTitle, title } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -51,6 +55,7 @@ export const ScanModal = (props: Props) => {
     requestPermission('camera')
 
     return () => setScanEnabled(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleBarCodeRead = (result: { data: string }) => {
@@ -66,7 +71,7 @@ export const ScanModal = (props: Props) => {
   const handleTextInput = async () => {
     triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
-      <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
+      <TextInputModal autoFocus={textModalAutoFocus} bridge={bridge} inputLabel={textModalHint} message={textModalBody} title={textModalTitle} />
     ))
 
     if (uri != null) {
@@ -113,10 +118,6 @@ export const ScanModal = (props: Props) => {
       }
     )
   }
-
-  // const handleLayout = (setRect: (rect: LayoutRectangle) => void) => (event: LayoutChangeEvent) => {
-  //   setRect(event.nativeEvent.layout)
-  // }
 
   const handleClose = () => {
     triggerHaptic('impactLight')

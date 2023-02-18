@@ -123,7 +123,7 @@ export const testDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  listSectionHeaderBackground: palette.transparent,
+  listSectionHeaderBackgroundGradientColors: [palette.transparent],
 
   // WalletList
   walletListBackground: palette.edgeBlue,

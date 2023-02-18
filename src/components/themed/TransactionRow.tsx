@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -5,9 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
 import { triggerHaptic } from '../../util/haptic'
@@ -27,6 +26,7 @@ interface Props {
   selectedCurrencyName: string
   thumbnailPath?: string
   transaction: TransactionListTx
+  wallet: EdgeCurrencyWallet
 }
 
 const TransactionRowComponent = (props: Props) => {
@@ -41,15 +41,13 @@ const TransactionRowComponent = (props: Props) => {
     requiredConfirmations,
     selectedCurrencyName,
     thumbnailPath,
-    transaction
+    transaction,
+    wallet
   } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const wallet = currencyWallets[transaction.walletId]
   const { canReplaceByFee = false } = wallet.currencyInfo
 
   const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`

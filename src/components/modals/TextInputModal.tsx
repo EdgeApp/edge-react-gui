@@ -21,7 +21,7 @@ interface Props {
 
   // Text to show in the modal:
   title?: string
-  message?: string
+  message?: string | React.ReactNode
   initialValue?: string
   inputLabel?: string
   submitLabel?: string
@@ -35,10 +35,10 @@ interface Props {
   autoFocus?: boolean
   autoCorrect?: boolean
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
-  secureTextEntry?: boolean
   multiline?: boolean
   maxLength?: number
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  secureTextEntry?: boolean
 }
 
 export function TextInputModal(props: Props) {
@@ -93,7 +93,7 @@ export function TextInputModal(props: Props) {
   return (
     <ThemedModal warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
-      {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+      {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={s.strings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
       <OutlinedTextInput
         // Text input props:

@@ -14,6 +14,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { logEvent } from '../../util/tracking'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Card } from './Card'
@@ -33,6 +34,7 @@ export const EarnCryptoCard = (props: Props) => {
   const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
+    logEvent('Earn_Spend_Launch')
     navigation.navigate('pluginViewBuy', {
       plugin: guiPlugins.ionia
     })

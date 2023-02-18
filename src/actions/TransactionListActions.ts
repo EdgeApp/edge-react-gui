@@ -184,14 +184,19 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
   }
 }
 
-export function fetchTransactions(walletId: string, currencyCode: string, options?: object): ThunkAction<void> {
+export function fetchTransactions(
+  walletId: string,
+  currencyCode: string,
+  options?: {
+    startIndex: number
+    startEntries: number
+  }
+): ThunkAction<void> {
   return (dispatch, getState) => {
     const state: RootState = getState()
     let startEntries, startIndex
     if (options) {
-      // @ts-expect-error
       startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1
-      // @ts-expect-error
       startIndex = options.startIndex || 0
     } else {
       startEntries = state.ui.scenes.transactionList.currentEndIndex + 1

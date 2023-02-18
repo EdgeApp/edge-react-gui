@@ -8,10 +8,27 @@ export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase(
 /**
  * An message card to show the user.
  *
- * TODO: The URI might include placeholders like `%BTC`,
+ * The URI might include placeholders like `%BTC`,
  * which we replace with an address
  */
-export const asMessageTweak = asObject({
+export interface MessageTweak {
+  message: string
+  localeMessages?: { [locale: string]: string }
+  uri?: string
+  iconUri?: string
+
+  countryCodes?: string[]
+  hasLinkedBankMap?: { [pluginId: string]: boolean }
+  exactBuildNum?: string
+  minBuildNum?: string
+  maxBuildNum?: string
+  osTypes?: Array<'ios' | 'android' | 'windows' | 'macos' | 'web'>
+
+  startDate?: Date
+  durationDays: number
+}
+
+export const asMessageTweak = asObject<MessageTweak>({
   message: asString,
   localeMessages: asOptional(asMap(asString)),
   uri: asOptional(asString),
@@ -27,13 +44,24 @@ export const asMessageTweak = asObject({
   startDate: asOptional(asDate),
   durationDays: asNumber
 })
-export type MessageTweak = ReturnType<typeof asMessageTweak>
 
 /**
  * Adjusts a plugin's behavior within the app,
  * such as by making it preferred.
  */
-export const asPluginTweak = asObject({
+export interface PluginTweak {
+  pluginId: string
+  preferredFiat?: boolean
+  preferredSwap?: boolean
+  promoCode?: string
+  promoMessage?: string
+  disabled: boolean
+
+  startDate?: Date
+  durationDays: number
+}
+
+export const asPluginTweak = asObject<PluginTweak>({
   pluginId: asString,
   preferredFiat: asOptional(asBoolean),
   preferredSwap: asOptional(asBoolean),
@@ -44,7 +72,6 @@ export const asPluginTweak = asObject({
   startDate: asOptional(asDate),
   durationDays: asNumber
 })
-export type PluginTweak = ReturnType<typeof asPluginTweak>
 
 export const asIpApi = asObject({
   countryCode: asString

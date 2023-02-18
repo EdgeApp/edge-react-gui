@@ -11,9 +11,9 @@ import s from '../../locales/strings'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../modules/FioAddress/util'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
-import { getSelectedWallet } from '../../selectors/WalletSelectors'
+import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { FioRequest, GuiWallet } from '../../types/types'
+import { FioRequest } from '../../types/types'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
@@ -109,7 +109,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         rightThreshold={theme.rem(7.5)}
         onRightSwipe={this.onSwipe}
       >
-        <ClickableRow gradient highlight paddingRem={[0, 1]} onPress={this.onPress}>
+        <ClickableRow paddingRem={[0, 1]} onPress={this.onPress}>
           <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
           <View style={styles.requestRight}>
@@ -192,7 +192,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
     let displayDenomination = emptyDisplayDenomination
-    const wallet: GuiWallet = getSelectedWallet(state)
+    const wallet = getSelectedCurrencyWallet(state)
     if (!wallet) {
       return {
         displayDenomination,
@@ -217,8 +217,8 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
-    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode.replace('iso:', ''))
+    const isoFiatCurrencyCode = wallet.fiatCurrencyCode
     const exchangeRates = state.exchangeRates
 
     const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`

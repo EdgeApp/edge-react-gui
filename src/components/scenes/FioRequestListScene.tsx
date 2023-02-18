@@ -6,14 +6,15 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { formatDate } from '../../locales/intl'
+import { formatDate, SHORT_DATE_FMT } from '../../locales/intl'
 import s from '../../locales/strings'
 import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { FioAddress, FioRequest, GuiWallet } from '../../types/types'
+import { FioAddress, FioRequest } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { tokenIdsToCurrencyCodes } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -23,6 +24,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { FioRequestRow } from '../themed/FioRequestRow'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SectionHeader } from '../themed/TransactionListComponents'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -41,7 +43,6 @@ interface LocalState {
 
 interface StateProps {
   account: EdgeAccount
-  wallets: { [walletId: string]: GuiWallet }
   fioAddresses: FioAddress[]
   currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
   fioWallets: EdgeCurrencyWallet[]
@@ -300,13 +301,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   headerRowUsingTitle = (sectionObj: { section: { title: string } }) => {
-    const styles = getStyles(this.props.theme)
     if (!sectionObj.section.title) return null
-    return (
-      <View style={styles.singleDateArea}>
-        <EdgeText style={styles.formattedDate}>{sectionObj.section.title}</EdgeText>
-      </View>
-    )
+    return <SectionHeader title={sectionObj.section.title} />
   }
 
   selectPendingRequest = (fioRequest: FioRequest) => {
@@ -314,23 +310,26 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    const { wallets = {}, onSelectWallet } = this.props
+    const { account, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string; currencyCode: string }> = []
-    for (const walletKey of Object.keys(wallets)) {
+    for (const walletId of Object.keys(account.currencyWallets)) {
+      const wallet = account.currencyWallets[walletId]
       const { chainCode, tokenCode } = convertFIOToEdgeCodes(
-        wallets[walletKey].pluginId,
+        wallet.currencyInfo.pluginId,
         fioRequest.content.chain_code.toUpperCase(),
         fioRequest.content.token_code.toUpperCase()
       )
-      if (wallets[walletKey].currencyCode.toUpperCase() === tokenCode) {
-        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
+      const walletCurrencyCode = wallet.currencyInfo.currencyCode.toUpperCase()
+      if (walletCurrencyCode === tokenCode) {
+        availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
         }
       }
-      if (wallets[walletKey].currencyCode.toUpperCase() === chainCode && wallets[walletKey].enabledTokens.includes(tokenCode)) {
-        availableWallets.push({ id: walletKey, currencyCode: tokenCode })
+      const enabledTokens = tokenIdsToCurrencyCodes(wallet.currencyConfig, wallet.enabledTokenIds)
+      if (walletCurrencyCode === chainCode && enabledTokens.includes(tokenCode)) {
+        availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
           this.renderDropUp(fioRequest)
           return
@@ -473,7 +472,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         requestsInSection.push(fioRequest)
         // @ts-expect-error
         previousTimestamp = fioRequest.time_stamp
-        previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
+        previousTitle = formatDate(new Date(fioRequest.time_stamp), SHORT_DATE_FMT)
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }
@@ -542,7 +541,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
               {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SectionList
                 initialNumToRender={10}
-                keyExtractor={item => item.fio_request_id.toString()}
+                keyExtractor={this.listKeyExtractor}
                 renderItem={this.renderSent}
                 renderSectionHeader={this.headerRowUsingTitle}
                 sections={this.sentRequestHeaders()}
@@ -590,17 +589,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(0.5),
     paddingLeft: theme.rem(1),
     paddingRight: theme.rem(1.5)
-  },
-  formattedDate: {
-    color: theme.primaryText,
-    fontSize: theme.rem(0.75)
   }
 }))
 
 export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
-    wallets: state.ui.wallets.byId,
     fioWallets: state.ui.wallets.fioWallets,
     fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     currencyWallets: state.core.account.currencyWallets,

@@ -1,9 +1,8 @@
-import { asArray, asObject, asOptional, asString } from 'cleaners'
+import { asObject, asString } from 'cleaners'
 import {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeMetadata,
-  EdgeMetaToken,
   EdgeSpendTarget,
   EdgeSwapQuote,
   EdgeSwapRequest,
@@ -28,36 +27,6 @@ export interface StringMap {
 export interface MapObject<T> {
   [key: string]: T
 }
-
-export interface GuiWallet {
-  id: string
-  type: string
-  name: string
-  pluginId: string
-  primaryNativeBalance: string
-  nativeBalances: { [currencyCode: string]: string }
-  currencyNames: { [currencyCode: string]: string }
-  currencyCode: string
-  isoFiatCurrencyCode: string
-  fiatCurrencyCode: string
-  metaTokens: EdgeMetaToken[]
-  enabledTokens: string[]
-  addressLoadingProgress?: number
-  blockHeight: number | null
-}
-
-// FIXME: Bandaid for when the GuiWallet object isn't quite ready when some components are loaded
-export const asSafeDefaultGuiWallet = (guiWallet: GuiWallet): GuiWallet => ({
-  ...asOptional(
-    asObject({
-      name: asOptional(asString, ''),
-      currencyNames: asOptional(asObject(asString), {}),
-      currencyCode: asOptional(asString, ''),
-      enabledTokens: asOptional(asArray(asString), [])
-    })
-  )(guiWallet),
-  ...guiWallet
-})
 
 export type GuiDenomination = EdgeDenomination
 export interface GuiCurrencyInfo {

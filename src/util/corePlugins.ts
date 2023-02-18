@@ -1,6 +1,6 @@
 import { EdgeCorePluginsInit } from 'edge-core-js'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
   // edge-currency-accountbased:

@@ -4,6 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene'
 import { getTheme } from '../../components/services/ThemeContext'
+import { initialState } from '../../reducers/ExchangeInfoReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 
 describe('CryptoExchangeComponent', () => {
@@ -15,6 +16,7 @@ describe('CryptoExchangeComponent', () => {
     const actual = renderer.render(
       <CryptoExchangeComponent
         account={fakeAccount}
+        exchangeInfo={initialState}
         fromWalletId=""
         fromWalletBalances={[''] as any}
         fromFiatCurrencyCode="USD"

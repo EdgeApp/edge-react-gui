@@ -25,12 +25,13 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { TextDropdown } from '../common/TextDropdown'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { changeTheme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
@@ -175,11 +176,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         warning
         onSubmit={async text => {
           if (text !== username) return s.strings.delete_account_verification_error
-
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest()
           await this.props.context.deleteLocalAccount(username)
-          showToast(sprintf(s.strings.delete_account_feedback, username))
+          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(s.strings.delete_account_feedback, username)} />)
           return true
         }}
       />

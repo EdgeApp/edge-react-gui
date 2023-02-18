@@ -59,7 +59,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    logEvent('ActivateWalletStart')
+    logEvent('Activate_Wallet_Start')
   }
 
   handleChangeHandle = (accountHandle: string) => {

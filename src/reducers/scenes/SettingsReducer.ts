@@ -1,6 +1,5 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
-import ENV from '../../../env.json'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 import { Action } from '../../types/reduxTypes'
@@ -159,15 +158,12 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         spamFilterOn,
         developerModeOn
       }
-      if (developerModeOn && ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
       return newState
     }
     case 'DEVELOPER_MODE_ON': {
-      if (ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = true
       return { ...state, developerModeOn: true }
     }
     case 'DEVELOPER_MODE_OFF': {
-      if (ENV.BETA_FEATURES_DEV_MODE_ONLY) ENV.BETA_FEATURES = false
       return { ...state, developerModeOn: false }
     }
     case 'SPAM_FILTER_ON': {

@@ -9,7 +9,7 @@ export function PairIcons({ icons }: { icons: string[] }) {
   return (
     <View style={styles.container}>
       {icons.map((icon, index) => (
-        <FastImage style={[styles.icon, index > 0 ? styles.consecutiveIcon : undefined]} source={{ uri: icon }} key={index} />
+        <FastImage style={[styles.icon, index > 0 ? styles.consecutiveIcon : undefined]} source={{ uri: icon }} key={icon} />
       ))}
     </View>
   )

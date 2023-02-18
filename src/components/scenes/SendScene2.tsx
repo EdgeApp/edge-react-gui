@@ -14,14 +14,16 @@ import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
+import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
@@ -32,11 +34,12 @@ import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, roundedFee } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
+import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -78,6 +81,8 @@ export interface SendScene2Params {
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
   beforeTransaction?: () => Promise<void>
   alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
+  // Useful to disable during for test runtime
+  doCheckAndShowGetCryptoModal?: boolean
 }
 
 interface FioSenderInfo {
@@ -120,7 +125,8 @@ const SendComponent = (props: Props) => {
     onDone,
     onBack,
     beforeTransaction,
-    alternateBroadcast
+    alternateBroadcast,
+    doCheckAndShowGetCryptoModal = true
   } = route.params
 
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
@@ -306,32 +312,7 @@ const SendComponent = (props: Props) => {
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
-          const { currencyCode, networkFee = '' } = insufficientFunds
-          const multiplier = cryptoDisplayDenomination.multiplier
-          const amountString = roundedFee(networkFee, 2, multiplier)
-          const result = await Airship.show<'buy' | 'exchange' | 'cancel' | undefined>(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.buy_crypto_modal_title}
-              message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
-              buttons={{
-                buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-                exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-                cancel: { label: s.strings.buy_crypto_decline }
-              }}
-            />
-          ))
-          switch (result) {
-            case 'buy':
-              navigation.navigate('pluginListBuy', { direction: 'buy' })
-              return
-            case 'exchange':
-              dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
-              navigation.navigate('exchangeScene', {})
-              break
-            default:
-              break
-          }
+          await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
       .catch(error => console.log(error))
@@ -848,11 +829,15 @@ const SendComponent = (props: Props) => {
     }
   })
 
-  React.useEffect(() => {
-    return () => {
-      if (onBack != null) onBack()
+  // Mount/Unmount life-cycle events:
+  useMount(() => {
+    if (doCheckAndShowGetCryptoModal) {
+      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode))
     }
-  }, [])
+  })
+  useUnmount(() => {
+    if (onBack != null) onBack()
+  })
 
   // Calculate the transaction
   useAsyncEffect(async () => {

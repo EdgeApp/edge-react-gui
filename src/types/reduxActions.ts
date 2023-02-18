@@ -1,6 +1,7 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeLobby, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
+import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
@@ -35,15 +36,12 @@ type NoDataActionName =
   | 'DEVELOPER_MODE_ON'
   | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
-  | 'EDGE_LOBBY_ACCEPT_FAILED'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
-  | 'INVALIDATE_EDGE_LOBBY'
   | 'OTP_ERROR_SHOWN'
   | 'PASSWORD_REMINDER_MODAL/CHECK_PASSWORD_SUCCESS'
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'PROCESS_EDGE_LOGIN'
   | 'RECEIVED_INSUFFICIENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'SPAM_FILTER_ON'
@@ -65,12 +63,6 @@ export type Action =
   | {
       type: 'CORE/CONTEXT/ADD_CONTEXT'
       data: { context: EdgeContext; disklet: Disklet }
-    }
-  | {
-      type: 'CORE/WALLETS/UPDATE_WALLETS'
-      data: {
-        currencyWallets: { [id: string]: EdgeCurrencyWallet }
-      }
     }
   | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
@@ -100,10 +92,12 @@ export type Action =
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR'; data: string }
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
-  | { type: 'SAVE_EDGE_LOBBY'; data: EdgeLobby }
-  | { type: 'SET_LOBBY_ERROR'; data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
+  | {
+      type: 'UPDATE_FIO_WALLETS'
+      data: { fioWallets: EdgeCurrencyWallet[] }
+    }
   | {
       type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
       data: {
@@ -153,6 +147,7 @@ export type Action =
       data: { currencyCode: string; walletId: string }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
+  | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | { type: 'UPDATE_SWAP_QUOTE'; data: GuiSwapInfo }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }

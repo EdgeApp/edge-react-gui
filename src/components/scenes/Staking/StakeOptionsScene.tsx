@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
@@ -5,13 +6,13 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { StakePolicy } from '../../../plugins/stake-plugins/types'
-import { RootState } from '../../../reducers/RootReducer'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -20,20 +21,16 @@ import { SceneHeader } from '../../themed/SceneHeader'
 interface Props {
   route: RouteProp<'stakeOptions'>
   navigation: NavigationProp<'stakeOptions'>
+  wallet: EdgeCurrencyWallet
 }
 
-export const StakeOptionsScene = (props: Props) => {
-  const { stakePlugins, walletId, currencyCode, stakePolicies } = props.route.params
-  const { navigation } = props
-  const { account } = useSelector(state => state.core)
+const StakeOptionsSceneComponent = (props: Props) => {
+  const { navigation, route, wallet } = props
+  const { stakePlugins, walletId, currencyCode, stakePolicies } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const wallet = useSelector((state: RootState) => {
-    const { currencyWallets } = state.core.account
-    return currencyWallets[walletId]
-  })
-
+  const account = useSelector(state => state.core.account)
   const pluginId = wallet?.currencyInfo.pluginId
   const tokenId = pluginId ? getTokenId(account, pluginId, currencyCode) : undefined
 
@@ -102,3 +99,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   }
 }))
+
+export const StakeOptionsScene = withWallet(StakeOptionsSceneComponent)

@@ -2,7 +2,7 @@ import { Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
-import ENV from '../../env.json'
+import { ENV } from '../env'
 
 interface CleanStoreRecord<T> {
   update: (data: T) => Promise<void>

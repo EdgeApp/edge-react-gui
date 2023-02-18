@@ -3,7 +3,6 @@ import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
-import { checkAndShowGetCryptoModal } from '../actions/ScanActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene'
@@ -34,7 +33,7 @@ import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { Permission } from '../reducers/PermissionsReducer'
 import { connect } from '../types/reactRedux'
-import { Actions, NavigationBase, withNavigation } from '../types/routerTypes'
+import { Actions, withNavigation } from '../types/routerTypes'
 import { scale } from '../util/scaling'
 import { logEvent } from '../util/tracking'
 import { AirshipToast } from './common/AirshipToast'
@@ -52,6 +51,9 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene'
 import { ChangePinScene } from './scenes/ChangePinScene'
+import { CoinRankingDetailsScene } from './scenes/CoinRankingDetailsScene'
+import { CoinRankingScene } from './scenes/CoinRankingScene'
+import { ConfirmScene } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene } from './scenes/CreateWalletCompletionScene'
@@ -116,7 +118,6 @@ interface DispatchProps {
   logout: (username?: string) => void
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
   checkEnabledExchanges: () => void
   requestPermission: (permission: Permission) => void
   showReEnableOtpModal: () => void
@@ -129,7 +130,7 @@ export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
 
   componentDidMount() {
-    logEvent('AppStart')
+    logEvent('Start_App')
   }
 
   render() {
@@ -316,7 +317,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key="fioStakingOverview"
                 navTransparent
-                component={ifLoggedIn(FioStakingOverviewScene)}
+                component={withNavigation(ifLoggedIn(FioStakingOverviewScene))}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -326,7 +327,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key="fioStakingChange"
                 navTransparent
-                component={ifLoggedIn(FioStakingChangeScene)}
+                component={withNavigation(ifLoggedIn(FioStakingChangeScene))}
                 // @ts-expect-error
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 // @ts-expect-error
@@ -419,6 +420,30 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
               />
             </Stack>
+            <Stack key="coinRanking">
+              <Scene
+                key="coinRanking"
+                component={withNavigation(ifLoggedIn(CoinRankingScene))}
+                navTransparent
+                // @ts-expect-error
+                renderTitle={<EdgeLogoHeader />}
+                // @ts-expect-error
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
+                // @ts-expect-error
+                renderRightButton={<SideMenuButton />}
+              />
+              <Scene
+                key="coinRankingDetails"
+                component={withNavigation(ifLoggedIn(CoinRankingDetailsScene))}
+                navTransparent
+                // @ts-expect-error
+                renderTitle={<EdgeLogoHeader />}
+                // @ts-expect-error
+                renderLeftButton={<BackButton onPress={this.handleBack} />}
+                // @ts-expect-error
+                renderRightButton={<SideMenuButton />}
+              />
+            </Stack>
             <Stack key="exchange">
               <Scene
                 key="exchangeScene"
@@ -468,6 +493,16 @@ export class MainComponent extends React.Component<Props> {
             </Stack>
           </Tabs>
 
+          <Stack key="confirmScene" hideTabBar>
+            <Scene
+              key="confirmScene"
+              component={withNavigation(ifLoggedIn(ConfirmScene))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+          </Stack>
+
           <Stack key="request" hideTabBar>
             <Scene
               key="request"
@@ -497,9 +532,6 @@ export class MainComponent extends React.Component<Props> {
               key="send"
               component={withNavigation(ifLoggedIn(SendScene))}
               navTransparent
-              onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
-              }}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -519,9 +551,6 @@ export class MainComponent extends React.Component<Props> {
               key="send2"
               component={withNavigation(ifLoggedIn(SendScene2))}
               navTransparent
-              onEnter={props => {
-                this.props.checkAndShowGetCryptoModal(props.navigation, props.route.params.walletId, props.route.params.spendInfo?.currencyCode)
-              }}
               // @ts-expect-error
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
@@ -1101,9 +1130,6 @@ export const Main = connect<{}, DispatchProps, {}>(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
-    },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
     },

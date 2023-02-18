@@ -2,7 +2,7 @@ import { asEither, Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'

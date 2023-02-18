@@ -2,7 +2,7 @@ import { div, eq, gt, toFixed } from 'biggystring'
 import { asMap, asNumber } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
-import ENV from '../../../env.json'
+import { ENV } from '../../env'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
@@ -10,6 +10,7 @@ import { EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
+import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
@@ -30,7 +31,7 @@ const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
-  const { showUi, account } = params
+  const { disablePlugins, showUi, account } = params
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
@@ -38,6 +39,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   let pluginPriority = {}
 
   for (const providerFactory of providerFactories) {
+    if (disablePlugins[providerFactory.pluginId]) continue
     // @ts-expect-error
     priorityArray[0][providerFactory.pluginId] = true
     // @ts-expect-error
@@ -46,6 +48,8 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }
+  if (providerPromises.length === 0) throw new Error('No enabled creditCardPlugin providers')
+
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
     assetPromises.push(provider.getSupportedAssets())
@@ -64,7 +68,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { regionCode, paymentTypes } = params
+      const { isBuy, regionCode, paymentTypes } = params
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
       const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
@@ -115,6 +119,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
+        isBuy,
 
         label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
@@ -230,6 +235,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
+
+                logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
+
                 if (sourceFieldNum === 1) {
                   enterAmountMethods.setValue2(bestQuote.cryptoAmount)
                 } else {
