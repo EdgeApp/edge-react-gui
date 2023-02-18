@@ -102,14 +102,14 @@ export const setDefaultFiatRequest = async (account: EdgeAccount, defaultFiat: s
 
 export const setPreferredSwapPluginId = async (account: EdgeAccount, pluginId: string | undefined) => {
   return getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId })
+    const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId, preferredSwapPluginType: undefined })
     return setSyncedSettings(account, updatedSettings)
   })
 }
 
 export const setPreferredSwapPluginType = async (account: EdgeAccount, swapPluginType: EdgeSwapPluginType | undefined) => {
   return getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { preferredSwapPluginType: swapPluginType })
+    const updatedSettings = updateSettings(settings, { preferredSwapPluginType: swapPluginType, preferredSwapPluginId: '' })
     return setSyncedSettings(account, updatedSettings)
   })
 }
