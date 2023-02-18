@@ -45,7 +45,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     const { walletItems } = props
     const { prevItemsConnected } = state
     for (const walletKey of Object.keys(prevItemsConnected)) {
-      if (prevItemsConnected[walletKey] !== walletItems[walletKey].isConnected) {
+      if (prevItemsConnected[walletKey] !== walletItems[walletKey]?.isConnected) {
         return {
           connectWalletsMap: {},
           disconnectWalletsMap: {},
