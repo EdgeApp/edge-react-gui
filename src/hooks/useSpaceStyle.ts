@@ -4,15 +4,15 @@ import { useTheme } from '../components/services/ThemeContext'
 
 export interface SpaceProps {
   // Compond space adjectives:
-  around?: boolean | number
-  horizontal?: boolean | number
-  vertical?: boolean | number
+  around?: number
+  horizontal?: number
+  vertical?: number
   isFill?: boolean
   // Unit space adjectives:
-  top?: boolean | number
-  right?: boolean | number
-  bottom?: boolean | number
-  left?: boolean | number
+  top?: number
+  right?: number
+  bottom?: number
+  left?: number
   // Direction:
   isSideways?: boolean
   // Alignment:

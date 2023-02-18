@@ -400,7 +400,7 @@ export const LoanCreateScene = (props: Props) => {
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <Space around>
+            <Space around={1}>
               <MainButton
                 label={s.strings.string_next_capitalized}
                 disabled={isInsufficientCollateral || !isUserInputComplete}

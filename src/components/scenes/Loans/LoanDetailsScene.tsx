@@ -184,7 +184,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
           const { title, iconName, handlePress, isDisabled } = actionCardConfigData
           return (
             <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
-              <Space right>
+              <Space right={1}>
                 <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
               </Space>
               <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
@@ -221,7 +221,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         }
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <Space around>
+        <Space around={1}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
             currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
@@ -231,8 +231,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             ltv={loanToValue}
           />
         </Space>
-        <Space horizontal>
-          <Space bottom>
+        <Space horizontal={1}>
+          <Space bottom={1}>
             <SectionHeading>{s.strings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
           {debts.map(debt => {
@@ -242,8 +242,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space isSideways>
-                  <Space right>
+                <Space sideways>
+                  <Space right={1}>
                     <CryptoIcon currencyCode={currencyCode} hideSecondary />
                   </Space>
                   <Space>
@@ -259,8 +259,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         </Space>
 
         {/* Tappable Action Cards */}
-        <Space horizontal>
-          <Space bottom>
+        <Space horizontal={1}>
+          <Space bottom={1}>
             <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
             {isActionProgramRunning ? (
               <Alert type="warning" title={s.strings.warning_please_wait_title} message={s.strings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
