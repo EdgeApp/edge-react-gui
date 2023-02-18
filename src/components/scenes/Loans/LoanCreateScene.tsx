@@ -359,7 +359,7 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <Space isItemCenter isGroupCenter>
+            <Space around>
               <AprCard apr={apr} />
             </Space>
           )}

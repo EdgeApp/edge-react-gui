@@ -110,7 +110,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       return (
         <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
           <Card marginRem={[0, 0, 1]}>
-            <Space isSideways>
+            <Space sideways>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
