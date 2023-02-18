@@ -57,6 +57,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:zcash',
   'wallet:tron',
   'wallet:polkadot',
+  'wallet:optimism',
   'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:solana',
@@ -252,7 +253,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
-    isSplittingDisabled: true,
     isCustomTokensSupported: true
   },
   stellar: {
@@ -406,7 +406,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: s.strings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isSplittingDisabled: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
@@ -424,6 +423,18 @@ export const SPECIAL_CURRENCY_INFO: {
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true
+  },
+  optimism: {
+    initWalletName: s.strings.string_first_optimism_wallet_name,
+    chainCode: 'OP',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false
   },
   tezos: {
     initWalletName: s.strings.string_first_tezos_wallet_name,
@@ -487,8 +498,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
-    isCustomTokensSupported: true,
-    isSplittingDisabled: true
+    isCustomTokensSupported: true
   },
   fio: {
     initWalletName: s.strings.string_first_fio_wallet_name,

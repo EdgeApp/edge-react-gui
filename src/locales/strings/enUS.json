@@ -444,6 +444,7 @@
   "string_first_polkadot_wallet_name": "My Polkadot",
   "string_first_polygon_wallet_name": "My Polygon",
   "string_first_avalanche_wallet_name": "My Avalanche",
+  "string_first_optimism_wallet_name": "My Optimism",
   "my_crypto_wallet_name": "My %s",
   "string_help": "Help",
   "string_exit": "Exit",
