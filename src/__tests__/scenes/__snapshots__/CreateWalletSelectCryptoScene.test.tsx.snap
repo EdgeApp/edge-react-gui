@@ -386,7 +386,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         automaticallyAdjustContentInsets={false}
         contentContainerStyle={
           Object {
-            "paddingBottom": 0,
+            "paddingBottom": 96,
           }
         }
         data={

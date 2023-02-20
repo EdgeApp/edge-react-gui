@@ -254,7 +254,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           <FlatList
             style={styles.resultList}
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
             initialNumToRender={12}
             keyboardShouldPersistTaps="handled"
