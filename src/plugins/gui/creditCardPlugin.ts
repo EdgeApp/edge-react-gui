@@ -68,7 +68,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { isBuy, regionCode, paymentTypes } = params
+      const { isBuy, regionCode, paymentTypes, providerId } = params
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
       const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
@@ -166,7 +166,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             }
           }
 
-          const quotePromises = providers.map(async p => p.getQuote(quoteParams))
+          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => p.getQuote(quoteParams))
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
