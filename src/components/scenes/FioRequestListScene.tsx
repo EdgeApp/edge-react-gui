@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +25,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { FioRequestRow } from '../themed/FioRequestRow'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SectionHeader } from '../themed/TransactionListComponents'
+import { SendScene2Params } from './SendScene2'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -376,7 +377,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { fioWallets = [], currencyWallets, navigation, getExchangeDenomination } = this.props
+    const { account, fioWallets = [], currencyWallets, navigation, getExchangeDenomination } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const currencyWallet = currencyWallets[walletId]
@@ -386,25 +387,28 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
 
     const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)
-    const guiMakeSpendInfo = {
-      fioPendingRequest: pendingRequest,
-      fioAddress: pendingRequest.payee_fio_address,
-      publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
-      nativeAmount,
-      currencyCode,
-      metadata: parsedUri.metadata,
-      uniqueIdentifier: parsedUri.uniqueIdentifier,
+
+    const spendInfo: EdgeSpendInfo = {
       spendTargets: [
         {
           nativeAmount,
-          publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
+          publicAddress: parsedUri.legacyAddress ?? parsedUri.publicAddress,
+          memo: parsedUri.uniqueIdentifier,
           otherParams: {
-            uniqueIdentifier: parsedUri.uniqueIdentifier,
             fioAddress: pendingRequest.payee_fio_address
           }
         }
       ],
-      lockInputs: true,
+      metadata: parsedUri.metadata
+    }
+
+    const sendParams: SendScene2Params = {
+      fioPendingRequest: pendingRequest,
+      fioAddress: pendingRequest.payee_fio_address,
+      walletId,
+      spendInfo,
+      tokenId: getTokenId(account, currencyWallet.currencyInfo.pluginId, currencyCode),
+      lockTilesMap: { amount: true, address: true },
       beforeTransaction: async () => {
         try {
           const getFeeResult = await fioWalletByAddress.otherMethods.fioAction('getFee', {
@@ -420,20 +424,64 @@ class FioRequestList extends React.Component<Props, LocalState> {
           throw e
         }
       },
-      // @ts-expect-error
-      onDone: (err, edgeTransaction) => {
-        if (!err && edgeTransaction != null) {
+      onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+        if (error == null && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
           navigation.navigate('fioRequestApproved', { edgeTransaction })
         }
       }
     }
 
-    navigation.navigate('send', {
-      guiMakeSpendInfo,
-      selectedWalletId: walletId,
-      selectedCurrencyCode
-    })
+    navigation.navigate('send2', sendParams)
+
+    // const guiMakeSpendInfo = {
+    //   fioPendingRequest: pendingRequest,
+    //   fioAddress: pendingRequest.payee_fio_address,
+    //   publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
+    //   nativeAmount,
+    //   currencyCode,
+    //   metadata: parsedUri.metadata,
+    //   uniqueIdentifier: parsedUri.uniqueIdentifier,
+    //   spendTargets: [
+    //     {
+    //       nativeAmount,
+    //       publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
+    //       otherParams: {
+    //         uniqueIdentifier: parsedUri.uniqueIdentifier,
+    //         fioAddress: pendingRequest.payee_fio_address
+    //       }
+    //     }
+    //   ],
+    //   lockInputs: true,
+    //   beforeTransaction: async () => {
+    //     try {
+    //       const getFeeResult = await fioWalletByAddress.otherMethods.fioAction('getFee', {
+    //         endPoint: 'record_obt_data',
+    //         fioAddress: pendingRequest.payer_fio_address
+    //       })
+    //       if (getFeeResult.fee) {
+    //         showError(s.strings.fio_no_bundled_err_msg)
+    //         throw new Error(s.strings.fio_no_bundled_err_msg)
+    //       }
+    //     } catch (e: any) {
+    //       showError(s.strings.fio_get_fee_err_msg)
+    //       throw e
+    //     }
+    //   },
+    //   // @ts-expect-error
+    //   onDone: (err, edgeTransaction) => {
+    //     if (!err && edgeTransaction != null) {
+    //       this.removeFioPendingRequest(pendingRequest.fio_request_id)
+    //       navigation.navigate('fioRequestApproved', { edgeTransaction })
+    //     }
+    //   }
+    // }
+
+    // navigation.navigate('send', {
+    //   guiMakeSpendInfo,
+    //   selectedWalletId: walletId,
+    //   selectedCurrencyCode
+    // })
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {

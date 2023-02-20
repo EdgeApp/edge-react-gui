@@ -30,7 +30,7 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, reco
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
-import { GuiExchangeRates } from '../../types/types'
+import { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
@@ -60,6 +60,8 @@ interface Props {
 }
 
 export interface SendScene2Params {
+  fioAddress?: string
+  fioPendingRequest?: FioRequest
   walletId: string
   tokenId?: string
   spendInfo?: EdgeSpendInfo
