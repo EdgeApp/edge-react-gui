@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -217,7 +218,7 @@ export const LoanDashboardScene = (props: Props) => {
         </>
       ) : (
         <>
-          <FlatList
+          <FlashList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
             renderItem={renderLoanCard}

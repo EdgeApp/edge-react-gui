@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, ScrollView, Switch, View } from 'react-native'
+import { ScrollView, Switch, View } from 'react-native'
 
 import { CryptoIcon } from '../../../components/icons/CryptoIcon'
 import { showError } from '../../../components/services/AirshipInstance'
@@ -194,9 +195,9 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         <View style={styles.list}>
           <ScrollView>
             {walletItems && Object.keys(walletItems).length ? (
-              <FlatList
+              <FlashList
                 data={Object.values(walletItems)}
-                initialNumToRender={24}
+                estimatedItemSize={theme.rem(4.25)}
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderFioConnectionWalletItem}

@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../../assets/vector'
@@ -170,7 +171,13 @@ class DomainListModalComponent extends React.Component<Props, State> {
             searchIcon
           />
         </View>
-        <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+        <FlashList
+          data={items}
+          estimatedItemSize={theme.rem(3.5)}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+        />
         <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
       </ThemedModal>
     )

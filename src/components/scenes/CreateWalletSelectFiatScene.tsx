@@ -1,5 +1,6 @@
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, ListRenderItemInfo, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -209,7 +210,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {s.strings.fragment_create_wallet_instructions}
         </EdgeText>
-        <FlatList
+        <FlashList
           style={styles.resultList}
           automaticallyAdjustContentInsets={false}
           data={createWalletList}

@@ -1,5 +1,6 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, ListRenderItem, StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -140,10 +141,11 @@ export function CategoryModal(props: Props) {
               value={subcategory}
             />
           </View>
-          <FlatList
+          <FlashList
+            ListHeaderComponent={<View style={styles.flashlistTopBorder} />}
+            estimatedItemSize={THEME.rem(3)}
             style={styles.resultList}
             data={sortedCategories}
-            initialNumToRender={12}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderRow}
@@ -203,12 +205,16 @@ const styles = StyleSheet.create({
   inputSubCategoryContainter: {
     marginTop: THEME.rem(0.8)
   },
-
-  resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
+  flashlistTopBorder: {
     borderTopColor: THEME.COLORS.GRAY_3,
     borderTopWidth: 1,
-    flex: 1
+    height: 1
+  },
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1
   },
   rowContainer: {
     flex: 1,
