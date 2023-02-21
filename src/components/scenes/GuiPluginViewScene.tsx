@@ -165,7 +165,7 @@ class GuiPluginView extends React.Component<Props, State> {
       root.setEdgeProvider(this._edgeProvider).catch(e => {
         console.warn('plugin setEdgeProvider error: ' + String(e))
       })
-    }, true)
+    })
 
     // Capture the WebView ref:
     const { setRef } = this._callbacks
