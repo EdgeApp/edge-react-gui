@@ -104,7 +104,7 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
   }
 }
 
-function clearAllLogs(): ThunkAction<Promise<void>> {
+export function clearAllLogs(): ThunkAction<Promise<void>> {
   return async (_dispatch, _getState) => {
     await clearLogs('activity')
     await logWithType('activity', 'CLEARED ACTIVITY LOGS')
