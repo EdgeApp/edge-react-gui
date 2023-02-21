@@ -20,6 +20,7 @@ import { PasswordReminderService } from './PasswordReminderService'
 import { PermissionsManager } from './PermissionsManager'
 import { SortedWalletList } from './SortedWalletList'
 import { WalletLifecycle } from './WalletLifecycle'
+import { WipeLogsService } from './WipeLogsService'
 
 interface Props {
   navigation: NavigationBase
@@ -60,6 +61,7 @@ export function Services(props: Props) {
       <NetworkActivity />
       <PasswordReminderService />
       <WalletLifecycle />
+      <WipeLogsService />
     </>
   )
 }
