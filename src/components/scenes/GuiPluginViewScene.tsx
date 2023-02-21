@@ -74,6 +74,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
     if (bridge == null) {
       let firstMessage = true
       bridge = new Bridge({
+        hideProperties: ['allKeys', 'displayPrivateSeed', 'displayPublicSeed', 'keys', 'otpKey', 'loginKey', 'publicWalletInfo', 'recoveryKey'],
         sendMessage: message => {
           if (debug) console.info('plugin ←', message)
           if (webview == null) return
@@ -165,7 +166,7 @@ class GuiPluginView extends React.Component<Props, State> {
       root.setEdgeProvider(this._edgeProvider).catch(e => {
         console.warn('plugin setEdgeProvider error: ' + String(e))
       })
-    }, true)
+    })
 
     // Capture the WebView ref:
     const { setRef } = this._callbacks
