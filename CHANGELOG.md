@@ -1,6 +1,10 @@
 # edge-react-gui
 
-## 3.3.0 (2023-02-)8)
+## 3.3.1 (2023-02-20)
+
+- fixed: Stop writing private keys to logs when visiting the GUI plugin WebView.
+
+## 3.3.0 (2023-02-08)
 
 - Add XRP Tokens support
 - Add Markets and Asset View
