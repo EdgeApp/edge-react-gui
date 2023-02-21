@@ -74,6 +74,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
     if (bridge == null) {
       let firstMessage = true
       bridge = new Bridge({
+        hideProperties: ['allKeys', 'displayPrivateSeed', 'displayPublicSeed', 'keys', 'otpKey', 'loginKey', 'publicWalletInfo', 'recoveryKey'],
         sendMessage: message => {
           if (debug) console.info('plugin ←', message)
           if (webview == null) return
