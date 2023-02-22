@@ -19,6 +19,7 @@ function setupBridge() {
 
   // Open a conneciton to the GUI:
   window.bridge = new Bridge({
+    hideProperties: ['allKeys', 'displayPrivateSeed', 'displayPublicSeed', 'keys', 'otpKey', 'loginKey', 'publicWalletInfo', 'recoveryKey'],
     sendMessage: function (message) {
       window.ReactNativeWebView.postMessage(JSON.stringify(message))
     }

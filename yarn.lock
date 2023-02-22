@@ -17785,10 +17785,10 @@ yaml@^1.10.0:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaob@^0.3.6, yaob@^0.3.7, yaob@^0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.9.tgz#1f445f13daf92cc5dbc92665c1692c9d0e53c452"
-  integrity sha512-SquvHf0O1GuQGNnSVjcdzD2LWxqcCU1Y6+QZ3xEEaej1VQPXCvkTPLmC5eWXc474WcmPCY4pwgi65dQ5xPbjCg==
+yaob@^0.3.10, yaob@^0.3.6, yaob@^0.3.7, yaob@^0.3.9:
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.10.tgz#fb86d54d564ff6014f6f52fafc4219b6c068f613"
+  integrity sha512-QU+03xtNssGOw01Tten5zlfNcrsMPQjy0Nr/gueVEbXYsXHgYeDKXNLgPNMdYdTY7qkvLj8IGLOk/MKtsUh+Fg==
   dependencies:
     rfc4648 "^1.1.0"
 
