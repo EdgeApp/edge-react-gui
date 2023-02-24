@@ -1,11 +1,12 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { Actions } from '../../types/routerTypes'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -18,25 +19,26 @@ const title = {
   help: s.strings.string_help
 }
 
-class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> {
-  handlePress = () => {
+export const HeaderTextButton = (props: Props) => {
+  const { placement, type } = props
+  const navigation = useNavigation()
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    const { type } = this.props
     if (type === 'exit') {
-      Actions.pop()
+      navigation.goBack()
     } else if (type === 'help') {
       showHelpModal()
     }
-  }
+  })
 
-  render() {
-    const styles = getStyles(this.props.theme)
-    return (
-      <TouchableOpacity style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]} onPress={this.handlePress}>
-        <EdgeText>{title[this.props.type]}</EdgeText>
-      </TouchableOpacity>
-    )
-  }
+  return (
+    <TouchableOpacity style={[styles.container, placement === 'left' ? styles.left : styles.right]} onPress={handlePress}>
+      <EdgeText>{title[type]}</EdgeText>
+    </TouchableOpacity>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -56,5 +58,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(0.25)
   }
 }))
-
-export const HeaderTextButton = withTheme(HeaderTextButtonComponent)

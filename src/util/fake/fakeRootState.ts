@@ -1003,6 +1003,13 @@ export const fakeRootState = {
             multiplier: '1000000000000000000'
           }
         },
+        optimism: {
+          OP: {
+            name: 'ETH',
+            multiplier: '1000000000000000000',
+            symbol: 'Ξ'
+          }
+        },
         polygon: {
           MATIC: {
             name: 'MATIC',

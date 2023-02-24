@@ -25,7 +25,7 @@ export class ChangePinComponent extends React.Component<Props> {
     }
     return (
       <SceneWrapper hasTabs={false} background="theme">
-        <ChangePinScreen account={account} context={context} onComplete={handleComplete} showHeader={false} />
+        <ChangePinScreen account={account} context={context} onComplete={handleComplete} />
       </SceneWrapper>
     )
   }

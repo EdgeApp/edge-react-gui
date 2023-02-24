@@ -8,10 +8,11 @@ interface Props {
   // Display options:
   appendFiatCurrencyCode?: boolean
   autoPrecision?: boolean
-  minPrecision?: number
-  maxPrecision?: number
   fiatSymbolSpace?: boolean
   hideFiatSymbol?: boolean
+  maxPrecision?: number
+  minPrecision?: number
+  subCentTruncation?: boolean
 
   // Amount to show:
   nativeCryptoAmount: string
@@ -26,11 +27,12 @@ interface Props {
 export const FiatText = ({
   appendFiatCurrencyCode,
   autoPrecision,
-  minPrecision,
-  maxPrecision,
-  hideFiatSymbol,
   fiatSymbolSpace,
+  hideFiatSymbol,
+  maxPrecision,
+  minPrecision,
   nativeCryptoAmount,
+  subCentTruncation = false,
   tokenId,
   wallet
 }: Props) => {
@@ -42,14 +44,15 @@ export const FiatText = ({
   const text = useFiatText({
     appendFiatCurrencyCode,
     autoPrecision,
-    minPrecision,
-    maxPrecision,
     cryptoCurrencyCode: currencyCode,
     cryptoExchangeMultiplier: denomination.multiplier,
     fiatSymbolSpace,
     hideFiatSymbol,
     isoFiatCurrencyCode,
-    nativeCryptoAmount
+    maxPrecision,
+    minPrecision,
+    nativeCryptoAmount,
+    subCentTruncation
   })
   return <>{text}</>
 }

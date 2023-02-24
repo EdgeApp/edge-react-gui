@@ -1,4 +1,4 @@
-import { abs, div, toFixed } from 'biggystring'
+import { abs, div, lt, toFixed } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
@@ -16,10 +16,11 @@ interface Props {
   fiatSymbolSpace?: boolean
   hideFiatSymbol?: boolean
   isoFiatCurrencyCode?: string
+  maxPrecision?: number
+  minPrecision?: number
   nativeCryptoAmount?: string
   noGrouping?: boolean
-  minPrecision?: number
-  maxPrecision?: number
+  subCentTruncation?: boolean
 }
 
 export const useFiatText = (props: Props): string => {
@@ -31,42 +32,39 @@ export const useFiatText = (props: Props): string => {
     fiatSymbolSpace,
     hideFiatSymbol,
     isoFiatCurrencyCode = USD_FIAT,
-    nativeCryptoAmount = cryptoExchangeMultiplier,
-    minPrecision,
     maxPrecision,
-    noGrouping
+    minPrecision,
+    nativeCryptoAmount = cryptoExchangeMultiplier,
+    noGrouping,
+    subCentTruncation
   } = props
 
   // Convert native to fiat amount.
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
-    try {
-      const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-      return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
-    } catch (e) {
-      // This should not happen!
-      // We don't know who is sending in the bad values,
-      // so we can't fix the bad currency plugin properly:
-      return '0'
-    }
+    const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
+
+  const isSubCentTruncationActive = subCentTruncation && lt(abs(fiatAmount), '0.01')
 
   // Convert the amount to an internationalized string or '0'
   const fiatString =
     autoPrecision || !zeroString(fiatAmount)
       ? formatFiatString({
-          fiatAmount,
+          fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
           autoPrecision,
           minPrecision,
-          maxPrecision,
+          maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
           noGrouping
         })
       : '0'
 
+  const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
   const fiatSymbol = hideFiatSymbol ? '' : `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
-  return `${fiatSymbol}${fiatString}${fiatCurrencyCode}`
+  return `${lessThanSymbol}${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 
 export const formatFiatString = (props: {

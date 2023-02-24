@@ -1,17 +1,16 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { RouteProp } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-interface Props {
-  currencyInfo: EdgeCurrencyInfo
-}
-
-export function CurrencySettingsTitle(props: Props) {
-  const { displayName, pluginId } = props.currencyInfo
+export function CurrencySettingsTitle() {
+  const route = useRoute<RouteProp<'currencySettings' | 'currencyNotificationSettings'>>()
+  const { currencyInfo } = route.params
+  const { displayName, pluginId } = currencyInfo
 
   const styles = getStyles(useTheme())
   return (

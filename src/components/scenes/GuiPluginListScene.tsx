@@ -265,9 +265,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         if (value === true) filteredDisablePlugins[key] = true
       }
       await executePlugin({
-        direction,
         disablePlugins: filteredDisablePlugins,
         guiPlugin: plugin,
+        direction,
         regionCode: { countryCode },
         paymentType,
         navigation,

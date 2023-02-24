@@ -12,6 +12,7 @@ import {
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
+  StakePoolFullError,
   StakePosition,
   StakePositionRequest,
   StakeProviderInfo
@@ -378,6 +379,9 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     const { error } = quoteDeposit
     if (error.includes('not enough fee')) {
       throw new StakeBelowLimitError(request, currencyCode)
+    }
+    if (error.includes('synth supply over target')) {
+      throw new StakePoolFullError(request, currencyCode)
     }
     throw new Error(error)
   }

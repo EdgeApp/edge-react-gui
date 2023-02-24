@@ -147,12 +147,9 @@ export class SwapSettings extends React.Component<Props, State> {
       if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
       if (result === preferDex.name) {
         changePreferredSwapPluginType('DEX')
-        changePreferredSwapPlugin(undefined)
       } else if (result === preferCex.name) {
         changePreferredSwapPluginType('CEX')
-        changePreferredSwapPlugin(undefined)
       } else {
-        changePreferredSwapPluginType(undefined)
         changePreferredSwapPlugin(Object.keys(exchanges).find(pluginId => exchanges[pluginId].swapInfo.displayName === result))
       }
     })

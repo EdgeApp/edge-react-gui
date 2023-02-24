@@ -183,7 +183,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} />
+          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation />
           {parenString}
         </EdgeText>
       </View>

@@ -8,6 +8,7 @@ import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImp
 import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {
   const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children
@@ -18,6 +19,7 @@ jest.mock('react-native-keyboard-aware-scroll-view', () => {
 jest.mock('../../assets/images/import-key-icon.svg', () => 'ImportKeySvg')
 
 describe('CreateWalletImportScene', () => {
+  const nonce = fakeNonce(0)
   const mockState: any = {
     core: {
       account: {
@@ -34,6 +36,7 @@ describe('CreateWalletImportScene', () => {
   it('should render with loading props', () => {
     const navigation = fakeNavigation
     const route: RouteProp<'createWalletImport'> = {
+      key: `createWalletImport-${nonce()}`,
       name: 'createWalletImport',
       params: {
         createWalletList: [

@@ -9,14 +9,17 @@ import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
 import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 
 let account: EdgeAccount | undefined
 
 describe('EdgeLoginScene', () => {
+  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
     const route: RouteProp<'edgeLogin'> = {
+      key: `edgeLogin-${nonce()}`,
       name: 'edgeLogin',
       params: {
         lobbyId: 'AmNsSBDVeF2837'

@@ -1,31 +1,43 @@
 import { NavigationProp } from '../../types/routerTypes'
 
 export const fakeNavigation: NavigationProp<any> = {
-  addListener(event, callback) {
+  addListener() {
     return () => undefined
   },
+  removeListener() {},
   isFocused() {
     return true
   },
 
-  navigate(name, params) {},
-  push(name, params) {},
-  replace(name, params) {},
+  navigate() {},
+  push() {},
+  replace() {},
   setParams(params) {},
 
   goBack() {},
   pop() {},
   popToTop() {},
 
-  closeDrawer() {},
-  openDrawer() {},
-  toggleDrawer() {},
-
+  dispatch() {},
+  reset() {},
+  canGoBack() {
+    return true
+  },
+  getId() {
+    return undefined
+  },
   getState() {
     return {
-      drawerOpen: false,
+      key: 'foo',
       index: 0,
-      routes: []
+      routes: [],
+      routeNames: [],
+      type: 'bar',
+      stale: false
     }
-  }
+  },
+  getParent() {
+    throw new Error('not implemented')
+  },
+  setOptions() {}
 }

@@ -23,15 +23,15 @@ import {
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
+  disablePlugins: DisablePluginMap
   account: EdgeAccount
   direction: 'buy' | 'sell'
-  disablePlugins: DisablePluginMap
   guiPlugin: GuiPlugin
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   paymentType?: FiatPaymentType
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { account, direction, disablePlugins, guiPlugin, navigation, paymentType, regionCode } = params
+  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode } = params
   const { pluginId } = guiPlugin
   const isBuy = direction === 'buy'
 

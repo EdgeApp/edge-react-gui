@@ -65,7 +65,7 @@ interface DispatchProps {
   showUnlockSettingsModal: () => void
   toggleDeveloperMode: (developerModeOn: boolean) => void
   toggleSpamFilter: (spamFilterOn: boolean) => void
-  logoutRequest: () => Promise<void>
+  logoutRequest: (navigation: NavigationBase) => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -177,7 +177,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         onSubmit={async text => {
           if (text !== username) return s.strings.delete_account_verification_error
           await this.props.account.deleteRemoteAccount()
-          await this.props.logoutRequest()
+          await this.props.logoutRequest(this.props.navigation)
           await this.props.context.deleteLocalAccount(username)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(s.strings.delete_account_feedback, username)} />)
           return true
@@ -399,8 +399,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     toggleSpamFilter(spamFilterOn: boolean) {
       dispatch(setSpamFilterOn(spamFilterOn))
     },
-    async logoutRequest() {
-      await dispatch(logoutRequest())
+    async logoutRequest(navigation: NavigationBase) {
+      await dispatch(logoutRequest(navigation))
     }
   })
 )(withTheme(SettingsSceneComponent))

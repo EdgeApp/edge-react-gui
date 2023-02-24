@@ -18,7 +18,7 @@ import {
   PaymentProtoVerificationPayment,
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
@@ -275,13 +275,7 @@ export async function launchPaymentProto(
     }
   }
 
-  // Send confirmation scene
-  if (Actions.currentScene === 'send2') {
-    navigation.pop()
-    navigation.push('send2', sendParams)
-  } else {
-    navigation.push('send2', sendParams)
-  }
+  navigation.navigate('send2', sendParams)
 }
 
 /**

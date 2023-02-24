@@ -22,7 +22,7 @@ import s from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
@@ -64,13 +64,13 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
 
       const swapInfo = await fetchSwapQuote(state, request)
 
-      navigation.push('exchangeQuote', {
+      navigation.replace('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      navigation.navigate('exchangeScene', {})
+      navigation.navigate('exchange', {})
 
       const insufficientFunds = asMaybeInsufficientFundsError(error)
       if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
@@ -96,18 +96,17 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
 
 export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    if (Actions.currentScene !== 'exchangeQuote') return
-    navigation.push('exchangeQuoteProcessing', {})
+    navigation.replace('exchangeQuoteProcessing', {})
 
     try {
       swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-      navigation.push('exchangeQuote', {
+      navigation.replace('exchangeQuote', {
         swapInfo,
         onApprove
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      navigation.navigate('exchangeScene', {})
+      navigation.navigate('exchange', {})
       dispatch(processSwapQuoteError(error))
     }
   }

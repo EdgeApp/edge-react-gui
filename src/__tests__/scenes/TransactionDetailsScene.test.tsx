@@ -9,6 +9,7 @@ import thunk from 'redux-thunk'
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -51,6 +52,7 @@ const fakeCoreWallet: any = {
 }
 
 describe('TransactionDetailsScene', () => {
+  const nonce = fakeNonce(0)
   const fakeState: any = {
     core: {
       account: {
@@ -68,6 +70,7 @@ describe('TransactionDetailsScene', () => {
         <TransactionDetailsScene
           navigation={fakeNavigation}
           route={{
+            key: `transactionDetails-${nonce()}`,
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
@@ -99,6 +102,7 @@ describe('TransactionDetailsScene', () => {
         <TransactionDetailsScene
           navigation={fakeNavigation}
           route={{
+            key: `transactionDetails-${nonce()}`,
             name: 'transactionDetails',
             params: {
               edgeTransaction: {

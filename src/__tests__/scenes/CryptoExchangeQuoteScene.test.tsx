@@ -7,6 +7,7 @@ import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/Cryp
 import { getTheme } from '../../components/services/ThemeContext'
 import { GuiSwapInfo } from '../../types/types'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 const dummySwapInfo: EdgeSwapInfo = {
   pluginId: '',
@@ -15,6 +16,7 @@ const dummySwapInfo: EdgeSwapInfo = {
 }
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
+  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -91,6 +93,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       <CryptoExchangeQuoteScreenComponent
         navigation={fakeNavigation}
         route={{
+          key: `exchangeQuote-${nonce()}`,
           name: 'exchangeQuote',
           params: { swapInfo, onApprove: () => undefined }
         }}
