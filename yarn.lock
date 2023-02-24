@@ -7892,16 +7892,16 @@ edge-currency-plugins@^1.3.6:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.17.3:
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.17.3.tgz#588a4720fc2b422eb292fe790b2be382ebf7194f"
-  integrity sha512-bKATNqmyytNMaSR/709OOxMO1aEqeVg+T6zsl69IU3Guwzr9XVshvjcW3FxPRvRYemWIFhb386quePr7FX/1mw==
+edge-exchange-plugins@^0.17.4:
+  version "0.17.4"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.17.4.tgz#7f8f7f5db680a68cd9308dda4a3b5c8225364996"
+  integrity sha512-27g3N8v0Tf3+g5G3PBkjZLLriiofFt4Kl6wm5aTDpugV5ZOdFCSOQHFbj76SrQbcHkA/Y6DKgHgAf5+ykmPDzA==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
     "@ethersproject/providers" "^5.5.3"
     "@ethersproject/solidity" "^5.5.0"
-    biggystring "^4.0.0"
+    biggystring "^4.1.3"
     cleaners "^0.3.13"
     esm "^3.2.4"
     ethers "^5.7.0"
