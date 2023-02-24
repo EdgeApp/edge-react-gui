@@ -69,6 +69,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       const { key, pluginId, tokenId } = item
       map[key] = defaultSelection.find(edgeTokenId => edgeTokenId.pluginId === pluginId && edgeTokenId.tokenId === tokenId) != null
       if (item.walletType === 'wallet:bitcoin-bip44') map[key] = false // HACK: Make sure we don't select both bitcoin wallet choices
+      if (item.walletType === 'wallet:litecoin-bip44') map[key] = false // HACK: Make sure we don't select both litecoin wallet choices
       return map
     }, {})
   })
