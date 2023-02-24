@@ -117,7 +117,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')
       return (
         <IconDataRow
-          marginRem={[1, -0.5, 0, 1]}
+          marginRem={[1, 0.5, 0, 1]}
           icon={<FontAwesome5 name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
           leftText={s.strings.create_wallet_tokens}
           leftSubtext={
