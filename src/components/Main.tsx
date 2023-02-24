@@ -17,7 +17,7 @@ import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
-import { ifLoggedIn } from './hoc/IfLoggedIn'
+import { IfLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
@@ -160,7 +160,7 @@ const EdgeApp = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={props => ifLoggedIn(ControlPanel)(props)}
+      drawerContent={props => IfLoggedIn(ControlPanel)(props)}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',
@@ -196,12 +196,12 @@ const EdgeAppStack = () => {
           headerShown: false
         }}
       />
-      <Stack.Screen name="confirmScene" component={ifLoggedIn(ConfirmScene)} />
-      <Stack.Screen name="createWalletSelectCrypto" component={ifLoggedIn(CreateWalletSelectCryptoScene)} />
-      <Stack.Screen name="createWalletSelectFiat" component={ifLoggedIn(CreateWalletSelectFiatScene)} />
+      <Stack.Screen name="confirmScene" component={IfLoggedIn(ConfirmScene)} />
+      <Stack.Screen name="createWalletSelectCrypto" component={IfLoggedIn(CreateWalletSelectCryptoScene)} />
+      <Stack.Screen name="createWalletSelectFiat" component={IfLoggedIn(CreateWalletSelectFiatScene)} />
       <Stack.Screen
         name="settingsOverview"
-        component={ifLoggedIn(SettingsScene)}
+        component={IfLoggedIn(SettingsScene)}
         options={{
           title: s.strings.title_settings
         }}
@@ -211,7 +211,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="transactionDetails"
-        component={ifLoggedIn(TransactionDetailsScene)}
+        component={IfLoggedIn(TransactionDetailsScene)}
         options={{
           headerTitle: () => <TransactionDetailsTitle />
         }}
@@ -224,7 +224,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="createWalletImport"
-        component={ifLoggedIn(CreateWalletImportScene)}
+        component={IfLoggedIn(CreateWalletImportScene)}
         options={{
           headerRight: () => null
         }}
@@ -232,7 +232,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="createWalletCompletion"
-        component={ifLoggedIn(CreateWalletCompletionScene)}
+        component={IfLoggedIn(CreateWalletCompletionScene)}
         options={{
           headerLeft: () => null,
           headerRight: () => null
@@ -241,7 +241,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="createWalletAccountSetup"
-        component={ifLoggedIn(CreateWalletAccountSetupScene)}
+        component={IfLoggedIn(CreateWalletAccountSetupScene)}
         options={{
           title: s.strings.create_wallet_create_account,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
@@ -250,7 +250,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="createWalletAccountSelect"
-        component={ifLoggedIn(CreateWalletAccountSelectScene)}
+        component={IfLoggedIn(CreateWalletAccountSelectScene)}
         options={{
           title: s.strings.create_wallet_account_activate,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
@@ -259,7 +259,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="transactionList"
-        component={ifLoggedIn(TransactionList)}
+        component={IfLoggedIn(TransactionList)}
         listeners={{
           focus: () => {
             requestPermission('contacts').catch(showError)
@@ -267,30 +267,30 @@ const EdgeAppStack = () => {
         }}
       />
 
-      <Stack.Screen name="stakeModify" component={ifLoggedIn(StakeModifyScene)} />
-      <Stack.Screen name="stakeOptions" component={ifLoggedIn(StakeOptionsScene)} />
-      <Stack.Screen name="stakeOverview" component={ifLoggedIn(StakeOverviewScene)} />
-      <Stack.Screen name="fioStakingOverview" component={ifLoggedIn(FioStakingOverviewScene)} />
-      <Stack.Screen name="fioStakingChange" component={ifLoggedIn(FioStakingChangeScene)} />
+      <Stack.Screen name="stakeModify" component={IfLoggedIn(StakeModifyScene)} />
+      <Stack.Screen name="stakeOptions" component={IfLoggedIn(StakeOptionsScene)} />
+      <Stack.Screen name="stakeOverview" component={IfLoggedIn(StakeOverviewScene)} />
+      <Stack.Screen name="fioStakingOverview" component={IfLoggedIn(FioStakingOverviewScene)} />
+      <Stack.Screen name="fioStakingChange" component={IfLoggedIn(FioStakingChangeScene)} />
 
       <Stack.Screen
         name="manageTokens"
         // @ts-expect-error
-        component={ifLoggedIn(ManageTokensScene)}
+        component={IfLoggedIn(ManageTokensScene)}
         options={{
           headerRight: () => null
         }}
       />
       <Stack.Screen
         name="editToken"
-        component={ifLoggedIn(EditTokenScene)}
+        component={IfLoggedIn(EditTokenScene)}
         options={{
           headerRight: () => null
         }}
       />
       <Stack.Screen
         name="transactionsExport"
-        component={ifLoggedIn(TransactionsExportScene)}
+        component={IfLoggedIn(TransactionsExportScene)}
         options={{
           title: s.strings.title_export_transactions,
           headerRight: () => null
@@ -298,7 +298,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="pluginViewBuy"
-        component={ifLoggedIn(GuiPluginViewScene)}
+        component={IfLoggedIn(GuiPluginViewScene)}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" placement="right" />,
@@ -307,7 +307,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="guiPluginEnterAmount"
-        component={ifLoggedIn(FiatPluginEnterAmountScene)}
+        component={IfLoggedIn(FiatPluginEnterAmountScene)}
         options={{
           headerLeft: () => <PluginBackButton />,
           headerRight: () => null
@@ -315,7 +315,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="pluginViewSell"
-        component={ifLoggedIn(GuiPluginViewScene)}
+        component={IfLoggedIn(GuiPluginViewScene)}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" placement="right" />,
@@ -324,23 +324,23 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="exchangeQuoteProcessing"
-        component={ifLoggedIn(CryptoExchangeQuoteProcessingScreen)}
+        component={IfLoggedIn(CryptoExchangeQuoteProcessingScreen)}
         options={{
           headerLeft: () => null,
           headerRight: () => null
         }}
       />
-      <Stack.Screen name="exchangeQuote" component={ifLoggedIn(CryptoExchangeQuote)} />
+      <Stack.Screen name="exchangeQuote" component={IfLoggedIn(CryptoExchangeQuote)} />
       <Stack.Screen
         name="exchangeSuccess"
-        component={ifLoggedIn(CryptoExchangeSuccessScene)}
+        component={IfLoggedIn(CryptoExchangeSuccessScene)}
         options={{
           headerLeft: () => null
         }}
       />
       <Stack.Screen
         name="extraTab"
-        component={ifLoggedIn(ExtraTabScene)}
+        component={IfLoggedIn(ExtraTabScene)}
         options={{
           headerLeft: () => <HeaderTextButton type="help" placement="left" />
         }}
@@ -348,32 +348,32 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="request"
-        component={ifLoggedIn(RequestScene)}
+        component={IfLoggedIn(RequestScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="fioRequestConfirmation"
-        component={ifLoggedIn(FioRequestConfirmationScene)}
+        component={IfLoggedIn(FioRequestConfirmationScene)}
         options={{
           title: s.strings.fio_confirm_request_header
         }}
       />
 
-      <Stack.Screen name="send" component={ifLoggedIn(SendScene)} />
+      <Stack.Screen name="send" component={IfLoggedIn(SendScene)} />
       <Stack.Screen
         name="changeMiningFee"
-        component={ifLoggedIn(ChangeMiningFeeScene)}
+        component={IfLoggedIn(ChangeMiningFeeScene)}
         options={{
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
       />
 
-      <Stack.Screen name="send2" component={ifLoggedIn(SendScene2)} />
+      <Stack.Screen name="send2" component={IfLoggedIn(SendScene2)} />
       <Stack.Screen
         name="changeMiningFee2"
-        component={ifLoggedIn(ChangeMiningFeeScene2)}
+        component={IfLoggedIn(ChangeMiningFeeScene2)}
         options={{
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
@@ -381,7 +381,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="changePassword"
-        component={ifLoggedIn(ChangePasswordScene)}
+        component={IfLoggedIn(ChangePasswordScene)}
         options={{
           title: s.strings.title_change_password,
           headerRight: () => null
@@ -389,7 +389,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="changePin"
-        component={ifLoggedIn(ChangePinScene)}
+        component={IfLoggedIn(ChangePinScene)}
         options={{
           title: s.strings.title_change_pin,
           headerRight: () => null
@@ -397,7 +397,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="otpSetup"
-        component={ifLoggedIn(OtpSettingsScene)}
+        component={IfLoggedIn(OtpSettingsScene)}
         options={{
           title: s.strings.title_otp,
           headerRight: () => null
@@ -405,7 +405,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="passwordRecovery"
-        component={ifLoggedIn(ChangeRecoveryScene)}
+        component={IfLoggedIn(ChangeRecoveryScene)}
         options={{
           title: s.strings.title_password_recovery,
           headerRight: () => null
@@ -413,7 +413,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="spendingLimits"
-        component={ifLoggedIn(SpendingLimitsScene)}
+        component={IfLoggedIn(SpendingLimitsScene)}
         options={{
           title: s.strings.spending_limits,
           headerRight: () => null
@@ -422,7 +422,7 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="exchangeSettings"
         // @ts-expect-error-error
-        component={ifLoggedIn(SwapSettingsScene)}
+        component={IfLoggedIn(SwapSettingsScene)}
         options={{
           title: s.strings.settings_exchange_settings,
           headerRight: () => null
@@ -430,7 +430,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="currencySettings"
-        component={ifLoggedIn(CurrencySettingsScene)}
+        component={IfLoggedIn(CurrencySettingsScene)}
         options={{
           headerTitle: props => <CurrencySettingsTitle />,
           headerRight: () => null
@@ -438,7 +438,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="promotionSettings"
-        component={ifLoggedIn(PromotionSettingsScene)}
+        component={IfLoggedIn(PromotionSettingsScene)}
         options={{
           title: s.strings.title_promotion_settings,
           headerRight: () => null
@@ -446,14 +446,14 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="defaultFiatSetting"
-        component={ifLoggedIn(DefaultFiatSettingScene)}
+        component={IfLoggedIn(DefaultFiatSettingScene)}
         options={{
           headerRight: () => null
         }}
       />
       <Stack.Screen
         name="notificationSettings"
-        component={ifLoggedIn(NotificationScene)}
+        component={IfLoggedIn(NotificationScene)}
         options={{
           title: s.strings.settings_notifications,
           headerRight: () => null
@@ -461,7 +461,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="currencyNotificationSettings"
-        component={ifLoggedIn(CurrencyNotificationScene)}
+        component={IfLoggedIn(CurrencyNotificationScene)}
         options={{
           headerTitle: props => <CurrencySettingsTitle />,
           headerRight: () => null
@@ -470,7 +470,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="pluginView"
-        component={ifLoggedIn(GuiPluginViewScene)}
+        component={IfLoggedIn(GuiPluginViewScene)}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginView'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" placement="right" />,
@@ -480,19 +480,19 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="termsOfService"
-        component={ifLoggedIn(TermsOfServiceComponent)}
+        component={IfLoggedIn(TermsOfServiceComponent)}
         options={{
           title: s.strings.title_terms_of_service
         }}
       />
 
-      <Stack.Screen name="edgeLogin" component={ifLoggedIn(EdgeLoginScene)} />
+      <Stack.Screen name="edgeLogin" component={IfLoggedIn(EdgeLoginScene)} />
 
-      <Stack.Screen name="fioAddressList" component={ifLoggedIn(FioAddressListScene)} />
+      <Stack.Screen name="fioAddressList" component={IfLoggedIn(FioAddressListScene)} />
 
       <Stack.Screen
         name="fioAddressRegister"
-        component={ifLoggedIn(FioAddressRegisterScene)}
+        component={IfLoggedIn(FioAddressRegisterScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
@@ -500,7 +500,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioAddressRegisterSelectWallet"
-        component={ifLoggedIn(FioAddressRegisterSelectWalletScene)}
+        component={IfLoggedIn(FioAddressRegisterSelectWalletScene)}
         options={{
           title: s.strings.title_fio_address_confirmation,
           headerRight: () => null
@@ -509,14 +509,14 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioDomainRegister"
-        component={ifLoggedIn(FioDomainRegisterScene)}
+        component={IfLoggedIn(FioDomainRegisterScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="fioDomainRegisterSelectWallet"
-        component={ifLoggedIn(FioDomainRegisterSelectWalletScene)}
+        component={IfLoggedIn(FioDomainRegisterSelectWalletScene)}
         options={{
           title: s.strings.title_register_fio_domain,
           headerRight: () => null
@@ -524,7 +524,7 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="fioDomainConfirm"
-        component={ifLoggedIn(FioNameConfirmScene)}
+        component={IfLoggedIn(FioNameConfirmScene)}
         options={{
           headerRight: () => null
         }}
@@ -532,7 +532,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioNameConfirm"
-        component={ifLoggedIn(FioNameConfirmScene)}
+        component={IfLoggedIn(FioNameConfirmScene)}
         options={{
           headerRight: () => null
         }}
@@ -540,14 +540,14 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioAddressDetails"
-        component={ifLoggedIn(FioAddressDetailsScene)}
+        component={IfLoggedIn(FioAddressDetailsScene)}
         options={{
           headerTitle: () => <ParamHeaderTitle<'fioAddressDetails'> fromParams={params => params.fioAddressName} />
         }}
       />
       <Stack.Screen
         name="fioConnectToWalletsConfirm"
-        component={ifLoggedIn(FioConnectWalletConfirmScene)}
+        component={IfLoggedIn(FioConnectWalletConfirmScene)}
         options={{
           title: s.strings.title_fio_connect_to_wallet
         }}
@@ -555,7 +555,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioAddressSettings"
-        component={FioAddressSettingsScene}
+        component={IfLoggedIn(FioAddressSettingsScene)}
         options={{
           title: s.strings.title_fio_address_settings
         }}
@@ -563,7 +563,7 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioAddressRegisterSuccess"
-        component={ifLoggedIn(FioAddressRegisteredScene)}
+        component={IfLoggedIn(FioAddressRegisteredScene)}
         options={{
           headerTitle: () => <ParamHeaderTitle<'fioAddressRegisterSuccess'> fromParams={params => params.fioName} />,
           headerLeft: () => null
@@ -572,17 +572,17 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioDomainSettings"
-        component={FioDomainSettingsScene}
+        component={IfLoggedIn(FioDomainSettingsScene)}
         options={{
           title: s.strings.title_fio_domain_settings
         }}
       />
 
-      <Stack.Screen name="fioRequestList" component={ifLoggedIn(FioRequestListScene)} />
+      <Stack.Screen name="fioRequestList" component={IfLoggedIn(FioRequestListScene)} />
       <Stack.Screen
         name="fioRequestApproved"
         // @ts-expect-error
-        component={ifLoggedIn(TransactionDetailsScene)}
+        component={IfLoggedIn(TransactionDetailsScene)}
         listeners={{
           focus: () => {
             requestPermission('contacts').catch(showError)
@@ -595,33 +595,33 @@ const EdgeAppStack = () => {
 
       <Stack.Screen
         name="fioSentRequestDetails"
-        component={ifLoggedIn(FioSentRequestDetailsScene)}
+        component={IfLoggedIn(FioSentRequestDetailsScene)}
         options={{
           headerRight: () => null
         }}
       />
 
-      <Stack.Screen name="wcConnections" component={ifLoggedIn(WcConnectionsScene)} />
-      <Stack.Screen name="wcDisconnect" component={ifLoggedIn(WcDisconnectScene)} />
-      <Stack.Screen name="wcConnect" component={ifLoggedIn(WcConnectScene)} />
+      <Stack.Screen name="wcConnections" component={IfLoggedIn(WcConnectionsScene)} />
+      <Stack.Screen name="wcDisconnect" component={IfLoggedIn(WcDisconnectScene)} />
+      <Stack.Screen name="wcConnect" component={IfLoggedIn(WcConnectScene)} />
 
       <Stack.Screen
         name="loanDashboard"
-        component={ifLoggedIn(LoanDashboardScene)}
+        component={IfLoggedIn(LoanDashboardScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="loanCreate"
-        component={ifLoggedIn(LoanCreateScene)}
+        component={IfLoggedIn(LoanCreateScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="loanCreateConfirmation"
-        component={ifLoggedIn(LoanCreateConfirmationScene)}
+        component={IfLoggedIn(LoanCreateConfirmationScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
@@ -629,29 +629,29 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="loanDetails"
         // @ts-expect-error
-        component={ifLoggedIn(LoanDetailsScene)}
+        component={IfLoggedIn(LoanDetailsScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="loanManage"
-        component={ifLoggedIn(LoanManageScene)}
+        component={IfLoggedIn(LoanManageScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
       <Stack.Screen
         name="loanClose"
-        component={ifLoggedIn(LoanCloseScene)}
+        component={IfLoggedIn(LoanCloseScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
       />
-      <Stack.Screen name="loanStatus" component={ifLoggedIn(LoanStatusScene)} />
+      <Stack.Screen name="loanStatus" component={IfLoggedIn(LoanStatusScene)} />
       <Stack.Screen
         name="coinRankingDetails"
-        component={ifLoggedIn(CoinRankingDetailsScene)}
+        component={IfLoggedIn(CoinRankingDetailsScene)}
         options={{
           headerTitle: () => <EdgeLogoHeader />
         }}
@@ -679,7 +679,7 @@ const EdgeTabs = () => {
     >
       <Tab.Screen
         name="walletList"
-        component={ifLoggedIn(WalletListScene)}
+        component={IfLoggedIn(WalletListScene)}
         options={{
           headerTitle: EdgeLogoHeader
         }}
@@ -687,30 +687,30 @@ const EdgeTabs = () => {
       <Tab.Screen
         name="pluginListBuy"
         // @ts-expect-error
-        component={ifLoggedIn(GuiPluginListScene)}
+        component={IfLoggedIn(GuiPluginListScene)}
         route={{ params: { direction: 'buy' } }}
       />
       <Tab.Screen
         name="pluginListSell"
         // @ts-expect-error
-        component={ifLoggedIn(GuiPluginListScene)}
+        component={IfLoggedIn(GuiPluginListScene)}
         route={{ params: { direction: 'sell' } }}
       />
       <Tab.Screen
         name="exchange"
-        component={ifLoggedIn(CryptoExchangeScene)}
+        component={IfLoggedIn(CryptoExchangeScene)}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
       <Tab.Screen
         name="coinRanking"
-        component={ifLoggedIn(CoinRankingScene)}
+        component={IfLoggedIn(CoinRankingScene)}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
-      <Tab.Screen name="extraTab" component={ifLoggedIn(ExtraTabScene)} />
+      <Tab.Screen name="extraTab" component={IfLoggedIn(ExtraTabScene)} />
     </Tab.Navigator>
   )
 }
