@@ -34,7 +34,7 @@ export const BuyCrypto = (props: Props) => {
   const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
-    navigation.push('pluginListBuy', { direction: 'buy' })
+    navigation.navigate('pluginListBuy', { direction: 'buy' })
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
