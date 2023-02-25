@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 
+import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useSelector } from '../../../types/reactRedux'
@@ -36,6 +37,8 @@ interface Props {
 const CurrencyRowComponent = (props: Props) => {
   const { customAsset, marginRem, showRate = false, token, tokenId } = props
   const wallet = customAsset?.wallet ?? props.wallet
+  const { pluginId } = wallet.currencyInfo
+  const showTokenNames = SPECIAL_CURRENCY_INFO[pluginId]?.showTokenNames
 
   // Currency code and wallet name for display:
   const allTokens = wallet.currencyConfig.allTokens
@@ -56,10 +59,15 @@ const CurrencyRowComponent = (props: Props) => {
   const fiatText = showBalance ? <FiatText nativeCryptoAmount={balance} tokenId={displayTokenId} wallet={wallet} /> : null
   const icon = <CryptoIcon sizeRem={2} tokenId={displayTokenId} walletId={wallet.id} />
 
+  let displayCurrencyCode = currencyCode
+  if (showTokenNames === true && tokenFromId != null) {
+    displayCurrencyCode = `${tokenFromId.displayName}`
+  }
+
   return (
     <IconDataRow
       icon={icon}
-      leftText={currencyCode}
+      leftText={displayCurrencyCode}
       leftTextExtended={tickerText}
       leftSubtext={name}
       rightText={cryptoText}

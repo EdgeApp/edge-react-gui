@@ -127,6 +127,7 @@ interface SpecialCurrencyInfo {
   allowZeroTx?: boolean
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
+  showTokenNames?: boolean
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
   needsAccountNameSetup?: boolean
@@ -277,6 +278,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   ripple: {
     initWalletName: s.strings.string_first_ripple_wallet_name,
+    showTokenNames: true,
     chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     uniqueIdentifierInfo: {
