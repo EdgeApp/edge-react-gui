@@ -130,6 +130,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         let feeTotal = '0'
         const hasError = false
         const pendingTxs: EdgeTransaction[] = []
+        const successfullyTransferredTokenIds: string[] = []
         for (const item of tokenItems) {
           let tokenSpendInfo: EdgeSpendInfo = {
             currencyCode: item.currencyCode,
@@ -141,6 +142,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
             tokenSpendInfo = { ...tokenSpendInfo, spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }] }
             const tx = await makeSpendSignAndBroadcast(oldWallet, tokenSpendInfo)
+            successfullyTransferredTokenIds.push(item.tokenId)
             const txFee = tx.parentNetworkFee ?? tx.networkFee
             feeTotal = add(feeTotal, txFee)
             pendingTxs.push(tx)
@@ -150,6 +152,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             handleItemStatus(item, 'error')
           }
         }
+
+        // Disable empty tokens
+        await oldWallet.changeEnabledTokenIds(tokenIdsToEnable.filter(tokenId => !successfullyTransferredTokenIds.includes(tokenId)))
 
         if (!hasError) {
           // Send mainnet
