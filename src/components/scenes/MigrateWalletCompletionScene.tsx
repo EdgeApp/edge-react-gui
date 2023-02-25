@@ -89,8 +89,8 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     for (const bundle of sortedMigrateWalletListBundles) {
       const mainnetItem = bundle[bundle.length - 1]
       const { createWalletIds } = mainnetItem
-      const walletId = createWalletIds[0]
-      const oldWallet = currencyWallets[walletId]
+      const oldWalletId = createWalletIds[0]
+      const oldWallet = currencyWallets[oldWalletId]
       const {
         currencyInfo: { walletType },
         fiatCurrencyCode
@@ -99,14 +99,23 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
       // Create new wallet
       const createNewWalletPromise = async () => {
-        const newWallet = await account.createCurrencyWallet(walletType, {
-          name: `${oldWalletName}${s.strings.migrate_wallet_new_fragment}`,
-          fiatCurrencyCode,
-          migratedFromWalletId: walletId
-        })
+        const previouslyCreatedWalletInfo = account.allKeys.find(
+          keys => keys.migratedFromWalletId === oldWalletId && !keys.archived && !keys.deleted && !keys.hidden
+        )
+        let newWallet = previouslyCreatedWalletInfo != null ? currencyWallets[previouslyCreatedWalletInfo.id] : undefined
+
+        let createdNewWallet = false
+        if (newWallet == null) {
+          newWallet = await account.createCurrencyWallet(walletType, {
+            name: `${oldWalletName}${s.strings.migrate_wallet_new_fragment}`,
+            fiatCurrencyCode,
+            migratedFromWalletId: oldWalletId
+          })
+          createdNewWallet = true
+        }
 
         // Change old wallet name
-        await oldWallet.renameWallet(`${oldWalletName}${s.strings.migrate_wallet_old_fragment}`)
+        if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${s.strings.migrate_wallet_old_fragment}`)
 
         const addressInfo = await newWallet.getReceiveAddress()
         const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
@@ -114,7 +123,8 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
 
         // Enable tokens on new wallet
-        await newWallet.changeEnabledTokenIds(tokenItems.map(pair => pair.tokenId))
+        const tokenIdsToEnable = [...new Set([...newWallet.enabledTokenIds, ...tokenItems.map(pair => pair.tokenId)])]
+        await newWallet.changeEnabledTokenIds(tokenIdsToEnable)
 
         // Send tokens
         let feeTotal = '0'
