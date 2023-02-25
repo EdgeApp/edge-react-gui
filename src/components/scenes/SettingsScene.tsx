@@ -335,6 +335,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
           <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
+          <SettingsTappableRow label={s.strings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
