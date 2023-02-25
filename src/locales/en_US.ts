@@ -994,6 +994,15 @@ const strings = {
   contacts_permission_modal_enable_settings: 'To use %1$s, please enable your %2$s permission.',
   contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
+  // Migrate Wallet
+  migrate_wallets_select_crypto_title: 'Choose Assets to Migrate',
+  migrate_wallets_calculate_fee_title: 'Confirm Migration',
+  migrate_wallets_title: 'Migrate Wallets',
+  migrate_wallet_instructions_fragment: `Migrating assets to a new wallet incurs a network fee for each asset transferred. If you don't have enough funds, you can return and deselect tokens or tap the row for more options.`,
+  migrate_wallet_old_fragment: ' (old)',
+  migrate_wallet_new_fragment: ' (new)',
+  migrate_unknown_error_fragment: 'Unknown error',
+
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
   wallet_list_sort_manual: 'Manual sort',
