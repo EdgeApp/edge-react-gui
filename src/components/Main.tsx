@@ -15,6 +15,7 @@ import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import s from '../locales/strings'
 import { FiatPluginEnterAmountScene } from '../plugins/gui/scenes/EnterAmountScene'
+import { EnterFormScene } from '../plugins/gui/scenes/EnterFormScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -309,7 +310,13 @@ const EdgeAppStack = () => {
         name="guiPluginEnterAmount"
         component={ifLoggedIn(FiatPluginEnterAmountScene)}
         options={{
-          headerLeft: () => <PluginBackButton />,
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterForm"
+        component={EnterFormScene}
+        options={{
           headerRight: () => null
         }}
       />

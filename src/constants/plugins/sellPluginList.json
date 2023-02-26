@@ -393,6 +393,54 @@
       "BTC"
     ],
     "paymentTypes": [
+      "sepa"
+    ],
+    "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
+    "title": "SEPA Bank Transfer",
+    "partnerIconPath": "logoBity.png",
+    "paymentTypeLogoKey": "bank",
+    "deepQuery": {
+      "type": "sell"
+    }
+  },
+  {
+    "id": "bityOG",
+    "pluginId": "bityOG",
+    "forCountries": [
+      "AT",
+      "BE",
+      "BG",
+      "CH",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HU",
+      "IT",
+      "LV",
+      "LT",
+      "LU",
+      "NL",
+      "PL",
+      "PT",
+      "RO",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "HR",
+      "LI",
+      "NO",
+      "SM",
+      "GB"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypes": [
       "bank"
     ],
     "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
@@ -527,6 +575,10 @@
   {
     "id": "bity",
     "sortIndex": 3
+  },
+  {
+    "id": "bityOG",
+    "sortIndex": 6
   },
   {
     "id": "bits of gold",

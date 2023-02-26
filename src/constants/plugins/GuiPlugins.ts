@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import { fiatPluginSepa } from '../../plugins/gui/bankAddressPlugin'
 import { creditCardPlugin } from '../../plugins/gui/creditCardPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
@@ -93,15 +94,24 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Simplex'
   },
-  bity: {
-    pluginId: 'bity',
+  bityOG: {
+    pluginId: 'bityOG',
     storeId: 'com.bity',
     baseUri: hostedUri + 'com.bity/index.html',
     lockUriPath: true,
     needsCountryCode: true,
     queryPromoCode: 'client_value',
     displayName: 'Bity'
-    // supportßEmail: 'support@bity.com'
+  },
+  bity: {
+    pluginId: 'sepaTransfer',
+    storeId: 'com.bity',
+    baseUri: hostedUri + 'com.bity/index.html',
+    lockUriPath: true,
+    needsCountryCode: true,
+    queryPromoCode: 'client_value',
+    displayName: 'BityIsh',
+    nativePlugin: fiatPluginSepa
   },
   bitrefill: {
     pluginId: 'bitrefill',

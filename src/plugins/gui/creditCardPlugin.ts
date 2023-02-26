@@ -68,7 +68,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { isBuy, regionCode, paymentTypes } = params
+      const { direction, regionCode, paymentTypes } = params
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
       const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
@@ -119,7 +119,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
-        isBuy,
+        direction,
 
         label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
@@ -236,7 +236,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
 
-                logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
+                logEvent(direction === 'buy' ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
 
                 if (sourceFieldNum === 1) {
                   enterAmountMethods.setValue2(bestQuote.cryptoAmount)

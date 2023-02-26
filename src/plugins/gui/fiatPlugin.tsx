@@ -16,8 +16,10 @@ import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
+  FiatPluginFormParams,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
+  FiatPluginTransferInfoParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -78,6 +80,24 @@ export const executePlugin = async (params: {
     },
     popScene: async () => {
       navigation.pop()
+    },
+    enterFieldsForm: async (params: FiatPluginFormParams) => {
+      return new Promise((resolve, reject) => {
+        const { headerIconUri, headerTitle, forms, onSubmit } = params
+        navigation.navigate('guiPluginEnterForm', {
+          headerIconUri,
+          headerTitle,
+          forms,
+          onSubmit
+        })
+      })
+    },
+
+    transferInfo: async (params: FiatPluginTransferInfoParams) => {
+      return new Promise((resolve, reject) => {
+        // TODO:
+        // navigation.navigate('guiPluginEnterForm', { ...formParams })
+      })
     }
   }
 
@@ -92,7 +112,7 @@ export const executePlugin = async (params: {
 
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
-    isBuy,
+    direction,
     regionCode,
     paymentTypes
   }

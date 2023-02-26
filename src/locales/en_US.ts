@@ -1,6 +1,13 @@
 export type LocaleStringKey = keyof typeof strings
 
 const strings = {
+  account_owner: 'Account Owner',
+  address_line_1: 'Address Line 1',
+  address_line_2: 'Address Line 2',
+  city: 'City',
+  state_province_region: 'State/Provice/Region',
+  zip_postal_code: 'Zip/Postal Code',
+
   // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -63,6 +70,8 @@ const strings = {
   action_display_message_complete_bank: 'Your loan is complete! \nYou should see funds in your bank account in 1-4 days',
 
   // #endregion
+
+  bank_info_label: 'Bank Info',
 
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
@@ -322,6 +331,8 @@ const strings = {
   help_call_text: 'Get in touch by phone',
   help_visit_site: 'Visit the %1$s site',
   help_site_more_info_text: 'More info on %1$s',
+  home_address_title: 'Home Address',
+  iban: 'IBAN',
   loading: 'Loading…',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',
@@ -507,6 +518,7 @@ const strings = {
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
+  swift_code: 'Swift Code',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -911,6 +923,7 @@ const strings = {
   enter_any_body:
     '1. Public address to send money to\n2. Private key to sweep\n3. Wallet Connect URI to connect to a dApp\n4. Edge Login URI to login to another device\n\nEdge will auto-detect the URI format and allow you to select an appropriate wallet',
   enter_any_input_hint: 'Enter any of the above',
+  enter_bank_info_title: 'Enter Bank Info',
   address_modal_default_header: 'Enter Address',
   open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes

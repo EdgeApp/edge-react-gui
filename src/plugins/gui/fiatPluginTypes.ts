@@ -5,9 +5,23 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
-export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach', 'sepa')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
+
+export interface FiatSepaInfo {
+  iban: string
+  swift: string
+  ownerAddress: {
+    name: string
+    address: string
+    address2: string
+    city: string
+    country: string
+    state: string
+    postalCode: string
+  }
+}
 
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
@@ -17,7 +31,7 @@ export interface FiatPluginGetMethodsResponse {
 }
 export interface FiatPluginEnterAmountParams {
   headerTitle: string
-  isBuy: boolean
+  direction: 'buy' | 'sell'
   label1: string
   label2: string
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
@@ -26,7 +40,38 @@ export interface FiatPluginEnterAmountParams {
   headerIconUri?: string
 }
 
-// export type FiatPluginListModalRow = { icon: string | number, name: string }
+// Field appearance and how user input is handled for a particular form field.
+// Defines what keyboard type, validation, autofill, etc is applied to the
+// field. Independent from the value stored. Ex: A 'number' type will get user
+// input with a number-only keypad, but we may want to store that value as a
+// string.
+export type FiatPluginFormFieldType = 'text' | 'number' | 'address' | 'zip'
+
+export interface FiatPluginFormField {
+  key: string
+  label: string
+  inputType: FiatPluginFormFieldType
+  value?: string
+}
+
+export type FiatPluginFormType = 'addressForm' | 'sepaForm'
+export interface FiatPluginForm {
+  fields: FiatPluginFormField[]
+  formType?: FiatPluginFormType
+  key: string
+  title: string
+}
+export interface FiatPluginFormParams {
+  forms: FiatPluginForm[] // Keys in all form fields must be unique
+  headerTitle: string
+  headerIconUri?: string
+  onSubmit: (fieldInputs: FiatPluginFormField[]) => Promise<void>
+}
+
+export interface FiatPluginTransferInfoParams {
+  fieldMap: { [fieldName: string]: string }
+}
+
 export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
@@ -52,6 +97,8 @@ export interface FiatPluginUi {
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
+  enterFieldsForm: (params: FiatPluginFormParams) => Promise<void>
+  transferInfo: (params: FiatPluginTransferInfoParams) => Promise<void>
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
@@ -71,7 +118,7 @@ export interface FiatPluginRegionCode {
   stateCode?: string
 }
 export interface FiatPluginStartParams {
-  isBuy: boolean
+  direction: 'buy' | 'sell'
   paymentTypes: FiatPaymentTypes
   regionCode: FiatPluginRegionCode
 }

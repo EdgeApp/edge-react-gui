@@ -5,10 +5,14 @@ import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
-import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
+
+console.warn = () => {}
+console.info = () => {}
+console.log = () => {}
 
 Bugsnag.start({
   // @ts-expect-error
@@ -51,7 +55,7 @@ console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
 if (ENV.DISABLE_WARNINGS) {
-  LogBox.ignoreLogs(IGNORED_WARNINGS)
+  LogBox.ignoreAllLogs()
 }
 
 // Disable the font scaling

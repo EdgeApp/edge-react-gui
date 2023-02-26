@@ -11,6 +11,7 @@ import {
   JsonObject
 } from 'edge-core-js/types'
 
+import { COUNTRY_CODES } from '../constants/CountryConstants'
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
@@ -167,12 +168,7 @@ export interface GuiExchangeRates {
   [pair: string]: string
 }
 
-export interface CountryData {
-  name: string
-  'alpha-2': string
-  'alpha-3': string
-  filename?: string
-}
+export type CountryData = typeof COUNTRY_CODES[number]
 
 export const asMostRecentWallet = asObject({
   id: asString,

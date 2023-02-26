@@ -1,7 +1,6 @@
-import { CountryData } from '../types/types'
 import { FLAG_LOGO_URL } from './CdnConstants'
 
-export const COUNTRY_CODES: CountryData[] = [
+export const COUNTRY_CODES = [
   { name: 'Afghanistan', 'alpha-2': 'AF', 'alpha-3': 'AFG' },
   { name: 'Åland Islands', filename: 'aland-islands', 'alpha-2': 'AX', 'alpha-3': 'ALA' },
   { name: 'Albania', 'alpha-2': 'AL', 'alpha-3': 'ALB' },
@@ -234,7 +233,9 @@ export const COUNTRY_CODES: CountryData[] = [
   { name: 'Yemen', 'alpha-2': 'YE', 'alpha-3': 'YEM' },
   { name: 'Zambia', 'alpha-2': 'ZM', 'alpha-3': 'ZMB' },
   { name: 'Zimbabwe', 'alpha-2': 'ZW', 'alpha-3': 'ZWE' }
-]
+] as const
+
+export type CountryCodeName = typeof COUNTRY_CODES[number]['name']
 
 export const FIAT_COUNTRY: { [key: string]: { countryName: string; logoUrl: string } } = {
   AFN: { countryName: 'AFGHANISTAN', logoUrl: `${FLAG_LOGO_URL}/afghanistan.png` },

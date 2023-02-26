@@ -300,8 +300,54 @@
     "cryptoCodes": [
       "BTC"
     ],
+    "paymentType": "sepa",
     "paymentTypes": [
       "bank"
+    ],
+    "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
+    "title": "SEPA Bank Transfer",
+    "partnerIconPath": "logoBity.png",
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "bityOG",
+    "pluginId": "bityOG",
+    "forCountries": [
+      "AT",
+      "BE",
+      "BG",
+      "CH",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HU",
+      "IT",
+      "LV",
+      "LT",
+      "LU",
+      "NL",
+      "PL",
+      "PT",
+      "RO",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "HR",
+      "LI",
+      "NO",
+      "SM",
+      "GB"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypes": [
+      "sepa"
     ],
     "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
     "title": "SEPA Bank Transfer",
@@ -559,7 +605,7 @@
     "sortIndex": 5
   },
   {
-    "id": "bits of gold",
+    "id": "bityOG",
     "sortIndex": 1
   },
   {
@@ -1156,6 +1202,13 @@
       "GB"
     ],
     "sortIndex": 2
+  },
+  {
+    "id": "bityOG",
+    "forCountries": [
+      "GB"
+    ],
+    "sortIndex": 1
   },
   {
     "id": "bits of gold",
