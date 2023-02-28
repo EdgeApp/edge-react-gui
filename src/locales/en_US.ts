@@ -1002,6 +1002,7 @@ const strings = {
   migrate_wallet_old_fragment: ' (old)',
   migrate_wallet_new_fragment: ' (new)',
   migrate_unknown_error_fragment: 'Unknown error',
+  migrate_wallets_modal_message: `The following wallets were found to be potentially impacted by a recent security incident:\n%1$s\nIt is highly recommended that you discontinue using these wallets and migrate the assets to a new wallet in your account. Would you like to use the automated Migrate Wallets feature to do so?`,
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',

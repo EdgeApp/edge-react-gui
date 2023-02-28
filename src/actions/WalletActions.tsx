@@ -1,5 +1,7 @@
 import { div, log10, lt, round } from 'biggystring'
+import { asArray, asBoolean, asMaybe, asObject, asString, asUnknown } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
+import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -7,13 +9,15 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { setMostRecentWalletsSelected } from '../modules/Core/Account/settings'
+import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
 import { getCurrencyCode, getCurrencyInfos, getToken, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { fetchInfo } from '../util/network'
 import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 import { registerNotificationsV2 } from './NotificationActions'
@@ -310,5 +314,136 @@ const activateWalletTokens = async (
     })
   } else {
     throw new Error('Activation with multiple wallet options not supported yet')
+  }
+}
+
+const asInfoServerResponse = asObject({
+  docs: asArray(asUnknown)
+})
+
+const asKeyInfo = asObject({
+  pubKeyHash: asString,
+  exposed: asBoolean
+})
+
+type KeyInfo = ReturnType<typeof asKeyInfo>
+
+export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+
+    const { activeWalletIds, currencyWallets } = account
+
+    // Get synced setting Settings.json with public key map securityCheckedWallets: {walletId: { checked: boolean, modalShown: number }}
+    const settings = await getSyncedSettings(account)
+    const securityCheckedWallets = { ...settings.securityCheckedWallets }
+
+    // Gather list to send to info server
+    const hashedPubKeys = new Map<string, string>()
+    for (const walletId of activeWalletIds) {
+      // Add entries for walletIds that aren't recognized
+      if (securityCheckedWallets[walletId] == null) {
+        securityCheckedWallets[walletId] = { checked: false, modalShown: 0 }
+      }
+
+      // create public key hashes for any walletIds that have not been checked or modalshown is less than 2
+      const { checked, modalShown } = securityCheckedWallets[walletId]
+      if (!checked && modalShown < 2) {
+        const wallet = currencyWallets[walletId]
+        if (wallet == null) continue
+
+        const pubKey = wallet.displayPublicSeed
+        if (pubKey == null) continue
+
+        const hash = hashjs.sha256().update(pubKey).digest('hex')
+        hashedPubKeys.set(walletId, hash)
+      }
+    }
+    if (hashedPubKeys.size === 0) {
+      return
+    }
+    const allDocIds = [...hashedPubKeys.values()]
+
+    // Send hashes to info server endpoint
+    const exposedKeyInfos: KeyInfo[] = []
+    const queryInfoServer = async (docIds: string[]): Promise<void> => {
+      const opts = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docIds })
+      }
+      const response = await fetchInfo('v1/exposedkeys', opts)
+      if (!response.ok) {
+        const text = await response.text()
+        throw new Error(`checkCompromisedKeys ${text}`)
+      }
+      const raw = await response.json()
+      const json = asInfoServerResponse(raw)
+
+      for (const doc of json.docs) {
+        const keyInfo = asMaybe(asKeyInfo)(doc)
+        if (keyInfo != null) {
+          exposedKeyInfos.push(keyInfo)
+        }
+      }
+    }
+
+    const PAGE_LIMIT = 100
+    for (let i = 0; i < allDocIds.length; i += PAGE_LIMIT) {
+      const docIds = allDocIds.slice(i, i + PAGE_LIMIT)
+      try {
+        await queryInfoServer(docIds)
+      } catch (e: any) {
+        console.log('checkCompromisedKeys invalid info server response', e.message)
+        break
+      }
+    }
+
+    const exposedWalletIds: string[] = []
+    for (const entry of hashedPubKeys.entries()) {
+      const [walletId, pubkeyHash] = entry
+
+      const keyInfo = exposedKeyInfos.find(info => info.pubKeyHash === pubkeyHash)
+      if (keyInfo?.exposed) {
+        exposedWalletIds.push(walletId)
+      } else {
+        securityCheckedWallets[walletId] = { ...securityCheckedWallets[walletId], checked: true }
+      }
+    }
+
+    const MigrateWalletsModal = async (walletNames: string[]): Promise<'yes' | 'no' | undefined> => {
+      const message = sprintf(s.strings.migrate_wallets_modal_message, walletNames.join('\n'))
+
+      return await Airship.show<'yes' | 'no' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.alert_dropdown_warning}
+          message={message}
+          fullScreen
+          warning
+          buttons={{
+            yes: { label: s.strings.yes },
+            no: { label: s.strings.no }
+          }}
+        />
+      ))
+    }
+
+    // If any walletId come back true show modal to go to migration scene with affected wallets preselected
+    if (exposedWalletIds.length > 0) {
+      const walletNames = exposedWalletIds.map(walletId => getWalletName(currencyWallets[walletId]))
+      const response = await MigrateWalletsModal(walletNames)
+      exposedWalletIds.forEach(walletId => {
+        const { checked, modalShown } = securityCheckedWallets[walletId]
+        securityCheckedWallets[walletId] = { checked, modalShown: modalShown + 1 }
+      })
+
+      if (response === 'yes') {
+        navigation.push('migrateWalletSelectCrypto', { preSelectedWalletIds: exposedWalletIds })
+      }
+    }
+
+    await setSyncedSettings(account, { ...settings, securityCheckedWallets })
   }
 }

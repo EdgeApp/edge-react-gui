@@ -248,7 +248,9 @@ export interface ParamList {
   migrateWalletCalculateFee: {
     migrateWalletList: MigrateWalletItem[]
   }
-  migrateWalletSelectCrypto: {}
+  migrateWalletSelectCrypto: {
+    preSelectedWalletIds?: string[]
+  }
   notificationSettings: {}
   otpRepair: {
     otpError: OtpError
