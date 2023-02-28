@@ -1,5 +1,14 @@
-# ID: C431
-# Title: Account will successfully creates and goes to wallets list screen
+# Priority: Critical
+# Test ID: C431
+# Title: Account will successfully create and goes to wallets list screen
+# Expected Result: 
+# 1. Tapping "Create" takes user to new Wallet List Scene with:  
+#   - BTC 
+#   - ETH 
+#   - LTC 
+#   - BCH 
+#   - DASH
+
 appId: co.edgesecure.app
 ---
 - runFlow:
@@ -12,28 +21,32 @@ appId: co.edgesecure.app
 - tapOn:
     text: "Get Started"
     index: 1
+- assertVisible: "Username"
+- tapOn: "Username"
 - inputText: "test-"
 - inputRandomText
 - pressKey: "Enter"
 - extendedWaitUntil:
     notVisible: "Choose Username"
     timeout: 10000
+- tapOn: "Password"
 - inputText: "Test123456"
 - pressKey: "Enter"
+- tapOn: "Confirm Password"
 - inputText: "Test123456"
 - pressKey: "Enter"
 - inputText: "1111"
 - pressKey: "Enter"
 - tapOn: "Next"
-- evalScript: ${output.counter = 0}
-- repeat:
-    while:
-      true: ${output.counter < 4}
-    commands:
-      - tapOn: 
-            text: "I understand that .*"
-            index: ${output.counter}
-      - evalScript: ${output.counter = output.counter + 1}
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital\
+    \ assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able\
+    \ to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private\
+    \ key pairs, PIN, and any other codes to access the software. Edge is not responsible\
+    \ if my information is compromised or accessed by a 3rd party where funds are\
+    \ lost"
 - tapOn: "Confirm"
 - tapOn: "View account information"
 - tapOn: "Create"
@@ -41,3 +54,9 @@ appId: co.edgesecure.app
 - tapOn: # Temporary workaround for <Fade> components blocking accessibility
     point: "50%,95%" 
 - assertVisible: "Slide wallets .*"
+- tapOn: "Got it!"
+- assertVisible: "BTC"
+- assertVisible: "BCH"
+- assertVisible: "DASH"
+- assertVisible: "ETH"
+- assertVisible: "LTC"

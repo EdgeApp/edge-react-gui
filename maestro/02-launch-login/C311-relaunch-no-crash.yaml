@@ -1,0 +1,19 @@
+# Priority: Critical
+# Test ID: C311
+# Title: Verify you're able to Re-Launch/Open App
+# Expected Result: 
+#   1. Edge should not crash when relaunching the App
+
+appId: co.edgesecure.app
+tags:
+    - edge-
+---
+- runFlow:
+    file: ../common/launch.yaml
+
+- pressKey: home
+
+- runFlow:
+    file: ../common/launch.yaml
+
+    
