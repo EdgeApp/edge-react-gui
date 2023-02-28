@@ -7684,10 +7684,10 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.37, edge-core-js@^0.19.42:
-  version "0.19.42"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.42.tgz#34b6bfe5deec27fc5edd277ad254269d72ed323e"
-  integrity sha512-HSikQl7tob3zyRHmpbo1JCL6gYWrYyl+Nf8+ZHECj7g/lJY/FTcMMLv1vsdvIwG5BPmIb92MBJLFUlYYqlkgEg==
+edge-core-js@^0.19.37, edge-core-js@^0.19.44:
+  version "0.19.44"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.44.tgz#b35c73f07585fa7f4c7cf40738e89b62a02a9fc9"
+  integrity sha512-nHwwwDZjV36vXu83Ceu8etukv3QrQDB96T5AkEQIO+/LmcCIS8apXjtdk7MRvCEIPhkXqXsl61fcg5zxsGd83g==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7957,7 +7957,7 @@ envinfo@^7.7.2, envinfo@^7.7.3:
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.8.1.tgz#06377e3e5f4d379fea7ac592d5ad8927e0c4d475"
   integrity sha512-/o+BXHmB7ocbHEAs6F2EnG0ogybVVUdkRunTT2glZU9XAaGmhqskrvKwqXuDfNjEO0LZKWdejEEpnq8aM0tOaw==
 
-"eosjs-api@git+https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb", "eosjs-api@https://github.com/EdgeApp/eosjs-api.git#prepare-script":
+"eosjs-api@https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb", "eosjs-api@https://github.com/EdgeApp/eosjs-api.git#prepare-script":
   version "7.0.4"
   resolved "https://github.com/EdgeApp/eosjs-api.git#3676348b6a7443389b28d21c98067760c51e02fb"
   dependencies:
@@ -8967,9 +8967,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
