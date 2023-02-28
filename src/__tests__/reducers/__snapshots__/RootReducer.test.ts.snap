@@ -236,6 +236,7 @@ Object {
       "pinLoginEnabled": false,
       "preferredSwapPluginId": "",
       "preferredSwapPluginType": undefined,
+      "securityCheckedWallets": Object {},
       "spamFilterOn": true,
       "spendingLimits": Object {
         "transaction": Object {

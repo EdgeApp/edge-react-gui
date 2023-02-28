@@ -1,7 +1,9 @@
 import * as React from 'react'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -37,6 +39,15 @@ export function Services(props: Props) {
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
   const { navigation } = props
 
+  // Methods to call once all of the currency wallets have been loaded
+  useAsyncEffect(async () => {
+    if (account?.waitForAllWallets == null) return
+    await account.waitForAllWallets()
+
+    dispatch(checkCompromisedKeys(navigation))
+  }, [account])
+
+  // Methods to call periodically
   useRefresher(
     async () => {
       makeStakePlugins().catch(() => {})
