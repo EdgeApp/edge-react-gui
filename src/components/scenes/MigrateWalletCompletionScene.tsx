@@ -8,6 +8,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
+import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -85,6 +86,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   // Create the wallets and enable the tokens
   useAsyncEffect(async () => {
+    const settings = await getSyncedSettings(account)
+    const securityCheckedWallets = { ...settings.securityCheckedWallets }
+
     const migrationPromises = []
     for (const bundle of sortedMigrateWalletListBundles) {
       const mainnetItem = bundle[bundle.length - 1]
@@ -171,6 +175,9 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }] }
             await makeSpendSignAndBroadcast(oldWallet, spendInfo)
             handleItemStatus(mainnetItem, 'complete')
+
+            const { modalShown } = securityCheckedWallets[oldWalletId]
+            securityCheckedWallets[oldWalletId] = { checked: true, modalShown }
           } catch (e) {
             showError(e)
             handleItemStatus(mainnetItem, 'error')
@@ -185,6 +192,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     for (const migration of migrationPromises) {
       await migration()
     }
+    await setSyncedSettings(account, { ...settings, securityCheckedWallets })
 
     setDone(true)
     return () => {}
