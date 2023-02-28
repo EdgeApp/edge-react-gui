@@ -80,14 +80,6 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
     console.debug('LoginScene')
 
-    navigation.navigate('guiPluginEnterFiatAmount', {
-      headerTitle: 'titleeee',
-      isoFiats: ['usd'],
-      onSubmit: async () => {
-        console.debug('Hello world')
-      }
-    })
-
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))

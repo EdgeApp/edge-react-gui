@@ -1,7 +1,9 @@
-import { asValue } from 'cleaners'
+import { asMaybe, asObject, asString, asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { RootState } from '../../reducers/RootReducer'
+import { Dispatch } from '../../types/reduxTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -9,19 +11,20 @@ export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iac
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
 
-export interface FiatSepaInfo {
-  iban: string
-  swift: string
-  ownerAddress: {
-    name: string
-    address: string
-    address2: string
-    city: string
-    country: string
-    state: string
-    postalCode: string
-  }
-}
+export const asFiatSepaInfo = asObject({
+  iban: asString,
+  swift: asString,
+  ownerAddress: asObject({
+    name: asString,
+    address: asString,
+    address2: asMaybe(asString),
+    city: asString,
+    country: asString,
+    state: asString,
+    postalCode: asString
+  })
+})
+export type FiatSepaInfo = ReturnType<typeof asFiatSepaInfo>
 
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
@@ -67,6 +70,9 @@ export interface FiatPluginFormParams {
   headerIconUri?: string
   onSubmit: (fieldInputs: FiatPluginFormField[]) => Promise<void>
 }
+export interface FiatPluginFormResponse {
+  fieldInputs: FiatPluginFormField[]
+}
 
 export interface FiatPluginTransferInfoParams {
   fieldMap: { [fieldName: string]: string }
@@ -97,7 +103,7 @@ export interface FiatPluginUi {
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
-  enterFieldsForm: (params: FiatPluginFormParams) => Promise<void>
+  enterFieldsForm: (params: FiatPluginFormParams) => Promise<FiatPluginFormField[]>
   transferInfo: (params: FiatPluginTransferInfoParams) => Promise<void>
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
@@ -111,6 +117,8 @@ export interface FiatPluginFactoryArgs {
   disablePlugins: DisablePluginMap
   showUi: FiatPluginUi
   account: EdgeAccount
+  state: RootState
+  dispatch: Dispatch
 }
 
 export interface FiatPluginRegionCode {

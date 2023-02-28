@@ -16,12 +16,14 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import s from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
+import { RootState } from '../../reducers/RootReducer'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
+import { GuiExchangeRates } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
@@ -77,10 +79,12 @@ interface StateProps {
   countryCode: string
   developerModeOn: boolean
   disablePlugins: NestedPluginMap
+  state: RootState
 }
 
 interface DispatchProps {
   updateCountryCode: (countryCode: string) => void
+  dispatch: Dispatch
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -222,7 +226,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, disablePlugins, navigation, route, account } = this.props
+    const { countryCode, disablePlugins, navigation, route, account, state } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -271,7 +275,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         regionCode: { countryCode },
         paymentType,
         navigation,
-        account
+        account,
+        state,
+        dispatch: this.props.dispatch
       })
     } else {
       // Launch!
@@ -371,7 +377,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
             <FastImage
-              source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+              source={{
+                uri: `${FLAG_LOGO_URL}/${'filename' in countryData ? countryData.filename : countryData.name.toLowerCase().replace(' ', '-')}.png`
+              }}
               style={styles.selectedCountryFlag}
             />
           )}
@@ -473,11 +481,13 @@ export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
     coreDisklet: state.core.disklet,
     countryCode: state.ui.settings.countryCode,
     developerModeOn: state.ui.settings.developerModeOn,
-    disablePlugins: state.ui.exchangeInfo[params.direction].disablePlugins
+    disablePlugins: state.ui.exchangeInfo[params.direction].disablePlugins,
+    state: state
   }),
   dispatch => ({
     updateCountryCode(countryCode: string) {
       dispatch(updateOneSetting({ countryCode }))
-    }
+    },
+    dispatch
   })
 )(withTheme(GuiPluginList))

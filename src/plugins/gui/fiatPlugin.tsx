@@ -9,13 +9,16 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
+import { RootState } from '../../reducers/RootReducer'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { Dispatch } from '../../types/reduxTypes'
 import { NavigationProp } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
+  FiatPluginFormField,
   FiatPluginFormParams,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
@@ -32,8 +35,10 @@ export const executePlugin = async (params: {
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   paymentType?: FiatPaymentType
   regionCode: FiatPluginRegionCode
+  state: RootState
+  dispatch: Dispatch
 }): Promise<void> => {
-  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode } = params
+  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode, state, dispatch } = params
   const { pluginId } = guiPlugin
   const isBuy = direction === 'buy'
 
@@ -88,7 +93,10 @@ export const executePlugin = async (params: {
           headerIconUri,
           headerTitle,
           forms,
-          onSubmit
+          onSubmit: async (fieldInputs: FiatPluginFormField[]) => {
+            await onSubmit(fieldInputs)
+            resolve(fieldInputs)
+          }
         })
       })
     },
@@ -105,7 +113,7 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ disablePlugins, showUi, account })
+  const plugin = await guiPlugin.nativePlugin({ disablePlugins, showUi, account, state, dispatch })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }

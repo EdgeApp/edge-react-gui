@@ -40,6 +40,7 @@ export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): st
 }
 
 export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string): string | undefined => {
+  console.debug('getBestError: ', errorQuotes)
   let bestError: FiatProviderQuoteError | undefined
   for (const eq of errorQuotes) {
     const errorQuote = eq.quoteError

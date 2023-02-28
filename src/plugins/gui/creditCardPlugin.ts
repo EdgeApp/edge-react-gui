@@ -58,8 +58,10 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
   try {
     const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
     pluginPriority = asFiatPluginPriorities(await response.json())
+
     // @ts-expect-error
     priorityArray = createPriorityArray(pluginPriority[pluginId])
+    console.debug(priorityArray)
   } catch (e: any) {
     console.log(e.message)
     // This is ok. We just use default values
@@ -179,8 +181,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           for (const quote of quotes) {
             if (quote.direction !== 'buy') continue
             // @ts-expect-error
-            if (pluginPriority[pluginId] != null && pluginPriority[pluginId][quote.pluginId] <= 0) continue
-            goodQuotes.push(quote)
+            if (pluginPriority[pluginId] != null && pluginPrioritygoodQuotes.push(quote)[pluginId][quote.pluginId] <= 0) continue
           }
 
           if (goodQuotes.length === 0) {

@@ -67,6 +67,7 @@ export type Action =
   | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
+  | { type: 'EXCHANGE_RATES/SUBSCRIBE'; data: { extraExchangeRatePairs: string[] } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS'
       data: { activeWalletIds: string[] }

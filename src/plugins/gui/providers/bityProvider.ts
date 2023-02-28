@@ -1,4 +1,4 @@
-// import { div, gt, lt, mul, toFixed } from 'biggystring'
+import { lt } from 'biggystring'
 import { asArray, asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
@@ -14,10 +14,11 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+
 const pluginId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
-const pluginDisplayName = 'SEPA Bank Transfer'
+const pluginDisplayName = 'Bity'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {
@@ -67,7 +68,8 @@ export type BityCurrencyTag = ReturnType<typeof asBityCurrencyTag>
 const asBityQuote = asObject({
   input: asObject({
     amount: asString,
-    currency: asString
+    currency: asString,
+    minimum_amount: asString
   }),
   output: asObject({
     amount: asString,
@@ -112,6 +114,12 @@ export interface BityBuyOrderRequest {
     bic_swift: string
     owner: {
       name: string
+      address: string
+      address_complement: string
+      city: string
+      country: string
+      state: string
+      zip: string
     }
   }
   output: {
@@ -152,7 +160,6 @@ const CURRENCY_PLUGINID_MAP: StringMap = {
 }
 
 export async function apiEstimate(data: BityQuoteRequest) {
-  console.debug('apiEstimate: ' + JSON.stringify(data, null, 2))
   const request = {
     method: 'POST',
     headers: {
@@ -168,7 +175,7 @@ export async function apiEstimate(data: BityQuoteRequest) {
     const newData = result.json()
     return newData
   }
-  throw new Error('Unable to process request at this time: code 35')
+  throw new Error('Unable to process request at this time: ' + JSON.stringify(result, null, 2))
 }
 
 const signMessage = async (wallet: EdgeCurrencyWallet, message: string) => {
@@ -327,7 +334,7 @@ export const bityProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const {
-          // amountType, // input amount type - fiat | crypto
+          amountType, // input amount type - fiat | crypto
           direction,
           exchangeAmount,
           fiatCurrencyCode,
@@ -336,29 +343,26 @@ export const bityProvider: FiatProviderFactory = {
           tokenId,
           sepaInfo
         } = params
-        console.debug('getQuote')
+        const isBuy = direction === 'buy'
+        if (isBuy && amountType === 'crypto') throw new Error('Bity only supports fiat buy quotes')
+        if (!isBuy && amountType === 'fiat') throw new Error('Bity only supports crypto sell quotes')
         if (sepaInfo == null) throw new Error('No SEPA info given')
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+
         let foundPaymentType = false
-        console.debug('getQuote0: ' + paymentTypes)
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
           if (allowedPaymentTypes[t]) {
             foundPaymentType = true
           }
         }
-        console.debug('getQuote00')
         if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
-        console.debug('getQuote1: ' + JSON.stringify(allowedCurrencyCodes, null, 2))
-        console.debug('getQuote11: ' + tokenId.pluginId)
-        console.debug('getQuote111: ' + fiatCurrencyCode)
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[tokenId.pluginId][tokenId?.tokenId ?? ''])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
+
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity could not query supported currencies')
 
-        console.debug('getQuote2')
-        const isBuy = direction === 'buy'
         const inputCurrencyCode = isBuy ? fiatCurrencyObj.code : cryptoCurrencyObj.code
         const outputCurrencyCode = isBuy ? cryptoCurrencyObj.code : fiatCurrencyObj.code
         const quoteRequest: BityQuoteRequest = {
@@ -370,13 +374,18 @@ export const bityProvider: FiatProviderFactory = {
             currency: outputCurrencyCode
           }
         }
-        console.debug('getQuote3')
 
+        console.debug('apiQuote req: ' + JSON.stringify(quoteRequest, null, 2))
         const result = await apiEstimate(quoteRequest)
+        console.debug('apiQuote res: ' + JSON.stringify(result, null, 2))
         const bityQuote = asBityQuote(result)
 
         console.debug('Got Bity quote')
         console.debug(JSON.stringify(bityQuote, null, 2))
+
+        if (lt(exchangeAmount, bityQuote.input.minimum_amount)) {
+          throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(bityQuote.input.minimum_amount) })
+        }
 
         const paymentQuote: FiatProviderQuote = {
           pluginId,
@@ -392,13 +401,14 @@ export const bityProvider: FiatProviderFactory = {
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+            console.debug('approveQuote')
             const { coreWallet, showUi } = approveParams
             const { iban, swift, ownerAddress } = sepaInfo
             const { name, address, address2, city, country, state, postalCode } = ownerAddress
             const owner = {
               name,
               address,
-              address_complement: address2,
+              address_complement: address2 ?? '',
               city,
               country,
               state,
@@ -440,7 +450,7 @@ export const bityProvider: FiatProviderFactory = {
                   }
                 })
 
-            console.debug('providerOrderRes: ', JSON.stringify(orderRes, null, 2))
+            console.debug('approveQuote Res: ', JSON.stringify(orderRes, null, 2))
             // TODO:
             await showUi.transferInfo({ fieldMap: {} })
           },

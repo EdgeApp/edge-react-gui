@@ -157,32 +157,16 @@ export const EnterFormScene = React.memo((props: Props) => {
                 returnKeyType="next"
                 label={label}
                 onChangeText={handleUserInput(formField.key)}
-                // value={formField.value ?? ''}
-                value="test"
+                value={formField.value ?? ''}
+                // value="test"
                 autoFocus={false}
+                onFocus={() => {}}
               />
             )
           })}
         </View>
       ))}
-      {/* <OutlinedTextInput returnKeyType="next" label="IBAN" onChangeText={handleUserInput('iban')} value={fieldInputs.iban} autoFocus={false} />
-      <OutlinedTextInput returnKeyType="next" label="Swift Code" onChangeText={handleUserInput('swiftCode')} value={fieldInputs.swiftCode} autoFocus={false} />
-      <EdgeText style={styles.textFieldHeader}>Home Address</EdgeText>
-      <OutlinedTextInput returnKeyType="next" label="Address" onChangeText={handleUserInput('address')} value={fieldInputs.address} autoFocus={false} />
-      <OutlinedTextInput returnKeyType="next" label="Unit (optional)" onChangeText={handleUserInput('unit')} value={fieldInputs.unit} autoFocus={false} />
-      <OutlinedTextInput returnKeyType="next" label="City" onChangeText={handleUserInput('city')} value={fieldInputs.city} autoFocus={false} />
-      <OutlinedTextInput returnKeyType="next" label="State" onChangeText={handleUserInput('state')} value={fieldInputs.state} autoFocus={false} />
-      <OutlinedTextInput
-        returnKeyType="next"
-        label="Postal Code"
-        onChangeText={handleUserInput('postalCode')}
-        value={fieldInputs.postalCode}
-        autoFocus={false}
-      /> */}
       <MainButton label={s.strings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
-      {/* <TappableCard marginRem={[0, 0, 0, 0]} onPress={handleCountrySelectionModal}>
-        <EdgeText>{fieldInputs.countryCode}</EdgeText>
-      </TappableCard> */}
     </SceneWrapper>
   )
 })

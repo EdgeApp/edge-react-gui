@@ -19,6 +19,17 @@ const asRatesResponse = asObject({
   )
 })
 
+export function subscribeToExchangeRates(extraExchangeRatePairs: string[]): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    console.debug('subscribing to: ' + extraExchangeRatePairs)
+    const state = getState()
+    dispatch({
+      type: 'EXCHANGE_RATES/SUBSCRIBE',
+      data: { extraExchangeRatePairs: [...state.extraExchangeRatePairs, ...extraExchangeRatePairs] }
+    })
+  }
+}
+
 export function updateExchangeRates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
@@ -33,7 +44,7 @@ export function updateExchangeRates(): ThunkAction<Promise<void>> {
 async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   const { account } = state.core
   const { currencyWallets } = account
-
+  const { extraExchangeRatePairs } = state
   const accountIsoFiat = state.ui.settings.defaultIsoFiat
 
   const exchangeRates: Array<{ currency_pair: string; date?: string }> = []
@@ -49,6 +60,12 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
     exchangeRates.push({ currency_pair: `${currencyCode}_${walletIsoFiat}` })
     exchangeRates.push({ currency_pair: `${currencyCode}_${accountIsoFiat}` })
     exchangeRates.push({ currency_pair: `${currencyCode}_iso:USD`, date: `${yesterdayDate}` })
+    for (const extraExchangeRatePair of extraExchangeRatePairs) {
+      console.debug('buildExchangeRates extraExchangeRatePair: ' + extraExchangeRatePair)
+      exchangeRates.push({ currency_pair: `iso:USD_iso:EUR` })
+      exchangeRates.push({ currency_pair: extraExchangeRatePair })
+    }
+
     // now add tokens, if they exist
     if (walletIsoFiat !== 'iso:USD') {
       exchangeRates.push({ currency_pair: `iso:USD_${walletIsoFiat}` })

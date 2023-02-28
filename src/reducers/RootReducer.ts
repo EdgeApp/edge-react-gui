@@ -19,6 +19,7 @@ const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 export interface RootState {
   readonly contacts: GuiContact[]
   readonly deviceReferral: DeviceReferral
+  readonly extraExchangeRatePairs: string[]
   readonly exchangeRates: GuiExchangeRates
 
   readonly isLoggedIn: boolean
@@ -55,6 +56,16 @@ export const rootReducer = combineReducers<RootState, Action>({
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
+  extraExchangeRatePairs: (state = [], action: Action): string[] => {
+    switch (action.type) {
+      case 'EXCHANGE_RATES/SUBSCRIBE':
+        return action.data.extraExchangeRatePairs
+      case 'LOGOUT':
+        return []
+      default:
+        return state
+    }
+  },
   exchangeRates: (state = {}, action: Action): GuiExchangeRates => {
     switch (action.type) {
       case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':

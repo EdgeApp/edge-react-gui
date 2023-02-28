@@ -1,8 +1,8 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { fiatPluginSepa } from '../../plugins/gui/bankAddressPlugin'
 import { creditCardPlugin } from '../../plugins/gui/creditCardPlugin'
+import { sepaPlugin } from '../../plugins/gui/sepaPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -111,7 +111,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     needsCountryCode: true,
     queryPromoCode: 'client_value',
     displayName: 'BityIsh',
-    nativePlugin: fiatPluginSepa
+    nativePlugin: sepaPlugin
   },
   bitrefill: {
     pluginId: 'bitrefill',
