@@ -10,6 +10,7 @@ import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { updateAssetOverrides } from '../../util/serverState'
+import { snooze } from '../../util/utils'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
 import { AutoLogout } from './AutoLogout'
@@ -44,6 +45,8 @@ export function Services(props: Props) {
     if (account?.waitForAllWallets == null) return
     await account.waitForAllWallets()
 
+    // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
+    await snooze(5000)
     dispatch(checkCompromisedKeys(navigation))
   }, [account])
 
