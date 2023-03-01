@@ -69,6 +69,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       const { key, pluginId, tokenId } = item
       map[key] = defaultSelection.find(edgeTokenId => edgeTokenId.pluginId === pluginId && edgeTokenId.tokenId === tokenId) != null
       if (item.walletType === 'wallet:bitcoin-bip44') map[key] = false // HACK: Make sure we don't select both bitcoin wallet choices
+      if (item.walletType === 'wallet:litecoin-bip44') map[key] = false // HACK: Make sure we don't select both litecoin wallet choices
       return map
     }, {})
   })
@@ -131,16 +132,14 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           const renderRow = (walletId: string) => {
             if (walletId === PLACEHOLDER_WALLET_ID) {
               return (
-                <View style={{ marginLeft: theme.rem(0.5) }}>
-                  <CreateWalletSelectCryptoRow
-                    pluginId={pluginId}
-                    walletName=""
-                    onPress={() => {
-                      bridge.resolve(PLACEHOLDER_WALLET_ID)
-                    }}
-                    rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
-                  />
-                </View>
+                <CreateWalletSelectCryptoRow
+                  pluginId={pluginId}
+                  walletName=""
+                  onPress={() => {
+                    bridge.resolve(PLACEHOLDER_WALLET_ID)
+                  }}
+                  rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
+                />
               )
             }
 
