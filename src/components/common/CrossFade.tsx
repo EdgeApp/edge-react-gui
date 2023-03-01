@@ -32,7 +32,7 @@ export function CrossFade(props: Props): JSX.Element {
   React.Children.forEach(children, child => {
     if (child != null && typeof child === 'object' && 'key' in child && typeof child.key === 'string') {
       out.push(
-        <CrossFadeChild activeKey={activeKey} childKey={child.key} duration={duration}>
+        <CrossFadeChild key={child.key} activeKey={activeKey} childKey={child.key} duration={duration}>
           {child}
         </CrossFadeChild>
       )

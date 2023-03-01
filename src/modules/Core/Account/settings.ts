@@ -49,7 +49,16 @@ export const asSyncedAccountSettings = asObject({
     PASSWORD_RECOVERY_REMINDERS_SHOWN
   ),
   walletsSort: asOptional(asSortOption, 'manual'),
-  denominationSettings: asOptional(asDenominationSettings, {})
+  denominationSettings: asOptional(asDenominationSettings, {}),
+  securityCheckedWallets: asMaybe(
+    asObject(
+      asObject({
+        checked: asBoolean,
+        modalShown: asNumber
+      })
+    ),
+    {}
+  )
 })
 
 // Default Account Settings

@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -20,6 +20,7 @@ import { WalletCreateItem } from '../themed/WalletList'
 
 interface Props {
   navigation: NavigationProp<'migrateWalletSelectCrypto'>
+  route: RouteProp<'migrateWalletSelectCrypto'>
 }
 
 export interface MigrateWalletItem extends WalletCreateItem {
@@ -27,7 +28,8 @@ export interface MigrateWalletItem extends WalletCreateItem {
 }
 
 const MigrateWalletSelectCryptoComponent = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { preSelectedWalletIds = [] } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -83,7 +85,13 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     return list
   }, [currencyWallets])
 
-  const [selectedItems, setSelectedItems] = React.useState<Set<string>>(new Set())
+  const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
+    const out: Set<string> = new Set()
+    for (const migrateWalletItem of migrateWalletList) {
+      if (preSelectedWalletIds.includes(migrateWalletItem.createWalletIds[0])) out.add(migrateWalletItem.key)
+    }
+    return out
+  })
 
   const numSelected = selectedItems.size
 
