@@ -1009,34 +1009,14 @@ exports[`FioAddressList should render with loading props 1`] = `
       </ClickableText>
     </View>
   </SceneWrapper>
-  <Fade
-    noFadeIn={true}
-    visible={true}
-  >
-    <View
-      style={
-        Object {
-          "flex": 1,
-          "height": 1334,
-          "left": 0,
-          "position": "absolute",
-          "top": 0,
-          "width": "100%",
-        }
+  <FullScreenLoader
+    indicatorStyles={
+      Object {
+        "alignSelf": "center",
+        "flex": 1,
+        "marginTop": 56,
       }
-    >
-      <ActivityIndicator
-        color="#00f1a2"
-        size="large"
-        style={
-          Object {
-            "alignSelf": "center",
-            "flex": 1,
-            "marginTop": 56,
-          }
-        }
-      />
-    </View>
-  </Fade>
+    }
+  />
 </React.Fragment>
 `;

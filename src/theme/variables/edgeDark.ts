@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
@@ -25,7 +25,6 @@ import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
-import { PLATFORM } from './platform'
 
 const palette = {
   white: '#FFFFFF',
@@ -68,6 +67,8 @@ const palette = {
   QuicksandSemiBold: 'Quicksand-SemiBold',
   QuicksandBold: 'Quicksand-Bold'
 }
+
+const deviceWidth = Dimensions.get('window').width
 
 export const edgeDark: Theme = {
   rem(size: number): number {
@@ -257,7 +258,7 @@ export const edgeDark: Theme = {
   confirmationSliderThumb: palette.edgeMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth: deviceWidth >= 340 ? 295 : deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines

@@ -8,11 +8,11 @@ import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
-import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { FullScreenLoader } from '../progress-indicators/FullScreenLoader'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableText } from '../themed/ClickableText'
@@ -171,11 +171,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
           </View>
         </SceneWrapper>
 
-        <Fade visible={initLoading} noFadeIn>
-          <View style={styles.initLoadingContainer}>
-            <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
-          </View>
-        </Fade>
+        {!initLoading ? null : <FullScreenLoader indicatorStyles={styles.loading} />}
       </>
     )
   }
@@ -191,14 +187,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     marginTop: theme.rem(2.5),
     alignSelf: 'center'
-  },
-  initLoadingContainer: {
-    flex: 1,
-    top: 0,
-    left: 0,
-    position: 'absolute',
-    width: '100%',
-    height: PLATFORM.deviceHeight
   },
   row: {
     flex: 1
