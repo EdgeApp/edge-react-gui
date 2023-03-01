@@ -3,6 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RootState } from '../../reducers/RootReducer'
+import { FormFieldProps, FormProps, HomeAddress } from '../../types/FormTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
@@ -11,19 +12,24 @@ export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iac
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
 
+export interface FiatSepaOwnerAddress extends HomeAddress {
+  name: string
+}
+
 export const asFiatSepaInfo = asObject({
   iban: asString,
   swift: asString,
-  ownerAddress: asObject({
+  ownerAddress: asObject<FiatSepaOwnerAddress>({
     name: asString,
     address: asString,
     address2: asMaybe(asString),
     city: asString,
     country: asString,
-    state: asString,
-    postalCode: asString
+    postalCode: asString,
+    state: asString
   })
 })
+
 export type FiatSepaInfo = ReturnType<typeof asFiatSepaInfo>
 
 export interface FiatPluginGetMethodsResponse {
@@ -43,35 +49,15 @@ export interface FiatPluginEnterAmountParams {
   headerIconUri?: string
 }
 
-// Field appearance and how user input is handled for a particular form field.
-// Defines what keyboard type, validation, autofill, etc is applied to the
-// field. Independent from the value stored. Ex: A 'number' type will get user
-// input with a number-only keypad, but we may want to store that value as a
-// string.
-export type FiatPluginFormFieldType = 'text' | 'number' | 'address' | 'zip'
-
-export interface FiatPluginFormField {
-  key: string
-  label: string
-  inputType: FiatPluginFormFieldType
-  value?: string
-}
-
-export type FiatPluginFormType = 'addressForm' | 'sepaForm'
-export interface FiatPluginForm {
-  fields: FiatPluginFormField[]
-  formType?: FiatPluginFormType
-  key: string
-  title: string
-}
-export interface FiatPluginFormParams {
-  forms: FiatPluginForm[] // Keys in all form fields must be unique
+export interface FiatPluginSepaFormParams {
+  countryCode: string
+  forms: FormProps[] // Keys in all form fields must be unique
   headerTitle: string
   headerIconUri?: string
-  onSubmit: (fieldInputs: FiatPluginFormField[]) => Promise<void>
+  onSubmit: (fieldInputs: FormFieldProps[]) => Promise<void>
 }
-export interface FiatPluginFormResponse {
-  fieldInputs: FiatPluginFormField[]
+export interface FiatPluginSepaFormResponse {
+  fieldInputs: FormFieldProps[]
 }
 
 export interface FiatPluginTransferInfoParams {
@@ -103,7 +89,7 @@ export interface FiatPluginUi {
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
-  enterFieldsForm: (params: FiatPluginFormParams) => Promise<FiatPluginFormField[]>
+  enterFieldsForm: (params: FiatPluginSepaFormParams) => Promise<FormFieldProps[]>
   transferInfo: (params: FiatPluginTransferInfoParams) => Promise<void>
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>

@@ -3,7 +3,7 @@ export type LocaleStringKey = keyof typeof strings
 const strings = {
   account_owner: 'Account Owner',
   address_line_1: 'Address Line 1',
-  address_line_2: 'Address Line 2',
+  address_line_2: 'Address Line 2 (optional)',
   city: 'City',
   state_province_region: 'State/Provice/Region',
   zip_postal_code: 'Zip/Postal Code',

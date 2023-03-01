@@ -9,9 +9,10 @@ import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInp
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
-import { FiatPluginEnterAmountResponse, FiatPluginForm, FiatPluginFormField, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
+import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
+import { FormFieldProps, FormProps } from './FormTypes'
 import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
@@ -211,10 +212,11 @@ interface RouteParamList {
     headerIconUri?: string
   }
   guiPluginEnterForm: {
+    countryCode: string
+    forms: FormProps[]
     headerIconUri?: string
     headerTitle: string
-    forms: FiatPluginForm[]
-    onSubmit: (fieldInputs: FiatPluginFormField[]) => Promise<void>
+    onSubmit: (fieldInputs: FormFieldProps[]) => Promise<void>
   }
   loanDashboard: {}
   loanDetails: {

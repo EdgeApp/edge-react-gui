@@ -1,27 +1,18 @@
-import { eq, mul, toFixed } from 'biggystring'
-import { useDispatch } from 'react-redux'
+import { eq, toFixed } from 'biggystring'
 import { sprintf } from 'sprintf-js'
 
 import { subscribeToExchangeRates, updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import s from '../../locales/strings'
 import { convertCurrency, convertCurrencyFromState } from '../../selectors/WalletSelectors'
+import { FormFieldProps } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout, snooze } from '../../util/utils'
-import {
-  asFiatSepaInfo,
-  FiatPlugin,
-  FiatPluginFactory,
-  FiatPluginFactoryArgs,
-  FiatPluginFormField,
-  FiatPluginGetMethodsResponse,
-  FiatPluginStartParams,
-  FiatSepaInfo
-} from './fiatPluginTypes'
-import { FiatProvider, FiatProviderAssetMap, FiatProviderError, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams, FiatSepaInfo } from './fiatPluginTypes'
+import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { bityProvider } from './providers/bityProvider'
 
@@ -91,6 +82,7 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
 
       // Grab address/bank info
       await showUi.enterFieldsForm({
+        countryCode: regionCode.countryCode,
         headerIconUri: '',
         headerTitle: s.strings.enter_bank_info_title,
         forms: [
@@ -103,17 +95,17 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
               {
                 key: 'name',
                 label: s.strings.account_owner,
-                inputType: 'text'
+                dataType: 'text'
               },
               {
                 key: 'iban',
                 label: s.strings.iban,
-                inputType: 'text'
+                dataType: 'text'
               },
               {
                 key: 'swift',
                 label: s.strings.swift_code,
-                inputType: 'text'
+                dataType: 'text'
               }
             ]
           },
@@ -127,32 +119,32 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
               {
                 key: 'address',
                 label: s.strings.address_line_1,
-                inputType: 'text'
+                dataType: 'address'
               },
               {
                 key: 'address2',
                 label: s.strings.address_line_2,
-                inputType: 'text'
+                dataType: 'text'
               },
               {
                 key: 'city',
                 label: s.strings.city,
-                inputType: 'text'
+                dataType: 'text'
               },
               {
                 key: 'state',
                 label: s.strings.state_province_region,
-                inputType: 'text'
+                dataType: 'text'
               },
               {
                 key: 'postalCode',
                 label: s.strings.zip_postal_code,
-                inputType: 'text'
+                dataType: 'text'
               }
             ]
           }
         ],
-        onSubmit: async (fieldInputs: FiatPluginFormField[]) => {
+        onSubmit: async (fieldInputs: FormFieldProps[]) => {
           console.debug('onSubmit callback: ' + JSON.stringify(fieldInputs, null, 2))
 
           // Validate user input
@@ -213,14 +205,13 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
             )
           }
 
+          // Get quote from user amount input
           if (sepaInfo == null) return
 
           const coreWallet = account.currencyWallets[walletId]
           const fiatCurrencyCode = 'iso:EUR' // TODO: Allow other accepted fiat codes
           const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
           const currencyPluginId = coreWallet.currencyInfo.pluginId
-
-          // Get quote from user amount input
           let enterAmountMethods: FiatPluginGetMethodsResponse
           let counter = 0
           let bestQuote: FiatProviderQuote | undefined
@@ -246,16 +237,10 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
               let quoteParams: FiatProviderGetQuoteParams
 
               if (sourceFieldNum === 1) {
-                // User entered a fiat value. Convert to crypto
-                let exchangeAmount = isBuy ? value : convertCurrency(state, fiatCurrencyCode, currencyCode, value)
-                if (!isBuy && exchangeAmount === '0') {
-                  subscribeToExchangeRates([`${currencyCode}_${fiatCurrencyCode}`])
-                  updateExchangeRates()
-                  while (exchangeAmount == null) exchangeAmount = dispatch(convertCurrencyFromState(fiatCurrencyCode, currencyCode, value))
-                }
+                // User entered a fiat value.
                 quoteParams = {
                   tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
-                  exchangeAmount,
+                  exchangeAmount: value,
                   fiatCurrencyCode,
                   amountType: isBuy ? 'fiat' : 'crypto',
                   direction,
@@ -264,14 +249,17 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
                   sepaInfo
                 }
               } else {
-                // User entered a crypto value. Convert to fiat
-                let exchangeAmount = isBuy ? toFixed(dispatch(convertCurrencyFromState(currencyCode, fiatCurrencyCode, value)), 0, 2) : value
+                // User entered a crypto value. Convert to fiat since only fiat
+                // quotes supported
+                let exchangeAmount = isBuy ? toFixed(convertCurrency(state, currencyCode, fiatCurrencyCode, value), 0, 2) : value
+                // let exchangeAmount = isBuy ? toFixed(dispatch(convertCurrencyFromState(currencyCode, fiatCurrencyCode, value))
                 if (isBuy && exchangeAmount === '0') {
                   await dispatch(subscribeToExchangeRates([`${fiatCurrencyCode}_${currencyCode}`]))
                   updateExchangeRates()
                   while (exchangeAmount === '0') {
                     await snooze(1000)
                     exchangeAmount = toFixed(dispatch(convertCurrencyFromState(currencyCode, fiatCurrencyCode, value)), 0, 2)
+                    // exchangeAmount = toFixed(convertCurrency(state, currencyCode, fiatCurrencyCode, value), 0, 2)
                   }
                 }
 
@@ -366,15 +354,13 @@ export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArg
             }
           })
 
-          showUi.popScene()
           if (bestQuote == null) {
             return
           }
           await bestQuote.approveQuote({ showUi, coreWallet })
+          showUi.popScene()
         }
       })
-
-      showUi.popScene()
 
       // // TODO: Support multiple providers
       // const quoteParams: FiatProviderGetQuoteParams = {

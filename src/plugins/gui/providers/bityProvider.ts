@@ -344,8 +344,7 @@ export const bityProvider: FiatProviderFactory = {
           sepaInfo
         } = params
         const isBuy = direction === 'buy'
-        if (isBuy && amountType === 'crypto') throw new Error('Bity only supports fiat buy quotes')
-        if (!isBuy && amountType === 'fiat') throw new Error('Bity only supports crypto sell quotes')
+        if (amountType === 'crypto') throw new Error('Bity only supports fiat buy quotes')
         if (sepaInfo == null) throw new Error('No SEPA info given')
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
 
@@ -363,7 +362,7 @@ export const bityProvider: FiatProviderFactory = {
 
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity could not query supported currencies')
 
-        const inputCurrencyCode = isBuy ? fiatCurrencyObj.code : cryptoCurrencyObj.code
+        const inputCurrencyCode = fiatCurrencyObj.code
         const outputCurrencyCode = isBuy ? cryptoCurrencyObj.code : fiatCurrencyObj.code
         const quoteRequest: BityQuoteRequest = {
           input: {

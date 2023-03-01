@@ -10,6 +10,7 @@ import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { RootState } from '../../reducers/RootReducer'
+import { FormFieldProps } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationProp } from '../../types/routerTypes'
@@ -18,10 +19,9 @@ import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
-  FiatPluginFormField,
-  FiatPluginFormParams,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
+  FiatPluginSepaFormParams,
   FiatPluginTransferInfoParams,
   FiatPluginUi
 } from './fiatPluginTypes'
@@ -86,14 +86,15 @@ export const executePlugin = async (params: {
     popScene: async () => {
       navigation.pop()
     },
-    enterFieldsForm: async (params: FiatPluginFormParams) => {
+    enterFieldsForm: async (params: FiatPluginSepaFormParams) => {
       return new Promise((resolve, reject) => {
-        const { headerIconUri, headerTitle, forms, onSubmit } = params
+        const { countryCode, forms, headerIconUri, headerTitle, onSubmit } = params
         navigation.navigate('guiPluginEnterForm', {
+          countryCode,
           headerIconUri,
           headerTitle,
           forms,
-          onSubmit: async (fieldInputs: FiatPluginFormField[]) => {
+          onSubmit: async (fieldInputs: FormFieldProps[]) => {
             await onSubmit(fieldInputs)
             resolve(fieldInputs)
           }

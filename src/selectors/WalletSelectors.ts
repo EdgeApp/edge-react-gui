@@ -1,7 +1,6 @@
 import { mul } from 'biggystring'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
-import { subscribeToExchangeRates } from '../actions/ExchangeRateActions'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { convertNativeToExchange, zeroString } from '../util/utils'
