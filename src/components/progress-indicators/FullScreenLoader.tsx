@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 
 interface Props {
-  // @ts-expect-error
-  indicatorStyles?: ViewPropTypes.style
+  indicatorStyles?: ViewStyle
   size?: 'large' | 'small'
 }
 
@@ -23,11 +21,12 @@ export class FullScreenLoader extends React.Component<Props> {
 
 const styles = StyleSheet.create({
   loadingContainer: {
-    flex: 1,
-    position: 'absolute',
-    height: PLATFORM.deviceHeight,
-    width: PLATFORM.deviceWidth,
     backgroundColor: THEME.COLORS.OPACITY_GRAY_1,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
     zIndex: 1000
   },
   indicator: {

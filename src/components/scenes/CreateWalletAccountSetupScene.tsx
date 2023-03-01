@@ -1,6 +1,6 @@
 import { EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions'
@@ -14,15 +14,12 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
 import { THEME } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { debounce } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
-
-const deviceWidth = PLATFORM.deviceWidth
 
 interface OwnProps {
   navigation: NavigationProp<'createWalletAccountSetup'>
@@ -136,7 +133,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
                   ...MaterialInputOnWhite.containerStyle,
                   marginTop: scale(16),
                   marginBottom: scale(24),
-                  width: deviceWidth - scale(25) - scale(40) // substract padding and validation icon
+                  width: Dimensions.get('window').width - scale(25) - scale(40) // substract padding and validation icon
                 }}
                 autoFocus
                 autoCorrect={false}

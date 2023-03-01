@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import { Dimensions, ViewStyle } from 'react-native'
 import { TextField, TextFieldProps } from 'react-native-material-textfield'
 
 import { THEME } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 
 interface Props extends TextFieldProps {
   autoFocus?: boolean
@@ -33,7 +32,7 @@ export class FormField extends React.Component<Props> {
 
 const containerStyle: ViewStyle = {
   position: 'relative',
-  width: PLATFORM.deviceWidth / 1.52,
+  width: Dimensions.get('window').width / 1.52,
   height: 60
 }
 
