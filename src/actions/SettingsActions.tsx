@@ -265,7 +265,7 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       )
       logActivity(`Restore Wallets: ${account.username}`)
 
-      navigation.navigate('walletList', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
     }
   }
 }

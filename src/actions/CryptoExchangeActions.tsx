@@ -70,7 +70,7 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      navigation.navigate('exchange', {})
+      navigation.navigate('exchangeTab', { screen: 'exchange' })
 
       const insufficientFunds = asMaybeInsufficientFundsError(error)
       if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
@@ -106,7 +106,7 @@ export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSw
       })
       dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
     } catch (error: any) {
-      navigation.navigate('exchange', {})
+      navigation.navigate('exchangeTab', { screen: 'exchange' })
       dispatch(processSwapQuoteError(error))
     }
   }

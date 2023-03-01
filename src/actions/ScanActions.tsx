@@ -338,10 +338,10 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedW
         ))
       }
       if (threeButtonModal === 'buy') {
-        navigation.navigate('pluginListBuy', { direction: 'buy' })
+        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
         dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-        navigation.navigate('exchange', {})
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:
