@@ -48,7 +48,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
   done = () => {
     const { navigation } = this.props
     this.setState({ showButton: false })
-    navigation.navigate('exchange', {})
+    navigation.navigate('exchangeTab', { screen: 'exchange' })
   }
 
   showConfetti = async () => {

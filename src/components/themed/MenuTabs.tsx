@@ -19,11 +19,11 @@ import { VectorIcon } from './VectorIcon'
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 const title: { readonly [key: string]: string } = {
-  coinRanking: s.strings.title_markets,
-  walletList: s.strings.title_wallets,
-  pluginListBuy: s.strings.title_buy,
-  pluginListSell: s.strings.title_sell,
-  exchange: s.strings.title_exchange,
+  marketsTab: s.strings.title_markets,
+  walletsTab: s.strings.title_wallets,
+  buyTab: s.strings.title_buy,
+  sellTab: s.strings.title_sell,
+  exchangeTab: s.strings.title_exchange,
   extraTab: s.strings[extraTabString]
 }
 
@@ -38,19 +38,20 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   let routes = state.routes
 
   const handleOnPress = useHandler((route: string) => {
+    const currentName = routes[activeTabIndex].name
     switch (route) {
-      case 'coinRanking':
-        return navigation.navigate('coinRanking', {})
-      case 'walletList':
-        return navigation.navigate('walletList', {})
-      case 'pluginListBuy':
-        return navigation.navigate('pluginListBuy', { direction: 'buy' })
-      case 'pluginListSell':
-        return navigation.navigate('pluginListSell', { direction: 'sell' })
-      case 'exchange':
-        return navigation.navigate('exchange', {})
+      case 'walletsTab':
+        return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
+      case 'buyTab':
+        return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+      case 'sellTab':
+        return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
+      case 'exchangeTab':
+        return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
+      case 'marketsTab':
+        return navigation.navigate('marketsTab', currentName === 'marketsTab' ? { screen: 'coinRanking' } : {})
       case 'extraTab':
-        return navigation.navigate('extraTab', undefined)
+        return navigation.navigate('extraTab')
     }
   })
 
@@ -65,11 +66,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         {routes.map((route, index: number) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon: { readonly [key: string]: JSX.Element } = {
-            coinRanking: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
-            walletList: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-            pluginListBuy: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-            pluginListSell: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-            exchange: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+            marketsTab: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
+            walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+            buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+            sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+            exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
             extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
           }
           return (

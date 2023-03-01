@@ -180,6 +180,19 @@ const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
 const Tab = createBottomTabNavigator<AppParamList>()
 
+const defaultScreenOptions = {
+  title: '',
+  headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
+  headerLeft: () => <BackButton />,
+  headerRight: () => <SideMenuButton />,
+  headerShown: true,
+  headerTransparent: true
+}
+const firstSceneScreenOptions = {
+  headerLeft: () => <HeaderTextButton type="help" placement="left" />,
+  headerTitle: EdgeLogoHeader
+}
+
 export const Main = () => {
   React.useEffect(() => {
     logEvent('Start_App')
@@ -251,17 +264,7 @@ const EdgeAppStack = () => {
   const dispatch = useDispatch()
 
   return (
-    <Stack.Navigator
-      initialRouteName="edgeTabs"
-      screenOptions={{
-        title: '',
-        headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
-        headerLeft: () => <BackButton />,
-        headerRight: () => <SideMenuButton />,
-        headerShown: true,
-        headerTransparent: true
-      }}
-    >
+    <Stack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="edgeTabs"
         component={EdgeTabs}
@@ -373,7 +376,7 @@ const EdgeAppStack = () => {
         name="pluginViewBuy"
         component={GuiPluginViewScene}
         options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
+          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" placement="right" />,
           headerLeft: () => <PluginBackButton />
         }}
@@ -394,15 +397,6 @@ const EdgeAppStack = () => {
           headerLeft: () => <PluginBackButton />
         }}
       />
-      <Stack.Screen
-        name="exchangeQuoteProcessing"
-        component={CryptoExchangeQuoteProcessingScreen}
-        options={{
-          headerLeft: () => null,
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
       <Stack.Screen
         name="exchangeSuccess"
         component={CryptoExchangeSuccessScene}
@@ -733,56 +727,139 @@ const EdgeAppStack = () => {
 }
 
 const EdgeTabs = () => {
-  const dispatch = useDispatch()
-
   return (
     <Tab.Navigator
-      initialRouteName="walletList"
+      initialRouteName="walletsTab"
       tabBar={props => <MenuTabs {...props} />}
       screenOptions={{
-        title: '',
-        headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
-        headerLeft: () => <HeaderTextButton type="help" placement="left" />,
-        headerRight: () => <SideMenuButton />,
-        headerShown: true,
-        headerTransparent: true,
-        unmountOnBlur: true
+        headerShown: false
       }}
     >
-      <Tab.Screen
-        name="walletList"
-        component={WalletListScene}
-        options={{
-          headerTitle: EdgeLogoHeader
+      <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
+      <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
+      <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
+      <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
+      <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
+      <Tab.Screen name="extraTab" component={ExtraTabScene} />
+    </Tab.Navigator>
+  )
+}
+
+const EdgeWalletsTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="transactionList"
+        component={TransactionList}
+        listeners={{
+          focus: () => {
+            requestPermission('contacts').catch(showError)
+          }
         }}
       />
-      <Tab.Screen
-        name="pluginListBuy"
-        // @ts-expect-error
-        component={GuiPluginListScene}
-        route={{ params: { direction: 'buy' } }}
+      <Stack.Screen
+        name="transactionDetails"
+        component={TransactionDetailsScene}
+        options={{
+          headerTitle: () => <TransactionDetailsTitle />
+        }}
+        listeners={{
+          focus: () => {
+            requestPermission('contacts').catch(showError)
+          }
+        }}
       />
-      <Tab.Screen
-        name="pluginListSell"
-        // @ts-expect-error
-        component={GuiPluginListScene}
-        route={{ params: { direction: 'sell' } }}
+    </Stack.Navigator>
+  )
+}
+
+const EdgeBuyTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="pluginViewBuy"
+        component={GuiPluginViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
+          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerLeft: () => <PluginBackButton />
+        }}
       />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerLeft: () => <PluginBackButton />,
+          headerRight: () => null
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeSellTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <Tab.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="pluginViewSell"
+        component={GuiPluginViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
+          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerLeft: () => <PluginBackButton />
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeExchangeTabScreen = () => {
+  const dispatch = useDispatch()
+  return (
+    <Stack.Navigator initialRouteName="exchange" screenOptions={defaultScreenOptions}>
       <Tab.Screen
         name="exchange"
         component={CryptoExchangeScene}
+        options={firstSceneScreenOptions}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
+      <Stack.Screen
+        name="exchangeQuoteProcessing"
+        component={CryptoExchangeQuoteProcessingScreen}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeMarketsTabScreen = () => {
+  const dispatch = useDispatch()
+  return (
+    <Stack.Navigator initialRouteName="coinRanking" screenOptions={defaultScreenOptions}>
       <Tab.Screen
         name="coinRanking"
         component={CoinRankingScene}
+        options={firstSceneScreenOptions}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
-      <Tab.Screen name="extraTab" component={ExtraTabScene} />
-    </Tab.Navigator>
+      <Stack.Screen
+        name="coinRankingDetails"
+        component={CoinRankingDetailsScene}
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+      />
+    </Stack.Navigator>
   )
 }

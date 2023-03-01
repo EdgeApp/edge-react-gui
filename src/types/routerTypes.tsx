@@ -49,6 +49,13 @@ interface RouteParamList {
   edgeTabs: {}
   controlPanel: {}
 
+  // Tabs
+  walletsTab: {}
+  buyTab: {}
+  sellTab: {}
+  exchangeTab: {}
+  marketsTab: {}
+
   // Logged-in scenes:
   changeMiningFee: {
     guiMakeSpendInfo: GuiMakeSpendInfo
@@ -259,8 +266,8 @@ interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: { direction: 'buy' }
-  pluginListSell: { direction: 'sell' }
+  pluginListBuy: {}
+  pluginListSell: {}
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

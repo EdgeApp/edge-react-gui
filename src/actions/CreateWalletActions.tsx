@@ -183,7 +183,7 @@ export function createAccountTransaction(
               notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              navigation.navigate('walletList', {})
+              navigation.navigate('walletsTab', { screen: 'walletList' })
               setTimeout(() => {
                 Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
               }, 750)
