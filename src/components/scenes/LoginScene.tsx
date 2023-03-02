@@ -134,7 +134,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     // Did we get a new recovery link?
     if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
       // Log out if necessary:
-      if (account.username !== null) this.props.logout()
+      if (account.username != null) this.props.logout()
 
       // Pass the link to our component:
       const { passwordRecoveryKey } = pendingDeepLink
