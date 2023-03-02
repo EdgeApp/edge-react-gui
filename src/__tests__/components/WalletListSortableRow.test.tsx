@@ -10,7 +10,7 @@ describe('WalletListSortableRow', () => {
   it('should render with loading wallet', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <WalletListSortableRow wallet={undefined} />
+        <WalletListSortableRow wallet={undefined} onDrag={() => {}} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -42,7 +42,7 @@ describe('WalletListSortableRow', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
-        <WalletListSortableRow wallet={fakeWallet} />
+        <WalletListSortableRow wallet={fakeWallet} onDrag={() => {}} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
