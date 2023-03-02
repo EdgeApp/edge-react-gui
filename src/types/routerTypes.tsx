@@ -218,6 +218,11 @@ interface RouteParamList {
     headerTitle: string
     onSubmit: (fieldInputs: FormFieldProps[]) => Promise<void>
   }
+  guiPluginSepaTransfer: {
+    headerTitle: string
+    labelToValueMap: Map<string, string>
+    promptMessage: string
+  }
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
-import { BackHandler, ScrollView, TouchableOpacity, View } from 'react-native'
+import { BackHandler, NativeSyntheticEvent, ScrollView, TextInputFocusEventData, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { MaterialIcon } from 'react-native-vector-icons/MaterialIcons'
 
@@ -42,7 +42,7 @@ const asKmootResponse = asObject({
 })
 
 const asKmootValidProperties = asObject({
-  housenumber: asOptional(asString),
+  housenumber: asString,
   street: asString,
   city: asString,
   state: asString,
@@ -57,19 +57,20 @@ export const EnterFormScene = React.memo((props: Props) => {
   const disklet = useSelector(state => state.core.disklet)
 
   const [forms, setForms] = React.useState<FormProps[]>([])
+
   const [isNeedsFuzzySearch, setIsNeedsFuzzySearch] = React.useState(false)
   const [searchResults, setSearchResults] = React.useState<HomeAddress[]>([])
-
   const [prevAddressQuery, setPrevAddressQuery] = React.useState<string | undefined>(undefined)
-  const [addressFilters, setAddressFilters] = React.useState<{ [key: string]: string }>({})
-
   const [isHintsDropped, setIsHintsDropped] = React.useState(false)
 
-  const inputBackButtonRef = React.useRef<OutlinedTextInputRef>(null)
+  const addressFieldRef = React.useRef<OutlinedTextInputRef>(null)
 
-  const addressField = React.useMemo(() => {
+  const inputRefs = React.useRef<{ [key: string]: OutlinedTextInputRef | null }>({})
+
+  const addressQuery = React.useMemo(() => {
     const addressForm = forms.find(form => form.fields.find(field => field.key === 'address'))
-    return addressForm != null ? addressForm.fields.find(field => field.key === 'address') : null
+    const addressField = addressForm != null ? addressForm.fields.find(field => field.key === 'address') : null
+    return addressField?.value
   }, [forms])
 
   const handleUserInput = useHandler((formType: FormDataType, fieldKey: string) => (text: string) => {
@@ -77,14 +78,8 @@ export const EnterFormScene = React.memo((props: Props) => {
       const updatedFormFields = form.fields.map(field => {
         if (field.key === fieldKey) {
           field.value = text
-          // Narrow address search results
-          if (formType === 'addressForm') {
-            if (field.dataType === 'address') {
-              setIsNeedsFuzzySearch(true)
-            } else {
-              addressFilters[field.key] = text
-              setAddressFilters({ ...addressFilters })
-            }
+          if (formType === 'addressForm' && field.dataType === 'address') {
+            setIsNeedsFuzzySearch(true)
           }
         }
         return field
@@ -96,14 +91,10 @@ export const EnterFormScene = React.memo((props: Props) => {
     setForms([...updatedForms])
   })
 
-  const handleBackPress = () => {
-    console.debug('back detected')
-    if (isHintsDropped) {
-      setIsHintsDropped(false)
-      return true
-    } else {
-      return false
-    }
+  // When the user taps on the visible background gray area while the address
+  // search results are shown
+  const handleInvisibleTap = () => {
+    setIsHintsDropped(false)
   }
 
   const handleAddressFieldSelect = useHandler(() => {
@@ -114,26 +105,102 @@ export const EnterFormScene = React.memo((props: Props) => {
     setIsHintsDropped(false)
   })
 
-  const handlePeriodicSearch = useHandler(async () => {
-    const addressQuery = addressField?.value as string
+  const isBlurEventRef = React.useRef(false)
 
-    if (isNeedsFuzzySearch) {
+  const handleBlur = useHandler((key: string) => () => {
+    const inputRef = inputRefs.current[key]
+
+    // Special handling takes care of an address field
+    // if (inputRef != null && key.split('_')[1].trim() !== 'address') {
+    if (inputRef != null) {
+      console.debug('BLUR')
+      setTimeout(() => inputRef.blur())
+    }
+  })
+
+  // Populate the address fields with the values from the selected search
+  // results
+  const handleAddressHintPress = useHandler((searchResult: HomeAddress) => () => {
+    console.debug('handleAddressHintPress')
+
+    const updatedForms = forms.map(form => {
+      if (form.formType === 'addressForm') {
+        const updatedFields = form.fields.map(field => {
+          const hintKey = Object.keys(searchResult).find(searchResultKey => searchResultKey === field.key) as keyof typeof searchResult | undefined
+          if (hintKey != null) {
+            return {
+              ...field,
+              value: searchResult[hintKey]
+            }
+          }
+          return field
+        })
+        return {
+          ...form,
+          fields: updatedFields
+        }
+      }
+      return form
+    })
+
+    isBlurEventRef.current = false
+
+    setForms(updatedForms)
+    setIsHintsDropped(false)
+  })
+
+  const handleSubmit = useHandler(async () => {
+    // Save user input to disk
+    forms.forEach(async form => await setDiskletForm(disklet, form))
+
+    // Flatten data for callback
+    onSubmit([...forms.flatMap(form => [...form.fields.flatMap(field => field)])])
+  })
+
+  // TODO: remove initialForms?
+  // Initialize with any saved forms from disklet
+  useAsyncEffect(async () => {
+    const updatedForms = await Promise.all(
+      initialForms.map(async initialForm => {
+        const diskletForm = await getDiskletForm(disklet, initialForm)
+
+        // Only take field values from disklet in case defined strings or keys
+        // change
+        if (
+          diskletForm != null &&
+          initialForm.fields.every(initialFormField => diskletForm.fields.some(diskletFormField => diskletFormField.key === initialFormField.key))
+        ) {
+          initialForm.fields = initialForm.fields.map(initialFormField => {
+            initialFormField.value = diskletForm.fields.find(diskletFormField => diskletFormField.key === initialFormField.key)?.value
+            return initialFormField
+          })
+        }
+        return initialForm
+      })
+    )
+    setForms([...updatedForms])
+
+    // TODO: invisible tap
+    // const backHandler = BackHandler.addEventListener('hardwareBackPress', handleInvisibleTap)
+
+    return () => {}
+  }, [])
+
+  const handlePeriodicSearch = useHandler(async () => {
+    if (isNeedsFuzzySearch && addressQuery != null) {
       setIsNeedsFuzzySearch(false)
 
-      // Check if address field is ready to search - a number and the start of
-      // the street
+      // Check if address field is ready to search
       if (addressQuery != null && addressQuery.split(' ').length >= 2 && prevAddressQuery !== addressQuery) {
         setPrevAddressQuery(addressQuery)
-        console.debug('searching')
 
-        // Fetch fuzzy search
+        // Fetch fuzzy search results
         const res = await fetch(`https://photon.komoot.io/api/?q=${addressQuery}`).catch(e => {
           throw e
         })
         const json = await res.json().catch(e => {
           throw e
         })
-        console.debug(JSON.stringify(json, null, 2))
 
         // Filter valid addresses by country code and if the required address
         // fields are there, then mutate the data to our required address type
@@ -164,86 +231,51 @@ export const EnterFormScene = React.memo((props: Props) => {
         } catch (e) {
           console.debug(e)
         }
+      } else {
+        setSearchResults([])
       }
     }
   })
 
-  const handleAddressHintPress = useHandler((searchResult: HomeAddress) => () => {
-    // TODO: Set address
-  })
-
-  const handleSubmit = useHandler(async () => {
-    // Save user input to disk
-    forms.forEach(async form => await setDiskletForm(disklet, form))
-
-    // Flatten data for callback
-    onSubmit([...forms.flatMap(form => [...form.fields.flatMap(field => field)])])
-  })
-
-  // Initialize with any saved forms from disklet
-  useAsyncEffect(async () => {
-    const updatedForms = await Promise.all(
-      initialForms.map(async initialForm => {
-        const diskletForm = await getDiskletForm(disklet, initialForm)
-
-        // Only set the values in case strings or keys change
-        if (
-          diskletForm != null &&
-          initialForm.fields.every(initialFormField => diskletForm.fields.some(diskletFormField => diskletFormField.key === initialFormField.key))
-        ) {
-          initialForm.fields = initialForm.fields.map(initialFormField => {
-            initialFormField.value = diskletForm.fields.find(diskletFormField => diskletFormField.key === initialFormField.key)?.value
-            return initialFormField
-          })
-        }
-        return initialForm
-      })
-    )
-    setForms([...updatedForms])
-
-    // Handle back button presses
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress)
-
-    return () => backHandler.remove()
-  }, [])
-
   // Periodically run a fuzzy search on changed address user input
   React.useEffect(() => {
-    if (addressField != null) {
-      const task = makePeriodicTask(handlePeriodicSearch, FUZZY_SEARCH_INTERVAL)
-      task.start({ wait: false })
+    const task = makePeriodicTask(handlePeriodicSearch, FUZZY_SEARCH_INTERVAL)
+    task.start({ wait: false })
 
-      return () => task.stop()
-    }
+    return () => task.stop()
   }, [handlePeriodicSearch])
 
   // Changes to the number of address hints results
   React.useEffect(() => {
     if (searchResults.length > 0) setIsHintsDropped(true)
     else setIsHintsDropped(false)
+
+    return () => {}
   }, [searchResults])
 
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
+    <SceneWrapper scroll background="theme">
       <SceneHeader title={headerTitle} underline withTopMargin />
       {forms.map(form => (
         <View key={form.title}>
           <EdgeText style={styles.formSectionTitle}>{form.title}</EdgeText>
-          {Object.values(form.fields).map(formField => {
-            const { key, label } = formField
-            const isAddressField = formField.dataType === 'address'
+          {Object.values(form.fields).map(field => {
+            const isAddressField = field.dataType === 'address'
+            const key = `${form.key}_${field.key}`
             return (
               <View key={key}>
                 <OutlinedTextInput
-                  key={key}
                   returnKeyType="next"
-                  label={label}
-                  onChangeText={handleUserInput(form.formType, formField.key)} // TODO:? Need a separate handler per field?
-                  value={formField.value ?? ''}
-                  autoFocus={forms.indexOf(form) === 0 && form.fields.indexOf(formField) === 0}
+                  label={field.label}
+                  onChangeText={handleUserInput(form.formType, field.key)} // TODO:? Need a separate handler per field?
+                  value={field.value ?? ''}
+                  autoFocus={forms.indexOf(form) === 0 && form.fields.indexOf(field) === 0}
+                  // onFocus={isAddressField ? handleAddressFieldSelect : handleAddressFieldDeselect}
+                  // onBlur={isAddressField ? handleAddressFieldDeselect : handleBlur(key)}
                   onFocus={isAddressField ? handleAddressFieldSelect : undefined}
-                  onBlur={isAddressField ? handleAddressFieldDeselect : undefined}
-                  ref={inputBackButtonRef}
+                  onBlur={isAddressField ? undefined : handleBlur(key)}
+                  // ref={isAddressField ? addressFieldRef : input => (inputRefs.current[`${form.key}_${field.key}`] = input)}
+                  ref={input => (inputRefs.current[`${form.key}_${field.key}`] = input)}
                 />
                 {isAddressField && isHintsDropped && searchResults.length > 0 ? (
                   <View style={styles.dropContainer}>
@@ -251,7 +283,12 @@ export const EnterFormScene = React.memo((props: Props) => {
                       {searchResults.map(searchResult => {
                         const displaySearchResult = `${searchResult.address}, ${searchResult.city}, ${searchResult.state} ${searchResult.postalCode}`
                         return (
-                          <TouchableOpacity key={displaySearchResult} style={styles.rowContainer} onPress={handleAddressHintPress(searchResult)}>
+                          // <TouchableOpacity key={displaySearchResult} style={styles.rowContainer} onPress={handleAddressHintPress(searchResult)}>
+                          <TouchableOpacity
+                            key={searchResults.indexOf(searchResult)}
+                            style={styles.rowContainer}
+                            onPress={handleAddressHintPress(searchResult)}
+                          >
                             <EdgeText>{displaySearchResult}</EdgeText>
                           </TouchableOpacity>
                         )

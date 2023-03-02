@@ -1,5 +1,5 @@
 import { lt } from 'biggystring'
-import { asArray, asNumber, asObject, asString, asValue } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { StringMap } from '../../../types/types'
@@ -153,13 +153,57 @@ export interface BitySellOrderRequest {
   }
 }
 
+export const asBityApproveQuoteResponse = asObject({
+  input: asObject({
+    amount: asString,
+    currency: asString,
+    type: asMaybe(asString),
+    iban: asMaybe(asString)
+  }),
+  output: asObject({
+    amount: asMaybe(asString),
+    currency: asMaybe(asString),
+    type: asMaybe(asString),
+    crypto_address: asMaybe(asString)
+  }),
+  id: asString,
+  timestamp_created: asMaybe(asString),
+  timestamp_awaiting_payment_since: asMaybe(asString),
+  payment_details: asObject({
+    iban: asString,
+    recipient: asString,
+    recipient_name: asString,
+    recipient_postal_address: asArray(asString),
+    reference: asString,
+    swift_bic: asString,
+    type: asMaybe(asString)
+  }),
+  price_breakdown: asObject({
+    customer_trading_fee: asObject({
+      amount: asMaybe(asString),
+      currency: asMaybe(asString)
+    }),
+    non_verified_fee: asObject({
+      amount: asMaybe(asString),
+      currency: asMaybe(asString)
+    }),
+    output_transaction_cost: asObject({
+      amount: asMaybe(asString),
+      currency: asMaybe(asString)
+    })
+  }),
+  client_value: asMaybe(asNumber)
+})
+
+export type BityApproveQuoteResponse = ReturnType<typeof asBityApproveQuoteResponse>
+
 const CURRENCY_PLUGINID_MAP: StringMap = {
   BTC: 'bitcoin',
   ETH: 'ethereum',
   LTC: 'litecoin'
 }
 
-export async function apiEstimate(data: BityQuoteRequest) {
+export const apiEstimate = async (data: BityQuoteRequest) => {
   const request = {
     method: 'POST',
     headers: {
@@ -171,6 +215,7 @@ export async function apiEstimate(data: BityQuoteRequest) {
   }
   const url = 'https://exchange.api.bity.com/v2/orders/estimate'
   const result = await fetch(url, request)
+  console.debug(JSON.stringify(result, null, 2))
   if (result.status === 200) {
     const newData = result.json()
     return newData
@@ -179,48 +224,54 @@ export async function apiEstimate(data: BityQuoteRequest) {
 }
 
 const signMessage = async (wallet: EdgeCurrencyWallet, message: string) => {
-  console.log(`signMessage message:***${message}***`)
+  console.debug(`signMessage message:***${message}***`)
 
   const { publicAddress } = await wallet.getReceiveAddress()
   const signedMessage = await wallet.otherMethods.signMessageBase64(message, publicAddress)
-  console.log(`signMessage public address:***${publicAddress}***`)
-  console.log(`signMessage signedMessage:***${signedMessage}***`)
+  console.debug(`signMessage public address:***${publicAddress}***`)
+  console.debug(`signMessage signedMessage:***${signedMessage}***`)
   return signedMessage
 }
 
-const deprecatedAndNotSupportedDouble = async (wallet: EdgeCurrencyWallet, request: any, firstURL: string, url2: string): Promise<any> => {
+const deprecatedAndNotSupportedDouble = async (
+  wallet: EdgeCurrencyWallet,
+  request: any,
+  orderUrl: string,
+  baseUrl: string
+): Promise<BityApproveQuoteResponse> => {
   console.debug('deprecatedAndNotSupportedDouble req: ' + JSON.stringify(request, null, 2))
-  console.log('Bity firstURL: ' + firstURL)
-  const response = await fetch(firstURL, request).catch(e => {
-    console.log(`throw from fetch firstURL: ${firstURL}`, e)
+  console.debug('Bity firstURL: ' + orderUrl)
+  const response = await fetch(orderUrl, request).catch(e => {
+    console.debug(`throw from fetch firstURL: ${orderUrl}`, e)
     throw e
   })
-  console.log('Bity response1: ', response)
+  console.debug('Bity response1: ', response)
   if (response.status !== 201) {
     const errorData = await response.json()
     throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
   }
-  const secondURL = url2 + response.headers.get('Location')
-  console.log('Bity secondURL: ', secondURL)
+  const secondURL = baseUrl + response.headers.get('Location')
+  console.debug('Bity secondURL: ', secondURL)
   const request2 = {
     method: 'GET',
     credentials: 'include'
   }
   // @ts-expect-error
   const response2 = await fetch(secondURL, request2).catch(e => {
-    console.log(`throw from fetch secondURL: ${secondURL}`, e)
+    console.debug(`throw from fetch secondURL: ${secondURL}`, e)
     throw e
   })
-  console.log('Bity response2: ', response2)
+  console.debug('Bity response2: ', response2)
   if (response2.status !== 200) {
     throw new Error('Problem confirming order: Code n200')
   }
   const orderData = await response2.json()
-  console.log('Bity orderData: ', orderData)
+  console.debug('Bity orderData: ', JSON.stringify(orderData, null, 2))
   if (orderData.message_to_sign) {
+    console.debug('orderData.message_to_sign')
     const { body } = orderData.message_to_sign
     const signedTransaction = await signMessage(wallet, body)
-    const thirdURL = url2 + orderData.message_to_sign.signature_submission_url
+    const thirdURL = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
       method: 'POST',
       headers: {
@@ -229,12 +280,12 @@ const deprecatedAndNotSupportedDouble = async (wallet: EdgeCurrencyWallet, reque
       },
       body: signedTransaction
     }
-    console.log('Bity thirdURL: ' + thirdURL)
+    console.debug('Bity thirdURL: ' + thirdURL)
     const signedTransactionResponse = await fetch(thirdURL, request).catch(e => {
-      console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
+      console.debug(`throw from fetch thirdURL: ${thirdURL}`, e)
       throw e
     })
-    console.log('Bity signedTransactionResponse: ', signedTransactionResponse)
+    console.debug('Bity signedTransactionResponse: ', signedTransactionResponse)
     if (signedTransactionResponse.status === 400) {
       throw new Error('Could not complete transaction. Code: 470')
     }
@@ -243,21 +294,25 @@ const deprecatedAndNotSupportedDouble = async (wallet: EdgeCurrencyWallet, reque
         method: 'GET',
         credentials: 'include'
       }
-      const detailUrl = firstURL + '/' + orderData.id
-      console.log('detailURL: ' + detailUrl)
+      const detailUrl = orderUrl + '/' + orderData.id
+      console.debug('detailURL: ' + detailUrl)
       // @ts-expect-error
       const bankDetailResponse = await fetch(detailUrl, bankDetailsRequest).catch(e => {
-        console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
+        console.debug(`throw from fetch detailUrl: ${detailUrl}`, e)
         throw e
       })
       if (bankDetailResponse.status === 200) {
         const parsedResponse = await bankDetailResponse.json()
-        console.log('Bity parsedResponse: ', parsedResponse)
-        return parsedResponse
+        console.debug('Bity parsedResponse: ', JSON.stringify(parsedResponse, null, 2))
+        return asBityApproveQuoteResponse(parsedResponse)
       }
     }
   }
-  return orderData
+
+  // Unknown how to get here - hopefully the data is in the same shape as the
+  // known path.
+  console.warn('Bity quote approval response - unhandled path...')
+  return asBityApproveQuoteResponse(orderData)
 }
 
 async function apiOrder(wallet: EdgeCurrencyWallet, data: BityBuyOrderRequest | BitySellOrderRequest) {
@@ -304,8 +359,7 @@ export const bityProvider: FiatProviderFactory = {
         try {
           bityCurrencies = asBityCurrencyResponse(result).currencies
         } catch (error: any) {
-          console.log(error.message)
-          console.log(JSON.stringify(error, null, 2))
+          console.error(error)
           return allowedCurrencyCodes
         }
         for (const currency of bityCurrencies) {
@@ -360,7 +414,7 @@ export const bityProvider: FiatProviderFactory = {
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[tokenId.pluginId][tokenId?.tokenId ?? ''])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
 
-        if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity could not query supported currencies')
+        if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity: Could not query supported currencies')
 
         const inputCurrencyCode = fiatCurrencyObj.code
         const outputCurrencyCode = isBuy ? cryptoCurrencyObj.code : fiatCurrencyObj.code
@@ -373,14 +427,9 @@ export const bityProvider: FiatProviderFactory = {
             currency: outputCurrencyCode
           }
         }
-
-        console.debug('apiQuote req: ' + JSON.stringify(quoteRequest, null, 2))
-        const result = await apiEstimate(quoteRequest)
-        console.debug('apiQuote res: ' + JSON.stringify(result, null, 2))
-        const bityQuote = asBityQuote(result)
-
-        console.debug('Got Bity quote')
-        console.debug(JSON.stringify(bityQuote, null, 2))
+        console.debug('apiEstimate') // TODO: fix quote cleaner
+        const bityQuote = await apiEstimate(quoteRequest)
+        console.debug('wtf' + JSON.stringify(bityQuote, null, 2))
 
         if (lt(exchangeAmount, bityQuote.input.minimum_amount)) {
           throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(bityQuote.input.minimum_amount) })
@@ -400,7 +449,6 @@ export const bityProvider: FiatProviderFactory = {
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
-            console.debug('approveQuote')
             const { coreWallet, showUi } = approveParams
             const { iban, swift, ownerAddress } = sepaInfo
             const { name, address, address2, city, country, state, postalCode } = ownerAddress
@@ -414,7 +462,7 @@ export const bityProvider: FiatProviderFactory = {
               zip: postalCode
             }
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
-            const orderRes = isBuy
+            const approveQuoteRes = isBuy
               ? // Buy Order Request
                 await apiOrder(coreWallet, {
                   client_value: 0,
@@ -449,9 +497,48 @@ export const bityProvider: FiatProviderFactory = {
                   }
                 })
 
-            console.debug('approveQuote Res: ', JSON.stringify(orderRes, null, 2))
-            // TODO:
-            await showUi.transferInfo({ fieldMap: {} })
+            // Parse the keys and values we want into display values
+            const handleProps = <T>(props: T): Map<string, string> => {
+              const result: Map<string, string> = new Map()
+
+              const handleValue = (key: string, value: any) => {
+                switch (key) {
+                  case 'iban':
+                    result.set('payment_details.iban', value.toUpperCase())
+                    break
+                  case 'recipient':
+                    result.set('payment_details.recipient', value.trim())
+                    break
+                  case 'recipient_postal_address':
+                    result.set('payment_details.recipient_postal_address', value.join(', '))
+                    break
+                  default:
+                    result.set(key, value.toString())
+                }
+              }
+
+              const handleObject = (parentKey: string, obj: any) => {
+                for (const key in obj) {
+                  if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    const value = obj[key]
+                    const combinedKey = parentKey ? `${parentKey}.${key}` : key
+                    if (value !== null && typeof value === 'object') {
+                      handleObject(combinedKey, value)
+                    } else {
+                      handleValue(combinedKey, value)
+                    }
+                  }
+                }
+              }
+
+              handleObject('', props)
+
+              return result
+            }
+
+            const labelToValueMap = handleProps(approveQuoteRes)
+
+            await showUi.transferInfo({ headerTitle: 'TODO', labelToValueMap, promptMessage: 'TODO' })
           },
           closeQuote: async (): Promise<void> => {}
         }

@@ -8,9 +8,9 @@ import { asMaybe, asObject, asString } from 'cleaners'
 export type FormFieldDataType = 'text' | 'number' | 'address' | 'zip'
 
 export interface FormFieldProps {
+  dataType: FormFieldDataType
   key: string
   label: string
-  dataType: FormFieldDataType
   value?: string
 }
 

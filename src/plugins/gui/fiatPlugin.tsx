@@ -22,7 +22,7 @@ import {
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
-  FiatPluginTransferInfoParams,
+  FiatPluginTransferInfoParams as FiatPluginSepaTransferParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -102,10 +102,10 @@ export const executePlugin = async (params: {
       })
     },
 
-    transferInfo: async (params: FiatPluginTransferInfoParams) => {
+    transferInfo: async (params: FiatPluginSepaTransferParams) => {
+      const { headerTitle, labelToValueMap, promptMessage } = params
       return new Promise((resolve, reject) => {
-        // TODO:
-        // navigation.navigate('guiPluginEnterForm', { ...formParams })
+        navigation.navigate('guiPluginSepaTransfer', { headerTitle, labelToValueMap, promptMessage })
       })
     }
   }

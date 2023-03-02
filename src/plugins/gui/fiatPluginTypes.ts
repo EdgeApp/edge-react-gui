@@ -61,7 +61,9 @@ export interface FiatPluginSepaFormResponse {
 }
 
 export interface FiatPluginTransferInfoParams {
-  fieldMap: { [fieldName: string]: string }
+  headerTitle: string
+  labelToValueMap: Map<string, string>
+  promptMessage: string
 }
 
 export interface FiatPluginListModalParams {
