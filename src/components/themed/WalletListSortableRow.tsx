@@ -16,14 +16,12 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  // react-native-sortable-listview sneakily injects this prop:
-  sortHandlers?: {}
-
   wallet?: EdgeCurrencyWallet
+  onDrag: () => void
 }
 
 function WalletListSortableRowComponent(props: Props) {
-  const { sortHandlers, wallet } = props
+  const { wallet, onDrag } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -37,7 +35,7 @@ function WalletListSortableRowComponent(props: Props) {
 
   if (wallet == null || exchangeDenomination == null) {
     return (
-      <TouchableOpacity style={styles.container} activeOpacity={0.95} {...sortHandlers}>
+      <TouchableOpacity style={styles.container} activeOpacity={0.95} onLongPress={onDrag}>
         <View style={[styles.rowContainer, styles.loaderContainer]}>
           <ActivityIndicator color={theme.primaryText} size="small" />
         </View>
@@ -62,7 +60,7 @@ function WalletListSortableRowComponent(props: Props) {
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
   return (
-    <TouchableOpacity style={styles.container} {...sortHandlers}>
+    <TouchableOpacity style={styles.container} onLongPress={onDrag}>
       <View style={styles.rowContainer}>
         <View style={styles.iconContainer}>
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
