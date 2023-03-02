@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletAccountSelect should render with loading props 1`] = `
-<SafeAreaViewComponent>
+<ForwardRef>
   <WithTheme(GradientComponent)
     style={
       Object {
@@ -149,5 +149,5 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       />
     </View>
   </ScrollView>
-</SafeAreaViewComponent>
+</ForwardRef>
 `;
