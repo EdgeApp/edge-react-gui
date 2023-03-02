@@ -1,19 +1,15 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { AdvancedDetailsModal } from '../../components/modals/AdvancedDetailsModal'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('AdvancedDetailsModal', () => {
-  const store = createStore(rootReducer)
-
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders>
         <AdvancedDetailsModal
           bridge={fakeAirshipBridge}
           transaction={{
@@ -29,7 +25,7 @@ describe('AdvancedDetailsModal', () => {
             txid: ''
           }}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

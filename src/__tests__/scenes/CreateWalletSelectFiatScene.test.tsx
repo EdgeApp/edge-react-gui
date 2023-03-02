@@ -1,18 +1,16 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CreateWalletSelectFiatScene } from '../../components/scenes/CreateWalletSelectFiatScene'
-import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('CreateWalletSelectFiatComponent', () => {
   const nonce = fakeNonce(0)
-  const mockState: any = {
+  const mockState: FakeState = {
     ui: {
       settings: {
         defaultIsoFiat: 'USD'
@@ -48,7 +46,6 @@ describe('CreateWalletSelectFiatComponent', () => {
       }
     }
   }
-  const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
     const navigation = fakeNavigation
@@ -77,9 +74,9 @@ describe('CreateWalletSelectFiatComponent', () => {
       }
     }
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockState}>
         <CreateWalletSelectFiatScene navigation={navigation} route={route} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
