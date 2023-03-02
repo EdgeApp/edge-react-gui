@@ -94,6 +94,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
       const mainnetItem = bundle[bundle.length - 1]
       const { createWalletIds } = mainnetItem
       const oldWalletId = createWalletIds[0]
+
+      if (securityCheckedWallets[oldWalletId] == null) {
+        securityCheckedWallets[oldWalletId] = { checked: false, modalShown: 0 }
+      }
+
       const oldWallet = currencyWallets[oldWalletId]
       const {
         currencyInfo: { walletType },
