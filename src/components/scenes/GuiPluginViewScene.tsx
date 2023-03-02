@@ -148,7 +148,6 @@ class GuiPluginView extends React.Component<Props, State> {
     const { route, dispatch, state, navigation } = props
     const { deepPath, deepQuery, plugin } = route.params
     super(props)
-    setPluginScene(this)
 
     // Mechanism to re-boot the webview:
     this.state = { webViewKey: 0 }
@@ -178,6 +177,8 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    setPluginScene(this)
+
     this.checkPermissions()
       .then(() => {
         const message = this._promoMessage

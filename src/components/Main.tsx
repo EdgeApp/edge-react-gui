@@ -399,7 +399,6 @@ const EdgeAppStack = () => {
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
-          headerLeft: () => <PluginBackButton />,
           headerRight: () => null
         }}
       />
