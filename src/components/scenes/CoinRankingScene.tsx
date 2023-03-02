@@ -191,7 +191,7 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper background="theme" hasTabs>
       <View style={styles.searchContainer}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <OutlinedTextInput

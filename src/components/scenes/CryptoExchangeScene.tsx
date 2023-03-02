@@ -329,7 +329,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const toHeaderText = sprintf(s.strings.exchange_to_wallet, toWalletName)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper background="theme" hasTabs>
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
