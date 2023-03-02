@@ -175,7 +175,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
               throw new InsufficientFundsError({ currencyCode: asset.currencyCode, networkFee: feeTotal })
             }
           } catch (e: any) {
-            for (const key in bundlesFeeTotals) {
+            for (const key of bundlesFeeTotals.keys()) {
               if (e instanceof InsufficientFundsError) {
                 bundlesFeeTotals.set(key, e)
               } else {
