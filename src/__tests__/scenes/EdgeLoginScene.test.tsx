@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Provider } from 'react-redux'
-import { createRenderer } from 'react-test-renderer/shallow'
+import TestRenderer from 'react-test-renderer'
 import { createStore } from 'redux'
 
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
@@ -17,7 +17,6 @@ let account: EdgeAccount | undefined
 describe('EdgeLoginScene', () => {
   const nonce = fakeNonce(0)
   it('should render with loading props', () => {
-    const renderer = createRenderer()
     const route: RouteProp<'edgeLogin'> = {
       key: `edgeLogin-${nonce()}`,
       name: 'edgeLogin',
@@ -30,12 +29,12 @@ describe('EdgeLoginScene', () => {
       account
     }
     const store = createStore(rootReducer, rootState)
-    const actual = renderer.render(
+    const renderer = TestRenderer.create(
       <Provider store={store}>
         <EdgeLoginScene route={route} navigation={fakeNavigation} />
       </Provider>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })
