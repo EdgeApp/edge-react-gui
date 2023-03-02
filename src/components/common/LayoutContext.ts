@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Platform, StatusBar } from 'react-native'
-import { getInset } from 'react-native-safe-area-view'
-
-import { useWindowSize } from '../../hooks/useWindowSize'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface SafeAreaGap {
   bottom: number
@@ -23,11 +21,8 @@ interface Props {
 }
 
 /**
- * In the future, React Native will provide this component itself:
- * https://github.com/facebook/react-native/pull/20999
- *
- * For now, we emulate the proposed API using the community
- * react-native-safe-area-view.
+ * It is better to use the react-native-safe-area-context hooks,
+ * but if you can't yet, this makes the values available.
  *
  * On Android, the height will not subtract the soft menu bar.
  * Do not rely on the height being correct! Use flexbox to do layout
@@ -37,19 +32,20 @@ export function LayoutContext(props: Props) {
   const { children } = props
 
   // Subscribe to the window size:
-  const { height, width } = useWindowSize()
-  const isLandscape = height < width
+  const { height, width } = useSafeAreaFrame()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const metrics: LayoutMetrics = {
     // @ts-expect-error
     layout: { x: 0, y: 0, height, width },
-    safeAreaInsets: {
-      bottom: isIos ? getInset('bottom', isLandscape) : 0,
-      left: isIos ? getInset('left', isLandscape) : 0,
-      right: isIos ? getInset('right', isLandscape) : 0,
-      // @ts-expect-error
-      top: isIos ? getInset('top', isLandscape) : StatusBar.currentHeight
-    }
+    safeAreaInsets: isIos
+      ? safeAreaInsets
+      : {
+          bottom: 0,
+          left: 0,
+          right: 0,
+          top: StatusBar.currentHeight ?? 0
+        }
   }
 
   return children(metrics)

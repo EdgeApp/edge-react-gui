@@ -1,4 +1,6 @@
-export const fakeRootState = {
+import { FakeState } from './FakeProviders'
+
+export const fakeRootState: FakeState = {
   contacts: [
     {
       jobTitle: '',

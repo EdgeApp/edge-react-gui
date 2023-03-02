@@ -2,7 +2,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { isIPhoneX } from 'react-native-safe-area-view'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -36,6 +36,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const start = theme.tabBarBackgroundStart
   const end = theme.tabBarBackgroundEnd
   let routes = state.routes
+
+  const insets = useSafeAreaInsets()
+  const safePadding = {
+    paddingBottom: theme.rem(0.75) + insets.bottom
+  }
 
   const handleOnPress = useHandler((route: string) => {
     switch (route) {
@@ -73,7 +78,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
             extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={styles.content} key={route.key} onPress={() => handleOnPress(route.name)}>
+            <TouchableOpacity style={[styles.content, safePadding]} key={route.key} onPress={() => handleOnPress(route.name)}>
               {icon[route.name]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[route.name]}</EdgeText>
             </TouchableOpacity>
@@ -93,7 +98,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     paddingTop: theme.rem(0.75),
-    paddingBottom: isIPhoneX ? theme.rem(2.125) : theme.rem(0.75),
     justifyContent: 'center',
     alignItems: 'center'
   },

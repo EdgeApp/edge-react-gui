@@ -1,12 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {
@@ -30,22 +28,21 @@ describe('TransactionListRow', () => {
       fiatCurrencyCode: 'iso:USD'
     }
 
-    const mockStore: any = {
+    const mockStore: FakeState = {
       core: {
         account: {
           currencyConfig: {
             bitcoin: {
-              allTokens: [],
+              allTokens: {},
               currencyInfo
             }
           }
         }
       }
     }
-    const store = createStore(rootReducer, mockStore)
 
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockStore}>
         <TransactionListRow
           navigation={fakeNavigation}
           wallet={fakeWallet}
@@ -65,7 +62,7 @@ describe('TransactionListRow', () => {
             ourReceiveAddresses: []
           }}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

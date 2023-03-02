@@ -1,15 +1,12 @@
 import { describe, expect, it } from '@jest/globals'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { applyMiddleware, createStore } from 'redux'
-import thunk from 'redux-thunk'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -53,7 +50,7 @@ const fakeCoreWallet: any = {
 
 describe('TransactionDetailsScene', () => {
   const nonce = fakeNonce(0)
-  const fakeState: any = {
+  const fakeState: FakeState = {
     core: {
       account: {
         currencyWallets: { '123': fakeCoreWallet },
@@ -62,11 +59,9 @@ describe('TransactionDetailsScene', () => {
     }
   }
 
-  const store = createStore(rootReducer, fakeState, applyMiddleware(thunk))
-
   it('should render', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
           route={{
@@ -90,7 +85,7 @@ describe('TransactionDetailsScene', () => {
             }
           }}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -98,7 +93,7 @@ describe('TransactionDetailsScene', () => {
 
   it('should render with negative nativeAmount and fiatAmount', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
           navigation={fakeNavigation}
           route={{
@@ -125,7 +120,7 @@ describe('TransactionDetailsScene', () => {
             }
           }}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
