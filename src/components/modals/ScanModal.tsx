@@ -4,11 +4,11 @@ import { AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 import { launchImageLibrary } from 'react-native-image-picker'
 import RNPermissions from 'react-native-permissions'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import RNQRGenerator from 'rn-qr-generator'
 
 import { useLayout } from '../../hooks/useLayout'
-import { useWindowSize } from '../../hooks/useWindowSize'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
@@ -37,7 +37,7 @@ export const ScanModal = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { width: windowWidth, height: windowHeight } = useWindowSize()
+  const { width: windowWidth, height: windowHeight } = useSafeAreaFrame()
   const isLandscape = windowWidth > windowHeight
 
   const cameraPermission = useSelector(state => state.permissions.camera)

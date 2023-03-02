@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { THEME } from '../../../../theme/variables/airbitz'
 import { Gradient } from '../../components/Gradient/Gradient.ui'
