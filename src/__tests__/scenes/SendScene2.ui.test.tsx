@@ -2,12 +2,9 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { asDate, asMap, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { SendScene2 } from '../../components/scenes/SendScene2'
-import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -15,6 +12,7 @@ import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
@@ -86,7 +84,7 @@ describe('SendScene2', () => {
   it('Render SendScene', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -97,15 +95,10 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -113,7 +106,7 @@ describe('SendScene2', () => {
   it('1 spendTarget', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -127,15 +120,10 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -143,7 +131,7 @@ describe('SendScene2', () => {
   it('1 spendTarget with info tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -161,15 +149,10 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -177,7 +160,7 @@ describe('SendScene2', () => {
   it('2 spendTargets', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -194,15 +177,10 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -211,7 +189,7 @@ describe('SendScene2', () => {
   it('2 spendTargets hide tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -229,16 +207,11 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     // Hide Address
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
 
@@ -246,9 +219,9 @@ describe('SendScene2', () => {
     // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
 
@@ -256,9 +229,9 @@ describe('SendScene2', () => {
     // @ts-expect-error
     route.params.hiddenTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()
   })
@@ -266,7 +239,7 @@ describe('SendScene2', () => {
   it('2 spendTargets lock tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: any = fakeRootState
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigation = fakeNavigation
     const route: RouteProp<'send2'> = {
       key: `send2-${nonce()}`,
@@ -284,16 +257,11 @@ describe('SendScene2', () => {
       }
     }
 
-    rootState.core = {
-      account
-    }
-    const store = createStore(rootReducer, rootState)
-
     // Lock Address
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
 
@@ -301,9 +269,9 @@ describe('SendScene2', () => {
     // @ts-expect-error
     route.params.lockTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
 
@@ -311,9 +279,9 @@ describe('SendScene2', () => {
     // @ts-expect-error
     route.params.lockTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
-      </Provider>
+      </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()
   })

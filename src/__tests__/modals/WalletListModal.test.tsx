@@ -1,23 +1,19 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { upgradeCurrencyCodes, WalletListModal } from '../../components/modals/WalletListModal'
-import { rootReducer } from '../../reducers/RootReducer'
 import { EdgeTokenId } from '../../types/types'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('WalletListModal', () => {
   it('should render with loading props', () => {
-    const store = createStore(rootReducer)
-
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders>
         <WalletListModal bridge={fakeAirshipBridge} navigation={fakeNavigation} headerTitle="Wallet List" />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
