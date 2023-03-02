@@ -1,31 +1,50 @@
 import { describe, expect, it } from '@jest/globals'
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import TestRenderer from 'react-test-renderer'
 
-import { getTheme } from '../../components/services/ThemeContext'
-import { WalletListSortableRowComponent } from '../../components/themed/WalletListSortableRow'
+import { WalletListSortableRow } from '../../components/themed/WalletListSortableRow'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListSortableRow', () => {
-  it('should render with loading props', () => {
-    const renderer = createRenderer()
-
-    const actual = renderer.render(
-      <WalletListSortableRowComponent
-        exchangeRates={'GuiExchangeRates' as any}
-        showBalance
-        walletFiatSymbol="USD"
-        exchangeDenomination={{
-          multiplier: '100000000',
-          name: 'BTC'
-        }}
-        getDisplayDenomination={(pluginId, currencyCode) => ({
-          multiplier: '100000000',
-          name: 'BTC'
-        })}
-        theme={getTheme()}
-      />
+  it('should render with loading wallet', () => {
+    const renderer = TestRenderer.create(
+      <FakeProviders>
+        <WalletListSortableRow wallet={undefined} />
+      </FakeProviders>
     )
+    expect(renderer.toJSON()).toMatchSnapshot()
+  })
 
-    expect(actual).toMatchSnapshot()
+  it('should render with fake wallet', () => {
+    const fakeCurrencyInfo: Partial<EdgeCurrencyInfo> = {
+      pluginId: 'fake',
+      currencyCode: 'FAKE',
+      denominations: [{ name: 'FAKE', multiplier: '1' }]
+    }
+    const fakeState: FakeState = {
+      core: {
+        account: {
+          currencyConfig: {
+            fake: {
+              allTokens: {},
+              currencyInfo: fakeCurrencyInfo
+            }
+          }
+        }
+      }
+    }
+    const fakeWallet: any = {
+      currencyInfo: fakeCurrencyInfo,
+      name: 'Test wallet',
+      balances: {}
+    }
+
+    const renderer = TestRenderer.create(
+      <FakeProviders initialState={fakeState}>
+        <WalletListSortableRow wallet={fakeWallet} />
+      </FakeProviders>
+    )
+    expect(renderer.toJSON()).toMatchSnapshot()
   })
 })
