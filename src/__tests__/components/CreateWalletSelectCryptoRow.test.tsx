@@ -1,15 +1,13 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CreateWalletSelectCryptoRow } from '../../components/themed/CreateWalletSelectCryptoRow'
-import { rootReducer } from '../../reducers/RootReducer'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('WalletListRow', () => {
-  const mockState: any = {
+  const mockState: FakeState = {
     core: {
       account: {
         currencyConfig: {
@@ -23,7 +21,6 @@ describe('WalletListRow', () => {
       }
     }
   }
-  const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
     const pluginId = 'bitcoin'
@@ -32,9 +29,9 @@ describe('WalletListRow', () => {
     const rightSide = <IonIcon size={26} color="#66EDA8" name="chevron-forward-outline" />
 
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockState}>
         <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={walletName} onPress={onPress} rightSide={rightSide} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

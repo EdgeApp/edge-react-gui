@@ -1,22 +1,19 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('BuyCrypto', () => {
-  const mockState: any = {
+  const mockState: FakeState = {
     ui: {
       settings: {
         defaultIsoFiat: 'iso:DOLLA'
       }
     }
   }
-  const store = createStore(rootReducer, mockState)
 
   it('should render with some props', () => {
     const fakeWallet: any = {
@@ -25,9 +22,9 @@ describe('BuyCrypto', () => {
     }
 
     const actual = renderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockState}>
         <BuyCrypto wallet={fakeWallet} tokenId={undefined} navigation={fakeNavigation} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(actual).toMatchSnapshot()
