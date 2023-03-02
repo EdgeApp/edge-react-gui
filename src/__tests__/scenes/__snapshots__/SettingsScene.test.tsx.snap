@@ -1569,7 +1569,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   }
                 }
               >
-                Send Logs
+                Export Logs
               </Text>
             </BVLinearGradient>
           </View>
@@ -3252,7 +3252,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   }
                 }
               >
-                Send Logs
+                Export Logs
               </Text>
             </BVLinearGradient>
           </View>

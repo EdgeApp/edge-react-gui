@@ -30,7 +30,7 @@ export const WipeLogsService = () => {
 
       if (logWipeInfo?.lastWipeTimestamp == null || logWipeInfo.lastWipeTimestamp.valueOf() < WIPE_LOGS_BEFORE_TIME.valueOf()) {
         console.log('Wiping expired logs...')
-        await dispatch(clearAllLogs())
+        await clearAllLogs()
         const newLogWipeInfo: LogWipeInfo = {
           lastWipeTimestamp: new Date()
         }
