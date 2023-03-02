@@ -1,16 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CurrencyNotificationScene } from '../../components/scenes/CurrencyNotificationScene'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('CurrencyNotificationComponent', () => {
   const nonce = fakeNonce(0)
-  const mockStore: any = {
+  const mockStore: FakeState = {
     notificationSettings: {
       plugins: {
         bitcoin: {
@@ -23,11 +21,9 @@ describe('CurrencyNotificationComponent', () => {
     }
   }
 
-  const store = createStore(rootReducer, mockStore)
-
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockStore}>
         <CurrencyNotificationScene
           route={{
             key: `currencyNotificationSettings-${nonce()}`,
@@ -63,7 +59,7 @@ describe('CurrencyNotificationComponent', () => {
             }
           }}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
