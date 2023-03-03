@@ -379,9 +379,11 @@ export class EdgeProvider extends Bridgeable {
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this._selectedWallet, metadata }).catch(
-        showError
-      )
+      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, {
+        currencyCode,
+        wallet: this._selectedWallet,
+        metadata
+      }).catch(showError)
       return
     }
 
