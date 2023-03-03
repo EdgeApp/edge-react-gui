@@ -30,7 +30,7 @@ export type WalletListMenuKey =
   | 'viewXPub'
   | 'getRawKeys'
   | 'rawDelete'
-  | string // for split keys like splitBCH, splitETH, etc.
+  | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
