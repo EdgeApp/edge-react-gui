@@ -2,6 +2,7 @@ import { lt } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
+import s from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -14,6 +15,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { GroupedResult } from '../scenes/SepaTransferScene'
 
 const pluginId = 'bity'
 const storeId = 'com.bity'
@@ -21,7 +23,7 @@ const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
-const allowedCountryCodes: { [code: string]: boolean } = {
+const allowedCountryCodes: { readonly [code: string]: boolean } = {
   AT: true,
   BE: true,
   BG: true,
@@ -52,7 +54,40 @@ const allowedCountryCodes: { [code: string]: boolean } = {
   SM: true,
   GB: true
 }
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { sepa: true }
+const allowedPaymentTypes: { readonly [Payment in FiatPaymentType]?: boolean } = { sepa: true }
+
+const LABEL_MAP: { readonly [bityDataKey: string]: string } = {
+  id: s.strings.id,
+  input: s.strings.input_title,
+  input_amount: s.strings.input_amount,
+  input_currency: s.strings.input_currency,
+  output_amount: s.strings.output_amount,
+  output_currency: s.strings.output_currency,
+  paymentdetails: s.strings.payment_details_title,
+  paymentdetails_iban: s.strings.iban,
+  paymentdetails_recipient: s.strings.recipient,
+  paymentdetails_recipientname: s.strings.recipient_name,
+  payment,
+  details,
+  recipientpostaladdress: s.strings.recipient_address,
+  paymentdetails_reference: s.strings.reference,
+  paymentdetails_swiftbic: s.strings.swift_bic
+}
+
+const GROUPING: { readonly [bityTitleKey: string]: string[] } = {
+  input: ['input_amount', 'input_currency'],
+  output: ['output_amount', 'output_currency'],
+  payment_details: [
+    'paymentdetails_iban',
+    'paymentdetails_swiftbic',
+    'paymentdetails_recipient',
+    'paymentdetails_recipientname',
+    'paymentdetails_recipientpostaladdress',
+    'paymentdetails_reference'
+  ]
+}
+
+const GROUPING_ORDER: string[] = ['input', 'output', 'payment_details']
 
 const asBityCurrencyTag = asValue('crypto', 'erc20', 'ethereum', 'fiat')
 const asBityCurrency = asObject({
@@ -153,46 +188,67 @@ export interface BitySellOrderRequest {
   }
 }
 
+// Full response:
+// export const asBityApproveQuoteResponse = asObject({
+//   input: asObject({
+//     amount: asString,
+//     currency: asString,
+//     type: asMaybe(asString),
+//     iban: asMaybe(asString)
+//   }),
+//   output: asObject({
+//     amount: asMaybe(asString),
+//     currency: asMaybe(asString),
+//     type: asMaybe(asString),
+//     crypto_address: asMaybe(asString)
+//   }),
+//   id: asString,
+//   timestamp_created: asMaybe(asString),
+//   timestamp_awaiting_payment_since: asMaybe(asString),
+//   payment_details: asObject({
+//     iban: asString,
+//     recipient: asString,
+//     recipient_name: asString,
+//     recipient_postal_address: asArray(asString),
+//     reference: asString,
+//     swift_bic: asString,
+//     type: asMaybe(asString)
+//   }),
+//   price_breakdown: asObject({
+//     customer_trading_fee: asObject({
+//       amount: asMaybe(asString),
+//       currency: asMaybe(asString)
+//     }),
+//     non_verified_fee: asObject({
+//       amount: asMaybe(asString),
+//       currency: asMaybe(asString)
+//     }),
+//     output_transaction_cost: asObject({
+//       amount: asMaybe(asString),
+//       currency: asMaybe(asString)
+//     })
+//   }),
+//   client_value: asMaybe(asNumber)
+// })
+
 export const asBityApproveQuoteResponse = asObject({
+  id: asString,
   input: asObject({
     amount: asString,
-    currency: asString,
-    type: asMaybe(asString),
-    iban: asMaybe(asString)
+    currency: asString
   }),
   output: asObject({
     amount: asMaybe(asString),
-    currency: asMaybe(asString),
-    type: asMaybe(asString),
-    crypto_address: asMaybe(asString)
+    currency: asMaybe(asString)
   }),
-  id: asString,
-  timestamp_created: asMaybe(asString),
-  timestamp_awaiting_payment_since: asMaybe(asString),
   payment_details: asObject({
     iban: asString,
-    recipient: asString,
-    recipient_name: asString,
-    recipient_postal_address: asArray(asString),
-    reference: asString,
     swift_bic: asString,
-    type: asMaybe(asString)
-  }),
-  price_breakdown: asObject({
-    customer_trading_fee: asObject({
-      amount: asMaybe(asString),
-      currency: asMaybe(asString)
-    }),
-    non_verified_fee: asObject({
-      amount: asMaybe(asString),
-      currency: asMaybe(asString)
-    }),
-    output_transaction_cost: asObject({
-      amount: asMaybe(asString),
-      currency: asMaybe(asString)
-    })
-  }),
-  client_value: asMaybe(asNumber)
+    reference: asString,
+    recipient_name: asString,
+    recipient: asString,
+    recipient_postal_address: asArray(asString)
+  })
 })
 
 export type BityApproveQuoteResponse = ReturnType<typeof asBityApproveQuoteResponse>
@@ -302,9 +358,10 @@ const deprecatedAndNotSupportedDouble = async (
         throw e
       })
       if (bankDetailResponse.status === 200) {
-        const parsedResponse = await bankDetailResponse.json()
-        console.debug('Bity parsedResponse: ', JSON.stringify(parsedResponse, null, 2))
-        return asBityApproveQuoteResponse(parsedResponse)
+        // HACK: can't clean an object with a '-' in its key. Manually pre-clean
+        const preCleanedResponse = (await bankDetailResponse.text()).replace('non-verified_fee', 'non_verified_fee')
+
+        return asBityApproveQuoteResponse(JSON.parse(preCleanedResponse))
       }
     }
   }
@@ -427,9 +484,7 @@ export const bityProvider: FiatProviderFactory = {
             currency: outputCurrencyCode
           }
         }
-        console.debug('apiEstimate') // TODO: fix quote cleaner
         const bityQuote = await apiEstimate(quoteRequest)
-        console.debug('wtf' + JSON.stringify(bityQuote, null, 2))
 
         if (lt(exchangeAmount, bityQuote.input.minimum_amount)) {
           throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(bityQuote.input.minimum_amount) })
@@ -462,83 +517,214 @@ export const bityProvider: FiatProviderFactory = {
               zip: postalCode
             }
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
-            const approveQuoteRes = isBuy
-              ? // Buy Order Request
-                await apiOrder(coreWallet, {
-                  client_value: 0,
-                  input: {
-                    amount: exchangeAmount,
-                    currency: inputCurrencyCode,
-                    type: 'bank_account',
-                    iban,
-                    bic_swift: swift,
-                    owner
-                  },
-                  output: {
-                    currency: outputCurrencyCode,
-                    type: 'crypto_address',
-                    crypto_address: cryptoAddress
-                  }
-                })
-              : // Sell Order Request
-                await apiOrder(coreWallet, {
-                  client_value: 0,
-                  input: {
-                    amount: exchangeAmount,
-                    currency: inputCurrencyCode,
-                    type: 'crypto_address'
-                  },
-                  output: {
-                    currency: outputCurrencyCode,
-                    type: 'bank_account',
-                    iban,
-                    bic_swift: swift,
-                    owner
-                  }
-                })
+            // const approveQuoteRes = isBuy
+            //   ? // Buy Order Request
+            //     await apiOrder(coreWallet, {
+            //       client_value: 0,
+            //       input: {
+            //         amount: exchangeAmount,
+            //         currency: inputCurrencyCode,
+            //         type: 'bank_account',
+            //         iban,
+            //         bic_swift: swift,
+            //         owner
+            //       },
+            //       output: {
+            //         currency: outputCurrencyCode,
+            //         type: 'crypto_address',
+            //         crypto_address: cryptoAddress
+            //       }
+            //     })
+            //   : // Sell Order Request
+            //     await apiOrder(coreWallet, {
+            //       client_value: 0,
+            //       input: {
+            //         amount: exchangeAmount,
+            //         currency: inputCurrencyCode,
+            //         type: 'crypto_address'
+            //       },
+            //       output: {
+            //         currency: outputCurrencyCode,
+            //         type: 'bank_account',
+            //         iban,
+            //         bic_swift: swift,
+            //         owner
+            //       }
+            //     })
 
-            // Parse the keys and values we want into display values
-            const handleProps = <T>(props: T): Map<string, string> => {
-              const result: Map<string, string> = new Map()
+            const approveQuoteRes = {
+              input: {
+                amount: '11.00',
+                currency: 'EUR',
+                type: 'bank_account',
+                iban: 'IT21G0300203280333113817227'
+              },
+              output: {
+                amount: '0.00046694',
+                currency: 'BTC',
+                type: 'crypto_address',
+                crypto_address: '3MgF24SdB8XhmRpAdxj7i45YEpd9TCK5eD'
+              },
+              id: '8bd6b40b-bd7c-40c9-9439-dc759d30bba1',
+              timestamp_created: '2023-03-02T23:19:06Z',
+              timestamp_awaiting_payment_since: '2023-03-02T23:19:16Z',
+              payment_details: {
+                iban: 'CH3400766000102941689',
+                recipient: 'Bity SA, Rue des Usines 44, 2000 Neuchâtel, Switzerland',
+                recipient_name: 'Bity SA',
+                recipient_postal_address: ['Rue des Usines 44', '2000 Neuchâtel', 'Switzerland'],
+                reference: 'bity.com 966D-NXG8',
+                swift_bic: 'BCNNCH22XXX',
+                type: 'bank_account'
+              },
+              price_breakdown: {
+                customer_trading_fee: {
+                  amount: '0.09',
+                  currency: 'EUR'
+                },
+                non_verified_fee: {
+                  amount: '0.04',
+                  currency: 'EUR'
+                },
+                output_transaction_cost: {
+                  amount: '0.00002345',
+                  currency: 'BTC'
+                }
+              },
+              client_value: 0
+            }
+
+            // const handleProps1 = (props: BityApproveQuoteResponse): GroupedResult => {
+            //   // Parse the raw data into display values
+            //   const labelToValueMap: Map<string, string> = new Map()
+
+            //   const handleValue = (key: string, value: any) => {
+            //     switch (key) {
+            //       case 'iban':
+            //         labelToValueMap.set('payment_details.iban', value.toUpperCase())
+            //         break
+            //       case 'recipient':
+            //         labelToValueMap.set('payment_details.recipient', value.trim())
+            //         break
+            //       case 'recipient_postal_address':
+            //         labelToValueMap.set('payment_details.recipient_postal_address', value.join(', '))
+            //         break
+            //       default:
+            //         labelToValueMap.set(key, value.toString())
+            //     }
+            //   }
+
+            //   const handleObject = (parentLabel: string, obj: any) => {
+            //     for (const key in obj) {
+            //       if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            //         const value = obj[key]
+            //         const label = parentLabel ? `${parentLabel}.${key}` : key
+
+            //         if (Array.isArray(value)) {
+            //           // Bank address
+            //           handleValue(label, value.join(', '))
+            //         }
+            //         if (value !== null && typeof value === 'object') {
+            //           handleObject(label, value)
+            //         } else {
+            //           handleValue(label, value)
+            //         }
+            //       }
+            //     }
+            //   }
+
+            //   handleObject('', props)
+
+            //   const orderedKeys = Object.keys(LABEL_MAP)
+
+            //   // group the keys based on their group title
+            //   const groups: { [groupTitle: string]: string[] } = {}
+            //   orderedKeys.forEach(key => {
+            //     const groupTitle = LABEL_MAP[key]
+            //     if (!groups[groupTitle]) {
+            //       groups[groupTitle] = []
+            //     }
+            //     groups[groupTitle].push(key)
+            //   })
+
+            //   // sort the groups based on their index in the order array
+            //   const groupTitles = Object.keys(groups)
+            //   groupTitles.sort((a, b) => {
+            //     const aIndex = GROUP_ORDER.indexOf(a)
+            //     const bIndex = GROUP_ORDER.indexOf(b)
+            //     return aIndex - bIndex
+            //   })
+
+            //   // loop through the groups, adding each key-value pair to its corresponding group
+            //   groupTitles.forEach(groupTitle => {
+            //     const items = groups[groupTitle].map(key => ({
+            //       label: LABEL_MAP[key],
+            //       value: labelToValueMap.get(key) ?? ''
+            //     }))
+            //     result.push({ groupTitle, items })
+            //   })
+
+            //   return result
+            // }
+
+            const parseBityApproveQuoteResponse = (response: BityApproveQuoteResponse): GroupedResult[] => {
+              const keyToValueMap: Map<string, string> = new Map()
 
               const handleValue = (key: string, value: any) => {
                 switch (key) {
                   case 'iban':
-                    result.set('payment_details.iban', value.toUpperCase())
+                    keyToValueMap.set('paymentdetails_iban', value.toUpperCase())
                     break
                   case 'recipient':
-                    result.set('payment_details.recipient', value.trim())
+                    keyToValueMap.set('paymentdetails_recipient', value.trim())
                     break
-                  case 'recipient_postal_address':
-                    result.set('payment_details.recipient_postal_address', value.join(', '))
+                  case 'recipientpostaladdress':
+                    keyToValueMap.set('paymentDetails_recipientpostaladdress', value.join(', '))
                     break
                   default:
-                    result.set(key, value.toString())
+                    keyToValueMap.set(key, value.toString())
                 }
+                console.debug(key + ', ' + value)
               }
 
-              const handleObject = (parentKey: string, obj: any) => {
+              const handleObject = (parentKey: string | null, obj: any) => {
                 for (const key in obj) {
                   if (Object.prototype.hasOwnProperty.call(obj, key)) {
                     const value = obj[key]
-                    const combinedKey = parentKey ? `${parentKey}.${key}` : key
+                    const parsedKey = parentKey ? `${parentKey}.${key}` : key
+
+                    if (Array.isArray(value)) {
+                      // Bank address
+                      handleValue(parsedKey, value.join(', '))
+                    }
                     if (value !== null && typeof value === 'object') {
-                      handleObject(combinedKey, value)
+                      handleObject(parsedKey, value)
                     } else {
-                      handleValue(combinedKey, value)
+                      handleValue(parsedKey, value)
                     }
                   }
                 }
               }
 
-              handleObject('', props)
+              handleObject('', response)
+
+              const result: GroupedResult[] = []
+              GROUPING_ORDER.forEach(groupTitleKey => {
+                const keys = GROUPING[groupTitleKey]
+                const items = keys.map(key => ({
+                  label: LABEL_MAP[key] || key,
+                  value: keyToValueMap.get(key) ?? ''
+                }))
+                result.push({ groupTitle: LABEL_MAP[groupTitleKey], items })
+              })
 
               return result
             }
 
-            const labelToValueMap = handleProps(approveQuoteRes)
+            const groupDisplayData = parseBityApproveQuoteResponse(approveQuoteRes)
+            console.debug(JSON.stringify(groupDisplayData, null, 2))
 
-            await showUi.transferInfo({ headerTitle: 'TODO', labelToValueMap, promptMessage: 'TODO' })
+            // await showUi.transferInfo({ headerTitle: 'TODO', groupDisplayData, promptMessage: 'TODO' })
           },
           closeQuote: async (): Promise<void> => {}
         }
