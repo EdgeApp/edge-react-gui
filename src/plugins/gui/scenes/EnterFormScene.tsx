@@ -2,6 +2,7 @@
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { getDiskletForm, setDiskletForm } from '../../../actions/FormActions'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
@@ -128,6 +129,10 @@ export const EnterFormScene = React.memo((props: Props) => {
 
     setForms(updatedForms)
     setIsHintsDropped(false)
+    const addressInputRef = inputRefs.current.addressForm_address
+    if (addressInputRef != null) {
+      addressInputRef.blur()
+    }
   })
 
   const handleSubmit = useHandler(async () => {
@@ -238,7 +243,7 @@ export const EnterFormScene = React.memo((props: Props) => {
   }, [searchResults])
 
   return (
-    <SceneWrapper scroll background="theme" keyboardShouldPersistTaps="always">
+    <SceneWrapper background="theme" scroll keyboardShouldPersistTaps="handled">
       <SceneHeader title={headerTitle} underline withTopMargin />
       {forms.map(form => (
         <View key={form.title}>
@@ -256,23 +261,22 @@ export const EnterFormScene = React.memo((props: Props) => {
                   autoFocus={forms.indexOf(form) === 0 && form.fields.indexOf(field) === 0}
                   onFocus={handleFocus(key)}
                   onBlur={!isAddressField ? handleBlur(key) : undefined}
+                  // onBlur={handleBlur(key)}
                   ref={input => (inputRefs.current[`${form.key}_${field.key}`] = input)}
                 />
                 {isAddressField && isHintsDropped && searchResults.length > 0 ? (
                   <View style={styles.dropContainer}>
-                    <ScrollView>
+                    <ScrollView keyboardShouldPersistTaps="handled">
                       {searchResults.map(searchResult => {
                         const displaySearchResult = `${searchResult.address}, ${searchResult.city}, ${searchResult.state} ${searchResult.postalCode}`
                         return (
-                          <TouchableOpacity
-                            key={searchResults.indexOf(searchResult)}
-                            style={styles.rowContainer}
-                            onPress={handleAddressHintPress(searchResult)}
-                          >
-                            <EdgeText style={styles.addressHintText} numberOfLines={2}>
-                              {displaySearchResult}
-                            </EdgeText>
-                          </TouchableOpacity>
+                          <View key={searchResults.indexOf(searchResult)}>
+                            <TouchableOpacity style={styles.rowContainer} onPress={handleAddressHintPress(searchResult)}>
+                              <EdgeText style={styles.addressHintText} numberOfLines={2}>
+                                {displaySearchResult}
+                              </EdgeText>
+                            </TouchableOpacity>
+                          </View>
                         )
                       })}
                     </ScrollView>
