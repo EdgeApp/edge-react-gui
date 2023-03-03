@@ -78,6 +78,9 @@ import { LoanManageScene } from './scenes/Loans/LoanManageScene'
 import { LoanStatusScene } from './scenes/Loans/LoanStatusScene'
 import { LoginScene } from './scenes/LoginScene'
 import { ManageTokensScene } from './scenes/ManageTokensScene'
+import { MigrateWalletCalculateFeeScene } from './scenes/MigrateWalletCalculateFeeScene'
+import { MigrateWalletCompletionScene } from './scenes/MigrateWalletCompletionScene'
+import { MigrateWalletSelectCryptoScene } from './scenes/MigrateWalletSelectCryptoScene'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene'
@@ -725,6 +728,21 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
+            <Scene
+              key="migrateWalletSelectCrypto"
+              component={withNavigation(ifLoggedIn(MigrateWalletSelectCryptoScene))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene
+              key="migrateWalletCalculateFee"
+              component={withNavigation(ifLoggedIn(MigrateWalletCalculateFeeScene))}
+              navTransparent
+              // @ts-expect-error
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+            />
+            <Scene key="migrateWalletCompletion" component={withNavigation(ifLoggedIn(MigrateWalletCompletionScene))} navTransparent />
           </Stack>
 
           <Stack

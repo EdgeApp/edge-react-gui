@@ -4,6 +4,7 @@ import * as Flux from 'react-native-router-flux'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
+import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { WalletCreateItem } from '../components/themed/WalletList'
@@ -240,6 +241,15 @@ export interface ParamList {
   }
   manageTokens: {
     walletId: string
+  }
+  migrateWalletCompletion: {
+    migrateWalletList: MigrateWalletItem[]
+  }
+  migrateWalletCalculateFee: {
+    migrateWalletList: MigrateWalletItem[]
+  }
+  migrateWalletSelectCrypto: {
+    preSelectedWalletIds?: string[]
   }
   notificationSettings: {}
   otpRepair: {

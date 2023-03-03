@@ -41,15 +41,8 @@ export const useFiatText = (props: Props): string => {
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
   const fiatAmount = useSelector(state => {
-    try {
-      const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-      return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
-    } catch (e) {
-      // This should not happen!
-      // We don't know who is sending in the bad values,
-      // so we can't fix the bad currency plugin properly:
-      return '0'
-    }
+    const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
   // Convert the amount to an internationalized string or '0'
