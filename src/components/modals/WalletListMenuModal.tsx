@@ -187,7 +187,7 @@ export function WalletListMenuModal(props: Props) {
     for (const splitWalletType of splittable) {
       const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
       if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
+      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
     }
 
     setOptions(result)

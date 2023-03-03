@@ -6,7 +6,7 @@ import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 
-export function showSplitWalletModal(walletId: string, currencyCode: string): ThunkAction<Promise<void>> {
+export function showSplitWalletModal(walletId: string, pluginId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -31,9 +31,8 @@ export function showSplitWalletModal(walletId: string, currencyCode: string): Th
     ))
 
     if (resolveValue === 'confirm') {
-      const pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
-      if (pluginId == null) return
-      const { walletType } = currencyConfig[pluginId].currencyInfo
+      const walletType = currencyConfig[pluginId]?.currencyInfo.walletType
+      if (walletType == null) return
 
       try {
         await account.splitWalletInfo(walletId, walletType)
