@@ -263,7 +263,7 @@ export function WalletListModal(props: Props) {
         onPress={handleWalletListPress}
         navigation={navigation}
       />
-      <ModalCloseArrow onPress={handleCancel} />
+      <ModalCloseArrow onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }

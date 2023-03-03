@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -12,22 +11,19 @@ const END = { x: 0, y: 1 }
 /*
  * Used for adding a gradient fadeout to the bottom of a list modal
  */
-export function GradientFadeOut() {
+export const GradientFadeOut = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = theme.modal
-  const colors: string[] = MARKS.map(mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2))
-
-  return (
-    <View>
-      <LinearGradient style={styles.container} start={START} end={END} colors={colors} locations={MARKS} pointerEvents="none" />
-    </View>
-  )
+  const colors: string[] = React.useMemo(() => {
+    return MARKS.map(mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2))
+  }, [color])
+  return <LinearGradient style={styles.container} start={START} end={END} colors={colors} locations={MARKS} pointerEvents="none" />
 }
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     position: 'absolute',
-    height: theme.rem(1.5),
+    height: theme.rem(3),
     width: '100%',
     bottom: 0
   }

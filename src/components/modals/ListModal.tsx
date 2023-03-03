@@ -69,9 +69,9 @@ export function ListModal<T>({
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
-      {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      {textInput && (
+      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
+      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+      {textInput == null ? null : (
         <OutlinedTextInput
           // Our props:
           searchIcon
@@ -96,7 +96,7 @@ export function ListModal<T>({
         keyExtractor={(_, i) => `${i}`}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-      {closeArrow && <ModalCloseArrow onPress={handleCancel} />}
+      {!closeArrow ? null : <ModalCloseArrow onPress={handleCancel} fadeOut />}
     </ThemedModal>
   )
 }
