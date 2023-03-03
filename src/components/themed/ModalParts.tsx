@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -47,10 +48,41 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
   )
 }
 
+export function ModalScrollArea(props: { children: React.ReactNode; onCancel: () => void }) {
+  const { children, onCancel } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const gradientTopColor = theme.modal + '00' // Add full transparency to the modal color
+  const gradientBottomColor = theme.modal
+
+  return (
+    <View>
+      <ScrollView contentContainerStyle={styles.scrollPadding}>{children}</ScrollView>
+      <LinearGradient style={styles.scrollGradient} colors={[gradientTopColor, gradientBottomColor]} start={gradientStart} end={gradientEnd}>
+        <ModalCloseArrow onPress={onCancel} />
+      </LinearGradient>
+    </View>
+  )
+}
+
+const gradientStart = { x: 0, y: 0 }
+const gradientEnd = { x: 0, y: 0.75 }
+
 const getStyles = cacheStyles((theme: Theme) => ({
   closeArrow: {
     alignItems: 'center',
     paddingTop: theme.rem(1)
+  },
+  scrollGradient: {
+    bottom: 0,
+    height: theme.rem(2.5),
+    left: 0,
+    position: 'absolute',
+    right: 0
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(2.5)
   },
   titleContainer: {
     alignItems: 'center',
