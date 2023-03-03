@@ -1,7 +1,6 @@
-import { EdgeCurrencyWallet, EdgeWalletStates } from 'edge-core-js'
+import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
-import SortableListView from 'react-native-sortable-listview'
+import DraggableFlatList, { DragEndParams, RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -17,15 +16,17 @@ interface Props {}
 export function WalletListSortable(props: Props) {
   // Subscribe to account state:
   const account = useSelector(state => state.core.account)
-
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const [walletOrder, setWalletOrder] = React.useState(account.activeWalletIds)
 
-  const handleRowMoved = useHandler((action: { from: number; to: number }) => {
-    const newOrder = [...walletOrder]
-    newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
-    setWalletOrder(newOrder)
-  })
+  const [walletOrder, setWalletOrder] = React.useState(account.activeWalletIds)
+  const handleDragEnd = useHandler((params: DragEndParams<string>) => setWalletOrder(params.data))
+
+  const keyExtractor = useHandler((walletId: string) => walletId)
+  const renderItem = useHandler((params: RenderItemParams<string>) => (
+    <ScaleDecorator activeScale={0.9}>
+      <WalletListSortableRow wallet={currencyWallets[params.item]} onDrag={params.drag} />
+    </ScaleDecorator>
+  ))
 
   React.useEffect(() => () => {
     const keyStates: EdgeWalletStates = {}
@@ -36,14 +37,5 @@ export function WalletListSortable(props: Props) {
     account.changeWalletStates(keyStates).catch(showError)
   })
 
-  return (
-    <SortableListView
-      style={StyleSheet.absoluteFill}
-      data={currencyWallets}
-      order={walletOrder}
-      onRowMoved={handleRowMoved}
-      renderRow={(wallet: EdgeCurrencyWallet | undefined) => <WalletListSortableRow wallet={wallet} />}
-      disableAnimatedScrolling
-    />
-  )
+  return <DraggableFlatList data={walletOrder} keyExtractor={keyExtractor} renderItem={renderItem} onDragEnd={handleDragEnd} />
 }

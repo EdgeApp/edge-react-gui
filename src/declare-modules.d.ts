@@ -41,5 +41,4 @@ declare module 'edge-currency-accountbased' {
 
 declare module 'edge-currency-monero/lib/react-native-io'
 declare module 'react-native-smart-splash-screen'
-declare module 'react-native-sortable-listview'
 declare module 'rn-id-blurview'
