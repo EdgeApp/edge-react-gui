@@ -1,0 +1,23 @@
+# Launches the app with a cleared cache, and logs in with the CREDENTIALS environment variable.
+appId: co.edgesecure.app
+env:
+    CREDENTIALS: ${output.CREDENTIALS}
+---
+- runFlow:
+    file: launch-cleared.yaml
+- assertVisible: "Username"
+- tapOn: 
+    id: usernameFormField
+- inputText: ${CREDENTIALS.USERNAME}
+- tapOn: 
+    id: passwordFormField
+- inputText: ${CREDENTIALS.PASSWORD}
+- hideKeyboard
+- pressKey: Enter
+- runFlow:
+    when:
+      visible: Two Factor Authentication
+    file: input-2fa.yaml
+    env: 
+        BACKUP_CODE: ${CREDENTIALS.BACKUP_CODE}
+    

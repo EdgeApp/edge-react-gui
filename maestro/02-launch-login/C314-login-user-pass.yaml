@@ -5,11 +5,10 @@
 #  1. User is able to login with a valid Username and Password without 2FA or IP2FA blocked.
 
 appId: co.edgesecure.app
-tags:
-    - auth
 ---
 - runFlow:
     file: ../common/launch.yaml
+- runScript: ${../env.js}
 - assertVisible: "Exit PIN"
 - tapOn: 
     text: "Exit PIN"
@@ -17,10 +16,10 @@ tags:
 - assertVisible: "Username"
 - copyTextFrom: 
     id: usernameFormField
-- assertTrue: ${USERNAME === maestro.copiedText}
+- assertTrue: ${output.C314.USERNAME === maestro.copiedText}
 - tapOn: 
     id: passwordFormField
-- inputText: ${PASSWORD}
+- inputText: ${output.C314.PASSWORD}
 - pressKey: "Enter"
 - tapOn: "Login"
 - assertVisible: "BTC"

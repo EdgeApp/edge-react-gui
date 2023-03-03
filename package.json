@@ -46,6 +46,7 @@
     "start.plugins": "webpack serve",
     "start": "react-native start",
     "test": "jest --config jest.config.js",
+    "maestro": "maestro test maestro/entrypoint.yaml",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "update-version": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
