@@ -1,5 +1,12 @@
 # edge-react-gui
 
+## 3.4.0 (2023-03-03)
+
+- added: Safety check to see if keys have been uploaded to Edge infrastructure.
+- added: Sweep-to-self feature to migrate funds to new keys.
+- added: Ability to view logs through the "share" feature.
+- changed: Disable the "Upload logs" feature if the logs contain things that look like keys.
+
 ## 3.3.1 (2023-02-20)
 
 - fixed: Stop writing private keys to logs when visiting the GUI plugin WebView.
