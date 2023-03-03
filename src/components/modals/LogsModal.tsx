@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View, ViewStyle } from 'react-native'
+import { Platform } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import RNFS from 'react-native-fs'
 import Share, { ShareOptions } from 'react-native-share'
@@ -8,11 +8,9 @@ import { MultiLogOutput } from '../../actions/LogActions'
 import s from '../../locales/strings'
 import { sendLogs } from '../../modules/Logs/api'
 import { WarningCard } from '../cards/WarningCard'
-import { CrossFade } from '../common/CrossFade'
 import { showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 interface Props {
@@ -24,8 +22,6 @@ const SENSITIVE_KEY_REGEX = /(allKeys|displayPrivateSeed|displayPublicSeed|otpKe
 
 export const LogsModal = (props: Props) => {
   const { bridge, logs } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
   const [userMessage, setUserMessage] = React.useState('')
 
   const isDangerous = React.useMemo(() => {
@@ -74,54 +70,28 @@ export const LogsModal = (props: Props) => {
   const handleCancel = () => {
     bridge.resolve(undefined)
   }
-  const minHeight: ViewStyle = { minHeight: isDangerous ? theme.rem(9) : theme.rem(7) }
+
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <View style={styles.containerStyle}>
+      <ModalScrollArea onCancel={handleCancel}>
         <ModalTitle>{s.strings.settings_button_export_logs}</ModalTitle>
-        <View style={minHeight}>
-          <CrossFade activeKey={isDangerous ? 'warning' : 'message'}>
-            <View key="warning">
-              <WarningCard key="warning" title={s.strings.string_warning} footer={s.strings.settings_modal_send_unsafe} marginRem={0.5} />
-            </View>
-            <View key="message">
-              <ModalMessage>{s.strings.settings_modal_export_logs_message + '\n'}</ModalMessage>
-            </View>
-          </CrossFade>
-        </View>
+        {!isDangerous ? null : <WarningCard key="warning" title={s.strings.string_warning} footer={s.strings.settings_modal_send_unsafe} marginRem={0.5} />}
+        {isDangerous ? null : <ModalMessage>{s.strings.settings_modal_export_logs_message}</ModalMessage>}
         <OutlinedTextInput
-          autoFocus
           autoCorrect
+          autoFocus={false}
           label={s.strings.settings_modal_send_logs_label}
-          returnKeyType="done"
-          multiline
-          marginRem={[0, 0.5, 1.5, 0.5]}
-          onChangeText={setUserMessage}
-          value={userMessage}
+          marginRem={1}
           maxLength={1000}
+          onChangeText={setUserMessage}
+          returnKeyType="done"
+          value={userMessage}
         />
-        {
-          // Hack around the android:windowSoftInputMode="adjustPan" glitch:
-          Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
-        }
-      </View>
-
-      <View style={styles.buttonsStyle}>
-        <MainButton label={s.strings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
+        {isDangerous ? null : (
+          <MainButton label={s.strings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
+        )}
         <MainButton label={s.strings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
-      </View>
-      <ModalCloseArrow onPress={handleCancel} />
+      </ModalScrollArea>
     </ThemedModal>
   )
 }
-const getStyles = cacheStyles((theme: Theme) => ({
-  containerStyle: {
-    flex: 1
-  },
-  buttonsStyle: {
-    justifyContent: 'flex-end'
-  },
-  messageContainer: {
-    justifyContent: 'center'
-  }
-}))
