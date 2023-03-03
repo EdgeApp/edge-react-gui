@@ -9,6 +9,7 @@ import s from '../../locales/strings'
 import { sendLogs } from '../../modules/Logs/api'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
+import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
@@ -66,6 +67,7 @@ export const LogsModal = (props: Props) => {
         throw new Error(`${s.strings.settings_modal_send_logs_failure} info logs code ${e?.message}`)
       })
     ])
+    showToast(s.strings.settings_modal_send_logs_success)
     bridge.resolve()
   }
 
