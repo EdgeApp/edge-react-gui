@@ -366,7 +366,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="header" hasTabs>
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (

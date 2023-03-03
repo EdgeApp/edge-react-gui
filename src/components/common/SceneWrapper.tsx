@@ -52,7 +52,7 @@ interface Props {
  */
 export class SceneWrapper extends React.Component<Props> {
   render() {
-    const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
+    const { avoidKeyboard = false, hasHeader = true, hasTabs = false } = this.props
 
     return (
       <LayoutContext>

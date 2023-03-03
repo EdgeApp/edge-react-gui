@@ -233,7 +233,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper background="theme" avoidKeyboard>
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
@@ -254,7 +254,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           <FlatList
             style={styles.resultList}
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
             initialNumToRender={12}
             keyboardShouldPersistTaps="handled"
