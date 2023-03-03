@@ -14,7 +14,7 @@ import { EdgeText } from '../themed/EdgeText'
 interface StakingReturnsCardParams {
   fromCurrencyLogos: string[]
   toCurrencyLogos: string[]
-  apy: number
+  apy?: number
   stakeProviderInfo?: StakeProviderInfo
 }
 
@@ -33,7 +33,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, st
   }
 
   const renderEstimatedReturn = () => {
-    if (apy <= 0) return null
+    if (apy == null || apy <= 0) return null
     const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
     return <EdgeText>{sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
   }
