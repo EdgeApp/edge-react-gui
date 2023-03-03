@@ -475,11 +475,14 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     const totalFeePercent = (Number(totalFee) / Number(nativeAmount)) * 100
     const { apy } = policy
 
-    const breakEvenYears = totalFeePercent / apy
-    const breakEvenDays = breakEvenYears * 365
-
-    quoteInfo = {
-      breakEvenDays
+    if (apy == null || apy <= 0) {
+      quoteInfo = {}
+    } else {
+      const breakEvenYears = totalFeePercent / apy
+      const breakEvenDays = breakEvenYears * 365
+      quoteInfo = {
+        breakEvenDays
+      }
     }
   }
 
