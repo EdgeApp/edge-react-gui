@@ -1,3 +1,5 @@
+import { LogOutput } from '../../actions/LogActions'
+
 const API_PREFIX = 'https://logs1.edge.app/v1/'
 
 const headers = {
@@ -34,5 +36,4 @@ const request = async (name, path, method, data) => {
     })
 }
 
-// @ts-expect-error
-export const sendLogs = async logs => request('SENDING LOGS', 'log/', 'PUT', logs)
+export const sendLogs = async (logs: LogOutput) => request('SENDING LOGS', 'log/', 'PUT', logs)

@@ -7,16 +7,20 @@ import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { TextInputModal } from '../components/modals/TextInputModal'
+import { LogsModal } from '../components/modals/LogsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { asActionProgram, asActionProgramState } from '../controllers/action-queue/cleaners'
 import { ActionProgram, ActionProgramState } from '../controllers/action-queue/types'
 import s from '../locales/strings'
-import { sendLogs } from '../modules/Logs/api'
 import { ThunkAction } from '../types/reduxTypes'
-import { clearLogs, log, logWithType, readLogs } from '../util/logger'
+import { clearLogs, logWithType, readLogs } from '../util/logger'
 
-interface LogOutput {
+export interface MultiLogOutput {
+  activity: LogOutput
+  info: LogOutput
+}
+
+export interface LogOutput {
   isoDate: string
   uniqueId: string
   userMessage: string
@@ -60,20 +64,8 @@ export function showSendLogsModal(): ThunkAction<Promise<void>> {
     const state = getState()
     const { isConnected } = state.network
     if (!isConnected) return showError(s.strings.network_alert_title)
-
-    Airship.show<string | undefined>(bridge => (
-      <TextInputModal
-        bridge={bridge}
-        inputLabel={s.strings.settings_modal_send_logs_label}
-        returnKeyType="send"
-        title={s.strings.settings_button_send_logs}
-        onSubmit={async notes => {
-          await dispatch(prepareLogs(notes))
-          showToast(s.strings.settings_modal_send_logs_success)
-          return true
-        }}
-      />
-    ))
+    const logs = await dispatch(getLogOutput())
+    await Airship.show(bridge => <LogsModal bridge={bridge} logs={logs} />)
   }
 }
 
@@ -89,7 +81,7 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
             label: 'Clear',
             type: 'secondary',
             onPress: async () => {
-              await dispatch(clearAllLogs())
+              await clearAllLogs()
               showToast(s.strings.settings_modal_clear_logs_success)
               return true
             }
@@ -104,16 +96,14 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
   }
 }
 
-export function clearAllLogs(): ThunkAction<Promise<void>> {
-  return async (_dispatch, _getState) => {
-    await clearLogs('activity')
-    await logWithType('activity', 'CLEARED ACTIVITY LOGS')
-    await clearLogs('info')
-    await logWithType('info', 'CLEARED INFO LOGS')
-  }
+export async function clearAllLogs(): Promise<void> {
+  await clearLogs('activity')
+  await logWithType('activity', 'CLEARED ACTIVITY LOGS')
+  await clearLogs('info')
+  await logWithType('info', 'CLEARED INFO LOGS')
 }
 
-function prepareLogs(text: string): ThunkAction<Promise<void>> {
+export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
   return async (dispatch, getState) => {
     const id = Math.floor(Math.random() * 0xffffff).toString(16)
     const infoId = id + '_info'
@@ -122,7 +112,7 @@ function prepareLogs(text: string): ThunkAction<Promise<void>> {
     const logOutput: LogOutput = {
       isoDate: new Date().toISOString(),
       uniqueId: infoId,
-      userMessage: text,
+      userMessage: '',
       deviceInfo: `${getBrand()} ${getDeviceId()}`,
       appVersion: packageJson.version,
       OS: Platform.OS,
@@ -134,8 +124,8 @@ function prepareLogs(text: string): ThunkAction<Promise<void>> {
     activityOutput.uniqueId = activityId
 
     const state = getState()
-    const { actionQueue } = state
-    const { account, context } = state.core
+    const { actionQueue, core } = state
+    const { account, context } = core
 
     if (context) {
       // Get local accounts
@@ -197,40 +187,29 @@ function prepareLogs(text: string): ThunkAction<Promise<void>> {
         logOutput.loggedInUser.actions.push(actionData)
       }
     }
+
     logOutput.data += `App version: ${packageJson.version}
 App build: ${getVersion()}.${getBuildNumber()}
 os: ${Platform.OS} ${Platform.Version}
 device: ${getBrand()} ${getDeviceId()}
 `
 
-    //
-    // Send log output
-    //
+    // Get activity logs
+    const activityLogs = await readLogs('activity')
+    activityOutput.data += activityLogs == null ? '' : activityLogs
 
-    await logWithType('activity', 'SENDING ACTIVITY LOGS WITH MESSAGE: ' + text)
-      .then(async () => await readLogs('activity'))
-      .then(async logs => {
-        activityOutput.data += logs || ''
-        return sendLogs(activityOutput)
-      })
-      .catch(e => {
-        throw new Error(`${s.strings.settings_modal_send_logs_failure} activity logs code ${e.message}`)
-      })
+    // Get info logs
+    const infoLogs = await readLogs('info')
+    logOutput.data += infoLogs == null ? '' : infoLogs
 
-    await log('SENDING INFO LOGS WITH MESSAGE: ' + text)
-      .then(async () => await readLogs('info'))
-      .then(async logs => {
-        logOutput.data += logs || ''
-        return sendLogs(logOutput)
-      })
-      .catch(e => {
-        throw new Error(`${s.strings.settings_modal_send_logs_failure} info logs code ${e.message}`)
-      })
+    return { activity: activityOutput, info: logOutput }
   }
 }
+
 function getRepoId(key: string): string {
   if (typeof key === 'string') {
     return base16.stringify(base64.parse(key)).toLowerCase()
   }
+
   return 'Invalid syncKey type'
 }

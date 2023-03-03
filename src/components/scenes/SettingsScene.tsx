@@ -335,6 +335,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
           <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
+          <SettingsTappableRow label={s.strings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
           <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
@@ -343,7 +344,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             onPress={this.handleVerboseLoggingToggle}
           />
           <Space around={2}>
-            <MainButton alignSelf="center" label={s.strings.settings_button_send_logs} type="secondary" onPress={handleSendLogs} />
+            <MainButton alignSelf="center" label={s.strings.settings_button_export_logs} type="secondary" onPress={handleSendLogs} />
             <MainButton alignSelf="center" label={s.strings.settings_button_clear_logs} marginRem={[1, 0, 0, 0]} type="escape" onPress={handleClearLogs} />
           </Space>
         </ScrollView>
@@ -372,8 +373,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     handleClearLogs() {
       dispatch(showClearLogsModal())
     },
-    handleSendLogs() {
-      dispatch(showSendLogsModal())
+    async handleSendLogs() {
+      await dispatch(showSendLogsModal())
     },
     lockSettings() {
       dispatch({
