@@ -10,6 +10,7 @@ import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
+import { SepaDisplayGroup } from '../plugins/gui/scenes/SepaTransferScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
 import { FormFieldProps, FormProps } from './FormTypes'
@@ -220,7 +221,7 @@ interface RouteParamList {
   }
   guiPluginSepaTransfer: {
     headerTitle: string
-    labelToValueMap: Map<string, string>
+    groupedDisplayData: SepaDisplayGroup[]
     promptMessage: string
   }
   loanDashboard: {}

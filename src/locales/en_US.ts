@@ -8,6 +8,18 @@ const strings = {
   state_province_region: 'State/Provice/Region',
   zip_postal_code: 'Zip/Postal Code',
 
+  input_title: 'Input',
+  input_output_amount: 'Amount',
+  input_output_currency: 'Currency',
+  output_title: 'Output',
+  payment_details_title: 'Payment Details',
+  iban: 'IBAN',
+  recipient: 'Recipient',
+  reference: 'Reference',
+  swift_bic: 'SWIFT/BIC',
+  sepa_transfer_prompt_s:
+    'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
+
   // #region Action Queue Display Info
   // Unknown
   action_queue_display_unknown_title: `Unknown action`,
@@ -332,7 +344,6 @@ const strings = {
   help_visit_site: 'Visit the %1$s site',
   help_site_more_info_text: 'More info on %1$s',
   home_address_title: 'Home Address',
-  iban: 'IBAN',
   loading: 'Loading…',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',

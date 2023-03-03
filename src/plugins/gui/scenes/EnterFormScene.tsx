@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
-import { BackHandler, NativeSyntheticEvent, ScrollView, TextInputFocusEventData, TouchableOpacity, View } from 'react-native'
-import Animated from 'react-native-reanimated'
-import { MaterialIcon } from 'react-native-vector-icons/MaterialIcons'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 
 import { getDiskletForm, setDiskletForm } from '../../../actions/FormActions'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
@@ -24,7 +22,7 @@ interface Props {
   route: RouteProp<'guiPluginEnterForm'>
 }
 
-const FUZZY_SEARCH_INTERVAL = 1000
+const FUZZY_SEARCH_INTERVAL = 2000
 
 const asKmootResponse = asObject({
   features: asArray(
@@ -63,8 +61,6 @@ export const EnterFormScene = React.memo((props: Props) => {
   const [prevAddressQuery, setPrevAddressQuery] = React.useState<string | undefined>(undefined)
   const [isHintsDropped, setIsHintsDropped] = React.useState(false)
 
-  const addressFieldRef = React.useRef<OutlinedTextInputRef>(null)
-
   const inputRefs = React.useRef<{ [key: string]: OutlinedTextInputRef | null }>({})
 
   const addressQuery = React.useMemo(() => {
@@ -91,38 +87,23 @@ export const EnterFormScene = React.memo((props: Props) => {
     setForms([...updatedForms])
   })
 
-  // When the user taps on the visible background gray area while the address
-  // search results are shown
-  const handleInvisibleTap = () => {
-    setIsHintsDropped(false)
-  }
-
-  const handleAddressFieldSelect = useHandler(() => {
-    setIsHintsDropped(true)
-  })
-
-  const handleAddressFieldDeselect = useHandler(() => {
-    setIsHintsDropped(false)
-  })
-
   const isBlurEventRef = React.useRef(false)
 
   const handleBlur = useHandler((key: string) => () => {
     const inputRef = inputRefs.current[key]
 
-    // Special handling takes care of an address field
-    // if (inputRef != null && key.split('_')[1].trim() !== 'address') {
     if (inputRef != null) {
-      console.debug('BLUR')
-      setTimeout(() => inputRef.blur())
+      inputRef.blur()
     }
+  })
+
+  const handleFocus = useHandler((key: string) => () => {
+    setIsHintsDropped(key.split('_')[1].trim() === 'address')
   })
 
   // Populate the address fields with the values from the selected search
   // results
   const handleAddressHintPress = useHandler((searchResult: HomeAddress) => () => {
-    console.debug('handleAddressHintPress')
-
     const updatedForms = forms.map(form => {
       if (form.formType === 'addressForm') {
         const updatedFields = form.fields.map(field => {
@@ -195,41 +176,45 @@ export const EnterFormScene = React.memo((props: Props) => {
         setPrevAddressQuery(addressQuery)
 
         // Fetch fuzzy search results
-        const res = await fetch(`https://photon.komoot.io/api/?q=${addressQuery}`).catch(e => {
-          throw e
-        })
-        const json = await res.json().catch(e => {
-          throw e
-        })
-
-        // Filter valid addresses by country code and if the required address
-        // fields are there, then mutate the data to our required address type
         try {
-          const kmootResult = asKmootResponse(json)
-          const searchResults: HomeAddress[] = kmootResult.features
-            .filter(rawFeature => {
-              try {
-                const cleanedProperties = asKmootValidProperties(rawFeature.properties)
-                return cleanedProperties.countrycode.toUpperCase() === countryCode
-              } catch {
-                return false
-              }
-            })
-            .map(feature => {
-              const { housenumber, street, city, state, postcode, countrycode } = asKmootValidProperties(feature.properties)
-              return {
-                address: `${street} ${housenumber ?? ''}`,
-                address2: undefined,
-                city,
-                state,
-                postalCode: postcode,
-                country: countrycode
-              }
-            })
+          const res = await fetch(`https://photon.komoot.io/api/?q=${addressQuery}`).catch(e => {
+            throw e
+          })
+          const json = await res.json().catch(e => {
+            throw e
+          })
 
-          setSearchResults([...searchResults])
+          // Filter valid addresses by country code and if the required address
+          // fields are there, then mutate the data to our required address type
+          try {
+            const kmootResult = asKmootResponse(json)
+            const searchResults: HomeAddress[] = kmootResult.features
+              .filter(rawFeature => {
+                try {
+                  const cleanedProperties = asKmootValidProperties(rawFeature.properties)
+                  return cleanedProperties.countrycode.toUpperCase() === countryCode
+                } catch {
+                  return false
+                }
+              })
+              .map(feature => {
+                const { housenumber, street, city, state, postcode, countrycode } = asKmootValidProperties(feature.properties)
+                return {
+                  address: `${street} ${housenumber ?? ''}`,
+                  address2: undefined,
+                  city,
+                  state,
+                  postalCode: postcode,
+                  country: countrycode
+                }
+              })
+
+            setSearchResults([...searchResults])
+          } catch (e) {
+            console.debug(e)
+          }
         } catch (e) {
-          console.debug(e)
+          console.debug('failed to get search')
         }
       } else {
         setSearchResults([])
@@ -247,14 +232,13 @@ export const EnterFormScene = React.memo((props: Props) => {
 
   // Changes to the number of address hints results
   React.useEffect(() => {
-    if (searchResults.length > 0) setIsHintsDropped(true)
-    else setIsHintsDropped(false)
+    if (searchResults.length === 0) setIsHintsDropped(false)
 
     return () => {}
   }, [searchResults])
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper scroll background="theme" keyboardShouldPersistTaps="always">
       <SceneHeader title={headerTitle} underline withTopMargin />
       {forms.map(form => (
         <View key={form.title}>
@@ -267,14 +251,11 @@ export const EnterFormScene = React.memo((props: Props) => {
                 <OutlinedTextInput
                   returnKeyType="next"
                   label={field.label}
-                  onChangeText={handleUserInput(form.formType, field.key)} // TODO:? Need a separate handler per field?
+                  onChangeText={handleUserInput(form.formType, field.key)}
                   value={field.value ?? ''}
                   autoFocus={forms.indexOf(form) === 0 && form.fields.indexOf(field) === 0}
-                  // onFocus={isAddressField ? handleAddressFieldSelect : handleAddressFieldDeselect}
-                  // onBlur={isAddressField ? handleAddressFieldDeselect : handleBlur(key)}
-                  onFocus={isAddressField ? handleAddressFieldSelect : undefined}
-                  onBlur={isAddressField ? undefined : handleBlur(key)}
-                  // ref={isAddressField ? addressFieldRef : input => (inputRefs.current[`${form.key}_${field.key}`] = input)}
+                  onFocus={handleFocus(key)}
+                  onBlur={!isAddressField ? handleBlur(key) : undefined}
                   ref={input => (inputRefs.current[`${form.key}_${field.key}`] = input)}
                 />
                 {isAddressField && isHintsDropped && searchResults.length > 0 ? (
@@ -283,13 +264,14 @@ export const EnterFormScene = React.memo((props: Props) => {
                       {searchResults.map(searchResult => {
                         const displaySearchResult = `${searchResult.address}, ${searchResult.city}, ${searchResult.state} ${searchResult.postalCode}`
                         return (
-                          // <TouchableOpacity key={displaySearchResult} style={styles.rowContainer} onPress={handleAddressHintPress(searchResult)}>
                           <TouchableOpacity
                             key={searchResults.indexOf(searchResult)}
                             style={styles.rowContainer}
                             onPress={handleAddressHintPress(searchResult)}
                           >
-                            <EdgeText>{displaySearchResult}</EdgeText>
+                            <EdgeText style={styles.addressHintText} numberOfLines={2}>
+                              {displaySearchResult}
+                            </EdgeText>
                           </TouchableOpacity>
                         )
                       })}
@@ -307,19 +289,29 @@ export const EnterFormScene = React.memo((props: Props) => {
 })
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  addressHintText: {
+    marginHorizontal: theme.rem(0.5),
+    marginVertical: theme.rem(0.25)
+  },
   dropContainer: {
     backgroundColor: theme.modal,
     borderBottomLeftRadius: theme.rem(1),
     borderBottomRightRadius: theme.rem(1),
-    zIndex: 2,
+    zIndex: 1,
+    borderColor: theme.secondaryText,
+    borderWidth: theme.thinLineWidth,
+    overflow: 'hidden',
     position: 'absolute',
-    marginTop: theme.rem(3.5),
-    marginLeft: theme.rem(1),
-    marginRight: theme.rem(1)
+    top: theme.rem(3.5),
+    left: theme.rem(1),
+    right: theme.rem(1),
+    maxHeight: theme.rem(15)
   },
   formSectionTitle: {
     marginLeft: theme.rem(0.5),
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1),
+    marginBottom: theme.rem(0.5),
+    fontFamily: theme.fontFaceBold
   },
   rowContainer: {
     display: 'flex',
@@ -336,46 +328,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
-
-// // Height value above can change if users are added/removed
-// const sMaxHeight = useSharedValue(userListHeight)
-// React.useEffect(() => {
-//   sMaxHeight.value = withTiming(userListHeight)
-// }, [sMaxHeight, userListHeight])
-// const aDropdown = useAnimatedStyle(() => ({
-//   height: sMaxHeight.value * sAnimationMult.value
-// }))
-
-// dropContainer: {
-//   backgroundColor: theme.modal,
-//   borderBottomLeftRadius: theme.rem(2),
-//   zIndex: 2,
-//   position: 'absolute',
-//   width: '100%'
-// },
-// rowsContainer: {
-//   flex: 1,
-//   flexGrow: 1,
-//   marginBottom: theme.rem(0)
-// },
-// rowBodyContainer: {
-//   display: 'flex',
-//   flexDirection: 'row',
-//   justifyContent: 'flex-start',
-//   alignItems: 'center',
-//   flexGrow: 1,
-//   flexShrink: 1,
-//   marginRight: theme.rem(1)
-// },
-
-// message.push('Please instruct your bank to do the following payment :')
-// message.push('Amount: €' + buyOrder.input.amount)
-// message.push('IBAN: ' + wireInformation.iban)
-// message.push('Reference: ' + wireInformation.reference)
-// message.push('Recipient: ' + wireInformation.recipient)
-// message.push('')
-// message.push('Additional Data:')
-// message.push('Bank Address: ' + wireInformation.bank_address)
-// message.push('Bank Code: ' + wireInformation.bank_code)
-// message.push('Account: ' + wireInformation.account_number)
-// message.push('SWIFT BIC: ' + wireInformation.swift_bic)

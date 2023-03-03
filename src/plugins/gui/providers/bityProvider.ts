@@ -1,6 +1,7 @@
 import { lt } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
@@ -15,7 +16,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-import { GroupedResult } from '../scenes/SepaTransferScene'
+import { SepaDisplayGroup } from '../scenes/SepaTransferScene'
 
 const pluginId = 'bity'
 const storeId = 'com.bity'
@@ -56,38 +57,20 @@ const allowedCountryCodes: { readonly [code: string]: boolean } = {
 }
 const allowedPaymentTypes: { readonly [Payment in FiatPaymentType]?: boolean } = { sepa: true }
 
-const LABEL_MAP: { readonly [bityDataKey: string]: string } = {
-  id: s.strings.id,
+const DATA_DISPLAY_MAP: { readonly [bityDataKey: string]: string } = {
+  id: s.strings.transaction_details_exchange_order_id,
   input: s.strings.input_title,
-  input_amount: s.strings.input_amount,
-  input_currency: s.strings.input_currency,
-  output_amount: s.strings.output_amount,
-  output_currency: s.strings.output_currency,
+  input_amount: s.strings.input_output_amount,
+  input_currency: s.strings.input_output_currency,
+  output: s.strings.output_title,
+  output_amount: s.strings.input_output_amount,
+  output_currency: s.strings.input_output_currency,
   paymentdetails: s.strings.payment_details_title,
   paymentdetails_iban: s.strings.iban,
   paymentdetails_recipient: s.strings.recipient,
-  paymentdetails_recipientname: s.strings.recipient_name,
-  payment,
-  details,
-  recipientpostaladdress: s.strings.recipient_address,
   paymentdetails_reference: s.strings.reference,
   paymentdetails_swiftbic: s.strings.swift_bic
 }
-
-const GROUPING: { readonly [bityTitleKey: string]: string[] } = {
-  input: ['input_amount', 'input_currency'],
-  output: ['output_amount', 'output_currency'],
-  payment_details: [
-    'paymentdetails_iban',
-    'paymentdetails_swiftbic',
-    'paymentdetails_recipient',
-    'paymentdetails_recipientname',
-    'paymentdetails_recipientpostaladdress',
-    'paymentdetails_reference'
-  ]
-}
-
-const GROUPING_ORDER: string[] = ['input', 'output', 'payment_details']
 
 const asBityCurrencyTag = asValue('crypto', 'erc20', 'ethereum', 'fiat')
 const asBityCurrency = asObject({
@@ -594,137 +577,68 @@ export const bityProvider: FiatProviderFactory = {
               client_value: 0
             }
 
-            // const handleProps1 = (props: BityApproveQuoteResponse): GroupedResult => {
-            //   // Parse the raw data into display values
-            //   const labelToValueMap: Map<string, string> = new Map()
-
-            //   const handleValue = (key: string, value: any) => {
-            //     switch (key) {
-            //       case 'iban':
-            //         labelToValueMap.set('payment_details.iban', value.toUpperCase())
-            //         break
-            //       case 'recipient':
-            //         labelToValueMap.set('payment_details.recipient', value.trim())
-            //         break
-            //       case 'recipient_postal_address':
-            //         labelToValueMap.set('payment_details.recipient_postal_address', value.join(', '))
-            //         break
-            //       default:
-            //         labelToValueMap.set(key, value.toString())
-            //     }
-            //   }
-
-            //   const handleObject = (parentLabel: string, obj: any) => {
-            //     for (const key in obj) {
-            //       if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            //         const value = obj[key]
-            //         const label = parentLabel ? `${parentLabel}.${key}` : key
-
-            //         if (Array.isArray(value)) {
-            //           // Bank address
-            //           handleValue(label, value.join(', '))
-            //         }
-            //         if (value !== null && typeof value === 'object') {
-            //           handleObject(label, value)
-            //         } else {
-            //           handleValue(label, value)
-            //         }
-            //       }
-            //     }
-            //   }
-
-            //   handleObject('', props)
-
-            //   const orderedKeys = Object.keys(LABEL_MAP)
-
-            //   // group the keys based on their group title
-            //   const groups: { [groupTitle: string]: string[] } = {}
-            //   orderedKeys.forEach(key => {
-            //     const groupTitle = LABEL_MAP[key]
-            //     if (!groups[groupTitle]) {
-            //       groups[groupTitle] = []
-            //     }
-            //     groups[groupTitle].push(key)
-            //   })
-
-            //   // sort the groups based on their index in the order array
-            //   const groupTitles = Object.keys(groups)
-            //   groupTitles.sort((a, b) => {
-            //     const aIndex = GROUP_ORDER.indexOf(a)
-            //     const bIndex = GROUP_ORDER.indexOf(b)
-            //     return aIndex - bIndex
-            //   })
-
-            //   // loop through the groups, adding each key-value pair to its corresponding group
-            //   groupTitles.forEach(groupTitle => {
-            //     const items = groups[groupTitle].map(key => ({
-            //       label: LABEL_MAP[key],
-            //       value: labelToValueMap.get(key) ?? ''
-            //     }))
-            //     result.push({ groupTitle, items })
-            //   })
-
-            //   return result
-            // }
-
-            const parseBityApproveQuoteResponse = (response: BityApproveQuoteResponse): GroupedResult[] => {
-              const keyToValueMap: Map<string, string> = new Map()
-
-              const handleValue = (key: string, value: any) => {
-                switch (key) {
-                  case 'iban':
-                    keyToValueMap.set('paymentdetails_iban', value.toUpperCase())
-                    break
-                  case 'recipient':
-                    keyToValueMap.set('paymentdetails_recipient', value.trim())
-                    break
-                  case 'recipientpostaladdress':
-                    keyToValueMap.set('paymentDetails_recipientpostaladdress', value.join(', '))
-                    break
-                  default:
-                    keyToValueMap.set(key, value.toString())
-                }
-                console.debug(key + ', ' + value)
-              }
-
-              const handleObject = (parentKey: string | null, obj: any) => {
-                for (const key in obj) {
-                  if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    const value = obj[key]
-                    const parsedKey = parentKey ? `${parentKey}.${key}` : key
-
-                    if (Array.isArray(value)) {
-                      // Bank address
-                      handleValue(parsedKey, value.join(', '))
-                    }
-                    if (value !== null && typeof value === 'object') {
-                      handleObject(parsedKey, value)
-                    } else {
-                      handleValue(parsedKey, value)
-                    }
+            // Generic parsing implementation is too complicated. Hard-code.
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { input, output, id, payment_details } = approveQuoteRes
+            const groupedDisplayData: SepaDisplayGroup[] = [
+              {
+                groupTitle: DATA_DISPLAY_MAP.input,
+                items: [
+                  {
+                    label: DATA_DISPLAY_MAP.input_amount,
+                    value: input.amount
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.input_currency,
+                    value: input.currency
                   }
-                }
+                ]
+              },
+              {
+                groupTitle: DATA_DISPLAY_MAP.output,
+                items: [
+                  {
+                    label: DATA_DISPLAY_MAP.output_amount,
+                    value: output.amount
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.output_currency,
+                    value: output.currency
+                  }
+                ]
+              },
+              {
+                groupTitle: DATA_DISPLAY_MAP.paymentdetails,
+                items: [
+                  {
+                    label: DATA_DISPLAY_MAP.id,
+                    value: id
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.paymentdetails_iban,
+                    value: payment_details.iban
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.paymentdetails_swiftbic,
+                    value: payment_details.swift_bic
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.paymentdetails_recipient,
+                    value: payment_details.recipient
+                  },
+                  {
+                    label: DATA_DISPLAY_MAP.paymentdetails_reference,
+                    value: payment_details.reference
+                  }
+                ]
               }
+            ]
 
-              handleObject('', response)
-
-              const result: GroupedResult[] = []
-              GROUPING_ORDER.forEach(groupTitleKey => {
-                const keys = GROUPING[groupTitleKey]
-                const items = keys.map(key => ({
-                  label: LABEL_MAP[key] || key,
-                  value: keyToValueMap.get(key) ?? ''
-                }))
-                result.push({ groupTitle: LABEL_MAP[groupTitleKey], items })
-              })
-
-              return result
-            }
-
-            const groupDisplayData = parseBityApproveQuoteResponse(approveQuoteRes)
-            console.debug(JSON.stringify(groupDisplayData, null, 2))
-
-            // await showUi.transferInfo({ headerTitle: 'TODO', groupDisplayData, promptMessage: 'TODO' })
+            await showUi.transferInfo({
+              headerTitle: s.strings.payment_details_title,
+              groupedDisplayData,
+              promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id)
+            })
           },
           closeQuote: async (): Promise<void> => {}
         }

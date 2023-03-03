@@ -18,6 +18,67 @@ import { bityProvider } from './providers/bityProvider'
 
 const providerFactories = [bityProvider]
 
+async function getOrders() {
+  try {
+    const ordersResponse = await fetch('https://exchange.api.bity.com/v2/orders', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!ordersResponse.ok) {
+      throw new Error('Failed to retrieve orders')
+    }
+
+    const orders = await ordersResponse.json()
+    console.debug(JSON.stringify(orders, null, 2))
+    return orders.orders
+  } catch (e) {
+    console.error(`Error getting orders: ${e.message}`)
+    throw e
+  }
+}
+
+async function cancelOpenOrders() {
+  try {
+    const orders = await getOrders()
+    const openOrders = orders
+
+    if (openOrders.length === 0) {
+      console.debug('No open orders to cancel')
+      return
+    }
+
+    const cancelOrderPromises = openOrders.map(async order => {
+      console.debug('cancelling ' + order.id)
+      try {
+        const cancelResponse = await fetch(`https://exchange.api.bity.com/v2/orders/${order.id}/cancel`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!cancelResponse.ok) {
+          throw new Error('Failed to cancel order')
+        }
+
+        console.debug(`Order ${order.id} cancelled successfully`)
+      } catch (e) {
+        console.error(`Error cancelling order ${order.id}: ${e.message}`)
+      }
+    })
+
+    await Promise.all(cancelOrderPromises)
+  } catch (e) {
+    console.error(`Error cancelling orders: ${e.message}`)
+    throw e
+  }
+}
+
 export const sepaPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'sepaTransfer'
   const { disablePlugins, account, showUi, dispatch, state } = params

@@ -7,6 +7,7 @@ import { FormFieldProps, FormProps, HomeAddress } from '../../types/FormTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
+import { SepaDisplayGroup } from './scenes/SepaTransferScene'
 
 export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach', 'sepa')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
@@ -62,7 +63,7 @@ export interface FiatPluginSepaFormResponse {
 
 export interface FiatPluginTransferInfoParams {
   headerTitle: string
-  labelToValueMap: Map<string, string>
+  groupedDisplayData: SepaDisplayGroup[]
   promptMessage: string
 }
 

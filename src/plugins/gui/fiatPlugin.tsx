@@ -103,9 +103,9 @@ export const executePlugin = async (params: {
     },
 
     transferInfo: async (params: FiatPluginSepaTransferParams) => {
-      const { headerTitle, labelToValueMap, promptMessage } = params
+      const { headerTitle, groupedDisplayData, promptMessage } = params
       return new Promise((resolve, reject) => {
-        navigation.navigate('guiPluginSepaTransfer', { headerTitle, labelToValueMap, promptMessage })
+        navigation.navigate('guiPluginSepaTransfer', { headerTitle, groupedDisplayData, promptMessage })
       })
     }
   }
