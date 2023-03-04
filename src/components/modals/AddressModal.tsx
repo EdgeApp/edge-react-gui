@@ -1,7 +1,8 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -309,8 +310,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   render() {
     const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
-    const { title, userFioAddressesLoading } = this.props
-    const styles = getStyles(this.props.theme)
+    const { title, userFioAddressesLoading, theme } = this.props
+    const styles = getStyles(theme)
 
     return (
       <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
@@ -330,9 +331,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
             error={fieldError}
           />
           {!userFioAddressesLoading ? (
-            <FlatList
+            <FlashList
               data={filteredFioAddresses}
-              initialNumToRender={24}
+              estimatedItemSize={theme.rem(4.25)}
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFioAddressRow}

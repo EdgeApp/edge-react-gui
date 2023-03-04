@@ -1,9 +1,9 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { RefreshControl } from 'react-native'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
@@ -112,13 +112,13 @@ function WalletListSwipeableComponent(props: Props) {
     return null
   })
 
-  const handleItemLayout = useRowLayout()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
   return (
-    <FlatList
+    <FlashList
+      estimatedItemSize={theme.rem(4.25)}
       contentOffset={flatListContentOffset}
       data={data}
       keyboardShouldPersistTaps="handled"
@@ -126,7 +126,6 @@ function WalletListSwipeableComponent(props: Props) {
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
-      getItemLayout={handleItemLayout}
     />
   )
 }

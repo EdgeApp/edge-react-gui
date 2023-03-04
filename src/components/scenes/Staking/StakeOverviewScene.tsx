@@ -1,7 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
@@ -132,7 +132,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
-      <FlatList
+      <FlashList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}

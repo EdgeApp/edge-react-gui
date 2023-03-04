@@ -1,5 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -230,8 +231,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     [defaultSelection, handleNext, numSelected]
   )
 
-  const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
-
   return (
     <SceneWrapper background="theme" avoidKeyboard>
       {gap => (
@@ -251,16 +250,15 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onClear={() => setSearchTerm('')}
             onSubmitEditing={handleNext}
           />
-          <FlatList
+          <FlashList
             style={styles.resultList}
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
-            initialNumToRender={12}
+            estimatedItemSize={theme.rem(4.25)}
             keyboardShouldPersistTaps="handled"
             keyExtractor={item => item.key}
             renderItem={data => renderCreateWalletRow(data.item)}
-            getItemLayout={getItemLayout}
           />
           {renderNextButton}
         </View>

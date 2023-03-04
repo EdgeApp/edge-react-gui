@@ -1,8 +1,10 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, Keyboard, ListRenderItem, ViewToken } from 'react-native'
+import { Keyboard, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
+import { useTheme } from '../services/ThemeContext'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -53,6 +55,7 @@ export function ListModal<T>({
   onViewableItemsChanged,
   ...textProps
 }: Props<T>) {
+  const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) => (rowComponent ? rowComponent(item) : null)
@@ -84,10 +87,9 @@ export function ListModal<T>({
           {...textProps}
         />
       )}
-      <FlatList
-        style={{ flexGrow: fullScreen ? 1 : 0 }}
+      <FlashList
         data={filteredRows}
-        initialNumToRender={12}
+        estimatedItemSize={theme.rem(5)}
         onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
         renderItem={renderItem}
