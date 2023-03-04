@@ -17,7 +17,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
@@ -168,7 +168,7 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-      <ModalCloseArrow
+      <ModalFooter
         onPress={() => {
           handleClose().catch(showError)
         }}

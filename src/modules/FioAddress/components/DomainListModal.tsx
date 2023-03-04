@@ -8,7 +8,7 @@ import { Fontello } from '../../../assets/vector'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableText } from '../../../components/themed/ClickableText'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../../../components/themed/ModalParts'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { ThemedModal } from '../../../components/themed/ThemedModal'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
@@ -178,7 +178,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
         />
-        <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+        <ModalFooter onPress={() => bridge.resolve(undefined)} />
       </ThemedModal>
     )
   }

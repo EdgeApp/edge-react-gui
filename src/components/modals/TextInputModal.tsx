@@ -6,7 +6,7 @@ import s from '../../locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -122,7 +122,7 @@ export function TextInputModal(props: Props) {
       ) : (
         <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
       )}
-      <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+      <ModalFooter onPress={() => bridge.resolve(undefined)} />
     </ThemedModal>
   )
 }
