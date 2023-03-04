@@ -41,7 +41,7 @@ export function ModalMessage(props: { children: React.ReactNode; paddingRem?: nu
   return <Text style={[styles.messageText, padding, isWarning && styles.warningText]}>{children}</Text>
 }
 
-export function ModalCloseArrow(props: ModalFooterProps) {
+export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { fadeOut } = props
@@ -69,7 +69,7 @@ export function ModalScrollArea(props: { children: React.ReactNode; onCancel: ()
   return (
     <View>
       <ScrollView contentContainerStyle={styles.scrollPadding}>{children}</ScrollView>
-      <ModalCloseArrow onPress={onCancel} fadeOut />
+      <ModalFooter onPress={onCancel} fadeOut />
     </View>
   )
 }

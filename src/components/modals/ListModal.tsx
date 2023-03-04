@@ -5,7 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -96,7 +96,7 @@ export function ListModal<T>({
         keyExtractor={(_, i) => `${i}`}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-      {!closeArrow ? null : <ModalCloseArrow onPress={handleCancel} fadeOut />}
+      {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
     </ThemedModal>
   )
 }

@@ -18,7 +18,7 @@ import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -345,7 +345,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           )}
           <MainButton label={s.strings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
         </View>
-        <ModalCloseArrow onPress={this.handleClose} />
+        <ModalFooter onPress={this.handleClose} />
       </ThemedModal>
     )
   }

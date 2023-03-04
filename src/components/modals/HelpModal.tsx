@@ -12,7 +12,7 @@ import { PLATFORM } from '../../theme/variables/platform'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -50,7 +50,7 @@ class HelpWebViewModal extends React.Component<Props & { uri: string; title: str
         </ModalTitle>
         <WebView ref={element => (this.webview = element)} source={{ uri }} />
 
-        <ModalCloseArrow onPress={this.handleClose} />
+        <ModalFooter onPress={this.handleClose} />
       </ThemedModal>
     )
   }
@@ -145,7 +145,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           <EdgeText style={styles.version}>{buildText}</EdgeText>
         </View>
 
-        <ModalCloseArrow onPress={this.handleClose} />
+        <ModalFooter onPress={this.handleClose} />
       </ThemedModal>
     )
   }
