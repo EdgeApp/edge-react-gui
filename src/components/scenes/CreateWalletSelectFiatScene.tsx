@@ -21,7 +21,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FiatListModal } from '../modals/FiatListModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -80,6 +80,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
         logEvent('Create_Wallet_Success')
       } catch (error: any) {
+        showError(error)
         logEvent('Create_Wallet_Failed', { error: String(error) })
       }
       navigation.navigate('walletsTab', { screen: 'walletList' })
