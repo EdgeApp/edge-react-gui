@@ -72,9 +72,13 @@ export class AdvancedDetailsModalComponent extends PureComponent<Props> {
 
   render() {
     const { bridge, theme, url } = this.props
-    const { feeRateUsed, networkFeeOption, signedTx, txid, txSecret, deviceDescription } = this.props.transaction
+    const { feeRateUsed, networkFeeOption, ourReceiveAddresses, signedTx, txid, txSecret, deviceDescription } = this.props.transaction
     const recipientAddress = this.getRecipientAddress()
     const styles = getStyles(theme)
+    let receiveAddressesString
+    if (ourReceiveAddresses != null && ourReceiveAddresses.length > 0) {
+      receiveAddressesString = ourReceiveAddresses.join('\n')
+    }
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
@@ -92,6 +96,7 @@ export class AdvancedDetailsModalComponent extends PureComponent<Props> {
                 onPress={this.openUrl}
               />
             )}
+            {receiveAddressesString != null && <Tile type="static" title={s.strings.my_receive_addresses_title} body={receiveAddressesString} />}
             {networkFeeOption != null && (
               <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />
             )}
