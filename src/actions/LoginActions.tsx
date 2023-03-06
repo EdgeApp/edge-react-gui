@@ -72,8 +72,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.replace('edgeTabs', {
-          screen: 'walletList',
-          params: {}
+          screen: 'walletsTab',
+          params: {
+            screen: 'walletList'
+          }
         })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
         await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)

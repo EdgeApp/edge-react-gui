@@ -83,7 +83,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       } catch (error: any) {
         logEvent('Create_Wallet_Failed', { error: String(error) })
       }
-      navigation.navigate('walletList', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
       return
     }
     // Any other combination goes to the completion scene
@@ -142,7 +142,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // If all remaining create items are tokens just go enable them and return home
     if (newWalletItemsCopy.length === 0 && newTokenItems.length > 0) {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletList', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
       return
     }
 
