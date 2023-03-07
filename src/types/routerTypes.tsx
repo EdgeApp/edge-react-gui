@@ -3,6 +3,7 @@ import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
+import { PluginListProps } from '../components/scenes/GuiPluginListScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
@@ -266,8 +267,8 @@ interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: {}
-  pluginListSell: {}
+  pluginListBuy: PluginListProps
+  pluginListSell: PluginListProps
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

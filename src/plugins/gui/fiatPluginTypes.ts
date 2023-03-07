@@ -74,6 +74,7 @@ export interface FiatPluginStartParams {
   isBuy: boolean
   paymentTypes: FiatPaymentTypes
   regionCode: FiatPluginRegionCode
+  providerId?: string
 }
 export interface FiatPlugin {
   pluginId: string

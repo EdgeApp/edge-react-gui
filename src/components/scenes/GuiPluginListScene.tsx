@@ -17,12 +17,14 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import s from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
+import { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
+import { UriQueryMap } from '../../types/WebTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
@@ -63,6 +65,17 @@ const paymentTypeLogosById = {
 const pluginPartnerLogos = {
   moonpay: 'guiPluginLogoMoonpay',
   bitaccess: 'guiPluginLogoBitaccess'
+}
+
+export interface PluginListProps {
+  direction: 'buy' | 'sell'
+  pluginId?: string
+  providerId?: string
+  paymentType?: FiatPaymentType
+  deepPath?: string
+  deepQuery?: {
+    [key: string]: string | null
+  }
 }
 
 interface OwnProps {
@@ -127,6 +140,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         }
       })
       .catch((e: any) => console.error(e.message))
+    if (this.props.route.params.pluginId != null) {
+      const { deepPath, deepQuery = {}, paymentType, pluginId, providerId } = this.props.route.params
+      // The scene was deeplinked into. Route directly to plugin
+      this.openPlugin({ deepPath, deepQuery, paymentType, pluginId, providerId })
+    }
   }
 
   componentWillUnmount() {
@@ -230,9 +248,25 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin(listRow: GuiPluginRow) {
+  async openPluginRow(listRow: GuiPluginRow) {
+    const { pluginId, paymentType, deepPath, deepQuery } = listRow
+    this.openPlugin({ pluginId, paymentType, deepPath, deepQuery })
+  }
+
+  async openPlugin({
+    pluginId,
+    paymentType,
+    providerId,
+    deepPath,
+    deepQuery = {}
+  }: {
+    pluginId: string
+    paymentType?: FiatPaymentType
+    providerId?: string
+    deepPath?: string
+    deepQuery: UriQueryMap
+  }) {
     const { countryCode, disablePlugins, navigation, account } = this.props
-    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
@@ -241,10 +275,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Grab a custom URI if necessary:
-    let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
-      // @ts-expect-error
       deepPath = await Airship.show<string | undefined>(bridge => (
         <TextInputModal
           autoCorrect={false}
@@ -279,6 +311,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         regionCode: { countryCode },
         paymentType,
+        providerId,
         navigation,
         account
       })
