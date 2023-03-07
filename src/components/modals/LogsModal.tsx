@@ -18,7 +18,7 @@ interface Props {
   logs: MultiLogOutput
 }
 
-const SENSITIVE_KEY_REGEX = /(allKeys|displayPrivateSeed|displayPublicSeed|otpKey|loginKey|recoveryKey|dataKey|syncKey)/g
+const SENSITIVE_KEY_REGEX = /"(?:allKeys|displayPrivateSeed|displayPublicSeed|otpKey|loginKey|recoveryKey|dataKey|syncKey)\\*"/
 
 export const LogsModal = (props: Props) => {
   const { bridge, logs } = props
