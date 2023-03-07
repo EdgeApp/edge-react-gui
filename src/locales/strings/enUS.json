@@ -348,7 +348,7 @@
   "settings_modal_send_logs_success": "Logs have been sent",
   "settings_modal_send_logs_failure": "Sending logs has failed",
   "settings_modal_share_logs_failure": "Sharing logs has failed",
-  "settings_modal_send_unsafe": "These logs appear to contain sensitive information, so it is not safe to send them to Edge servers.",
+  "settings_modal_send_unsafe": "These logs appear to contain sensitive information, such as private keys and addresses, that could result in the loss of funds. Therefore, it is not safe to send these logs to Edge servers.",
   "settings_modal_send_logs_label": "Type Notes Here",
   "settings_options_title_cap": "Options",
   "settings_seconds": "Second(s)",
