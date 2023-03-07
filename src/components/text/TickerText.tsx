@@ -61,7 +61,7 @@ export const TickerText = React.memo(({ wallet, tokenId }: Props) => {
       marginLeft: theme.rem(0.75),
       alignSelf: 'center'
     }),
-    [deltaColorStyle]
+    [deltaColorStyle, theme]
   )
 
   const tickerText = `${fiatText} ${percentString}`
