@@ -897,7 +897,7 @@ const SendComponent = (props: Props) => {
   let disableSlider = false
   let disabledText: string | undefined
 
-  if (edgeTransaction == null || processingAmountChanged) {
+  if (edgeTransaction == null || processingAmountChanged || error != null) {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true
