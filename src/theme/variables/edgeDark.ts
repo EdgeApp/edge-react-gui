@@ -46,6 +46,7 @@ const palette = {
   accentRed: '#E85466',
   accentBlue: '#0073D9',
   accentOrange: '#F1AA19',
+  darkBlueLightened: '#2B333A',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
@@ -249,7 +250,7 @@ export const edgeDark: Theme = {
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.whiteOp05,
+  confirmationSlider: palette.darkBlueLightened,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.darkAqua,
   confirmationSliderThumb: palette.edgeMint,

@@ -905,7 +905,7 @@ const SendComponent = (props: Props) => {
   }
   return (
     <SceneWrapper background="theme">
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView contentContainerStyle={styles.contentContainerStyle} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {renderSelectedWallet()}
         {renderAddressAmountPairs()}
         {renderAddAddress()}
@@ -917,10 +917,10 @@ const SendComponent = (props: Props) => {
         {renderInfoTiles()}
         {renderAuthentication()}
         {renderScamWarning()}
-        <View style={styles.footer}>
-          {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.footer}>
+        {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+      </View>
     </SceneWrapper>
   )
 }
@@ -934,10 +934,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   calcFeeSpinner: {
     marginLeft: theme.rem(1)
   },
+  contentContainerStyle: { paddingBottom: theme.rem(6) },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0
   },
   pinContainer: {
     marginTop: theme.rem(0.25)
