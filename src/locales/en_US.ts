@@ -1115,6 +1115,8 @@ const strings = {
   send_scan_modal_text_modal_title_s: 'Enter %1$s Address',
   send_scan_modal_text_modal_message_s: 'Enter a %1$s public address or payment protocol URL to send funds to',
   send_scan_modal_text_modal_hint: 'Public Address',
+  send_address_expire_title: 'Payment Address Expiration Time',
+  send_address_expired_error_message: 'Payment Address Expired',
 
   // Request Scene
   request_balance: 'You have %s',
