@@ -77,6 +77,9 @@ import { LoanManageScene as LoanManageSceneComponent } from './scenes/Loans/Loan
 import { LoanStatusScene as LoanStatusSceneComponent } from './scenes/Loans/LoanStatusScene'
 import { LoginScene } from './scenes/LoginScene'
 import { ManageTokensScene as ManageTokensSceneComponent } from './scenes/ManageTokensScene'
+import { MigrateWalletCalculateFeeScene as MigrateWalletCalculateFeeSceneComponent } from './scenes/MigrateWalletCalculateFeeScene'
+import { MigrateWalletCompletionScene as MigrateWalletCompletionSceneComponent } from './scenes/MigrateWalletCompletionScene'
+import { MigrateWalletSelectCryptoScene as MigrateWalletSelectCryptoSceneComponent } from './scenes/MigrateWalletSelectCryptoScene'
 import { NotificationScene as NotificationSceneComponent } from './scenes/NotificationScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
@@ -155,6 +158,9 @@ const LoanDetailsScene = ifLoggedIn(LoanDetailsSceneComponent)
 const LoanManageScene = ifLoggedIn(LoanManageSceneComponent)
 const LoanStatusScene = ifLoggedIn(LoanStatusSceneComponent)
 const ManageTokensScene = ifLoggedIn(ManageTokensSceneComponent)
+const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
+const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
+const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
@@ -309,6 +315,17 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="createWalletCompletion"
         component={CreateWalletCompletionScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+
+      <Stack.Screen name="migrateWalletSelectCrypto" component={MigrateWalletSelectCryptoScene} />
+      <Stack.Screen name="migrateWalletCalculateFee" component={MigrateWalletCalculateFeeScene} />
+      <Stack.Screen
+        name="migrateWalletCompletion"
+        component={MigrateWalletCompletionScene}
         options={{
           headerLeft: () => null,
           headerRight: () => null
