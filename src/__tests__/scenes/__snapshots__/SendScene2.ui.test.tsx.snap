@@ -52,6 +52,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -614,147 +619,149 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -811,6 +818,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -1575,147 +1587,149 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -1772,6 +1786,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -2462,147 +2481,149 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -2659,6 +2680,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -3223,147 +3249,149 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -3420,6 +3448,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -3962,147 +3995,149 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -4159,6 +4194,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -4575,147 +4615,149 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -4772,6 +4814,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -5435,147 +5482,149 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -5632,6 +5681,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -6268,147 +6322,149 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -6465,6 +6521,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -7074,147 +7135,149 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           />
         </View>
-        <View
-          style={
+      </View>
+    </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          Array [
+            undefined,
             Object {
               "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#2B333A",
+                "borderRadius": 27.5,
+                "height": 55,
+                "justifyContent": "center",
+                "width": 295,
+              },
+              Object {
+                "backgroundColor": "#2B333A",
+              },
+              Object {
+                "width": 295,
+              },
+            ]
           }
         >
           <View
             style={
               Array [
-                undefined,
+                Object {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "width": 295,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
                 Object {
                   "alignItems": "center",
+                  "backgroundColor": "#00f1a2",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 55,
+                  "zIndex": 5,
+                },
+                Object {
+                  "backgroundColor": "#87939E",
+                },
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": 240,
+                    },
+                  ],
                 },
               ]
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
               style={
                 Array [
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 295,
+                    "color": undefined,
+                    "fontSize": 34,
                   },
                   Object {
-                    "backgroundColor": "rgba(255, 255, 255, .05)",
+                    "color": "#1b2f3b",
+                    "fontSize": 51,
                   },
                   Object {
-                    "width": 295,
+                    "fontFamily": "Entypo",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
                   },
+                  Object {},
                 ]
               }
             >
-              <View
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "rgba(255, 255, 255, .05)",
-                      "borderRadius": 27.5,
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    },
-                    Object {
-                      "width": 295,
-                    },
-                  ]
-                }
-              />
-              <View
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
-                      "borderRadius": 27.5,
-                      "height": 55,
-                      "justifyContent": "center",
-                      "width": 55,
-                      "zIndex": 5,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                    },
-                    Object {
-                      "transform": Array [
-                        Object {
-                          "translateX": 240,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    Array [
-                      Object {
-                        "color": undefined,
-                        "fontSize": 34,
-                      },
-                      Object {
-                        "color": "#1b2f3b",
-                        "fontSize": 51,
-                      },
-                      Object {
-                        "fontFamily": "Entypo",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      Object {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    Array [
-                      Object {
-                        "alignSelf": "center",
-                        "color": "#FFFFFF",
-                        "fontSize": 17,
-                        "lineHeight": 55,
-                        "position": "absolute",
-                        "zIndex": 1,
-                      },
-                      Object {
-                        "color": "#87939E",
-                      },
-                    ],
-                    null,
-                  ]
-                }
-              >
-                Enter an Amount
-              </Text>
-            </View>
+              
+            </Text>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                Array [
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "color": "#87939E",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            Enter an Amount
+          </Text>
         </View>
       </View>
-    </RCTScrollView>
+    </View>
   </View>
 </BVLinearGradient>
 `;
@@ -7271,6 +7334,11 @@ exports[`SendScene2 Render SendScene 1`] = `
   >
     <RCTScrollView
       automaticallyAdjustContentInsets={false}
+      contentContainerStyle={
+        Object {
+          "paddingBottom": 135,
+        }
+      }
       contentInset={
         Object {
           "bottom": 0,
@@ -7928,17 +7996,19 @@ exports[`SendScene2 Render SendScene 1`] = `
             If you have any questions or concerns regarding this send please contact support@edge.app
           </Text>
         </View>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "margin": 45,
-            }
-          }
-        />
       </View>
     </RCTScrollView>
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "bottom": 0,
+          "justifyContent": "center",
+          "margin": 45,
+          "position": "absolute",
+        }
+      }
+    />
   </View>
 </BVLinearGradient>
 `;

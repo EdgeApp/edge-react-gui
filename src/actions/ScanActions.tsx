@@ -217,7 +217,10 @@ export function handleWalletUris(
         tokenId
       }
 
-      navigation.push('send2', { walletId: wallet.id, spendInfo })
+      // React navigation doesn't like passing non-serializable objects as params. Convert date to string first
+      // https://github.com/react-navigation/react-navigation/issues/7925
+      const isoExpireDate = parsedUri?.expireDate?.toISOString()
+      navigation.push('send2', { walletId: wallet.id, spendInfo, isoExpireDate })
     } catch (error: any) {
       // INVALID URI
       await Airship.show<'ok' | undefined>(bridge => (
