@@ -88,10 +88,6 @@ export function walletListMenuAction(
           }
         }
 
-        // If we are in the tx list scene, go back to the wallet list so we don't crash on a deleted wallet
-        // Otherwise, goBack() does nothing if already in Wallet List
-        navigation.goBack()
-
         // Determine the modal's additional message
         let additionalMsg: string | undefined
         if (tokenId == null) {
