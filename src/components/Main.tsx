@@ -82,10 +82,12 @@ import { MigrateWalletCalculateFeeScene as MigrateWalletCalculateFeeSceneCompone
 import { MigrateWalletCompletionScene as MigrateWalletCompletionSceneComponent } from './scenes/MigrateWalletCompletionScene'
 import { MigrateWalletSelectCryptoScene as MigrateWalletSelectCryptoSceneComponent } from './scenes/MigrateWalletSelectCryptoScene'
 import { NotificationScene as NotificationSceneComponent } from './scenes/NotificationScene'
+import { OtpRepairScene as OtpRepairSceneComponent } from './scenes/OtpRepairScene'
 import { OtpSettingsScene as OtpSettingsSceneComponent } from './scenes/OtpSettingsScene'
 import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/PasswordRecoveryScene'
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
+import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
 import { SendScene as SendSceneComponent } from './scenes/SendScene'
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
@@ -163,9 +165,11 @@ const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeScene
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
 const NotificationScene = ifLoggedIn(NotificationSceneComponent)
+const OtpRepairScene = ifLoggedIn(OtpRepairSceneComponent)
 const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
+const SecurityAlertsScene = ifLoggedIn(SecurityAlertsSceneComponent)
 const SendScene = ifLoggedIn(SendSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
@@ -502,6 +506,10 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+
+      <Stack.Screen name="otpRepair" component={OtpRepairScene} options={{ headerShown: false }} />
+      <Stack.Screen name="securityAlerts" component={SecurityAlertsScene} options={{ headerShown: false }} />
+
       <Stack.Screen
         name="spendingLimits"
         component={SpendingLimitsScene}
