@@ -3,12 +3,15 @@ import { Text, TouchableOpacity } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
+import { WalletListErrorRow } from './WalletListErrorRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
 
 interface Props {
@@ -23,6 +26,8 @@ interface Props {
 function WalletListSwipeableLoadingRowComponent(props: Props) {
   const { navigation, walletId } = props
 
+  const account = useSelector(state => state.core.account)
+  const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
   const rowRef = React.useRef<SwipableRowRef>(null)
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,9 +55,16 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     )
   }
 
+  const row =
+    currencyWalletErrors[walletId] != null ? (
+      <WalletListErrorRow error={currencyWalletErrors[walletId]} onLongPress={handleMenu} />
+    ) : (
+      <WalletListLoadingRow onLongPress={handleMenu} />
+    )
+
   return (
     <SwipeableRow ref={rowRef} renderRight={renderMenuUnderlay} rightDetent={theme.rem(2.5)} rightThreshold={theme.rem(5)} onRightSwipe={handleMenu}>
-      <WalletListLoadingRow onLongPress={handleMenu} />
+      {row}
     </SwipeableRow>
   )
 }

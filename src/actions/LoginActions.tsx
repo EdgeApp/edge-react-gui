@@ -311,6 +311,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 
     return wallet
   } catch (error) {
+    showError(error)
     dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error: String(error) }))
     throw error
   }
