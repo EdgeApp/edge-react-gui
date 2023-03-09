@@ -1,5 +1,5 @@
 import { abs, div, gt, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -12,13 +12,13 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import s from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
-import { convertNativeToDisplay, convertNativeToExchange, truncateDecimals } from '../../util/utils'
+import { convertNativeToExchange } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -32,6 +32,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
 import { Tile } from '../tiles/Tile'
+import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 
 interface OwnProps {
   navigation: NavigationProp<'transactionDetails'>
@@ -41,7 +42,6 @@ interface OwnProps {
 interface StateProps {
   currentFiatAmount: string
   thumbnailPath?: string
-  walletDefaultDenomProps: EdgeDenomination
 }
 interface DispatchProps {
   refreshTransaction: (walletId: string, transaction: EdgeTransaction) => void
@@ -58,12 +58,6 @@ interface State {
   category: string
   name: string
   notes: string
-}
-
-interface FiatCryptoAmountUI {
-  amountString: string
-  symbolString: string
-  feeString: string
 }
 
 interface FiatCurrentAmountUI {
@@ -249,61 +243,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     this.setState({ ...this.state, ...newDetails })
   }
 
-  // Crypto Amount Logic
-  getReceivedCryptoAmount(): FiatCryptoAmountUI {
-    const { walletDefaultDenomProps, wallet, route } = this.props
-    const { edgeTransaction } = route.params
-    const { currencyInfo } = wallet
-    const { swapData } = edgeTransaction
-
-    const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-    const symbolString =
-      currencyInfo.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
-        ? walletDefaultDenomProps.symbol
-        : swapData?.payoutCurrencyCode ?? ''
-
-    return {
-      amountString: convertedAmount,
-      symbolString,
-      feeString: ''
-    }
-  }
-
-  getSentCryptoAmount(): FiatCryptoAmountUI {
-    const { walletDefaultDenomProps, wallet, route } = this.props
-    const { edgeTransaction } = route.params
-    const { currencyInfo } = wallet
-
-    const absoluteAmount = getAbsoluteAmount(edgeTransaction)
-    const symbolString =
-      currencyInfo.currencyCode === edgeTransaction.currencyCode && walletDefaultDenomProps.symbol
-        ? walletDefaultDenomProps.symbol
-        : edgeTransaction.currencyCode
-
-    if (edgeTransaction.networkFee) {
-      const convertedAmount = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
-      const convertedFee = convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
-      const amountMinusFee = sub(convertedAmount, convertedFee)
-
-      const feeAbsolute = abs(truncateDecimals(convertedFee))
-      const feeString = symbolString
-        ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, feeAbsolute)
-        : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, feeAbsolute, walletDefaultDenomProps.name)
-      return {
-        amountString: amountMinusFee,
-        symbolString,
-        feeString
-      }
-    } else {
-      return {
-        amountString: absoluteAmount,
-        symbolString,
-        feeString: ''
-      }
-    }
-  }
-
   // Exchange Rate Fiat
   getCurrentFiat(): FiatCurrentAmountUI {
     const { currentFiatAmount } = this.props
@@ -325,13 +264,11 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   // Render
   render() {
     const { navigation, route, theme, thumbnailPath, wallet } = this.props
-    const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
     const { direction, acceleratedTx, amountFiat, name, notes, category } = this.state
     const styles = getStyles(theme)
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
-    const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
     const fiatValue = displayFiatAmount(amountFiat)
     const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
@@ -351,13 +288,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const categoriesText = formatCategory(splitCategory(category))
 
-    // Find the currency display name:
-    const { allTokens } = wallet.currencyConfig
-    let currencyName = edgeTransaction.currencyCode
-    if (edgeTransaction.currencyCode === currencyInfo.currencyCode) currencyName = currencyInfo.displayName
-    const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === edgeTransaction.currencyCode)
-    if (tokenId != null) currencyName = allTokens[tokenId].displayName
-
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -372,11 +302,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
                 <EdgeText style={styles.tileTextBottom}>{personName}</EdgeText>
               </View>
             </Tile>
-            <Tile
-              type="static"
-              title={sprintf(s.strings.transaction_details_crypto_amount, currencyName)}
-              body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
-            />
+            <TransactionCryptoAmountTile transaction={edgeTransaction} wallet={wallet} />
             <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
               <View style={styles.tileRow}>
                 <EdgeText style={styles.tileTextBottom}>{fiatSymbol + ' '}</EdgeText>
@@ -478,12 +404,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const thumbnailPath = useContactThumbnail(metadata?.name)
   const nativeAmount = getAbsoluteAmount(edgeTransaction)
 
-  const walletDefaultDenomProps: EdgeDenomination = useSelector(state =>
-    currencyInfo.currencyCode === edgeTransaction.currencyCode
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
-  )
-
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
   const cryptoAmount = convertNativeToExchange(exchangeDenom.multiplier)(nativeAmount)
   const currentFiatAmount = useSelector(state => convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.fiatCurrencyCode, cryptoAmount))
@@ -497,7 +417,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       theme={theme}
       thumbnailPath={thumbnailPath}
       wallet={wallet}
-      walletDefaultDenomProps={walletDefaultDenomProps}
     />
   )
 })
