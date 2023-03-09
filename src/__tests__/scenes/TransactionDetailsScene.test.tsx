@@ -41,7 +41,7 @@ const fakeCoreWallet: any = {
   currencyConfig: fakeCurrencyConfig,
   currencyInfo,
   enabledTokenIds: [],
-  fiatCurrencyCode: 'USD',
+  fiatCurrencyCode: 'iso:USD',
   id: '123',
   name: 'wallet name',
   type: 'wallet:bitcoin',
@@ -57,6 +57,10 @@ describe('TransactionDetailsScene', () => {
         currencyConfig: { bitcoin: fakeCurrencyConfig },
         watch() {}
       }
+    },
+    exchangeRates: {
+      'BTC_iso:USD': '10000',
+      'BTC_iso:USD_2018-08-31T21:59:40.947Z': '20000'
     }
   }
 
@@ -74,7 +78,7 @@ describe('TransactionDetailsScene', () => {
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-                nativeAmount: '123',
+                nativeAmount: '12300000',
                 networkFee: '1',
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
@@ -106,7 +110,7 @@ describe('TransactionDetailsScene', () => {
                 txid: 'this is the txid',
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-                nativeAmount: '-123',
+                nativeAmount: '-12300000',
                 networkFee: '1',
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
