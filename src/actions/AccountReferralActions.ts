@@ -26,6 +26,9 @@ export function loadAccountReferral(account: EdgeAccount): ThunkAction<Promise<v
   return async (dispatch, getState) => {
     // First try the disk:
     try {
+      if (account?.disklet?.setText == null) return
+      if (account?.localDisklet?.setText == null) return
+
       const [cacheText, referralText] = await Promise.all([
         // Cache errors are fine:
         account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
