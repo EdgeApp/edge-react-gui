@@ -7,7 +7,6 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { playSendSound } from '../../actions/SoundActions'
-import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
 import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -40,13 +39,10 @@ interface OwnProps {
 }
 interface StateProps {
   currentFiatAmount: string
-  subcategoriesList: string[]
   walletDefaultDenomProps: EdgeDenomination
 }
 interface DispatchProps {
-  getSubcategories: () => void
   refreshTransaction: (walletId: string, transaction: EdgeTransaction) => void
-  setNewSubcategory: (newSubcategory: string) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -111,8 +107,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { route, wallet } = this.props
     const { edgeTransaction } = route.params
 
-    this.props.getSubcategories()
-
     if (amountFiat === 0) {
       const { currencyCode, date, nativeAmount } = edgeTransaction
       const isoDate = new Date(date * 1000).toISOString()
@@ -172,9 +166,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { category } = this.state
     Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />).then(async category => {
       if (category == null) return
-      if (!this.props.subcategoriesList.includes(category)) {
-        this.props.setNewSubcategory(category)
-      }
       this.onSaveTxDetails({ category })
     })
   }
@@ -481,8 +472,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const subcategoriesList = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
-
   const { currencyCode } = edgeTransaction
   const { currencyInfo } = wallet
 
@@ -502,11 +491,8 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
     <TransactionDetailsComponent
       navigation={navigation}
       route={route}
-      subcategoriesList={subcategoriesList}
       currentFiatAmount={currentFiatAmount}
-      getSubcategories={() => dispatch(getSubcategories())}
       refreshTransaction={(walletId: string, transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(walletId, [transaction]))}
-      setNewSubcategory={async newSubcategory => dispatch(setNewSubcategory(newSubcategory))}
       theme={theme}
       wallet={wallet}
       walletDefaultDenomProps={walletDefaultDenomProps}

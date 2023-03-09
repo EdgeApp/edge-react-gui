@@ -3,11 +3,13 @@ import * as React from 'react'
 import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
+import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { scale } from '../../util/scaling'
 import { AirshipModal } from '../common/AirshipModal'
@@ -31,6 +33,7 @@ interface CategoryRow {
  */
 export function CategoryModal(props: Props) {
   const { bridge, initialCategory } = props
+  const dispatch = useDispatch()
 
   // We split the state into category and subcategory internally:
   const split = splitCategory(initialCategory)
@@ -38,6 +41,11 @@ export function CategoryModal(props: Props) {
   const [subcategory, setSubcategory] = React.useState(split.subcategory)
 
   const categories = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
+
+  // Load the categories from disk:
+  useAsyncEffect(async () => {
+    await dispatch(getSubcategories())
+  }, [dispatch])
 
   const sortedCategories = React.useMemo(() => {
     // Transform the raw categories into row objects:
@@ -84,8 +92,12 @@ export function CategoryModal(props: Props) {
     bridge.resolve(undefined)
   })
 
-  const handleSubmit = useHandler(() => {
-    bridge.resolve(joinCategory({ category, subcategory }))
+  const handleSubmit = useHandler(async () => {
+    const result = joinCategory({ category, subcategory })
+    if (!categories.includes(result)) {
+      await dispatch(setNewSubcategory(result))
+    }
+    bridge.resolve(result)
   })
 
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
