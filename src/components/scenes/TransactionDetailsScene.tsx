@@ -16,7 +16,6 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
-import { GuiContact } from '../../types/types'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { convertNativeToDisplay, convertNativeToExchange, truncateDecimals } from '../../util/utils'
@@ -40,7 +39,6 @@ interface OwnProps {
   wallet: EdgeCurrencyWallet
 }
 interface StateProps {
-  contacts: GuiContact[]
   currentFiatAmount: string
   subcategoriesList: string[]
   walletDefaultDenomProps: EdgeDenomination
@@ -140,11 +138,11 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
-    Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} contacts={this.props.contacts} />
-    )).then(person => {
-      if (person != null) this.onSaveTxDetails({ name: person.contactName })
-    })
+    Airship.show<ContactModalResult | undefined>(bridge => <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />).then(
+      person => {
+        if (person != null) this.onSaveTxDetails({ name: person.contactName })
+      }
+    )
   }
 
   openFiatInput = () => {
@@ -483,7 +481,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const contacts = useSelector(state => state.contacts)
   const subcategoriesList = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
 
   const { currencyCode } = edgeTransaction
@@ -505,7 +502,6 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
     <TransactionDetailsComponent
       navigation={navigation}
       route={route}
-      contacts={contacts}
       subcategoriesList={subcategoriesList}
       currentFiatAmount={currentFiatAmount}
       getSubcategories={() => dispatch(getSubcategories())}

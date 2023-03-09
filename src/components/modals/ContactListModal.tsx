@@ -5,6 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -20,12 +21,12 @@ interface Props {
   bridge: AirshipBridge<ContactModalResult | undefined>
   contactType: string
   contactName: string
-  contacts: GuiContact[]
 }
 
-export function ContactListModal({ bridge, contactType, contacts, contactName }: Props) {
+export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const contacts = useSelector(state => state.contacts)
 
   const rowComponent = ({ givenName, familyName, hasThumbnail, thumbnailPath }: GuiContact) => {
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
