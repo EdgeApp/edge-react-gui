@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, Text, TextStyle } from 'react-native'
+import { Platform, Text, TextProps, TextStyle } from 'react-native'
 
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
@@ -12,8 +12,7 @@ interface OwnProps {
   minimumFontScale?: number
 }
 
-// @ts-expect-error
-export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps & Text.props> {
+export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps & TextProps> {
   render() {
     const { children, style, theme, disableFontScaling = false, ...props } = this.props
     const { text, androidAdjust } = getStyles(theme)

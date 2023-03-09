@@ -138,6 +138,7 @@ export const testDark: Theme = {
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
+  emphasizedText: palette.edgeMint,
   // listHeaderText: palette.white,
 
   // Header
