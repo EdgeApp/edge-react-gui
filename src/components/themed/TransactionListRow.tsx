@@ -5,6 +5,7 @@ import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
@@ -14,7 +15,7 @@ import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { GuiContact, TransactionListTx } from '../../types/types'
+import { TransactionListTx } from '../../types/types'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -22,7 +23,6 @@ import {
   getDenomFromIsoCode,
   isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
-  normalizeForSearch,
   precisionAdjust,
   truncateDecimals
 } from '../../util/utils'
@@ -58,17 +58,7 @@ export function TransactionListRow(props: Props) {
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
   // Thumbnail
-  let thumbnailPath: string | undefined
-  const contacts: GuiContact[] = useSelector(state => state.contacts) ?? []
-  const transactionContactName = name != null ? normalizeForSearch(name) : null
-  for (const contact of contacts) {
-    const { givenName, familyName } = contact
-    const fullName = normalizeForSearch(`${givenName}${familyName ?? ''}`)
-    if (contact.thumbnailPath && fullName === transactionContactName) {
-      thumbnailPath = contact.thumbnailPath
-      break
-    }
-  }
+  const thumbnailPath = useContactThumbnail(name)
 
   // CryptoAmount
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
@@ -97,7 +87,6 @@ export function TransactionListRow(props: Props) {
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       walletId: wallet.id,
-      thumbnailPath,
       amountFiat
     })
   })

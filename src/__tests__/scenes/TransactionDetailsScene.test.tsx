@@ -57,7 +57,13 @@ describe('TransactionDetailsScene', () => {
         currencyConfig: { bitcoin: fakeCurrencyConfig },
         watch() {}
       }
-    }
+    },
+    contacts: [
+      {
+        givenName: 'Timmy',
+        thumbnailPath: 'thumb/nail/path'
+      }
+    ]
   }
 
   it('should render', () => {
@@ -79,10 +85,10 @@ describe('TransactionDetailsScene', () => {
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
                 otherParams: {},
-                blockHeight: 0
+                blockHeight: 0,
+                metadata: { name: 'timmy' }
               },
-              walletId: fakeCoreWallet.id,
-              thumbnailPath: 'thumb/nail/path'
+              walletId: fakeCoreWallet.id
             }
           }}
         />
@@ -113,11 +119,11 @@ describe('TransactionDetailsScene', () => {
                 otherParams: {},
                 blockHeight: 0,
                 metadata: {
-                  amountFiat: -6392.93
+                  amountFiat: -6392.93,
+                  name: 'timmy'
                 }
               },
-              walletId: fakeCoreWallet.id,
-              thumbnailPath: 'thumb/nail/path'
+              walletId: fakeCoreWallet.id
             }
           }}
         />

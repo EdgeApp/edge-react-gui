@@ -214,7 +214,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       ]
                     }
                   >
-                    Sender
+                    timmy
                   </Text>
                 </View>
               </View>
@@ -1256,7 +1256,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    Recipient
+                    timmy
                   </Text>
                 </View>
               </View>

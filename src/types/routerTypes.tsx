@@ -319,7 +319,6 @@ interface RouteParamList {
     edgeTransaction: EdgeTransaction | TransactionListTx
     walletId: string
     amountFiat?: number
-    thumbnailPath?: string
   }
   transactionList: {
     walletId: string

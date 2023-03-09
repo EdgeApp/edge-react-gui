@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { playSendSound } from '../../actions/SoundActions'
 import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -39,6 +40,7 @@ interface OwnProps {
 }
 interface StateProps {
   currentFiatAmount: string
+  thumbnailPath?: string
   walletDefaultDenomProps: EdgeDenomination
 }
 interface DispatchProps {
@@ -49,7 +51,6 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 interface State {
   acceleratedTx: EdgeTransaction | null
   direction: string
-  thumbnailPath?: string
 
   // EdgeMetadata:
   amountFiat: number
@@ -78,7 +79,7 @@ const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
 class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { amountFiat: defaultAmountFiat = 0, edgeTransaction, thumbnailPath } = props.route.params
+    const { amountFiat: defaultAmountFiat = 0, edgeTransaction } = props.route.params
     const { metadata = {} } = edgeTransaction
     const { name = '', notes = '', amountFiat = defaultAmountFiat } = metadata
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
@@ -97,8 +98,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       category,
       name,
       direction,
-      notes,
-      thumbnailPath
+      notes
     }
   }
 
@@ -324,10 +324,10 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { wallet, theme, route, navigation } = this.props
+    const { navigation, route, theme, thumbnailPath, wallet } = this.props
     const { currencyInfo } = wallet
     const { edgeTransaction } = route.params
-    const { direction, acceleratedTx, amountFiat, name, thumbnailPath, notes, category } = this.state
+    const { direction, acceleratedTx, amountFiat, name, notes, category } = this.state
     const styles = getStyles(theme)
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
@@ -472,9 +472,10 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
-  const { currencyCode } = edgeTransaction
+  const { currencyCode, metadata } = edgeTransaction
   const { currencyInfo } = wallet
 
+  const thumbnailPath = useContactThumbnail(metadata?.name)
   const nativeAmount = getAbsoluteAmount(edgeTransaction)
 
   const walletDefaultDenomProps: EdgeDenomination = useSelector(state =>
@@ -494,6 +495,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
       currentFiatAmount={currentFiatAmount}
       refreshTransaction={(walletId: string, transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(walletId, [transaction]))}
       theme={theme}
+      thumbnailPath={thumbnailPath}
       wallet={wallet}
       walletDefaultDenomProps={walletDefaultDenomProps}
     />
