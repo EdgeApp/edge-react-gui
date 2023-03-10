@@ -640,7 +640,8 @@ export const getRegInfo = async (
   let feeValue = 0
 
   try {
-    feeValue = await selectedWallet.otherMethods.getFee('registerFioAddress')
+    const edgeTx = await fioMakeSpend(selectedWallet, 'registerFioAddress', { fioAddress })
+    feeValue = parseInt(edgeTx.networkFee)
     activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
@@ -692,7 +693,8 @@ export const getDomainRegInfo = async (
   let feeValue = 0
 
   try {
-    feeValue = await selectedWallet.otherMethods.getFee('registerFioDomain')
+    const edgeTx = await fioMakeSpend(selectedWallet, 'registerFioDomain', { fioDomain })
+    feeValue = parseInt(edgeTx.networkFee)
     activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
@@ -813,12 +815,8 @@ export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAdd
 export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
-      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: 'renew_fio_domain',
-        fioAddress: ''
-      })
-
-      return fee
+      const edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', { fioDomain: '' })
+      return parseInt(edgeTx.networkFee)
     } catch (e: any) {
       throw new Error(s.strings.fio_get_fee_err_msg)
     }
@@ -830,8 +828,9 @@ export const renewFioDomain = async (fioWallet: EdgeCurrencyWallet | null, fioDo
   const errorStr = sprintf(s.strings.fio_renew_err_msg, s.strings.fio_domain_label)
   if (fioWallet) {
     try {
-      const params = { fioDomain, maxFee: fee }
-      const { expiration } = await fioWallet.otherMethods.fioAction('renewFioDomain', params)
+      let edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', { fioDomain })
+      edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
+      const expiration = edgeTx.otherParams?.broadcastResult?.expiration
       return { expiration }
     } catch (e: any) {
       throw new Error(errorStr)

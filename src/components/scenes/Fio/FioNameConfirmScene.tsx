@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
+import { fioMakeSpend, fioSignAndBroadcast } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -108,7 +109,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
     } else {
       try {
         if (this.isFioAddress()) {
-          await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
+          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioAddress', { fioAddress: fioName })
+          edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
+          await paymentWallet.saveTx(edgeTx)
           // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
@@ -116,11 +119,10 @@ class FioNameConfirm extends React.PureComponent<Props> {
             })
           )
         } else {
-          const { expiration } = await paymentWallet.otherMethods.fioAction('registerFioDomain', {
-            fio_domain: fioName,
-            max_fee: fee,
-            owner_fio_public_key: ownerPublicKey
-          })
+          let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioDomain', { fioDomain: fioName })
+          edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
+          await paymentWallet.saveTx(edgeTx)
+          const expiration = edgeTx.otherParams?.broadcastResult?.expiration
           // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
