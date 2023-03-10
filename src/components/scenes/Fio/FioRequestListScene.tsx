@@ -12,6 +12,7 @@ import {
   addToFioAddressCache,
   cancelFioRequest,
   convertFIOToEdgeCodes,
+  FIO_FAKE_RECORD_OBT_DATA_REQUEST,
   FIO_NO_BUNDLED_ERR_CODE,
   fioMakeSpend,
   fioSignAndBroadcast
@@ -415,11 +416,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       lockInputs: true,
       beforeTransaction: async () => {
         try {
-          const getFeeResult = await fioWalletByAddress.otherMethods.fioAction('getFee', {
-            endPoint: 'record_obt_data',
-            fioAddress: pendingRequest.payer_fio_address
+          const edgeTx = await fioMakeSpend(fioWalletByAddress, 'recordObtData', {
+            ...FIO_FAKE_RECORD_OBT_DATA_REQUEST,
+            payerFioAddress: pendingRequest.payer_fio_address
           })
-          if (getFeeResult.fee) {
+          if (edgeTx.networkFee !== '0') {
             showError(s.strings.fio_no_bundled_err_msg)
             throw new Error(s.strings.fio_no_bundled_err_msg)
           }
@@ -432,7 +433,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          navigation.navigate('fioRequestApproved', { edgeTransaction })
+          navigation.replace('transactionDetails', { edgeTransaction, walletId })
         }
       }
     }

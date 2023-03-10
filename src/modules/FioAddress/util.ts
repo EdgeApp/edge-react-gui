@@ -50,6 +50,18 @@ export interface FioAddresses {
 export const FIO_NO_BUNDLED_ERR_CODE = 'FIO_NO_BUNDLED_ERR_CODE'
 export const FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM = 'Fee exceeds supplied maximum'
 export const FIO_DOMAIN_IS_NOT_PUBLIC = 'FIO_DOMAIN_IS_NOT_PUBLIC'
+export const FIO_FAKE_RECORD_OBT_DATA_REQUEST = {
+  payerFioAddress: '',
+  payeeFioAddress: '',
+  payerPublicAddress: '',
+  payeePublicAddress: '',
+  amount: '',
+  tokenCode: '',
+  chainCode: '',
+  obtId: '',
+  memo: '',
+  status: 'sent_to_blockchain'
+}
 export class FioError extends Error {
   code: string
 
@@ -493,18 +505,19 @@ export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddre
 
 export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string) => {
   if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
-  let getFeeResult
+  let getFeeResult: string
   try {
-    getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
-      endPoint: 'record_obt_data',
-      fioAddress: fioAddress
+    const edgeTx = await fioMakeSpend(fioWallet, 'recordObtData', {
+      ...FIO_FAKE_RECORD_OBT_DATA_REQUEST,
+      payerFioAddress: fioAddress
     })
+    getFeeResult = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   const bundles = await getRemainingBundles(fioWallet, fioAddress)
   // record_obt_data requires 2 bundled transactions
-  if (getFeeResult.fee !== 0 || bundles < 2) {
+  if (getFeeResult !== '0' || bundles < 2) {
     throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
@@ -558,7 +571,9 @@ export const recordSend = async (
       actionParams = { ...actionParams, fioRequestId }
     }
     try {
-      await senderWallet.otherMethods.fioAction('recordObtData', actionParams)
+      let edgeTx = await fioMakeSpend(senderWallet, 'recordObtData', actionParams)
+      edgeTx = await fioSignAndBroadcast(senderWallet, edgeTx)
+      await senderWallet.saveTx(edgeTx)
     } catch (e: any) {
       //
       throw new Error(e.message)
