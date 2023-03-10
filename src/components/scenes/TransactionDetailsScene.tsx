@@ -31,7 +31,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { SwapDetailsTiles } from '../themed/SwapDetailsTiles'
+import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
 import { Tile } from '../tiles/Tile'
 
 interface OwnProps {
