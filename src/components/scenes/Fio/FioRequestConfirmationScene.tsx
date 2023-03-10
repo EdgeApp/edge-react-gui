@@ -5,7 +5,14 @@ import { View } from 'react-native'
 
 import { formatNumber } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { addToFioAddressCache, checkPubAddress, convertEdgeToFIOCodes, getRemainingBundles } from '../../../modules/FioAddress/util'
+import {
+  addToFioAddressCache,
+  checkPubAddress,
+  convertEdgeToFIOCodes,
+  fioMakeSpend,
+  fioSignAndBroadcast,
+  getRemainingBundles
+} from '../../../modules/FioAddress/util'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
@@ -125,11 +132,20 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         // checking fee
         this.setState({ loading: true })
         try {
-          const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
+          const edgeTx = await fioMakeSpend(fioWallet, 'requestFunds', {
+            payerFioAddress: '',
+            payeeFioAddress: this.state.fioAddressFrom,
+            payeeTokenPublicAddress: '',
+            payerFioPublicKey: '',
+            amount: '',
+            chainCode: '',
+            tokenCode: '',
+            memo: ''
+          })
           const bundledTxs = await getRemainingBundles(fioWallet, this.state.fioAddressFrom)
           // The API only returns a fee if there are 0 bundled transactions remaining. New requests can cost up to two transactions
           // so we need to check the corner case where a user might have one remaining transaction.
-          if (getFeeRes.fee || bundledTxs < 2) {
+          if (edgeTx.networkFee !== '0' || bundledTxs < 2) {
             this.setState({ loading: false })
             this.resetSlider()
             const answer = await Airship.show<'ok' | undefined>(bridge => (
@@ -169,7 +185,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         const { fioChainCode, fioTokenCode } = convertEdgeToFIOCodes(edgeWallet.currencyInfo.pluginId, chainCode, primaryCurrencyInfo.exchangeCurrencyCode)
 
         // send fio request
-        await fioWallet.otherMethods.fioAction('requestFunds', {
+        const edgeTx = await fioMakeSpend(fioWallet, 'requestFunds', {
           payerFioAddress: this.state.fioAddressTo,
           payeeFioAddress: this.state.fioAddressFrom,
           payerFioPublicKey: payerPublicKey,
@@ -177,9 +193,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           amount: val,
           tokenCode: fioTokenCode,
           chainCode: fioChainCode,
-          memo: this.state.memo,
-          maxFee: 0
+          memo: this.state.memo
         })
+        await fioSignAndBroadcast(fioWallet, edgeTx)
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(account, [this.state.fioAddressTo])
