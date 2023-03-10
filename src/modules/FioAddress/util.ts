@@ -1,6 +1,6 @@
 import { div } from 'biggystring'
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -118,6 +118,28 @@ export const setFioExpiredCheckToDisklet = async (lastChecks: { [fioName: string
   } catch (error: any) {
     console.log(error)
   }
+}
+
+export const fioMakeSpend = async (fioWallet: EdgeCurrencyWallet, actionName: string, params: unknown): Promise<EdgeTransaction> => {
+  const fakeSpendTarget = { publicAddress: '', nativeAmount: '0' }
+  const spendInfo: EdgeSpendInfo = {
+    currencyCode: 'FIO',
+    spendTargets: [fakeSpendTarget],
+    otherParams: {
+      action: {
+        name: actionName,
+        params
+      }
+    }
+  }
+  const edgeTransaction = await fioWallet.makeSpend(spendInfo)
+  return edgeTransaction
+}
+
+export const fioSignAndBroadcast = async (fioWallet: EdgeCurrencyWallet, unsignedEdgeTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
+  const signedTx = await fioWallet.signTx(unsignedEdgeTransaction)
+  const edgeTransaction = await fioWallet.broadcastTx(signedTx)
+  return edgeTransaction
 }
 
 /**
