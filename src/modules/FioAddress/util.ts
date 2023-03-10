@@ -521,7 +521,7 @@ interface RecordObtDataParams {
   memo: string
   maxFee: number
   status: string
-  fioRequestId?: string
+  fioRequestId?: number
 }
 
 export const recordSend = async (
@@ -536,7 +536,7 @@ export const recordSend = async (
     chainCode: string
     txid: string
     memo: string
-    fioRequestId?: string
+    fioRequestId?: number
   }
 ) => {
   const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo, fioRequestId } = params
@@ -889,20 +889,20 @@ export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDo
 
 export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fioRequestId: number, fioAddress: string) => {
   if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
-  let getFeeResult
+  let getFeeResult: string
+  let edgeTx: EdgeTransaction
   try {
-    getFeeResult = await fioWallet.otherMethods.fioAction('getFeeForCancelFundsRequest', { fioAddress })
+    edgeTx = await fioMakeSpend(fioWallet, 'cancelFundsRequest', { fioAddress, fioRequestId })
+    getFeeResult = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
-  if (getFeeResult.fee !== 0) {
+  if (getFeeResult !== '0') {
     throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
   try {
-    await fioWallet.otherMethods.fioAction('cancelFundsRequest', {
-      fioRequestId,
-      maxFee: getFeeResult.fee
-    })
+    edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
+    await fioWallet.saveTx(edgeTx)
   } catch (e: any) {
     throw new Error(s.strings.fio_cancel_request_error)
   }

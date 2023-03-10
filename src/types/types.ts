@@ -201,7 +201,7 @@ export interface FioPublicDomain {
 }
 
 export interface FioRequest {
-  fio_request_id: string
+  fio_request_id: number
   content: {
     payee_public_address: string
     amount: string
