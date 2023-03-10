@@ -19,7 +19,7 @@ describe('SelectFioAddress', () => {
         onSelect={() => undefined}
         onMemoChange={() => undefined}
         fioRequest={{
-          fio_request_id: '123123',
+          fio_request_id: 123123,
           content: {
             payee_public_address: '123123',
             amount: '123123',
