@@ -884,12 +884,13 @@ export const setDomainVisibility = async (
 export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
   if (fioWallet) {
     try {
-      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: forDomain ? 'transfer_fio_domain' : 'transfer_fio_address',
-        fioAddress: ''
-      })
-
-      return fee
+      if (forDomain) {
+        const edgeTx = await fioMakeSpend(fioWallet, 'transferFioDomain', { fioAddress: '', fioDomain: '' })
+        return parseInt(edgeTx.networkFee)
+      } else {
+        const edgeTx = await fioMakeSpend(fioWallet, 'transferFioAddress', { fioAddress: '', fioDomain: '' })
+        return parseInt(edgeTx.networkFee)
+      }
     } catch (e: any) {
       throw new Error(s.strings.fio_get_fee_err_msg)
     }
