@@ -323,28 +323,24 @@ export const addPublicAddresses = async (
   fioAddress: string,
   publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
 ) => {
-  let getFeeRes: { fee: number }
+  let fee: string
+  let edgeTx: EdgeTransaction
   try {
-    getFeeRes = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
-      fioAddress
-    })
+    edgeTx = await fioMakeSpend(fioWallet, 'addPublicAddresses', { fioAddress, publicAddresses })
+    fee = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
-  if (getFeeRes.fee) throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
+  if (fee !== '0') throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
-    await fioWallet.otherMethods.fioAction('addPublicAddresses', {
-      fioAddress,
-      publicAddresses,
-      maxFee: getFeeRes.fee
-    })
+    await fioSignAndBroadcast(fioWallet, edgeTx)
   } catch (e: any) {
     throw new Error(s.strings.fio_connect_wallets_err)
   }
 }
 
 /**
- * Add public addresses for FIO Address API call method
+ * Remove public addresses for FIO Address API call method
  *
  * @param fioWallet
  * @param fioAddress
@@ -356,21 +352,17 @@ export const removePublicAddresses = async (
   fioAddress: string,
   publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
 ) => {
-  let getFeeRes: { fee: number }
+  let fee: string
+  let edgeTx: EdgeTransaction
   try {
-    getFeeRes = await fioWallet.otherMethods.fioAction('getFeeForRemovePublicAddresses', {
-      fioAddress
-    })
+    edgeTx = await fioMakeSpend(fioWallet, 'removePublicAddresses', { fioAddress, publicAddresses })
+    fee = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
-  if (getFeeRes.fee) throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
+  if (fee !== '0') throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
-    await fioWallet.otherMethods.fioAction('removePublicAddresses', {
-      fioAddress,
-      publicAddresses,
-      maxFee: getFeeRes.fee
-    })
+    await fioSignAndBroadcast(fioWallet, edgeTx)
   } catch (e: any) {
     throw new Error(s.strings.fio_connect_wallets_err)
   }
