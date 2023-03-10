@@ -54,7 +54,8 @@ describe('TransactionDetailsScene', () => {
     core: {
       account: {
         currencyWallets: { '123': fakeCoreWallet },
-        currencyConfig: { bitcoin: fakeCurrencyConfig }
+        currencyConfig: { bitcoin: fakeCurrencyConfig },
+        watch() {}
       }
     }
   }
