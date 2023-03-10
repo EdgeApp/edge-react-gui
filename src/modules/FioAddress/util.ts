@@ -787,12 +787,8 @@ export const getRemainingBundles = async (fioWallet: EdgeCurrencyWallet, fioName
 export const getAddBundledTxsFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
-      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: 'add_bundled_transactions',
-        fioAddress: ''
-      })
-
-      return fee
+      const edgeTx = await fioMakeSpend(fioWallet, 'addBundledTransactions', { fioAddress: '', bundleSets: DEFAULT_BUNDLE_SET_VALUE })
+      return parseInt(edgeTx.networkFee)
     } catch (e: any) {
       throw new Error(s.strings.fio_get_fee_err_msg)
     }
@@ -800,11 +796,15 @@ export const getAddBundledTxsFee = async (fioWallet: EdgeCurrencyWallet | null):
   throw new Error(s.strings.fio_get_fee_err_msg)
 }
 
-export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<{ expiration: string }> => {
+export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<void> => {
   if (fioWallet) {
     try {
-      const params = { fioAddress, bundleSets: DEFAULT_BUNDLE_SET_VALUE, maxFee: fee }
-      return await fioWallet.otherMethods.fioAction('addBundledTransactions', params)
+      let edgeTx = await fioMakeSpend(fioWallet, 'addBundledTransactions', { fioAddress, bundleSets: DEFAULT_BUNDLE_SET_VALUE })
+      edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
+      await fioWallet.saveTx(edgeTx)
+
+      const expiration = edgeTx.otherParams?.broadcastResult?.expiration
+      return expiration
     } catch (e: any) {
       throw new Error(s.strings.fio_add_bundled_txs_err_msg)
     }
@@ -842,12 +842,8 @@ export const renewFioDomain = async (fioWallet: EdgeCurrencyWallet | null, fioDo
 export const getDomainSetVisibilityFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
   if (fioWallet) {
     try {
-      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
-        endPoint: 'set_fio_domain_public',
-        fioAddress: ''
-      })
-
-      return fee
+      const edgeTx = await fioMakeSpend(fioWallet, 'setFioDomainVisibility', { fioDomain: '', isPublic: true })
+      return parseInt(edgeTx.networkFee)
     } catch (e: any) {
       throw new Error(s.strings.fio_get_fee_err_msg)
     }
@@ -863,7 +859,9 @@ export const setDomainVisibility = async (
 ): Promise<{ expiration: string }> => {
   if (fioWallet) {
     try {
-      const { expiration } = await fioWallet.otherMethods.fioAction('setFioDomainVisibility', { fioDomain, isPublic, maxFee: fee })
+      let edgeTx = await fioMakeSpend(fioWallet, 'setFioDomainVisibility', { fioDomain, isPublic })
+      edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
+      const expiration = edgeTx.otherParams?.broadcastResult?.expiration
       return { expiration }
     } catch (e: any) {
       throw new Error(s.strings.fio_domain_set_visibility_err)

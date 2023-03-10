@@ -50,25 +50,14 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     }
   }
 
-  afterAddBundledTxsSuccess = (result: { bundledTxs: number } | any) => {
-    const { refreshAllFioAddresses, navigation, route } = this.props
-    const { fioWallet, fioAddressName, refreshAfterAddBundledTxs } = route.params
+  afterAddBundledTxsSuccess = () => {
+    const { refreshAllFioAddresses, navigation } = this.props
 
     refreshAllFioAddresses()
 
     this.setState({ showAddBundledTxs: false })
     showToast(s.strings.fio_request_add_bundled_txs_ok_text)
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
-    if (result.bundledTxs != null && refreshAfterAddBundledTxs) {
-      // @ts-expect-error
-      window.requestAnimationFrame(() => {
-        navigation.setParams({
-          fioWallet,
-          fioAddressName,
-          bundledTxs: result.bundledTxs
-        })
-      })
-    }
   }
 
   afterTransferSuccess = async () => {
