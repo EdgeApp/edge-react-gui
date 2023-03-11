@@ -1,7 +1,6 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -15,7 +14,6 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
@@ -25,6 +23,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { fixFiatCurrencyCode } from '../../util/utils'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship } from '../services/AirshipInstance'
 
 export interface AccountPaymentParams {
@@ -250,9 +249,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
 
     return (
-      <SafeAreaView>
+      <SceneWrapper>
         <View style={styles.scene}>
-          <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
               <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
@@ -265,7 +263,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
             <View style={{ paddingBottom: 200 }} />
           </ScrollView>
         </View>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
@@ -274,9 +272,6 @@ const styles = StyleSheet.create({
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
-  },
-  scrollableGradient: {
-    height: THEME.HEADER
   },
   scrollableView: {
     position: 'relative',
