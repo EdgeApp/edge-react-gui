@@ -133,7 +133,7 @@ Object {
       "createWallet": Object {
         "handleActivationInfo": Object {
           "activationCost": "",
-          "supportedCurrencies": Object {},
+          "supportedAssets": Array [],
         },
         "handleAvailableStatus": "",
         "isCheckingHandleAvailability": false,
