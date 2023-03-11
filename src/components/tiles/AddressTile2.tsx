@@ -132,7 +132,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchPaymentProto(navigation, this.props.account, parsedUri.paymentProtocolUrl, { wallet: coreWallet }).catch(showError)
+        await launchPaymentProto(navigation, this.props.account, parsedUri.paymentProtocolUrl, {
+          currencyCode,
+          navigateReplace: true,
+          wallet: coreWallet
+        }).catch(showError)
 
         return
       }
@@ -151,7 +155,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchPaymentProto(navigation, this.props.account, parsedLink.uri, { wallet: coreWallet }).catch(showError)
+          await launchPaymentProto(navigation, this.props.account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)

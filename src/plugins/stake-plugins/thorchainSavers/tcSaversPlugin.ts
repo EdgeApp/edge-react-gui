@@ -12,6 +12,7 @@ import {
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
+  StakePoolFullError,
   StakePosition,
   StakePositionRequest,
   StakeProviderInfo
@@ -379,6 +380,9 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     if (error.includes('not enough fee')) {
       throw new StakeBelowLimitError(request, currencyCode)
     }
+    if (error.includes('synth supply over target')) {
+      throw new StakePoolFullError(request, currencyCode)
+    }
     throw new Error(error)
   }
 
@@ -471,11 +475,14 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     const totalFeePercent = (Number(totalFee) / Number(nativeAmount)) * 100
     const { apy } = policy
 
-    const breakEvenYears = totalFeePercent / apy
-    const breakEvenDays = breakEvenYears * 365
-
-    quoteInfo = {
-      breakEvenDays
+    if (apy == null || apy <= 0) {
+      quoteInfo = {}
+    } else {
+      const breakEvenYears = totalFeePercent / apy
+      const breakEvenDays = breakEvenYears * 365
+      quoteInfo = {
+        breakEvenDays
+      }
     }
   }
 

@@ -34,7 +34,7 @@
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
 import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
-import { ParamList } from './routerTypes'
+import { AppParamList } from './routerTypes'
 
 export interface AztecoLink {
   type: 'azteco'
@@ -88,7 +88,7 @@ export interface WalletConnectLink {
 
 export interface DevLink {
   type: 'dev'
-  sceneName: keyof ParamList
+  sceneName: keyof AppParamList
 }
 
 export type DeepLink =

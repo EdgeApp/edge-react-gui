@@ -13,7 +13,7 @@ import { javascript } from '../../util/bridge/injectThisInWebView'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { handlePluginBack, setPluginScene } from '../navigation/GuiPluginBackButton'
+import { setPluginScene } from '../navigation/GuiPluginBackButton'
 import { showError, showToast } from '../services/AirshipInstance'
 import { requestPermissionOnSettings } from '../services/PermissionsManager'
 
@@ -117,7 +117,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => unknown, debug: bo
 
 interface OwnProps {
   navigation: NavigationBase
-  route: RouteProp<'pluginView'>
+  route: RouteProp<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'>
 }
 
 interface DispatchProps {
@@ -148,7 +148,6 @@ class GuiPluginView extends React.Component<Props, State> {
     const { route, dispatch, state, navigation } = props
     const { deepPath, deepQuery, plugin } = route.params
     super(props)
-    setPluginScene(this)
 
     // Mechanism to re-boot the webview:
     this.state = { webViewKey: 0 }
@@ -178,6 +177,8 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    setPluginScene(this)
+
     this.checkPermissions()
       .then(() => {
         const message = this._promoMessage
@@ -210,7 +211,7 @@ class GuiPluginView extends React.Component<Props, State> {
     for (const permission of permissions) {
       const deniedPermission = await requestPermissionOnSettings(state.core.disklet, permission, displayName, mandatory)
       if (deniedPermission) {
-        handlePluginBack()
+        this.goBack()
         return
       }
     }
@@ -218,6 +219,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
   goBack(): boolean {
     if (this._webview == null || !this._canGoBack) {
+      this.props.navigation.goBack()
       return false
     }
     this._webview.goBack()

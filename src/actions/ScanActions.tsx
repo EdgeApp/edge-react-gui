@@ -195,7 +195,7 @@ export function handleWalletUris(
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
-        return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
+        return await privateKeyModalActivated(wallet, parsedUri.privateKeys)
       }
 
       // PUBLIC ADDRESS URI
@@ -232,34 +232,28 @@ export function handleWalletUris(
   }
 }
 
-function privateKeyModalActivated(privateKeys: string[]): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
+async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
+  const message = sprintf(s.strings.private_key_modal_sweep_from_private_key_message, config.appName)
 
-    const { currencyWallets } = state.core.account
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[selectedWalletId]
-    const message = sprintf(s.strings.private_key_modal_sweep_from_private_key_message, config.appName)
-
-    await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        // @ts-expect-error
-        bridge={bridge}
-        title={s.strings.private_key_modal_sweep_from_private_address}
-        message={message}
-        buttons={{
+  await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.private_key_modal_sweep_from_private_address}
+      message={message}
+      buttons={
+        {
           confirm: {
             label: s.strings.private_key_modal_import,
             async onPress() {
-              await sweepPrivateKeys(edgeWallet, privateKeys)
+              await sweepPrivateKeys(wallet, privateKeys)
               return true
             }
           },
           cancel: { label: s.strings.private_key_modal_cancel }
-        }}
-      />
-    ))
-  }
+        } as const
+      }
+    />
+  ))
 }
 
 async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
@@ -344,10 +338,10 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedW
         ))
       }
       if (threeButtonModal === 'buy') {
-        navigation.navigate('pluginListBuy', { direction: 'buy' })
+        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
         dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-        navigation.navigate('exchangeScene', {})
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

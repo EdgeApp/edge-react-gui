@@ -18,7 +18,7 @@ export const useFadeAnimation = (visible: boolean, options: { noFadeIn?: boolean
     }
 
     opacity.value = withDelay(delay, withTiming(visible ? 1 : 0, { duration }))
-  }, [duration, opacity, visible])
+  }, [duration, opacity, visible, delay])
 
   return style
 }

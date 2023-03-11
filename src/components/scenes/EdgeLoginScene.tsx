@@ -4,11 +4,13 @@ import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
+import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -25,109 +27,95 @@ interface Props {
 export const EdgeLoginScene = (props: Props) => {
   const { navigation, route } = props
   const { lobbyId } = route.params
-  const account = useSelector(state => state.core.account)
-  const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
-  const [isApproved, setIsApproved] = React.useState<boolean>(false)
-  const isLobby = lobby != null
-  const isLoading = !isLobby || isApproved
-  const warningMessage = sprintf(s.strings.edge_description_warning, config.appName)
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
+
+  const warningMessage =
+    lobby?.loginRequest?.appId === ''
+      ? sprintf(s.strings.edge_description_warning, lobby?.loginRequest?.displayName)
+      : sprintf(s.strings.access_wallet_description, config.appName)
+
   useAsyncEffect(async () => {
-    await account
-      .fetchLobby(lobbyId)
-      .then((lobby: EdgeLobby) => {
-        setLobby(lobby)
-      })
-      .catch((e: any) => {
-        if (e.message.includes('Account does not')) {
-          showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_stale_qr)
-        } else {
-          showError(e)
-        }
-        navigation.pop()
-      })
+    try {
+      setLobby(await account.fetchLobby(lobbyId))
+    } catch (error: any) {
+      if (error.message.includes('Account does not')) {
+        showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_stale_qr)
+      } else {
+        showError(error)
+      }
+      navigation.pop()
+    }
   }, [lobbyId])
 
-  const handleAccept = async () => {
+  const handleAccept = useHandler(async () => {
     if (lobby?.loginRequest == null) return
-    setIsApproved(true)
     const { loginRequest } = lobby
-    await loginRequest
-      .approve()
-      .then(() => {
-        navigation.pop()
-        showOkModal(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
-      })
-      .catch((e: any) => {
-        navigation.pop()
-        if (e.message.includes('Could not reach')) {
-          showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_message)
-        } else {
-          showError(e)
-        }
-      })
-  }
+    try {
+      await loginRequest.approve()
+      navigation.pop()
+      showOkModal(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
+    } catch (error: any) {
+      navigation.pop()
+      if (error.message.includes('Could not reach')) {
+        showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_message)
+      } else {
+        showError(error)
+      }
+    }
+  })
 
-  const showOkModal = async (title: string, message: string) => {
-    return Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} buttons={{ ok: { label: s.strings.string_ok } }} message={message + '\n'} title={title} />
-    ))
-  }
-
-  const handleDecline = () => navigation.goBack()
+  const handleDecline = useHandler(() => navigation.goBack())
 
   return (
     <SceneWrapper background="theme">
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image style={styles.logo} source={theme.primaryLogo} resizeMode="contain" />
-          <TitleText style={styles.appName}>{config.appName}</TitleText>
-        </View>
-        <View style={styles.loader}>
-          <Fade visible={isLoading} noFadeIn>
+      <View style={styles.topArea}>
+        <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
+          <View key="loader" style={styles.header}>
             <ActivityIndicator color={theme.iconTappable} size="large" />
-          </Fade>
-        </View>
-        <View style={styles.container}>
-          <Fade visible={!isLoading} delay={125}>
-            <WarningCard title={s.strings.string_warning} header={warningMessage} />
-          </Fade>
-          <View>
-            <Fade visible={isLobby} delay={250}>
-              <MainButton label={s.strings.accept_button_text} onPress={handleAccept} marginRem={1} />
-            </Fade>
-            <Fade visible={isLobby} delay={500}>
-              <MainButton label={s.strings.string_cancel_cap} onPress={handleDecline} type="escape" marginRem={[0, 0, 1, 0]} />
-            </Fade>
           </View>
-        </View>
+          <View key="logo" style={styles.header}>
+            <Image style={styles.logo} source={{ uri: lobby?.loginRequest?.displayImageUrl }} resizeMode="contain" />
+            <TitleText style={styles.appName}>{lobby?.loginRequest?.displayName}</TitleText>
+          </View>
+        </CrossFade>
       </View>
+      <Fade visible={lobby != null} delay={125}>
+        <WarningCard title={s.strings.string_warning} header={warningMessage} />
+      </Fade>
+      <Fade visible={lobby != null} delay={250}>
+        <MainButton label={s.strings.accept_button_text} onPress={handleAccept} marginRem={1} />
+      </Fade>
+      <MainButton label={s.strings.string_cancel_cap} onPress={handleDecline} type="escape" marginRem={[0, 1, 1]} />
     </SceneWrapper>
   )
 }
 
+const showOkModal = async (title: string, message: string) => {
+  return Airship.show<'ok' | undefined>(bridge => (
+    <ButtonsModal bridge={bridge} buttons={{ ok: { label: s.strings.string_ok } }} message={message + '\n'} title={title} />
+  ))
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    alignSelf: 'center',
-    justifyContent: 'space-between',
+  topArea: {
     flex: 1
   },
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1
+  },
   logo: {
-    height: theme.rem(6),
-    width: theme.rem(12)
+    alignSelf: 'stretch',
+    flexGrow: 1,
+    marginHorizontal: theme.rem(1),
+    maxHeight: theme.rem(6)
   },
   appName: {
-    fontSize: theme.rem(1.25),
-    paddingTop: theme.rem(1)
-  },
-  header: {
-    alignItems: 'center'
-  },
-  loader: {
-    opacity: 0.5,
-    paddingVertical: theme.rem(1.5),
-    height: theme.rem(4)
+    padding: theme.rem(1)
   }
 }))

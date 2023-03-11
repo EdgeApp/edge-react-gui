@@ -41,13 +41,13 @@ export function InsufficientFeesModal(props: Props) {
 
   const handleCancel = useHandler(() => bridge.resolve())
   const handleBuy = useHandler(() => {
-    navigation.navigate('pluginListBuy', { direction: 'buy' })
+    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     bridge.resolve()
   })
   const handleSwap = useHandler(() => {
     if (onSwap) return onSwap()
     dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
-    navigation.navigate('exchangeScene', {})
+    navigation.navigate('exchangeTab', { screen: 'exchange' })
     bridge.resolve()
   })
 

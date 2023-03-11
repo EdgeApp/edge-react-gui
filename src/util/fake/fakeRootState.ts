@@ -1,4 +1,6 @@
-export const fakeRootState = {
+import { FakeState } from './FakeProviders'
+
+export const fakeRootState: FakeState = {
   contacts: [
     {
       jobTitle: '',
@@ -1001,6 +1003,13 @@ export const fakeRootState = {
           RIF: {
             name: 'RIF',
             multiplier: '1000000000000000000'
+          }
+        },
+        optimism: {
+          OP: {
+            name: 'ETH',
+            multiplier: '1000000000000000000',
+            symbol: 'Ξ'
           }
         },
         polygon: {

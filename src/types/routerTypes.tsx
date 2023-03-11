@@ -1,6 +1,6 @@
+import * as NavigationCore from '@react-navigation/core'
+import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
-import * as React from 'react'
-import * as Flux from 'react-native-router-flux'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
@@ -24,6 +24,7 @@ import {
   GuiFiatType,
   GuiMakeSpendInfo,
   GuiSwapInfo,
+  TransactionListTx,
   WcConnectionInfo
 } from './types'
 import { UriQueryMap } from './WebTypes'
@@ -39,12 +40,21 @@ interface PluginViewParams {
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-export interface ParamList {
+
+interface RouteParamList {
   // Top-level router:
-  root: {}
   login: {}
-  edge: {}
+  edgeApp: {}
+  edgeAppStack: {}
+  edgeTabs: {}
   controlPanel: {}
+
+  // Tabs
+  walletsTab: {}
+  buyTab: {}
+  sellTab: {}
+  exchangeTab: {}
+  marketsTab: {}
 
   // Logged-in scenes:
   changeMiningFee: {
@@ -91,7 +101,7 @@ export interface ParamList {
     fiatCode: string
   }
   createWalletSelectCrypto: {
-    newAccountFlow?: (items: WalletCreateItem[]) => Promise<void>
+    newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
     defaultSelection?: EdgeTokenId[]
   }
   createWalletSelectFiat: {
@@ -121,7 +131,6 @@ export interface ParamList {
     onApprove: () => void
   }
   exchangeQuoteProcessing: {}
-  exchangeScene: {}
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
@@ -257,8 +266,8 @@ export interface ParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: { direction: 'buy' }
-  pluginListSell: { direction: 'sell' }
+  pluginListBuy: {}
+  pluginListSell: {}
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
@@ -302,7 +311,7 @@ export interface ParamList {
   termsOfService: {}
   testScene: {}
   transactionDetails: {
-    edgeTransaction: EdgeTransaction
+    edgeTransaction: EdgeTransaction | TransactionListTx
     walletId: string
     amountFiat?: number
     thumbnailPath?: string
@@ -316,7 +325,6 @@ export interface ParamList {
     currencyCode: string
   }
   walletList: {}
-  walletListScene: {}
   wcConnections: {}
   wcDisconnect: { wcConnectionInfo: WcConnectionInfo }
   wcConnect: {
@@ -324,157 +332,31 @@ export interface ParamList {
   }
 }
 
-/**
- * The global `Actions` object for navigation.
- */
-export const Actions = {
-  get currentParams(): any {
-    return Flux.Actions.currentParams
-  },
-  get currentScene(): keyof ParamList {
-    return Flux.Actions.currentScene
-  },
-
-  drawerClose() {
-    Flux.Actions.drawerClose()
-  },
-  drawerOpen() {
-    Flux.Actions.drawerOpen()
-  },
-
-  jump<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    Flux.Actions.jump(name, { route: { name, params } })
-  },
-  push<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    Flux.Actions.push(name, { route: { name, params } })
-  },
-  replace<Name extends keyof ParamList>(name: Name, params: ParamList[Name]): void {
-    Flux.Actions.replace(name, { route: { name, params } })
-  },
-
-  refresh(params: any): void {
-    Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
-  },
-
-  pop(): void {
-    Flux.Actions.pop()
-  },
-  popTo(name: keyof ParamList): void {
-    Flux.Actions.popTo(name)
-  }
+export type AppParamList = {
+  [key in keyof RouteParamList]: RouteParamList[key]
 }
-
-type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
 
 /**
  * The of the `navigation` prop passed to each scene,
  * but without any scene-specific stuff.
  */
-export interface NavigationBase {
-  // Whether this scene is in the foreground:
-  addListener: (event: NavigationEvent, callback: () => void) => () => void
-  isFocused: () => boolean
-
-  // Going places:
-  navigate: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  push: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-  replace: <Name extends keyof ParamList>(name: Name, params: ParamList[Name]) => void
-
-  // Returning:
-  goBack: () => void
-  pop: () => void
-  popToTop: () => void
-
-  // Drawer:
-  closeDrawer: () => void
-  openDrawer: () => void
-  toggleDrawer: () => void
-
-  // Internals nobody should need to touch:
-  getState: () => unknown
-
-  // Coming soon:
-  // canGoBack() {},
-  // dispatch() {},
-  // getParent() {},
-  // jumpTo() {},
-  // reset() {},
-  // setOptions() {},
-}
+export type NavigationBase = NavigationCore.NavigationProp<AppParamList> & StackActionHelpers<AppParamList>
 
 /**
- * The of the `navigation` prop passed to each scene.
+ * The `navigation` prop passed to each scene.
  */
-export interface NavigationProp<Name extends keyof ParamList> extends NavigationBase {
-  setParams: (params: ParamList[Name]) => void
-}
+
+export type NavigationProp<RouteName extends keyof AppParamList> = NavigationCore.NavigationProp<AppParamList, RouteName> & StackActionHelpers<AppParamList>
 
 /**
- * The of the `route` prop passed to each scene.
+ * The `route` prop passed to each scene.
  */
-export interface RouteProp<Name extends keyof ParamList> {
-  name: Name
-  params: ParamList[Name]
-}
+export type RouteProp<Name extends keyof AppParamList> = NavigationCore.RouteProp<AppParamList, Name>
 
 /**
- * Adjusts the navigation prop to match the definitions above.
+ * All the props passed to each scene.
  */
-export function withNavigation<Props>(Component: React.ComponentType<Props>): React.FunctionComponent<Props> {
-  function WithNavigation(props: any) {
-    const navigation: NavigationProp<'edge'> = {
-      addListener(event, callback) {
-        const remover = props.navigation.addListener(event, callback)
-        return () => remover.remove()
-      },
-      isFocused() {
-        return props.navigation.isFocused()
-      },
-
-      navigate(name, params) {
-        props.navigation.navigate(name, { route: { name, params } })
-      },
-      push(name, params) {
-        props.navigation.push(name, { route: { name, params } })
-      },
-      replace(name, params) {
-        Flux.Actions.replace(name, { route: { name, params } })
-        // TODO: Replace Flux.Actions.replace with props.navigation.replace
-        // which will require debugging why it doesn't work for certain scenes.
-        // props.navigation.replace(name, { route: { name, params } })
-      },
-      setParams(params) {
-        props.navigation.setParams({ route: { name: Actions.currentScene, params } })
-      },
-
-      goBack() {
-        props.navigation.goBack()
-      },
-      pop() {
-        props.navigation.pop()
-      },
-      popToTop() {
-        props.navigation.popToTop()
-      },
-
-      closeDrawer() {
-        props.navigation.closeDrawer()
-      },
-      openDrawer() {
-        props.navigation.openDrawer()
-      },
-      toggleDrawer() {
-        props.navigation.toggleDrawer()
-      },
-
-      getState() {
-        return props.navigation.state
-      }
-    }
-
-    return <Component {...props} navigation={navigation} />
-  }
-  const displayName = Component.displayName ?? Component.name ?? 'Component'
-  WithNavigation.displayName = `WithNavigation(${displayName})`
-  return WithNavigation
+export interface SceneProps<RouteName extends keyof ParamList, ParamList extends ParamListBase = AppParamList> {
+  route: NavigationCore.RouteProp<ParamList, RouteName>
+  navigation: NavigationCore.NavigationProp<ParamList, RouteName> & StackActionHelpers<ParamList>
 }

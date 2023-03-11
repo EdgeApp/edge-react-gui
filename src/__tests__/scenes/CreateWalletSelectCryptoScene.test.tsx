@@ -1,16 +1,16 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
-import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('CreateWalletSelectCrypto', () => {
-  const mockState: any = {
+  const nonce = fakeNonce(0)
+  const mockState: FakeState = {
     core: {
       account: {
         currencyConfig: {
@@ -60,19 +60,19 @@ describe('CreateWalletSelectCrypto', () => {
       }
     }
   }
-  const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
     const navigation = fakeNavigation
     const route: RouteProp<'createWalletSelectCrypto'> = {
+      key: `createWalletSelectCrypto-${nonce()}`,
       name: 'createWalletSelectCrypto',
       params: {}
     }
 
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockState}>
         <CreateWalletSelectCryptoScene navigation={navigation} route={route} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

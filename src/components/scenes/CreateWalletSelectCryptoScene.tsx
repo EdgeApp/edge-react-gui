@@ -184,14 +184,14 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
     if (newAccountFlow != null) {
       // This scene is used when an account is just created. Allow the initialization method to define what needs to be done.
-      newAccountFlow(newList)
+      newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
       navigation.push('createWalletSelectFiat', { createWalletList: newList })
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
     }
   })
 

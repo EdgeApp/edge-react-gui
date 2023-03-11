@@ -139,7 +139,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
           label={s.strings.string_done_cap}
           type="secondary"
           marginRem={[1]}
-          onPress={() => navigation.navigate('walletListScene', {})}
+          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
           alignSelf="center"
         />
       </Fade>

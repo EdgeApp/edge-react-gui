@@ -75,6 +75,7 @@ Object {
     "plugins": Array [],
   },
   "exchangeRates": Object {},
+  "isLoggedIn": false,
   "loanManager": Object {
     "lastResyncTimestamp": 0,
     "loanAccounts": Object {},

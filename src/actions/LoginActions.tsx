@@ -2,7 +2,6 @@ import { EdgeAccount } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
@@ -21,7 +20,7 @@ import { initialState as passwordReminderInitialState } from '../reducers/Passwo
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
+import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { runWithTimeout } from '../util/utils'
@@ -71,16 +70,27 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const defaultSelection = currencyCodesToEdgeTokenIds(account, currencyCodes)
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
-      const newAccountFlow = async (items: WalletCreateItem[]) => {
-        navigation.replace('edge', {})
+      const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
+        navigation.replace('edgeTabs', {
+          screen: 'walletsTab',
+          params: {
+            screen: 'walletList'
+          }
+        })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
         await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
         await updateWalletsRequest()(dispatch, getState)
       }
 
-      navigation.push('createWalletSelectCrypto', { newAccountFlow, defaultSelection })
+      navigation.navigate('edgeApp', {
+        screen: 'edgeAppStack',
+        params: {
+          screen: 'createWalletSelectCrypto',
+          params: { newAccountFlow, defaultSelection }
+        }
+      })
     } else {
-      navigation.push('edge', {})
+      navigation.push('edgeApp', {})
     }
 
     // Show a notice for deprecated electrum server settings
@@ -256,9 +266,19 @@ export const mergeSettings = (
   }
 }
 
-export function logoutRequest(username?: string): ThunkAction<Promise<void>> {
+export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    Actions.popTo('login')
+    // Must use reset in order to avoid being prevented by the useBackEvent:
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login' }]
+    })
+    await dispatch(logout(username))
+  }
+}
+
+export function logout(username?: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     Airship.clear()
     const state = getState()
     const { account } = state.core
@@ -291,6 +311,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 
     return wallet
   } catch (error) {
+    showError(error)
     dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error: String(error) }))
     throw error
   }

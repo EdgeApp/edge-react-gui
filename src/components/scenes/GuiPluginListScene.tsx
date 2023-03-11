@@ -219,10 +219,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   /**
+   * Get the scene's direction from the route information. This determines
+   * which plugin list to show.
+   */
+  getSceneDirection(): 'buy' | 'sell' {
+    return this.props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+  }
+
+  /**
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, disablePlugins, navigation, route, account } = this.props
+    const { countryCode, disablePlugins, navigation, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -258,16 +266,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
 
-    const direction = route.params.direction
+    const direction = this.getSceneDirection()
     if (plugin.nativePlugin != null) {
       const filteredDisablePlugins: { [pluginId: string]: true } = {}
       for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
         if (value === true) filteredDisablePlugins[key] = true
       }
       await executePlugin({
-        direction,
         disablePlugins: filteredDisablePlugins,
         guiPlugin: plugin,
+        direction,
         regionCode: { countryCode },
         paymentType,
         navigation,
@@ -343,8 +351,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, route } = this.props
-    const { direction } = route.params ?? { direction: 'buy' }
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
+    const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
@@ -466,15 +474,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
-    account: state.core.account,
-    accountPlugins: state.account.referralCache.accountPlugins,
-    accountReferral: state.account.accountReferral,
-    coreDisklet: state.core.disklet,
-    countryCode: state.ui.settings.countryCode,
-    developerModeOn: state.ui.settings.developerModeOn,
-    disablePlugins: state.ui.exchangeInfo[params.direction].disablePlugins
-  }),
+  (state, props) => {
+    const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+    return {
+      account: state.core.account,
+      accountPlugins: state.account.referralCache.accountPlugins,
+      accountReferral: state.account.accountReferral,
+      coreDisklet: state.core.disklet,
+      countryCode: state.ui.settings.countryCode,
+      developerModeOn: state.ui.settings.developerModeOn,
+      disablePlugins: state.ui.exchangeInfo[direction].disablePlugins
+    }
+  },
   dispatch => ({
     updateCountryCode(countryCode: string) {
       dispatch(updateOneSetting({ countryCode }))

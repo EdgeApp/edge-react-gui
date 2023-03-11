@@ -18,7 +18,7 @@ import {
   PaymentProtoVerificationPayment,
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
-import { Actions, NavigationBase } from '../types/routerTypes'
+import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
@@ -99,11 +99,15 @@ export async function launchPaymentProto(
   uri: string,
   params: {
     wallet?: EdgeCurrencyWallet
+    currencyCode?: string
     metadata?: EdgeMetadata
+
+    // User is already on SendScene2 and router should replace vs navigate
+    navigateReplace?: boolean
   }
 ): Promise<void> {
   const { currencyWallets } = account
-  const { wallet } = params
+  const { currencyCode, navigateReplace, wallet } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -150,15 +154,16 @@ export async function launchPaymentProto(
     })
     if (asset == null) throw new PaymentProtoError('InvalidPaymentOption', { text: paymentCurrencies.join(', ') })
     selectedWallet = wallet
+    selectedCurrencyCode = currencyCode
   } else {
     const walletListResult = await pickWallet({ account, assets: paymentAssets, navigation })
     if (walletListResult == null) {
       throw new PaymentProtoError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     }
 
-    const { walletId, currencyCode } = walletListResult
+    const { walletId } = walletListResult
     selectedWallet = currencyWallets[walletId ?? '']
-    selectedCurrencyCode = currencyCode
+    selectedCurrencyCode = walletListResult.currencyCode
   }
   if (selectedWallet == null) return
 
@@ -274,13 +279,10 @@ export async function launchPaymentProto(
       return await selectedWallet.broadcastTx(edgeTransaction)
     }
   }
-
-  // Send confirmation scene
-  if (Actions.currentScene === 'send2') {
-    navigation.pop()
-    navigation.push('send2', sendParams)
+  if (navigateReplace === true) {
+    navigation.replace('send2', sendParams)
   } else {
-    navigation.push('send2', sendParams)
+    navigation.navigate('send2', sendParams)
   }
 }
 

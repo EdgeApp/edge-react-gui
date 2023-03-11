@@ -27,6 +27,23 @@ export class StakeBelowLimitError extends Error {
   }
 }
 
+/**
+ * Trying to stake or unstake an amount that is too low.
+ * @param nativeMin the minimum supported amount, in the currency specified
+ */
+export class StakePoolFullError extends Error {
+  name: string
+  request: ChangeQuoteRequest
+  currencyCode: string
+
+  constructor(request: ChangeQuoteRequest, currencyCode: string) {
+    super('Staking Pool Full')
+    this.currencyCode = currencyCode
+    this.name = 'StakePoolFullError'
+    this.request = request
+  }
+}
+
 export interface AssetId {
   pluginId: string
   currencyCode: string
@@ -54,7 +71,7 @@ export interface StakePolicy {
   stakeProviderInfo?: StakeProviderInfo
 
   // A percentage number representing the yield per year
-  apy: number
+  apy?: number
 
   // The assets which can be earned
   rewardAssets: AssetId[]

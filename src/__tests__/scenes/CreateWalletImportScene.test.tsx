@@ -1,13 +1,12 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
-import { rootReducer } from '../../reducers/RootReducer'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {
   const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children
@@ -18,7 +17,8 @@ jest.mock('react-native-keyboard-aware-scroll-view', () => {
 jest.mock('../../assets/images/import-key-icon.svg', () => 'ImportKeySvg')
 
 describe('CreateWalletImportScene', () => {
-  const mockState: any = {
+  const nonce = fakeNonce(0)
+  const mockState: FakeState = {
     core: {
       account: {
         currencyConfig: {
@@ -29,11 +29,11 @@ describe('CreateWalletImportScene', () => {
       }
     }
   }
-  const store = createStore(rootReducer, mockState)
 
   it('should render with loading props', () => {
     const navigation = fakeNavigation
     const route: RouteProp<'createWalletImport'> = {
+      key: `createWalletImport-${nonce()}`,
       name: 'createWalletImport',
       params: {
         createWalletList: [
@@ -51,9 +51,9 @@ describe('CreateWalletImportScene', () => {
     }
 
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={mockState}>
         <CreateWalletImportScene navigation={navigation} route={route} />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

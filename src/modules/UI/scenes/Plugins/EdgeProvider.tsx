@@ -330,28 +330,10 @@ export class EdgeProvider extends Bridgeable {
     const balance = this._selectedWallet.balances[currencyCode] ?? '0'
 
     const txs = await this._selectedWallet.getTransactions({ currencyCode })
-    const transactions: EdgeTransaction[] = []
-    for (const tx of txs) {
-      const newTx: EdgeTransaction = {
-        walletId: tx.walletId,
-        currencyCode: tx.currencyCode,
-        nativeAmount: tx.nativeAmount,
-        networkFee: tx.networkFee,
-        parentNetworkFee: tx.parentNetworkFee,
-        confirmations: tx.confirmations,
-        blockHeight: tx.blockHeight,
-        date: tx.date,
-        signedTx: '',
-        txid: tx.txid,
-        ourReceiveAddresses: tx.ourReceiveAddresses,
-        metadata: tx.metadata
-      }
-      transactions.push(newTx)
-    }
     const result: EdgeGetWalletHistoryResult = {
       fiatCurrencyCode,
       balance,
-      transactions
+      transactions: txs.map(cleanTx)
     }
     console.log('EdgeGetWalletHistoryResult', JSON.stringify(result))
     return result
@@ -397,9 +379,11 @@ export class EdgeProvider extends Bridgeable {
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, { wallet: this._selectedWallet, metadata }).catch(
-        showError
-      )
+      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, {
+        currencyCode,
+        wallet: this._selectedWallet,
+        metadata
+      }).catch(showError)
       return
     }
 
@@ -458,7 +442,8 @@ export class EdgeProvider extends Bridgeable {
             reject(new Error('Missing transaction'))
             return
           }
-          resolve(transaction)
+          // Do not expose the entire wallet to the plugin:
+          resolve(cleanTx(transaction))
           this._navigation.pop()
 
           this._selectedWallet
@@ -675,4 +660,25 @@ export function getReturnCurrencyCode(allowedCurrencyCodes: string[] | undefined
   }
 
   return returnCurrencyCode
+}
+
+function cleanTx(tx: EdgeTransaction): EdgeTransaction {
+  const newTx: EdgeTransaction = {
+    blockHeight: tx.blockHeight,
+    confirmations: tx.confirmations,
+    currencyCode: tx.currencyCode,
+    date: tx.date,
+    // feeRateUsed: tx.feeRateUsed,
+    metadata: tx.metadata,
+    nativeAmount: tx.nativeAmount,
+    networkFee: tx.networkFee,
+    // networkFeeOption: tx.networkFeeOption,
+    ourReceiveAddresses: tx.ourReceiveAddresses,
+    parentNetworkFee: tx.parentNetworkFee,
+    signedTx: '',
+    // requestedCustomFee: tx.requestedCustomFee,
+    txid: tx.txid,
+    walletId: tx.walletId
+  }
+  return newTx
 }

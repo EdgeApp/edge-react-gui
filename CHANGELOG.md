@@ -11,6 +11,45 @@
 
 - fixed: Stop writing private keys to logs when visiting the GUI plugin WebView.
 
+## 3.3.0 (2023-02-08)
+
+- Add XRP Tokens support
+- Add Markets and Asset View
+- Add Tron staking support for bandwidth and energy
+- Add Intuitive UI for transferring assets between wallets
+- Fix gradient background throughout app
+- Fix Thorchain swaps
+- Fix crash when staking or unstaking FIO
+- Add support for new recovery token URI
+- Change default XRP wallet name to "My XRP"
+- Allow for currency plugins that support tokens without custom tokens
+- Refactor selectWallet to allow for token activation
+- Audit and fix unsafe React component keys in lists
+- Other improvements and minor visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.19.42
+  - added: Support for token activation
+  - changed: Convert source code to TypeScript internally. No changes should be visible externally, aside from some file locations.
+- Upgrade edge-currency-accountbased to v0.22.11
+  - fixed: Correctly report ETHW balances.
+  - Fix: Include per token reserve in calculation of getMaxSpendable and makeSpend
+  - Add: Built in tokens for BSC, ETHW, and ETC to allow for custom tokens
+  - Fix: Missing XRP token transactions
+  - Improve hexToDecimal safety
+  - Fix: BNB Beacon Chain missing setOtherData method causing login errors
+  - TRX: Add bandwidth and energy staking support
+  - Add XRP token support
+  - Add native builtinTokens support and deprecate metaTokens
+  - Use patch-package to fix @tronscan/client errors
+- Upgrade edge-exchange-plugins to v0.17.2
+  - Fix: Send Ninerealms client-id when doing Thorchain queries
+  - Fix: Use Thornode servers instead of Midgard for inbound_addresses
+  - Godex: Check min amount before supported networks
+- Upgrade edge-login-ui-rn to v0.10.21
+  - changed: Re-format the new-account username screen to work better on small screens.
+  - added: Instructions to Terms of Use
+  - added: Conversion event tracking to login and account creation
+
 ## 3.2.0 (2023-02-02)
 
 - Add max swap support
@@ -55,9 +94,7 @@
   - DOT: Update @polkadot/api to v9.11.3
   - DOT: Improve type safety and various code cleanups
   - DOT: Add hard limit of 1 to transaction query progress
-  - HBAR: Update explorer urls
-  - TRX: Fix resource handling
-  - TRX: Fix fee calculation for low value transactions
+
   - TRX: Add note support
   - TRX: Update derivation path to industry standard
   - XRP: Replace use of autofill with local transaction creation

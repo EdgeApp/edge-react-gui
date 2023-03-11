@@ -1,19 +1,19 @@
+import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { TransactionListTx } from '../../types/types'
+import { RouteProp } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-interface Props {
-  edgeTransaction: TransactionListTx
-}
-
-export function TransactionDetailsTitle(props: Props) {
+export function TransactionDetailsTitle() {
+  const route = useRoute<RouteProp<'transactionDetails'>>()
+  const { edgeTransaction } = route.params
   const styles = getStyles(useTheme())
 
-  if (props.edgeTransaction == null) return null // Should never happen!?
-  const { dateString, time } = props.edgeTransaction
+  if (edgeTransaction == null) return null // Should never happen!?
+  if (!('dateString' in edgeTransaction)) return null
+  const { dateString, time } = edgeTransaction
 
   return (
     <View style={styles.container}>

@@ -6,8 +6,10 @@ import { ChangeMiningFeeComponent } from '../../components/scenes/ChangeMiningFe
 import { getTheme } from '../../components/services/ThemeContext'
 import { RouteProp } from '../../types/routerTypes'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('Change Mining Fees', () => {
+  const nonce = fakeNonce(0)
   const onSubmit = jest.fn()
   const wallet: any = {
     currencyInfo: {
@@ -24,6 +26,7 @@ describe('Change Mining Fees', () => {
     metadata: {}
   }
   const route: RouteProp<'changeMiningFee'> = {
+    key: `changeMiningFee-${nonce()}`,
     name: 'changeMiningFee',
     params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
   }

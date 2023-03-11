@@ -84,7 +84,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   componentDidMount = () => {
-    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
+    this.willFocusSubscription = this.props.navigation.addListener('focus', () => {
       this.getFioRequestsPending()
       this.getFioRequestsSent()
       this.props.refreshAllFioAddresses()

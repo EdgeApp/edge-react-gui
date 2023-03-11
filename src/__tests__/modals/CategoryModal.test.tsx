@@ -1,16 +1,14 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { createStore } from 'redux'
 
 import { CategoryModal } from '../../components/modals/CategoryModal'
-import { rootReducer } from '../../reducers/RootReducer'
 import { defaultCategories } from '../../util/categories'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('CategoryModal', () => {
-  const fakeState: any = {
+  const fakeState: FakeState = {
     ui: {
       scenes: {
         transactionDetails: {
@@ -19,13 +17,12 @@ describe('CategoryModal', () => {
       }
     }
   }
-  const store = createStore(rootReducer, fakeState)
 
   it('should render with an empty subcategory', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={fakeState}>
         <CategoryModal bridge={fakeAirshipBridge} initialCategory="Exchange:" />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -33,9 +30,9 @@ describe('CategoryModal', () => {
 
   it('should render with a subcategory', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={fakeState}>
         <CategoryModal bridge={fakeAirshipBridge} initialCategory="Income:Paycheck" />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

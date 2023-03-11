@@ -1,6 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
+import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { LoadingScene } from '../scenes/LoadingScene'
 
@@ -22,7 +23,8 @@ export function withWallet<Props extends { wallet: EdgeCurrencyWallet }>(
     const { navigation, route } = props
 
     const account = useSelector(state => state.core.account)
-    const wallet = account.currencyWallets[route.params.walletId]
+    const currencyWallets = useWatch(account, 'currencyWallets')
+    const wallet = currencyWallets[route.params.walletId]
 
     React.useEffect(() => {
       if (wallet == null) navigation.goBack()

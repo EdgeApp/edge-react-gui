@@ -2,11 +2,11 @@ import * as React from 'react'
 
 import { LoanAccount } from '../../controllers/loan-manager/types'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, ParamList } from '../../types/routerTypes'
+import { AppParamList, NavigationProp } from '../../types/routerTypes'
 import { LoadingScene } from '../scenes/LoadingScene'
 
 interface NavigationProps {
-  navigation: NavigationProp<keyof ParamList>
+  navigation: NavigationProp<keyof AppParamList>
   route: { params: { loanAccountId: string } }
 }
 

@@ -1,26 +1,16 @@
 import * as React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 interface Props {
   // The props.key of the visible child, or undefined to hide everything:
   activeKey: string | null | undefined
 
-  // An array of children to switch between:
+  // An array of children to switch between. Each child must have a key:
   children: React.ReactNode
 
   // The number of milliseconds the animation should take:
   duration?: number
-}
-
-interface State {
-  [key: string]: boolean // True to render the component
-}
-
-interface Opacities {
-  [key: string]: {
-    value: Animated.Value
-    mode: 'rise' | 'fall'
-  }
 }
 
 /**
@@ -32,102 +22,66 @@ interface Opacities {
  * in some sort of parent view to give it a useful size.
  *
  * Children always appear in their original order,
- * so as two compononets fade past each other during an animation,
+ * so as two components fade past each other during an animation,
  * the last child in the list will receive any touches.
  */
-export class CrossFade extends React.Component<Props, State> {
-  // Putting these in state would cause extra re-renders:
-  opacities: Opacities
+export function CrossFade(props: Props): JSX.Element {
+  const { activeKey, children, duration = 500 } = props
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {}
-    this.opacities = {}
-  }
-
-  /**
-   * Starts animations on an as-needed basis.
-   */
-  componentDidUpdate() {
-    const { activeKey, children, duration = 500 } = this.props
-
-    forEachKey(children, key => {
-      const opacity = this.opacities[key]
-      if (opacity.mode !== 'rise' && key === activeKey) {
-        opacity.mode = 'rise'
-        Animated.timing(opacity.value, {
-          duration,
-          toValue: 1,
-          useNativeDriver: false
-        }).start()
-      } else if (opacity.mode !== 'fall' && key !== activeKey) {
-        opacity.mode = 'fall'
-        Animated.timing(opacity.value, {
-          duration,
-          toValue: 0,
-          useNativeDriver: false
-        }).start(({ finished }) => {
-          if (finished) this.setState({ [key]: false })
-        })
-      }
-    })
-  }
-
-  /**
-   * Ensure we have a state row for each child.
-   * Shows each child if it is active, or we are already showing it.
-   */
-  static getDerivedStateFromProps(props: Props, state: State): State {
-    const { activeKey, children } = props
-
-    const out: State = {}
-    forEachKey(children, key => {
-      out[key] = key === activeKey || state[key]
-    })
-    return out
-  }
-
-  /**
-   * Renders each non-hidden child inside an animated wrapper.
-   */
-  render() {
-    const { activeKey, children } = this.props
-
-    const out: Array<React.ReactElement<any>> = []
-    const opacities: Opacities = {}
-    forEachKey(children, (key, child) => {
-      // Ensure we have an opacity animation for this child:
-      if (this.opacities[key] != null) {
-        opacities[key] = this.opacities[key]
-      } else if (key === activeKey) {
-        opacities[key] = { value: new Animated.Value(1), mode: 'rise' }
-      } else {
-        opacities[key] = { value: new Animated.Value(0), mode: 'fall' }
-      }
-
-      // Render the child:
-      if (this.state[key]) {
-        out.push(
-          <Animated.View key={key} style={[StyleSheet.absoluteFill, { opacity: opacities[key].value }]}>
-            {child}
-          </Animated.View>
-        )
-      }
-    })
-    this.opacities = opacities
-    return out
-  }
-}
-
-/**
- * Iterates over all the React children with `key` properties.
- */
-function forEachKey<Child>(children: Child | Child[], callback: (key: string, child: Child) => void): void {
-  React.Children.forEach(children, (child: Child) => {
-    // @ts-expect-error
-    if (child != null && child.key != null) {
-      // @ts-expect-error
-      callback(String(child.key), child)
+  const out: JSX.Element[] = []
+  React.Children.forEach(children, child => {
+    if (child != null && typeof child === 'object' && 'key' in child && typeof child.key === 'string') {
+      out.push(
+        <CrossFadeChild activeKey={activeKey} childKey={child.key} duration={duration}>
+          {child}
+        </CrossFadeChild>
+      )
     }
   })
+  return <>{out}</>
+}
+
+interface ChildProps {
+  activeKey: string | null | undefined
+  childKey: string
+  children: React.ReactNode
+  duration: number
+}
+
+function CrossFadeChild(props: ChildProps) {
+  const { activeKey, childKey, children, duration } = props
+  const active = childKey === activeKey
+
+  const [mode, setMode] = React.useState<'visible' | 'hiding' | 'hidden'>(active ? 'visible' : 'hidden')
+  const opacity = useSharedValue(active ? 1 : 0)
+
+  React.useEffect(() => {
+    switch (mode) {
+      case 'hiding':
+      case 'hidden':
+        if (active) {
+          setMode('visible')
+          opacity.value = withTiming(1, { duration })
+        }
+        break
+
+      case 'visible':
+        if (!active) {
+          setMode('hiding')
+          opacity.value = withTiming(0, { duration }, finished => {
+            if (finished) runOnJS(setMode)('hidden')
+          })
+        }
+    }
+  }, [active, duration, mode, opacity])
+
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value
+  }))
+
+  return mode === 'hidden' ? null : (
+    <Animated.View key={childKey} style={[StyleSheet.absoluteFill, style]}>
+      {children}
+    </Animated.View>
+  )
 }

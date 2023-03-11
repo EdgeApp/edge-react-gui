@@ -1,14 +1,11 @@
 import { describe, expect, it } from '@jest/globals'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import TestRenderer from 'react-test-renderer'
-import { applyMiddleware, createStore } from 'redux'
-import thunk from 'redux-thunk'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
-import { rootReducer } from '../../reducers/RootReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('TransactionListTop', () => {
   const currencyInfo: EdgeCurrencyInfo = {
@@ -51,7 +48,7 @@ describe('TransactionListTop', () => {
     watch() {}
   }
 
-  const fakeState: any = {
+  const fakeState: FakeState = {
     core: {
       account: {
         currencyWallets: { '123': fakeWallet },
@@ -60,11 +57,9 @@ describe('TransactionListTop', () => {
     }
   }
 
-  const store = createStore(rootReducer, fakeState, applyMiddleware(thunk))
-
   it('should render', () => {
     const renderer = TestRenderer.create(
-      <Provider store={store}>
+      <FakeProviders initialState={fakeState}>
         <TransactionListTop
           currencyCode="BTC"
           isEmpty={false}
@@ -74,7 +69,7 @@ describe('TransactionListTop', () => {
           onChangeSortingState={() => undefined}
           onSearchTransaction={() => undefined}
         />
-      </Provider>
+      </FakeProviders>
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()

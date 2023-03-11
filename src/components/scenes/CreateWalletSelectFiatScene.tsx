@@ -21,7 +21,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FiatListModal } from '../modals/FiatListModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -80,9 +80,10 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
         logEvent('Create_Wallet_Success')
       } catch (error: any) {
+        showError(error)
         logEvent('Create_Wallet_Failed', { error: String(error) })
       }
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
       return
     }
     // Any other combination goes to the completion scene
@@ -141,7 +142,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // If all remaining create items are tokens just go enable them and return home
     if (newWalletItemsCopy.length === 0 && newTokenItems.length > 0) {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
-      navigation.navigate('walletListScene', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
       return
     }
 

@@ -1,6 +1,7 @@
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import LinearGradient from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
@@ -43,6 +44,9 @@ const icons = {
   resync: 'sync',
   viewXPub: 'eye'
 }
+
+const xButtonGradientStart = { x: 0, y: 0 }
+const xButtonGradientEnd = { x: 0, y: 0.75 }
 
 /**
  * Customizes which coins get which options on the wallet list scene.
@@ -164,15 +168,6 @@ export function WalletListMenuModal(props: Props) {
 
     const result: Option[] = []
 
-    const splittable = await account.listSplittableWalletTypes(wallet.id)
-
-    const currencyInfos = getCurrencyInfos(account)
-    for (const splitWalletType of splittable) {
-      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.currencyCode}` })
-    }
-
     const { pluginId } = wallet.currencyInfo
     for (const option of WALLET_LIST_MENU) {
       const { pluginIds, label, value } = option
@@ -185,10 +180,23 @@ export function WalletListMenuModal(props: Props) {
       }
       result.push({ label, value })
     }
+
+    const splittable = await account.listSplittableWalletTypes(wallet.id)
+
+    const currencyInfos = getCurrencyInfos(account)
+    for (const splitWalletType of splittable) {
+      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
+    }
+
     setOptions(result)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color
+  const xButtonBottomColor = theme.modal
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
@@ -202,18 +210,24 @@ export function WalletListMenuModal(props: Props) {
         </View>
       )}
 
-      {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-          <AntDesignIcon
-            // @ts-expect-error
-            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
-            size={theme.rem(1)}
-            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-          />
-          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-        </TouchableOpacity>
-      ))}
-      <ModalCloseArrow onPress={handleCancel} />
+      <View style={styles.scrollViewContainer}>
+        <ScrollView contentContainerStyle={styles.scrollViewPadding}>
+          {options.map((option: Option) => (
+            <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+              <AntDesignIcon
+                // @ts-expect-error
+                name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+                size={theme.rem(1)}
+                style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+              />
+              <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+      <LinearGradient style={styles.modalCloseButton} colors={[xButtonTopColor, xButtonBottomColor]} start={xButtonGradientStart} end={xButtonGradientEnd}>
+        <ModalCloseArrow onPress={handleCancel} />
+      </LinearGradient>
     </ThemedModal>
   )
 }
@@ -232,6 +246,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     margin: theme.rem(0.5)
+  },
+  modalCloseButton: {
+    position: 'absolute',
+    width: '100%',
+    bottom: theme.rem(4),
+    height: theme.rem(3)
+  },
+  scrollViewContainer: {
+    flexShrink: 1
+  },
+  scrollViewPadding: {
+    paddingBottom: theme.rem(3)
   },
   warningColor: {
     color: theme.warningText

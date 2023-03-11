@@ -109,12 +109,16 @@ export function setPreferredSwapPluginId(pluginId: string | undefined): ThunkAct
     const state = getState()
     const { account } = state.core
     setPreferredSwapPluginIdAccountSettings(account, pluginId)
-      .then(() =>
+      .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
           data: pluginId
         })
-      )
+        dispatch({
+          type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE',
+          data: undefined
+        })
+      })
       .catch(showError)
   }
 }
@@ -124,12 +128,16 @@ export function setPreferredSwapPluginType(swapPluginType: EdgeSwapPluginType | 
     const state = getState()
     const { account } = state.core
     setPreferredSwapPluginTypeAccountSettings(account, swapPluginType)
-      .then(() =>
+      .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE',
           data: swapPluginType
         })
-      )
+        dispatch({
+          type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
+          data: undefined
+        })
+      })
       .catch(showError)
   }
 }
@@ -257,7 +265,7 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       )
       logActivity(`Restore Wallets: ${account.username}`)
 
-      navigation.navigate('walletList', {})
+      navigation.navigate('walletsTab', { screen: 'walletList' })
     }
   }
 }
