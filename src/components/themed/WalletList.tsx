@@ -12,7 +12,6 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -32,7 +31,6 @@ interface Props {
   filterActivation?: boolean
 
   // Visuals:
-  marginRem?: number | number[]
   searching: boolean
   searchText: string
   showCreateWallet?: boolean
@@ -70,7 +68,6 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    marginRem,
     searching,
     searchText,
     showCreateWallet,
@@ -81,7 +78,6 @@ export function WalletList(props: Props) {
   } = props
 
   const theme = useTheme()
-  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
   // Subscribe to the common wallet list:
   const account = useSelector(state => state.core.account)
@@ -226,14 +222,13 @@ export function WalletList(props: Props) {
   const handleItemLayout = useRowLayout()
 
   return sectionList == null ? (
-    <FlashList estimatedItemSize={theme.rem(4.25)} data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
+    <FlashList data={walletList} estimatedItemSize={theme.rem(4.25)} keyboardShouldPersistTaps="handled" renderItem={renderRow} />
   ) : (
     <SectionList
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
       renderSectionHeader={renderSectionHeader}
       sections={sectionList}
-      style={margin}
       getItemLayout={handleItemLayout}
     />
   )
