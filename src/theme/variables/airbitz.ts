@@ -1,4 +1,4 @@
-import { Platform, StatusBar } from 'react-native'
+import { Platform } from 'react-native'
 
 import { scale } from '../../util/scaling'
 
@@ -23,8 +23,6 @@ export const THEME = {
   BUTTONS: {
     HEIGHT: 44
   },
-
-  HEADER: Platform.OS === 'ios' ? getHeaderHeight() : getHeaderHeight() + (StatusBar.currentHeight ?? 0),
 
   FOOTER_TABS_HEIGHT: 50,
 
