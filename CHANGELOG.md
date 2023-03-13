@@ -1,5 +1,46 @@
 # edge-react-gui
 
+## 3.5.0 (2023-03-12)
+
+- Add LiFi DEX aggregator
+- Add Optimism
+- Update Account Recovery to UI2 theme
+- Allow single character currency codes
+- Fix AnyPay parsing on send scene
+- Fix potential crash when connecting addresses to FIO names
+- Fix swap settings not getting saved consistently
+- Create a FakeProvider to provide redux to test components
+- Change activation payment currencies to use pluginIds
+- Change split wallet functionality to use pluginIds instead of currency codes
+- Show engine failure error in currency row on failure to load
+- Disable Paynow support in SG
+- Various visual and text fixes
+- Upgrade edge-core-js to v0.19.45
+  - fixed: Update denominationToNative and nativeToDenomination to look at allTokens, instead of the legacy token lists.
+- Upgrade edge-currency-accountbased to v0.22.18
+  - Fix: Lower Optimism minGasPrice
+  - HBAR: Update explorer URL
+  - added: Parse/quote Smartpay PIX QR codes for Tron/USDT
+  - EVM: Add L1 gas price multiplier
+  - EVM: Fix nativeAmount calculation when paying an L1 fee
+  - Add optional checkEnvironment method to OuterPlugin to allow a plugin to fail after loading and during initialization
+  - EVM: Fix race condition of undefined balance for ETH-based currencies
+  - ARRR: Update checkpoint files
+- Upgrade edge-exchange-plugins to v0.17.6
+  - added: Add LI.FI DEX exchange.
+  - added: Add Optimism support across swap plugins
+  - added: Add default mainnet transcription map
+  - Lifi: Allow gas price lower than 1 gwei
+  - LetsExchange: Audit and add special case mainnet codes
+- Upgrade edge-login-ui-rn to v1.2.0
+  - fixed: Missing back button on password recovery login
+  - added: PublicLoginScreen takes a initialRoute prop to allow for control over the scene that it will initially show
+  - added: Accessibility hint to Edge logo
+  - fixed: Safe area for iPhone 14+
+  - added: Depend on the native @react-native-community/datetimepicker library, which must be installed manually.
+  - changed: Re-theme the recovery login scenes to match the rest of the app.
+  - removed: Scene components no longer accept a showHeader prop. With the final scene being themed, this prop no longer does anything.
+
 ## 3.4.0 (2023-03-03)
 
 - added: Safety check to see if keys have been uploaded to Edge infrastructure.
