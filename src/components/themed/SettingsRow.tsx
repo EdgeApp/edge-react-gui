@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { ActivityIndicator, Text, TextStyle, TouchableHighlight } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -37,13 +39,15 @@ const SettingsRowComponent = (props: Props) => {
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
-      <>
-        {children}
-        <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>
-        {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
-      </>
-    </TouchableHighlight>
+    <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+      <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
+        <>
+          {children}
+          <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>
+          {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
+        </>
+      </TouchableHighlight>
+    </Animated.View>
   )
 }
 

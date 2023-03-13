@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
+import { BALANCE_BOX_ENTER_ANIMATION, BALANCE_BOX_EXIT_ANIMATION, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
@@ -52,14 +54,16 @@ export class BalanceBox extends React.PureComponent<Props> {
       <SceneHeader underline>
         <TouchableOpacity onPress={this.handleToggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
-            <>
+            <Animated.View key="showing" layout={LAYOUT_ANIMATION} entering={BALANCE_BOX_ENTER_ANIMATION} exiting={BALANCE_BOX_EXIT_ANIMATION}>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
               <EdgeText style={styles.balanceBody}>
                 {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
               </EdgeText>
-            </>
+            </Animated.View>
           ) : (
-            <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
+            <Animated.View key="hidden" layout={LAYOUT_ANIMATION} entering={BALANCE_BOX_ENTER_ANIMATION} exiting={BALANCE_BOX_EXIT_ANIMATION}>
+              <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
+            </Animated.View>
           )}
         </TouchableOpacity>
       </SceneHeader>

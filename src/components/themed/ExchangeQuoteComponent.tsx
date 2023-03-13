@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import s from '../../locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Card } from '../cards/Card'
@@ -63,24 +65,26 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
     const fiatAmount = `${this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`
 
     return (
-      <Card marginRem={[0, 1]}>
-        <View style={styles.container}>
-          <View style={styles.iconContainer}>
-            <CryptoIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
+      <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+        <Card marginRem={[0, 1]}>
+          <View style={styles.container}>
+            <View style={styles.iconContainer}>
+              <CryptoIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
+            </View>
+            <View style={styles.contentContainer}>
+              {this.renderRow(
+                <EdgeText style={styles.contentTitle}>{this.props.currency}</EdgeText>,
+                <EdgeText style={styles.contentValue}>{cryptoAmount}</EdgeText>
+              )}
+              {this.renderRow(
+                <EdgeText style={styles.contentSubTitle}>{this.props.walletName}</EdgeText>,
+                <EdgeText style={styles.contentSubValue}>{fiatAmount}</EdgeText>
+              )}
+            </View>
           </View>
-          <View style={styles.contentContainer}>
-            {this.renderRow(
-              <EdgeText style={styles.contentTitle}>{this.props.currency}</EdgeText>,
-              <EdgeText style={styles.contentValue}>{cryptoAmount}</EdgeText>
-            )}
-            {this.renderRow(
-              <EdgeText style={styles.contentSubTitle}>{this.props.walletName}</EdgeText>,
-              <EdgeText style={styles.contentSubValue}>{fiatAmount}</EdgeText>
-            )}
-          </View>
-        </View>
-        {this.renderBottom()}
-      </Card>
+          {this.renderBottom()}
+        </Card>
+      </Animated.View>
     )
   }
 }
