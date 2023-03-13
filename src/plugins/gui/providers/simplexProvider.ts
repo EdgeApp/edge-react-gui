@@ -211,8 +211,8 @@ export const simplexProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes } = params
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        const { direction, regionCode, exchangeAmount, amountType, paymentTypes } = params
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', direction })
         let foundPaymentType = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
@@ -221,7 +221,7 @@ export const simplexProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported', direction })
 
         const ts = Math.floor(Date.now() / 1000)
         const simplexCryptoCode = SIMPLEX_ID_MAP[params.tokenId.pluginId][params.tokenId?.tokenId ?? '']
@@ -271,10 +271,10 @@ export const simplexProvider: FiatProviderFactory = {
             const [minLimit, maxLimit] = result3.slice(2, 4)
 
             if (gt(params.exchangeAmount, maxLimit)) {
-              throw new FiatProviderError({ errorType: 'overLimit', errorAmount: parseFloat(maxLimit) })
+              throw new FiatProviderError({ errorType: 'overLimit', errorAmount: parseFloat(maxLimit), direction })
             }
             if (lt(params.exchangeAmount, minLimit)) {
-              throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(minLimit) })
+              throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(minLimit), direction })
             }
           }
           throw new Error('Simplex unknown error')

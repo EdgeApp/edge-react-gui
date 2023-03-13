@@ -27,9 +27,21 @@ export interface EnterAmountPoweredBy {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
+  const {
+    headerIconUri,
+    headerTitle,
+    onSubmit,
+    convertValue,
+    onChangeText,
+    label1,
+    label2,
+    initialAmount1 = '',
+    initialAmount2 = '',
+    getMethods
+  } = props.route.params
+  console.debug(initialAmount2)
   const [value1, setValue1] = React.useState<string>(initialAmount1)
-  const [value2, setValue2] = React.useState<string>('')
+  const [value2, setValue2] = React.useState<string>(initialAmount2)
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
   const [spinner2, setSpinner2] = React.useState<boolean>(false)
   const [statusTextContent, setStatusTextContent] = React.useState<string>('')
@@ -58,17 +70,30 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       setValue2: formattedSetValue2
     })
 
-  if (firstRun.current && initialAmount1 != null) {
-    setValue2(' ')
-    setSpinner2(true)
-    convertValue(1, initialAmount1).then(val => {
-      if (typeof val === 'string') {
-        setValue2(val)
-        setSpinner2(false)
-      }
-    })
+  if (firstRun.current) {
+    if (initialAmount1 !== '') {
+      setValue2(' ')
+      setSpinner2(true)
+      convertValue(1, initialAmount1).then(val => {
+        if (typeof val === 'string') {
+          console.debug('setValue2(val) ' + val)
+          setValue2(val)
+          setSpinner2(false)
+        }
+      })
+    } else if (initialAmount2 !== '') {
+      setValue1(' ')
+      setSpinner1(true)
+      convertValue(2, initialAmount2).then(val => {
+        if (typeof val === 'string') {
+          console.debug('setValue1(val) ' + val)
+          setValue1(val)
+          setSpinner1(false)
+        }
+      })
+    }
+    firstRun.current = false
   }
-  firstRun.current = false
   let headerIcon = null
   if (headerIconUri != null) {
     headerIcon = <Image style={styles.icon} source={{ uri: headerIconUri }} />

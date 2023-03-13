@@ -1,11 +1,12 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
 import { EdgeTokenId } from '../../types/types'
-import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
+import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi, FiatSepaInfo } from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
   coreWallet: EdgeCurrencyWallet
+  displayDenomination?: EdgeDenomination
 }
 
 export interface FiatProviderQuote {
@@ -38,9 +39,13 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 export type FiatProviderQuoteError =
   | {
       errorType: FiatProviderQuoteErrorTypesOther
+      direction: 'buy' | 'sell'
     }
-  | { errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
-
+  | {
+      errorType: FiatProviderQuoteErrorTypesLimit
+      errorAmount: number
+      direction: 'buy' | 'sell'
+    }
 export class FiatProviderError extends Error {
   // @ts-expect-error
   name: string
@@ -65,6 +70,7 @@ export interface FiatProviderGetQuoteParams {
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
   paymentTypes: FiatPaymentTypes
+  sepaInfo?: FiatSepaInfo
 }
 
 export interface FiatProviderStore {

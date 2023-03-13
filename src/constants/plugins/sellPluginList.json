@@ -395,6 +395,7 @@
     "paymentTypes": [
       "bank"
     ],
+    "paymentType": "sepa",
     "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "logoBity.png",

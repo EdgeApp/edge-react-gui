@@ -1,5 +1,5 @@
 import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
-import { EdgeAccount, EdgeDataStore } from 'edge-core-js'
+import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -8,16 +8,23 @@ import SafariView from 'react-native-safari-view'
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
+import { RootState } from '../../reducers/RootReducer'
+import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { Dispatch } from '../../types/reduxTypes'
 import { NavigationProp } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
+  FiatPluginAddressFormParams,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
+  FiatPluginSepaFormParams,
+  FiatPluginSepaTransferParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -30,6 +37,8 @@ export const executePlugin = async (params: {
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   paymentType?: FiatPaymentType
   regionCode: FiatPluginRegionCode
+  state: RootState
+  dispatch: Dispatch
 }): Promise<void> => {
   const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode } = params
   const { pluginId } = guiPlugin
@@ -57,7 +66,7 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
+      const { headerTitle, label1, label2, initialAmount1, initialAmount2, convertValue, getMethods } = params
       return new Promise((resolve, reject) => {
         logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
@@ -66,6 +75,7 @@ export const executePlugin = async (params: {
           label1,
           label2,
           initialAmount1,
+          initialAmount2,
           getMethods,
           convertValue,
           onChangeText: async () => undefined,
@@ -78,6 +88,51 @@ export const executePlugin = async (params: {
     },
     popScene: async () => {
       navigation.pop()
+    },
+    addressForm: async (params: FiatPluginAddressFormParams) => {
+      return new Promise((resolve, reject) => {
+        const { countryCode, headerIconUri, headerTitle } = params
+        navigation.navigate('guiPluginAddressForm', {
+          countryCode,
+          headerIconUri,
+          headerTitle,
+          onSubmit: async (homeAddress: HomeAddress) => {
+            resolve(homeAddress)
+          }
+        })
+      })
+    },
+    sepaForm: async (params: FiatPluginSepaFormParams) => {
+      const { headerTitle, transferInfo, headerIconUri } = params
+      return new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginSepaForm', {
+          headerTitle,
+          transferInfo,
+          headerIconUri,
+          onSubmit: async (sepaInfo: SepaInfo) => {
+            resolve(sepaInfo)
+          }
+        })
+      })
+    },
+    sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
+      return new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginSepaTransfer', {
+          onSubmit: async () => {
+            resolve()
+          }
+        })
+      })
+    },
+    send: async (params: SendScene2Params) => {
+      return new Promise<void>((resolve, reject) => {
+        navigation.navigate('send2', {
+          ...params,
+          onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
+            resolve()
+          }
+        })
+      })
     }
   }
 
@@ -92,7 +147,7 @@ export const executePlugin = async (params: {
 
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
-    isBuy,
+    direction,
     regionCode,
     paymentTypes
   }

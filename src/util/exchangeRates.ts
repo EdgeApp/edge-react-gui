@@ -1,7 +1,9 @@
+import { mul, toFixed } from 'biggystring'
 import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
 import { EdgeFetchFunction } from 'edge-core-js'
 
 import { fetchRates } from './network'
+import { DECIMAL_PRECISION } from './utils'
 
 const RATES_SERVER_MAX_QUERY_SIZE = 100
 const FETCH_FREQUENCY = 1000
@@ -144,7 +146,9 @@ export const getHistoricalRate = async (
   maxQuerySize: number = RATES_SERVER_MAX_QUERY_SIZE,
   doFetch?: EdgeFetchFunction
 ): Promise<number> => {
+  console.debug('date', date)
   const roundDate = roundHalfMinute(date)
+  console.debug('roundDate', roundDate)
   return new Promise((resolve, reject) => {
     const [code1, code2] = codePair.split('_').sort()
     const pair = `${code1}_${code2}`
@@ -161,4 +165,11 @@ export const getHistoricalRate = async (
     }
     resolve(out)
   })
+}
+
+export const getAnyRate = async (base: string, quote: string, amount?: string, precision?: number | string): Promise<string> => {
+  const codePair = `${base}_${quote}`
+  const rate = await getHistoricalRate(codePair, new Date().toISOString())
+  const parsedPrecision = typeof precision === 'number' ? precision : typeof precision === 'string' ? parseInt(precision) : DECIMAL_PRECISION
+  return toFixed(mul(rate.toString(), amount ?? '1'), 0, parsedPrecision)
 }

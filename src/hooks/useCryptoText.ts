@@ -28,7 +28,7 @@ interface UseCryptoTextParams {
  * 2. Display Denomination
  * 3. Localization: commas, decimals, spaces
  */
-export const useCryptoText = ({
+export const formatCryptoText = ({
   displayDenomination,
   exchangeDenomination,
   fiatDenomination,

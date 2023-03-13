@@ -25,10 +25,19 @@ const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
 }
 
 const ERROR_TEXT = {
-  underLimit: s.strings.fiat_plugin_buy_amount_under_limit,
-  overLimit: s.strings.fiat_plugin_buy_amount_over_limit,
+  underLimit: {
+    buy: s.strings.fiat_plugin_buy_amount_under_limit_s,
+    sell: s.strings.fiat_plugin_sell_amount_over_limit_s
+  },
+  overLimit: {
+    buy: s.strings.fiat_plugin_buy_amount_under_limit_s,
+    sell: s.strings.fiat_plugin_sell_amount_over_limit_s
+  },
   paymentUnsupported: s.strings.fiat_plugin_payment_unsupported,
-  regionRestricted: s.strings.fiat_plugin_buy_region_restricted,
+  regionRestricted: {
+    buy: s.strings.fiat_plugin_buy_region_restricted_s,
+    sell: s.strings.fiat_plugin_sell_region_restricted_s
+  },
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
 }
 
@@ -67,12 +76,21 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
     }
   }
   if (bestError == null) return
-  let errorText = ERROR_TEXT[bestError.errorType]
-  if (bestError.errorType === 'underLimit' || bestError.errorType === 'overLimit') {
-    const localeAmount = formatNumber(bestError.errorAmount.toString())
-    errorText = sprintf(errorText, localeAmount + ' ' + currencyCode)
+  const errorText = ERROR_TEXT[bestError.errorType]
+  if (typeof errorText === 'string') {
+    return errorText
+  } else {
+    // Buy/sell-specific strings
+    let sprintfParam
+    if (bestError.errorType === 'underLimit' || bestError.errorType === 'overLimit') {
+      const localeAmount = formatNumber(bestError.errorAmount.toString())
+      sprintfParam = localeAmount + ' ' + currencyCode
+    } else if (bestError.errorType === 'regionRestricted') {
+      sprintfParam = currencyCode
+    }
+    const buyOrSellErrorText = errorText[bestError.direction]
+    return sprintfParam != null ? sprintf(buyOrSellErrorText, sprintfParam) : buyOrSellErrorText
   }
-  return errorText
 }
 
 export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {

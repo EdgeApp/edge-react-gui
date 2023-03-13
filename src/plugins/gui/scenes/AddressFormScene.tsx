@@ -12,7 +12,6 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { OutlinedTextInput, OutlinedTextInputRef } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
-import { ADDRESS_FORM_DISKLET_NAME, ADDRESS_FORM_TITLE_MAP } from '../../../constants/plugins/GuiFormConsts'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import s from '../../../locales/strings'
@@ -27,6 +26,16 @@ interface Props {
 
 const FUZZY_SEARCH_INTERVAL = 2000
 const MAX_DISPLAYED_HINTS = 5
+
+const ADDRESS_FORM_DISKLET_NAME = 'homeAddress'
+const ADDRESS_FORM_TITLE_MAP: { readonly [key: string]: string } = {
+  address: s.strings.address_line_1,
+  address2: s.strings.address_line_2,
+  city: s.strings.city,
+  state: s.strings.state_province_region,
+  postalCode: s.strings.zip_postal_code,
+  country: s.strings.country
+}
 
 const asKmootResponse = asObject({
   features: asArray(

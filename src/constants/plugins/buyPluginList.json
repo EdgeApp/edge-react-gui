@@ -300,6 +300,7 @@
     "cryptoCodes": [
       "BTC"
     ],
+    "paymentType": "sepa",
     "paymentTypes": [
       "bank"
     ],

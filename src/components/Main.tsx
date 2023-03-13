@@ -16,6 +16,7 @@ import { useUnmount } from '../hooks/useUnmount'
 import s from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -406,6 +407,13 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
         options={{
           headerRight: () => null
         }}

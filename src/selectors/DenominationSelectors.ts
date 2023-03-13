@@ -1,4 +1,4 @@
-import { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyInfo, EdgeDenomination, EdgeTokenMap } from 'edge-core-js'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 
@@ -34,9 +34,7 @@ export function getExchangeDenominationFromState(pluginId: string, currencyCode:
  * Finds the primary denomination for the given currencyCode.
  * This would match "BTC" but not "sats".
  */
-export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  const { allTokens, currencyInfo } = state.core.account.currencyConfig[pluginId]
-
+const getExchangeDenominationInner = (allTokens: EdgeTokenMap, currencyInfo: EdgeCurrencyInfo, currencyCode: string): EdgeDenomination => {
   if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
   for (const tokenId of Object.keys(allTokens)) {
     const token = allTokens[tokenId]
@@ -44,6 +42,14 @@ export const getExchangeDenomination = (state: RootState, pluginId: string, curr
   }
 
   return { ...emptyEdgeDenomination }
+}
+export const getExchangeDenominationFromAccount = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeDenomination => {
+  const { allTokens, currencyInfo } = account.currencyConfig[pluginId]
+  return getExchangeDenominationInner(allTokens, currencyInfo, currencyCode)
+}
+export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
+  const { allTokens, currencyInfo } = state.core.account.currencyConfig[pluginId]
+  return getExchangeDenominationInner(allTokens, currencyInfo, currencyCode)
 }
 
 /**
