@@ -10,3 +10,11 @@ export const asHomeAddress = asObject({
 })
 
 export type HomeAddress = ReturnType<typeof asHomeAddress>
+
+export const asSepaInfo = asObject({
+  name: asString,
+  iban: asString,
+  swift: asString
+})
+
+export type SepaInfo = ReturnType<typeof asSepaInfo>

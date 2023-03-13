@@ -3,7 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
-import { HomeAddress } from '../../types/FormTypes'
+import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -37,6 +37,12 @@ export interface FiatPluginAddressFormParams {
   headerTitle: string
   headerIconUri?: string
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
+}
+
+export interface FiatPluginSepaFormParams {
+  headerTitle: string
+  headerIconUri?: string
+  onSubmit: (sepaInfo: SepaInfo) => Promise<void>
 }
 
 export interface FiatPluginListModalParams {
