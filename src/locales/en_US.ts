@@ -1216,15 +1216,23 @@ const strings = {
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 
-  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
-  fiat_plugin_buy_currencycode: 'Buy %s',
   fiat_plugin_amount_currencycode: 'Amount %s',
-  fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
-  fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
-  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
-  fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
+
+  fiat_plugin_buy_amount_over_limit_s: 'Maximum purchase amount is %s',
+  fiat_plugin_buy_amount_under_limit_s: 'Minimum purchase amount is %s',
+  fiat_plugin_buy_currencycode_s: 'Buy %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_buy_region_restricted_s: 'Region restricted from purchasing %s',
+
+  fiat_plugin_sell_amount_over_limit_s: 'Maximum sell amount is %s',
+  fiat_plugin_sell_amount_under_limit_s: 'Minimum sell amount is %s',
+  fiat_plugin_sell_currencycode_s: 'Sell %s',
+  fiat_plugin_sell_no_quote: 'Unable to get sell quote',
+  fiat_plugin_sell_region_restricted_s: 'Region restricted from selling %s',
+
+  fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
+  fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Wallet List Modal
@@ -1257,6 +1265,33 @@ const strings = {
   coin_rank_volume_24hr_abbreviation: 'Vol 24h',
 
   // #endregion CoinRanking
+
+  // #region Gui Plugin
+
+  account_owner: 'Account Owner',
+  address_line_1: 'Address Line 1',
+  address_line_2: 'Address Line 2 (optional)',
+  bank_info: 'Bank Info',
+  city: 'City',
+  country: 'Country',
+  enter_bank_info: 'Enter Bank Info',
+  home_address: 'Home Address',
+  iban: 'IBAN',
+  input_output_currency: 'Currency',
+  n_a: 'N/A',
+  payment_details: 'Payment Details',
+  quote_input_title: 'Input',
+  quote_output_title: 'Output',
+  recipient: 'Recipient',
+  reference: 'Reference',
+  sepa_transfer_prompt_s:
+    'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
+  state_province_region: 'Region/Provice/State',
+  swift_bic: 'SWIFT/BIC',
+  swift_code: 'Swift Code',
+  zip_postal_code: 'Postal Code/Zip',
+
+  // #endregion
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
