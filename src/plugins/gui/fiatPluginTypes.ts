@@ -2,12 +2,18 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { SendScene2Params } from '../../components/scenes/SendScene2'
+import { HomeAddress } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
-export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach', 'sepa')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
+
+export interface FiatSepaOwnerAddress extends HomeAddress {
+  name: string
+}
 
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
@@ -26,7 +32,13 @@ export interface FiatPluginEnterAmountParams {
   headerIconUri?: string
 }
 
-// export type FiatPluginListModalRow = { icon: string | number, name: string }
+export interface FiatPluginAddressFormParams {
+  countryCode: string
+  headerTitle: string
+  headerIconUri?: string
+  onSubmit: (homeAddress: HomeAddress) => Promise<void>
+}
+
 export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
@@ -53,6 +65,7 @@ export interface FiatPluginUi {
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
   popScene: () => {}
+  send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
