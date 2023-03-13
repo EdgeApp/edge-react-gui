@@ -15,12 +15,11 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeTokenId } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { makeCurrencyCodeTable } from '../../util/utils'
 import { CustomAsset } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
@@ -106,6 +105,7 @@ export function WalletListModal(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   // #endregion Constants
 
@@ -201,34 +201,32 @@ export function WalletListModal(props: Props) {
       return <MainButton label={s.strings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
     }
     return (
-      <View>
+      <View style={styles.bankMargin}>
         <FlashList
           estimatedItemSize={theme.rem(4.25)}
           data={Object.values(bankAccountsMap)}
           keyboardShouldPersistTaps="handled"
           renderItem={renderPaymentMethod}
           keyExtractor={item => item.id}
-          style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
         />
       </View>
     )
-  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, theme])
+  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin, theme])
 
   const customAssetSection = React.useMemo<React.ReactNode>(() => {
     if (!showCustomAssets) return null
     return (
-      <View>
+      <View style={styles.customAssetMargin}>
         <FlashList
           estimatedItemSize={theme.rem(4.25)}
           data={customAssets}
           keyboardShouldPersistTaps="handled"
           renderItem={renderCustomAsset}
           keyExtractor={item => item.referenceTokenId}
-          style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
         />
       </View>
     )
-  }, [customAssets, renderCustomAsset, showCustomAssets, theme])
+  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin, theme])
 
   // #endregion Renderers
 
@@ -249,26 +247,44 @@ export function WalletListModal(props: Props) {
         marginRem={[0.5, 0, 1.25, 0]}
         searchIcon
       />
-      <WalletList
-        allowedAssets={allowedAssets ?? legacyAllowedAssets}
-        allowedWalletIds={allowedWalletIds}
-        excludeAssets={walletListExcludeAssets}
-        excludeWalletIds={excludeWalletIds}
-        filterActivation={filterActivation}
-        marginRem={listMargin}
-        searching={searching}
-        searchText={searchText}
-        showCreateWallet={showCreateWallet}
-        createWalletId={createWalletId}
-        onPress={handleWalletListPress}
-        navigation={navigation}
-      />
+      <View style={styles.walletsMargin}>
+        <WalletList
+          allowedAssets={allowedAssets ?? legacyAllowedAssets}
+          allowedWalletIds={allowedWalletIds}
+          excludeAssets={walletListExcludeAssets}
+          excludeWalletIds={excludeWalletIds}
+          filterActivation={filterActivation}
+          searching={searching}
+          searchText={searchText}
+          showCreateWallet={showCreateWallet}
+          createWalletId={createWalletId}
+          onPress={handleWalletListPress}
+          navigation={navigation}
+        />
+      </View>
       <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }
 
-const listMargin = [0, -1]
+const getStyles = cacheStyles((theme: Theme) => ({
+  bankMargin: {
+    flex: 1,
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(-1),
+    marginTop: theme.rem(-1)
+  },
+  customAssetMargin: {
+    flex: 1,
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(-1),
+    marginTop: theme.rem(-0.5)
+  },
+  walletsMargin: {
+    flex: 1,
+    marginHorizontal: theme.rem(-1)
+  }
+}))
 
 /**
  * Precisely identify the assets named by a currency-code array.
