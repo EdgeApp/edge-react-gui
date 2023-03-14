@@ -380,7 +380,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   scrollViewContentContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: theme.rem(0.5)
   },
   spinner: {
     marginVertical: theme.rem(1.5)

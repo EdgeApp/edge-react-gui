@@ -66,7 +66,8 @@ export const WcDisconnectScene = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    padding: theme.rem(0.5)
+    padding: theme.rem(0.5),
+    paddingTop: theme.rem(1)
   },
   currencyLogo: {
     height: theme.rem(2),

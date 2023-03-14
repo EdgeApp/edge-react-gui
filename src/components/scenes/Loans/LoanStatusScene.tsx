@@ -109,7 +109,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
       {displayInfo == null ? (
         <FillLoader />
       ) : (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
             <StepProgressBar actionDisplayInfos={steps} />
           </ScrollView>
@@ -135,6 +135,10 @@ export const LoanStatusSceneComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {
+    container: {
+      flex: 1,
+      paddingTop: theme.rem(0.5)
+    },
     button: {
       color: theme.textLink,
       fontFamily: theme.addButtonFont,

@@ -520,8 +520,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
         <View style={styles.scene}>
           <View style={styles.row}>
             <SceneHeader title={s.strings.fio_pending_requests} underline />
-            {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
+              {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
               {loadingPending && !fioRequestsPending.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SectionList
                 initialNumToRender={10}
@@ -536,8 +536,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
           </View>
           <View style={styles.row}>
             <SceneHeader title={s.strings.fio_sent_requests} underline withTopMargin />
-            {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
+              {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
               {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SectionList
                 initialNumToRender={10}
@@ -564,8 +564,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'stretch'
   },
   container: {
+    alignItems: 'stretch',
     flex: 1,
-    alignItems: 'stretch'
+    paddingTop: theme.rem(0.5)
   },
   row: {
     height: '50%'

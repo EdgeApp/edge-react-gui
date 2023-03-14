@@ -91,7 +91,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              marginRem={[0, 1.75]}
+              marginRem={[0.5, 1.75, 0]}
               searchIcon
             />
             <FlashList

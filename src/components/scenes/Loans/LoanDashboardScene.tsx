@@ -263,8 +263,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,
       fontSize: theme.rem(0.75),
-      marginTop: theme.rem(0.5),
-      marginLeft: theme.rem(1)
+      marginLeft: theme.rem(1),
+      marginTop: theme.rem(1)
     }
   }
 })

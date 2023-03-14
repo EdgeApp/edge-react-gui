@@ -221,7 +221,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <Space around={1}>
+        <Space around={1} top={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
             currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}

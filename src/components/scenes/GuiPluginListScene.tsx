@@ -436,7 +436,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   selectedCountryRow: {
-    marginTop: theme.rem(1),
+    marginTop: theme.rem(1.5),
     marginBottom: theme.rem(1.5),
     marginHorizontal: theme.rem(1.5),
     flexDirection: 'row',

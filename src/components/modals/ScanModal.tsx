@@ -240,6 +240,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   headerContainer: {
     justifyContent: 'flex-end',
+    marginBottom: theme.rem(0.5),
     marginTop: theme.rem(1)
   },
   peepholeSpace: {

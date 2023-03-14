@@ -184,7 +184,8 @@ export class FioAddressList extends React.Component<Props, LocalState> {
 const getStyles = cacheStyles((theme: Theme) => ({
   list: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingTop: theme.rem(0.5)
   },
   loading: {
     flex: 1,

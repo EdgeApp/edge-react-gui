@@ -130,9 +130,10 @@ const CreateWalletImportComponent = (props: Props) => {
     <SceneWrapper background="theme">
       <SceneHeader title={s.strings.create_wallet_import_title} withTopMargin />
       <KeyboardAwareScrollView
-        onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
-        onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
+        contentContainerStyle={styles.container}
         scrollEnabled={scrollEnabled}
+        onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
+        onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
       >
         <View style={styles.icon}>
           <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
@@ -159,6 +160,9 @@ const CreateWalletImportComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    marginTop: theme.rem(0.5)
+  },
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',

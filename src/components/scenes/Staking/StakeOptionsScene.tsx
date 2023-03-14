@@ -83,8 +83,9 @@ const StakeOptionsSceneComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   optionsContainer: {
     alignItems: 'stretch',
-    margin: theme.rem(1),
-    marginBottom: theme.rem(6)
+    marginBottom: theme.rem(6),
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   optionContainer: {
     margin: theme.rem(1),

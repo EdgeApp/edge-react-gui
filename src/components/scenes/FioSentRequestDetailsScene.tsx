@@ -1,5 +1,6 @@
 import { mul } from 'biggystring'
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate, formatNumber, SHORT_DATE_FMT } from '../../locales/intl'
@@ -64,11 +65,14 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { route } = this.props
+    const { route, theme } = this.props
     const { selectedFioSentRequest } = route.params
+    const styles = getStyles(theme)
+
     return (
       <SceneWrapper background="header">
         <SceneHeader title={s.strings.title_fio_sent_request_details} underline />
+        <View style={styles.headerSpace} />
         {this.amountField()}
         <Tile type="static" title={s.strings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
         <Tile type="static" title={s.strings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
@@ -81,6 +85,9 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  headerSpace: {
+    paddingTop: theme.rem(0.5)
+  },
   status: {
     color: theme.warningText,
     fontSize: theme.rem(1)

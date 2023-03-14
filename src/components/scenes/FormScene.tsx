@@ -26,7 +26,7 @@ export const FormScene = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <SceneHeader tertiary={headerTertiary} title={headerText} underline withTopMargin />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}
         <View style={styles.footer}>
           <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} disabledText={s.strings.send_confirmation_slide_to_confirm} />
@@ -37,6 +37,9 @@ export const FormScene = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingTop: theme.rem(0.5)
+  },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',

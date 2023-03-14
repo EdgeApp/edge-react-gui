@@ -245,7 +245,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           <SceneHeader title={s.strings.migrate_wallets_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}
             data={sortedMigrateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={itemStatus}

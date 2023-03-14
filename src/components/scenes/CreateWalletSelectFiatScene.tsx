@@ -207,8 +207,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
+      <SceneHeader title={s.strings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
-        <SceneHeader title={s.strings.title_create_wallet} withTopMargin />
         {renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {s.strings.fragment_create_wallet_instructions}
@@ -229,7 +229,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
+    flex: 1,
+    paddingTop: theme.rem(0.5)
   },
   cryptoTypeLogo: {
     width: theme.rem(2),

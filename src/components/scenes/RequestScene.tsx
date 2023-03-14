@@ -519,10 +519,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   keysOnlyModeText: {
-    padding: theme.rem(1),
+    color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    color: theme.primaryText
+    padding: theme.rem(1),
+    paddingTop: theme.rem(0.5)
   },
   container: {
     flex: 1,

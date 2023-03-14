@@ -115,7 +115,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     return (
       <SceneWrapper background="theme">
         <SceneHeader title={s.strings.title_exchange} underline withTopMargin />
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.container}>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={s.strings.transaction_details_fee_warning} type="warning" />}
           <ExchangeQuote
@@ -166,6 +166,9 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingTop: theme.rem(0.5)
+  },
   footerText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText

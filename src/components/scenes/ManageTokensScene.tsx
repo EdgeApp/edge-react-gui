@@ -146,14 +146,7 @@ function ManageTokensSceneComponent(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlashList
-        estimatedItemSize={theme.rem(4.25)}
-        data={filteredTokenIds}
-        extraData={extraData}
-        keyExtractor={keyExtractor}
-        renderItem={renderRow}
-        style={styles.tokenList}
-      />
+      <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
@@ -174,10 +167,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   subTitle: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.85)
-  },
-  tokenList: {
-    marginTop: theme.rem(-0.5),
-    flex: 4
   }
 }))
 

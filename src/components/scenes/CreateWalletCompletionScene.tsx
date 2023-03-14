@@ -156,7 +156,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
           <SceneHeader title={s.strings.title_create_wallets} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            contentContainerStyle={{ paddingTop: theme.rem(0.5), paddingBottom: gap.bottom }}
             data={filteredCreateItemsForDisplay}
             estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}

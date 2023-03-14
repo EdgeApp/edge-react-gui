@@ -251,10 +251,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.backgroundGradientColors[1]
   },
   instructionalText: {
-    fontSize: theme.rem(0.75),
     color: theme.primaryText,
+    fontSize: theme.rem(0.75),
     paddingBottom: theme.rem(1),
     paddingHorizontal: theme.rem(1),
+    paddingTop: theme.rem(0.5),
     textAlign: 'left'
   }
 }))

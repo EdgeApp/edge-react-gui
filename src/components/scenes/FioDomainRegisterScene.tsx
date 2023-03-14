@@ -262,7 +262,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
         </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
-        <ScrollView ref="_scrollView">
+        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
             {s.strings.fio_domain_reg_text}
           </EdgeText>
@@ -292,6 +292,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingTop: theme.rem(0.5)
+  },
   paddings: {
     paddingBottom: theme.rem(1),
     paddingHorizontal: theme.rem(1.25)

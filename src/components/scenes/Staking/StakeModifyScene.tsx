@@ -511,7 +511,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   amountTilesContainer: {
-    marginBottom: theme.rem(1)
+    marginBottom: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   footer: {
     marginBottom: theme.rem(2)

@@ -14,6 +14,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     contentContainerStyle={
       Object {
         "alignItems": "center",
+        "paddingTop": 11,
       }
     }
     enableAutomaticScroll={true}

@@ -52,68 +52,61 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
   >
     <View
       style={
-        Object {
-          "flex": 1,
-        }
+        Array [
+          Object {
+            "justifyContent": "center",
+            "marginLeft": 22,
+            "paddingBottom": 22,
+          },
+          Object {
+            "marginTop": 22,
+          },
+          undefined,
+        ]
       }
     >
       <View
         style={
-          Array [
-            Object {
-              "justifyContent": "center",
-              "marginLeft": 22,
-              "paddingBottom": 22,
-            },
-            Object {
-              "marginTop": 22,
-            },
-            undefined,
-          ]
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginRight": 22,
+          }
         }
       >
-        <View
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
           style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "marginRight": 22,
-            }
+            Array [
+              Object {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              Object {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
-                },
-                null,
-              ]
-            }
-          >
-            Create Wallet
-          </Text>
-        </View>
+          Create Wallet
+        </Text>
       </View>
-      <View
-        style={
-          Object {
-            "marginBottom": 11,
-            "marginLeft": 22,
-          }
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "paddingTop": 11,
         }
-      />
+      }
+    >
       <View
         accessible={true}
         collapsable={false}

@@ -344,7 +344,7 @@ export const LoanCreateScene = (props: Props) => {
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <Space horizontal={0.5} bottom={1}>
+        <Space horizontal={0.5} bottom={1} top={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}

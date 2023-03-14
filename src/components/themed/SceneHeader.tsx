@@ -29,10 +29,12 @@ const SceneHeaderComponent = (props: Props) => {
         </View>
         {children}
       </View>
-      <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
+      {underline ? <DividerLine marginRem={dividerMargin} /> : null}
     </>
   )
 }
+
+const dividerMargin = [0, 1]
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
@@ -49,10 +51,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   topMargin: {
     marginTop: theme.rem(1)
-  },
-  dividerLine: {
-    marginLeft: theme.rem(1),
-    marginBottom: theme.rem(0.5)
   },
   title: {
     fontSize: theme.rem(1.2),

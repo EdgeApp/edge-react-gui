@@ -21,6 +21,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           Object {
             "display": "flex",
             "flexDirection": "column",
+            "paddingTop": 11,
           }
         }
       >
@@ -466,6 +467,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           Object {
             "display": "flex",
             "flexDirection": "column",
+            "paddingTop": 11,
           }
         }
       >

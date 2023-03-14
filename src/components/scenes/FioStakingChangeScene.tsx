@@ -331,7 +331,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1)
   },
   explainer: {
-    margin: theme.rem(0.5)
+    margin: theme.rem(0.5),
+    marginTop: theme.rem(1)
   },
   amountText: {
     fontSize: theme.rem(2)

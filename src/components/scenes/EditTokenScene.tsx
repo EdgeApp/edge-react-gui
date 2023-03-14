@@ -191,7 +191,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(-0.5)
   },
   scrollContainer: {
-    padding: theme.rem(1)
+    padding: theme.rem(1),
+    paddingTop: theme.rem(1.5)
   },
   rightIcon: {
     color: theme.iconTappable,

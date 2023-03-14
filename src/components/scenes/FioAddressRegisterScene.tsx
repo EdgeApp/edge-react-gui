@@ -402,7 +402,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
         </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
-        <ScrollView ref="_scrollView">
+        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
           <View style={styles.view}>
             <View style={[styles.createWalletPromptArea, styles.title]}>
               <EdgeText style={styles.instructionalText} numberOfLines={2}>
@@ -457,6 +457,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingTop: theme.rem(0.5)
+  },
   view: {
     position: 'relative'
   },

@@ -163,8 +163,9 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   card: {
+    alignItems: 'center',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    paddingTop: theme.rem(0.5)
   },
   icon: {
     height: theme.rem(1.5),
