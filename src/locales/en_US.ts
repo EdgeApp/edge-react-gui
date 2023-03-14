@@ -1282,6 +1282,15 @@ const strings = {
   bank_info: 'Bank Info',
   enter_bank_info_title: 'Enter Bank Info',
   iban: 'IBAN',
+  input_output_currency: 'Currency',
+  n_a: 'n/a',
+  payment_details: 'Payment Details',
+  recipient: 'Recipient',
+  reference: 'Reference',
+  quote_input_title: 'Input',
+  quote_output_title: 'Output',
+  sepa_transfer_prompt_s:
+    'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
   swift_bic: 'SWIFT/BIC',
 
   // #endregion GuiPlugins

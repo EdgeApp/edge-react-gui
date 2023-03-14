@@ -1,6 +1,7 @@
 import { lt, toFixed } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
 import { SepaInfo } from '../../../types/FormTypes'
@@ -379,27 +380,70 @@ export const bityProvider: FiatProviderFactory = {
             }
 
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
-            const approveQuoteRes = await approveBityQuote(
-              coreWallet,
-              {
-                client_value: 0,
+            let approveQuoteRes: BityApproveQuoteResponse | null = null
+            try {
+              approveQuoteRes = await approveBityQuote(
+                coreWallet,
+                {
+                  client_value: 0,
+                  input: {
+                    amount,
+                    currency: inputCurrencyCode,
+                    type: 'bank_account',
+                    iban: sepaInfo.iban,
+                    bic_swift: sepaInfo.swift
+                  },
+                  output: {
+                    currency: outputCurrencyCode,
+                    type: 'crypto_address',
+                    crypto_address: cryptoAddress
+                  }
+                },
+                clientId
+              )
+              console.debug('approveQuoteRes', JSON.stringify(approveQuoteRes, null, 2))
+            } catch (e) {
+              // TODO: Post-routing implementation: Show the error on scene
+              console.error('Bity order error: ', e)
+            }
+            showUi.popScene()
+
+            if (approveQuoteRes == null) {
+              return
+            }
+
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { input, output, id, payment_details } = approveQuoteRes
+            if (payment_details == null || output.crypto_address == null) return
+
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { iban, swift_bic, recipient, reference } = payment_details
+
+            await showUi.sepaTransferInfo({
+              headerTitle: s.strings.payment_details,
+              promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id),
+              transferInfo: {
                 input: {
-                  amount,
-                  currency: inputCurrencyCode,
-                  type: 'bank_account',
-                  iban: sepaInfo.iban,
-                  bic_swift: sepaInfo.swift
+                  amount: input.amount,
+                  currency: input.currency
                 },
                 output: {
-                  currency: outputCurrencyCode,
-                  type: 'crypto_address',
-                  crypto_address: cryptoAddress
+                  amount: output.amount,
+                  currency: output.currency,
+                  walletAddress: output.crypto_address
+                },
+                paymentDetails: {
+                  id: id,
+                  iban: iban,
+                  swiftBic: swift_bic,
+                  recipient: recipient,
+                  reference: reference
                 }
               },
-              clientId
-            )
-
-            console.debug('approveQuoteRes', JSON.stringify(approveQuoteRes, null, 2))
+              onDone: async () => {
+                // TODO: See fiatPluginTypes.ts
+              }
+            })
             showUi.popScene()
 
             // TODO: Sell side, requiring full address/KYC
