@@ -409,8 +409,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             }
           }
           disableRecycling={false}
-          extendedState={Object {}}
+          extendedState={
+            Object {
+              "value": Object {
+                "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
+                "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
+                "create-wallet:ethereum-ethereum": "My Ether 2",
+              },
+            }
+          }
           externalScrollView={[Function]}
+          extraData={
+            Object {
+              "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
+              "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
+              "create-wallet:ethereum-ethereum": "My Ether 2",
+            }
+          }
           finalRenderAheadOffset={250}
           forceNonDeterministicRendering={true}
           horizontal={false}
@@ -472,12 +487,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     "tokenId": "9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
                   },
                 ],
+                "extraData": Object {
+                  "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
+                  "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
+                  "create-wallet:ethereum-ethereum": "My Ether 2",
+                },
                 "keyExtractor": [Function],
                 "numColumns": 1,
                 "renderItem": [Function],
-                "style": Object {
-                  "flex": 1,
-                },
               },
               "renderWindowInsets": Object {
                 "height": 0,
