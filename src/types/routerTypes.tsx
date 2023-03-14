@@ -14,7 +14,8 @@ import {
   FiatPluginAddressFormParams,
   FiatPluginEnterAmountResponse,
   FiatPluginGetMethodsResponse,
-  FiatPluginSepaFormParams
+  FiatPluginSepaFormParams,
+  FiatPluginSepaTransferParams
 } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
@@ -219,6 +220,7 @@ interface RouteParamList {
   }
   guiPluginAddressForm: FiatPluginAddressFormParams
   guiPluginSepaForm: FiatPluginSepaFormParams
+  guiPluginSepaTransfer: FiatPluginSepaTransferParams
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string
