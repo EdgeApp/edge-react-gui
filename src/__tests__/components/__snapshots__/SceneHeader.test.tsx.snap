@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SceneHeader should render with loading props 1`] = `
-<React.Fragment>
+Array [
   <View
     style={
       Array [
@@ -27,19 +27,31 @@ exports[`SceneHeader should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
         style={
-          Object {
-            "fontFamily": "Quicksand-Medium",
-            "fontSize": 27,
-          }
+          Array [
+            Object {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            Object {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+            },
+            null,
+          ]
         }
       >
         string
-      </WithTheme(EdgeTextComponent)>
+      </Text>
     </View>
     hello
-  </View>
+  </View>,
   <View
     style={
       Object {
@@ -48,7 +60,41 @@ exports[`SceneHeader should render with loading props 1`] = `
       }
     }
   >
-    <DividerLine />
-  </View>
-</React.Fragment>
+    <BVLinearGradient
+      colors={
+        Array [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        Object {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        Object {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        Array [
+          Object {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          Object {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": -22,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
+  </View>,
+]
 `;

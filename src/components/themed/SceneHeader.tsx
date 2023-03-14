@@ -14,7 +14,7 @@ interface Props {
   style?: ViewStyle
 }
 
-export const SceneHeaderComponent = (props: Props) => {
+const SceneHeaderComponent = (props: Props) => {
   const { title, underline, withTopMargin, children, tertiary = null, style } = props
   const theme = useTheme()
   const styles = getStyles(theme)

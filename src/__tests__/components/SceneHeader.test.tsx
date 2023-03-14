@@ -1,19 +1,20 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import renderer from 'react-test-renderer'
 
-import { SceneHeaderComponent } from '../../components/themed/SceneHeader'
+import { SceneHeader } from '../../components/themed/SceneHeader'
+import { FakeProviders } from '../../util/fake/FakeProviders'
 
 describe('SceneHeader', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
     const fakeChild: React.ReactNode = 'hello'
 
-    const actual = renderer.render(
-      <SceneHeaderComponent title="string" underline withTopMargin>
-        {fakeChild}
-      </SceneHeaderComponent>
+    const actual = renderer.create(
+      <FakeProviders>
+        <SceneHeader title="string" underline withTopMargin>
+          {fakeChild}
+        </SceneHeader>
+      </FakeProviders>
     )
 
     expect(actual).toMatchSnapshot()
