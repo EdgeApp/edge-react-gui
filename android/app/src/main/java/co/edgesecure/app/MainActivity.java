@@ -18,7 +18,7 @@ public class MainActivity extends ReactActivity {
   protected void onCreate(Bundle savedInstanceState) {
     RCTSplashScreen.openSplashScreen(this);
 
-    super.onCreate(savedInstanceState);
+    super.onCreate(null);
     if (getResources().getBoolean(R.bool.portrait_only)) {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
