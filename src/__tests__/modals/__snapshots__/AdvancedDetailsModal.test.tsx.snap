@@ -246,48 +246,154 @@ Array [
               }
             />
           </View>
+          <View
+            accessibilityState={
+              Object {
+                "disabled": true,
+              }
+            }
+            accessible={true}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  Array [
+                    Object {
+                      "flex": 1,
+                    },
+                    Object {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  My Receive Addresses
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      Object {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  123123123
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                Object {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
         </View>
       </RCTScrollView>
     </View>
-    <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        Object {
-          "alignItems": "center",
-          "opacity": 1,
-          "paddingTop": 22,
-        }
-      }
-    >
-      <Text
-        allowFontScaling={false}
-        style={
-          Array [
+    <View>
+      <View>
+        <View
+          accessibilityHint="Close Modal"
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
             Object {
-              "color": "#00f1a2",
-              "fontSize": 28,
-            },
-            undefined,
-            Object {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            Object {},
-          ]
-        }
-      >
-        
-      </Text>
+              "alignItems": "center",
+              "opacity": 1,
+              "padding": 22,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": "#00f1a2",
+                  "fontSize": 28,
+                },
+                undefined,
+                Object {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
     </View>
   </View>,
 ]

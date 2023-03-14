@@ -1,5 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { Alert, FlatList, Keyboard, View } from 'react-native'
+import { Alert, Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
@@ -72,6 +73,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props
     const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
@@ -92,12 +94,12 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               marginRem={[0, 1.75]}
               searchIcon
             />
-            <FlatList
+            <FlashList
               style={styles.resultList}
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
               data={filteredArray}
-              initialNumToRender={30}
+              estimatedItemSize={theme.rem(1.75)}
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}

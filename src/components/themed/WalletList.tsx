@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, SectionList } from 'react-native'
+import { SectionList } from 'react-native'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -225,7 +226,7 @@ export function WalletList(props: Props) {
   const handleItemLayout = useRowLayout()
 
   return sectionList == null ? (
-    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} getItemLayout={handleItemLayout} />
+    <FlashList estimatedItemSize={theme.rem(4.25)} data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} />
   ) : (
     <SectionList
       keyboardShouldPersistTaps="handled"

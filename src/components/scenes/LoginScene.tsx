@@ -17,7 +17,7 @@ import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
-import { NavigationBase } from '../../types/routerTypes'
+import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiTouchIdInfo } from '../../types/types'
 import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
@@ -32,7 +32,8 @@ import { LoadingScene } from './LoadingScene'
 global.ReactNativeBlurView = BlurView
 
 interface OwnProps {
-  navigation: NavigationBase
+  navigation: NavigationProp<'login'>
+  route: RouteProp<'login'>
 }
 interface StateProps {
   account: EdgeAccount
@@ -169,8 +170,9 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { context, handleSendLogs, theme, username } = this.props
+    const { context, handleSendLogs, route, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
+    const { loginUiInitialRoute } = route.params ?? {}
     const styles = getStyles(theme)
 
     return this.props.account.username == null ? (
@@ -180,6 +182,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           appId={config.appId}
           accountOptions={{ pauseWallets: true }}
           context={context}
+          initialRoute={loginUiInitialRoute}
           recoveryLogin={passwordRecoveryKey}
           onLogin={this.onLogin}
           onNotificationPermit={this.onNotificationPermit}

@@ -1,5 +1,6 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -132,16 +133,14 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           const renderRow = (walletId: string) => {
             if (walletId === PLACEHOLDER_WALLET_ID) {
               return (
-                <View style={{ marginLeft: theme.rem(0.5) }}>
-                  <CreateWalletSelectCryptoRow
-                    pluginId={pluginId}
-                    walletName=""
-                    onPress={() => {
-                      bridge.resolve(PLACEHOLDER_WALLET_ID)
-                    }}
-                    rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
-                  />
-                </View>
+                <CreateWalletSelectCryptoRow
+                  pluginId={pluginId}
+                  walletName=""
+                  onPress={() => {
+                    bridge.resolve(PLACEHOLDER_WALLET_ID)
+                  }}
+                  rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
+                />
               )
             }
 
@@ -195,8 +194,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     }
   })
 
-  const renderCreateWalletRow = useHandler((item: WalletCreateItem) => {
-    const { key, displayName, pluginId, tokenId } = item
+  const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
+    const { key, displayName, pluginId, tokenId } = item.item
 
     const toggle = (
       <Switch
@@ -221,6 +220,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     )
   })
 
+  const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
+
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
@@ -232,10 +233,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     [defaultSelection, handleNext, numSelected]
   )
 
-  const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
-
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper background="theme" avoidKeyboard>
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
@@ -253,16 +252,15 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onClear={() => setSearchTerm('')}
             onSubmitEditing={handleNext}
           />
-          <FlatList
-            style={styles.resultList}
+          <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom }}
+            contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
-            initialNumToRender={12}
+            estimatedItemSize={theme.rem(4.25)}
+            extraData={selectedItems}
             keyboardShouldPersistTaps="handled"
-            keyExtractor={item => item.key}
-            renderItem={data => renderCreateWalletRow(data.item)}
-            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+            renderItem={renderCreateWalletRow}
           />
           {renderNextButton}
         </View>
@@ -273,9 +271,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   }
 }))

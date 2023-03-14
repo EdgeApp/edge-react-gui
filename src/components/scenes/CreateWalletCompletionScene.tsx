@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -71,7 +72,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     }, {})
   )
 
-  const flatListRef = React.useRef<FlatList<WalletCreateItem>>(null)
+  const flatListRef = React.useRef<FlashList<WalletCreateItem>>(null)
 
   // Create the wallets and enable the tokens
   useAsyncEffect(async () => {
@@ -117,7 +118,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')
       return (
         <IconDataRow
-          marginRem={[1, -0.5, 0, 1]}
+          marginRem={[1, 0.5, 0, 1]}
           icon={<FontAwesome5 name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
           leftText={s.strings.create_wallet_tokens}
           leftSubtext={
@@ -146,26 +147,24 @@ const CreateWalletCompletionComponent = (props: Props) => {
     )
   }, [done, navigation])
 
-  const keyExtractor = useHandler(item => item.key)
-  const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
+  const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.title_create_wallets} />
-          <FlatList
-            style={styles.resultList}
+          <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}
             data={filteredCreateItemsForDisplay}
-            initialNumToRender={12}
-            scrollEnabled={false}
-            keyExtractor={keyExtractor}
-            renderItem={renderRow}
-            getItemLayout={getItemLayout}
+            estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}
+            keyExtractor={keyExtractor}
+            extraData={itemStatus}
             ref={flatListRef}
+            renderItem={renderRow}
+            scrollEnabled={false}
           />
           {renderNextButton}
         </View>
@@ -176,9 +175,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   }
 }))

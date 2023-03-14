@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -163,7 +164,7 @@ export const LoanDashboardScene = (props: Props) => {
           </Card>
         ) : null}
         {isLoansLoading ? (
-          <Space around>
+          <Space around={1}>
             <FillLoader />
           </Space>
         ) : (
@@ -201,23 +202,25 @@ export const LoanDashboardScene = (props: Props) => {
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
-            <Space isFill isGroupCenter isItemCenter horizontal bottom={2.5}>
+            <Space expand around horizontal={1} bottom={2.5}>
               <EdgeText style={styles.emptyText}>{s.strings.loan_loading_loans}</EdgeText>
             </Space>
           ) : (
             <>
-              <Space isFill isGroupCenter isItemCenter horizontal top>
+              <Space expand around horizontal={1} top={1}>
                 <EdgeText style={styles.emptyText} numberOfLines={4}>
                   {s.strings.loan_no_active_loans}
                 </EdgeText>
               </Space>
-              <Space bottom>{renderFooter()}</Space>
+              <Space around bottom={1}>
+                {renderFooter()}
+              </Space>
             </>
           )}
         </>
       ) : (
         <>
-          <FlatList
+          <FlashList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
             renderItem={renderLoanCard}

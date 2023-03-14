@@ -2,7 +2,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { isIPhoneX } from 'react-native-safe-area-view'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -30,6 +30,7 @@ const title: { readonly [key: string]: string } = {
 export const MenuTabs = (props: BottomTabBarProps) => {
   const { navigation, state } = props
   const theme = useTheme()
+  const insets = useSafeAreaInsets()
   const styles = getStyles(theme)
   const activeTabIndex = state.index
   const colors = theme.tabBarBackground
@@ -59,6 +60,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     routes = routes.slice(0, -1)
   }
 
+  const contentStyle = React.useMemo(() => {
+    const paddingBottom = insets.bottom === 0 ? theme.rem(0.75) : insets.bottom
+    return [styles.content, { paddingBottom }]
+  }, [insets.bottom, styles.content])
+
   return (
     <View>
       <DividerLine colors={theme.tabBarTopOutlineColors} />
@@ -74,7 +80,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
             extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={styles.content} key={route.key} onPress={() => handleOnPress(route.name)}>
+            <TouchableOpacity style={contentStyle} key={route.key} onPress={() => handleOnPress(route.name)}>
               {icon[route.name]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[route.name]}</EdgeText>
             </TouchableOpacity>
@@ -94,7 +100,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     paddingTop: theme.rem(0.75),
-    paddingBottom: isIPhoneX ? theme.rem(2.125) : theme.rem(0.75),
     justifyContent: 'center',
     alignItems: 'center'
   },

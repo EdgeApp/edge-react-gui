@@ -1,12 +1,11 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
@@ -126,7 +125,6 @@ function ManageTokensSceneComponent(props: Props) {
   })
 
   const extraData = React.useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
-  const handleItemLayout = useRowLayout()
 
   const sceneHeader = React.useMemo(
     () => (
@@ -155,8 +153,8 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       {sceneHeader}
-      <FlatList
-        getItemLayout={handleItemLayout}
+      <FlashList
+        estimatedItemSize={theme.rem(4.25)}
         data={filteredTokenIds}
         extraData={extraData}
         keyExtractor={keyExtractor}

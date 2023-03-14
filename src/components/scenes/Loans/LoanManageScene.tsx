@@ -414,7 +414,7 @@ export const LoanManageSceneComponent = (props: Props) => {
         </TouchableOpacity>
       }
     >
-      <Space vertical around={0.5}>
+      <Space vertical={1} around={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
@@ -432,7 +432,7 @@ export const LoanManageSceneComponent = (props: Props) => {
           </Peek>
         </Space>
       </Space>
-      <Space vertical around={0.25}>
+      <Space vertical={1} around={0.25}>
         <TotalDebtCollateralTile
           title={isActionSideDebts ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
           wallet={borrowEngineWallet}

@@ -359,7 +359,7 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <Space isItemCenter isGroupCenter>
+            <Space around>
               <AprCard apr={apr} />
             </Space>
           )}
@@ -400,7 +400,7 @@ export const LoanCreateScene = (props: Props) => {
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <Space around>
+            <Space around={1}>
               <MainButton
                 label={s.strings.string_next_capitalized}
                 disabled={isInsufficientCollateral || !isUserInputComplete}

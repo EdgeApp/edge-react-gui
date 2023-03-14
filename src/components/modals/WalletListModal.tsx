@@ -1,15 +1,14 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -24,7 +23,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
@@ -179,8 +178,6 @@ export function WalletListModal(props: Props) {
     if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
   })
 
-  const handleItemLayout = useRowLayout()
-
   // #endregion Handlers
 
   // #region Renderers
@@ -207,11 +204,11 @@ export function WalletListModal(props: Props) {
     if (Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
     return (
       <View>
-        <FlatList
+        <FlashList
+          estimatedItemSize={theme.rem(4.25)}
           data={Object.values(bankAccountsMap)}
           keyboardShouldPersistTaps="handled"
           renderItem={renderPaymentMethod}
-          getItemLayout={handleItemLayout}
           keyExtractor={item => item.id}
           style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
         />
@@ -222,11 +219,11 @@ export function WalletListModal(props: Props) {
   const renderCustomAssetSection = () =>
     showCustomAssets ? (
       <View>
-        <FlatList
+        <FlashList
+          estimatedItemSize={theme.rem(4.25)}
           data={customAssets}
           keyboardShouldPersistTaps="handled"
           renderItem={renderCustomAsset}
-          getItemLayout={handleItemLayout}
           keyExtractor={item => item.referenceTokenId}
           style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
         />
@@ -266,7 +263,7 @@ export function WalletListModal(props: Props) {
         onPress={handleWalletListPress}
         navigation={navigation}
       />
-      <ModalCloseArrow onPress={handleCancel} />
+      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }

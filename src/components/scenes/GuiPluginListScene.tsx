@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { FlashList } from '@shopify/flash-list'
 import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -16,12 +17,14 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import s from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
+import { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
+import { UriQueryMap } from '../../types/WebTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
@@ -62,6 +65,17 @@ const paymentTypeLogosById = {
 const pluginPartnerLogos = {
   moonpay: 'guiPluginLogoMoonpay',
   bitaccess: 'guiPluginLogoBitaccess'
+}
+
+export interface PluginListProps {
+  direction: 'buy' | 'sell'
+  pluginId?: string
+  providerId?: string
+  paymentType?: FiatPaymentType
+  deepPath?: string
+  deepQuery?: {
+    [key: string]: string | null
+  }
 }
 
 interface OwnProps {
@@ -126,6 +140,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         }
       })
       .catch((e: any) => console.error(e.message))
+    if (this.props.route.params.pluginId != null) {
+      const { deepPath, deepQuery = {}, paymentType, pluginId, providerId } = this.props.route.params
+      // The scene was deeplinked into. Route directly to plugin
+      this.openPlugin({ deepPath, deepQuery, paymentType, pluginId, providerId })
+    }
   }
 
   componentWillUnmount() {
@@ -229,9 +248,25 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin(listRow: GuiPluginRow) {
+  async openPluginRow(listRow: GuiPluginRow) {
+    const { pluginId, paymentType, deepPath, deepQuery } = listRow
+    this.openPlugin({ pluginId, paymentType, deepPath, deepQuery })
+  }
+
+  async openPlugin({
+    pluginId,
+    paymentType,
+    providerId,
+    deepPath,
+    deepQuery = {}
+  }: {
+    pluginId: string
+    paymentType?: FiatPaymentType
+    providerId?: string
+    deepPath?: string
+    deepQuery: UriQueryMap
+  }) {
     const { countryCode, disablePlugins, navigation, account } = this.props
-    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
@@ -240,10 +275,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Grab a custom URI if necessary:
-    let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
-      // @ts-expect-error
       deepPath = await Airship.show<string | undefined>(bridge => (
         <TextInputModal
           autoCorrect={false}
@@ -278,6 +311,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         regionCode: { countryCode },
         paymentType,
+        providerId,
         navigation,
         account
       })
@@ -374,7 +408,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="header" hasTabs>
         <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
@@ -393,7 +427,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
+          <FlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
         )}
       </SceneWrapper>
     )

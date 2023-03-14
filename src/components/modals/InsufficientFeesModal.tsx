@@ -36,7 +36,7 @@ export function InsufficientFeesModal(props: Props) {
   // Get the display amount:
   const { currencyInfo } = wallet
   const { currencyCode = currencyInfo.currencyCode, networkFee = '' } = coreError
-  const { multiplier } = useDisplayDenom(currencyInfo.pluginId, currencyCode)
+  const { multiplier, name } = useDisplayDenom(currencyInfo.pluginId, currencyCode)
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   const handleCancel = useHandler(() => bridge.resolve())
@@ -54,7 +54,7 @@ export function InsufficientFeesModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       <ModalTitle>{s.strings.buy_crypto_modal_title}</ModalTitle>
-      <ModalMessage>{sprintf(s.strings.buy_parent_crypto_modal_message_2s, amountString, currencyCode)}</ModalMessage>
+      <ModalMessage>{sprintf(s.strings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
       <MainButton label={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)} type="primary" marginRem={0.5} onPress={handleBuy} />
       <MainButton label={s.strings.buy_crypto_modal_exchange} type="primary" marginRem={0.5} onPress={handleSwap} />
       <MainButton label={s.strings.buy_crypto_decline} type="secondary" marginRem={0.5} onPress={handleCancel} />

@@ -206,15 +206,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
                   >
-                    Sender
+                    timmy
                   </Text>
                 </View>
               </View>
@@ -316,7 +313,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     ]
                   }
                 >
-                  ₿ 0.00000123
+                  ₿ 0.123
                 </Text>
               </View>
             </View>
@@ -443,10 +440,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -465,10 +459,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -574,10 +565,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -605,7 +593,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       ]
                     }
                   >
-                    0.00
+                    1230.00
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -1248,15 +1236,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
                   >
-                    Recipient
+                    timmy
                   </Text>
                 </View>
               </View>
@@ -1358,7 +1343,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     ]
                   }
                 >
-                  ₿ 0.00000122 (+ 0 fee)
+                  ₿ 0.12299999 (+ 0 fee)
                 </Text>
               </View>
             </View>
@@ -1485,10 +1470,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -1507,10 +1489,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -1616,10 +1595,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
-                        Object {
-                          "color": "#FFFFFF",
-                          "fontSize": 22,
-                        },
+                        undefined,
                         null,
                       ]
                     }
@@ -1647,7 +1623,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    0.00
+                    1230.00
                   </Text>
                   <Text
                     adjustsFontSizeToFit={true}
@@ -1662,14 +1638,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         Object {
-                          "color": "#77C513",
+                          "color": "#E85466",
                           "fontSize": 22,
                         },
                         null,
                       ]
                     }
                   >
-                    0%
+                    - 80.76%
                   </Text>
                 </View>
               </View>

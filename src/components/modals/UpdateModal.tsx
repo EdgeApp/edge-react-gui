@@ -8,7 +8,7 @@ import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -39,7 +39,7 @@ export function UpdateModal(props: Props) {
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={s.strings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={s.strings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
-      <ModalCloseArrow onPress={handleClose} />
+      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }

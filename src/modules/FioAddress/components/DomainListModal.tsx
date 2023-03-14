@@ -1,13 +1,14 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../../assets/vector'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableText } from '../../../components/themed/ClickableText'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../../../components/themed/ModalParts'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { ThemedModal } from '../../../components/themed/ThemedModal'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
@@ -170,8 +171,14 @@ class DomainListModalComponent extends React.Component<Props, State> {
             searchIcon
           />
         </View>
-        <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
-        <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+        <FlashList
+          data={items}
+          estimatedItemSize={theme.rem(3.5)}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+        />
+        <ModalFooter onPress={() => bridge.resolve(undefined)} />
       </ThemedModal>
     )
   }

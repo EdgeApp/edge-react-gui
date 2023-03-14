@@ -1,8 +1,10 @@
 import * as NavigationCore from '@react-navigation/core'
 import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
+import { PluginListProps } from '../components/scenes/GuiPluginListScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
@@ -43,11 +45,14 @@ interface PluginViewParams {
 
 interface RouteParamList {
   // Top-level router:
-  login: {}
+  login: {
+    loginUiInitialRoute?: InitialRouteName
+  }
   edgeApp: {}
   edgeAppStack: {}
   edgeTabs: {}
   controlPanel: {}
+  gettingStarted: {}
 
   // Tabs
   walletsTab: {}
@@ -266,8 +271,8 @@ interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: {}
-  pluginListSell: {}
+  pluginListBuy: PluginListProps
+  pluginListSell: PluginListProps
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
@@ -313,8 +318,6 @@ interface RouteParamList {
   transactionDetails: {
     edgeTransaction: EdgeTransaction | TransactionListTx
     walletId: string
-    amountFiat?: number
-    thumbnailPath?: string
   }
   transactionList: {
     walletId: string

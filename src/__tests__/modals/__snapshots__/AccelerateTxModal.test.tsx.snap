@@ -53,7 +53,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
       showSpinner={false}
     />
   </View>
-  <ModalCloseArrow
+  <ModalFooter
     onPress={[Function]}
   />
 </ThemedModal>

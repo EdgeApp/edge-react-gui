@@ -1,6 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -191,7 +191,7 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper background="theme" hasTabs>
       <View style={styles.searchContainer}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <OutlinedTextInput
@@ -228,13 +228,7 @@ const CoinRankingComponent = (props: Props) => {
         </View>
       </View>
       <DividerLine marginRem={[0, 0, 0, 1]} />
-      <FlatList
-        contentContainerStyle={styles.contentContainer}
-        data={listdata}
-        renderItem={renderItem}
-        onEndReachedThreshold={1}
-        onEndReached={handleEndReached}
-      />
+      <FlashList estimatedItemSize={theme.rem(3.75)} data={listdata} renderItem={renderItem} onEndReachedThreshold={1} onEndReached={handleEndReached} />
     </SceneWrapper>
   )
 }
@@ -256,7 +250,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginLeft: theme.rem(1),
       paddingRight: theme.rem(1)
     },
-    contentContainer: { flexGrow: 1 },
     searchContainer: {
       flexDirection: 'row',
       marginVertical: theme.rem(0.5),
