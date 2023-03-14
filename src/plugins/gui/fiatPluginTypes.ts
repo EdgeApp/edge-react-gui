@@ -45,6 +45,30 @@ export interface FiatPluginSepaFormParams {
   onSubmit: (sepaInfo: SepaInfo) => Promise<void>
 }
 
+export interface FiatPluginSepaTransferParams {
+  headerTitle: string
+  promptMessage: string
+  transferInfo: {
+    input: {
+      amount: string
+      currency: string
+    }
+    output: {
+      amount: string
+      currency: string
+    }
+    paymentDetails: {
+      id: string
+      iban: string
+      swiftBic: string
+      recipient: string
+      reference: string
+    }
+  }
+  headerIconUri?: string
+  onSubmit: () => Promise<void>
+}
+
 export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
