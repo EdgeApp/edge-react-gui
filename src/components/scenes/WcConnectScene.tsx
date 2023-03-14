@@ -130,11 +130,10 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      {sceneHeader}
+      <SceneHeader title={s.strings.wc_confirm_title} underline />
       <ScrollView style={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}

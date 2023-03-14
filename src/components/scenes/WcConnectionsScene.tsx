@@ -118,11 +118,9 @@ export const WcConnectionsScene = (props: Props) => {
       })
   }
 
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
-
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      {sceneHeader}
+      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
       <ScrollView style={styles.container}>
         <EdgeText style={styles.subTitle}>{s.strings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton

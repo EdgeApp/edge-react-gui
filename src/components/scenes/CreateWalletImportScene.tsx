@@ -128,7 +128,7 @@ const CreateWalletImportComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <SceneHeader withTopMargin title={s.strings.create_wallet_import_title} />
+      <SceneHeader title={s.strings.create_wallet_import_title} withTopMargin />
       <KeyboardAwareScrollView
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}

@@ -86,7 +86,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
 
     return (
       <SceneWrapper background="theme" hasTabs={false} avoidKeyboard>
-        <SceneHeader withTopMargin underline title={s.strings.title_change_mining_fee} />
+        <SceneHeader title={s.strings.title_change_mining_fee} underline withTopMargin />
         <ScrollView>
           {Object.keys(feeOptions).map(feeSetting => {
             return (

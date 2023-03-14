@@ -156,7 +156,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader withTopMargin title={s.strings.migrate_wallets_select_crypto_title} />
+          <SceneHeader title={s.strings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}

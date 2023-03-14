@@ -6,23 +6,25 @@ import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  title?: string
   children?: React.ReactNode
+  style?: ViewStyle
+
   tertiary?: React.ReactNode
+  title?: string
   underline?: boolean
   withTopMargin?: boolean
-  style?: ViewStyle
 }
 
 const SceneHeaderComponent = (props: Props) => {
-  const { title, underline, withTopMargin, children, tertiary = null, style } = props
+  const { children, style, tertiary = null, title, underline = false, withTopMargin = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
   return (
     <>
       <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
         <View style={styles.titleContainer}>
-          {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+          {title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}
           {tertiary}
         </View>
         {children}

@@ -242,7 +242,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader withTopMargin title={s.strings.migrate_wallets_title} />
+          <SceneHeader title={s.strings.migrate_wallets_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}

@@ -43,11 +43,9 @@ export const WcDisconnectScene = (props: Props) => {
     navigation.navigate('wcConnections', {})
   }
 
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_walletconnect_title} />, [])
-
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      {sceneHeader}
+      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
       <View style={styles.container}>
         <Card paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>

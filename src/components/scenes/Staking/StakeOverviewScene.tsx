@@ -107,10 +107,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
-  const sceneHeader = React.useMemo(
-    () => <SceneHeader style={styles.sceneHeader} title={getPolicyTitleName(stakePolicy)} withTopMargin />,
-    [stakePolicy, styles.sceneHeader]
-  )
+  const title = React.useMemo(() => getPolicyTitleName(stakePolicy), [stakePolicy])
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
@@ -123,7 +120,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper scroll background="theme">
-      {sceneHeader}
+      <SceneHeader style={styles.sceneHeader} title={title} withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}

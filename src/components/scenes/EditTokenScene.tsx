@@ -109,11 +109,9 @@ function EditTokenSceneComponent(props: Props) {
     navigation.goBack()
   })
 
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
-
   return (
     <SceneWrapper avoidKeyboard>
-      {sceneHeader}
+      <SceneHeader title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
         <OutlinedTextInput
           autoCapitalize="characters"

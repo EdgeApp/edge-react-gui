@@ -267,7 +267,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader withTopMargin underline title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} />
+        <SceneHeader title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} underline withTopMargin />
         <Text style={styles.keysOnlyModeText}>{sprintf(s.strings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
         <MainButton onPress={this.handleKeysOnlyModePress} label={s.strings.help_support} marginRem={2} type="secondary">
           <Fontello name="help_headset" color={this.props.theme.iconTappable} size={this.props.theme.rem(1.5)} />

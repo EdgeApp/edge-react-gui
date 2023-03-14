@@ -208,7 +208,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <View style={styles.content}>
-        <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
+        <SceneHeader title={s.strings.title_create_wallet} withTopMargin />
         {renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {s.strings.fragment_create_wallet_instructions}

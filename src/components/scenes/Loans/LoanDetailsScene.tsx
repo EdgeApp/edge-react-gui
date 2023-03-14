@@ -211,14 +211,14 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader
-        underline
-        title={`${s.strings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={`${s.strings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
+        underline
+        withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space around={1}>

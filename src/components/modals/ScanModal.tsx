@@ -165,7 +165,7 @@ export const ScanModal = (props: Props) => {
 
           <View style={styles.overlayContainer}>
             <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
-              <SceneHeader withTopMargin title={title} underline />
+              <SceneHeader title={title} underline withTopMargin />
             </View>
             <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />

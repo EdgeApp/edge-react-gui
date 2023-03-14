@@ -114,7 +114,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const styles = getStyles(theme)
     return (
       <SceneWrapper background="theme">
-        <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
+        <SceneHeader title={s.strings.title_exchange} underline withTopMargin />
         <ScrollView>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={s.strings.transaction_details_fee_warning} type="warning" />}

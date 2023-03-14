@@ -330,7 +330,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="theme" hasTabs>
-        <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
+        <SceneHeader title={s.strings.title_exchange} underline withTopMargin />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper

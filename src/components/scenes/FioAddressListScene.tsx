@@ -135,7 +135,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 />
               ))}
             </View>
-            <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
+            <SceneHeader title={s.strings.title_fio_domains} underline withTopMargin />
             <View style={styles.list}>
               {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
               {fioDomains.map((domain: FioDomain) => (

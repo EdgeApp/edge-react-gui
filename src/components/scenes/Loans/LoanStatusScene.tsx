@@ -97,14 +97,14 @@ export const LoanStatusSceneComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme" hasHeader hasTabs={false}>
       <SceneHeader
-        underline
-        title={s.strings.loan_status_title}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={s.strings.loan_status_title}
+        underline
+        withTopMargin
       />
       {displayInfo == null ? (
         <FillLoader />

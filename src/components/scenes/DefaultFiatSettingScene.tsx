@@ -83,7 +83,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
+            <SceneHeader title={s.strings.title_create_wallet_select_fiat} withTopMargin />
             <OutlinedTextInput
               autoCorrect={false}
               autoCapitalize="words"

@@ -153,7 +153,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader withTopMargin title={s.strings.title_create_wallets} />
+          <SceneHeader title={s.strings.title_create_wallets} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}

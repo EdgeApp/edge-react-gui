@@ -237,7 +237,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper background="theme" avoidKeyboard>
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+          <SceneHeader title={s.strings.title_create_wallet_select_crypto} withTopMargin />
           <OutlinedTextInput
             autoCorrect={false}
             autoCapitalize="words"

@@ -334,14 +334,14 @@ export const LoanCreateScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader
-        underline
-        title={s.strings.loan_create_title}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={s.strings.loan_create_title}
+        underline
+        withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <Space horizontal={0.5} bottom={1}>

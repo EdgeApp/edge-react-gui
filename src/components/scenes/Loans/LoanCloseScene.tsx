@@ -124,14 +124,14 @@ export const LoanCloseSceneComponent = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader
-        underline
-        title={s.strings.loan_close_loan_title}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={s.strings.loan_close_loan_title}
+        underline
+        withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
