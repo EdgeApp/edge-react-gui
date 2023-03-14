@@ -25,10 +25,10 @@ const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
 }
 
 const ERROR_TEXT = {
-  underLimit: s.strings.fiat_plugin_buy_amount_under_limit,
-  overLimit: s.strings.fiat_plugin_buy_amount_over_limit,
+  underLimit: s.strings.fiat_plugin_buy_amount_under_limit_s,
+  overLimit: s.strings.fiat_plugin_buy_amount_over_limit_s,
   paymentUnsupported: s.strings.fiat_plugin_payment_unsupported,
-  regionRestricted: s.strings.fiat_plugin_buy_region_restricted,
+  regionRestricted: s.strings.fiat_plugin_buy_region_restricted_s,
   assetUnsupported: s.strings.fiat_plugin_asset_unsupported
 }
 

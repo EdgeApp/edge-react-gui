@@ -7,7 +7,7 @@ import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  FiatProviderAssetMaps,
   FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
@@ -19,7 +19,7 @@ const storeId = 'com.moonpay'
 const partnerIcon = 'icon_white_small.png'
 const pluginDisplayName = 'Moonpay'
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMaps = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true, iach: true }
 
@@ -111,13 +111,14 @@ export const moonpayProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+    console.debug('makeProvider ' + pluginId)
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
     const out = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (): Promise<FiatProviderAssetMaps> => {
         const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
         if (response == null || !response.ok) return allowedCurrencyCodes
 

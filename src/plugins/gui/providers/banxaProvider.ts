@@ -10,7 +10,7 @@ import { FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  FiatProviderAssetMaps,
   FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
@@ -159,13 +159,14 @@ const CURRENCY_PLUGINID_MAP = {
 
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: {}, crypto: {} }
+const allowedCurrencyCodes: FiatProviderAssetMaps = { fiat: {}, crypto: {} }
 const banxaPaymentsMap: BanxaPaymentMap = {}
 
 export const banxaProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
+    console.debug('makeProvider ' + pluginId)
     const {
       apiKeys,
       io: { store }
@@ -182,7 +183,7 @@ export const banxaProvider: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (): Promise<FiatProviderAssetMaps> => {
         const promises = [
           banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)

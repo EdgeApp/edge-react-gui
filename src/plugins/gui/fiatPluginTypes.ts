@@ -1,8 +1,7 @@
-import { asValue } from 'cleaners'
+import { asMaybe, asObject, asString, asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
-import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
@@ -14,6 +13,22 @@ export type FiatPaymentTypes = FiatPaymentType[]
 export interface FiatSepaOwnerAddress extends HomeAddress {
   name: string
 }
+
+export const asFiatSepaInfo = asObject({
+  iban: asString,
+  swift: asString,
+  ownerAddress: asObject<FiatSepaOwnerAddress>({
+    name: asString,
+    address: asString,
+    address2: asMaybe(asString),
+    city: asString,
+    country: asString,
+    postalCode: asString,
+    state: asString
+  })
+})
+
+export type FiatSepaInfo = ReturnType<typeof asFiatSepaInfo>
 
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
@@ -83,19 +98,24 @@ export interface FiatPluginEnterAmountResponse {
 export interface FiatPluginOpenWebViewParams {
   url: string
 }
+export interface FiatPluginFiatPickerParams {
+  headerTitle: string
+  allowedIsoFiats: string[]
+}
 
 export interface FiatPluginUi {
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
-  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<{
-    walletId: string | undefined
-    currencyCode: string | undefined
-  }>
+  fiatPicker: (params: FiatPluginFiatPickerParams) => Promise<string>
+  walletPicker: (params: {
+    headerTitle: string
+    allowedAssets?: EdgeTokenId[]
+    showCreateWallet?: boolean
+  }) => Promise<{ currencyCode?: string; tokenId?: string; walletId?: string }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
   popScene: () => {}
-  send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 

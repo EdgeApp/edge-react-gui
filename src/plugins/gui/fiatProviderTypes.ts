@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { EdgeTokenId } from '../../types/types'
-import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
+import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi, FiatSepaInfo } from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
@@ -52,7 +52,7 @@ export class FiatProviderError extends Error {
   }
 }
 
-export interface FiatProviderAssetMap {
+export interface FiatProviderAssetMaps {
   crypto: { [pluginId: string]: { [tokenId: string]: boolean | any } }
   fiat: { [currencyCode: string]: boolean | any }
 }
@@ -65,6 +65,7 @@ export interface FiatProviderGetQuoteParams {
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
   paymentTypes: FiatPaymentTypes
+  sepaInfo?: FiatSepaInfo
 }
 
 export interface FiatProviderStore {
@@ -78,7 +79,7 @@ export interface FiatProvider {
   pluginId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: () => Promise<FiatProviderAssetMap>
+  getSupportedAssets: () => Promise<FiatProviderAssetMaps>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 
@@ -90,5 +91,6 @@ export interface FiatProviderFactoryParams {
 export interface FiatProviderFactory {
   pluginId: string
   storeId: string
+  isNoApiKey?: boolean
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
 }

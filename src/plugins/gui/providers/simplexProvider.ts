@@ -8,7 +8,7 @@ import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  FiatProviderAssetMaps,
   FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
@@ -118,7 +118,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMaps = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false }
 
@@ -175,6 +175,8 @@ export const simplexProvider: FiatProviderFactory = {
       apiKeys,
       io: { store }
     } = params
+
+    console.debug('makeProvider ' + pluginId)
     let simplexUserId = await store.getItem('simplex_user_id').catch(e => undefined)
     if (simplexUserId == null || simplexUserId === '') {
       simplexUserId = makeUuid()
@@ -186,7 +188,7 @@ export const simplexProvider: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (): Promise<FiatProviderAssetMaps> => {
         const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
         if (response == null || !response.ok) return allowedCurrencyCodes
         const result = await response.json()

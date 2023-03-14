@@ -14,15 +14,16 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
 
-interface Props {
+export interface FiatListModalProps {
   bridge: AirshipBridge<GuiFiatType>
+  allowedFiatCodes?: string[]
 }
 
 interface FiatListViewToken extends ViewToken {
   item: GuiFiatType
 }
 
-export const FiatListModal = (props: Props) => {
+export const FiatListModal = (props: FiatListModalProps) => {
   const { bridge } = props
 
   const theme = useTheme()

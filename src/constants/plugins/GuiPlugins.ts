@@ -100,6 +100,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     needsCountryCode: true,
     queryPromoCode: 'client_value',
+    nativePlugin: creditCardPlugin,
     displayName: 'Bity'
     // supportßEmail: 'support@bity.com'
   },

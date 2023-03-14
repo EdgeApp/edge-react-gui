@@ -16,6 +16,7 @@ import {
   FiatPaymentType,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
+  FiatPluginFiatPickerParams,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginUi
@@ -41,7 +42,10 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
     },
-    // @ts-expect-error
+    fiatPicker: async (params: FiatPluginFiatPickerParams): Promise<string> => {
+      // TODO
+      return 'iso:EUR'
+    },
     walletPicker: async (params): Promise<WalletListResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
       const walletListResult = await Airship.show<WalletListResult>(bridge => (

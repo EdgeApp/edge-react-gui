@@ -13,9 +13,10 @@ import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
-import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import { FiatProvider, FiatProviderAssetMaps, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
+import { bityProvider } from './providers/bityProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
@@ -26,14 +27,15 @@ interface FiatPluginPriority {
 }
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-// TODO: Allow other fiat currency codes. Hard code USD for now
-const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
+// TODO: Allow other fiat currency codes. Hard code USD/EUR for now
+const providerFactoriesBak = [simplexProvider, moonpayProvider, banxaProvider, bityProvider]
+const providerFactories = [bityProvider]
 
 export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'creditcard'
   const { disablePlugins, showUi, account } = params
 
-  const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
+  const providerSupportedAssetPromises: Array<Promise<{ providerPluginId: string; assetMaps: FiatProviderAssetMaps }>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
   let priorityArray = [{}]
   let pluginPriority = {}
@@ -44,16 +46,18 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     priorityArray[0][providerFactory.pluginId] = true
     // @ts-expect-error
     const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
-    if (apiKeys == null) continue
+    if (apiKeys == null && !providerFactory.isNoApiKey) continue
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }
   if (providerPromises.length === 0) throw new Error('No enabled creditCardPlugin providers')
 
-  const providers = await Promise.all(providerPromises)
-  for (const provider of providers) {
-    assetPromises.push(provider.getSupportedAssets())
-  }
+  let providers = await Promise.all(providerPromises)
+  providerSupportedAssetPromises.push(
+    ...providers.map(async provider => {
+      return { providerPluginId: provider.pluginId, assetMaps: await provider.getSupportedAssets() }
+    })
+  )
 
   try {
     const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
@@ -69,51 +73,75 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
       const { direction, regionCode, paymentTypes } = params
-      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
-      const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
+      const ps = fuzzyTimeout(providerSupportedAssetPromises, 5000).catch(e => [])
+      const providerSupportedAssets = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
 
-      const allowedAssets: EdgeTokenId[] = []
-      const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
-      for (const assetMap of assetArray) {
-        if (assetMap == null) continue
-        for (const currencyPluginId in assetMap.crypto) {
-          const currencyCodeMap = assetMap.crypto[currencyPluginId]
+      // Convert the supportedAsset map to EdgeTokenIds
+      const supportedAssetsMap: Map<string, { cryptos: EdgeTokenId[]; fiatIsoCodes: string[] }> = new Map()
+
+      for (const providerAssets of providerSupportedAssets) {
+        if (providerAssets == null) continue
+        const { assetMaps } = providerAssets
+
+        // Parse all the supported cryptos for this provider
+        const cryptos: EdgeTokenId[] = []
+        for (const currencyPluginId in assetMaps.crypto) {
+          const currencyCodeMap = assetMaps.crypto[currencyPluginId]
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
               try {
                 const currencyTokenId = getTokenId(account, currencyPluginId, currencyCode)
-                allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
+                cryptos.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
               } catch (e: any) {
                 // This is ok. We might not support a specific pluginId
               }
             }
           }
-          for (const fiatCode in assetMap.fiat) {
-            allowedFiats[fiatCode] = true
-          }
         }
+
+        // Parse all the supported fiats for this provider
+        const fiatIsoCodes: string[] = []
+        for (const fiatCode in assetMaps.fiat) {
+          fiatIsoCodes.push(fiatCode)
+        }
+
+        supportedAssetsMap.set(pluginId, { cryptos, fiatIsoCodes })
       }
 
       // Pop up modal to pick wallet/asset
-      const walletListResult: { walletId: string | undefined; currencyCode: string | undefined } = await showUi.walletPicker({
+      const walletListResult: { currencyCode?: string; tokenId?: string; walletId?: string } = await showUi.walletPicker({
         headerTitle: s.strings.fiat_plugin_select_asset_to_purchase,
-        allowedAssets,
+        allowedAssets: Array.from(supportedAssetsMap.values()).flatMap(({ cryptos, fiatIsoCodes }) => cryptos),
         showCreateWallet: true
       })
 
-      const { walletId, currencyCode } = walletListResult
+      const { walletId, currencyCode, tokenId: selectedTokenId } = walletListResult
       if (walletId == null || currencyCode == null) return
 
+      // Popup modal to pick fiat asset
+      const allowedIsoFiats = Array.from(supportedAssetsMap.values()).flatMap(({ cryptos, fiatIsoCodes }) => fiatIsoCodes)
+      const selectedIsoFiat = await showUi.fiatPicker({ headerTitle: '', allowedIsoFiats })
+      if (selectedIsoFiat == null) return
+
+      // Filter providers by fiat and crypto selection
       const coreWallet = account.currencyWallets[walletId]
       const currencyPluginId = coreWallet.currencyInfo.pluginId
       if (!coreWallet) return showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+      providers = providers.filter(async provider => {
+        const supportingProviderPluginIds = Array.from(supportedAssetsMap.entries())
+          .filter(
+            ([, assetsMap]) =>
+              assetsMap.fiatIsoCodes.includes(selectedIsoFiat) &&
+              assetsMap.cryptos.find(supportedTokenId => supportedTokenId.pluginId === currencyPluginId && supportedTokenId.tokenId === selectedTokenId)
+          )
+          .map(([key]) => key)
+
+        return supportingProviderPluginIds.includes(provider.pluginId)
+      })
 
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
       let goodQuotes: FiatProviderQuote[] = []
-
-      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
-      const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
@@ -121,7 +149,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
         headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
         direction,
 
-        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
+        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, selectedIsoFiat),
         label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
@@ -142,11 +170,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
           if (sourceFieldNum === 1) {
             // User entered a fiat value. Convert to crypto
-            sourceFieldCurrencyCode = displayFiatCurrencyCode
+            sourceFieldCurrencyCode = selectedIsoFiat
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode: selectedIsoFiat,
               amountType: 'fiat',
               direction: 'buy',
               paymentTypes,
@@ -158,7 +186,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode: selectedIsoFiat,
               amountType: 'crypto',
               direction: 'buy',
               paymentTypes,
@@ -166,9 +194,13 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             }
           }
 
-          const quotePromises = providers.map(async p => p.getQuote(quoteParams))
+          const quotePromises = providers.map(async provider => {
+            console.debug('quoting: ' + provider.pluginId)
+            return provider.getQuote(quoteParams)
+          })
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
+            console.debug(e)
             errors = e
             return []
           })
@@ -191,13 +223,15 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           }
 
           // Find best quote factoring in pluginPriorities
-          bestQuote = getBestQuote(goodQuotes, priorityArray)
-          if (bestQuote == null) {
-            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: s.strings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
-            return
-          }
+          // TODO:
+          // bestQuote = getBestQuote(goodQuotes, priorityArray)
+          // if (bestQuote == null) {
+          //   if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: s.strings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
+          //   return
+          // }
+          bestQuote = goodQuotes[0]
 
-          const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+          const exchangeRateText = getRateFromQuote(bestQuote, selectedIsoFiat)
           if (enterAmountMethods != null) {
             const poweredByOnClick = async () => {
               // 1. Show modal with all the valid quotes
@@ -232,7 +266,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
                 if (bestQuote == null) return
 
                 // 3. Set the status text and powered by
-                const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+                const statusText = getRateFromQuote(bestQuote, selectedIsoFiat)
                 enterAmountMethods.setStatusText({ statusText })
                 enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
 

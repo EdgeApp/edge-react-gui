@@ -3,7 +3,7 @@ import { div, gt, lt, mul, toFixed } from 'biggystring'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
-  FiatProviderAssetMap,
+  FiatProviderAssetMaps,
   FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
@@ -114,7 +114,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: { 'iso:USD': true }, crypto: {} }
+const allowedCurrencyCodes: FiatProviderAssetMaps = { fiat: { 'iso:USD': true }, crypto: {} }
 
 for (const pluginId in SIMPLEX_ID_MAP) {
   const codesObject = SIMPLEX_ID_MAP[pluginId]
@@ -132,7 +132,7 @@ export const dummyProvider2: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
+      getSupportedAssets: async (): Promise<FiatProviderAssetMaps> => allowedCurrencyCodes,
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { regionCode, paymentTypes } = params
 
