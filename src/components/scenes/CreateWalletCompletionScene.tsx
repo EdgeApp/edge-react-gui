@@ -147,7 +147,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     )
   }, [done, navigation])
 
-  const keyExtractor = useHandler(item => item.key)
+  const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
     <SceneWrapper background="theme">
@@ -155,16 +155,16 @@ const CreateWalletCompletionComponent = (props: Props) => {
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.title_create_wallets} />
           <FlashList
-            style={styles.resultList}
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}
             data={filteredCreateItemsForDisplay}
             estimatedItemSize={theme.rem(4.25)}
-            scrollEnabled={false}
-            keyExtractor={keyExtractor}
-            renderItem={renderRow}
             fadingEdgeLength={10}
+            keyExtractor={keyExtractor}
+            extraData={itemStatus}
             ref={flatListRef}
+            renderItem={renderRow}
+            scrollEnabled={false}
           />
           {renderNextButton}
         </View>
@@ -175,9 +175,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   }
 }))

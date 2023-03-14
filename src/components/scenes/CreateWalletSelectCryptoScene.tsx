@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -194,8 +194,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     }
   })
 
-  const renderCreateWalletRow = useHandler((item: WalletCreateItem) => {
-    const { key, displayName, pluginId, tokenId } = item
+  const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
+    const { key, displayName, pluginId, tokenId } = item.item
 
     const toggle = (
       <Switch
@@ -219,6 +219,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       />
     )
   })
+
+  const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   const renderNextButton = React.useMemo(
     () => (
@@ -251,14 +253,14 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onSubmitEditing={handleNext}
           />
           <FlashList
-            style={styles.resultList}
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
             estimatedItemSize={theme.rem(4.25)}
+            extraData={selectedItems}
             keyboardShouldPersistTaps="handled"
-            keyExtractor={item => item.key}
-            renderItem={data => renderCreateWalletRow(data.item)}
+            keyExtractor={keyExtractor}
+            renderItem={renderCreateWalletRow}
           />
           {renderNextButton}
         </View>
@@ -269,9 +271,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   }
 }))
