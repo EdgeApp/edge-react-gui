@@ -92,7 +92,7 @@ export const executePlugin = async (params: {
 
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
-    isBuy,
+    direction,
     regionCode,
     paymentTypes
   }

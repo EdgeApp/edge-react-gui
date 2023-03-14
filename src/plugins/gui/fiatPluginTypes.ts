@@ -17,7 +17,7 @@ export interface FiatPluginGetMethodsResponse {
 }
 export interface FiatPluginEnterAmountParams {
   headerTitle: string
-  isBuy: boolean
+  direction: 'buy' | 'sell'
   label1: string
   label2: string
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
@@ -71,7 +71,7 @@ export interface FiatPluginRegionCode {
   stateCode?: string
 }
 export interface FiatPluginStartParams {
-  isBuy: boolean
+  direction: 'buy' | 'sell'
   paymentTypes: FiatPaymentTypes
   regionCode: FiatPluginRegionCode
 }
