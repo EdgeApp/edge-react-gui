@@ -16,7 +16,7 @@ import { RawTextModal } from '../modals/RawTextModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from '../tiles/Tile'
+import { Tile } from './Tile'
 
 interface Props {
   swapData: EdgeTxSwap
