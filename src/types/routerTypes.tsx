@@ -12,7 +12,12 @@ import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInp
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
-import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse, FiatPluginSepaFormParams } from '../plugins/gui/fiatPluginTypes'
+import {
+  FiatPluginEnterAmountResponse,
+  FiatPluginGetMethodsResponse,
+  FiatPluginSepaFormParams,
+  FiatPluginSepaTransferParams
+} from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
 import { GuiPlugin } from './GuiPluginTypes'
@@ -224,6 +229,7 @@ interface RouteParamList {
     headerIconUri?: string
   }
   guiPluginSepaForm: FiatPluginSepaFormParams
+  guiPluginSepaTransfer: FiatPluginSepaTransferParams
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string

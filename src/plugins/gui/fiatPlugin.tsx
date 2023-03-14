@@ -20,6 +20,7 @@ import {
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
+  FiatPluginSepaTransferParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -87,6 +88,21 @@ export const executePlugin = async (params: {
           headerIconUri,
           onSubmit: async (sepaInfo: SepaInfo) => {
             resolve(sepaInfo)
+          }
+        })
+      })
+    },
+    sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
+      console.debug('transferInfo')
+      const { headerTitle, headerIconUri, promptMessage, transferInfo } = params
+      return new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginSepaTransfer', {
+          headerTitle,
+          promptMessage,
+          transferInfo,
+          headerIconUri,
+          onDone: async () => {
+            resolve()
           }
         })
       })

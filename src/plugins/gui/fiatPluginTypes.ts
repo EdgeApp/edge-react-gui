@@ -36,6 +36,33 @@ export interface FiatPluginSepaFormParams {
   onSubmit: (sepaInfo: SepaInfo) => Promise<void>
 }
 
+export interface FiatPluginSepaTransferInfo {
+  input: {
+    amount: string
+    currency: string
+  }
+  output: {
+    amount: string
+    currency: string
+    walletAddress: string
+  }
+  paymentDetails: {
+    id: string
+    iban: string
+    swiftBic: string
+    recipient: string
+    reference: string
+  }
+}
+
+export interface FiatPluginSepaTransferParams {
+  headerTitle: string
+  promptMessage: string
+  transferInfo: FiatPluginSepaTransferInfo
+  headerIconUri?: string
+  onDone: () => Promise<void>
+}
+
 export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
@@ -62,6 +89,7 @@ export interface FiatPluginUi {
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
+  sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
