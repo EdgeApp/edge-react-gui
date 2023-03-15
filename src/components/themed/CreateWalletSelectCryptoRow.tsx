@@ -36,7 +36,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const currencyConfigs = useWatch(account, 'currencyConfig')
-  const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].builtinTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
+  const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].allTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
 
   return (
     <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={onPress}>
