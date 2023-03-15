@@ -95,7 +95,6 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               searchIcon
             />
             <FlashList
-              style={styles.resultList}
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
               data={filteredArray}
@@ -137,9 +136,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     paddingTop: scale(5)
-  },
-  resultList: {
-    flex: 1
   },
   cryptoTypeLogo: {
     width: theme.rem(2),
