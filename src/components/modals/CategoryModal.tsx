@@ -154,10 +154,8 @@ export function CategoryModal(props: Props) {
             />
           </View>
           <FlashList
-            ListHeaderComponent={<View style={styles.flashlistTopBorder} />}
-            estimatedItemSize={THEME.rem(3)}
-            style={styles.resultList}
             data={sortedCategories}
+            estimatedItemSize={THEME.rem(3)}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderRow}
@@ -215,18 +213,9 @@ const styles = StyleSheet.create({
     marginBottom: THEME.rem(0.8)
   },
   inputSubCategoryContainter: {
-    marginTop: THEME.rem(0.8)
-  },
-  flashlistTopBorder: {
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1,
-    height: 1
-  },
-  resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flex: 1,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1
+    marginTop: THEME.rem(0.8),
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: 1
   },
   rowContainer: {
     flex: 1,
