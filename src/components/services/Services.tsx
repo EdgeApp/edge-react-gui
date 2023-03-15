@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -44,6 +45,8 @@ export function Services(props: Props) {
   useAsyncEffect(async () => {
     if (account?.waitForAllWallets == null) return
     await account.waitForAllWallets()
+
+    dispatch(registerNotificationsV2())
 
     // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
     await snooze(5000)
