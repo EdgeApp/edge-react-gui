@@ -29,8 +29,8 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 // TODO: Allow other fiat currency codes. Hard code USD for now
 const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
 
-export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const pluginId = 'creditcard'
+export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
+  const pluginId = 'amountquote'
   const { disablePlugins, showUi, account } = params
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
@@ -48,7 +48,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     const store = createStore(providerFactory.storeId, account.dataStore)
     providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
   }
-  if (providerPromises.length === 0) throw new Error('No enabled creditCardPlugin providers')
+  if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
 
   const providers = await Promise.all(providerPromises)
   for (const provider of providers) {
