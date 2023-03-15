@@ -7,7 +7,6 @@ import { CustomTabs } from 'react-native-custom-tabs'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
-import { Bridgeable, update } from 'yaob'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { trackConversion } from '../../actions/TrackingActions'
@@ -16,10 +15,9 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
 import s from '../../locales/strings'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { Dispatch, RootState } from '../../types/reduxTypes'
+import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, MapObject } from '../../types/types'
-import { UriQueryMap } from '../../types/WebTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -43,7 +41,7 @@ const asEdgeTokenIdExtended = asObject({
 
 const asCurrencyCodesArray: Cleaner<ExtendedCurrencyCode[] | undefined> = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
 
-export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethods {
+export class EdgeProviderServer implements EdgeProviderMethods {
   // Private properties:
   _account: EdgeAccount
   _dispatch: Dispatch
@@ -54,9 +52,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   _selectedWallet: EdgeCurrencyWallet | undefined
 
   // Public properties:
-  deepPath: string | undefined
-  deepQuery: UriQueryMap | undefined
-  promoCode: string | undefined
+  deepLink: EdgeProviderDeepLink
 
   constructor(opts: {
     account: EdgeAccount
@@ -70,7 +66,6 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   }) {
     const { account, deepLink, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
 
-    super()
     this._account = account
     this._dispatch = dispatch
     this._navigation = navigation
@@ -78,24 +73,11 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
     this._reloadWebView = reloadWebView
     this._selectedTokenId = selectedTokenId
     this._selectedWallet = selectedWallet
-    this.deepPath = deepLink.deepPath
-    this.deepQuery = deepLink.deepQuery
-    this.promoCode = deepLink.promoCode
-  }
-
-  _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
-    this.deepPath = deepPath
-    this.deepQuery = deepQuery
-    this.promoCode = promoCode
-    update(this)
+    this.deepLink = deepLink
   }
 
   async getDeepLink(): Promise<EdgeProviderDeepLink> {
-    return {
-      deepPath: this.deepPath,
-      deepQuery: this.deepQuery,
-      promoCode: this.promoCode
-    }
+    return this.deepLink
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
