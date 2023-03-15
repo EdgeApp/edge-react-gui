@@ -2,11 +2,11 @@ import { describe, expect, test } from '@jest/globals'
 import { sprintf } from 'sprintf-js'
 
 import s from '../locales/strings'
-import { createPriorityArray } from '../plugins/gui/creditCardPlugin'
+import { createPriorityArray } from '../plugins/gui/amountQuotePlugin'
 import { FiatProviderError } from '../plugins/gui/fiatProviderTypes'
 import { getBestError } from '../plugins/gui/pluginUtils'
 
-describe('creditCardPlugin', function () {
+describe('amountQuoteFiatPlugin', function () {
   describe('createPriorityArray', function () {
     test('createPriorityArray', function () {
       const prio = {

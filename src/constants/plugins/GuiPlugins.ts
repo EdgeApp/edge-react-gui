@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { creditCardPlugin } from '../../plugins/gui/creditCardPlugin'
+import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -71,19 +71,19 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     permissions: ['camera']
   },
   creditcard: {
-    pluginId: 'creditcard',
+    pluginId: 'amountquote',
     storeId: '',
     baseUri: '',
     lockUriPath: true,
-    nativePlugin: creditCardPlugin,
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
   iach: {
-    pluginId: 'creditcard',
+    pluginId: 'amountquote',
     storeId: '',
     baseUri: '',
     lockUriPath: true,
-    nativePlugin: creditCardPlugin,
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'ACH Bank Transfer'
   },
   simplex: {
