@@ -46,11 +46,15 @@ export function Services(props: Props) {
     if (account?.waitForAllWallets == null) return
     await account.waitForAllWallets()
 
-    dispatch(registerNotificationsV2())
+    dispatch(registerNotificationsV2()).catch(e => {
+      console.warn('registerNotificationsV2 error:', e)
+    })
 
     // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
     await snooze(5000)
-    dispatch(checkCompromisedKeys(navigation))
+    dispatch(checkCompromisedKeys(navigation)).catch(e => {
+      console.warn('checkCompromisedKeys error:', e)
+    })
   }, [account])
 
   // Methods to call periodically
