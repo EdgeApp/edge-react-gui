@@ -52,6 +52,7 @@ export class FiatProviderError extends Error {
   }
 }
 
+// Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
   crypto: { [pluginId: string]: { [tokenId: string]: boolean | any } }
   fiat: { [currencyCode: string]: boolean | any }
@@ -84,7 +85,9 @@ export interface FiatProvider {
 
 export interface FiatProviderFactoryParams {
   io: { store: FiatProviderStore }
-  apiKeys?: unknown
+  apiKeys?: unknown // Data specific to the requirements of each provider,
+  // which lets the provider know that these orders were made from within Edge.
+  // Typically an API key, but can be some other information like a client ID.
 }
 
 export interface FiatProviderFactory {
