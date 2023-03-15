@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
+import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
@@ -182,11 +182,7 @@ export function WalletListModal(props: Props) {
 
   // #region Renderers
 
-  const renderBankSignupButton = () => (
-    <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleShowBankPlugin} marginRem={[0, 0.75, 1.5, 0.75]} />
-  )
-
-  const renderPaymentMethod = useHandler(item => {
+  const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
     return (
       <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
         <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
@@ -194,14 +190,16 @@ export function WalletListModal(props: Props) {
     )
   })
 
-  const renderCustomAsset = useHandler(item => {
-    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.tokenId} customAsset={item.item} onPress={handleWalletListPress} />
+  const renderCustomAsset: ListRenderItem<CustomAsset> = useHandler(item => {
+    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.item.referenceTokenId} customAsset={item.item} onPress={handleWalletListPress} />
   })
 
-  const renderBankSection = () => {
+  const bankSection = React.useMemo<React.ReactNode>(() => {
     if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
-    if (Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
+    if (Object.keys(bankAccountsMap).length === 0) {
+      return <MainButton label={s.strings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
+    }
     return (
       <View>
         <FlashList
@@ -214,10 +212,11 @@ export function WalletListModal(props: Props) {
         />
       </View>
     )
-  }
+  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, theme])
 
-  const renderCustomAssetSection = () =>
-    showCustomAssets ? (
+  const customAssetSection = React.useMemo<React.ReactNode>(() => {
+    if (!showCustomAssets) return null
+    return (
       <View>
         <FlashList
           estimatedItemSize={theme.rem(4.25)}
@@ -228,15 +227,16 @@ export function WalletListModal(props: Props) {
           style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
         />
       </View>
-    ) : null
+    )
+  }, [customAssets, renderCustomAsset, showCustomAssets, theme])
 
   // #endregion Renderers
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
-      {renderBankSection()}
-      {renderCustomAssetSection()}
+      {bankSection}
+      {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{s.strings.your_wallets}</EdgeText> : null}
       <OutlinedTextInput
         returnKeyType="search"

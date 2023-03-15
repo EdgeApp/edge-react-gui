@@ -83,6 +83,11 @@ export function WalletList(props: Props) {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
+  // Subscribe to the common wallet list:
+  const account = useSelector(state => state.core.account)
+  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
+  const sortedWalletList = useSelector(state => state.sortedWalletList)
+
   const handlePress = React.useMemo(
     () =>
       onPress ??
@@ -91,13 +96,8 @@ export function WalletList(props: Props) {
         const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
         dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       }),
-    [dispatch, navigation, onPress]
+    [account, dispatch, navigation, onPress]
   )
-
-  // Subscribe to the common wallet list:
-  const account = useSelector(state => state.core.account)
-  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
-  const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter the common wallet list:
   const filteredWalletList = React.useMemo(() => {
@@ -122,7 +122,7 @@ export function WalletList(props: Props) {
       const { pluginId } = wallet.currencyInfo
       return checkFilterWallet({ pluginId, tokenId }, allowedAssets, excludeAssets)
     })
-  }, [allowedAssets, excludeAssets, excludeWalletIds, sortedWalletList])
+  }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
 
   // Extract recent wallets:
   const recentWalletList = React.useMemo(() => {
