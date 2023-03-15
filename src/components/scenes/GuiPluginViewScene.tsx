@@ -5,6 +5,7 @@ import { WebView } from 'react-native-webview'
 import { Bridge, onMethod } from 'yaob'
 
 import { EdgeProviderServer } from '../../controllers/edgeProvider/EdgeProviderServer'
+import { EdgeProvider } from '../../controllers/edgeProvider/types/edgeProviderTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
@@ -133,7 +134,7 @@ interface State {
 }
 
 interface PluginWorkerApi {
-  setEdgeProvider: (provider: EdgeProviderServer) => Promise<unknown>
+  setEdgeProvider: (provider: EdgeProvider) => Promise<unknown>
 }
 
 class GuiPluginView extends React.Component<Props, State> {
