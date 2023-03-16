@@ -963,7 +963,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   contentContainerStyle: { paddingBottom: theme.rem(6) },
   footer: {
-    margin: theme.rem(2),
+    width: '100%',
+    marginBottom: theme.rem(2),
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
