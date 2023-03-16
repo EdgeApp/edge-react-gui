@@ -627,8 +627,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -1595,8 +1596,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -2489,8 +2491,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -3257,8 +3260,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -4003,8 +4007,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -4623,8 +4628,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -5490,8 +5496,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -6330,8 +6337,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -7143,8 +7151,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     >
@@ -8004,8 +8013,9 @@ exports[`SendScene2 Render SendScene 1`] = `
           "alignItems": "center",
           "bottom": 0,
           "justifyContent": "center",
-          "margin": 45,
+          "marginBottom": 45,
           "position": "absolute",
+          "width": "100%",
         }
       }
     />
