@@ -1,4 +1,4 @@
-import { lt } from 'biggystring'
+import { lt, toFixed } from 'biggystring'
 import { asArray, asNumber, asObject, asString, asValue } from 'cleaners'
 
 import { StringMap } from '../../../types/types'
@@ -151,7 +151,7 @@ export const bityProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const {
-          // TODO: amountType, // input amount type - fiat | crypto
+          amountType, // input amount type - fiat | crypto
           direction,
           exchangeAmount,
           fiatCurrencyCode,
@@ -167,22 +167,36 @@ export const bityProvider: FiatProviderFactory = {
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
 
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity: Could not query supported currencies')
+        const cryptoCode = cryptoCurrencyObj.code
+        const fiatCode = fiatCurrencyObj.code
 
-        const inputCurrencyCode = isBuy ? fiatCurrencyObj.code : cryptoCurrencyObj.code
-        const outputCurrencyCode = isBuy ? cryptoCurrencyObj.code : fiatCurrencyObj.code
+        const inputCurrencyCode = isBuy ? fiatCode : cryptoCode
+        const outputCurrencyCode = isBuy ? cryptoCode : fiatCode
+
+        const amountPrecision = amountType === 'fiat' ? fiatCurrencyObj.max_digits_in_decimal_part : cryptoCurrencyObj.max_digits_in_decimal_part
+
+        const amount = toFixed(exchangeAmount, amountPrecision)
+        const isReverseQuote = (isBuy && amountType === 'crypto') || (!isBuy && amountType === 'fiat')
         const quoteRequest: BityQuoteRequest = {
           input: {
-            amount: exchangeAmount,
+            amount: isReverseQuote ? undefined : amount,
             currency: inputCurrencyCode
           },
           output: {
+            amount: isReverseQuote ? amount : undefined,
             currency: outputCurrencyCode
           }
         }
         const bityQuote = await fetchBityQuote(quoteRequest)
+        console.debug('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
-        if (lt(exchangeAmount, bityQuote.input.minimum_amount)) {
-          throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(bityQuote.input.minimum_amount) })
+        const minimumAmount = isReverseQuote ? bityQuote.output.minimum_amount : bityQuote.input.minimum_amount
+        if (lt(amount, minimumAmount)) {
+          throw new FiatProviderError({
+            // TODO: direction,
+            errorType: 'underLimit',
+            errorAmount: parseFloat(minimumAmount)
+          })
         }
 
         const paymentQuote: FiatProviderQuote = {
