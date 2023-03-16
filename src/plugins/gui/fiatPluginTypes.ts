@@ -5,7 +5,7 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
-export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue('sepa', 'credit', 'applepay', 'googlepay', 'iach')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 export type FiatPaymentTypes = FiatPaymentType[]
 
