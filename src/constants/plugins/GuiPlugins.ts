@@ -94,14 +94,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Simplex'
   },
   bity: {
-    pluginId: 'bity',
+    pluginId: 'amountquote',
     storeId: 'com.bity',
-    baseUri: hostedUri + 'com.bity/index.html',
+    baseUri: '',
     lockUriPath: true,
     needsCountryCode: true,
     queryPromoCode: 'client_value',
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Bity'
-    // supportßEmail: 'support@bity.com'
   },
   bitrefill: {
     pluginId: 'bitrefill',

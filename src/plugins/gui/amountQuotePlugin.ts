@@ -16,6 +16,7 @@ import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMeth
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
+import { bityProvider } from './providers/bityProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
@@ -31,7 +32,7 @@ interface ProviderPriorityMap {
 const asPaymentTypeProviderPriorityMap = asMap(asMap(asNumber))
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
+const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const pluginId = 'amountquote'

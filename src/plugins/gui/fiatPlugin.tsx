@@ -99,6 +99,10 @@ export const executePlugin = async (params: {
     throw new Error(`pluginId ${pluginId} not found`)
   }
 
+  // TODO: Pick one or the other - paymentType or paymentTypes.
+  // We currently always use 'paymentType' and then mask it as 'paymentTypes'
+  // here. The 'paymentTypes' defined in buy/sellList.json gets ignored, causing
+  // confusion.
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
     isBuy,

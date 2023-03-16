@@ -300,8 +300,9 @@
     "cryptoCodes": [
       "BTC"
     ],
+    "paymentType": "sepa",
     "paymentTypes": [
-      "bank"
+      "sepa"
     ],
     "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
     "title": "SEPA Bank Transfer",

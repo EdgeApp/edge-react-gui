@@ -8,7 +8,7 @@ import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
 
-export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue('sepa', 'credit', 'applepay', 'googlepay', 'iach')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
 export interface FiatPluginGetMethodsResponse {
