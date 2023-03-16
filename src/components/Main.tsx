@@ -785,7 +785,6 @@ const EdgeBuyTabScreen = () => {
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
-          headerLeft: () => <PluginBackButton />,
           headerRight: () => null
         }}
       />
