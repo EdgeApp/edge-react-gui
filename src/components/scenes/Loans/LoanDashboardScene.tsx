@@ -55,21 +55,26 @@ export const LoanDashboardScene = (props: Props) => {
   // State
   //
 
-  const sortedWalletList = useSelector(state => state.sortedWalletList)
-  const account = useSelector(state => state.core.account)
   const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
 
   const isLoansLoading = syncRatio < 0
 
-  const wallets = useWatch(account, 'currencyWallets')
-  const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
+  const account = useSelector(state => state.core.account)
+  const activeWalletIds = useWatch(account, 'activeWalletIds')
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
+  useAsyncEffect(async () => {
+    await account.waitForAllWallets()
+    setIsWalletsLoaded(true)
+  }, [account])
 
   const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(wallets[walletId].currencyInfo.pluginId))
+  const hardPluginWalletIds = activeWalletIds.filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(currencyWallets[walletId]?.currencyInfo.pluginId))
 
   //
   // Effects
@@ -107,10 +112,10 @@ export const LoanDashboardScene = (props: Props) => {
           excludeWalletIds={Object.keys(loanAccountsMap)}
         />
       ))
-      newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
+      newLoanWallet = newWalletId == null ? null : currencyWallets[newWalletId]
     } else if (hardPluginWalletIds.length === 1) {
       // If the user owns one polygon wallet, auto-select that wallet for the loan creation
-      newLoanWallet = wallets[hardPluginWalletIds[0]]
+      newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
       const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
