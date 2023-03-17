@@ -65,7 +65,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           Array [
             Object {
               "justifyContent": "center",
-              "marginLeft": 22,
+              "marginHorizontal": 22,
               "paddingBottom": 22,
             },
             Object {

@@ -120,7 +120,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper scroll background="theme">
-      <SceneHeader style={styles.sceneHeader} title={title} withTopMargin />
+      <SceneHeader title={title} withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
           fromCurrencyLogos={policyIcons.stakeAssetUris}
@@ -172,11 +172,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5),
     marginRight: theme.rem(0.5),
     resizeMode: 'contain'
-  },
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
   }
 }))
 
