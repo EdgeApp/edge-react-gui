@@ -1,5 +1,6 @@
 import { lt, toFixed } from 'biggystring'
-import { asArray, asNumber, asObject, asString, asValue } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { StringMap } from '../../../types/types'
 import {
@@ -57,6 +58,12 @@ const CURRENCY_PLUGINID_MAP: StringMap = {
   LTC: 'litecoin'
 }
 
+const EDGE_CLIENT_ID = '4949bf59-c23c-4d71-949e-f5fd56ff815b'
+
+const asBityApiKeys = asObject({
+  clientId: asMaybe(asString)
+})
+
 const asBityCurrencyTag = asValue('crypto', 'erc20', 'ethereum', 'fiat')
 const asBityCurrency = asObject({
   tags: asArray(asBityCurrencyTag),
@@ -79,6 +86,72 @@ interface BityQuoteRequest {
   }
 }
 
+interface BityBuyOrderRequest {
+  client_value: number
+  input: {
+    amount: string
+    currency: string
+    type: 'bank_account'
+    iban: string
+    bic_swift: string
+  }
+  output: {
+    currency: string
+    type: 'crypto_address'
+    crypto_address: string
+  }
+}
+
+interface BitySellOrderRequest {
+  client_value: number
+  input: {
+    amount: string
+    currency: string
+    type: 'bank_account'
+    crypto_address: string
+  }
+  output: {
+    currency: string
+    type: 'crypto_address'
+    iban: string
+    bic_swift: string
+    owner: {
+      name: string
+      address: string
+      address_complement: string
+      city: string
+      country: string
+      state: string
+      zip: string
+    }
+  }
+}
+
+const asBityApproveQuoteResponse = asObject({
+  id: asString,
+  input: asObject({
+    amount: asString,
+    currency: asString,
+    crypto_address: asOptional(asString)
+  }),
+  output: asObject({
+    amount: asString,
+    currency: asString,
+    crypto_address: asOptional(asString)
+  }),
+  payment_details: asMaybe(
+    asObject({
+      iban: asString,
+      swift_bic: asString,
+      reference: asString,
+      recipient_name: asString,
+      recipient: asString
+    })
+  )
+})
+
+type BityApproveQuoteResponse = ReturnType<typeof asBityApproveQuoteResponse>
+
 const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
   const request = {
     method: 'POST',
@@ -98,14 +171,86 @@ const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
   }
 }
 
+const approveBityQuote = async (
+  wallet: EdgeCurrencyWallet,
+  data: BityBuyOrderRequest | BitySellOrderRequest,
+  clientId?: string
+): Promise<BityApproveQuoteResponse> => {
+  const baseUrl = 'https://exchange.api.bity.com'
+  const orderUrl = 'https://exchange.api.bity.com/v2/orders'
+  const orderReq: RequestInit = {
+    method: 'POST',
+    headers: {
+      Host: 'exchange.api.bity.com',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Client-Id': clientId ?? EDGE_CLIENT_ID
+    },
+    credentials: 'include',
+    body: JSON.stringify(data)
+  }
+
+  const orderRes = await fetch(orderUrl, orderReq)
+
+  if (orderRes.status !== 201) {
+    const errorData = await orderRes.json()
+    throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
+  }
+  // "location": "https://...bity.com/v2/orders/[orderid]"
+  const locationHeader = orderRes.headers.get('Location')
+
+  const locationUrl = baseUrl + locationHeader
+  const locationReq: RequestInit = {
+    method: 'GET',
+    credentials: 'include'
+  }
+  const locationRes = await fetch(locationUrl, locationReq)
+
+  if (locationRes.status !== 200) {
+    console.error(JSON.stringify({ locationRes }, null, 2))
+    throw new Error('Problem confirming order: Code n200')
+  }
+  const orderData = await locationRes.json()
+
+  if (orderData.message_to_sign != null) {
+    const { body } = orderData.message_to_sign
+    const { publicAddress } = await wallet.getReceiveAddress()
+    const signedMessage = await wallet.otherMethods.signMessageBase64(body, publicAddress)
+    const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
+    const request = {
+      method: 'POST',
+      headers: {
+        Host: 'exchange.api.bity.com',
+        'Content-Type': '*/*'
+      },
+      body: signedMessage
+    }
+    const signedTransactionResponse = await fetch(signUrl, request)
+    if (signedTransactionResponse.status === 400) {
+      throw new Error('Could not complete transaction. Code: 400')
+    }
+    if (signedTransactionResponse.status === 204) {
+      const bankDetailsReq = {
+        method: 'GET',
+        credentials: 'include'
+      }
+      const detailUrl = orderUrl + '/' + orderData.id
+      // @ts-expect-error
+      const bankDetailRes = await fetch(detailUrl, bankDetailsReq)
+      if (bankDetailRes.status === 200) {
+        const bankDetailResJson = await bankDetailRes.json()
+        return asBityApproveQuoteResponse(bankDetailResJson)
+      }
+    }
+  }
+  return asBityApproveQuoteResponse(orderData)
+}
+
 export const bityProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    // const {
-    // TODO: apiKeys, added to header of order objects
-    // TODO: io: {store}, to cache address and sepa info
-    // } = params
+    const clientId = asBityApiKeys(params.apiKeys).clientId
 
     const out = {
       pluginId,
@@ -213,7 +358,36 @@ export const bityProvider: FiatProviderFactory = {
           direction: params.direction,
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
-            // TODO
+            const { coreWallet } = approveParams
+            // Either input or output always require SEPA info, depending on if
+            // input or output are of type 'bank_account'.
+            // Bity only checks SEPA info format validity.
+            // Home address and KYC is only required for sell.
+
+            const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
+            const approveQuoteRes = await approveBityQuote(
+              coreWallet,
+              {
+                client_value: 0,
+                input: {
+                  amount,
+                  currency: inputCurrencyCode,
+                  type: 'bank_account',
+                  iban: 'IT98E0300203280486762717991', // Fake generated data.
+                  bic_swift: 'ICBBITMM'
+                },
+                output: {
+                  currency: outputCurrencyCode,
+                  type: 'crypto_address',
+                  crypto_address: cryptoAddress
+                }
+              },
+              clientId
+            )
+
+            // TODO: Sell side, requiring full address/KYC
+
+            console.debug('approveQuoteRes', JSON.stringify(approveQuoteRes, null, 2))
           },
           closeQuote: async (): Promise<void> => {}
         }
