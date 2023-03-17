@@ -67,15 +67,11 @@ const StakeOptionsSceneComponent = (props: Props) => {
     )
   }
 
-  const renderSceneHeader = () => (
-    <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
-      <CryptoIcon marginRem={[0, 0.5, 0, 0]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
-    </SceneHeader>
-  )
-
   return (
     <SceneWrapper scroll background="theme">
-      {renderSceneHeader()}
+      <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
+        <CryptoIcon marginRem={[0, 0.5, 0, 0]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
+      </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{s.strings.stake_select_options}</EdgeText>
         <FlashList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
@@ -87,8 +83,9 @@ const StakeOptionsSceneComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   optionsContainer: {
     alignItems: 'stretch',
-    margin: theme.rem(1),
-    marginBottom: theme.rem(6)
+    marginBottom: theme.rem(6),
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   optionContainer: {
     margin: theme.rem(1),

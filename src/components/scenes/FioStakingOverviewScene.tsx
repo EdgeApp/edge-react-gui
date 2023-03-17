@@ -139,7 +139,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   scrollContainer: {
     flex: 1,
-    marginVertical: theme.rem(0.5)
+    paddingBottom: theme.rem(0.5),
+    paddingTop: theme.rem(1)
   },
   explainerText: {
     marginVertical: theme.rem(0.5),

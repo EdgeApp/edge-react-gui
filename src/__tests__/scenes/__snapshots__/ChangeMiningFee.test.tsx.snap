@@ -11,7 +11,13 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     underline={true}
     withTopMargin={true}
   />
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
@@ -106,7 +112,13 @@ exports[`Change Mining Fees should render with high props 1`] = `
     underline={true}
     withTopMargin={true}
   />
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
@@ -201,7 +213,13 @@ exports[`Change Mining Fees should render with low props 1`] = `
     underline={true}
     withTopMargin={true}
   />
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}
@@ -296,7 +314,13 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     underline={true}
     withTopMargin={true}
   />
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <Memo(SettingsRadioRowComponent)
       label="High"
       onPress={[Function]}

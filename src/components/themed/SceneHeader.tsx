@@ -6,31 +6,35 @@ import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  title?: string
   children?: React.ReactNode
+  style?: ViewStyle
+
   tertiary?: React.ReactNode
+  title?: string
   underline?: boolean
   withTopMargin?: boolean
-  style?: ViewStyle
 }
 
-export const SceneHeaderComponent = (props: Props) => {
-  const { title, underline, withTopMargin, children, tertiary = null, style } = props
+const SceneHeaderComponent = (props: Props) => {
+  const { children, style, tertiary = null, title, underline = false, withTopMargin = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
   return (
     <>
       <View style={[styles.container, withTopMargin ? styles.topMargin : null, style]}>
         <View style={styles.titleContainer}>
-          {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+          {title == null ? null : <EdgeText style={styles.title}>{title}</EdgeText>}
           {tertiary}
         </View>
         {children}
       </View>
-      <View style={styles.dividerLine}>{underline ? <DividerLine /> : null}</View>
+      {underline ? <DividerLine marginRem={dividerMargin} /> : null}
     </>
   )
 }
+
+const dividerMargin = [0, 1]
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
@@ -47,10 +51,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   topMargin: {
     marginTop: theme.rem(1)
-  },
-  dividerLine: {
-    marginLeft: theme.rem(1),
-    marginBottom: theme.rem(0.5)
   },
   title: {
     fontSize: theme.rem(1.2),

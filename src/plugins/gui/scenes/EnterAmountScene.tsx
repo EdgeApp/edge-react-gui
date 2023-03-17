@@ -184,8 +184,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   container: {
-    width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: theme.rem(0.5),
+    width: '100%'
   },
   textFields: {
     flexDirection: 'column',

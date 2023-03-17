@@ -135,7 +135,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 />
               ))}
             </View>
-            <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
+            <SceneHeader title={s.strings.title_fio_domains} underline withTopMargin />
             <View style={styles.list}>
               {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
               {fioDomains.map((domain: FioDomain) => (
@@ -184,7 +184,8 @@ export class FioAddressList extends React.Component<Props, LocalState> {
 const getStyles = cacheStyles((theme: Theme) => ({
   list: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingTop: theme.rem(0.5)
   },
   loading: {
     flex: 1,

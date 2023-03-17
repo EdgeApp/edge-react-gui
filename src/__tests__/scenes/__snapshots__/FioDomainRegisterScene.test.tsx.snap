@@ -28,7 +28,13 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     />
   </Memo(SceneHeaderComponent)>
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <WithTheme(EdgeTextComponent)
       numberOfLines={3}
       style={

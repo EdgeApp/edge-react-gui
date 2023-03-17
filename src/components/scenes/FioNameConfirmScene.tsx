@@ -10,7 +10,7 @@ import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles } from '../services/ThemeContext'
+import { cacheStyles, Theme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
@@ -143,8 +143,8 @@ class FioNameConfirm extends React.PureComponent<Props> {
 
     return (
       <SceneWrapper background="theme">
+        <SceneHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} underline />
         <View style={styles.scene}>
-          <SceneHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} underline />
           <Tile
             type="static"
             title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
@@ -157,12 +157,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 }
 
-const getStyles = cacheStyles(() => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   scene: {
+    alignItems: 'stretch',
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'stretch'
+    paddingTop: theme.rem(0.5)
   }
 }))
 

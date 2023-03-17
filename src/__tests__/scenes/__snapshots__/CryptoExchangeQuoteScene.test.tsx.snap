@@ -9,7 +9,13 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
     underline={true}
     withTopMargin={true}
   />
-  <ScrollView>
+  <ScrollView
+    contentContainerStyle={
+      Object {
+        "paddingTop": 11,
+      }
+    }
+  >
     <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="From"

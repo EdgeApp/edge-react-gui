@@ -237,7 +237,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper background="theme" avoidKeyboard>
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+          <SceneHeader title={s.strings.title_create_wallet_select_crypto} withTopMargin />
           <OutlinedTextInput
             autoCorrect={false}
             autoCapitalize="words"
@@ -245,7 +245,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             value={searchTerm}
             label={s.strings.wallet_list_wallet_search}
             returnKeyType="next"
-            marginRem={[0, 1, 0.5]}
+            marginRem={[0.5, 1]}
             searchIcon
             clearIcon
             blurOnClear={false}
