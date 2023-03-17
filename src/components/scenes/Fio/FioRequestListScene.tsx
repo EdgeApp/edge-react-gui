@@ -489,7 +489,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   listKeyExtractor(item: FioRequest) {
-    return item.fio_request_id.toString()
+    return `${item.fio_request_id.toString()}${item.fioWalletId}`
   }
 
   pendingLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
