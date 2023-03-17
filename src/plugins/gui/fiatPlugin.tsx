@@ -9,6 +9,7 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
+import { SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationProp } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
@@ -18,6 +19,7 @@ import {
   FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
+  FiatPluginSepaFormParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -73,6 +75,18 @@ export const executePlugin = async (params: {
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
             logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
             resolve(value)
+          }
+        })
+      })
+    },
+    sepaForm: async (params: FiatPluginSepaFormParams) => {
+      const { headerTitle, headerIconUri } = params
+      return new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginSepaForm', {
+          headerTitle,
+          headerIconUri,
+          onSubmit: async (sepaInfo: SepaInfo) => {
+            resolve(sepaInfo)
           }
         })
       })

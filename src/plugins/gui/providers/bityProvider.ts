@@ -2,6 +2,8 @@ import { lt, toFixed } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
+import s from '../../../locales/strings'
+import { SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
 import {
   FiatProvider,
@@ -250,7 +252,8 @@ export const bityProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const clientId = asBityApiKeys(params.apiKeys).clientId
+    const { apiKeys, showUi } = params
+    const clientId = asBityApiKeys(apiKeys).clientId
 
     const out = {
       pluginId,
@@ -364,6 +367,17 @@ export const bityProvider: FiatProviderFactory = {
             // Bity only checks SEPA info format validity.
             // Home address and KYC is only required for sell.
 
+            const sepaInfo = await showUi.sepaForm({
+              headerTitle: s.strings.enter_bank_info_title,
+              onSubmit: async (formSepaInfo: SepaInfo) => {
+                // TODO: See fiatPluginTypes.ts
+              }
+            })
+
+            if (sepaInfo == null) {
+              return
+            }
+
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
             const approveQuoteRes = await approveBityQuote(
               coreWallet,
@@ -373,8 +387,8 @@ export const bityProvider: FiatProviderFactory = {
                   amount,
                   currency: inputCurrencyCode,
                   type: 'bank_account',
-                  iban: 'IT98E0300203280486762717991', // Fake generated data.
-                  bic_swift: 'ICBBITMM'
+                  iban: sepaInfo.iban,
+                  bic_swift: sepaInfo.swift
                 },
                 output: {
                   currency: outputCurrencyCode,
@@ -385,9 +399,10 @@ export const bityProvider: FiatProviderFactory = {
               clientId
             )
 
-            // TODO: Sell side, requiring full address/KYC
-
             console.debug('approveQuoteRes', JSON.stringify(approveQuoteRes, null, 2))
+            showUi.popScene()
+
+            // TODO: Sell side, requiring full address/KYC
           },
           closeQuote: async (): Promise<void> => {}
         }
