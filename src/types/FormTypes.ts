@@ -1,3 +1,5 @@
+import { asObject, asString } from 'cleaners'
+
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 
 // Define all form field types here.
@@ -50,3 +52,13 @@ export const FORM_FIELD_DISPLAY_PROPS: {
     textInputProps: undefined
   }
 }
+
+export const SEPA_FORM_DISKLET_NAME = 'sepaInfo'
+
+export const asSepaInfo = asObject({
+  name: asString,
+  iban: asString,
+  swift: asString
+})
+
+export type SepaInfo = ReturnType<typeof asSepaInfo>

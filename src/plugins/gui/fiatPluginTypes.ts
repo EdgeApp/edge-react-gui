@@ -2,6 +2,7 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { SepaInfo } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -26,7 +27,15 @@ export interface FiatPluginEnterAmountParams {
   headerIconUri?: string
 }
 
-// export type FiatPluginListModalRow = { icon: string | number, name: string }
+export interface FiatPluginSepaFormParams {
+  headerTitle: string
+  headerIconUri?: string
+  // TODO: onSubmit handling control by the plugin/provider may still be needed
+  // to communicate the working status of the action and success/failure to the
+  // scene, unless some other callback API is designed
+  onSubmit: (sepaInfo: SepaInfo) => Promise<void>
+}
+
 export interface FiatPluginListModalParams {
   title: string
   items: Array<{ icon: string | number | React.ReactNode; name: string; text?: string }> // Icon strings are image uri, numbers are local files
@@ -52,6 +61,7 @@ export interface FiatPluginUi {
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
+  sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   popScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }

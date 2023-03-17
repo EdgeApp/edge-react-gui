@@ -79,7 +79,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         if (apiKeys == null) continue
 
         const store = createStore(providerFactory.storeId, account.dataStore)
-        providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
+        providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys, showUi }))
       }
 
       if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
