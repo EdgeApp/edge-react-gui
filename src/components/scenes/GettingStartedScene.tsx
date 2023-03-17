@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, ImageSourcePropType, Pressable, View } from 'react-native'
+import { Image, ImageSourcePropType, Pressable, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Animated, { Extrapolation, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -101,7 +101,7 @@ export const GettingStartedScene = (props: Props) => {
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
               <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle>{s.strings.getting_started_welcome_title}</WelcomeHeroTitle>
+              <WelcomeHeroTitle>{parseMarkedText(s.strings.getting_started_welcome_title)}</WelcomeHeroTitle>
               <WelcomeHeroMessage>{s.strings.getting_started_welcome_message}</WelcomeHeroMessage>
               <WelcomeHeroPrompt>{s.strings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
             </WelcomeHero>
@@ -188,8 +188,11 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
   }))
 ])
 
-const WelcomeHeroTitle = styled(EdgeText)(props => ({
+const WelcomeHeroTitle = styled(Text)(props => ({
+  color: props.theme.primaryText,
+  fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(2.25),
+  includeFontPadding: false,
   paddingVertical: props.theme.rem(1),
   textAlign: 'center'
 }))
