@@ -1276,6 +1276,16 @@ const strings = {
 
   // #endregion CoinRanking
 
+  // #region GuiPlugins
+
+  account_owner: 'Account Owner',
+  bank_info: 'Bank Info',
+  enter_bank_info_title: 'Enter Bank Info',
+  iban: 'IBAN',
+  swift_bic: 'SWIFT/BIC',
+
+  // #endregion GuiPlugins
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

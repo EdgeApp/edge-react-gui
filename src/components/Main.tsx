@@ -15,6 +15,7 @@ import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -533,6 +534,13 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
         options={{
           headerRight: () => null
         }}
