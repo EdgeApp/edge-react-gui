@@ -61,6 +61,7 @@ const CoinRankingComponent = (props: Props) => {
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
   const [fiatCode] = useState<string>('iso:USD')
+  const extraData = React.useMemo(() => ({ assetSubText, percentChangeTimeFrame }), [assetSubText, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
 
@@ -228,7 +229,14 @@ const CoinRankingComponent = (props: Props) => {
         </View>
       </View>
       <DividerLine marginRem={[0, 0, 0, 1]} />
-      <FlashList estimatedItemSize={theme.rem(3.75)} data={listdata} renderItem={renderItem} onEndReachedThreshold={1} onEndReached={handleEndReached} />
+      <FlashList
+        estimatedItemSize={theme.rem(3.75)}
+        data={listdata}
+        extraData={extraData}
+        renderItem={renderItem}
+        onEndReachedThreshold={1}
+        onEndReached={handleEndReached}
+      />
     </SceneWrapper>
   )
 }
