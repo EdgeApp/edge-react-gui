@@ -35,7 +35,7 @@ export const SceneHeaderComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
-    marginLeft: theme.rem(1),
+    marginHorizontal: theme.rem(1),
     paddingBottom: theme.rem(1)
   },
   titleContainer: {

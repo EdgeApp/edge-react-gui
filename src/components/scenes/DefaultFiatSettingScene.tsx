@@ -83,17 +83,18 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
-            <OutlinedTextInput
-              autoCorrect={false}
-              autoCapitalize="words"
-              onChangeText={this.handleSearchTermChange}
-              value={this.state.searchTerm}
-              label={s.strings.fragment_wallets_addwallet_fiat_hint}
-              returnKeyType="search"
-              marginRem={[0, 1.75]}
-              searchIcon
-            />
+            <SceneHeader title={s.strings.title_create_wallet_select_fiat} underline withTopMargin>
+              <OutlinedTextInput
+                autoCorrect={false}
+                autoCapitalize="words"
+                onChangeText={this.handleSearchTermChange}
+                value={this.state.searchTerm}
+                label={s.strings.fragment_wallets_addwallet_fiat_hint}
+                returnKeyType="search"
+                marginRem={[1, 0.5, 0]}
+                searchIcon
+              />
+            </SceneHeader>
             <FlashList
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
