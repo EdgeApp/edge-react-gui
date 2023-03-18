@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { SharedValue, useSharedValue, withSpring } from 'react-native-reanimated'
+import { SharedValue, useSharedValue, withDecay, WithDecayConfig, withSpring } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useTheme } from '../services/ThemeContext'
@@ -11,6 +11,9 @@ interface Props {
   maxOffset?: number
   minOffset?: number
 }
+
+// This adjust the velocity just enough to make it feel right.
+const VELOCITY_INCREASE_FACTOR = 3 / 2
 
 /**
  * Detect swipe gestures on child components, and update the `swipeOffset` to
@@ -28,31 +31,44 @@ interface Props {
  * This component should commonly be used along with a pagination component with
  * the scene. This pagination communicates to the user the current offset.
  */
+
 export const SwipeOffsetDetector = (props: Props) => {
-  const { children, maxOffset, minOffset, swipeOffset } = props
+  const { children, maxOffset = Infinity, minOffset = -Infinity, swipeOffset } = props
   const theme = useTheme()
   const { width: screenWidth } = useSafeAreaFrame()
   const offsetStart = useSharedValue(0)
+
   const panGesture = Gesture.Pan()
     .activeOffsetX([-theme.rem(1.5), theme.rem(1.5)])
     .onBegin(_ => {
       offsetStart.value = swipeOffset.value
     })
     .onUpdate(e => {
-      // Subtract to make the value positive and to make calculations easier
       swipeOffset.value = offsetStart.value - e.translationX / screenWidth
     })
-    .onEnd(_ => {
-      let destValue: number
-      if (minOffset != null && swipeOffset.value < minOffset) {
-        destValue = minOffset
-      } else if (maxOffset != null && swipeOffset.value > maxOffset) {
-        destValue = maxOffset
-      } else {
-        // Snap to the nearest offset:
-        destValue = Math.round(swipeOffset.value)
+    .onEnd(e => {
+      // Convert the velocity to a ratio of the screen width.
+      const screenVelocity = (e.velocityX / screenWidth) * VELOCITY_INCREASE_FACTOR
+      const inertiaConfig: WithDecayConfig = {
+        // Negate velocity because swipe direction is an inverse to gesture direction
+        velocity: -screenVelocity,
+        deceleration: 0.95 // Decelerate by 5%
       }
-      swipeOffset.value = withSpring(destValue, { damping: 15 })
+
+      swipeOffset.value = withDecay(inertiaConfig, finished => {
+        if (finished) {
+          let destValue: number
+          if (minOffset != null && swipeOffset.value < minOffset) {
+            destValue = minOffset
+          } else if (maxOffset != null && swipeOffset.value > maxOffset) {
+            destValue = maxOffset
+          } else {
+            // Snap to the nearest offset:
+            destValue = Math.round(swipeOffset.value)
+          }
+          swipeOffset.value = withSpring(destValue, { damping: 15 })
+        }
+      })
     })
 
   return <GestureDetector gesture={panGesture}>{children}</GestureDetector>
