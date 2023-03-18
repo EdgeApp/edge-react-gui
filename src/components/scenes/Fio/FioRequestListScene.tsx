@@ -123,13 +123,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsPending = async () => {
-    const { fioWallets = [], account, fioAddresses } = this.props
+    const { fioWallets = [], fioAddresses } = this.props
     const { pendingRequestPaging, fioRequestsPending } = this.state
-    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
     let newRequests: FioRequest[] = []
     try {
-      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
+      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, 'PENDING')
     } catch (e: any) {
       showError(e.message)
     }
@@ -146,13 +145,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsSent = async () => {
-    const { fioWallets = [], account } = this.props
+    const { fioWallets = [] } = this.props
     const { fioRequestsSent, sentRequestPaging } = this.state
-    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
     let newRequests: FioRequest[] = []
     try {
-      newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
+      newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, 'SENT')
     } catch (e: any) {
       showError(e.message)
     }
@@ -164,7 +162,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  getFioRequests = async (fioWallets: EdgeCurrencyWallet[], paging: { [fioPublicKey: string]: number }, requestsType: string): Promise<FioRequest[]> => {
+  getFioRequests = async (
+    fioWallets: EdgeCurrencyWallet[],
+    paging: { [fioPublicKey: string]: number },
+    requestsType: 'PENDING' | 'SENT'
+  ): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
     if (fioWallets.length) {
       try {
