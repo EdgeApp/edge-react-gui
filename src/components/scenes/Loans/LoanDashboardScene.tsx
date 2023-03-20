@@ -263,7 +263,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       textAlign: 'center'
     },
     listMargin: {
-      margin: theme.rem(0.5)
+      margin: theme.rem(0.5),
+      flex: 1
     },
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,
