@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -22,7 +22,6 @@ import { Theme } from '../../../types/Theme'
 import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
-import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -47,7 +46,6 @@ export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
 
   const theme = useTheme()
-  const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
@@ -224,16 +222,15 @@ export const LoanDashboardScene = (props: Props) => {
           )}
         </>
       ) : (
-        <>
+        <View style={styles.listMargin}>
           <FlashList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
-            renderItem={renderLoanCard}
-            style={margin}
-            ListFooterComponent={renderFooter()}
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
+            ListFooterComponent={renderFooter()}
+            renderItem={renderLoanCard}
           />
-        </>
+        </View>
       )}
     </SceneWrapper>
   )
@@ -264,6 +261,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.fontFaceMedium,
       color: theme.secondaryText,
       textAlign: 'center'
+    },
+    listMargin: {
+      margin: theme.rem(0.5)
     },
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,

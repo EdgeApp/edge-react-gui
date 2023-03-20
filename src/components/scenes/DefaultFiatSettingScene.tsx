@@ -83,19 +83,19 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader title={s.strings.title_create_wallet_select_fiat} withTopMargin />
-            <OutlinedTextInput
-              autoCorrect={false}
-              autoCapitalize="words"
-              onChangeText={this.handleSearchTermChange}
-              value={this.state.searchTerm}
-              label={s.strings.fragment_wallets_addwallet_fiat_hint}
-              returnKeyType="search"
-              marginRem={[0.5, 1.75, 0]}
-              searchIcon
-            />
+            <SceneHeader title={s.strings.title_create_wallet_select_fiat} underline withTopMargin>
+              <OutlinedTextInput
+                autoCorrect={false}
+                autoCapitalize="words"
+                onChangeText={this.handleSearchTermChange}
+                value={this.state.searchTerm}
+                label={s.strings.fragment_wallets_addwallet_fiat_hint}
+                returnKeyType="search"
+                marginRem={[1, 0.5, 0]}
+                searchIcon
+              />
+            </SceneHeader>
             <FlashList
-              style={styles.resultList}
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
               data={filteredArray}
@@ -137,9 +137,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     paddingTop: scale(5)
-  },
-  resultList: {
-    flex: 1
   },
   cryptoTypeLogo: {
     width: theme.rem(2),

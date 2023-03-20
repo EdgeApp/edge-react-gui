@@ -351,6 +351,8 @@ Array [
       <View
         style={
           Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
             "marginTop": 18,
           }
         }
@@ -534,17 +536,6 @@ Array [
         }
       >
         <RCTScrollView
-          ListHeaderComponent={
-            <View
-              style={
-                Object {
-                  "borderTopColor": "#D9E3ED",
-                  "borderTopWidth": 1,
-                  "height": 1,
-                }
-              }
-            />
-          }
           applyWindowCorrection={[Function]}
           canChangeSize={true}
           contentContainerStyle={
@@ -661,15 +652,6 @@ Array [
                 "span": undefined,
               },
               "props": Object {
-                "ListHeaderComponent": <View
-                  style={
-                    Object {
-                      "borderTopColor": "#D9E3ED",
-                      "borderTopWidth": 1,
-                      "height": 1,
-                    }
-                  }
-                />,
                 "data": Array [
                   Object {
                     "display": "Income: Paycheck",
@@ -701,12 +683,6 @@ Array [
                 "keyboardShouldPersistTaps": "handled",
                 "numColumns": 1,
                 "renderItem": [Function],
-                "style": Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderTopColor": "#D9E3ED",
-                  "borderTopWidth": 1,
-                  "flex": 1,
-                },
               },
               "renderWindowInsets": Object {
                 "height": 0,
@@ -767,7 +743,7 @@ Array [
               "value": Object {
                 "endCorrection": 0,
                 "startCorrection": 0,
-                "windowShift": -1,
+                "windowShift": -0,
               },
             }
           }
@@ -1155,6 +1131,8 @@ Array [
       <View
         style={
           Object {
+            "borderBottomColor": "#D9E3ED",
+            "borderBottomWidth": 1,
             "marginTop": 18,
           }
         }
@@ -1338,17 +1316,6 @@ Array [
         }
       >
         <RCTScrollView
-          ListHeaderComponent={
-            <View
-              style={
-                Object {
-                  "borderTopColor": "#D9E3ED",
-                  "borderTopWidth": 1,
-                  "height": 1,
-                }
-              }
-            />
-          }
           applyWindowCorrection={[Function]}
           canChangeSize={true}
           contentContainerStyle={
@@ -1465,15 +1432,6 @@ Array [
                 "span": undefined,
               },
               "props": Object {
-                "ListHeaderComponent": <View
-                  style={
-                    Object {
-                      "borderTopColor": "#D9E3ED",
-                      "borderTopWidth": 1,
-                      "height": 1,
-                    }
-                  }
-                />,
                 "data": Array [
                   Object {
                     "display": "Exchange: Buy Bitcoin",
@@ -1505,12 +1463,6 @@ Array [
                 "keyboardShouldPersistTaps": "handled",
                 "numColumns": 1,
                 "renderItem": [Function],
-                "style": Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderTopColor": "#D9E3ED",
-                  "borderTopWidth": 1,
-                  "flex": 1,
-                },
               },
               "renderWindowInsets": Object {
                 "height": 0,
@@ -1571,7 +1523,7 @@ Array [
               "value": Object {
                 "endCorrection": 0,
                 "startCorrection": 0,
-                "windowShift": -1,
+                "windowShift": -0,
               },
             }
           }
