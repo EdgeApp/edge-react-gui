@@ -64,9 +64,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     const { navigation, route } = this.props
     const { fioAddressName = '' } = route.params
 
-    const addressName = `@${fioAddressName}`
     // todo: styles for message
-    const transferredMessage = `${addressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
+    const transferredMessage = `${fioAddressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal bridge={bridge} title={s.strings.fio_domain_transferred} buttons={{ ok: { label: s.strings.string_ok_cap } }}>
         <EdgeText>{transferredMessage}</EdgeText>
