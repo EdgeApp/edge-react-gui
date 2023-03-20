@@ -8,7 +8,7 @@ import s from '../../locales/strings'
 import { CcWalletMap } from '../../reducers/FioReducer'
 import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
@@ -154,6 +154,14 @@ export const fioSignAndBroadcast = async (fioWallet: EdgeCurrencyWallet, unsigne
   return edgeTransaction
 }
 
+interface FioConnectedPublicAddresses {
+  public_addresses: Array<{
+    public_address: string
+    token_code: string
+    chain_code: string
+  }>
+}
+
 /**
  * Check if wallet is connected to FIO Address
  *
@@ -167,7 +175,7 @@ export const fioSignAndBroadcast = async (fioWallet: EdgeCurrencyWallet, unsigne
  */
 const isWalletConnected = async (
   fioWallet: EdgeCurrencyWallet,
-  fioAddress: string,
+  connectedAddresses: FioConnectedPublicAddresses['public_addresses'],
   wallet: EdgeCurrencyWallet,
   tokenCode: string,
   chainCode: string,
@@ -176,21 +184,20 @@ const isWalletConnected = async (
   try {
     chainCode = chainCode.toUpperCase()
     tokenCode = tokenCode.toUpperCase()
-    const { public_address: publicAddress } = await fioWallet.otherMethods.fioAction('getPublicAddress', {
-      fioAddress,
-      tokenCode,
-      chainCode
-    })
+    const connectedAddressObj = connectedAddresses.find(
+      connectedAddress => connectedAddress.chain_code === chainCode && connectedAddress.token_code === tokenCode
+    )
 
-    if (zeroString(publicAddress)) return false
+    if (connectedAddressObj == null) return false
+    const { public_address: connectedAddress } = connectedAddressObj
 
     const receiveAddress = await wallet.getReceiveAddress()
-    if (publicAddress === receiveAddress.publicAddress) return true
+    if (connectedAddress === receiveAddress.publicAddress) return true
 
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
     if (connectedWalletsFromDisklet[fullCurrencyCode]) {
       const { walletId, publicAddress: pubAddressFromDisklet } = connectedWalletsFromDisklet[fullCurrencyCode]
-      if (walletId === wallet.id && publicAddress === pubAddressFromDisklet) {
+      if (walletId === wallet.id && connectedAddress === pubAddressFromDisklet) {
         return true
       }
     }
@@ -220,10 +227,13 @@ export const refreshConnectedWalletsForFioAddress = async (
     if (!enabledTokens.find((enabledToken: string) => enabledToken === wallet.currencyInfo.currencyCode)) {
       enabledTokens.push(wallet.currencyInfo.currencyCode)
     }
+    const { public_addresses: connectedAddresses }: FioConnectedPublicAddresses = await fioWallet.otherMethods.fioAction('getPublicAddresses', {
+      fioAddress
+    })
     for (const enabledToken of enabledTokens) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${enabledToken}`
       if (connectedWallets[fullCurrencyCode]) continue
-      if (await isWalletConnected(fioWallet, fioAddress, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
+      if (await isWalletConnected(fioWallet, connectedAddresses, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
         connectedWallets[fullCurrencyCode] = wallet.id
       }
     }
