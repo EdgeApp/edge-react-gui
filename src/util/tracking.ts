@@ -3,6 +3,7 @@ import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
 import { fetchReferral } from './network'
+import { consify } from './utils'
 
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
@@ -30,6 +31,7 @@ export type TrackingEventName =
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
   | 'Start_App'
+  | 'purchase'
 
 export interface TrackingValues {
   accountDate?: string // Account creation date
@@ -57,6 +59,7 @@ if (ENV.USE_FIREBASE) {
  * Send a raw event to all backends.
  */
 export async function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
+  consify({ logEvent: { event, values } })
   return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
