@@ -9,12 +9,13 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
-import { SepaInfo } from '../../types/FormTypes'
+import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationProp } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
+  FiatPluginAddressFormParams,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
@@ -80,6 +81,20 @@ export const executePlugin = async (params: {
         })
       })
     },
+    addressForm: async (params: FiatPluginAddressFormParams) => {
+      const { countryCode, headerTitle, headerIconUri } = params
+      return new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginAddressForm', {
+          countryCode,
+          headerTitle,
+          headerIconUri,
+          onSubmit: async (homeAddress: HomeAddress) => {
+            logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+            resolve(homeAddress)
+          }
+        })
+      })
+    },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
       const { headerTitle, headerIconUri } = params
       return new Promise((resolve, reject) => {
@@ -127,7 +142,7 @@ export const executePlugin = async (params: {
   // confusion.
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
-    isBuy,
+    direction,
     regionCode,
     paymentTypes,
     providerId

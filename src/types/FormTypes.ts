@@ -1,4 +1,4 @@
-import { asObject, asString } from 'cleaners'
+import { asMaybe, asObject, asString } from 'cleaners'
 
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 
@@ -62,3 +62,16 @@ export const asSepaInfo = asObject({
 })
 
 export type SepaInfo = ReturnType<typeof asSepaInfo>
+
+export const ADDRESS_FORM_DISKLET_NAME = 'homeAddress'
+
+export const asHomeAddress = asObject({
+  address: asString,
+  address2: asMaybe(asString),
+  city: asString,
+  country: asString,
+  state: asString,
+  postalCode: asString
+})
+
+export type HomeAddress = ReturnType<typeof asHomeAddress>

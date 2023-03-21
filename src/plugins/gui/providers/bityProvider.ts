@@ -4,7 +4,7 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { SepaInfo } from '../../../types/FormTypes'
+import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
 import {
   FiatProvider,
@@ -374,6 +374,7 @@ export const bityProvider: FiatProviderFactory = {
                 // TODO: See fiatPluginTypes.ts
               }
             })
+            showUi.popScene()
 
             if (sepaInfo == null) {
               return
@@ -381,72 +382,122 @@ export const bityProvider: FiatProviderFactory = {
 
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
             let approveQuoteRes: BityApproveQuoteResponse | null = null
+
             try {
-              approveQuoteRes = await approveBityQuote(
-                coreWallet,
-                {
-                  client_value: 0,
-                  input: {
-                    amount,
-                    currency: inputCurrencyCode,
-                    type: 'bank_account',
-                    iban: sepaInfo.iban,
-                    bic_swift: sepaInfo.swift
+              if (isBuy) {
+                approveQuoteRes = await approveBityQuote(
+                  coreWallet,
+                  {
+                    client_value: 0,
+                    input: {
+                      amount: bityQuote.input.amount,
+                      currency: fiatCode,
+                      type: 'bank_account',
+                      iban: sepaInfo.iban,
+                      bic_swift: sepaInfo.swift
+                    },
+                    output: {
+                      currency: outputCurrencyCode,
+                      type: 'crypto_address',
+                      crypto_address: cryptoAddress
+                    }
                   },
-                  output: {
-                    currency: outputCurrencyCode,
-                    type: 'crypto_address',
-                    crypto_address: cryptoAddress
+                  clientId
+                )
+              } else {
+                // Sell approval
+                const homeAddress = await showUi.addressForm({
+                  countryCode: regionCode.countryCode,
+                  headerTitle: s.strings.home_address_title,
+                  onSubmit: async (formAddress: HomeAddress) => {
+                    // TODO: See fiatPluginTypes.ts
                   }
-                },
-                clientId
-              )
-              console.debug('approveQuoteRes', JSON.stringify(approveQuoteRes, null, 2))
+                })
+                showUi.popScene()
+
+                if (homeAddress == null) {
+                  return
+                }
+
+                approveQuoteRes = await approveBityQuote(
+                  coreWallet,
+                  {
+                    client_value: 0,
+                    input: {
+                      amount: bityQuote.input.amount,
+                      currency: inputCurrencyCode,
+                      type: 'crypto_address',
+                      crypto_address: cryptoAddress
+                    },
+                    output: {
+                      currency: outputCurrencyCode,
+                      type: 'bank_account',
+                      iban: sepaInfo.iban,
+                      bic_swift: sepaInfo.swift,
+                      owner: {
+                        name: sepaInfo.name,
+                        address: homeAddress.address,
+                        address_complement: homeAddress.address2,
+                        city: homeAddress.city,
+                        state: homeAddress.state,
+                        zip: homeAddress.postalCode,
+                        country: homeAddress.country
+                      }
+                    }
+                  },
+                  clientId
+                )
+              }
             } catch (e) {
-              // TODO: Post-routing implementation: Show the error on scene
+              // TODO: Post-routing implementation: Route to the appropriate
+              // scene for the user to fix depending on what was wrong with the
+              // order.
               console.error('Bity order error: ', e)
             }
-            showUi.popScene()
 
             if (approveQuoteRes == null) {
               return
             }
 
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { input, output, id, payment_details } = approveQuoteRes
-            if (payment_details == null || output.crypto_address == null) return
+            if (isBuy) {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              const { input, output, id, payment_details } = approveQuoteRes
+              if (payment_details == null || output.crypto_address == null) return
 
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { iban, swift_bic, recipient, reference } = payment_details
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              const { iban, swift_bic, recipient, reference } = payment_details
 
-            await showUi.sepaTransferInfo({
-              headerTitle: s.strings.payment_details,
-              promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id),
-              transferInfo: {
-                input: {
-                  amount: input.amount,
-                  currency: input.currency
+              await showUi.sepaTransferInfo({
+                headerTitle: s.strings.payment_details,
+                promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id),
+                transferInfo: {
+                  input: {
+                    amount: input.amount,
+                    currency: input.currency
+                  },
+                  output: {
+                    amount: output.amount,
+                    currency: output.currency,
+                    walletAddress: output.crypto_address
+                  },
+                  paymentDetails: {
+                    id: id,
+                    iban: iban,
+                    swiftBic: swift_bic,
+                    recipient: recipient,
+                    reference: reference
+                  }
                 },
-                output: {
-                  amount: output.amount,
-                  currency: output.currency,
-                  walletAddress: output.crypto_address
-                },
-                paymentDetails: {
-                  id: id,
-                  iban: iban,
-                  swiftBic: swift_bic,
-                  recipient: recipient,
-                  reference: reference
+                onDone: async () => {
+                  // TODO: See fiatPluginTypes.ts
                 }
-              },
-              onDone: async () => {
-                // TODO: See fiatPluginTypes.ts
-              }
-            })
-            showUi.popScene()
+              })
+            } else {
+              // TODO:
+              console.debug('Sending crypto to approved sell quote address')
+            }
 
-            // TODO: Sell side, requiring full address/KYC
+            showUi.popScene()
           },
           closeQuote: async (): Promise<void> => {}
         }
