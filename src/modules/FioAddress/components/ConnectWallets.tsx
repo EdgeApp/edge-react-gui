@@ -34,6 +34,8 @@ interface OwnProps {
 
 type Props = StateProps & OwnProps & ThemeProps
 
+let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.
+
 class ConnectWallets extends React.Component<Props, LocalState> {
   state = {
     connectWalletsMap: {},
@@ -124,6 +126,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     }
 
     this.setState({ connectWalletsMap, disconnectWalletsMap })
+    flashListToggle = !flashListToggle
   }
 
   keyExtractor = (item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`
@@ -197,6 +200,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
             {walletItems && Object.keys(walletItems).length ? (
               <FlashList
                 data={Object.values(walletItems)}
+                extraData={flashListToggle}
                 estimatedItemSize={theme.rem(4.25)}
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={this.keyExtractor}
