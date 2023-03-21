@@ -14,6 +14,7 @@ import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import {
+  FiatPluginAddressFormParams,
   FiatPluginEnterAmountResponse,
   FiatPluginGetMethodsResponse,
   FiatPluginSepaFormParams,
@@ -217,6 +218,7 @@ interface RouteParamList {
   }
   guiPluginSepaForm: FiatPluginSepaFormParams
   guiPluginSepaTransfer: FiatPluginSepaTransferParams
+  guiPluginAddressForm: FiatPluginAddressFormParams
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string

@@ -9,7 +9,7 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { asSepaInfo, SEPA_FORM_DISKLET_NAME, SepaInfo } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { RouteProp } from '../../../types/routerTypes'
@@ -62,12 +62,12 @@ export const SepaFormScene = React.memo((props: Props) => {
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" extraScrollHeight={theme.rem(2.75)} enableAutomaticScroll enableOnAndroid>
         <SceneHeader title={headerTitle} underline withTopMargin />
-        <EdgeText style={styles.formSectionTitle}>{s.strings.bank_info}</EdgeText>
-        <GuiFormField fieldType="name" value={name} label={s.strings.account_owner} onChangeText={handleNameInput} autofocus />
-        <GuiFormField fieldType="iban" value={iban} label={s.strings.iban} onChangeText={handleIbanInput} />
-        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={s.strings.swift_bic} onChangeText={handleSwiftInput} />
+        <EdgeText style={styles.formSectionTitle}>{lstrings.bank_info}</EdgeText>
+        <GuiFormField fieldType="name" value={name} label={lstrings.account_owner} onChangeText={handleNameInput} autofocus />
+        <GuiFormField fieldType="iban" value={iban} label={lstrings.iban} onChangeText={handleIbanInput} />
+        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.swift_bic} onChangeText={handleSwiftInput} />
         <MainButton
-          label={s.strings.string_next_capitalized}
+          label={lstrings.string_next_capitalized}
           marginRem={[1, 0.5, 1, 0.5]}
           type="secondary"
           disabled={!name.trim() || !iban.trim() || !swift.trim()}

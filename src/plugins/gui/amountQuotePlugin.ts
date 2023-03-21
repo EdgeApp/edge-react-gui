@@ -45,7 +45,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { isBuy, regionCode, paymentTypes, providerId } = params
+      const { direction, regionCode, paymentTypes, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -137,13 +137,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const fiatCurrencyCode = coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+      const isBuy = direction === 'buy'
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
-        headerTitle: sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode),
+        headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         isBuy,
-
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
@@ -173,7 +173,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'fiat',
-              direction: 'buy',
+              direction,
               paymentTypes,
               regionCode
             }
@@ -185,7 +185,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
               exchangeAmount: value,
               fiatCurrencyCode: coreWallet.fiatCurrencyCode,
               amountType: 'crypto',
-              direction: 'buy',
+              direction,
               paymentTypes,
               regionCode
             }
@@ -202,7 +202,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           if (myCounter !== counter) return
 
           for (const quote of quotes) {
-            if (quote.direction !== 'buy') continue
+            if (quote.direction !== direction) continue
             // @ts-expect-error
             if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)

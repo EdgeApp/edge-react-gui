@@ -2,7 +2,7 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
-import { SepaInfo } from '../../types/FormTypes'
+import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -12,12 +12,20 @@ export type FiatDirection = ReturnType<typeof asFiatDirection>
 export const asFiatPaymentType = asValue('sepa', 'credit', 'applepay', 'googlepay', 'iach')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
+export interface FiatPluginAddressFormParams {
+  countryCode: string
+  headerTitle: string
+  headerIconUri?: string
+  onSubmit: (homeAddress: HomeAddress) => Promise<void>
+}
+
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
   setPoweredBy: (params: EnterAmountPoweredBy) => void
   setValue1: (value: string) => void
   setValue2: (value: string) => void
 }
+
 export interface FiatPluginEnterAmountParams {
   headerTitle: string
   isBuy: boolean
@@ -90,6 +98,7 @@ export interface FiatPluginUi {
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
+  addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   popScene: () => {}
@@ -111,7 +120,7 @@ export interface FiatPluginRegionCode {
   stateCode?: string
 }
 export interface FiatPluginStartParams {
-  isBuy: boolean
+  direction: 'buy' | 'sell'
   paymentTypes: FiatPaymentType[]
   regionCode: FiatPluginRegionCode
   providerId?: string

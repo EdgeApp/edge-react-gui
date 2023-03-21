@@ -1,4 +1,4 @@
-import { asObject, asString } from 'cleaners'
+import { asMaybe, asObject, asString } from 'cleaners'
 
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 
@@ -41,11 +41,10 @@ export const FORM_FIELD_DISPLAY_PROPS: {
     textInputProps: undefined
   },
   postalcode: {
-    widthRem: 13,
-    textInputProps: {
-      keyboardType: 'numeric',
-      numeric: true
-    }
+    // Global postal codes can include letters and symbols
+    // TODO: Character input filtering props for weird cases like this where
+    // default keyboard types may include some disallowed characters.
+    widthRem: 13
   },
   text: {
     widthRem: undefined,
@@ -62,3 +61,16 @@ export const asSepaInfo = asObject({
 })
 
 export type SepaInfo = ReturnType<typeof asSepaInfo>
+
+export const ADDRESS_FORM_DISKLET_NAME = 'homeAddress'
+
+export const asHomeAddress = asObject({
+  address: asString,
+  address2: asMaybe(asString),
+  city: asString,
+  country: asString,
+  state: asString,
+  postalCode: asString
+})
+
+export type HomeAddress = ReturnType<typeof asHomeAddress>

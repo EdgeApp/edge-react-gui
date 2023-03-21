@@ -9,7 +9,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 
 interface SepaDisplayGroup {
@@ -32,56 +32,56 @@ export const SepaTransferScene = React.memo((props: Props) => {
     const { input, output, paymentDetails } = transferInfo
     return [
       {
-        groupTitle: s.strings.quote_input_title,
+        groupTitle: lstrings.quote_input_title,
         items: [
           {
-            label: s.strings.string_amount,
+            label: lstrings.string_amount,
             value: input.amount
           },
           {
-            label: s.strings.input_output_currency,
+            label: lstrings.input_output_currency,
             value: input.currency
           }
         ]
       },
       {
-        groupTitle: s.strings.quote_output_title,
+        groupTitle: lstrings.quote_output_title,
         items: [
           {
-            label: s.strings.string_amount,
+            label: lstrings.string_amount,
             value: output.amount
           },
           {
-            label: s.strings.input_output_currency,
+            label: lstrings.input_output_currency,
             value: output.currency
           },
           {
-            label: s.strings.request_qr_your_wallet_address,
+            label: lstrings.request_qr_your_wallet_address,
             value: output.walletAddress
           }
         ]
       },
       {
-        groupTitle: s.strings.payment_details,
+        groupTitle: lstrings.payment_details,
         items: [
           {
-            label: s.strings.transaction_details_exchange_order_id,
+            label: lstrings.transaction_details_exchange_order_id,
             value: paymentDetails.id
           },
           {
-            label: s.strings.iban,
+            label: lstrings.iban,
             value: paymentDetails.iban
           },
           {
-            label: s.strings.swift_bic,
+            label: lstrings.swift_bic,
             value: paymentDetails.swiftBic
           },
           {
-            label: s.strings.transaction_details_recipient,
+            label: lstrings.transaction_details_recipient,
             value: paymentDetails.recipient
           },
           {
-            label: s.strings.reference,
+            label: lstrings.reference,
             value: paymentDetails.reference
           }
         ]
@@ -114,9 +114,9 @@ export const SepaTransferScene = React.memo((props: Props) => {
             <EdgeText style={styles.itemLabel}>{item.label}:</EdgeText>
             <View style={styles.itemValueRow}>
               <EdgeText style={styles.itemValue} numberOfLines={3}>
-                {item.value ?? s.strings.n_a}
+                {item.value ?? lstrings.n_a}
               </EdgeText>
-              {renderCopyButton(item.value ?? s.strings.n_a)}
+              {renderCopyButton(item.value ?? lstrings.n_a)}
             </View>
           </View>
         ))}
@@ -130,7 +130,7 @@ export const SepaTransferScene = React.memo((props: Props) => {
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>
       </View>
       {renderGroups()}
-      <MainButton label={s.strings.string_done_cap} marginRem={[2, 1, 1.5, 1]} type="secondary" onPress={handleDone} />
+      <MainButton label={lstrings.string_done_cap} marginRem={[2, 1, 1.5, 1]} type="secondary" onPress={handleDone} />
     </SceneWrapper>
   )
 })

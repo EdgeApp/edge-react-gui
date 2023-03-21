@@ -14,6 +14,7 @@ import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../componen
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
+import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { SepaTransferScene } from '../plugins/gui/scenes/SepaTransferScene'
@@ -535,6 +536,13 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
         options={{
           headerRight: () => null
         }}
