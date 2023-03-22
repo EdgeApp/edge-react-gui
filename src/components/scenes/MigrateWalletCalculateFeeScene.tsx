@@ -143,7 +143,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     let successCount = 0
     const walletPromises = []
     for (const bundle of bundledWalletAssets) {
-      const wallet = currencyWallets[bundle[bundle.length - 1].key]
+      const wallet = currencyWallets[bundle[bundle.length - 1].createWalletIds[0]]
       const {
         currencyInfo: { pluginId }
       } = wallet
