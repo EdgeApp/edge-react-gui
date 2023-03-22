@@ -216,7 +216,7 @@ const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemI
     {
       alignItems: 'center',
       aspectRatio: 1,
-      padding: props.theme.rem(2),
+      padding: props.theme.rem(1),
       position: 'absolute',
       height: '100%',
       width: '100%'
@@ -288,7 +288,7 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   },
   useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.5, 1], Extrapolation.CLAMP)
+    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.5, 1.5], Extrapolation.CLAMP)
     return {
       backgroundColor,
       flex
@@ -301,7 +301,7 @@ const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(pro
     paddingBottom: props.theme.rem(1)
   },
   useAnimatedStyle(() => {
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.00000001, 1])
+    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.00000001, 1.5])
     return {
       flex
     }
