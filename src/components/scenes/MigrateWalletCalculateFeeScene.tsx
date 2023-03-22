@@ -172,7 +172,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
             feeTotal = add(feeTotal, txFee)
 
             // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-            if (i === bundle.length - 1 && lt(wallet.balances[asset.currencyCode], feeTotal)) {
+            if (i === bundle.length - 1 && lt(wallet.balances[wallet.currencyInfo.currencyCode], feeTotal)) {
               throw new InsufficientFundsError({ currencyCode: asset.currencyCode, networkFee: feeTotal })
             }
           } catch (e: any) {
