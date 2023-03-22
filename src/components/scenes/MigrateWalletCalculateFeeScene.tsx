@@ -143,7 +143,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     let successCount = 0
     const walletPromises = []
     for (const bundle of bundledWalletAssets) {
-      const wallet = currencyWallets[bundle[bundle.length - 1].key]
+      const wallet = currencyWallets[bundle[bundle.length - 1].createWalletIds[0]]
       const {
         currencyInfo: { pluginId }
       } = wallet
@@ -172,7 +172,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
             feeTotal = add(feeTotal, txFee)
 
             // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-            if (i === bundle.length - 1 && lt(wallet.balances[asset.currencyCode], feeTotal)) {
+            if (i === bundle.length - 1 && lt(wallet.balances[wallet.currencyInfo.currencyCode], feeTotal)) {
               throw new InsufficientFundsError({ currencyCode: asset.currencyCode, networkFee: feeTotal })
             }
           } catch (e: any) {
