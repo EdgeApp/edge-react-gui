@@ -19,7 +19,9 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { NumericInput } from '../modals/NumericInput'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-interface Props {
+export type OutlinedTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+
+export interface OutlinedTextInputProps {
   // Contents:
   value: string
   error?: string
@@ -50,7 +52,7 @@ interface Props {
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
+  returnKeyType?: OutlinedTextInputReturnKeyType // Defaults to 'done'
   secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
 
@@ -74,7 +76,7 @@ export interface OutlinedTextInputRef {
   setNativeProps: (nativeProps: Object) => void
 }
 
-export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((props: Props, ref) => {
+export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, OutlinedTextInputProps>((props: OutlinedTextInputProps, ref) => {
   const {
     // Contents:
     error,
