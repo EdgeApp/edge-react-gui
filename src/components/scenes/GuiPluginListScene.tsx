@@ -13,7 +13,9 @@ import { NestedPluginMap } from '../../actions/ExchangeInfoActions'
 import { updateOneSetting } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
+import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
+import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import s from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -39,8 +41,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 
 const buySellPlugins: BuySellPlugins = {
-  buy: asGuiPluginJson(require('../../constants/plugins/buyPluginList.json')),
-  sell: asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
+  buy: asGuiPluginJson(buyPluginJsonRaw),
+  sell: asGuiPluginJson(sellPluginJsonRaw)
 }
 
 const paymentTypeLogosById = {

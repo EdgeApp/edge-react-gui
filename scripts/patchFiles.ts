@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import childProcess from 'child_process'
 import fs from 'fs'
 import { join } from 'path'
