@@ -11,6 +11,7 @@ import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { javascript } from '../../util/bridge/injectThisInWebView'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -158,7 +159,26 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProviderServer(navigation, plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
+
+    const { account } = state.core
+    const selectedWallet = account.currencyWallets[state.ui.wallets.selectedWalletId]
+    const selectedTokenId =
+      selectedWallet == null ? undefined : getTokenId(account, selectedWallet.currencyInfo.pluginId, state.ui.wallets.selectedCurrencyCode)
+
+    this._edgeProvider = new EdgeProviderServer({
+      account,
+      dispatch,
+      navigation,
+      plugin,
+      reloadWebView: restartPlugin,
+      selectedTokenId,
+      selectedWallet,
+      deepLink: {
+        deepPath,
+        deepQuery,
+        promoCode: this._promoCode
+      }
+    })
 
     // Set up the WebView bridge:
     this._canGoBack = false

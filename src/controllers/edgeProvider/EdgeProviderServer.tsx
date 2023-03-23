@@ -1,6 +1,6 @@
 import { abs } from 'biggystring'
 import { asArray, asEither, asObject, asOptional, asString, Cleaner } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -45,49 +45,45 @@ const asCurrencyCodesArray: Cleaner<ExtendedCurrencyCode[] | undefined> = asOpti
 
 export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethods {
   // Private properties:
-  _plugin: GuiPlugin
+  _account: EdgeAccount
   _dispatch: Dispatch
-  _state: RootState
   _navigation: NavigationBase
+  _plugin: GuiPlugin
   _reloadWebView: () => void
-  _selectedWallet: EdgeCurrencyWallet | undefined
   _selectedTokenId: string | undefined
+  _selectedWallet: EdgeCurrencyWallet | undefined
 
   // Public properties:
   deepPath: string | undefined
   deepQuery: UriQueryMap | undefined
   promoCode: string | undefined
 
-  constructor(
-    navigation: NavigationBase,
-    plugin: GuiPlugin,
-    state: RootState,
-    dispatch: Dispatch,
-    reloadWebView: () => void,
-    deepPath?: string,
-    deepQuery?: UriQueryMap,
-    promoCode?: string
-  ) {
-    super()
-    this._plugin = plugin
-    this._dispatch = dispatch
-    this._state = state
-    this._navigation = navigation
-    this._reloadWebView = reloadWebView
+  constructor(opts: {
+    account: EdgeAccount
+    deepLink: EdgeProviderDeepLink
+    dispatch: Dispatch
+    navigation: NavigationBase
+    plugin: GuiPlugin
+    reloadWebView: () => void
+    selectedTokenId?: string
+    selectedWallet?: EdgeCurrencyWallet
+  }) {
+    const { account, deepLink, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
 
-    this.deepPath = deepPath
-    this.deepQuery = deepQuery
-    this.promoCode = promoCode
-    const { currencyWallets } = this._state.core.account
-    this._selectedWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    this._selectedTokenId =
-      this._selectedWallet == null
-        ? undefined
-        : getTokenId(this._state.core.account, this._selectedWallet.currencyInfo.pluginId, this._state.ui.wallets.selectedCurrencyCode)
+    super()
+    this._account = account
+    this._dispatch = dispatch
+    this._navigation = navigation
+    this._plugin = plugin
+    this._reloadWebView = reloadWebView
+    this._selectedTokenId = selectedTokenId
+    this._selectedWallet = selectedWallet
+    this.deepPath = deepLink.deepPath
+    this.deepQuery = deepLink.deepQuery
+    this.promoCode = deepLink.promoCode
   }
 
   _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
-    this._state = state
     this.deepPath = deepPath
     this.deepQuery = deepQuery
     this.promoCode = promoCode
@@ -106,6 +102,8 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
   async chooseCurrencyWallet(allowedCurrencyCodes?: ExtendedCurrencyCode[]): Promise<ExtendedCurrencyCode> {
+    const account = this._account
+
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
@@ -116,7 +114,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
       throw new Error('Cannot mix string and object currency specifiers')
     }
 
-    const allowedAssets = upgradeExtendedCurrencyCodes(this._state.core.account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
+    const allowedAssets = upgradeExtendedCurrencyCodes(account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
     if (allowedAssets == null) {
       throw new Error('No allowed assets specified')
     }
@@ -133,12 +131,12 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
 
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
-      this._selectedWallet = this._state.core.account.currencyWallets[walletId]
+      this._selectedWallet = account.currencyWallets[walletId]
       if (this._selectedWallet == null) throw new Error(`Missing wallet for walletId`)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
-      const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
+      const tokenId = getTokenId(account, pluginId, currencyCode)
       this._selectedTokenId = tokenId
 
       const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
@@ -229,7 +227,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
   async writeData(data: { [key: string]: string | undefined }): Promise<void> {
-    const { account } = this._state.core
+    const account = this._account
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(
@@ -249,7 +247,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
   async readData(keys: string[]): Promise<MapObject<string | undefined>> {
-    const { account } = this._state.core
+    const account = this._account
     const store = account.dataStore
     const returnObj: MapObject<string | undefined> = {}
     for (const key of keys) {
@@ -340,6 +338,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     console.log(`requestSpendUri ${uri}`)
+    const account = this._account
     const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     const tokenId = this._selectedTokenId
@@ -355,7 +354,7 @@ export class EdgeProviderServer extends Bridgeable implements EdgeProviderMethod
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, {
+      await launchPaymentProto(this._navigation, account, result.paymentProtocolURL, {
         currencyCode,
         wallet: this._selectedWallet,
         metadata
