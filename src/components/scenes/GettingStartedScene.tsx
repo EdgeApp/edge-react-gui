@@ -14,11 +14,11 @@ import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { parseMarkedText } from '../../util/parseMarkedText'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
+import { MarkedText } from '../text/MarkedText'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 
@@ -101,7 +101,9 @@ export const GettingStartedScene = (props: Props) => {
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
               <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle>{parseMarkedText(s.strings.getting_started_welcome_title)}</WelcomeHeroTitle>
+              <WelcomeHeroTitle>
+                <MarkedText>{s.strings.getting_started_welcome_title}</MarkedText>
+              </WelcomeHeroTitle>
               <WelcomeHeroMessage>{s.strings.getting_started_welcome_message}</WelcomeHeroMessage>
               <WelcomeHeroPrompt>{s.strings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
             </WelcomeHero>
@@ -128,7 +130,9 @@ export const GettingStartedScene = (props: Props) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
                     <ScrollView>
-                      <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
+                      <SectionTitle numberOfLines={2}>
+                        <MarkedText>{section.title}</MarkedText>
+                      </SectionTitle>
                       <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
                       {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{s.strings.getting_started_slide_1_footnote}</Footnote>}
                     </ScrollView>

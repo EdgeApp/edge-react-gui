@@ -1,7 +1,7 @@
 import { describe, it } from '@jest/globals'
 import { asObject, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
 
-import { parseMarkedText } from '../../util/parseMarkedText'
+import { parseMarkedText } from '../../components/text/MarkedText'
 
 describe('parseMarkedText', () => {
   const asJsxElement = (asChildren: Cleaner<any> = asUnknown) =>

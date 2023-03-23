@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React, { memo } from 'react'
 import { Text } from 'react-native'
 
-import { styled } from '../components/hoc/styled'
+import { styled } from '../hoc/styled'
 
 /**
  * Converts formatted text into ReactNodes. The currently supported formatting
@@ -12,7 +12,16 @@ import { styled } from '../components/hoc/styled'
  * @param str Formatted text with special formatting rules.
  * @returns An array of ReactNodes which can be inserted directly into JSX
  */
-export function parseMarkedText(str: string): React.ReactNode[] {
+
+interface Props {
+  children: string
+}
+
+const Em = styled(Text)(props => ({
+  color: props.theme.emphasizedText
+}))
+
+export const parseMarkedText = (str: string) => {
   const regex = /(?<!\\)\*(.*?)(?<!\\)\*/g
   let match
   let lastIndex = 0
@@ -35,6 +44,9 @@ export function parseMarkedText(str: string): React.ReactNode[] {
   return parsedArr
 }
 
-const Em = styled(Text)(props => ({
-  color: props.theme.emphasizedText
-}))
+const MarkedTextComponent = ({ children }: Props) => {
+  const parsedText = parseMarkedText(children)
+  return <>{parsedText}</>
+}
+
+export const MarkedText = memo(MarkedTextComponent)
