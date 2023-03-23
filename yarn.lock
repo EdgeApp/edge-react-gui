@@ -3510,6 +3510,11 @@
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.2.tgz#b74129719fc8d11c01868010082d483b7545591a"
   integrity sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==
 
+"@types/marked@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-4.0.8.tgz#b316887ab3499d0a8f4c70b7bd8508f92d477955"
+  integrity sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==
+
 "@types/mime@^1":
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
@@ -7853,9 +7858,9 @@ edge-currency-plugins@^1.3.6:
     ws "^7.4.6"
 
 edge-exchange-plugins@^0.17.6:
-  version "0.17.6"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.17.6.tgz#e21ef32cfaae728c04a7a124455675c2be668ce4"
-  integrity sha512-T0KQATHazSJdCxOYi5oIN96lQT0AWClWz8vjuoXO0t7rKbZtRTRZ7IAUHCyfQKnhckrRmjEx1aoOxhCe7d6PDw==
+  version "0.17.7"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.17.7.tgz#bc09a1981b5128e56033c509655d350c5e5fb18b"
+  integrity sha512-9B298sEtia7G2uVbYBhV52ABRiODMNZIA+tAofFF7DLu3M2kVzBaW+P8BtDY9R27dWf8qAJbiW5ee9s6pnb6OA==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -11984,6 +11989,11 @@ map-visit@^1.0.0:
   integrity sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
   dependencies:
     object-visit "^1.0.0"
+
+marked@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
+  integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==
 
 md5.js@^1.3.4:
   version "1.3.5"

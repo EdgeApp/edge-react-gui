@@ -1,52 +1,72 @@
+import marked from 'marked'
 import React, { memo } from 'react'
-import { Text } from 'react-native'
+import { Linking, Text } from 'react-native'
 
 import { styled } from '../hoc/styled'
 
 /**
- * Converts formatted text into ReactNodes. The currently supported formatting
+ * Converts formatted text into styled text. The currently supported formatting
  * rule-set is based on markdown:
  *
  * * Use asterisks around text to emphasize the text: \*emphasized\*
+ * * Use [link](url) to open a URL
  *
- * @param str Formatted text with special formatting rules.
+ * @param children Formatted text with special formatting rules.
  * @returns An array of ReactNodes which can be inserted directly into JSX
  */
 
-interface Props {
-  children: string
+interface OwnProps {
+  children?: React.ReactNode
 }
 
-const Em = styled(Text)(props => ({
+export const EmText = styled(Text)(props => ({
   color: props.theme.emphasizedText
 }))
 
-export const parseMarkedText = (str: string) => {
-  const regex = /(?<!\\)\*(.*?)(?<!\\)\*/g
-  let match
-  let lastIndex = 0
-  const parsedArr: React.ReactNode[] = []
+export const LinkText = styled(Text)(props => ({
+  color: props.theme.emphasizedText,
+  textDecorationLine: 'underline'
+}))
 
-  while ((match = regex.exec(str)) !== null) {
-    const startIndex = match.index
-    const endIndex = regex.lastIndex - 2 // adjust for the asterisks
-    if (startIndex > lastIndex) {
-      const fixed = str.substring(lastIndex, startIndex).replace(/(\\)(\*)/g, '*') // Fix escaped markers
-      parsedArr.push(fixed)
-    }
-    parsedArr.push(<Em>{str.substring(startIndex + 1, endIndex + 1)}</Em>)
-    lastIndex = endIndex + 2
+const parseMarkedToken = (token: marked.marked.Token): React.ReactNode[] => {
+  if (token.type === 'text') {
+    return [<Text key={Math.random()}>{token.text}</Text>]
+  } else if (token.type === 'link') {
+    return [
+      <LinkText key={Math.random()} onPress={async () => Linking.openURL(token.href)}>
+        {token.text}
+      </LinkText>
+    ]
+  } else if (token.type === 'paragraph') {
+    return [...token.tokens.flatMap(token => parseMarkedToken(token))]
+  } else if (token.type === 'em') {
+    return [<EmText key={Math.random()}>{token.text}</EmText>]
+  } else {
+    return []
   }
-  if (lastIndex < str.length) {
-    const fixed = str.substring(lastIndex).replace(/(\\)(\*)/g, '*') // Fix escaped markers
-    parsedArr.push(fixed)
-  }
-  return parsedArr
 }
 
-const MarkedTextComponent = ({ children }: Props) => {
-  const parsedText = parseMarkedText(children)
-  return <>{parsedText}</>
+export const parseMarkedText = (markedStr: string): React.ReactNode[] => {
+  const lexData = new marked.Lexer().lex(markedStr)
+  let processedTokens: React.ReactNode[] = []
+
+  for (let i = 0; i < lexData.length; i++) {
+    const token = lexData[i]
+
+    const parsedToken = parseMarkedToken(token)
+    processedTokens = [...processedTokens, ...parsedToken]
+  }
+
+  return processedTokens
+}
+
+const MarkedTextComponent: React.FC<OwnProps> = ({ children }: OwnProps) => {
+  if (children != null && typeof children === 'string') {
+    const parsedText = parseMarkedText(children)
+    return <>{parsedText}</>
+  } else {
+    return <></>
+  }
 }
 
 export const MarkedText = memo(MarkedTextComponent)
