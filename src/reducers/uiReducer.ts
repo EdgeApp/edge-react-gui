@@ -1,13 +1,13 @@
 import { combineReducers, Reducer } from 'redux'
 
-import { ExchangeInfo } from '../../actions/ExchangeInfoActions'
-import { exchangeInfo } from '../../reducers/ExchangeInfoReducer'
-import { fio, FioState } from '../../reducers/FioReducer'
-import { passwordReminder, PasswordReminderState } from '../../reducers/PasswordReminderReducer'
-import { scenes, ScenesState } from '../../reducers/scenes/ScenesReducer'
-import { settings, SettingsState } from '../../reducers/scenes/SettingsReducer'
-import { wallets, WalletsState } from '../../reducers/scenes/WalletsReducer'
-import { Action } from '../../types/reduxTypes'
+import { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import { Action } from '../types/reduxTypes'
+import { exchangeInfo } from './ExchangeInfoReducer'
+import { fio, FioState } from './FioReducer'
+import { passwordReminder, PasswordReminderState } from './PasswordReminderReducer'
+import { scenes, ScenesState } from './scenes/ScenesReducer'
+import { settings, SettingsState } from './scenes/SettingsReducer'
+import { wallets, WalletsState } from './scenes/WalletsReducer'
 
 export interface UiState {
   readonly exchangeInfo: ExchangeInfo

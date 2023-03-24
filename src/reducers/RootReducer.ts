@@ -3,7 +3,6 @@ import { combineReducers } from 'redux'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { actionQueue, ActionQueueState } from '../controllers/action-queue/redux/reducers'
 import { loanManager, LoanManagerState } from '../controllers/loan-manager/redux/reducers'
-import { ui, UiState } from '../modules/UI/reducer'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Action } from '../types/reduxTypes'
 import { DeviceReferral } from '../types/ReferralTypes'
@@ -13,6 +12,7 @@ import { core, CoreState } from './CoreReducer'
 import { cryptoExchange, CryptoExchangeState } from './CryptoExchangeReducer'
 import { network, NetworkState } from './NetworkReducer'
 import { permissions, PermissionsState } from './PermissionsReducer'
+import { ui, UiState } from './uiReducer'
 
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 
