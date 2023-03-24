@@ -800,6 +800,7 @@ const SendComponent = (props: Props) => {
       playSendSound().catch(error => console.log(error)) // Fail quietly
 
       if (onDone) {
+        navigation.pop()
         onDone(null, broadcastedTx)
       } else {
         navigation.replace('transactionDetails', {
