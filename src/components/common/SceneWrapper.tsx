@@ -50,40 +50,20 @@ interface Props {
  *
  * Also draws a common gradient background under the scene.
  */
-export class SceneWrapper extends React.Component<Props> {
-  render() {
-    const { avoidKeyboard = false, hasHeader = true, hasTabs = false } = this.props
+export function SceneWrapper(props: Props): JSX.Element {
+  const {
+    avoidKeyboard = false,
+    background = 'theme',
+    bodySplit = 0,
+    children,
+    hasHeader = true,
+    hasTabs = false,
+    keyboardShouldPersistTaps,
+    padding = 0,
+    scroll = false
+  } = props
 
-    return (
-      <LayoutContext>
-        {metrics => {
-          const { safeAreaInsets } = metrics
-          const gap = {
-            ...safeAreaInsets,
-            bottom: hasTabs ? 0 : safeAreaInsets.bottom,
-            top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
-          }
-          const downValue = metrics.layout.height - gap.top
-          const upValue = (keyboardHeight: number) => downValue - keyboardHeight
-
-          return avoidKeyboard ? (
-            <KeyboardTracker downValue={downValue} upValue={upValue}>
-              {(keyboardAnimation, keyboardLayout) => this.renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
-            </KeyboardTracker>
-          ) : (
-            this.renderScene(gap, null, 0)
-          )
-        }}
-      </LayoutContext>
-    )
-  }
-
-  /**
-   * Render the scene wrapper component, given various items from the context.
-   */
-  renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false, keyboardShouldPersistTaps } = this.props
-
+  const renderScene = (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
     const scene =
@@ -109,6 +89,29 @@ export class SceneWrapper extends React.Component<Props> {
       </Gradient>
     )
   }
+
+  return (
+    <LayoutContext>
+      {metrics => {
+        const { safeAreaInsets } = metrics
+        const gap = {
+          ...safeAreaInsets,
+          bottom: hasTabs ? 0 : safeAreaInsets.bottom,
+          top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
+        }
+        const downValue = metrics.layout.height - gap.top
+        const upValue = (keyboardHeight: number) => downValue - keyboardHeight
+
+        return avoidKeyboard ? (
+          <KeyboardTracker downValue={downValue} upValue={upValue}>
+            {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+          </KeyboardTracker>
+        ) : (
+          renderScene(gap, null, 0)
+        )
+      }}
+    </LayoutContext>
+  )
 }
 
 const styles = StyleSheet.create({
