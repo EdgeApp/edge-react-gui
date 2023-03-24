@@ -16,9 +16,45 @@ type Props = StateProps & DispatchProps
 
 const merchantPartners = [
   {
-    givenName: 'ShapeShift',
+    givenName: 'Bitrefill',
     hasThumbnail: true,
-    thumbnailPath: 'shapeshift.png',
+    thumbnailPath: 'bitrefill.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Bits of Gold',
+    hasThumbnail: true,
+    thumbnailPath: 'bits-of-gold-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Change NOW',
+    hasThumbnail: true,
+    thumbnailPath: 'changenow.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'ChangeHero',
+    hasThumbnail: true,
+    thumbnailPath: 'changehero.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -52,81 +88,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Change NOW',
+    givenName: 'Exolix',
     hasThumbnail: true,
-    thumbnailPath: 'changenow.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Simplex',
-    hasThumbnail: true,
-    thumbnailPath: 'simplex.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Thorchain',
-    hasThumbnail: true,
-    thumbnailPath: 'thorchain.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Thorchain DEX Aggregator',
-    hasThumbnail: true,
-    thumbnailPath: 'thorchain.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Wyre',
-    hasThumbnail: true,
-    thumbnailPath: 'wyre.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Bitrefill',
-    hasThumbnail: true,
-    thumbnailPath: 'bitrefill.png',
-    emailAddresses: [],
-    postalAddresses: [],
-    middleName: '',
-    company: '',
-    jobTitle: '',
-    familyName: '',
-    recordID: ''
-  },
-  {
-    givenName: 'Godex',
-    hasThumbnail: true,
-    thumbnailPath: 'godex.png',
+    thumbnailPath: 'exolix-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -148,9 +112,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Bits of Gold',
+    givenName: 'Godex',
     hasThumbnail: true,
-    thumbnailPath: 'bits-of-gold-logo.png',
+    thumbnailPath: 'godex.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -160,9 +124,57 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Totle',
+    givenName: 'LetsExchange',
     hasThumbnail: true,
-    thumbnailPath: 'totle-logo.png',
+    thumbnailPath: 'letsexchange-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'LI.FI',
+    hasThumbnail: true,
+    thumbnailPath: 'lifi.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'ShapeShift',
+    hasThumbnail: true,
+    thumbnailPath: 'shapeshift.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'SideShift.ai',
+    hasThumbnail: true,
+    thumbnailPath: 'sideshift-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
+    givenName: 'Simplex',
+    hasThumbnail: true,
+    thumbnailPath: 'simplex.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -196,9 +208,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'Exolix',
+    givenName: 'Thorchain',
     hasThumbnail: true,
-    thumbnailPath: 'exolix-logo.png',
+    thumbnailPath: 'thorchain.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -208,9 +220,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'LetsExchange',
+    givenName: 'Thorchain DEX Aggregator',
     hasThumbnail: true,
-    thumbnailPath: 'letsexchange-logo.png',
+    thumbnailPath: 'thorchain.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -220,9 +232,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'SideShift.ai',
+    givenName: 'Totle',
     hasThumbnail: true,
-    thumbnailPath: 'sideshift-logo.png',
+    thumbnailPath: 'totle-logo.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
@@ -232,9 +244,9 @@ const merchantPartners = [
     recordID: ''
   },
   {
-    givenName: 'ChangeHero',
+    givenName: 'Wyre',
     hasThumbnail: true,
-    thumbnailPath: 'changehero.png',
+    thumbnailPath: 'wyre.png',
     emailAddresses: [],
     postalAddresses: [],
     middleName: '',
