@@ -914,6 +914,11 @@ const strings = {
   fio_address_to_transfer: 'Address to Transfer',
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
+  fio_free_handle_congrats: 'Congrats on creating your Edge account!',
+  fio_free_handle_title_m: 'Get a *FIO* Handle',
+  fio_free_handle_message: 'Give your wallet an easy-to-read handle to simplify sending/receiving transactions.',
+  get_started_button: 'Get Started',
+  not_now_button: 'Not Now',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
   enter_any_title: 'Enter any of the following:',
   enter_any_body:
