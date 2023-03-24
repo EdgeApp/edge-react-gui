@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getHeaderHeight, THEME } from '../../theme/variables/airbitz'
+import { useTheme } from '../services/ThemeContext'
 import { KeyboardTracker } from './KeyboardTracker'
 import { LayoutContext, SafeAreaGap } from './LayoutContext'
 
@@ -61,6 +62,7 @@ export function SceneWrapper(props: Props): JSX.Element {
     padding = 0,
     scroll = false
   } = props
+  const theme = useTheme()
 
   const renderScene = (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
     // Render the scene container:
@@ -79,10 +81,10 @@ export function SceneWrapper(props: Props): JSX.Element {
     // Render the background, if any:
     if (background === 'none') return scene
     return (
-      <Gradient style={styles.gradient}>
+      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
         {background !== 'legacy' ? null : <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
-      </Gradient>
+      </LinearGradient>
     )
   }
 
