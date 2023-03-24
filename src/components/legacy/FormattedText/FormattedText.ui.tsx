@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Text, TextStyle } from 'react-native'
 
-import { scale } from '../../../../util/scaling'
+import { scale } from '../../../util/scaling'
 import { styles } from './style'
 
 interface Props {

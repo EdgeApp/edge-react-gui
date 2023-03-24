@@ -1,4 +1,4 @@
-import { THEME } from '../../../../theme/variables/airbitz'
+import { THEME } from '../../../theme/variables/airbitz'
 export const styles = {
   defaultStyle: {
     fontFamily: THEME.FONTS.DEFAULT
