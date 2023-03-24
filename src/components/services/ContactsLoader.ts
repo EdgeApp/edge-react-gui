@@ -136,6 +136,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'LI.FI',
+    hasThumbnail: true,
+    thumbnailPath: 'lifi.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'ShapeShift',
     hasThumbnail: true,
     thumbnailPath: 'shapeshift.png',
