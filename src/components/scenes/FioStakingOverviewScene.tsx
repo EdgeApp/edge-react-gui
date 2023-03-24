@@ -103,7 +103,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const fiatStaked = ` (${fiatSymbol}${stakingFiatBalanceFormat} ${fiatCurrencyCode})`
 
   return (
-    <SceneWrapper background="header" hasTabs={false}>
+    <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_overview_header, currencyCode)} underline withTopMargin>
         <Image style={styles.currencyLogo} source={fioLogo} />
       </SceneHeader>

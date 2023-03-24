@@ -8,7 +8,6 @@ import { LayoutContext, SafeAreaGap } from './LayoutContext'
 
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
-  | 'header' // Dark header area covers the screen
   | 'legacy' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
 
@@ -79,9 +78,6 @@ export function SceneWrapper(props: Props): JSX.Element {
 
     // Render the background, if any:
     if (background === 'none') return scene
-    if (background === 'theme') {
-      return <Gradient style={styles.gradient}>{scene}</Gradient>
-    }
     return (
       <Gradient style={styles.gradient}>
         {background !== 'legacy' ? null : <View style={[styles.body, { top: gap.top + bodySplit }]} />}

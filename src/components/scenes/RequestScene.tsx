@@ -309,7 +309,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     return keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
-      <SceneWrapper background="header" hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <View style={styles.container}>
           <View style={styles.requestContainer}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
