@@ -9,7 +9,7 @@ export function ExtraTabScene() {
   const { webviewUrl } = config.extraTab
 
   return (
-    <SceneWrapper background="body" avoidKeyboard>
+    <SceneWrapper background="legacy" avoidKeyboard>
       <WebView
         allowFileAccess
         allowUniversalAccessFromFileURLs
