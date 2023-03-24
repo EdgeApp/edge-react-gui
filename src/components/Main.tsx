@@ -806,7 +806,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <Tab.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
@@ -824,7 +824,7 @@ const EdgeExchangeTabScreen = () => {
   const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="exchange" screenOptions={defaultScreenOptions}>
-      <Tab.Screen
+      <Stack.Screen
         name="exchange"
         component={CryptoExchangeScene}
         options={firstSceneScreenOptions}
@@ -849,7 +849,7 @@ const EdgeMarketsTabScreen = () => {
   const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="coinRanking" screenOptions={defaultScreenOptions}>
-      <Tab.Screen
+      <Stack.Screen
         name="coinRanking"
         component={CoinRankingScene}
         options={firstSceneScreenOptions}
