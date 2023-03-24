@@ -4,6 +4,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, J
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
+import { FioCreateHandleConfirmationProps } from '../components/scenes/Fio/FioCreateHandleConfirmationScene'
 import { PluginListProps } from '../components/scenes/GuiPluginListScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
@@ -139,6 +140,8 @@ interface RouteParamList {
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
+  fioCreateHandle: {}
+  fioCreateHandleConfirmation: FioCreateHandleConfirmationProps
   fioAddressDetails: {
     fioAddressName: string
     bundledTxs: number

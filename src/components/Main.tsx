@@ -57,6 +57,8 @@ import { FioAddressRegisterScene as FioAddressRegisterSceneComponent } from './s
 import { FioAddressRegisterSelectWalletScene as FioAddressRegisterSelectWalletSceneComponent } from './scenes/Fio/FioAddressRegisterSelectWalletScene'
 import { FioAddressSettingsScene as FioAddressSettingsSceneComponent } from './scenes/Fio/FioAddressSettingsScene'
 import { FioConnectWalletConfirmScene as FioConnectWalletConfirmSceneComponent } from './scenes/Fio/FioConnectWalletConfirmScene'
+import { FioCreateHandleConfirmationScene as FioCreateHandleConfirmationSceneComponent } from './scenes/Fio/FioCreateHandleConfirmationScene'
+import { FioCreateHandleScene as FioCreateHandleSceneComponent } from './scenes/Fio/FioCreateHandleScene'
 import { FioDomainRegisterScene as FioDomainRegisterSceneComponent } from './scenes/Fio/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene as FioDomainRegisterSelectWalletSceneComponent } from './scenes/Fio/FioDomainRegisterSelectWalletScene'
 import { FioDomainSettingsScene as FioDomainSettingsSceneComponent } from './scenes/Fio/FioDomainSettingsScene'
@@ -142,6 +144,8 @@ const FioAddressRegisterScene = ifLoggedIn(FioAddressRegisterSceneComponent)
 const FioAddressRegisterSelectWalletScene = ifLoggedIn(FioAddressRegisterSelectWalletSceneComponent)
 const FioAddressSettingsScene = ifLoggedIn(FioAddressSettingsSceneComponent)
 const FioConnectWalletConfirmScene = ifLoggedIn(FioConnectWalletConfirmSceneComponent)
+const FioCreateHandleScene = ifLoggedIn(FioCreateHandleSceneComponent)
+const FioCreateHandleConfirmationScene = ifLoggedIn(FioCreateHandleConfirmationSceneComponent)
 const FioDomainRegisterScene = ifLoggedIn(FioDomainRegisterSceneComponent)
 const FioDomainRegisterSelectWalletScene = ifLoggedIn(FioDomainRegisterSelectWalletSceneComponent)
 const FioDomainSettingsScene = ifLoggedIn(FioDomainSettingsSceneComponent)
@@ -457,6 +461,20 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="fioConnectToWalletsConfirm"
         component={FioConnectWalletConfirmScene}
+        options={{
+          title: s.strings.title_fio_connect_to_wallet
+        }}
+      />
+      <Stack.Screen
+        name="fioCreateHandle"
+        component={FioCreateHandleScene}
+        options={{
+          title: s.strings.title_fio_connect_to_wallet
+        }}
+      />
+      <Stack.Screen
+        name="fioCreateHandleConfirmation"
+        component={FioCreateHandleConfirmationScene}
         options={{
           title: s.strings.title_fio_connect_to_wallet
         }}

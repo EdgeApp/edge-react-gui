@@ -10,6 +10,10 @@ import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
+console.log = () => {}
+console.info = () => {}
+// console.warn = () => {}
+
 Bugsnag.start({
   // @ts-expect-error
   apiKey: ENV.BUGSNAG_API_KEY,

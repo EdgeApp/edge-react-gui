@@ -8,6 +8,7 @@ import { createCurrencyWallet } from './CreateWalletActions'
 
 export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {
   return async (dispatch, getState) => {
+    console.debug('createFioWallet')
     const state = getState()
     const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
     return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode))
@@ -16,6 +17,7 @@ export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {
 
 export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    console.debug('refreshAllFioAddresses')
     dispatch({
       type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
     })
