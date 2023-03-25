@@ -18,9 +18,6 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 interface Props {
   navigation: NavigationProp<'walletList'>
 
-  // Open the row for demo purposes:
-  openTutorial?: boolean
-
   token?: EdgeToken
   tokenId?: string
   wallet: EdgeCurrencyWallet
@@ -31,19 +28,12 @@ interface Props {
  * which can be swiped to reveal or activate various options.
  */
 function WalletListSwipeableCurrencyRowComponent(props: Props) {
-  const { navigation, openTutorial = false, token, tokenId, wallet } = props
+  const { navigation, token, tokenId, wallet } = props
 
   const rowRef = React.useRef<SwipableRowRef>(null)
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  // Tutorial mode:
-  React.useEffect(() => {
-    if (openTutorial && rowRef.current != null) {
-      rowRef.current.openRight()
-    }
-  }, [openTutorial])
 
   // callbacks -----------------------------------------------------------
 
