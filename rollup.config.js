@@ -1,7 +1,11 @@
+import typescript from '@rollup/plugin-typescript'
 import resolve from 'rollup-plugin-node-resolve'
 
 export default {
-  input: './src/util/bridge/bridge.js',
-  output: { file: './src/util/bridge/rolledUp.js', format: 'cjs' },
-  plugins: [resolve()]
+  input: './src/controllers/edgeProvider/client/edgeProviderBridge.ts',
+  output: {
+    file: './src/controllers/edgeProvider/client/rolledUp.js',
+    format: 'iife'
+  },
+  plugins: [typescript(), resolve()]
 }

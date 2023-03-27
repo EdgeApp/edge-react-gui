@@ -1,92 +1,37 @@
 import { abs } from 'biggystring'
-import { asArray, asEither, asObject, asOptional, asString } from 'cleaners'
-import {
-  EdgeCurrencyWallet,
-  EdgeMetadata,
-  EdgeNetworkFee,
-  EdgeParsedUri,
-  EdgeReceiveAddress,
-  EdgeSpendInfo,
-  EdgeSpendTarget,
-  EdgeTransaction,
-  JsonObject
-} from 'edge-core-js'
+import { asArray, asEither, asObject, asOptional, asString, Cleaner } from 'cleaners'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
-import { Bridgeable, update } from 'yaob'
 
-import { launchPaymentProto } from '../../../../actions/PaymentProtoActions'
-import { trackConversion } from '../../../../actions/TrackingActions'
-import { ButtonsModal } from '../../../../components/modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../../../components/modals/WalletListModal'
-import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance'
-import s from '../../../../locales/strings'
-import { GuiPlugin } from '../../../../types/GuiPluginTypes'
-import { Dispatch, RootState } from '../../../../types/reduxTypes'
-import { NavigationBase } from '../../../../types/routerTypes'
-import { EdgeTokenId, MapObject } from '../../../../types/types'
-import { UriQueryMap } from '../../../../types/WebTypes'
-import { getCurrencyIconUris } from '../../../../util/CdnUris'
-import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
-import { getWalletName } from '../../../../util/CurrencyWalletHelpers'
-import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
-
-interface WalletDetails {
-  name: string
-  pluginId?: string
-  receiveAddress: {
-    publicAddress: string
-  }
-  chainCode: string
-  currencyCode: string
-  fiatCurrencyCode: string
-  currencyIcon: string
-  currencyIconDark: string
-}
-
-interface EdgeRequestSpendOptions {
-  // Specify the currencyCode to spend to this URI. Required for spending tokens
-  currencyCode?: string
-
-  // This overrides any parameters specified in a URI such as label or message
-  metadata?: EdgeMetadata
-  networkFeeOption?: 'low' | 'standard' | 'high'
-
-  // If true, do not allow the user to change the amount to spend
-  lockInputs?: boolean
-
-  // Do not broadcast transaction
-  signOnly?: boolean
-
-  // Additional identifier such as a payment ID for Monero or destination tag for Ripple/XRP
-  // This overrides any parameters specified in a URI
-  uniqueIdentifier?: string
-
-  customNetworkFee?: EdgeNetworkFee
-  orderId?: string
-}
-
-interface EdgeGetReceiveAddressOptions {
-  // Metadata to tag these addresses with for when funds arrive at the address
-  metadata?: EdgeMetadata
-}
-
-interface EdgeGetWalletHistoryResult {
-  fiatCurrencyCode: string // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
-  balance: string // the current balance of wallet in the native amount units. I.e. "satoshis"
-  transactions: EdgeTransaction[]
-}
-
-export interface EdgeProviderSpendTarget {
-  exchangeAmount?: string
-  nativeAmount?: string
-  publicAddress?: string
-  otherParams?: JsonObject
-}
+import { launchPaymentProto } from '../../actions/PaymentProtoActions'
+import { trackConversion } from '../../actions/TrackingActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
+import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import s from '../../locales/strings'
+import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { Dispatch } from '../../types/reduxTypes'
+import { NavigationBase } from '../../types/routerTypes'
+import { EdgeTokenId, MapObject } from '../../types/types'
+import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../util/utils'
+import {
+  EdgeGetReceiveAddressOptions,
+  EdgeGetWalletHistoryResult,
+  EdgeProviderDeepLink,
+  EdgeProviderMethods,
+  EdgeProviderSpendTarget,
+  EdgeRequestSpendOptions,
+  ExtendedCurrencyCode,
+  WalletDetails
+} from './types/edgeProviderTypes'
 
 const asEdgeTokenIdExtended = asObject({
   pluginId: asString,
@@ -94,64 +39,53 @@ const asEdgeTokenIdExtended = asObject({
   currencyCode: asOptional(asString)
 })
 
-const asCurrencyCodesArray = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
-type ExtendedCurrencyCode = string | ReturnType<typeof asEdgeTokenIdExtended>
+const asCurrencyCodesArray: Cleaner<ExtendedCurrencyCode[] | undefined> = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
 
-export class EdgeProvider extends Bridgeable {
+export class EdgeProviderServer implements EdgeProviderMethods {
   // Private properties:
-  _plugin: GuiPlugin
+  _account: EdgeAccount
   _dispatch: Dispatch
-  _state: RootState
   _navigation: NavigationBase
-  _selectedWallet: EdgeCurrencyWallet | undefined
+  _plugin: GuiPlugin
+  _reloadWebView: () => void
   _selectedTokenId: string | undefined
+  _selectedWallet: EdgeCurrencyWallet | undefined
 
   // Public properties:
-  deepPath: string | undefined
-  deepQuery: UriQueryMap | undefined
-  promoCode: string | undefined
-  restartPlugin: () => void
+  deepLink: EdgeProviderDeepLink
 
-  constructor(
-    navigation: NavigationBase,
-    plugin: GuiPlugin,
-    state: RootState,
-    dispatch: Dispatch,
-    restartPlugin: () => void,
-    deepPath?: string,
-    deepQuery?: UriQueryMap,
-    promoCode?: string
-  ) {
-    super()
-    this._plugin = plugin
+  constructor(opts: {
+    account: EdgeAccount
+    deepLink: EdgeProviderDeepLink
+    dispatch: Dispatch
+    navigation: NavigationBase
+    plugin: GuiPlugin
+    reloadWebView: () => void
+    selectedTokenId?: string
+    selectedWallet?: EdgeCurrencyWallet
+  }) {
+    const { account, deepLink, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
+
+    this._account = account
     this._dispatch = dispatch
-    this._state = state
     this._navigation = navigation
-
-    this.deepPath = deepPath
-    this.deepQuery = deepQuery
-    this.promoCode = promoCode
-    this.restartPlugin = restartPlugin
-    const { currencyWallets } = this._state.core.account
-    this._selectedWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    this._selectedTokenId =
-      this._selectedWallet == null
-        ? undefined
-        : getTokenId(this._state.core.account, this._selectedWallet.currencyInfo.pluginId, this._state.ui.wallets.selectedCurrencyCode)
+    this._plugin = plugin
+    this._reloadWebView = reloadWebView
+    this._selectedTokenId = selectedTokenId
+    this._selectedWallet = selectedWallet
+    this.deepLink = deepLink
   }
 
-  _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
-    this._state = state
-    this.deepPath = deepPath
-    this.deepQuery = deepQuery
-    this.promoCode = promoCode
-    update(this)
+  async getDeepLink(): Promise<EdgeProviderDeepLink> {
+    return this.deepLink
   }
 
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: ExtendedCurrencyCode[] | undefined): Promise<ExtendedCurrencyCode> {
+  async chooseCurrencyWallet(allowedCurrencyCodes?: ExtendedCurrencyCode[]): Promise<ExtendedCurrencyCode> {
+    const account = this._account
+
     // Sanity-check our untrusted input:
     asCurrencyCodesArray(allowedCurrencyCodes)
 
@@ -162,7 +96,7 @@ export class EdgeProvider extends Bridgeable {
       throw new Error('Cannot mix string and object currency specifiers')
     }
 
-    const allowedAssets = upgradeExtendedCurrencyCodes(this._state.core.account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
+    const allowedAssets = upgradeExtendedCurrencyCodes(account.currencyConfig, this._plugin.fixCurrencyCodes, allowedCurrencyCodes)
     if (allowedAssets == null) {
       throw new Error('No allowed assets specified')
     }
@@ -179,12 +113,12 @@ export class EdgeProvider extends Bridgeable {
 
     const { walletId, currencyCode } = selectedWallet
     if (walletId && currencyCode) {
-      this._selectedWallet = this._state.core.account.currencyWallets[walletId]
+      this._selectedWallet = account.currencyWallets[walletId]
       if (this._selectedWallet == null) throw new Error(`Missing wallet for walletId`)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
-      const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
+      const tokenId = getTokenId(account, pluginId, currencyCode)
       this._selectedTokenId = tokenId
 
       const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
@@ -215,12 +149,12 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Get an address from the user's wallet
-  async getReceiveAddress(options: EdgeGetReceiveAddressOptions): Promise<EdgeReceiveAddress> {
+  async getReceiveAddress(options: EdgeGetReceiveAddressOptions = {}): Promise<EdgeReceiveAddress> {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
     const receiveAddress = await wallet.getReceiveAddress()
-    if (options && options.metadata) {
+    if (options.metadata != null) {
       receiveAddress.metadata = options.metadata
     }
     return receiveAddress
@@ -250,11 +184,11 @@ export class EdgeProvider extends Bridgeable {
     return Promise.resolve(returnObject)
   }
 
-  openURL(url: string): void {
+  async openURL(url: string): Promise<void> {
     Linking.openURL(url)
   }
 
-  openEmailApp(emailAddress: string) {
+  async openEmailApp(emailAddress: string): Promise<void> {
     Mailer.mail(
       {
         subject: '',
@@ -268,14 +202,14 @@ export class EdgeProvider extends Bridgeable {
     )
   }
 
-  consoleLog(arg: any): void {
+  async consoleLog(arg: any): Promise<void> {
     console.log('EP: BridgeLog', arg)
   }
 
   // Write data to user's account. This data is encrypted and persisted in their Edge
   // account and transferred between devices
-  async writeData(data: { [key: string]: string | undefined }) {
-    const { account } = this._state.core
+  async writeData(data: { [key: string]: string | undefined }): Promise<void> {
+    const account = this._account
     const store = account.dataStore
     console.log('edgeProvider writeData: ', JSON.stringify(data))
     await Promise.all(
@@ -289,14 +223,13 @@ export class EdgeProvider extends Bridgeable {
       })
     )
     console.log('edgeProvider writeData Success')
-    return { success: true }
   }
 
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
   async readData(keys: string[]): Promise<MapObject<string | undefined>> {
-    const { account } = this._state.core
+    const account = this._account
     const store = account.dataStore
     const returnObj: MapObject<string | undefined> = {}
     for (const key of keys) {
@@ -366,7 +299,13 @@ export class EdgeProvider extends Bridgeable {
       if (exchangeAmount != null) {
         nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
       }
-      spendTargets.push({ publicAddress, nativeAmount, otherParams, memo: uniqueIdentifier, uniqueIdentifier })
+      spendTargets.push({
+        publicAddress,
+        nativeAmount,
+        otherParams: otherParams as JsonObject,
+        memo: uniqueIdentifier,
+        uniqueIdentifier
+      })
     }
 
     const spendInfo: EdgeSpendInfo = {
@@ -381,6 +320,7 @@ export class EdgeProvider extends Bridgeable {
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     console.log(`requestSpendUri ${uri}`)
+    const account = this._account
     const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     const tokenId = this._selectedTokenId
@@ -396,7 +336,7 @@ export class EdgeProvider extends Bridgeable {
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
-      await launchPaymentProto(this._navigation, this._state.core.account, result.paymentProtocolURL, {
+      await launchPaymentProto(this._navigation, account, result.paymentProtocolURL, {
         currencyCode,
         wallet: this._selectedWallet,
         metadata
@@ -460,6 +400,8 @@ export class EdgeProvider extends Bridgeable {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
+          this._navigation.pop()
+
           wallet
             .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
             .then(exchangeAmount => {
@@ -493,7 +435,7 @@ export class EdgeProvider extends Bridgeable {
     return signedMessage
   }
 
-  hasSafariView(): boolean {
+  async hasSafariView(): Promise<boolean> {
     return true
   }
 
@@ -574,12 +516,16 @@ export class EdgeProvider extends Bridgeable {
     else CustomTabs.openURL(url)
   }
 
-  async displayError(error: Error | string) {
+  async displayError(error: Error | string): Promise<void> {
     showError(error)
   }
 
-  async displayToast(arg: string) {
+  async displayToast(arg: string): Promise<void> {
     showToast(arg)
+  }
+
+  async restartPlugin(): Promise<void> {
+    this._reloadWebView()
   }
 }
 
