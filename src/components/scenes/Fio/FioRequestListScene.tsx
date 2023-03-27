@@ -608,7 +608,7 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     fioWallets: state.ui.wallets.fioWallets,
-    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    fioAddresses: state.ui.fioAddress.fioAddresses,
     currencyWallets: state.core.account.currencyWallets,
     isConnected: state.network.isConnected
   }),

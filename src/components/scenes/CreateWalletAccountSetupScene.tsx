@@ -198,8 +198,8 @@ const styles = StyleSheet.create({
 
 export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
-    isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
-    handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus,
+    isCheckingHandleAvailability: state.ui.createWallet.isCheckingHandleAvailability,
+    handleAvailableStatus: state.ui.createWallet.handleAvailableStatus,
     currencyConfigs: state.core.account.currencyConfig
   }),
   (dispatch, { route: { params } }) => ({

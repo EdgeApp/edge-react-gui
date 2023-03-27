@@ -219,7 +219,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const DomainListModal = connect<StateProps, {}, OwnProps>(
   state => ({
-    userDomains: state.ui.scenes.fioAddress.fioDomains,
+    userDomains: state.ui.fioAddress.fioDomains,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio
   }),

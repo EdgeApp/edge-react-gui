@@ -223,10 +223,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioAddressListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
-    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-    fioDomains: state.ui.scenes.fioAddress.fioDomains,
+    fioAddresses: state.ui.fioAddress.fioAddresses,
+    fioDomains: state.ui.fioAddress.fioDomains,
     fioWallets: state.ui.wallets.fioWallets,
-    loading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    loading: state.ui.fioAddress.fioAddressesLoading,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

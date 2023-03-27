@@ -688,23 +688,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
+    const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.sendConfirmation
 
     return {
       account: state.core.account,
-      authRequired: state.ui.scenes.sendConfirmation.authRequired,
+      authRequired: state.ui.sendConfirmation.authRequired,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
       exchangeRates: state.exchangeRates,
       nativeAmount,
-      pin: state.ui.scenes.sendConfirmation.pin,
+      pin: state.ui.sendConfirmation.pin,
       sliderDisabled: !transaction,
       transaction,
       transactionMetadata,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
-      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,
+      maxSpendSet: state.ui.sendConfirmation.maxSpendSet,
       currencyWallets: state.core.account.currencyWallets
     }
   },

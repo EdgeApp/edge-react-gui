@@ -178,7 +178,7 @@ export function createAccountTransaction(
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
-    const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const { paymentAddress, amount, currencyCode } = state.ui.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)

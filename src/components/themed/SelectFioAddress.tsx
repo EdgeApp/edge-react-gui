@@ -270,7 +270,7 @@ export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
 
     return {
       loading: selectedWallet == null || !currencyCode,
-      fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      fioAddresses: state.ui.fioAddress.fioAddresses,
       fioWallets: state.ui.wallets.fioWallets,
       currencyCode,
       selectedWalletId: selectedWallet.id

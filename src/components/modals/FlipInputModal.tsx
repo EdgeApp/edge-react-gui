@@ -347,7 +347,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       exchangeDenomination: fiatDenomination
     }
 
-    const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
+    const { forceUpdateGuiCounter, nativeAmount } = state.ui.sendConfirmation
     const overridePrimaryExchangeAmount = div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
@@ -356,13 +356,13 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const transactionFee = convertTransactionFeeToDisplayFee(
       wallet,
       state.exchangeRates,
-      state.ui.scenes.sendConfirmation.transaction,
+      state.ui.sendConfirmation.transaction,
       feeDisplayDenomination,
       feeExchangeDenomination
     )
 
     // Error
-    const error = state.ui.scenes.sendConfirmation.error
+    const error = state.ui.sendConfirmation.error
     let errorMessage
     if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && asMaybeNoAmountSpecifiedError(error) == null) {
       errorMessage = error.message

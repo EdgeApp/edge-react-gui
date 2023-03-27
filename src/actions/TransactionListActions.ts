@@ -21,9 +21,9 @@ export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 export function fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean): ThunkAction<void> {
   return (dispatch, getState) => {
     const state: RootState = getState()
-    const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
-    let { currentEndIndex } = state.ui.scenes.transactionList
-    const { transactions } = state.ui.scenes.transactionList
+    const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.transactionList
+    let { currentEndIndex } = state.ui.transactionList
+    const { transactions } = state.ui.transactionList
     let existingTransactions = transactions
     const walletTransactionsCount = numTransactions
     // if we are resetting then start over
@@ -81,8 +81,8 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   // @ts-expect-error
   if (options && options.startIndex > 0) {
     // then insert the already-loaded transactions into the master array of transactions
-    transactionsWithKeys = [...state.ui.scenes.transactionList.transactions] // start off with previous values included
-    transactionIdMap = { ...state.ui.scenes.transactionList.transactionIdMap }
+    transactionsWithKeys = [...state.ui.transactionList.transactions] // start off with previous values included
+    transactionIdMap = { ...state.ui.transactionList.transactionIdMap }
   }
   try {
     const numTransactions = await wallet.getNumTransactions({ currencyCode }) // get number of transactions on wallet
@@ -150,7 +150,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
     const exchangeRate = state.exchangeRates[`${edgeTransaction.currencyCode}_${wallet.fiatCurrencyCode}`]
-    const currentViewableTransactions = state.ui.scenes.transactionList.transactions
+    const currentViewableTransactions = state.ui.transactionList.transactions
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const spamFilterOn = state.ui.settings.spamFilterOn
@@ -173,7 +173,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
     }
     const options = {
       startIndex: 0,
-      startEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
+      startEntries: state.ui.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
     }
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
@@ -196,10 +196,10 @@ export function fetchTransactions(
     const state: RootState = getState()
     let startEntries, startIndex
     if (options) {
-      startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1
+      startEntries = options.startEntries || state.ui.transactionList.currentEndIndex + 1
       startIndex = options.startIndex || 0
     } else {
-      startEntries = state.ui.scenes.transactionList.currentEndIndex + 1
+      startEntries = state.ui.transactionList.currentEndIndex + 1
       startIndex = 0
     }
     getAndMergeTransactions(state, dispatch, walletId, currencyCode, {

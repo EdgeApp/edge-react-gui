@@ -360,8 +360,8 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     const { currencyWallets } = state.core.account
     const { existingWalletId } = params
 
-    const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
-    const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const handleActivationInfo = state.ui.createWallet.handleActivationInfo
+    const walletAccountActivationPaymentInfo = state.ui.createWallet.walletAccountActivationPaymentInfo
     const { supportedAssets, activationCost } = handleActivationInfo
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
@@ -375,7 +375,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     } else {
       paymentDenominationSymbol = ''
     }
-    const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
+    const walletAccountActivationQuoteError = state.ui.createWallet.walletAccountActivationQuoteError
     return {
       account: state.core.account,
       paymentCurrencyCode: currencyCode,

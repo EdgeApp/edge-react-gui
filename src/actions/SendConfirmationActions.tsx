@@ -66,7 +66,7 @@ export function sendConfirmationUpdateTx(
 
     const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
-    const maxSpendSet = state.ui.scenes.sendConfirmation.maxSpendSet
+    const maxSpendSet = state.ui.sendConfirmation.maxSpendSet
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     if (maxSpendSet && isFeeChanged) guiMakeSpendInfoClone.nativeAmount = '0'
     const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
@@ -203,8 +203,8 @@ export function signBroadcastAndSave(
     const amountFiatString = abs(mul(exchangeAmount, fiatPerCrypto))
     const amountFiat = parseFloat(amountFiatString)
 
-    const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
-    const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
+    const spendInfo = state.ui.sendConfirmation.spendInfo
+    const guiMakeSpendInfo = state.ui.sendConfirmation.guiMakeSpendInfo
 
     if (guiMakeSpendInfo.beforeTransaction) {
       try {
@@ -216,7 +216,7 @@ export function signBroadcastAndSave(
 
     if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
     const authRequired = getAuthRequired(state, spendInfo, selectedWalletId)
-    const pin = state.ui.scenes.sendConfirmation.pin
+    const pin = state.ui.sendConfirmation.pin
 
     // check hwo high fee is and decide whether to display warninig
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
@@ -287,8 +287,8 @@ export function signBroadcastAndSave(
       if (spendInfo.spendTargets[0].otherParams != null) {
         payeeFioAddress = spendInfo.spendTargets[0].otherParams.fioAddress
       }
-      if (state.ui.scenes.sendConfirmation.transactionMetadata) {
-        edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
+      if (state.ui.sendConfirmation.transactionMetadata) {
+        edgeMetadata = { ...edgeMetadata, ...state.ui.sendConfirmation.transactionMetadata }
       }
       if (payeeFioAddress != null) {
         edgeMetadata.name = payeeFioAddress
@@ -442,7 +442,7 @@ export function updateTransactionAmount(nativeAmount: string, exchangeAmount: st
   return (dispatch, getState) => {
     const state = getState()
     const edgeWallet = state.core.account.currencyWallets[walletId]
-    const sceneState = state.ui.scenes.sendConfirmation
+    const sceneState = state.ui.sendConfirmation
     const isoFiatCurrencyCode = edgeWallet.fiatCurrencyCode
 
     // Spend Info
@@ -509,8 +509,8 @@ export function updateTransactionAmount(nativeAmount: string, exchangeAmount: st
   }
 }
 
-const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction ?? initialTransaction
-const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+const getTransaction = (state: RootState): EdgeTransaction => state.ui.sendConfirmation.transaction ?? initialTransaction
+const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
 
 const getNetworkFeeOption = (state: RootState): 'high' | 'standard' | 'low' | 'custom' =>
   // @ts-expect-error
@@ -524,23 +524,23 @@ const getPublicAddress = (state: RootState): string => {
       getGuiMakeSpendInfo(state).publicAddress ||
       initialState.guiMakeSpendInfo.publicAddress ||
       // @ts-expect-error
-      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      state.ui.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
       ''
     )
   } catch (e: any) {
     return ''
   }
 }
-const getNativeAmount = (state: RootState): string | undefined => state.ui.scenes.sendConfirmation.nativeAmount
+const getNativeAmount = (state: RootState): string | undefined => state.ui.sendConfirmation.nativeAmount
 
 const getUniqueIdentifier = (state: RootState): string => {
-  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+  const guiMakeSpendInfo = state.ui.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
   const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
   return uniqueIdentifier || ''
 }
 const getSpendTargetOtherParams = (state: RootState): any => {
   try {
-    const { spendInfo } = state.ui.scenes.sendConfirmation
+    const { spendInfo } = state.ui.sendConfirmation
     if (spendInfo == null) return {}
     return spendInfo.spendTargets[0].otherParams || {}
   } catch (e: any) {

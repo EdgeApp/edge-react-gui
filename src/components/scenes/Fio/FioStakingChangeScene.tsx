@@ -394,7 +394,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
       currencyWallet,
       currencyDenomination,
       currencyPlugin,
-      fioAddresses: state.ui.scenes.fioAddress.fioAddresses
+      fioAddresses: state.ui.fioAddress.fioAddresses
     }
   },
   dispatch => ({

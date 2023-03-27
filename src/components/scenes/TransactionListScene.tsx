@@ -251,8 +251,8 @@ export const TransactionList = withWallet((props: OwnProps) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
-  const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
+  const numTransactions = useSelector(state => state.ui.transactionList.numTransactions)
+  const transactions = useSelector(state => state.ui.transactionList.transactions)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
 
