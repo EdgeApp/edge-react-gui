@@ -50,7 +50,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
     const { transactionAmount, transactionIsEnabled } = this.state
 
     return (
-      <SceneWrapper background="body" hasHeader>
+      <SceneWrapper background="legacy" hasHeader>
         <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
           <TextField
             baseColor={THEME.COLORS.GRAY_2}

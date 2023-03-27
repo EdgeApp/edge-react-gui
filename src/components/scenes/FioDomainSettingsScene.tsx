@@ -164,7 +164,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { showRenew, showVisibility, showTransfer } = this.state
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         <Tile type="static" title={s.strings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
         <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showVisibility && (

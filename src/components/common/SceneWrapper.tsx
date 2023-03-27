@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getHeaderHeight, THEME } from '../../theme/variables/airbitz'
+import { useTheme } from '../services/ThemeContext'
 import { KeyboardTracker } from './KeyboardTracker'
 import { LayoutContext, SafeAreaGap } from './LayoutContext'
 
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
-  | 'header' // Dark header area covers the screen
-  | 'body' // Seprate dark header and white content areas
+  | 'legacy' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
 
 interface Props {
@@ -50,40 +50,21 @@ interface Props {
  *
  * Also draws a common gradient background under the scene.
  */
-export class SceneWrapper extends React.Component<Props> {
-  render() {
-    const { avoidKeyboard = false, hasHeader = true, hasTabs = false } = this.props
+export function SceneWrapper(props: Props): JSX.Element {
+  const {
+    avoidKeyboard = false,
+    background = 'theme',
+    bodySplit = 0,
+    children,
+    hasHeader = true,
+    hasTabs = false,
+    keyboardShouldPersistTaps,
+    padding = 0,
+    scroll = false
+  } = props
+  const theme = useTheme()
 
-    return (
-      <LayoutContext>
-        {metrics => {
-          const { safeAreaInsets } = metrics
-          const gap = {
-            ...safeAreaInsets,
-            bottom: hasTabs ? 0 : safeAreaInsets.bottom,
-            top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
-          }
-          const downValue = metrics.layout.height - gap.top
-          const upValue = (keyboardHeight: number) => downValue - keyboardHeight
-
-          return avoidKeyboard ? (
-            <KeyboardTracker downValue={downValue} upValue={upValue}>
-              {(keyboardAnimation, keyboardLayout) => this.renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
-            </KeyboardTracker>
-          ) : (
-            this.renderScene(gap, null, 0)
-          )
-        }}
-      </LayoutContext>
-    )
-  }
-
-  /**
-   * Render the scene wrapper component, given various items from the context.
-   */
-  renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false, keyboardShouldPersistTaps } = this.props
-
+  const renderScene = (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
     const scene =
@@ -99,16 +80,36 @@ export class SceneWrapper extends React.Component<Props> {
 
     // Render the background, if any:
     if (background === 'none') return scene
-    if (background === 'theme') {
-      return <Gradient style={styles.gradient}>{scene}</Gradient>
-    }
     return (
-      <Gradient style={styles.gradient}>
-        {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
+      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
+        {background !== 'legacy' ? null : <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
-      </Gradient>
+      </LinearGradient>
     )
   }
+
+  return (
+    <LayoutContext>
+      {metrics => {
+        const { safeAreaInsets } = metrics
+        const gap = {
+          ...safeAreaInsets,
+          bottom: hasTabs ? 0 : safeAreaInsets.bottom,
+          top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
+        }
+        const downValue = metrics.layout.height - gap.top
+        const upValue = (keyboardHeight: number) => downValue - keyboardHeight
+
+        return avoidKeyboard ? (
+          <KeyboardTracker downValue={downValue} upValue={upValue}>
+            {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+          </KeyboardTracker>
+        ) : (
+          renderScene(gap, null, 0)
+        )
+      }}
+    </LayoutContext>
+  )
 }
 
 const styles = StyleSheet.create({

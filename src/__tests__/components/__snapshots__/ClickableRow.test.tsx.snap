@@ -6,7 +6,25 @@ exports[`ClickableRow should render with loading props 1`] = `
   onPress={[Function]}
   underlayColor="#06090c"
 >
-  <WithTheme(GradientComponent)
+  <LinearGradient
+    colors={
+      Array [
+        "#06090c",
+        "#1b2f3b",
+      ]
+    }
+    end={
+      Object {
+        "x": 1,
+        "y": 0,
+      }
+    }
+    start={
+      Object {
+        "x": 0,
+        "y": 0,
+      }
+    }
     style={
       Array [
         Object {
@@ -39,6 +57,6 @@ exports[`ClickableRow should render with loading props 1`] = `
     }
   >
     String
-  </WithTheme(GradientComponent)>
+  </LinearGradient>
 </TouchableHighlight>
 `;

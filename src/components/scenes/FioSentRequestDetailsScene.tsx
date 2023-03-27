@@ -70,7 +70,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         <SceneHeader title={s.strings.title_fio_sent_request_details} underline />
         <View style={styles.headerSpace} />
         {this.amountField()}

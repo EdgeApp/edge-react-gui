@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
@@ -26,8 +26,11 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
     const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
     const containerStyles = [styles.rowContainer, margin, padding, underline ? styles.underline : null, autoHeight ? styles.autoHeight : null]
     if (gradient) {
-      // @ts-expect-error
-      return <Gradient style={containerStyles}>{children}</Gradient>
+      return (
+        <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={containerStyles}>
+          {children}
+        </LinearGradient>
+      )
     }
 
     return <View style={containerStyles}>{children}</View>

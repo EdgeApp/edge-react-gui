@@ -2,7 +2,7 @@
 
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 <SceneWrapper
-  background="header"
+  background="theme"
 >
   <ScrollView>
     <WithTheme(TileComponent)

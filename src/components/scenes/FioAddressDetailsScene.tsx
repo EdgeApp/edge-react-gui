@@ -107,7 +107,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const bundledTxsLabel = `${s.strings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
         {this.renderAccountSettings()}
         <SettingsHeaderRow

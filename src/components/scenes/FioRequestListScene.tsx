@@ -515,7 +515,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         {fullScreenLoader && <FullScreenLoader indicatorStyles={styles.fullScreenLoader} />}
         <View style={styles.scene}>
           <View style={styles.row}>

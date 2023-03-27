@@ -9,7 +9,7 @@ interface Props {}
 export class TermsOfServiceComponent extends React.Component<Props> {
   render() {
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <WebView source={{ uri: config.termsOfServiceSite }} />
       </SceneWrapper>
     )
