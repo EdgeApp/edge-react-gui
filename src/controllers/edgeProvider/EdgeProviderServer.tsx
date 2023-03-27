@@ -19,21 +19,21 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
-import { launchPaymentProto } from '../../../../actions/PaymentProtoActions'
-import { trackConversion } from '../../../../actions/TrackingActions'
-import { ButtonsModal } from '../../../../components/modals/ButtonsModal'
-import { WalletListModal, WalletListResult } from '../../../../components/modals/WalletListModal'
-import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance'
-import s from '../../../../locales/strings'
-import { GuiPlugin } from '../../../../types/GuiPluginTypes'
-import { Dispatch, RootState } from '../../../../types/reduxTypes'
-import { NavigationBase } from '../../../../types/routerTypes'
-import { EdgeTokenId, MapObject } from '../../../../types/types'
-import { UriQueryMap } from '../../../../types/WebTypes'
-import { getCurrencyIconUris } from '../../../../util/CdnUris'
-import { getTokenId } from '../../../../util/CurrencyInfoHelpers'
-import { getWalletName } from '../../../../util/CurrencyWalletHelpers'
-import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../../../util/utils'
+import { launchPaymentProto } from '../../actions/PaymentProtoActions'
+import { trackConversion } from '../../actions/TrackingActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
+import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import s from '../../locales/strings'
+import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { Dispatch, RootState } from '../../types/reduxTypes'
+import { NavigationBase } from '../../types/routerTypes'
+import { EdgeTokenId, MapObject } from '../../types/types'
+import { UriQueryMap } from '../../types/WebTypes'
+import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../util/utils'
 
 interface WalletDetails {
   name: string
@@ -97,7 +97,7 @@ const asEdgeTokenIdExtended = asObject({
 const asCurrencyCodesArray = asOptional(asArray(asEither(asString, asEdgeTokenIdExtended)))
 type ExtendedCurrencyCode = string | ReturnType<typeof asEdgeTokenIdExtended>
 
-export class EdgeProvider extends Bridgeable {
+export class EdgeProviderServer extends Bridgeable {
   // Private properties:
   _plugin: GuiPlugin
   _dispatch: Dispatch

@@ -4,7 +4,7 @@ import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { Bridge, onMethod } from 'yaob'
 
-import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider'
+import { EdgeProviderServer } from '../../controllers/edgeProvider/EdgeProviderServer'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { Dispatch, RootState } from '../../types/reduxTypes'
@@ -133,13 +133,13 @@ interface State {
 }
 
 interface PluginWorkerApi {
-  setEdgeProvider: (provider: EdgeProvider) => Promise<unknown>
+  setEdgeProvider: (provider: EdgeProviderServer) => Promise<unknown>
 }
 
 class GuiPluginView extends React.Component<Props, State> {
   _callbacks: WebViewCallbacks
   _canGoBack: boolean
-  _edgeProvider: EdgeProvider
+  _edgeProvider: EdgeProviderServer
   _promoCode: string | undefined
   _promoMessage: string | undefined
   _webview: WebView | null = null
@@ -157,7 +157,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(navigation, plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
+    this._edgeProvider = new EdgeProviderServer(navigation, plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
 
     // Set up the WebView bridge:
     this._canGoBack = false
