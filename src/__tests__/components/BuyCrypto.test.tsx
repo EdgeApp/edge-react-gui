@@ -3,6 +3,7 @@ import * as React from 'react'
 import renderer from 'react-test-renderer'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
+import { initialState } from '../../reducers/scenes/SettingsReducer'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
@@ -10,6 +11,7 @@ describe('BuyCrypto', () => {
   const mockState: FakeState = {
     ui: {
       settings: {
+        ...initialState,
         defaultIsoFiat: 'iso:DOLLA'
       }
     }

@@ -166,6 +166,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,
       preferredSwapPluginType: undefined,
+      securityCheckedWallets: {},
       spamFilterOn: true,
       spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,

@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
 import { SortOption } from '../../components/modals/WalletListSortModal'
-import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
+import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 import { Action } from '../../types/reduxTypes'
 import { GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
 import { PasswordReminderState } from '../PasswordReminderReducer'
@@ -34,6 +34,7 @@ export interface AccountInitPayload {
   preferredSwapPluginType: EdgeSwapPluginType | undefined
   spamFilterOn: boolean
   spendingLimits: SpendingLimits
+  securityCheckedWallets: SecurityCheckedWallets
   touchIdInfo: GuiTouchIdInfo
   walletId: string
   walletsSort: SortOption
@@ -84,6 +85,7 @@ export interface SettingsState {
   pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
   preferredSwapPluginType: EdgeSwapPluginType | undefined
+  securityCheckedWallets: SecurityCheckedWallets
   spamFilterOn: boolean
   spendingLimits: {
     transaction: {
@@ -133,6 +135,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinLoginEnabled,
         preferredSwapPluginId,
         preferredSwapPluginType,
+        securityCheckedWallets,
         spamFilterOn,
         touchIdInfo,
         walletsSort
@@ -154,6 +157,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinLoginEnabled,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
+        securityCheckedWallets,
         spamFilterOn,
         walletsSort
       }
