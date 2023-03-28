@@ -36,6 +36,8 @@
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
 
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-handler-names": "off",
     "react-native/no-inline-styles": "off",
     "react-native/no-raw-text": [
       "error",
@@ -44,7 +46,6 @@
       }
     ],
     "react-native/sort-styles": "off",
-    "react/jsx-handler-names": "off",
     "simple-import-sort/imports": "error"
   },
   "settings": {
