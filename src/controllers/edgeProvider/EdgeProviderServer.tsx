@@ -429,7 +429,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     if (wallet == null) throw new Error('No selected wallet')
 
     const { publicAddress } = await wallet.getReceiveAddress()
-    const signedMessage = await wallet.otherMethods.signMessageBase64(message, publicAddress)
+    const signedMessage = await wallet.signMessage(message, { otherParams: { publicAddress } })
     console.log(`signMessage public address:***${publicAddress}***`)
     console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage

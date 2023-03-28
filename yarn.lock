@@ -1712,9 +1712,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
   version "1.8.0"
-  resolved "git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
+  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -7764,7 +7764,7 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.37, edge-core-js@^0.19.48:
+edge-core-js@^0.19.48:
   version "0.19.48"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.48.tgz#cfc0ed5ab176e723007ebfd4845a4027fc6a9506"
   integrity sha512-hP8sB8JR0f11/a0Bd4uEp+4HCfYQjh9IgU+1Lj5TVbqJwKvduFFdH4TlCiwSXIqTxt+aCjvcEL+jrqNpPgtZEQ==
@@ -7839,10 +7839,10 @@ edge-currency-monero@^0.5.5:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.3.6:
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.6.tgz#ef5c8fe496eadb38e96c28e98dc28701b7a21ffb"
-  integrity sha512-g/HaeUZ5bg42XslNK3ZcSZ7gFJqvPiAM/tns7NCeBHnhbwVAQ0IF5umH8YWFSnlcSe3KQNaX3fFjwKo3Tib1vQ==
+edge-currency-plugins@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.0.0.tgz#37440570f15b0ab3c8016678ce6b529cfc485c8a"
+  integrity sha512-7GxyyDF8KTppS/nLNNsR14GqdBreFumiJLdxzj89wUL8nKbDdWBK99V4UFQ6SNyjn2aag1k4modcyLPCtCo8Eg==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -7859,7 +7859,7 @@ edge-currency-plugins@^1.3.6:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.37"
+    edge-core-js "^0.19.48"
     edge-sync-client "^0.2.7"
     memlet "^0.1.7"
     uri-js "^4.4.0"
@@ -9013,9 +9013,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
