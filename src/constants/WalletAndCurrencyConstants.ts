@@ -151,7 +151,7 @@ interface SpecialCurrencyInfo {
  */
 export const getSpecialCurrencyInfo = (walletType: string = ''): SpecialCurrencyInfo => {
   const pluginId = getPluginId(walletType)
-  if (SPECIAL_CURRENCY_INFO[pluginId]) {
+  if (SPECIAL_CURRENCY_INFO[pluginId] != null) {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
     return {

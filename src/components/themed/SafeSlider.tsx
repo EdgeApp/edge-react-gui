@@ -24,17 +24,23 @@ interface Props {
 }
 
 export const SafeSlider = (props: Props) => {
-  const { disabledText, disabled, onSlidingComplete, parentStyle, completePoint = COMPLETE_POINT } = props
-
   const theme = useTheme()
   const styles = getStyles(theme)
+  const {
+    completePoint = COMPLETE_POINT,
+    disabled,
+    disabledText = s.strings.select_exchange_amount_short,
+    onSlidingComplete,
+    parentStyle,
+    width = theme.confirmationSliderWidth
+  } = props
+
   const [completed, setCompleted] = React.useState(false)
 
-  const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || completed
-  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)

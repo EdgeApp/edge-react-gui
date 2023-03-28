@@ -467,7 +467,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
-    const displayAmountCheck = (decimalAmount.match(/^0*$/) && !showCursor) || displayAmount === ''
+    const displayAmountCheck = (/^0*$/.test(decimalAmount) && !showCursor) || displayAmount === ''
     const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
     const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency

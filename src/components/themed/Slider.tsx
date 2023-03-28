@@ -31,10 +31,10 @@ type Props = OwnProps & ThemeProps
 
 export const SliderComponent = (props: Props) => {
   const {
-    disabledText,
+    disabledText = s.strings.select_exchange_amount_short,
     disabled,
-    reset,
-    showSpinner,
+    reset = false,
+    showSpinner = false,
     onSlidingComplete,
     parentStyle,
     completePoint = COMPLETE_POINT,
@@ -47,7 +47,7 @@ export const SliderComponent = (props: Props) => {
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
-  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
