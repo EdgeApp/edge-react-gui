@@ -7,7 +7,6 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import s from '../../locales/strings'
-import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
@@ -25,6 +24,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
+import { Slider } from '../themed/Slider'
 
 interface OwnProps {
   navigation: NavigationProp<'exchangeQuote'>

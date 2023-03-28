@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 
-import { fioAddress, FioAddressSceneState } from '../../modules/FioAddress/reducer'
 import { Action } from '../../types/reduxTypes'
 import { createWallet, CreateWalletState } from './CreateWalletReducer'
+import { fioAddress, FioAddressSceneState } from './FioAddressSceneReducer'
 import { sendConfirmation, SendConfirmationState } from './SendConfirmationReducer'
 import { transactionDetails, TransactionDetailsState } from './TransactionDetailsReducer'
 import { transactionList, TransactionListState } from './TransactionListReducer'

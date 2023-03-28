@@ -5,7 +5,7 @@ import { BlurView } from 'rn-id-blurview'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
-import { SafeAreaGap } from './LayoutContext'
+import { SafeAreaGap } from '../common/LayoutContext'
 
 interface Props<T> {
   bridge: AirshipBridge<T>

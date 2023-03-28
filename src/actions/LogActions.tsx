@@ -15,6 +15,8 @@ import s from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 
+const logsUri = 'https://logs1.edge.app/v1/log/'
+
 export interface MultiLogOutput {
   activity: LogOutput
   info: LogOutput
@@ -212,4 +214,28 @@ function getRepoId(key: string): string {
   }
 
   return 'Invalid syncKey type'
+}
+
+export const sendLogs = async (logs: LogOutput) => {
+  console.log('====== SENDING LOGS REQUEST ======')
+
+  return fetch(logsUri, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(logs)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw Error(`${logsUri} returned status ${response.status}`)
+      }
+      console.log(`====== SENDING LOGS SUCCESS ======`, response)
+      return response
+    })
+    .catch(error => {
+      console.log(`====== SENDING LOGS FAILURE ======`, error)
+      throw error
+    })
 }

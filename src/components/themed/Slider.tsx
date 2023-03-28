@@ -4,11 +4,11 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
 
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../../components/services/ThemeContext'
-import { EdgeText } from '../../../../components/themed/EdgeText'
-import { useHandler } from '../../../../hooks/useHandler'
-import s from '../../../../locales/strings'
-import { triggerHaptic } from '../../../../util/haptic'
+import { useHandler } from '../../hooks/useHandler'
+import s from '../../locales/strings'
+import { triggerHaptic } from '../../util/haptic'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 

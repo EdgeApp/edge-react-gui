@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 
-import { THEME } from '../../../../theme/variables/airbitz'
-import { scale } from '../../../../util/scaling'
+import { THEME } from '../../../theme/variables/airbitz'
+import { scale } from '../../../util/scaling'
 
 export const primaryButtonUnderlay = { color: THEME.COLORS.PRIMARY }
 export const secondaryButtonUnderlay = { color: THEME.COLORS.GRAY_1 }

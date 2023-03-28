@@ -3,9 +3,9 @@ import { Image, View } from 'react-native'
 
 import { formatDate } from '../../locales/intl'
 import s from '../../locales/strings'
-import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
