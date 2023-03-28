@@ -52,7 +52,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   }, [account, fiatCode, importText, newWalletItems, walletNames])
 
   const tokenPromise = React.useMemo(() => {
-    return async () => dispatch(enableTokensAcrossWallets(newTokenItems))
+    return async () => await dispatch(enableTokensAcrossWallets(newTokenItems))
   }, [dispatch, newTokenItems])
 
   // Mainnet wallets first followed by our single token item, if necessary

@@ -109,7 +109,7 @@ export function expiredFioNamesCheckDates(navigation: NavigationBase): ThunkActi
     const state = getState()
     const lastChecks = await getFioExpiredCheckFromDisklet(state.core.disklet)
     dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: lastChecks })
-    setTimeout(async () => dispatch(refreshNamesToCheckExpired(navigation)), INIT_EXPIRE_CHECK_TIMEOUT)
+    setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), INIT_EXPIRE_CHECK_TIMEOUT)
   }
 }
 
@@ -122,11 +122,11 @@ function refreshNamesToCheckExpired(navigation: NavigationBase): ThunkAction<Pro
 
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     if (fioWallets.length === 0) {
-      return setTimeout(async () => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
+      return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
     }
 
     const { expiredLastChecks, expiredChecking, walletsCheckedForExpired } = state.ui.fio
-    if (expiredChecking) return setTimeout(async () => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
+    if (expiredChecking) return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
 
     const walletsToCheck: EdgeCurrencyWallet[] = []
     for (const fioWallet of fioWallets) {
@@ -148,7 +148,7 @@ function refreshNamesToCheckExpired(navigation: NavigationBase): ThunkAction<Pro
       dispatch(checkExpiredFioDomains(navigation, namesToCheck, fioWalletsById))
     }
 
-    return setTimeout(async () => dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
+    return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
   }
 }
 

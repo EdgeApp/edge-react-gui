@@ -196,7 +196,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       console.log(e.message)
       // This is ok. We just use default values
     }
-    this.timeoutId = setTimeout(async () => this.updatePluginsNetwork(diskPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
+    this.timeoutId = setTimeout(async () => await this.updatePluginsNetwork(diskPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
   }
 
   /**
@@ -362,7 +362,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.pluginRowContainer}>
-        <TouchableOpacity onPress={async () => this.openPlugin(item).catch(showError)}>
+        <TouchableOpacity onPress={async () => await this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
             <Image
               style={styles.logo}

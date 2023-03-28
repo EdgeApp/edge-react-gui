@@ -133,7 +133,7 @@ async function actionEffectToPushTrigger(context: ExecutionContext, effect: Acti
 
       // Only check the child effect at the current opIndex
       const childEffect = checkedEffects[effect.opIndex]
-      return actionEffectToPushTrigger(context, childEffect)
+      return await actionEffectToPushTrigger(context, childEffect)
     }
     case 'address-balance': {
       const { address, walletId, tokenId, aboveAmount, belowAmount } = effect

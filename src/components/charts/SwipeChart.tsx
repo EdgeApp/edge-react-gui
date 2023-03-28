@@ -185,7 +185,7 @@ const SwipeChartComponent = (params: Props) => {
           const fromParam = unixNow - queryFromTimeOffset
           const fetchUrl = sprintf(DATASET_URL_3S, assetId, fromParam, unixNow)
           fetch(fetchUrl)
-            .then(async res => res.json())
+            .then(async res => await res.json())
             .then((data: any) => {
               const marketChartRange = asCoinGeckoMarketChartRange(data)
               const rawChartData = marketChartRange.prices.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: rawDataPoint[1] }))

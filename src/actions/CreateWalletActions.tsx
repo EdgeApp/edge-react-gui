@@ -52,7 +52,7 @@ export function createCurrencyWallet(
   return async (dispatch, getState) => {
     const state = getState()
     fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
-    return createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
+    return await createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
   }
 }
 
@@ -296,7 +296,7 @@ export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]
     const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
       const wallet = currencyWallets[walletId]
       if (wallet == null) return
-      return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
+      return await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
     })
 
     await Promise.all(promises)

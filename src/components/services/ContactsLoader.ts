@@ -267,7 +267,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
   }
 
   loadContacts = async () => {
-    return Contacts.getAll()
+    return await Contacts.getAll()
       .then(contacts => {
         const cleanContacts = contacts
           .filter(item => item.givenName)

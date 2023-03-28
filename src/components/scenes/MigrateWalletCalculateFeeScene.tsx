@@ -201,7 +201,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       })
     }
 
-    await Promise.all(walletPromises.map(async promise => promise()))
+    await Promise.all(walletPromises.map(async promise => await promise()))
 
     if (mounted.current && successCount > 0) {
       setSliderDisabled(false)

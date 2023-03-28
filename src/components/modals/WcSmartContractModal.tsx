@@ -85,7 +85,7 @@ export const WcSmartContractModal = (props: Props) => {
 
   const handleSubmit = () => {
     wcRequestResponse(wallet, uri, true, payload)
-      .then(async () => Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} />))
+      .then(async () => await Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} />))
       .catch(showError)
       .finally(props.bridge.resolve)
   }

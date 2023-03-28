@@ -59,7 +59,7 @@ export const executePlugin = async (params: {
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
       const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
-      return new Promise((resolve, reject) => {
+      return await new Promise((resolve, reject) => {
         logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
         navigation.navigate('guiPluginEnterAmount', {

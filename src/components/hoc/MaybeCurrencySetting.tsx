@@ -46,11 +46,12 @@ export function maybeCurrencySetting<T, X>(
     const userSettings = useWatch(currencyConfig, 'userSettings')
     const setting = React.useMemo(() => asMaybeSetting(userSettings), [userSettings])
 
-    const handleUpdate = useHandler(async settings =>
-      currencyConfig.changeUserSettings({
-        ...currencyConfig.userSettings,
-        ...wasSetting(settings)
-      })
+    const handleUpdate = useHandler(
+      async settings =>
+        await currencyConfig.changeUserSettings({
+          ...currencyConfig.userSettings,
+          ...wasSetting(settings)
+        })
     )
 
     return defaultSetting == null ? null : (

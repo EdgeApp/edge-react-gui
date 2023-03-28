@@ -256,7 +256,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
       title: s.strings.settings_title
     },
     {
-      pressHandler: async () => dispatch(logoutRequest(navigation)),
+      pressHandler: async () => await dispatch(logoutRequest(navigation)),
       iconName: 'control-panel-logout',
       title: s.strings.settings_button_logout
     },

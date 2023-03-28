@@ -181,7 +181,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
-    return Promise.resolve(returnObject)
+    return await Promise.resolve(returnObject)
   }
 
   async openURL(url: string): Promise<void> {
@@ -216,9 +216,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       Object.keys(data).map(async key => {
         const val = data[key]
         if (val != null) {
-          return store.setItem(this._plugin.storeId, key, val)
+          return await store.setItem(this._plugin.storeId, key, val)
         } else {
-          return store.deleteItem(this._plugin.storeId, key)
+          return await store.deleteItem(this._plugin.storeId, key)
         }
       })
     )
@@ -314,7 +314,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       spendTargets,
       tokenId
     }
-    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
+    return await this._requestSpendCommon({ lockInputs, orderId, spendInfo })
   }
 
   // Request that the user spend to a URI
@@ -363,7 +363,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       ],
       tokenId
     }
-    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
+    return await this._requestSpendCommon({ lockInputs, orderId, spendInfo })
   }
 
   /**
@@ -381,7 +381,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       const lockTilesMap = lockInputs ? { address: true, amount: true, wallet: true } : undefined
 
       this._navigation.navigate('send2', {

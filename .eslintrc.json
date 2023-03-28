@@ -34,7 +34,6 @@
     "@typescript-eslint/require-array-sort-compare": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/return-await": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
 
     "react-native/no-inline-styles": "off",

@@ -365,7 +365,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
  * Creates wallets inside a new account.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeTokenId[], dispatch: Dispatch) {
-  if (edgeTokenIds.length === 0) return createDefaultWallets(account, fiatCurrencyCode, dispatch)
+  if (edgeTokenIds.length === 0) return await createDefaultWallets(account, fiatCurrencyCode, dispatch)
 
   const pluginIdTokenIdMap: { [pluginId: string]: string[] } = {}
 

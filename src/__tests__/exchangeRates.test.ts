@@ -14,7 +14,7 @@ beforeAll(() => {
 })
 
 async function snooze(ms: number): Promise<void> {
-  return new Promise((resolve: any) => setTimeout(() => resolve(), ms))
+  return await new Promise((resolve: any) => setTimeout(() => resolve(), ms))
 }
 
 const TEST_MAX_QUERY_SIZE = 2

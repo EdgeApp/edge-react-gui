@@ -43,7 +43,7 @@ export async function requestPermission(data: Permission): Promise<PermissionSta
 
       if (result === 'deny') return status
     }
-    return request(permissionNames[data])
+    return await request(permissionNames[data])
   }
   return status
 }

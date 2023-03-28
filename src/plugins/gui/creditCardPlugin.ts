@@ -106,7 +106,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       const coreWallet = account.currencyWallets[walletId]
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) return showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+      if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
@@ -166,7 +166,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             }
           }
 
-          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => p.getQuote(quoteParams))
+          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => await p.getQuote(quoteParams))
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e

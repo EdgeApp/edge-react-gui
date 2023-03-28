@@ -258,11 +258,11 @@ export async function runWithTimeout<T>(promise: Promise<T>, ms: number, error: 
     const onDone = () => clearTimeout(timer)
     promise.then(onDone, onDone)
   })
-  return Promise.race([promise, timeout])
+  return await Promise.race([promise, timeout])
 }
 
 export async function snooze(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
@@ -556,7 +556,7 @@ export const pickRandom = <T>(array?: T[]): T | null => {
  * If all promises reject, rejects an array of errors.
  */
 export async function fuzzyTimeout<T>(promises: Array<Promise<T>>, timeoutMs: number): Promise<T[]> {
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     let done = false
     const results: T[] = []
     const failures: any[] = []

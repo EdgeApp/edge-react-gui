@@ -16,6 +16,6 @@ export const approveTokenTerms = async (disklet: Disklet, currencyCode: string) 
   try {
     return await disklet.getText(filePath)
   } catch (error: any) {
-    Airship.show<boolean>(bridge => <ConfirmContinueModal bridge={bridge} title={title} body={body} />).then(async () => disklet.setText(filePath, ''))
+    Airship.show<boolean>(bridge => <ConfirmContinueModal bridge={bridge} title={title} body={body} />).then(async () => await disklet.setText(filePath, ''))
   }
 }

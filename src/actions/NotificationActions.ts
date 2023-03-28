@@ -110,7 +110,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         } else {
           // v1 settings do exist let's migrate them to v2
           const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
-            activeCurrencyInfos.map(async info => fetchLegacySettings(userId, info.currencyCode))
+            activeCurrencyInfos.map(async info => await fetchLegacySettings(userId, info.currencyCode))
           )
 
           for (const [i, setting] of currencySettings.entries()) {
@@ -251,7 +251,7 @@ export const fetchLegacySettings = async (userId: string, currencyCode: string) 
   const deviceId = getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
-  return legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
+  return await legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
 async function legacyGet(path: string) {
