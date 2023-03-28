@@ -1,5 +1,16 @@
 import * as React from 'react'
-import { ActivityIndicator, Platform, TextInput, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  NativeSyntheticEvent,
+  Platform,
+  TextInput,
+  TextInputSelectionChangeEventData,
+  TextStyle,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle
+} from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -29,6 +40,7 @@ interface Props {
   onChangeText?: (text: string) => void
   onClear?: () => void
   onFocus?: () => void
+  onSelectionChange?: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
@@ -59,6 +71,7 @@ export interface OutlinedTextInputRef {
   blur: () => void
   isFocused: () => boolean
   clear: () => void
+  setNativeProps: (nativeProps: Object) => void
 }
 
 export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((props: Props, ref) => {
@@ -83,6 +96,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
     onChangeText,
     onClear,
     onFocus,
+    onSelectionChange,
 
     // TextInput:
     autoFocus = !searchIcon,
@@ -119,7 +133,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
-  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
+  function setNativeProps(nativeProps: Object): void {
+    if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
+  }
+
+  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused, setNativeProps }))
 
   // Captures the width of the placeholder label:
   const [labelWidth, setLabelWidth] = React.useState(0)
@@ -157,6 +175,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     focusAnimationAlt.value = withDelay(animationDelay, withTiming(1, { duration: baseDuration }))
     if (onFocus != null) onFocus()
+  }
+  const handleSelectionChange = (event: any) => {
+    if (onSelectionChange != null) onSelectionChange(event)
   }
 
   // Label dimensions:
@@ -328,6 +349,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
             onChangeText={onChangeText}
             onFocus={handleFocus}
             maxLength={maxLength}
+            onSelectionChange={handleSelectionChange}
           />
         ) : (
           <TextInput
@@ -346,6 +368,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Props>((
             onChangeText={onChangeText}
             onFocus={handleFocus}
             maxLength={maxLength}
+            onSelectionChange={handleSelectionChange}
           />
         )}
       </View>
