@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { LayoutChangeEvent, Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, { runOnJS, SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-import { useWindowSize } from '../../hooks/useWindowSize'
 import { useState } from '../../types/reactHooks'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -45,7 +45,7 @@ export function Carousel<T>(props: Props<T>) {
   }
 
   // Respond to device orientation changes:
-  const { width: windowWidth } = useWindowSize()
+  const { width: windowWidth } = useSafeAreaFrame()
   useEffect(() => {
     setItemWidth(itemWidth => itemWidth)
   }, [windowWidth])

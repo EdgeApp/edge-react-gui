@@ -2,12 +2,11 @@ import { div, log10, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { MINIMUM_DEVICE_HEIGHT } from '../../constants/constantSettings'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
@@ -15,7 +14,6 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
-import { deviceHeight } from '../../theme/variables/platform'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { Card } from '../cards/Card'
@@ -238,11 +236,11 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   )
 })
 
-export const FlipInputModal2 = memo(FlipInputModal2Component)
+const deviceHeight = Dimensions.get('window').height
 
 const getStyles = cacheStyles((theme: Theme) => ({
   hackContainer: {
-    flex: deviceHeight <= MINIMUM_DEVICE_HEIGHT ? 1 : 0
+    flex: deviceHeight <= 580 ? 1 : 0
   },
   flipInput: {
     justifyContent: 'flex-start'
@@ -300,3 +298,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.5)
   }
 }))
+
+export const FlipInputModal2 = memo(FlipInputModal2Component)

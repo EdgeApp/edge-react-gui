@@ -1,6 +1,6 @@
 import { EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions'
@@ -12,7 +12,6 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
 import { THEME } from '../../theme/variables/airbitz'
-import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { scale } from '../../util/scaling'
@@ -21,7 +20,7 @@ import { debounce } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-const deviceWidth = PLATFORM.deviceWidth
+const deviceWidth = Dimensions.get('window').width
 
 interface OwnProps {
   navigation: NavigationProp<'createWalletAccountSetup'>
