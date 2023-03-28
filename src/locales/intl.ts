@@ -133,8 +133,7 @@ export function prettifyNumber(input: string): string {
  * @param allowBlank
  * @returns {string}
  */
-// @ts-expect-error
-export function truncateDecimalsPeriod(input: string, precision?: number, allowBlank?: boolean = false): string {
+export function truncateDecimalsPeriod(input: string, precision?: number, allowBlank: boolean = false): string {
   if (input === '') {
     if (allowBlank) {
       input = ''
@@ -157,8 +156,7 @@ export function truncateDecimalsPeriod(input: string, precision?: number, allowB
  * @param allowBlank
  * @returns {string}
  */
-// @ts-expect-error
-export function truncateDecimals(input: string, precision?: number, allowBlank?: boolean = false): string {
+export function truncateDecimals(input: string, precision?: number, allowBlank: boolean = false): string {
   const { decimalSeparator } = locale
 
   if (input === '') {
