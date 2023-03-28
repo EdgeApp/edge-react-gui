@@ -1,5 +1,5 @@
 import { abs, add, div, gt, mul } from 'biggystring'
-import { JsonObject } from 'edge-core-js/types'
+import { EdgeCurrencyWallet, EdgeSpendInfo, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -83,17 +83,15 @@ export const WcSmartContractModal = (props: Props) => {
 
   const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
 
-  // @ts-expect-error
-  const handleSubmit = reset =>
-    wallet.otherMethods
-      .wcRequestResponse(uri, true, payload)
-      .then(Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} onPress={() => {}} />))
+  const handleSubmit = () => {
+    wcRequestResponse(wallet, uri, true, payload)
+      .then(async () => Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} />))
       .catch(showError)
       .finally(props.bridge.resolve)
+  }
 
-  const handleClose = async () => {
-    props.bridge.resolve()
-    await wallet.otherMethods.wcRequestResponse(uri, false, payload)
+  const handleClose = () => {
+    wcRequestResponse(wallet, uri, false, payload).catch(showError).finally(props.bridge.resolve)
   }
 
   const renderWarning = () => {
@@ -127,13 +125,7 @@ export const WcSmartContractModal = (props: Props) => {
   const tokenId = contractAddress != null ? contractAddress.toLowerCase().replace('0x', '') : undefined
 
   return (
-    <ThemedModal
-      bridge={bridge}
-      onCancel={() => {
-        handleClose().catch(showError)
-      }}
-      paddingRem={[1, 0]}
-    >
+    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <View style={styles.title}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
@@ -168,11 +160,7 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-      <ModalFooter
-        onPress={() => {
-          handleClose().catch(showError)
-        }}
-      />
+      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }
@@ -193,3 +181,42 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(1)
   }
 }))
+
+async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: WcRpcPayload): Promise<void> {
+  if (!approve) {
+    await wallet.otherMethods.wcRejectRequest(uri, payload)
+    return
+  }
+
+  try {
+    switch (payload.method) {
+      case 'personal_sign':
+      case 'eth_sign':
+      case 'eth_signTypedData': {
+        const typedData = payload.method === 'eth_signTypedData'
+        const result = await wallet.signMessage(payload.params[1], { otherParams: { typedData } })
+        await wallet.otherMethods.wcApproveRequest(uri, payload, result)
+        break
+      }
+      case 'eth_signTransaction': {
+        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const tx = await wallet.makeSpend(spendInfo)
+        const signTx = await wallet.signTx(tx)
+        await wallet.otherMethods.wcApproveRequest(uri, payload, signTx.signedTx)
+        break
+      }
+      case 'eth_sendTransaction':
+      case 'eth_sendRawTransaction': {
+        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const tx = await wallet.makeSpend(spendInfo)
+        const signedTx = await wallet.signTx(tx)
+        const sentTx = await wallet.broadcastTx(signedTx)
+        await wallet.otherMethods.wcApproveRequest(uri, payload, sentTx.txid)
+        break
+      }
+    }
+  } catch (e: any) {
+    await wallet.otherMethods.wcRejectRequest(uri, payload)
+    throw e
+  }
+}
