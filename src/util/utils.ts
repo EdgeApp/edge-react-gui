@@ -209,7 +209,7 @@ export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean
 }
 
 export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
-  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
+  return edgeTransaction.ourReceiveAddresses.length === 0 || (!!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-')
 }
 
 // multiplier / exchange rate / ( 1 / unit )
