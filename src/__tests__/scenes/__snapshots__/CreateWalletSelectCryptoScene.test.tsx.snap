@@ -32,20 +32,22 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
   }
 >
   <View
-    collapsable={false}
     style={
-      Object {
-        "alignItems": "stretch",
-        "bottom": 0,
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "left": 0,
-        "maxHeight": 1270,
-        "padding": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 64,
-      }
+      Array [
+        Object {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "position": "absolute",
+        },
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "padding": 0,
+          "right": 0,
+          "top": 64,
+        },
+      ]
     }
   >
     <View
@@ -735,7 +737,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           style={
             Object {
               "alignSelf": "center",
-              "bottom": "1%",
+              "bottom": 22,
               "position": "absolute",
             }
           }
@@ -804,10 +806,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   },
                   Object {
                     "alignSelf": "center",
-                    "marginBottom": 11,
+                    "marginBottom": 0,
                     "marginLeft": -11,
                     "marginRight": -11,
-                    "marginTop": 11,
+                    "marginTop": 0,
                     "opacity": 1,
                     "paddingBottom": 0,
                     "paddingLeft": 0,
