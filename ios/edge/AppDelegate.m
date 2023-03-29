@@ -73,7 +73,7 @@ static void InitializeFlipper(UIApplication *application) {
                                                    moduleName:@"edge"
                                             initialProperties:nil];
 
-  [RCTSplashScreen open:rootView withImageNamed:@"splash"];
+  [RCTSplashScreen open:rootView withImageNamed:@"splash-coinhub"];
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {

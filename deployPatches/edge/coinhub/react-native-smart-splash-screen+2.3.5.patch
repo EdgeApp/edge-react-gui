@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-native-smart-splash-screen/android/src/main/java/com/reactnativecomponent/splashscreen/RCTSplashScreen.java b/node_modules/react-native-smart-splash-screen/android/src/main/java/com/reactnativecomponent/splashscreen/RCTSplashScreen.java
+index 32c2e83..4a26b08 100644
+--- a/node_modules/react-native-smart-splash-screen/android/src/main/java/com/reactnativecomponent/splashscreen/RCTSplashScreen.java
++++ b/node_modules/react-native-smart-splash-screen/android/src/main/java/com/reactnativecomponent/splashscreen/RCTSplashScreen.java
+@@ -135,9 +135,9 @@ public class RCTSplashScreen {
+     }
+ 
+     private static int getImageId() {
+-        int drawableId = getActivity().getResources().getIdentifier("splash", "drawable", getActivity().getClass().getPackage().getName());
++        int drawableId = getActivity().getResources().getIdentifier("splash_coinhub", "drawable", getActivity().getClass().getPackage().getName());
+         if (drawableId == 0) {
+-            drawableId = getActivity().getResources().getIdentifier("splash", "drawable", getActivity().getPackageName());
++            drawableId = getActivity().getResources().getIdentifier("splash_coinhub", "drawable", getActivity().getPackageName());
+         }
+         return drawableId;
+     }
