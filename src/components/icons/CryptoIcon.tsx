@@ -2,6 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -39,6 +40,11 @@ const CryptoIconComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = walletId != null ? currencyWallets[walletId] : null
+  const compromised = useSelector(state => {
+    if (walletId == null) return 0
+    const { modalShown = 0 } = state.ui.settings.securityCheckedWallets[walletId] ?? {}
+    return modalShown > 0
+  })
 
   // If we have a wallet, get the pluginId from it in case it's missing
   let { pluginId = wallet?.currencyInfo.pluginId, tokenId } = props
@@ -66,6 +72,10 @@ const CryptoIconComponent = (props: Props) => {
 
   // Secondary (parent) currency icon (if it's a token)
   const secondaryCurrencyIcon = React.useMemo(() => {
+    if (compromised) {
+      return <FastImage source={compromisedIcon} style={styles.parentIcon} />
+    }
+
     // Skip if this is not a token:
     if (pluginId == null || tokenId == null || tokenId === pluginId) {
       return null
@@ -77,7 +87,7 @@ const CryptoIconComponent = (props: Props) => {
 
     // Return Parent logo from the edge server
     return <FastImage style={styles.parentIcon} source={source} />
-  }, [tokenId, pluginId, mono, styles.parentIcon])
+  }, [compromised, mono, pluginId, styles.parentIcon, tokenId])
 
   // Main view styling
   const spacingStyle = React.useMemo(
