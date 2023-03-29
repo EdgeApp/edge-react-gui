@@ -49,7 +49,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
 
-      let priorityArray: PriorityArray | null = null
+      let priorityArray = [{}]
       if (paymentTypes.length === 1) {
         // Fetch provider priorities from the info server based on the payment
         // type
@@ -58,30 +58,33 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const fiatProviderPriorities = asPaymentTypeProviderPriorityMap(await response.json())
           priorityArray = createPriorityArray(fiatProviderPriorities[paymentTypes[0]])
         } catch (e: any) {
+          console.warn('Failed to fetch provider priorities:', e)
           // This is ok. We will use all configured providers at equal priority.
         }
+      } else {
+        throw new Error('Multiple paymentTypes not implemented')
       }
 
-      // Filter providers for which API keys are setand are not explicitly
+      // Filter providers for which API keys are set and are not explicitly
       // disabled by disablePlugins.
       // TODO: Address redundancy of plugin-disabling implementations: info
       // server vs disablePlugins
       for (const providerFactory of providerFactories) {
         if (disablePlugins[providerFactory.pluginId]) continue
         // @ts-expect-error
+        priorityArray[0][providerFactory.pluginId] = true
+        // @ts-expect-error
         const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
         if (apiKeys == null) continue
 
-        // Use the provider if we failed to get priorities from info server or
-        // we explicitly fetched a nonzero priority for this provider
-        if (priorityArray == null || Object.keys(priorityArray[0]).includes(providerFactory.pluginId)) {
-          const store = createStore(providerFactory.storeId, account.dataStore)
-          providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
-        }
+        const store = createStore(providerFactory.storeId, account.dataStore)
+        providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
       }
+
       if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
 
       // Fetch supported assets from all providers
+      // TODO: Filter by supported paymentTypes
       const providers = await Promise.all(providerPromises)
       for (const provider of providers) {
         assetPromises.push(provider.getSupportedAssets())
