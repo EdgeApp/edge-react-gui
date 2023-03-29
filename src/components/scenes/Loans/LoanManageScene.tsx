@@ -30,7 +30,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -137,14 +137,8 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const { tokenId: hardDebtTokenId } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
-  const { tokenId: hardCollateralTokenId } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
+  const hardDebtTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardCollateralTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
   const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
@@ -394,7 +388,7 @@ export const LoanManageSceneComponent = (props: Props) => {
           setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtTokenId, paymentMethod })
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
-          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
+          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })

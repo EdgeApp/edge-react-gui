@@ -115,6 +115,7 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): s
 
 /**
  * If we have a currency code, guess the pluginId and tokenId from that.
+ * @deprecated Use getTokenId when you know the pluginId for sure.
  */
 export const guessFromCurrencyCode = (account: EdgeAccount, { currencyCode, pluginId, tokenId }: { [key: string]: string | undefined }) => {
   if (currencyCode == null) return { pluginId, tokenId }
