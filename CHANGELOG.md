@@ -1,5 +1,42 @@
 # edge-react-gui
 
+## 3.6.0 (2023-03-28)
+
+- Add new Getting Started flow
+- Add Smartpay PIX support
+- EOS: Add PowerUp support
+- Support deep linking to buy/sell providers
+- Prevent sending to unactivated accounts (XRP, DOT, and XLM)
+- Show expiration time from parsed URI, if provided
+- Add user's receiving address to advanced transaction details scene
+- Fix navigation issue when attempting to leave partner plugins
+- Fix potential crash when migrating custom tokens
+- Replace FlatList with FlashList
+- Fix safe area display issues with iPhone 14
+- Prevent Optimism from appearing as HBAR activation currency
+- Android: Fix occasional crash when refocusing app
+- Add event tracking to logs
+- Move notification registration to Services
+- Various visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.19.46
+  - added: Add expireDate to EdgeParsedUri
+- Upgrade edge-currency-accountbased to v0.22.21
+  - Fix fallback value returned when recipient min balance check fails
+  - XRP: Add additional broadcast error code handling
+  - EOS: Fix address parsing
+  - EOS: Replace address regex with greymass sdk regex
+  - removed: Do not use EdgeCurrencyInfo.defaultSettings to store network info for most chains.
+  - changed: Upgrade EOS to have power-up support. This will make spending EOS work again.
+  - changed: Do not allow sending funds to XRP or Polkadot addresses if they would fail to meet activation the reserve requirement.
+- Upgrade edge-exchange-plugins to v0.17.7
+  - Lifi: Use built-in gas limit estimator for Ethereum transactions and not Lifi's
+- Upgrade edge-login-ui-rn to v1.2.2
+  - changed: Change 'new-account' value for initialRoute prop to route to the username screen
+  - changed: Updated password description verbaige
+  - changed: Don't require showing acct creds to continue acct creation
+  - changed: Change wording to not require writing down password on acct creation
+
 ## 3.5.0 (2023-03-12)
 
 - Add LiFi DEX aggregator
