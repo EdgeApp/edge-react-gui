@@ -4,7 +4,8 @@ import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
-import { CurrencyRow, CustomAsset } from '../data/row/CurrencyRow'
+import { CurrencyRow } from '../data/row/CurrencyRow'
+import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -49,7 +50,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
-      <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} customAsset={customAsset} wallet={wallet} />
+      {customAsset != null ? <CustomAssetRow customAsset={customAsset} /> : <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />}
     </TouchableOpacity>
   )
 }

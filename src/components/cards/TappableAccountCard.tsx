@@ -4,7 +4,8 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
-import { CurrencyRow, CustomAsset } from '../data/row/CurrencyRow'
+import { CurrencyRow } from '../data/row/CurrencyRow'
+import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -36,11 +37,13 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
 
   const renderAccount = () => (
     <View style={styles.currencyRow}>
-      {paymentMethod ? (
+      {paymentMethod != null ? (
         <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={[0, 0.5, 0, 0.5]} />
-      ) : wallet ? (
-        <CurrencyRow tokenId={tokenId} wallet={wallet} customAsset={customAsset} marginRem={[0, 0.5, 0, 0.5]} />
-      ) : null}
+      ) : customAsset != null ? (
+        <CustomAssetRow customAsset={customAsset} marginRem={[0, 0.5, 0, 0.5]} />
+      ) : wallet == null ? null : (
+        <CurrencyRow tokenId={tokenId} wallet={wallet} marginRem={[0, 0.5, 0, 0.5]} />
+      )}
     </View>
   )
 
