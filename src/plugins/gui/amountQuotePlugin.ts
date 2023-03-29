@@ -70,10 +70,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // disabled by disablePlugins.
       // TODO: Address redundancy of plugin-disabling implementations: info
       // server vs disablePlugins
+      let isBity = false // HACK: see usage
       for (const providerFactory of providerFactories) {
         if (disablePlugins[providerFactory.pluginId]) continue
         // @ts-expect-error
         priorityArray[0][providerFactory.pluginId] = true
+
+        if (paymentTypes.length === 1 && paymentTypes[0] === 'sepa' && providerFactory.pluginId === 'bity') isBity = true
+
         // @ts-expect-error
         const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
         if (apiKeys == null) continue
@@ -135,7 +139,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       let bestQuote: FiatProviderQuote | undefined
       let goodQuotes: FiatProviderQuote[] = []
 
-      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+      // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
+      // wallet fiat selection regardless of region.
+      // TODO: Remove when Fiat selection is designed.
+      const fiatCurrencyCode = isBity ? 'iso:EUR' : coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
 
@@ -171,7 +178,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode: fiatCurrencyCode,
               amountType: 'fiat',
               direction,
               paymentTypes,
@@ -183,7 +190,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode: fiatCurrencyCode,
               amountType: 'crypto',
               direction,
               paymentTypes,
