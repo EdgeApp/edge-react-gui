@@ -207,6 +207,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   // #endregion
 
   const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
+  const { pluginId } = wallet.currencyInfo
 
   return (
     <SceneWrapper>
@@ -237,14 +238,12 @@ export const LoanDetailsSceneComponent = (props: Props) => {
           </Space>
           {debts.map(debt => {
             if (zeroString(debt.nativeAmount)) return null
-            const token = getToken(wallet, debt.tokenId)
-            const currencyCode = token?.currencyCode ?? 'N/A'
             const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
             return (
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space sideways>
                   <Space right={1}>
-                    <CryptoIcon currencyCode={currencyCode} hideSecondary />
+                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>

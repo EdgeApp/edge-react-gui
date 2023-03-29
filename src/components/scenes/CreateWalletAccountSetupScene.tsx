@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -12,6 +12,7 @@ import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { debounce } from '../../util/utils'
@@ -28,9 +29,9 @@ interface OwnProps {
 }
 
 interface StateProps {
+  account: EdgeAccount
   handleAvailableStatus: HandleAvailableStatus
   isCheckingHandleAvailability: boolean
-  currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
 interface DispatchProps {
@@ -95,7 +96,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   render() {
-    const { isCheckingHandleAvailability, handleAvailableStatus, currencyConfigs, route } = this.props
+    const { account, handleAvailableStatus, isCheckingHandleAvailability, route } = this.props
     const { accountHandle } = this.state
 
     const { selectedWalletType } = route.params
@@ -114,11 +115,15 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     }
 
     const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
+
+    const { pluginId } = account.currencyConfig[walletTypeValue].currencyInfo
+    const tokenId = getTokenId(account, pluginId, currencyCode)
+
     return (
       <SceneWrapper>
         <ScrollView>
           <View style={styles.scrollableView}>
-            <CryptoIcon currencyCode={currencyCode} marginRem={[1.5, 0, 0, 0]} pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId} sizeRem={4} />
+            <CryptoIcon marginRem={[1.5, 0, 0, 0]} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
@@ -198,9 +203,9 @@ const styles = StyleSheet.create({
 
 export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
+    account: state.core.account,
     isCheckingHandleAvailability: state.ui.createWallet.isCheckingHandleAvailability,
-    handleAvailableStatus: state.ui.createWallet.handleAvailableStatus,
-    currencyConfigs: state.core.account.currencyConfig
+    handleAvailableStatus: state.ui.createWallet.handleAvailableStatus
   }),
   (dispatch, { route: { params } }) => ({
     checkHandleAvailability(handle: string) {

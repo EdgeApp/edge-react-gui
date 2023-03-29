@@ -18,6 +18,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
@@ -231,7 +232,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, activationCost, walletAccountActivationQuoteError } = this.props
+    const { account, route, activationCost, walletAccountActivationQuoteError } = this.props
     const { selectedWalletType } = route.params
     const { walletId } = this.state
 
@@ -244,13 +245,14 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     )
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
 
+    const { tokenId } = guessFromCurrencyCode(account, { currencyCode: selectedWalletType.currencyCode })
+
     return (
       <SceneWrapper>
         <View style={styles.scene}>
           <ScrollView>
             <View style={styles.scrollableView}>
-              <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
-
+              <CryptoIcon marginRem={[1.5, 0, 0, 0]} sizeRem={4} tokenId={tokenId} />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>

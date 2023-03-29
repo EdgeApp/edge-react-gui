@@ -8,6 +8,14 @@ import { fakeNonce } from '../../util/fake/fakeNonce'
 
 describe('CreateWalletAccountSelect', () => {
   const nonce = fakeNonce(0)
+  const fakeAccount: any = {
+    currencyConfig: {
+      bitcoin: {
+        allTokens: {},
+        currencyInfo: { pluginId: 'bitcoin', currencyCode: 'BTC' }
+      } as any
+    }
+  }
 
   it('should render with loading props', () => {
     const renderer = createRenderer()
@@ -35,11 +43,7 @@ describe('CreateWalletAccountSelect', () => {
         }}
         handleAvailableStatus="AVAILABLE"
         isCheckingHandleAvailability
-        currencyConfigs={{
-          bitcoin: {
-            currencyInfo: { pluginId: 'bitcoin', currencyCode: 'BTC' }
-          } as any
-        }}
+        account={fakeAccount}
         checkHandleAvailability={handle => undefined}
       />
     )
