@@ -27,7 +27,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Space } from '../../layout/Space'
-import { useTheme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -43,6 +43,7 @@ export interface Props {
 
 export const LoanCloseSceneComponent = (props: Props) => {
   const theme = useTheme()
+  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const clientId = useSelector(state => state.core.context.clientId)
@@ -124,16 +125,16 @@ export const LoanCloseSceneComponent = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader
-        underline
-        title={s.strings.loan_close_loan_title}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={s.strings.loan_close_loan_title}
+        underline
+        withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
@@ -177,5 +178,11 @@ export const LoanCloseSceneComponent = (props: Props) => {
     </SceneWrapper>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingTop: theme.rem(0.5)
+  }
+}))
 
 export const LoanCloseScene = withLoanAccount(LoanCloseSceneComponent)

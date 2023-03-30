@@ -10,7 +10,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props {
   bridge: AirshipBridge<void>
   message: string
-  onPress: () => void
+  onPress?: () => void
 }
 
 export function FlashNotification(props: Props) {

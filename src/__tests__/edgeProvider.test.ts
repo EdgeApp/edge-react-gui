@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { getReturnCurrencyCode, upgradeExtendedCurrencyCodes } from '../modules/UI/scenes/Plugins/EdgeProvider'
+import { getReturnCurrencyCode, upgradeExtendedCurrencyCodes } from '../controllers/edgeProvider/EdgeProviderServer'
 
 describe('upgradeExtendedCurrencyCodes', () => {
   describe('string list', () => {

@@ -9,6 +9,7 @@ exports[`BalanceBox should render with loading props 1`] = `
     style={
       Object {
         "height": 73,
+        "marginTop": 11,
       }
     }
   >

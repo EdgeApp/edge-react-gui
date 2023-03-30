@@ -1,5 +1,5 @@
-import { abs, div, mul, toFixed } from 'biggystring'
-import { asMaybeInsufficientFundsError, EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
+import { abs, div, gte, mul, toFixed } from 'biggystring'
+import { asMaybeInsufficientFundsError, EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -10,12 +10,12 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
 import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } from '../modules/FioAddress/util'
-import { getAmountRequired, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
+import { initialState, initialTransaction } from '../reducers/scenes/SendConfirmationReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
-import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors'
-import { ThunkAction } from '../types/reduxTypes'
+import { convertCurrency, convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors'
+import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { GuiMakeSpendInfo } from '../types/types'
+import { GuiMakeSpendInfo, SpendAuthType } from '../types/types'
 import { logActivity } from '../util/logger'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode } from '../util/utils'
 import { playSendSound } from './SoundActions'
@@ -507,4 +507,126 @@ export function updateTransactionAmount(nativeAmount: string, exchangeAmount: st
         })
       })
   }
+}
+
+const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction ?? initialTransaction
+const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+
+const getNetworkFeeOption = (state: RootState): 'high' | 'standard' | 'low' | 'custom' =>
+  // @ts-expect-error
+  getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption
+
+const getCustomNetworkFee = (state: RootState): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
+const getMetadata = (state: RootState): EdgeMetadata => getGuiMakeSpendInfo(state).metadata || initialState.guiMakeSpendInfo.metadata || {}
+const getPublicAddress = (state: RootState): string => {
+  try {
+    return (
+      getGuiMakeSpendInfo(state).publicAddress ||
+      initialState.guiMakeSpendInfo.publicAddress ||
+      // @ts-expect-error
+      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      ''
+    )
+  } catch (e: any) {
+    return ''
+  }
+}
+const getNativeAmount = (state: RootState): string | undefined => state.ui.scenes.sendConfirmation.nativeAmount
+
+const getUniqueIdentifier = (state: RootState): string => {
+  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+  const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
+  return uniqueIdentifier || ''
+}
+const getSpendTargetOtherParams = (state: RootState): any => {
+  try {
+    const { spendInfo } = state.ui.scenes.sendConfirmation
+    if (spendInfo == null) return {}
+    return spendInfo.spendTargets[0].otherParams || {}
+  } catch (e: any) {
+    return {}
+  }
+}
+
+// @ts-expect-error
+const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
+  const uniqueIdentifier = newSpendInfo.uniqueIdentifier != null ? newSpendInfo.uniqueIdentifier : getUniqueIdentifier(state)
+  let spendTargets = []
+  if (newSpendInfo.spendTargets) {
+    spendTargets = newSpendInfo.spendTargets
+  } else {
+    spendTargets = [
+      {
+        nativeAmount: newSpendInfo.nativeAmount || getNativeAmount(state),
+        publicAddress: newSpendInfo.publicAddress || getPublicAddress(state),
+        otherParams: {
+          ...getSpendTargetOtherParams(state),
+          uniqueIdentifier
+        }
+      }
+    ]
+  }
+
+  return {
+    currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
+    metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
+    spendTargets,
+    networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
+    customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state),
+    otherParams: newSpendInfo.otherParams || {}
+  }
+}
+
+// @ts-expect-error
+const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
+  const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
+  let spendTargets = []
+  if (newSpendInfo.spendTargets) {
+    spendTargets = newSpendInfo.spendTargets
+  } else {
+    spendTargets = [
+      {
+        nativeAmount: newSpendInfo.nativeAmount || sceneState.nativeAmount,
+        publicAddress: newSpendInfo.publicAddress || initialState.guiMakeSpendInfo.publicAddress || sceneState.spendInfo.spendTargets[0].publicAddress,
+        otherParams: {
+          uniqueIdentifier,
+          ...sceneState.spendInfo.spendTargets[0].otherParams
+        }
+      }
+    ]
+  }
+  const metaData = sceneState.guiMakeSpendInfo.metadata || initialState.guiMakeSpendInfo.metadata
+  const customNetworkFee = sceneState.guiMakeSpendInfo.customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee
+  return {
+    currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
+    metadata: newSpendInfo.metadata ? { ...metaData, ...newSpendInfo.metadata } : metaData,
+    spendTargets,
+    networkFeeOption: newSpendInfo.networkFeeOption || sceneState.guiMakeSpendInfo.networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption,
+    customNetworkFee: newSpendInfo.customNetworkFee ? { ...customNetworkFee, ...newSpendInfo.customNetworkFee } : customNetworkFee,
+    otherParams: newSpendInfo.otherParams || {}
+  }
+}
+
+const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo, walletId: string): SpendAuthType => {
+  const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
+  if (!isEnabled) return 'none'
+
+  const currencyCode = spendInfo.currencyCode
+  const { nativeAmount } = spendInfo.spendTargets[0]
+  if (nativeAmount === '') return 'none' // TODO: Future change will make this null instead of ''
+  if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
+
+  const { spendingLimits } = state.ui.settings
+  const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
+  const wallet = state.core.account.currencyWallets[walletId]
+  const nativeToExchangeRatio = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode).multiplier
+  const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
+  const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
+  const exceedsLimit = gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
+
+  return exceedsLimit ? 'pin' : 'none'
+}
+
+const getAmountRequired = (guiMakeSpendInfo: EdgeSpendInfo): boolean => {
+  return guiMakeSpendInfo.otherParams == null || guiMakeSpendInfo.otherParams.action == null || guiMakeSpendInfo.otherParams.action.name == null
 }

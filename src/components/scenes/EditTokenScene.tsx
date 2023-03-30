@@ -109,11 +109,9 @@ function EditTokenSceneComponent(props: Props) {
     navigation.goBack()
   })
 
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} />, [tokenId])
-
   return (
     <SceneWrapper avoidKeyboard>
-      {sceneHeader}
+      <SceneHeader title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
         <OutlinedTextInput
           autoCapitalize="characters"
@@ -193,7 +191,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(-0.5)
   },
   scrollContainer: {
-    padding: theme.rem(1)
+    padding: theme.rem(1),
+    paddingTop: theme.rem(1.5)
   },
   rightIcon: {
     color: theme.iconTappable,

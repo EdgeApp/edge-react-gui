@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
@@ -24,7 +24,6 @@ import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
 import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
-import { PLATFORM } from './platform'
 
 const palette = {
   black: '#000000',
@@ -63,6 +62,8 @@ const palette = {
   QuicksandSemiBold: 'Quicksand-SemiBold',
   QuicksandBold: 'Quicksand-Bold'
 }
+
+const deviceWidth = Dimensions.get('window').width
 
 export const testLight: Theme = {
   rem(size: number): number {
@@ -256,7 +257,7 @@ export const testLight: Theme = {
   confirmationSliderThumb: palette.edgeBlue,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth: deviceWidth >= 340 ? 295 : deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines

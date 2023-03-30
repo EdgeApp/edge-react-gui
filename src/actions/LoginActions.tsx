@@ -5,8 +5,10 @@ import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
+import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
+import { ENV } from '../env'
 import s from '../locales/strings'
 import {
   getLocalSettings,
@@ -71,6 +73,14 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
+        // New user FIO handle registration flow (if env is properly configured)
+        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+          Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
+            if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+          })
+        }
+
         navigation.replace('edgeTabs', {
           screen: 'walletsTab',
           params: {

@@ -269,6 +269,7 @@ Array [
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
+            onSelectionChange={[Function]}
             returnKeyType="search"
             secureTextEntry={false}
             selectionColor="#FFFFFF"
@@ -915,49 +916,40 @@ Array [
       Transactions
     </Text>
   </View>,
-  <View
-    style={
+  <BVLinearGradient
+    colors={
+      Array [
+        452984831,
+        452984831,
+      ]
+    }
+    endPoint={
       Object {
-        "marginBottom": 11,
-        "marginLeft": 22,
+        "x": 1,
+        "y": 0.5,
       }
     }
-  >
-    <BVLinearGradient
-      colors={
-        Array [
-          452984831,
-          452984831,
-        ]
+    locations={null}
+    startPoint={
+      Object {
+        "x": 0,
+        "y": 0.5,
       }
-      endPoint={
+    }
+    style={
+      Array [
         Object {
-          "x": 1,
-          "y": 0.5,
-        }
-      }
-      locations={null}
-      startPoint={
+          "alignSelf": "stretch",
+          "height": 1,
+        },
         Object {
-          "x": 0,
-          "y": 0.5,
-        }
-      }
-      style={
-        Array [
-          Object {
-            "alignSelf": "stretch",
-            "height": 1,
-          },
-          Object {
-            "marginBottom": 0,
-            "marginLeft": 0,
-            "marginRight": -22,
-            "marginTop": 0,
-          },
-        ]
-      }
-    />
-  </View>,
+          "marginBottom": 0,
+          "marginLeft": 22,
+          "marginRight": 0,
+          "marginTop": 0,
+        },
+      ]
+    }
+  />,
 ]
 `;

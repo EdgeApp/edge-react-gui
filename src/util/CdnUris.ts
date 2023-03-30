@@ -5,6 +5,20 @@ import { edgeLight } from '../theme/variables/edgeLight'
 import { Theme } from '../types/Theme'
 import { removeHexPrefix } from './utils'
 
+/**
+ * New user FIO handle signup flow
+ */
+export const getFioNewHandleImage = (theme: Theme) => {
+  return `${theme.iconServerBaseUri}/FIO/fioNewHandle.png`
+}
+
+export const getFioCustomizeHandleImage = (theme: Theme) => {
+  return `${theme.iconServerBaseUri}/FIO/fioCustomizeHandle.png`
+}
+
+/**
+ * Borrow Plugin Icons
+ */
 export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
   return getCurrencyIconUris(borrowPluginInfo.currencyPluginId, borrowPluginInfo.displayTokenId).symbolImage
 }
@@ -12,7 +26,6 @@ export const getBorrowPluginIconUri = (borrowPluginInfo: BorrowPluginInfo) => {
 /**
  * Swap Plugin Icons
  */
-
 export function getSwapPluginIconUri(pluginId: string, theme: Theme) {
   return `${theme.iconServerBaseUri}/exchangeIcons/${pluginId}/icon.png`
 }

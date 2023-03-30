@@ -130,12 +130,11 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-  const sceneHeader = React.useMemo(() => <SceneHeader underline title={s.strings.wc_confirm_title} />, [])
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      {sceneHeader}
-      <ScrollView style={styles.container}>
+      <SceneHeader title={s.strings.wc_confirm_title} underline />
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}
           <EdgeText style={styles.subTitle} numberOfLines={2}>
@@ -162,7 +161,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2)
   },
   container: {
-    padding: theme.rem(0.5)
+    padding: theme.rem(0.5),
+    paddingTop: theme.rem(1)
   },
   listRow: {
     marginTop: theme.rem(1),

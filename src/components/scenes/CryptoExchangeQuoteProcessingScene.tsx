@@ -9,7 +9,7 @@ import { EdgeText } from '../themed/EdgeText'
 function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
   const styles = getStyles(props.theme)
   return (
-    <SceneWrapper background="header" hasTabs={false}>
+    <SceneWrapper background="theme" hasTabs={false}>
       <View style={styles.container}>
         <EdgeText style={styles.title}>{s.strings.hang_tight}</EdgeText>
         <EdgeText style={styles.findingText} numberOfLines={2}>

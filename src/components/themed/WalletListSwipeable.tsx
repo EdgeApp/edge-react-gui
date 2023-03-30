@@ -21,7 +21,6 @@ interface Props {
   navigation: NavigationProp<'walletList'>
   searching: boolean
   searchText: string
-  showSlidingTutorial?: boolean
 
   // Callbacks:
   onRefresh?: () => void
@@ -38,7 +37,6 @@ function WalletListSwipeableComponent(props: Props) {
     navigation,
     searching,
     searchText,
-    showSlidingTutorial,
 
     // Callbacks:
     onRefresh,
@@ -96,15 +94,7 @@ function WalletListSwipeableComponent(props: Props) {
     const { token, tokenId, wallet, walletId } = item.item
 
     if (wallet != null) {
-      return (
-        <WalletListSwipeableCurrencyRow
-          navigation={navigation}
-          openTutorial={item.index === 0 && showSlidingTutorial}
-          token={token}
-          tokenId={tokenId}
-          wallet={wallet}
-        />
-      )
+      return <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
     }
     if (walletId != null) {
       return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />

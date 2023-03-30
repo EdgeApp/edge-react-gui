@@ -50,22 +50,23 @@ import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './s
 import { EdgeLoginScene as EdgeLoginSceneComponent } from './scenes/EdgeLoginScene'
 import { EditTokenScene as EditTokenSceneComponent } from './scenes/EditTokenScene'
 import { ExtraTabScene as ExtraTabSceneComponent } from './scenes/ExtraTabScene'
-import { FioAddressDetailsScene as FioAddressDetailsSceneComponent } from './scenes/FioAddressDetailsScene'
-import { FioAddressListScene as FioAddressListSceneComponent } from './scenes/FioAddressListScene'
-import { FioAddressRegisteredScene as FioAddressRegisteredSceneComponent } from './scenes/FioAddressRegisteredScene'
-import { FioAddressRegisterScene as FioAddressRegisterSceneComponent } from './scenes/FioAddressRegisterScene'
-import { FioAddressRegisterSelectWalletScene as FioAddressRegisterSelectWalletSceneComponent } from './scenes/FioAddressRegisterSelectWalletScene'
-import { FioAddressSettingsScene as FioAddressSettingsSceneComponent } from './scenes/FioAddressSettingsScene'
-import { FioConnectWalletConfirmScene as FioConnectWalletConfirmSceneComponent } from './scenes/FioConnectWalletConfirmScene'
-import { FioDomainRegisterScene as FioDomainRegisterSceneComponent } from './scenes/FioDomainRegisterScene'
-import { FioDomainRegisterSelectWalletScene as FioDomainRegisterSelectWalletSceneComponent } from './scenes/FioDomainRegisterSelectWalletScene'
-import { FioDomainSettingsScene as FioDomainSettingsSceneComponent } from './scenes/FioDomainSettingsScene'
-import { FioNameConfirmScene as FioNameConfirmSceneComponent } from './scenes/FioNameConfirmScene'
-import { FioRequestConfirmationScene as FioRequestConfirmationSceneComponent } from './scenes/FioRequestConfirmationScene'
-import { FioRequestListScene as FioRequestListSceneComponent } from './scenes/FioRequestListScene'
-import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } from './scenes/FioSentRequestDetailsScene'
-import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/FioStakingChangeScene'
-import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/FioStakingOverviewScene'
+import { FioAddressDetailsScene as FioAddressDetailsSceneComponent } from './scenes/Fio/FioAddressDetailsScene'
+import { FioAddressListScene as FioAddressListSceneComponent } from './scenes/Fio/FioAddressListScene'
+import { FioAddressRegisteredScene as FioAddressRegisteredSceneComponent } from './scenes/Fio/FioAddressRegisteredScene'
+import { FioAddressRegisterScene as FioAddressRegisterSceneComponent } from './scenes/Fio/FioAddressRegisterScene'
+import { FioAddressRegisterSelectWalletScene as FioAddressRegisterSelectWalletSceneComponent } from './scenes/Fio/FioAddressRegisterSelectWalletScene'
+import { FioAddressSettingsScene as FioAddressSettingsSceneComponent } from './scenes/Fio/FioAddressSettingsScene'
+import { FioConnectWalletConfirmScene as FioConnectWalletConfirmSceneComponent } from './scenes/Fio/FioConnectWalletConfirmScene'
+import { FioCreateHandleScene as FioCreateHandleSceneComponent } from './scenes/Fio/FioCreateHandleScene'
+import { FioDomainRegisterScene as FioDomainRegisterSceneComponent } from './scenes/Fio/FioDomainRegisterScene'
+import { FioDomainRegisterSelectWalletScene as FioDomainRegisterSelectWalletSceneComponent } from './scenes/Fio/FioDomainRegisterSelectWalletScene'
+import { FioDomainSettingsScene as FioDomainSettingsSceneComponent } from './scenes/Fio/FioDomainSettingsScene'
+import { FioNameConfirmScene as FioNameConfirmSceneComponent } from './scenes/Fio/FioNameConfirmScene'
+import { FioRequestConfirmationScene as FioRequestConfirmationSceneComponent } from './scenes/Fio/FioRequestConfirmationScene'
+import { FioRequestListScene as FioRequestListSceneComponent } from './scenes/Fio/FioRequestListScene'
+import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } from './scenes/Fio/FioSentRequestDetailsScene'
+import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/Fio/FioStakingChangeScene'
+import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/Fio/FioStakingOverviewScene'
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
@@ -142,6 +143,7 @@ const FioAddressRegisterScene = ifLoggedIn(FioAddressRegisterSceneComponent)
 const FioAddressRegisterSelectWalletScene = ifLoggedIn(FioAddressRegisterSelectWalletSceneComponent)
 const FioAddressSettingsScene = ifLoggedIn(FioAddressSettingsSceneComponent)
 const FioConnectWalletConfirmScene = ifLoggedIn(FioConnectWalletConfirmSceneComponent)
+const FioCreateHandleScene = ifLoggedIn(FioCreateHandleSceneComponent)
 const FioDomainRegisterScene = ifLoggedIn(FioDomainRegisterSceneComponent)
 const FioDomainRegisterSelectWalletScene = ifLoggedIn(FioDomainRegisterSelectWalletSceneComponent)
 const FioDomainSettingsScene = ifLoggedIn(FioDomainSettingsSceneComponent)
@@ -459,6 +461,13 @@ const EdgeAppStack = () => {
         component={FioConnectWalletConfirmScene}
         options={{
           title: s.strings.title_fio_connect_to_wallet
+        }}
+      />
+      <Stack.Screen
+        name="fioCreateHandle"
+        component={FioCreateHandleScene}
+        options={{
+          title: s.strings.fio_free_handle_title
         }}
       />
       <Stack.Screen
@@ -805,7 +814,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <Tab.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
@@ -823,7 +832,7 @@ const EdgeExchangeTabScreen = () => {
   const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="exchange" screenOptions={defaultScreenOptions}>
-      <Tab.Screen
+      <Stack.Screen
         name="exchange"
         component={CryptoExchangeScene}
         options={firstSceneScreenOptions}
@@ -848,7 +857,7 @@ const EdgeMarketsTabScreen = () => {
   const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="coinRanking" screenOptions={defaultScreenOptions}>
-      <Tab.Screen
+      <Stack.Screen
         name="coinRanking"
         component={CoinRankingScene}
         options={firstSceneScreenOptions}

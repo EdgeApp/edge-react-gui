@@ -69,7 +69,8 @@ export class BalanceBox extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxContainer: {
-    height: theme.rem(3.25)
+    height: theme.rem(3.25),
+    marginTop: theme.rem(0.5)
   },
   balanceHeader: {
     fontSize: theme.rem(1),

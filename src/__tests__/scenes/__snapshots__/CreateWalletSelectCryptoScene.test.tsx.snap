@@ -112,14 +112,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         </View>
       </View>
       <View
-        style={
-          Object {
-            "marginBottom": 11,
-            "marginLeft": 22,
-          }
-        }
-      />
-      <View
         accessible={true}
         focusable={true}
         onClick={[Function]}
@@ -143,7 +135,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "marginBottom": 11,
               "marginLeft": 22,
               "marginRight": 22,
-              "marginTop": 0,
+              "marginTop": 11,
               "paddingLeft": 65,
               "paddingRight": 65,
               "paddingVertical": 0,
@@ -362,6 +354,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
+          onSelectionChange={[Function]}
           onSubmitEditing={[Function]}
           returnKeyType="next"
           secureTextEntry={false}

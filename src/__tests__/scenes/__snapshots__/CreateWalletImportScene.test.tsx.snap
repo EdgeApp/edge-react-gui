@@ -102,14 +102,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     <View
       style={
         Object {
-          "marginBottom": 11,
-          "marginLeft": 22,
-        }
-      }
-    />
-    <View
-      style={
-        Object {
           "flexDirection": "row",
           "justifyContent": "center",
           "marginVertical": 45,
@@ -365,6 +357,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         onBlur={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
+        onSelectionChange={[Function]}
         onSubmitEditing={[Function]}
         returnKeyType="next"
         secureTextEntry={false}

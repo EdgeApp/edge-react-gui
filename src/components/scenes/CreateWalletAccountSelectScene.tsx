@@ -12,8 +12,6 @@ import {
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
-import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
@@ -25,6 +23,8 @@ import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
+import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { Airship } from '../services/AirshipInstance'
 
 export interface AccountPaymentParams {

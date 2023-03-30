@@ -1712,10 +1712,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@^1.5.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.7.0.tgz#699c47a87e797eac8df3563ac99760ab69a3e827"
-  integrity sha512-9nHH2SL4FExwFVRssl8t9s3RPIMTEM/xcTWZapL95HTXTmBgzmAty4infatDdkXNfX3eROYHLGu2K8lQRkZQvQ==
+"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+  version "1.8.0"
+  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -2834,6 +2833,23 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
+"@rollup/plugin-typescript@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-11.0.0.tgz#f136272d1df5209daca0cb6f171c574b1d505545"
+  integrity sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==
+  dependencies:
+    "@rollup/pluginutils" "^5.0.1"
+    resolve "^1.22.1"
+
+"@rollup/pluginutils@^5.0.1":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.0.2.tgz#012b8f53c71e4f6f9cb317e311df1404f56e7a33"
+  integrity sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==
+  dependencies:
+    "@types/estree" "^1.0.0"
+    estree-walker "^2.0.2"
+    picomatch "^2.3.1"
+
 "@scure/base@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.1.tgz#ebb651ee52ff84f420097055f4bf46cfba403938"
@@ -3360,7 +3376,12 @@
     "@types/estree" "*"
     "@types/json-schema" "*"
 
-"@types/estree@*", "@types/estree@^0.0.51":
+"@types/estree@*", "@types/estree@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.0.tgz#5fb2e536c1ae9bf35366eed879e827fa59ca41c2"
+  integrity sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==
+
+"@types/estree@^0.0.51":
   version "0.0.51"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.51.tgz#cfd70924a25a3fd32b218e5e420e6897e1ac4f40"
   integrity sha512-CuPgU6f3eT/XgKKPqKd/gLZV1Xmvf1a2R5POBOGQa6uv82xpls89HU5zKeVoyR8XzHd1RGNOlQlvUe3CFkjWNQ==
@@ -3604,11 +3625,6 @@
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@types/react-native-custom-tabs/-/react-native-custom-tabs-0.1.2.tgz#725e2f01721f304890c54cd1814e8d8f4ccaf129"
   integrity sha512-GWPd/r6voEIZb7va+3rsLxeT8j9GpUUM8FPBcBJ5RXM+kmJneFz05GANQiD+si+E4MztWmeUemCUxMeEsaYktQ==
-
-"@types/react-native-extra-dimensions-android@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.0.tgz#50c7e9b252f04ce0c3bc0945ac687a403fe8ec4f"
-  integrity sha512-9lUeO0P/yXBPlR8KjIKttqLXy/zRS0a6tofiCooDRcT2YXWkhVAoXZv7y/5opzUdCORk6eSMkfMRLbRjs8v5Uw==
 
 "@types/react-native-material-textfield@^0.16.5":
   version "0.16.5"
@@ -6055,9 +6071,9 @@ bufferutil@^4.0.1:
     node-gyp-build "^4.3.0"
 
 builtin-modules@^3.0.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.2.0.tgz#45d5db99e7ee5e6bc4f362e008bf917ab5049887"
-  integrity sha512-lGzLKcioL90C7wMczpkY0n/oART3MbBa8R9OFGE1rJxoVI86u4WAGfEk8Wjv10eKSyTHVGkSo3bvBylCEtk7LA==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.3.0.tgz#cae62812b89801e9656336e46223e030386be7b6"
+  integrity sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==
 
 builtin-status-codes@^3.0.0:
   version "3.0.0"
@@ -7748,10 +7764,10 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.37, edge-core-js@^0.19.46:
-  version "0.19.46"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.46.tgz#6df7c26ac00d8f00e7f383c3ad6eb362dbeee8ea"
-  integrity sha512-N2QY+pOs/B2weMOTHIPI4/blblgjFZgTc+0H0v1ufvk5ICPSK+qr3CqPSxAgZJ/hhEHNiaghkFyC4pt/FH90Xw==
+edge-core-js@^0.19.48:
+  version "0.19.48"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.48.tgz#cfc0ed5ab176e723007ebfd4845a4027fc6a9506"
+  integrity sha512-hP8sB8JR0f11/a0Bd4uEp+4HCfYQjh9IgU+1Lj5TVbqJwKvduFFdH4TlCiwSXIqTxt+aCjvcEL+jrqNpPgtZEQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7775,15 +7791,15 @@ edge-core-js@^0.19.37, edge-core-js@^0.19.46:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.22.21:
-  version "0.22.21"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.22.21.tgz#b497247cc107da25ef60b8d860c7c56d027f5563"
-  integrity sha512-q3clIJRF6Zcyuh2kncyumnvULF1rsuXy1MrFY3YaCeLhjMtF9uOIGZh8mxWKW3EsG1NHWbp/8txObCN5JYX1Jg==
+edge-currency-accountbased@^0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.23.0.tgz#6df8b16b1b17167d49eb29968bb1793e63ff5ee2"
+  integrity sha512-s/Hhr+1uvDX+uyIcHPQ8CNjFzK3AUwLm4tSf4cv1dT5/vwdOcUHXp4A5zGNzjMmVs0xVLN4lT+6vkMJWsdhnoQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
-    "@fioprotocol/fiosdk" "^1.5.0"
+    "@fioprotocol/fiosdk" "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
     "@greymass/eosio" "^0.6.8"
     "@greymass/eosio-resources" "^0.7.0"
     "@hashgraph/sdk" "^1.1.9"
@@ -7823,10 +7839,10 @@ edge-currency-monero@^0.5.5:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^1.3.6:
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-1.3.6.tgz#ef5c8fe496eadb38e96c28e98dc28701b7a21ffb"
-  integrity sha512-g/HaeUZ5bg42XslNK3ZcSZ7gFJqvPiAM/tns7NCeBHnhbwVAQ0IF5umH8YWFSnlcSe3KQNaX3fFjwKo3Tib1vQ==
+edge-currency-plugins@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.0.0.tgz#37440570f15b0ab3c8016678ce6b529cfc485c8a"
+  integrity sha512-7GxyyDF8KTppS/nLNNsR14GqdBreFumiJLdxzj89wUL8nKbDdWBK99V4UFQ6SNyjn2aag1k4modcyLPCtCo8Eg==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -7843,7 +7859,7 @@ edge-currency-plugins@^1.3.6:
     bs58smartcheck "^2.0.4"
     cleaners "^0.3.12"
     disklet "^0.4.5"
-    edge-core-js "^0.19.37"
+    edge-core-js "^0.19.48"
     edge-sync-client "^0.2.7"
     memlet "^0.1.7"
     uri-js "^4.4.0"
@@ -8573,6 +8589,11 @@ estraverse@^5.1.0, estraverse@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-5.2.0.tgz#307df42547e6cc7324d3cf03c155d5cdb8c53880"
   integrity sha512-BxbNGGNm0RyRYvUdHpIwv9IWzeM9XClbOxwoATuFdOE7ZE6wHL+HQ5T8hoPM+zHvmKzzsEqhgy0GrQ5X13afiQ==
+
+estree-walker@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-2.0.2.tgz#52f010178c2a4c117a7757cfe942adb7d2da4cac"
+  integrity sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==
 
 esutils@^2.0.2:
   version "2.0.3"
@@ -10441,7 +10462,7 @@ is-interactive@^1.0.0:
 is-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-module/-/is-module-1.0.0.tgz#3258fb69f78c14d5b815d664336b4cffb6441591"
-  integrity sha1-Mlj7afeMFNW4FdZkM2tM/7ZEFZE=
+  integrity sha512-51ypPSPCoTEIN9dy5Oy+h4pShgJmPCygKfyRCISBI+JoWT/2oJvK8QPxmwv7b/p239jXrm9M1mlQbyKJ5A152g==
 
 is-nan@^1.2.1:
   version "1.3.2"
@@ -13444,10 +13465,10 @@ picocolors@^1.0.0:
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
   integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
 
-picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.3.tgz#465547f359ccc206d3c48e46a1bcb89bf7ee619d"
-  integrity sha512-KpELjfwcCDUb9PeigTs2mBJzXUPzAuP2oPcA989He8Rte0+YUAjw1JVedDhuTKPkHjSYzMN3npC9luThGYEKdg==
+picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3, picomatch@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
+  integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
 pify@^3.0.0:
   version "3.0.0"
@@ -13936,11 +13957,6 @@ react-native-draggable-flatlist@^4.0.1:
   integrity sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q==
   dependencies:
     "@babel/preset-typescript" "^7.17.12"
-
-react-native-extra-dimensions-android@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
-  integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
 react-native-fast-image@^8.5.11:
   version "8.5.11"
@@ -14613,7 +14629,7 @@ resolve.exports@^1.1.0:
   resolved "https://registry.yarnpkg.com/resolve.exports/-/resolve.exports-1.1.0.tgz#5ce842b94b05146c0e03076985d1d0e7e48c90c9"
   integrity sha512-J1l+Zxxp4XK3LUDZ9m60LRJF/mAe4z6a4xyabPHk7pvK5t35dACV32iIjJDFeWZFfZlO29w6SZ67knR0tHzJtQ==
 
-resolve@^1.10.0, resolve@^1.10.1, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.8.1, resolve@^1.9.0:
+resolve@^1.10.0, resolve@^1.10.1, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.14.2, resolve@^1.20.0, resolve@^1.22.1, resolve@^1.8.1, resolve@^1.9.0:
   version "1.22.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
   integrity sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==

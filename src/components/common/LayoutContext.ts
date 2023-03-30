@@ -1,7 +1,5 @@
 import * as React from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-import { useWindowSize } from '../../hooks/useWindowSize'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface SafeAreaGap {
   bottom: number
@@ -27,7 +25,7 @@ export function LayoutContext(props: Props) {
   const safeAreaInsets = useSafeAreaInsets()
 
   // Subscribe to the window size:
-  const { height, width } = useWindowSize()
+  const { height, width } = useSafeAreaFrame()
 
   const metrics: LayoutMetrics = {
     layout: { height, width },
