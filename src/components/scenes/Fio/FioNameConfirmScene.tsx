@@ -10,7 +10,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
-import { cacheStyles, Theme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Tile } from '../../tiles/Tile'
 
@@ -24,7 +24,7 @@ interface OwnProps {
   route: RouteProp<'fioDomainConfirm' | 'fioNameConfirm'>
 }
 
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & ThemeProps
 
 const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 
@@ -136,10 +136,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   render() {
-    const { route } = this.props
+    const { route, theme } = this.props
     const { fioName, paymentWallet } = route.params
-    // @ts-expect-error
-    const styles = getStyles()
+    const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="theme">
@@ -173,4 +172,4 @@ export const FioNameConfirmScene = connect<StateProps, {}, OwnProps>(
     isConnected: state.network.isConnected
   }),
   dispatch => ({})
-)(FioNameConfirm)
+)(withTheme(FioNameConfirm))
