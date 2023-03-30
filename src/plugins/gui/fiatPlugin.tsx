@@ -1,5 +1,5 @@
 import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
-import { EdgeAccount, EdgeDataStore } from 'edge-core-js'
+import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
@@ -117,6 +118,16 @@ export const executePlugin = async (params: {
           transferInfo,
           headerIconUri,
           onDone: async () => {
+            resolve()
+          }
+        })
+      })
+    },
+    send: async (params: SendScene2Params) => {
+      return new Promise<void>((resolve, reject) => {
+        navigation.navigate('send2', {
+          ...params,
+          onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
             resolve()
           }
         })
