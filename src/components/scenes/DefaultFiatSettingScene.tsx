@@ -1,5 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { Alert, FlatList, Keyboard, View } from 'react-native'
+import { Alert, Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
@@ -72,6 +73,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props
     const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
@@ -81,23 +83,23 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
-            <OutlinedTextInput
-              autoCorrect={false}
-              autoCapitalize="words"
-              onChangeText={this.handleSearchTermChange}
-              value={this.state.searchTerm}
-              label={s.strings.fragment_wallets_addwallet_fiat_hint}
-              returnKeyType="search"
-              marginRem={[0, 1.75]}
-              searchIcon
-            />
-            <FlatList
-              style={styles.resultList}
+            <SceneHeader title={s.strings.title_create_wallet_select_fiat} underline withTopMargin>
+              <OutlinedTextInput
+                autoCorrect={false}
+                autoCapitalize="words"
+                onChangeText={this.handleSearchTermChange}
+                value={this.state.searchTerm}
+                label={s.strings.fragment_wallets_addwallet_fiat_hint}
+                returnKeyType="search"
+                marginRem={[1, 0.5, 0]}
+                searchIcon
+              />
+            </SceneHeader>
+            <FlashList
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
               data={filteredArray}
-              initialNumToRender={30}
+              estimatedItemSize={theme.rem(1.75)}
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
@@ -135,9 +137,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     paddingTop: scale(5)
-  },
-  resultList: {
-    flex: 1
   },
   cryptoTypeLogo: {
     width: theme.rem(2),

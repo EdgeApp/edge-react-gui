@@ -10,8 +10,6 @@ import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
 import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
@@ -21,6 +19,7 @@ import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { debounce } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField'
+import { SceneWrapper } from '../common/SceneWrapper'
 
 const deviceWidth = PLATFORM.deviceWidth
 
@@ -117,8 +116,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
 
     const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     return (
-      <SafeAreaView>
-        <Gradient style={styles.scrollableGradient} />
+      <SceneWrapper>
         <ScrollView>
           <View style={styles.scrollableView}>
             <CryptoIcon currencyCode={currencyCode} marginRem={[1.5, 0, 0, 0]} pluginId={currencyConfigs[walletTypeValue].currencyInfo.pluginId} sizeRem={4} />
@@ -159,15 +157,12 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             <View style={{ paddingBottom: 400 }} />
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  scrollableGradient: {
-    height: THEME.HEADER
-  },
   scrollableView: {
     position: 'relative',
     paddingHorizontal: 20

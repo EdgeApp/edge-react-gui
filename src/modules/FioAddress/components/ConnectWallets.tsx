@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, ScrollView, Switch, View } from 'react-native'
+import { ScrollView, Switch, View } from 'react-native'
 
 import { CryptoIcon } from '../../../components/icons/CryptoIcon'
 import { showError } from '../../../components/services/AirshipInstance'
@@ -32,6 +33,8 @@ interface OwnProps {
 }
 
 type Props = StateProps & OwnProps & ThemeProps
+
+let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.
 
 class ConnectWallets extends React.Component<Props, LocalState> {
   state = {
@@ -123,6 +126,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     }
 
     this.setState({ connectWalletsMap, disconnectWalletsMap })
+    flashListToggle = !flashListToggle
   }
 
   keyExtractor = (item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`
@@ -194,9 +198,10 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         <View style={styles.list}>
           <ScrollView>
             {walletItems && Object.keys(walletItems).length ? (
-              <FlatList
+              <FlashList
                 data={Object.values(walletItems)}
-                initialNumToRender={24}
+                extraData={flashListToggle}
+                estimatedItemSize={theme.rem(4.25)}
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={this.keyExtractor}
                 renderItem={this.renderFioConnectionWalletItem}
@@ -256,7 +261,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   bottomSection: {
-    flex: 2,
+    flex: 1,
     backgroundColor: theme.backgroundGradientColors[1],
     padding: theme.rem(1)
   },

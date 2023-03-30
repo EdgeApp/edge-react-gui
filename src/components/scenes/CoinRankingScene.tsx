@@ -1,6 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -61,6 +61,7 @@ const CoinRankingComponent = (props: Props) => {
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
   const [fiatCode] = useState<string>('iso:USD')
+  const extraData = React.useMemo(() => ({ assetSubText, percentChangeTimeFrame }), [assetSubText, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
 
@@ -191,7 +192,7 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper background="theme" hasTabs>
       <View style={styles.searchContainer}>
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <OutlinedTextInput
@@ -228,9 +229,10 @@ const CoinRankingComponent = (props: Props) => {
         </View>
       </View>
       <DividerLine marginRem={[0, 0, 0, 1]} />
-      <FlatList
-        contentContainerStyle={styles.contentContainer}
+      <FlashList
+        estimatedItemSize={theme.rem(3.75)}
         data={listdata}
+        extraData={extraData}
         renderItem={renderItem}
         onEndReachedThreshold={1}
         onEndReached={handleEndReached}
@@ -256,7 +258,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginLeft: theme.rem(1),
       paddingRight: theme.rem(1)
     },
-    contentContainer: { flexGrow: 1 },
     searchContainer: {
       flexDirection: 'row',
       marginVertical: theme.rem(0.5),

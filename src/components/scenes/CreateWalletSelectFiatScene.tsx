@@ -1,5 +1,6 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, ListRenderItemInfo, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -171,7 +172,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (fiat != null) setFiat(fiat)
   })
 
-  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<WalletCreateItem>) => {
+  const renderCurrencyRow: ListRenderItem<WalletCreateItem> = useHandler(data => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
 
     if (walletType != null) {
@@ -202,6 +203,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     }
   })
 
+  const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
+
   return (
     <SceneWrapper background="theme">
       <View style={styles.content}>
@@ -210,11 +213,11 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {s.strings.fragment_create_wallet_instructions}
         </EdgeText>
-        <FlatList
-          style={styles.resultList}
+        <FlashList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
-          keyExtractor={item => item.key}
+          extraData={walletNames}
+          keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
         />
         <MainButton label={s.strings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
@@ -226,9 +229,6 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   },
   cryptoTypeLogo: {

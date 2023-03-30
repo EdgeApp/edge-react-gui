@@ -10,7 +10,7 @@ import { showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeTextField } from '../themed/EdgeTextField'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface OwnProps {
@@ -105,7 +105,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           <MainButton label={s.strings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
         )}
         <MainButton label={s.strings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
-        <ModalCloseArrow onPress={this.handleCancel} />
+        <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )
   }

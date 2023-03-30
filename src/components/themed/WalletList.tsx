@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, SectionList } from 'react-native'
+import { SectionList } from 'react-native'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,7 +12,6 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -31,7 +31,6 @@ interface Props {
   filterActivation?: boolean
 
   // Visuals:
-  marginRem?: number | number[]
   searching: boolean
   searchText: string
   showCreateWallet?: boolean
@@ -69,7 +68,6 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    marginRem,
     searching,
     searchText,
     showCreateWallet,
@@ -80,7 +78,11 @@ export function WalletList(props: Props) {
   } = props
 
   const theme = useTheme()
-  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+
+  // Subscribe to the common wallet list:
+  const account = useSelector(state => state.core.account)
+  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
+  const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   const handlePress = React.useMemo(
     () =>
@@ -90,13 +92,8 @@ export function WalletList(props: Props) {
         const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
         dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       }),
-    [dispatch, navigation, onPress]
+    [account, dispatch, navigation, onPress]
   )
-
-  // Subscribe to the common wallet list:
-  const account = useSelector(state => state.core.account)
-  const mostRecentWallets = useSelector(state => state.ui.settings.mostRecentWallets)
-  const sortedWalletList = useSelector(state => state.sortedWalletList)
 
   // Filter the common wallet list:
   const filteredWalletList = React.useMemo(() => {
@@ -121,7 +118,7 @@ export function WalletList(props: Props) {
       const { pluginId } = wallet.currencyInfo
       return checkFilterWallet({ pluginId, tokenId }, allowedAssets, excludeAssets)
     })
-  }, [allowedAssets, excludeAssets, excludeWalletIds, sortedWalletList])
+  }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
 
   // Extract recent wallets:
   const recentWalletList = React.useMemo(() => {
@@ -225,14 +222,13 @@ export function WalletList(props: Props) {
   const handleItemLayout = useRowLayout()
 
   return sectionList == null ? (
-    <FlatList data={walletList} keyboardShouldPersistTaps="handled" renderItem={renderRow} style={margin} getItemLayout={handleItemLayout} />
+    <FlashList data={walletList} estimatedItemSize={theme.rem(4.25)} keyboardShouldPersistTaps="handled" renderItem={renderRow} />
   ) : (
     <SectionList
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
       renderSectionHeader={renderSectionHeader}
       sections={sectionList}
-      style={margin}
       getItemLayout={handleItemLayout}
     />
   )

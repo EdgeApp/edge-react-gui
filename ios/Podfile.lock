@@ -18,11 +18,11 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (0.19.45):
+  - edge-core-js (0.19.46):
     - React-Core
-  - edge-currency-accountbased (0.22.18):
+  - edge-currency-accountbased (0.22.21):
     - React-Core
-  - edge-login-ui-rn (1.2.0):
+  - edge-login-ui-rn (1.2.2):
     - React
   - FBLazyVector (0.67.5)
   - FBReactNativeSpec (0.67.5):
@@ -560,6 +560,8 @@ PODS:
     - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
+  - RNFlashList (1.4.1):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.5.0):
@@ -809,6 +811,7 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
+  - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -1023,6 +1026,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
+  RNFlashList:
+    :path: "../node_modules/@shopify/flash-list"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -1079,9 +1084,9 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  edge-core-js: 3b4ae090838b2f5927a0e4191619ba1d919f596a
-  edge-currency-accountbased: 5c9b257f47a5d55fe825c64c9c1cbfca54951f91
-  edge-login-ui-rn: 3e7b2b4f8835d13698b8b2e74ba7557929e31194
+  edge-core-js: c1a123dd7dd617e568d8961b2eccee4a64a8a024
+  edge-currency-accountbased: cc04c152256b12958fbb4bbfc623bc00d1c206fe
+  edge-login-ui-rn: 8edc8a82230c79cc83b127051dcb395356d4ba3f
   FBLazyVector: d2db9d00883282819d03bbd401b2ad4360d47580
   FBReactNativeSpec: 94da4d84ba3b1acf459103320882daa481a2b62d
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -1171,6 +1176,7 @@ SPEC CHECKSUMS:
   RNFBAnalytics: fae7572493095e19d22498650c97507f988e627d
   RNFBApp: fd23737680ed2bdde41ca27d8bfb171b6d668c6b
   RNFBMessaging: cd273b4dcacf98c83a25ce1711c8c85511573990
+  RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNLocalize: cbcb55d0e19c78086ea4eea20e03fe8000bbbced
@@ -1207,4 +1213,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2c8eb53f773ad98335ff8c0df91d74e83c87b8d6
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

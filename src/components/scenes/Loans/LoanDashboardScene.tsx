@@ -1,6 +1,7 @@
+import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -21,7 +22,6 @@ import { Theme } from '../../../types/Theme'
 import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
-import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -46,7 +46,6 @@ export const LoanDashboardScene = (props: Props) => {
   const { navigation } = props
 
   const theme = useTheme()
-  const margin = sidesToMargin(mapSides(fixSides(0.5, 0), theme.rem))
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
@@ -54,21 +53,26 @@ export const LoanDashboardScene = (props: Props) => {
   // State
   //
 
-  const sortedWalletList = useSelector(state => state.sortedWalletList)
-  const account = useSelector(state => state.core.account)
   const loanAccountsMap = useSelector(state => state.loanManager.loanAccounts)
   const syncRatio = useSelector(state => state.loanManager.syncRatio)
   const lastResyncTimestamp = useSelector(state => state.loanManager.lastResyncTimestamp)
 
   const isLoansLoading = syncRatio < 0
 
-  const wallets = useWatch(account, 'currencyWallets')
-  const isWalletsLoaded = sortedWalletList.every(walletListItem => walletListItem.wallet != null)
+  const account = useSelector(state => state.core.account)
+  const activeWalletIds = useWatch(account, 'activeWalletIds')
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
+  useAsyncEffect(async () => {
+    await account.waitForAllWallets()
+    setIsWalletsLoaded(true)
+  }, [account])
 
   const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
   // TODO: When new loan dApps are added, we will need a way to specify a way to select which dApp to add a new loan for.
-  const hardPluginWalletIds = Object.keys(wallets).filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(wallets[walletId].currencyInfo.pluginId))
+  const hardPluginWalletIds = activeWalletIds.filter(walletId => SUPPORTED_WALLET_PLUGIN_IDS.includes(currencyWallets[walletId]?.currencyInfo.pluginId))
 
   //
   // Effects
@@ -106,10 +110,10 @@ export const LoanDashboardScene = (props: Props) => {
           excludeWalletIds={Object.keys(loanAccountsMap)}
         />
       ))
-      newLoanWallet = newWalletId != null ? wallets[newWalletId] : null
+      newLoanWallet = newWalletId == null ? null : currencyWallets[newWalletId]
     } else if (hardPluginWalletIds.length === 1) {
       // If the user owns one polygon wallet, auto-select that wallet for the loan creation
-      newLoanWallet = wallets[hardPluginWalletIds[0]]
+      newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
     } else {
       // If the user owns no polygon wallets, auto-create one
       const filteredCurrencyInfo = SUPPORTED_WALLET_PLUGIN_IDS.reduce((info: EdgeCurrencyInfo | undefined, pluginId) => {
@@ -163,7 +167,7 @@ export const LoanDashboardScene = (props: Props) => {
           </Card>
         ) : null}
         {isLoansLoading ? (
-          <Space around>
+          <Space around={1}>
             <FillLoader />
           </Space>
         ) : (
@@ -201,31 +205,32 @@ export const LoanDashboardScene = (props: Props) => {
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
-            <Space isFill isGroupCenter isItemCenter horizontal bottom={2.5}>
+            <Space expand around horizontal={1} bottom={2.5}>
               <EdgeText style={styles.emptyText}>{s.strings.loan_loading_loans}</EdgeText>
             </Space>
           ) : (
             <>
-              <Space isFill isGroupCenter isItemCenter horizontal top>
+              <Space expand around horizontal={1} top={1}>
                 <EdgeText style={styles.emptyText} numberOfLines={4}>
                   {s.strings.loan_no_active_loans}
                 </EdgeText>
               </Space>
-              <Space bottom>{renderFooter()}</Space>
+              <Space around bottom={1}>
+                {renderFooter()}
+              </Space>
             </>
           )}
         </>
       ) : (
-        <>
-          <FlatList
+        <View style={styles.listMargin}>
+          <FlashList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
-            renderItem={renderLoanCard}
-            style={margin}
-            ListFooterComponent={renderFooter()}
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
+            ListFooterComponent={renderFooter()}
+            renderItem={renderLoanCard}
           />
-        </>
+        </View>
       )}
     </SceneWrapper>
   )
@@ -256,6 +261,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.fontFaceMedium,
       color: theme.secondaryText,
       textAlign: 'center'
+    },
+    listMargin: {
+      margin: theme.rem(0.5),
+      flex: 1
     },
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,

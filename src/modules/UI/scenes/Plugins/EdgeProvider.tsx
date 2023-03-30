@@ -103,9 +103,8 @@ export class EdgeProvider extends Bridgeable {
   _dispatch: Dispatch
   _state: RootState
   _navigation: NavigationBase
-  _selectedWallet: EdgeCurrencyWallet
-  _selectedChainCode: string
-  _selectedCurrencyCode: string
+  _selectedWallet: EdgeCurrencyWallet | undefined
+  _selectedTokenId: string | undefined
 
   // Public properties:
   deepPath: string | undefined
@@ -135,8 +134,10 @@ export class EdgeProvider extends Bridgeable {
     this.restartPlugin = restartPlugin
     const { currencyWallets } = this._state.core.account
     this._selectedWallet = currencyWallets[this._state.ui.wallets.selectedWalletId]
-    this._selectedChainCode = this._selectedWallet.currencyInfo.currencyCode
-    this._selectedCurrencyCode = this._state.ui.wallets.selectedCurrencyCode
+    this._selectedTokenId =
+      this._selectedWallet == null
+        ? undefined
+        : getTokenId(this._state.core.account, this._selectedWallet.currencyInfo.pluginId, this._state.ui.wallets.selectedCurrencyCode)
   }
 
   _updateState(state: RootState, deepPath?: string, deepQuery?: UriQueryMap, promoCode?: string): void {
@@ -184,9 +185,7 @@ export class EdgeProvider extends Bridgeable {
       const tokenCode = currencyCode
       const { pluginId } = this._selectedWallet.currencyInfo
       const tokenId = getTokenId(this._state.core.account, pluginId, currencyCode)
-
-      this._selectedCurrencyCode = currencyCode
-      this._selectedChainCode = chainCode
+      this._selectedTokenId = tokenId
 
       const unfixCode = unfixCurrencyCode(this._plugin.fixCurrencyCodes, pluginId, tokenId)
       if (unfixCode != null) {
@@ -217,7 +216,10 @@ export class EdgeProvider extends Bridgeable {
 
   // Get an address from the user's wallet
   async getReceiveAddress(options: EdgeGetReceiveAddressOptions): Promise<EdgeReceiveAddress> {
-    const receiveAddress = await this._selectedWallet.getReceiveAddress()
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const receiveAddress = await wallet.getReceiveAddress()
     if (options && options.metadata) {
       receiveAddress.metadata = options.metadata
     }
@@ -225,20 +227,23 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async getCurrentWalletInfo(): Promise<WalletDetails> {
-    const edgeWallet = this._selectedWallet
-    const currencyCode = this._selectedCurrencyCode
-    const walletName = getWalletName(edgeWallet)
-    const receiveAddress = await edgeWallet.getReceiveAddress()
-    const contractAddress = edgeWallet.currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)?.contractAddress
-    const icons = getCurrencyIconUris(edgeWallet.currencyInfo.pluginId, contractAddress)
+    const tokenId = this._selectedTokenId
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const { currencyConfig, currencyInfo, fiatCurrencyCode } = wallet
+    const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
+    const walletName = getWalletName(wallet)
+    const receiveAddress = await wallet.getReceiveAddress()
+    const icons = getCurrencyIconUris(wallet.currencyInfo.pluginId, tokenId)
 
     const returnObject: WalletDetails = {
       name: walletName,
-      pluginId: edgeWallet.currencyInfo.pluginId,
+      pluginId: currencyInfo.pluginId,
       receiveAddress,
-      chainCode: this._selectedChainCode,
+      chainCode: currencyInfo.currencyCode,
       currencyCode,
-      fiatCurrencyCode: edgeWallet.fiatCurrencyCode.replace('iso:', ''),
+      fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''),
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
@@ -306,15 +311,19 @@ export class EdgeProvider extends Bridgeable {
   }
 
   async getWalletHistory() {
-    // Get Wallet Info
-    const currencyCode = this._selectedCurrencyCode
+    const tokenId = this._selectedTokenId
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const { currencyConfig, currencyInfo, fiatCurrencyCode } = wallet
+    const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
 
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.fragment_wallets_export_transactions}
-        message={sprintf(s.strings.transaction_history_permission, getWalletName(this._selectedWallet))}
+        message={sprintf(s.strings.transaction_history_permission, getWalletName(wallet))}
         buttons={{
           ok: { label: s.strings.yes },
           cancel: { label: s.strings.no }
@@ -326,10 +335,9 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Grab transactions from current wallet
-    const fiatCurrencyCode = this._selectedWallet.fiatCurrencyCode
-    const balance = this._selectedWallet.balances[currencyCode] ?? '0'
+    const balance = wallet.balances[currencyCode] ?? '0'
 
-    const txs = await this._selectedWallet.getTransactions({ currencyCode })
+    const txs = await wallet.getTransactions({ currencyCode })
     const result: EdgeGetWalletHistoryResult = {
       fiatCurrencyCode,
       balance,
@@ -342,19 +350,21 @@ export class EdgeProvider extends Bridgeable {
   // Request that the user spend to an address or multiple addresses
   async requestSpend(providerSpendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
-    const { account } = this._state.core
+
+    const tokenId = this._selectedTokenId
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const { currencyConfig, currencyInfo } = wallet
+    const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
 
     // PUBLIC ADDRESS URI
-    let tokenId: string | undefined
-    if (this._selectedChainCode !== this._selectedCurrencyCode) {
-      tokenId = getTokenId(account, this._selectedWallet.currencyInfo.pluginId, this._selectedCurrencyCode)
-    }
     const spendTargets: EdgeSpendTarget[] = []
     for (const target of providerSpendTargets) {
       let { exchangeAmount, nativeAmount, publicAddress, otherParams } = target
 
       if (exchangeAmount != null) {
-        nativeAmount = await this._selectedWallet.denominationToNative(exchangeAmount, this._selectedCurrencyCode)
+        nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
       }
       spendTargets.push({ publicAddress, nativeAmount, otherParams, memo: uniqueIdentifier, uniqueIdentifier })
     }
@@ -371,11 +381,18 @@ export class EdgeProvider extends Bridgeable {
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | undefined> {
     console.log(`requestSpendUri ${uri}`)
-    const { account } = this._state.core
-    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await this._selectedWallet.parseUri(uri)
-    const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
+    const { customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
+    const tokenId = this._selectedTokenId
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const { currencyConfig, currencyInfo } = wallet
+    const { currencyCode: selectedCurrencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
+
+    const result: EdgeParsedUri & { paymentProtocolURL?: string } = await wallet.parseUri(uri)
     const { legacyAddress, publicAddress, nativeAmount } = result
+    const { currencyCode = result.currencyCode } = options
 
     // Check is PaymentProtocolUri
     if (result.paymentProtocolURL != null) {
@@ -387,15 +404,11 @@ export class EdgeProvider extends Bridgeable {
       return
     }
 
-    if (currencyCode !== this._selectedCurrencyCode) {
+    if (currencyCode !== selectedCurrencyCode) {
       throw new Error('URI currency code mismatch from chooseCurrencyWallet selected code')
     }
 
     // PUBLIC ADDRESS URI
-    let tokenId: string | undefined
-    if (this._selectedChainCode !== this._selectedCurrencyCode) {
-      tokenId = getTokenId(account, this._selectedWallet.currencyInfo.pluginId, currencyCode)
-    }
     const spendInfo: EdgeSpendInfo = {
       customNetworkFee,
       metadata,
@@ -425,11 +438,14 @@ export class EdgeProvider extends Bridgeable {
     orderId?: string
     spendInfo: EdgeSpendInfo
   }): Promise<EdgeTransaction | undefined> {
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
     return new Promise((resolve, reject) => {
       const lockTilesMap = lockInputs ? { address: true, amount: true, wallet: true } : undefined
 
       this._navigation.navigate('send2', {
-        walletId: this._selectedWallet.id,
+        walletId: wallet.id,
         spendInfo,
         lockTilesMap,
         onBack: () => resolve(undefined),
@@ -444,9 +460,7 @@ export class EdgeProvider extends Bridgeable {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
-          this._navigation.pop()
-
-          this._selectedWallet
+          wallet
             .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
             .then(exchangeAmount => {
               this._dispatch(
@@ -469,8 +483,11 @@ export class EdgeProvider extends Bridgeable {
   async signMessage(message: string) /* EdgeSignedMessage */ {
     console.log(`signMessage message:***${message}***`)
 
-    const { publicAddress } = await this._selectedWallet.getReceiveAddress()
-    const signedMessage = await this._selectedWallet.otherMethods.signMessageBase64(message, publicAddress)
+    const wallet = this._selectedWallet
+    if (wallet == null) throw new Error('No selected wallet')
+
+    const { publicAddress } = await wallet.getReceiveAddress()
+    const signedMessage = await wallet.otherMethods.signMessageBase64(message, publicAddress)
     console.log(`signMessage public address:***${publicAddress}***`)
     console.log(`signMessage signedMessage:***${signedMessage}***`)
     return signedMessage

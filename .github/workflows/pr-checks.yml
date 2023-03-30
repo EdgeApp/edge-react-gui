@@ -2,7 +2,7 @@ name: PR Checks
 on: [pull_request]
 jobs:
   block-wip-pr:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.0.0
     - name: Block WIP PR

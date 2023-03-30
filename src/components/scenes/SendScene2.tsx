@@ -50,6 +50,7 @@ import { PinDots } from '../themed/PinDots'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SelectFioAddress2 } from '../themed/SelectFioAddress2'
 import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
+import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
@@ -62,6 +63,7 @@ interface Props {
 export interface SendScene2Params {
   walletId: string
   tokenId?: string
+  isoExpireDate?: string
   spendInfo?: EdgeSpendInfo
   openCamera?: boolean
   lockTilesMap?: {
@@ -118,6 +120,7 @@ const SendComponent = (props: Props) => {
     walletId: initWalletId = '',
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
+    isoExpireDate,
     openCamera = false,
     infoTiles,
     lockTilesMap = {},
@@ -129,11 +132,13 @@ const SendComponent = (props: Props) => {
     doCheckAndShowGetCryptoModal = true
   } = route.params
 
+  const initExpireDate = isoExpireDate != null ? new Date(isoExpireDate) : undefined
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
+  const [expireDate, setExpireDate] = useState<Date | undefined>(initExpireDate)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
@@ -193,6 +198,7 @@ const SendComponent = (props: Props) => {
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
         // should properly re-render with new spendTargets
+        setExpireDate(parsedUri?.expireDate)
         setSpendInfo({ ...spendInfo })
       }
     }
@@ -233,6 +239,8 @@ const SendComponent = (props: Props) => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
     spendTarget.memo = spendTarget.uniqueIdentifier = undefined
+    setError(undefined)
+    setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
   }
@@ -410,6 +418,24 @@ const SendComponent = (props: Props) => {
     } else {
       return null
     }
+  }
+
+  const handleTimeoutDone = useHandler(() => {
+    setError(new Error(s.strings.send_address_expired_error_message))
+  })
+
+  const renderTimeout = () => {
+    if (expireDate == null) return null
+
+    return (
+      <CountdownTile
+        title={s.strings.send_address_expire_title}
+        isoExpireDate={expireDate.toISOString()}
+        onDone={handleTimeoutDone}
+        maximumHeight="small"
+        contentPadding
+      />
+    )
   }
 
   const renderError = () => {
@@ -774,6 +800,7 @@ const SendComponent = (props: Props) => {
       playSendSound().catch(error => console.log(error)) // Fail quietly
 
       if (onDone) {
+        navigation.pop()
         onDone(null, broadcastedTx)
       } else {
         navigation.replace('transactionDetails', {
@@ -897,7 +924,7 @@ const SendComponent = (props: Props) => {
   let disableSlider = false
   let disabledText: string | undefined
 
-  if (edgeTransaction == null || processingAmountChanged) {
+  if (edgeTransaction == null || processingAmountChanged || error != null) {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true
@@ -905,10 +932,11 @@ const SendComponent = (props: Props) => {
   }
   return (
     <SceneWrapper background="theme">
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView contentContainerStyle={styles.contentContainerStyle} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {renderSelectedWallet()}
         {renderAddressAmountPairs()}
         {renderAddAddress()}
+        {renderTimeout()}
         {renderError()}
         {renderFees()}
         {renderMetadataNotes()}
@@ -917,10 +945,10 @@ const SendComponent = (props: Props) => {
         {renderInfoTiles()}
         {renderAuthentication()}
         {renderScamWarning()}
-        <View style={styles.footer}>
-          {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
-        </View>
       </KeyboardAwareScrollView>
+      <View style={styles.footer}>
+        {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+      </View>
     </SceneWrapper>
   )
 }
@@ -934,10 +962,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   calcFeeSpinner: {
     marginLeft: theme.rem(1)
   },
+  contentContainerStyle: { paddingBottom: theme.rem(6) },
   footer: {
-    margin: theme.rem(2),
+    width: '100%',
+    marginBottom: theme.rem(2),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0
   },
   pinContainer: {
     marginTop: theme.rem(0.25)

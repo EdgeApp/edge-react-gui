@@ -15,6 +15,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
+import { EdgeTokenId } from '../types/types'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent, TrackingEventName } from '../util/tracking'
@@ -63,15 +64,42 @@ export function fetchAccountActivationInfo(walletType: string): ThunkAction<Prom
     const currencyPluginName = getPluginId(walletType)
     const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
     try {
-      const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-      const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
-      const activationInfo = await Promise.all([supportedCurrencies, activationCost])
-      const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
+      const [supportedCurrencies, activationCost] = await Promise.all([
+        currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
+        currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
+      ])
+
+      // Translate ambiguous currency codes:
+      const supportedAssets: EdgeTokenId[] = []
+      for (const currency of Object.keys(supportedCurrencies.result)) {
+        // Handle special cases:
+        if (currency === 'FTC') continue
+        if (currency === 'ETH') {
+          supportedAssets.push({ pluginId: 'ethereum' })
+          continue
+        }
+
+        // Find a top-level currency:
+        const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
+        if (pluginId != null) {
+          supportedAssets.push({ pluginId })
+          continue
+        }
+
+        // Find an Ethereum mainnet token:
+        const { ethereum } = account.currencyConfig
+        if (ethereum == null) continue
+        const tokenId = Object.keys(ethereum.allTokens).find(tokenId => ethereum.allTokens[tokenId].currencyCode === currency)
+        if (tokenId != null) {
+          supportedAssets.push({ pluginId: 'ethereum', tokenId })
+        }
+      }
+
       dispatch({
         type: 'ACCOUNT_ACTIVATION_INFO',
         data: {
-          supportedCurrencies: modifiedSupportedCurrencies,
-          activationCost: activationInfo[1]
+          supportedAssets,
+          activationCost
         }
       })
     } catch (error: any) {

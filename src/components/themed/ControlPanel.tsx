@@ -7,6 +7,7 @@ import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
@@ -52,6 +53,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
+  const insets = useSafeAreaInsets()
   const { hideIoniaRewards = false } = config
 
   // ---- Redux State ----
@@ -70,6 +72,10 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
   const usernames = React.useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
+
+  const closeButtonContainerStyle = React.useMemo(() => {
+    return [styles.closeButtonContainer, { paddingBottom: insets.bottom }]
+  }, [insets.bottom, styles.closeButtonContainer])
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = React.useState(false)
@@ -280,7 +286,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   const xButtonBottomColor = theme.modal
 
   return (
-    <SceneWrapper hasHeader={false} hasTabs={false} background="none">
+    <SceneWrapper hasHeader={false} hasTabs background="none">
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
@@ -370,12 +376,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
           {/* === Navigation Rows End === */}
         </View>
         {/* === Translucent X Close Button Start === */}
-        <LinearGradient
-          colors={[xButtonTopColor, xButtonBottomColor]}
-          style={styles.closeButtonContainer}
-          start={xButtonGradientStart}
-          end={xButtonGradientEnd}
-        >
+        <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
           <TouchableOpacity onPress={handlePressClose}>
             <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>

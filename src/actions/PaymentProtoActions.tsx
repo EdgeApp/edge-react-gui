@@ -232,7 +232,6 @@ export async function launchPaymentProto(
     lockTilesMap: { amount: true, address: true },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
-      navigation.pop()
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
       const unsignedHex = edgeTransaction.otherParams?.unsignedTx

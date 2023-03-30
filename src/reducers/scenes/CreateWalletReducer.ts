@@ -1,9 +1,10 @@
 import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../../types/reduxActions'
+import { EdgeTokenId } from '../../types/types'
 
 export interface HandleActivationInfo {
-  supportedCurrencies: { [key: string]: boolean }
+  supportedAssets: EdgeTokenId[]
   activationCost: string
 }
 
@@ -48,8 +49,8 @@ const handleAvailableStatus: Reducer<HandleAvailableStatus, Action> = (state = '
   }
 }
 
-const initialHandleActivationInfo = {
-  supportedCurrencies: {},
+const initialHandleActivationInfo: HandleActivationInfo = {
+  supportedAssets: [],
   activationCost: ''
 }
 

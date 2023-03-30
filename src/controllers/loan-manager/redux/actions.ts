@@ -166,7 +166,7 @@ export function resyncLoanAccounts(account: EdgeAccount): ThunkAction<Promise<vo
     const typeHack: any = Object.values(borrowPluginMap)
     const borrowPlugins: BorrowPlugin[] = typeHack
 
-    const walletIds = Object.keys(account.currencyWallets)
+    const walletIds = account.activeWalletIds
 
     dispatch({
       type: 'LOAN_MANAGER/SET_SYNC_RATIO',

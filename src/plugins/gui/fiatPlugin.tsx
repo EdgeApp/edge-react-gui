@@ -29,9 +29,10 @@ export const executePlugin = async (params: {
   guiPlugin: GuiPlugin
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   paymentType?: FiatPaymentType
+  providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, regionCode } = params
+  const { disablePlugins, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
   const isBuy = direction === 'buy'
 
@@ -94,7 +95,8 @@ export const executePlugin = async (params: {
   const startPluginParams = {
     isBuy,
     regionCode,
-    paymentTypes
+    paymentTypes,
+    providerId
   }
   plugin.startPlugin(startPluginParams)
 }

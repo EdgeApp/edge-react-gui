@@ -20,7 +20,6 @@ import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
-import { registerNotificationsV2 } from './NotificationActions'
 
 export interface SelectWalletTokenParams {
   navigation: NavigationBase
@@ -191,19 +190,11 @@ export function updateMostRecentWalletsSelected(walletId: string, currencyCode: 
   }
 }
 
-// This gets called a bunch on launch so we need to limit it otherwise duplicate notifications will get registered
-let limitRegistrations = false
 export function updateWalletsRequest(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const { activeWalletIds, currencyWallets } = account
-
-    if (activeWalletIds.length === Object.keys(currencyWallets).length && !limitRegistrations) {
-      limitRegistrations = true
-      await dispatch(registerNotificationsV2())
-      limitRegistrations = false
-    }
+    const { currencyWallets } = account
 
     const fioWallets: EdgeCurrencyWallet[] = []
     for (const walletId of Object.keys(currencyWallets)) {

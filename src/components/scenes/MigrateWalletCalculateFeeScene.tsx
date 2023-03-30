@@ -1,7 +1,8 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { add, lt } from 'biggystring'
 import { EdgeDenomination, EdgeSpendInfo, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, ListRenderItemInfo, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -49,7 +50,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   const [feeState, setFeeState] = React.useState<Map<string, AssetRowState | undefined>>(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
 
-  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
+  const renderCurrencyRow: ListRenderItem<MigrateWalletItem> = useHandler(data => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
     if (walletType == null) return null
 
@@ -142,7 +143,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     let successCount = 0
     const walletPromises = []
     for (const bundle of bundledWalletAssets) {
-      const wallet = currencyWallets[bundle[bundle.length - 1].key]
+      const wallet = currencyWallets[bundle[bundle.length - 1].createWalletIds[0]]
       const {
         currencyInfo: { pluginId }
       } = wallet
@@ -171,7 +172,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
             feeTotal = add(feeTotal, txFee)
 
             // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-            if (i === bundle.length - 1 && lt(wallet.balances[asset.currencyCode], feeTotal)) {
+            if (i === bundle.length - 1 && lt(wallet.balances[wallet.currencyInfo.currencyCode], feeTotal)) {
               throw new InsufficientFundsError({ currencyCode: asset.currencyCode, networkFee: feeTotal })
             }
           } catch (e: any) {
@@ -211,6 +212,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     }
   }, [])
 
+  const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
+
   return (
     <SceneWrapper background="theme">
       <View style={styles.content}>
@@ -218,11 +221,12 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
           {s.strings.migrate_wallet_instructions_fragment}
         </EdgeText>
-        <FlatList
-          style={styles.resultList}
+        <FlashList
           automaticallyAdjustContentInsets={false}
           data={migrateWalletList}
-          keyExtractor={item => item.key}
+          estimatedItemSize={theme.rem(4.25)}
+          extraData={feeState}
+          keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
         />
         <SafeSlider
@@ -237,9 +241,6 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   },
   cryptoTypeLogo: {

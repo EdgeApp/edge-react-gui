@@ -66,6 +66,7 @@ import { FioRequestListScene as FioRequestListSceneComponent } from './scenes/Fi
 import { FioSentRequestDetailsScene as FioSentRequestDetailsSceneComponent } from './scenes/FioSentRequestDetailsScene'
 import { FioStakingChangeScene as FioStakingChangeSceneComponent } from './scenes/FioStakingChangeScene'
 import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './scenes/FioStakingOverviewScene'
+import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
@@ -208,16 +209,23 @@ export const Main = () => {
     logEvent('Start_App')
   }, [])
 
+  // Animations for the login scene are disabled because when navigating from
+  // the 'gettingStarted' initial route to the 'login' route we wish for there
+  // to be no animation and the transition to be immediate if it is detected
+  // that the device has no localUsers in the core's state.
+  const loginSceneAnimationsEnabled = false
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="login"
+        initialRouteName="gettingStarted"
         screenOptions={{
           headerShown: false
         }}
       >
         <Stack.Screen name="edgeApp" component={EdgeApp} />
-        <Stack.Screen name="login" component={LoginScene} />
+        <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
+        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: loginSceneAnimationsEnabled }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -777,7 +785,6 @@ const EdgeBuyTabScreen = () => {
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
         options={{
-          headerLeft: () => <PluginBackButton />,
           headerRight: () => null
         }}
       />

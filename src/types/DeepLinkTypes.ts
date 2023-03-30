@@ -59,6 +59,9 @@ export interface PasswordRecoveryLink {
 export interface PluginLink {
   type: 'plugin'
   pluginId: string
+  direction: string
+  providerId: string
+  paymentType: string
   path: string
   query: { [key: string]: string | null }
 }

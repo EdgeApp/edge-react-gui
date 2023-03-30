@@ -14,17 +14,17 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { SafeAreaViewComponent as SafeAreaView } from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { EdgeTokenId } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
 import { fixFiatCurrencyCode } from '../../util/utils'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { Airship } from '../services/AirshipInstance'
 
 export interface AccountPaymentParams {
@@ -44,7 +44,7 @@ interface StateProps {
   account: EdgeAccount
   paymentCurrencyCode: string
   amount: string
-  supportedCurrencies: { [currencyCode: string]: boolean }
+  supportedAssets: EdgeTokenId[]
   activationCost: string
   paymentDenominationSymbol: string
   existingCoreWallet?: EdgeCurrencyWallet
@@ -104,15 +104,10 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onPressSelect = () => {
-    const { supportedCurrencies } = this.props
-    const allowedCurrencyCodes: string[] = []
-    for (const currency of Object.keys(supportedCurrencies)) {
-      if (supportedCurrencies[currency]) {
-        allowedCurrencyCodes.push(currency)
-      }
-    }
+    const { supportedAssets } = this.props
+
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedAssets={supportedAssets} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.onSelectWallet(walletId, currencyCode)
@@ -250,9 +245,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
 
     return (
-      <SafeAreaView>
+      <SceneWrapper>
         <View style={styles.scene}>
-          <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
               <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
@@ -265,7 +259,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
             <View style={{ paddingBottom: 200 }} />
           </ScrollView>
         </View>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
@@ -274,9 +268,6 @@ const styles = StyleSheet.create({
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
-  },
-  scrollableGradient: {
-    height: THEME.HEADER
   },
   scrollableView: {
     position: 'relative',
@@ -371,7 +362,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
 
     const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
     const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
-    const { supportedCurrencies, activationCost } = handleActivationInfo
+    const { supportedAssets, activationCost } = handleActivationInfo
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
     const paymentDenomination =
@@ -389,7 +380,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
       account: state.core.account,
       paymentCurrencyCode: currencyCode,
       amount,
-      supportedCurrencies,
+      supportedAssets,
       activationCost,
       paymentDenominationSymbol,
       existingCoreWallet,

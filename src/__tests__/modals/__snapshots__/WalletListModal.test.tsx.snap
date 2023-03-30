@@ -372,75 +372,316 @@ Array [
         value=""
       />
     </View>
-    <RCTScrollView
-      data={Array []}
-      getItem={[Function]}
-      getItemCount={[Function]}
-      getItemLayout={[Function]}
-      keyExtractor={[Function]}
-      keyboardShouldPersistTaps="handled"
-      onContentSizeChange={[Function]}
-      onLayout={[Function]}
-      onMomentumScrollBegin={[Function]}
-      onMomentumScrollEnd={[Function]}
-      onScroll={[Function]}
-      onScrollBeginDrag={[Function]}
-      onScrollEndDrag={[Function]}
-      removeClippedSubviews={false}
-      renderItem={[Function]}
-      scrollEventThrottle={50}
-      stickyHeaderIndices={Array []}
-      style={
-        Object {
-          "marginBottom": 0,
-          "marginLeft": -22,
-          "marginRight": -22,
-          "marginTop": 0,
-        }
-      }
-      viewabilityConfigCallbackPairs={Array []}
-    >
-      <View />
-    </RCTScrollView>
     <View
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
         Object {
-          "alignItems": "center",
-          "opacity": 1,
-          "paddingTop": 22,
+          "flex": 1,
+          "marginHorizontal": -22,
         }
       }
     >
-      <Text
-        allowFontScaling={false}
+      <View
         style={
-          Array [
-            Object {
-              "color": "#00f1a2",
-              "fontSize": 28,
-            },
-            undefined,
-            Object {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            Object {},
-          ]
+          Object {
+            "flex": 1,
+            "overflow": "hidden",
+          }
         }
       >
-        
-      </Text>
+        <RCTScrollView
+          applyWindowCorrection={[Function]}
+          canChangeSize={true}
+          contentContainerStyle={
+            Object {
+              "backgroundColor": undefined,
+              "minHeight": 1,
+              "minWidth": 1,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+            }
+          }
+          contentHeight={0}
+          contentWidth={0}
+          data={Array []}
+          dataProvider={
+            DataProvider {
+              "_data": Array [],
+              "_firstIndexToProcess": 0,
+              "_hasStableIds": false,
+              "_requiresDataChangeHandling": false,
+              "_size": 0,
+              "getStableId": [Function],
+              "rowHasChanged": [Function],
+            }
+          }
+          disableRecycling={false}
+          estimatedItemSize={96}
+          extendedState={Object {}}
+          externalScrollView={[Function]}
+          finalRenderAheadOffset={250}
+          forceNonDeterministicRendering={true}
+          horizontal={false}
+          initialOffset={0}
+          initialRenderIndex={0}
+          isHorizontal={false}
+          keyboardShouldPersistTaps="handled"
+          layoutProvider={
+            GridLayoutProviderWithProps {
+              "_acceptableRelayoutDelta": 1,
+              "_getHeightOrWidth": [Function],
+              "_getLayoutTypeForIndex": [Function],
+              "_getSpan": [Function],
+              "_hasExpired": false,
+              "_maxSpan": 1,
+              "_setLayoutForType": [Function],
+              "_tempDim": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "averageWindow": AverageWindow {
+                "currentAverage": 96,
+                "currentCount": 1,
+                "inputValues": Array [
+                  96,
+                ],
+                "nextIndex": 1,
+              },
+              "defaultEstimatedItemSize": 100,
+              "layoutObject": Object {
+                "size": undefined,
+                "span": undefined,
+              },
+              "props": Object {
+                "data": Array [],
+                "estimatedItemSize": 96,
+                "keyboardShouldPersistTaps": "handled",
+                "numColumns": 1,
+                "renderItem": [Function],
+              },
+              "renderWindowInsets": Object {
+                "height": 0,
+                "width": 0,
+              },
+              "shouldRefreshWithAnchoring": true,
+            }
+          }
+          maxRenderAhead={750}
+          numColumns={1}
+          onEndReached={[Function]}
+          onEndReachedThreshold={0}
+          onEndReachedThresholdRelative={0}
+          onItemLayout={[Function]}
+          onLayout={[Function]}
+          onScroll={[Function]}
+          onScrollBeginDrag={[Function]}
+          onSizeChanged={[Function]}
+          onVisibleIndicesChanged={[Function]}
+          removeClippedSubviews={false}
+          renderAheadOffset={0}
+          renderAheadStep={250}
+          renderContentContainer={[Function]}
+          renderItem={[Function]}
+          renderItemContainer={[Function]}
+          rowRenderer={[Function]}
+          scrollEventThrottle={16}
+          scrollThrottle={16}
+          scrollViewProps={
+            Object {
+              "contentContainerStyle": Object {
+                "backgroundColor": undefined,
+                "minHeight": 1,
+                "minWidth": 1,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
+              "onLayout": [Function],
+              "onScrollBeginDrag": [Function],
+              "refreshControl": undefined,
+              "style": Object {
+                "minHeight": 1,
+                "minWidth": 1,
+              },
+            }
+          }
+          style={
+            Object {
+              "minHeight": 1,
+              "minWidth": 1,
+            }
+          }
+          suppressBoundedSizeException={true}
+          windowCorrectionConfig={
+            Object {
+              "applyToInitialOffset": true,
+              "applyToItemScroll": true,
+              "value": Object {
+                "endCorrection": 0,
+                "startCorrection": 0,
+                "windowShift": -0,
+              },
+            }
+          }
+        >
+          <View>
+            <View
+              style={
+                Object {
+                  "flexDirection": "column",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "paddingLeft": 0,
+                    "paddingTop": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  Array [
+                    undefined,
+                    undefined,
+                  ]
+                }
+              />
+              <AutoLayoutView
+                enableInstrumentation={false}
+                horizontal={false}
+                onBlankAreaEvent={[Function]}
+                onLayout={[Function]}
+                renderAheadOffset={0}
+                scrollOffset={0}
+                style={
+                  Object {
+                    "height": 0,
+                    "width": 0,
+                  }
+                }
+                windowSize={0}
+              />
+              <CellContainer
+                index={-1}
+                style={
+                  Array [
+                    undefined,
+                    undefined,
+                  ]
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "paddingBottom": 0,
+                    "paddingRight": 0,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </RCTScrollView>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "marginBottom": -22,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          accessibilityHint="Close Modal"
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "opacity": 1,
+              "padding": 22,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": "#00f1a2",
+                  "fontSize": 28,
+                },
+                undefined,
+                Object {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+      <BVLinearGradient
+        colors={
+          Array [
+            1187109,
+            856825125,
+            3205635365,
+            4279377189,
+          ]
+        }
+        endPoint={
+          Object {
+            "x": 0,
+            "y": 1,
+          }
+        }
+        locations={
+          Array [
+            0,
+            0.2,
+            0.75,
+            1,
+          ]
+        }
+        pointerEvents="none"
+        startPoint={
+          Object {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          Object {
+            "bottom": 0,
+            "height": 67,
+            "position": "absolute",
+            "width": "100%",
+          }
+        }
+      />
     </View>
   </View>,
 ]

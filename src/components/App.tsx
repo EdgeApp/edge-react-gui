@@ -3,6 +3,7 @@ import '@ethersproject/shims'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { CrashScene } from './scenes/CrashScene'
 import { EdgeCoreManager } from './services/EdgeCoreManager'
@@ -16,13 +17,15 @@ function logCrash(error: { originalError: unknown }) {
 
 export function App(props: {}) {
   return (
-    <ThemeProvider>
-      <GestureHandlerRootView style={StyleSheet.absoluteFill}>
-        <ErrorBoundary FallbackComponent={CrashScene} onError={logCrash}>
-          <StatusBarManager />
-          <EdgeCoreManager />
-        </ErrorBoundary>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+          <ErrorBoundary FallbackComponent={CrashScene} onError={logCrash}>
+            <StatusBarManager />
+            <EdgeCoreManager />
+          </ErrorBoundary>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </SafeAreaProvider>
   )
 }

@@ -1,5 +1,6 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { FlatList, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -112,8 +113,8 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     navigation.push('migrateWalletCalculateFee', { migrateWalletList: filteredMigrateWalletList })
   })
 
-  const renderCreateWalletRow = useHandler((item: MigrateWalletItem) => {
-    const { key, displayName, pluginId, tokenId } = item
+  const renderCreateWalletRow: ListRenderItem<MigrateWalletItem> = useHandler(item => {
+    const { key, displayName, pluginId, tokenId } = item.item
 
     const toggle = (
       <Switch
@@ -149,23 +150,22 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     [handleNext, numSelected]
   )
 
-  const getItemLayout = useHandler((data: any, index: number) => ({ length: theme.rem(4.25), offset: theme.rem(4.25) * index, index }))
+  const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader withTopMargin title={s.strings.migrate_wallets_select_crypto_title} />
-          <FlatList
-            style={styles.resultList}
+          <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom }}
             data={migrateWalletList}
-            initialNumToRender={12}
+            estimatedItemSize={theme.rem(4.25)}
+            extraData={selectedItems}
             keyboardShouldPersistTaps="handled"
-            keyExtractor={item => item.key}
-            renderItem={data => renderCreateWalletRow(data.item)}
-            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+            renderItem={renderCreateWalletRow}
           />
           {renderNextButton}
         </View>
@@ -176,9 +176,6 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    flex: 1
-  },
-  resultList: {
     flex: 1
   }
 }))

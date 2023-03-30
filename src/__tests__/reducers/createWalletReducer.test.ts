@@ -14,7 +14,7 @@ test('initialState', () => {
     isCheckingHandleAvailability: false,
     handleAvailableStatus: '',
     handleActivationInfo: {
-      supportedCurrencies: {},
+      supportedAssets: [],
       activationCost: ''
     },
     walletAccountActivationQuoteError: ''

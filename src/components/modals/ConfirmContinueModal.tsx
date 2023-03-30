@@ -9,7 +9,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -73,7 +73,7 @@ export function ConfirmContinueModal(props: Props) {
           <MainButton alignSelf="center" label={s.strings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
         </Fade>
       </ScrollView>
-      {isSkippable && <ModalCloseArrow onPress={handleClose} />}
+      {isSkippable && <ModalFooter onPress={handleClose} />}
     </ThemedModal>
   )
 }

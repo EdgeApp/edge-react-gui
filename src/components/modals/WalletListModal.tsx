@@ -1,30 +1,28 @@
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
+import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeTokenId } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { makeCurrencyCodeTable } from '../../util/utils'
 import { CustomAsset } from '../data/row/CurrencyRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
@@ -107,6 +105,7 @@ export function WalletListModal(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   // #endregion Constants
 
@@ -179,17 +178,11 @@ export function WalletListModal(props: Props) {
     if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
   })
 
-  const handleItemLayout = useRowLayout()
-
   // #endregion Handlers
 
   // #region Renderers
 
-  const renderBankSignupButton = () => (
-    <MainButton label={s.strings.deposit_to_bank} type="secondary" onPress={handleShowBankPlugin} marginRem={[0, 0.75, 1.5, 0.75]} />
-  )
-
-  const renderPaymentMethod = useHandler(item => {
+  const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
     return (
       <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
         <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
@@ -197,49 +190,51 @@ export function WalletListModal(props: Props) {
     )
   })
 
-  const renderCustomAsset = useHandler(item => {
-    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.tokenId} customAsset={item.item} onPress={handleWalletListPress} />
+  const renderCustomAsset: ListRenderItem<CustomAsset> = useHandler(item => {
+    return <WalletListCurrencyRow wallet={item.item.wallet} tokenId={item.item.referenceTokenId} customAsset={item.item} onPress={handleWalletListPress} />
   })
 
-  const renderBankSection = () => {
+  const bankSection = React.useMemo<React.ReactNode>(() => {
     if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
-    if (Object.keys(bankAccountsMap).length === 0) return renderBankSignupButton()
+    if (Object.keys(bankAccountsMap).length === 0) {
+      return <MainButton label={s.strings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
+    }
     return (
-      <View>
-        <FlatList
+      <View style={styles.bankMargin}>
+        <FlashList
+          estimatedItemSize={theme.rem(4.25)}
           data={Object.values(bankAccountsMap)}
           keyboardShouldPersistTaps="handled"
           renderItem={renderPaymentMethod}
-          getItemLayout={handleItemLayout}
           keyExtractor={item => item.id}
-          style={sidesToMargin(mapSides(fixSides([-1, -1, 1, -0.5], 0), theme.rem))}
         />
       </View>
     )
-  }
+  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin, theme])
 
-  const renderCustomAssetSection = () =>
-    showCustomAssets ? (
-      <View>
-        <FlatList
+  const customAssetSection = React.useMemo<React.ReactNode>(() => {
+    if (!showCustomAssets) return null
+    return (
+      <View style={styles.customAssetMargin}>
+        <FlashList
+          estimatedItemSize={theme.rem(4.25)}
           data={customAssets}
           keyboardShouldPersistTaps="handled"
           renderItem={renderCustomAsset}
-          getItemLayout={handleItemLayout}
           keyExtractor={item => item.referenceTokenId}
-          style={sidesToMargin(mapSides(fixSides([-0.5, -1, 1, -1], 0), theme.rem))}
         />
       </View>
-    ) : null
+    )
+  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin, theme])
 
   // #endregion Renderers
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{headerTitle}</ModalTitle>
-      {renderBankSection()}
-      {renderCustomAssetSection()}
+      {bankSection}
+      {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{s.strings.your_wallets}</EdgeText> : null}
       <OutlinedTextInput
         returnKeyType="search"
@@ -252,26 +247,44 @@ export function WalletListModal(props: Props) {
         marginRem={[0.5, 0, 1.25, 0]}
         searchIcon
       />
-      <WalletList
-        allowedAssets={allowedAssets ?? legacyAllowedAssets}
-        allowedWalletIds={allowedWalletIds}
-        excludeAssets={walletListExcludeAssets}
-        excludeWalletIds={excludeWalletIds}
-        filterActivation={filterActivation}
-        marginRem={listMargin}
-        searching={searching}
-        searchText={searchText}
-        showCreateWallet={showCreateWallet}
-        createWalletId={createWalletId}
-        onPress={handleWalletListPress}
-        navigation={navigation}
-      />
-      <ModalCloseArrow onPress={handleCancel} />
+      <View style={styles.walletsMargin}>
+        <WalletList
+          allowedAssets={allowedAssets ?? legacyAllowedAssets}
+          allowedWalletIds={allowedWalletIds}
+          excludeAssets={walletListExcludeAssets}
+          excludeWalletIds={excludeWalletIds}
+          filterActivation={filterActivation}
+          searching={searching}
+          searchText={searchText}
+          showCreateWallet={showCreateWallet}
+          createWalletId={createWalletId}
+          onPress={handleWalletListPress}
+          navigation={navigation}
+        />
+      </View>
+      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }
 
-const listMargin = [0, -1]
+const getStyles = cacheStyles((theme: Theme) => ({
+  bankMargin: {
+    flex: 1,
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(-1),
+    marginTop: theme.rem(-1)
+  },
+  customAssetMargin: {
+    flex: 1,
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(-1),
+    marginTop: theme.rem(-0.5)
+  },
+  walletsMargin: {
+    flex: 1,
+    marginHorizontal: theme.rem(-1)
+  }
+}))
 
 /**
  * Precisely identify the assets named by a currency-code array.

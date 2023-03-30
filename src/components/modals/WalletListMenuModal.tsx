@@ -16,7 +16,7 @@ import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelper
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Option {
@@ -226,7 +226,7 @@ export function WalletListMenuModal(props: Props) {
         </ScrollView>
       </View>
       <LinearGradient style={styles.modalCloseButton} colors={[xButtonTopColor, xButtonBottomColor]} start={xButtonGradientStart} end={xButtonGradientEnd}>
-        <ModalCloseArrow onPress={handleCancel} />
+        <ModalFooter onPress={handleCancel} />
       </LinearGradient>
     </ThemedModal>
   )

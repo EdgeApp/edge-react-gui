@@ -119,7 +119,7 @@ export function WalletListScene(props: Props) {
   const handlePressDone = useHandler(() => setSorting(false))
 
   return (
-    <SceneWrapper>
+    <SceneWrapper hasTabs>
       <WiredProgressBar />
       {sorting && (
         <View style={styles.headerContainer}>

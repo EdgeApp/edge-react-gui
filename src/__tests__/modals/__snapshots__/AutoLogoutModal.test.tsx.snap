@@ -41,7 +41,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "cardBorderColor": "rgba(255, 255, 255, .1)",
       "cardBorderRadius": 4,
       "clipboardPopupText": "#000000",
-      "confirmationSlider": "rgba(255, 255, 255, .05)",
+      "confirmationSlider": "#2B333A",
       "confirmationSliderArrow": "#1b2f3b",
       "confirmationSliderText": "#FFFFFF",
       "confirmationSliderTextDeactivated": "#87939E",
@@ -64,6 +64,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "dropdownError": "#E85466",
       "dropdownText": "#FFFFFF",
       "dropdownWarning": "#F1AA19",
+      "emphasizedText": "#00f1a2",
       "escapeButton": Array [
         "rgba(255, 255, 255, 0)",
         "rgba(255, 255, 255, 0)",
