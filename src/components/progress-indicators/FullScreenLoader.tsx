@@ -10,10 +10,10 @@ interface Props {
 
 export class FullScreenLoader extends React.Component<Props> {
   render() {
-    const { size, indicatorStyles } = this.props
+    const { size = 'large', indicatorStyles } = this.props
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={[styles.indicator, indicatorStyles]} size={size || 'large'} />
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={[styles.indicator, indicatorStyles]} size={size} />
       </View>
     )
   }

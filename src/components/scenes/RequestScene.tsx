@@ -88,7 +88,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
-      if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
+      if (getSpecialCurrencyInfo(pluginId).minimumPopupModals != null) {
         minimumPopupModalState[pluginId] = 'NOT_YET_SHOWN'
       }
     })
@@ -165,7 +165,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const { pluginId } = wallet.currencyInfo
 
     const didAddressChange = prevState.selectedAddress !== this.state.selectedAddress
-    const didWalletChange = prevProps.wallet && wallet.id !== prevProps.wallet.id
+    const didWalletChange = prevProps.wallet != null && wallet.id !== prevProps.wallet.id
 
     if (didWalletChange) {
       this.getAddressItems()
@@ -219,7 +219,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   flipInputRef = (ref: ExchangedFlipInput | null) => {
-    if (ref?.flipInput) {
+    if (ref?.flipInput != null) {
       this.flipInput = ref.flipInput
     }
   }
@@ -251,7 +251,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={this.props.navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
+        if (walletId != null && currencyCode != null) {
           const wallet = account.currencyWallets[walletId]
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
           this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
@@ -413,7 +413,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     if (currencyCode !== wallet.currencyInfo.currencyCode) return false
     const { pluginId } = wallet.currencyInfo
 
-    if (this.state.minimumPopupModalState[pluginId]) {
+    if (this.state.minimumPopupModalState[pluginId] != null) {
       if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
@@ -436,7 +436,8 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
-    if (getSpecialCurrencyInfo(wallet.currencyInfo.pluginId).isUriEncodedStructure) {
+    const { isUriEncodedStructure = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
+    if (isUriEncodedStructure) {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
@@ -467,12 +468,12 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   fioAddressModal = () => {
-    const { navigation } = this.props
+    const { navigation, fioAddressesExist = false } = this.props
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    if (!this.props.fioAddressesExist) {
+    if (fioAddressesExist) {
       showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
       return
     }
@@ -491,7 +492,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   fioMode = () => {
-    if (this.flipInput && Platform.OS === 'ios') {
+    if (this.flipInput != null && Platform.OS === 'ios') {
       this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
@@ -499,17 +500,17 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
-      if (this.flipInput) {
+      if (this.flipInput != null) {
         this.flipInput.textInputBottomBlur()
       }
     })
   }
 
   nextFioMode = () => {
-    if (this.state.isFioMode && (!this.state.amounts || lte(this.state.amounts.nativeAmount, '0'))) {
+    if (this.state.isFioMode && (this.state.amounts == null || lte(this.state.amounts.nativeAmount, '0'))) {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
-      if (this.flipInput) {
+      if (this.flipInput != null) {
         this.flipInput.textInputBottomBlur()
       }
       this.onNext()
@@ -603,7 +604,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
+    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name
     const tokenId = getTokenId(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
@@ -624,7 +625,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
+    const fioAddressesExist = !(state.ui.scenes.fioAddress.fioAddresses.length === 0)
 
     return {
       account,

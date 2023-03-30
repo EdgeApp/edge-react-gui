@@ -25,18 +25,18 @@ interface Props {
 
 export const useFiatText = (props: Props): string => {
   const {
-    appendFiatCurrencyCode,
-    autoPrecision,
+    appendFiatCurrencyCode = false,
+    autoPrecision = false,
     cryptoCurrencyCode,
     cryptoExchangeMultiplier = defaultMultiplier,
-    fiatSymbolSpace,
-    hideFiatSymbol,
+    fiatSymbolSpace = false,
+    hideFiatSymbol = false,
     isoFiatCurrencyCode = USD_FIAT,
     maxPrecision,
     minPrecision,
     nativeCryptoAmount = cryptoExchangeMultiplier,
     noGrouping,
-    subCentTruncation
+    subCentTruncation = false
   } = props
 
   // Convert native to fiat amount.

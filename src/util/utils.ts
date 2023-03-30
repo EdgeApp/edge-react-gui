@@ -205,11 +205,11 @@ export function fixFiatCurrencyCode(currencyCode: string) {
 }
 
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) !== '0' && edgeTransaction.nativeAmount.charAt(0) !== '-'
+  return edgeTransaction.nativeAmount != null && edgeTransaction.nativeAmount.charAt(0) !== '0' && edgeTransaction.nativeAmount.charAt(0) !== '-'
 }
 
 export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
-  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
+  return edgeTransaction.nativeAmount != null && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
 // multiplier / exchange rate / ( 1 / unit )
@@ -336,7 +336,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
       promises.splice(i, 1)
       promises.pop()
       --pending
-      if (!pending) {
+      if (pending <= 0) {
         throw e
       }
     }
@@ -375,9 +375,9 @@ export function debounce(func: any, wait: number, immediate: boolean): any {
       if (!immediate) func.apply(context, args)
     }
 
-    const callNow = immediate && !timeout
+    const callNow = immediate && timeout == null
 
-    if (timeout) clearTimeout(timeout)
+    if (timeout != null) clearTimeout(timeout)
 
     timeout = setTimeout(later, wait)
 
