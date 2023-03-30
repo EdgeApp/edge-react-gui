@@ -225,16 +225,16 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
-        <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
-          <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
+        <View style={styles.bottomButton}>
+          <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
-    [defaultSelection, handleNext, numSelected]
+    [defaultSelection, handleNext, numSelected, styles.bottomButton]
   )
 
   return (
-    <SceneWrapper background="theme" avoidKeyboard>
+    <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader title={s.strings.title_create_wallet_select_crypto} withTopMargin />
@@ -270,6 +270,11 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
+  },
   content: {
     flex: 1
   }
