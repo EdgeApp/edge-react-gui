@@ -233,7 +233,7 @@ const getOs = (): string => Platform.OS
 
 async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
   const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs }
-  return validatePromoCardsInner(account.dataStore, cards, funcs)
+  return await validatePromoCardsInner(account.dataStore, cards, funcs)
 }
 export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
   const out: MessageTweak[] = []

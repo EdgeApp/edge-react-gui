@@ -112,7 +112,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
           redirectUrl: '',
           apiToken: freeRegApiToken
         })
-      }).then(async res => res.json())
+      }).then(async res => await res.json())
 
       // Check registration status
       try {

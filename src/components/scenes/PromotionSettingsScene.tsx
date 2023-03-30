@@ -52,7 +52,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
             action="delete"
             key={promotion.installerId}
             label={promotion.installerId}
-            onPress={async () => removePromotion(promotion.installerId)}
+            onPress={async () => await removePromotion(promotion.installerId)}
           />
         ))}
         <SettingsTappableRow action="add" label={s.strings.settings_promotion_add} onPress={this.handleAdd} />

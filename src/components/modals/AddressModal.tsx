@@ -153,7 +153,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = `${baseurl}/${domain}`
-    const response = await global.fetch(url).then(async res => res.json())
+    const response = await global.fetch(url).then(async res => await res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
       throw new ResolutionError('UnregisteredDomain', { domain })

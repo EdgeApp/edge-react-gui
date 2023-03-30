@@ -56,13 +56,13 @@ export const NotificationScene = (props: Props) => {
           key="marketing-notifications"
           label={s.strings.settings_marketing_notifications_switch}
           value={!settings.ignoreMarketing}
-          onPress={async () => handlePressToggleSetting('ignoreMarketing')}
+          onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
         />
         <SettingsSwitchRow
           key="price-notifications"
           label={s.strings.settings_price_notifications_switch}
           value={!settings.ignorePriceChanges}
-          onPress={async () => handlePressToggleSetting('ignorePriceChanges')}
+          onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
         />
         {pluginIds.map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]

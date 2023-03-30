@@ -107,7 +107,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(context, (): ExecutionOutput => {
+      return await mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -123,7 +123,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(context, (): ExecutionOutput => {
+      return await mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -139,7 +139,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(context, (): ExecutionOutput => {
+      return await mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -155,7 +155,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const { walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(context, (): ExecutionOutput => {
+      return await mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'tx-confs',
@@ -171,7 +171,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const { toWalletId, toTokenId, fromWalletId: walletId } = actionOp
       const wallet = await account.waitForCurrencyWallet(walletId)
 
-      return mockExecutableAction(context, (): ExecutionOutput => {
+      return await mockExecutableAction(context, (): ExecutionOutput => {
         return {
           effect: {
             type: 'address-balance',

@@ -148,7 +148,7 @@ export function setDenominationKeyRequest(pluginId: string, currencyCode: string
     const state = getState()
     const { account } = state.core
 
-    return setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
+    return await setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
       .then(() =>
         dispatch({
           type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
@@ -184,7 +184,7 @@ export function togglePinLoginEnabled(pinLoginEnabled: boolean): ThunkAction<Pro
       type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
       data: { pinLoginEnabled }
     })
-    return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
+    return await account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
       showError(error)
 
       const pinLoginEnabled = await context.pinLoginEnabled(account.username)
@@ -257,10 +257,11 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       await Promise.all(
         restoreKeys
           .map(key => key.id)
-          .map(async walletId =>
-            account.changeWalletStates({
-              [walletId]: { archived: false, deleted: false }
-            })
+          .map(
+            async walletId =>
+              await account.changeWalletStates({
+                [walletId]: { archived: false, deleted: false }
+              })
           )
       )
       logActivity(`Restore Wallets: ${account.username}`)

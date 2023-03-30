@@ -37,8 +37,6 @@ export const asCoinranking = asObject({
   data: asArray(asCoinRankingData)
 })
 
-export interface CoinRankingParams {}
-
 export interface CoinRanking {
   coinRankingDatas: CoinRankingData[]
 }

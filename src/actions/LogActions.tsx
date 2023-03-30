@@ -219,7 +219,7 @@ function getRepoId(key: string): string {
 export const sendLogs = async (logs: LogOutput) => {
   console.log('====== SENDING LOGS REQUEST ======')
 
-  return fetch(logsUri, {
+  return await fetch(logsUri, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',

@@ -8,10 +8,10 @@ import { FiatProviderError, FiatProviderQuote, FiatProviderQuoteError, FiatProvi
 
 export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
   return {
-    deleteItem: async (itemId: string) => store.deleteItem(storeId, itemId),
-    listItemIds: async () => store.listItemIds(storeId),
-    getItem: async (itemId: string) => store.getItem(storeId, itemId),
-    setItem: async (itemId: string, value: string) => store.setItem(storeId, itemId, value)
+    deleteItem: async (itemId: string) => await store.deleteItem(storeId, itemId),
+    listItemIds: async () => await store.listItemIds(storeId),
+    getItem: async (itemId: string) => await store.getItem(storeId, itemId),
+    setItem: async (itemId: string, value: string) => await store.setItem(storeId, itemId, value)
   }
 }
 

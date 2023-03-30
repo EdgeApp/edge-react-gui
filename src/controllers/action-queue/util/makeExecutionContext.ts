@@ -18,12 +18,12 @@ export const makeExecutionContext = (properties: ExecutionContextProperties, moc
   const out: ExecutionContext = {
     ...properties,
     async evaluateAction(program, state) {
-      if (mockMode) return mockEvaluateAction(out, program, state)
-      return evaluateAction(out, program, state)
+      if (mockMode) return await mockEvaluateAction(out, program, state)
+      return await evaluateAction(out, program, state)
     },
     async checkActionEffect(effect) {
-      if (mockMode) return mockCheckActionEffect(out, effect)
-      return checkActionEffect(out, effect)
+      if (mockMode) return await mockCheckActionEffect(out, effect)
+      return await checkActionEffect(out, effect)
     }
   }
   return out

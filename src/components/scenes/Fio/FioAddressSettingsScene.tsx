@@ -86,7 +86,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     this.setState({ showTransfer: false, showAddBundledTxs: false })
   }
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet)
 
   onAddBundledTxsSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
     const { isConnected, route } = this.props
@@ -96,7 +96,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       showError(s.strings.fio_network_alert_text)
       return
     }
-    return addBundledTxs(fioWallet, fioAddressName, fee)
+    return await addBundledTxs(fioWallet, fioAddressName, fee)
   }
 
   goToTransfer = (params: { fee: number }) => {

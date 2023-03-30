@@ -239,7 +239,7 @@ export class SwapSettings extends React.Component<Props, State> {
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
           </View>
-          <SettingsTappableRow action="delete" label={label} onPress={async () => this.props.removePromotion(swapSource.installerId)}>
+          <SettingsTappableRow action="delete" label={label} onPress={async () => await this.props.removePromotion(swapSource.installerId)}>
             {icon}
           </SettingsTappableRow>
         </>

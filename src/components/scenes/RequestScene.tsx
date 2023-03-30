@@ -110,7 +110,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     this.getAddressItems()
     this.props.refreshAllFioAddresses()
     if (this.props.wallet != null) {
-      this.unsubscribeAddressChanged = this.props.wallet.on('addressChanged', async () => this.getAddressItems())
+      this.unsubscribeAddressChanged = this.props.wallet.on('addressChanged', async () => await this.getAddressItems())
     }
   }
 

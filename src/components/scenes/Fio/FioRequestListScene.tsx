@@ -290,7 +290,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.rejectFioRequest(request)
+      return await this.rejectFioRequest(request)
     }
   }
 
@@ -307,7 +307,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'yes') {
-      return this.cancelFioRequest(request)
+      return await this.cancelFioRequest(request)
     }
   }
 

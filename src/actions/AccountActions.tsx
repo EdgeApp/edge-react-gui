@@ -61,6 +61,6 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
 export function deleteLocalAccount(username: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    return state.core.context.deleteLocalAccount(username).catch(showError)
+    return await state.core.context.deleteLocalAccount(username).catch(showError)
   }
 }

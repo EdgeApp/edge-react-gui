@@ -106,7 +106,7 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
 
   // Special complete message for withdraw to bank
-  return makeActionProgram(actionOp, {
+  return await makeActionProgram(actionOp, {
     title: s.strings.action_display_title_complete_default,
     message:
       destination.paymentMethodId != null

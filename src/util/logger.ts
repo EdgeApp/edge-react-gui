@@ -145,7 +145,7 @@ export async function logWithType(type: LogType, ...info: Array<number | string 
 
   try {
     await lock.acquire('logger', async () => {
-      return writeLog(type, d + ': ' + logs)
+      return await writeLog(type, d + ': ' + logs)
     })
   } catch (e: any) {
     // @ts-expect-error
@@ -165,7 +165,7 @@ export async function logActivity(...info: Array<number | string | null | {}>): 
 
 async function request(data: string) {
   // @ts-expect-error
-  return global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
+  return await global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

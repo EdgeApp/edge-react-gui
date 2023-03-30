@@ -548,8 +548,7 @@ const getSpendTargetOtherParams = (state: RootState): any => {
   }
 }
 
-// @ts-expect-error
-const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
+const getSpendInfo = (state: RootState, newSpendInfo: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier != null ? newSpendInfo.uniqueIdentifier : getUniqueIdentifier(state)
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -577,8 +576,7 @@ const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, se
   }
 }
 
-// @ts-expect-error
-const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
+const getSpendInfoWithoutState = (newSpendInfo: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
   let spendTargets = []
   if (newSpendInfo.spendTargets) {

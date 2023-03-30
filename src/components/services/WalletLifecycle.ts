@@ -83,7 +83,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // If we have become paused, shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
-      Promise.all(Object.keys(currencyWallets).map(async walletId => currencyWallets[walletId].changePaused(true))).catch(showError)
+      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(showError)
     }
     this.paused = paused
 

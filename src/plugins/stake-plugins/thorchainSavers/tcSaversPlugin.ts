@@ -240,11 +240,11 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
         throw new Error('Only mainnet coins supported for staking')
       }
 
-      return changeQuoteFuncs[action](opts, request)
+      return await changeQuoteFuncs[action](opts, request)
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       await updateInboundAddresses(opts)
-      return getStakePosition(opts, request)
+      return await getStakePosition(opts, request)
     }
   }
   return instance
@@ -255,7 +255,7 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   const policy = getPolicyFromId(stakePolicyId)
   const { currencyCode } = policy.stakeAssets[0]
   const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
-  return getStakePositionInner(opts, request, primaryAddress)
+  return await getStakePositionInner(opts, request, primaryAddress)
 }
 
 const getStakePositionInner = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest, primaryAddress: string): Promise<StakePosition> => {
@@ -528,7 +528,7 @@ const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRe
   const { allocations } = await getStakePosition(opts, request)
   const { wallet, currencyCode } = request
   const { addressBalance, primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
-  return unstakeRequestInner(opts, request, { addressBalance, allocations, primaryAddress })
+  return await unstakeRequestInner(opts, request, { addressBalance, allocations, primaryAddress })
 }
 
 interface UnstakeRequestParams {

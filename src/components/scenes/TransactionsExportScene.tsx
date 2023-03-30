@@ -278,6 +278,6 @@ export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnPro
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>
-      dispatch(updateTxsFiat(wallet, currencyCode, txs))
+      await dispatch(updateTxsFiat(wallet, currencyCode, txs))
   })
 )(withTheme(TransactionsExportSceneComponent))

@@ -57,7 +57,7 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
    */
   async showError(error: unknown): Promise<void> {
     console.log(yellowText('Showing core drop-down alert: ' + makeErrorLog(error)))
-    return Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
+    return await Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
   }
 
   render() {

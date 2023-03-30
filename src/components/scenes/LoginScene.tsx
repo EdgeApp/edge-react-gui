@@ -73,7 +73,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   }
 
   async getSkipUpdate() {
-    return this.props.disklet.getText('ignoreUpdate.json').catch(() => '')
+    return await this.props.disklet.getText('ignoreUpdate.json').catch(() => '')
   }
 
   async componentDidMount() {

@@ -31,7 +31,7 @@ export const CountdownTile = (props: Props) => {
     }
     timeoutHandler.current = setTimeout(() => setTick(tick + 1), 500)
     return () => clearTimeout(timeoutHandler.current)
-  }, [isoExpireDate, tick])
+  }, [isoExpireDate, onDone, tick])
 
   if (expireSeconds == null) return null
 

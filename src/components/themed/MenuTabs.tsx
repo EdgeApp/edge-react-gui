@@ -63,7 +63,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const contentStyle = React.useMemo(() => {
     const paddingBottom = insets.bottom === 0 ? theme.rem(0.75) : insets.bottom
     return [styles.content, { paddingBottom }]
-  }, [insets.bottom, styles.content])
+  }, [insets.bottom, styles.content, theme])
 
   return (
     <View>

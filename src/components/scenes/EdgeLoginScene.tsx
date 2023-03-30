@@ -95,7 +95,7 @@ export const EdgeLoginScene = (props: Props) => {
 }
 
 const showOkModal = async (title: string, message: string) => {
-  return Airship.show<'ok' | undefined>(bridge => (
+  return await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal bridge={bridge} buttons={{ ok: { label: s.strings.string_ok } }} message={message + '\n'} title={title} />
   ))
 }

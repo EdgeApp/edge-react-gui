@@ -91,9 +91,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     this.setState({ showRenew: false, showVisibility: false, showTransfer: false })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet)
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => await getRenewalFee(fioWallet)
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
     const { isConnected, route } = this.props

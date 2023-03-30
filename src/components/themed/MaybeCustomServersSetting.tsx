@@ -76,7 +76,7 @@ function CustomServersSettingComponent(props: Props) {
       {!enableCustomServers ? null : (
         <>
           {Array.from(customServerSet).map(server => (
-            <SettingsTappableRow key={server} action="delete" onPress={async () => handleDeleteNode(server)}>
+            <SettingsTappableRow key={server} action="delete" onPress={async () => await handleDeleteNode(server)}>
               <TouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
                 <Text style={styles.labelText}>{server}</Text>
               </TouchableOpacity>
