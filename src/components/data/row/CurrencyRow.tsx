@@ -1,11 +1,14 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
+import { Text } from 'react-native'
 
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
+import s from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
 import { CryptoIcon } from '../../icons/CryptoIcon'
+import { useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { FiatText } from '../../text/FiatText'
 import { TickerText } from '../../text/TickerText'
@@ -26,12 +29,26 @@ const CurrencyRowComponent = (props: Props) => {
   const { marginRem, showRate = false, token, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  const theme = useTheme()
 
-  // Currency code and wallet name for display:
+  // Currency code for display:
   const allTokens = wallet.currencyConfig.allTokens
   const tokenFromId = token != null ? token : tokenId == null ? null : allTokens[tokenId]
   const { currencyCode } = tokenFromId == null ? wallet.currencyInfo : tokenFromId
-  const name = useWalletName(wallet)
+
+  // Wallet name for display:
+  let name: React.ReactNode = useWalletName(wallet)
+  const compromised = useSelector(state => {
+    const { modalShown = 0 } = state.ui.settings.securityCheckedWallets[wallet.id] ?? {}
+    return modalShown > 0
+  })
+  if (compromised) {
+    name = (
+      <>
+        <Text style={{ color: theme.warningText }}>{s.strings.compromised_key_label}</Text> {name}
+      </>
+    )
+  }
 
   // Balance stuff:
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
