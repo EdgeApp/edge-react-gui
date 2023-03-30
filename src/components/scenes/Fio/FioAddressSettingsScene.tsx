@@ -50,34 +50,22 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     }
   }
 
-  afterAddBundledTxsSuccess = (result: { bundledTxs: number } | any) => {
-    const { refreshAllFioAddresses, navigation, route } = this.props
-    const { fioWallet, fioAddressName, refreshAfterAddBundledTxs } = route.params
+  afterAddBundledTxsSuccess = () => {
+    const { refreshAllFioAddresses, navigation } = this.props
 
     refreshAllFioAddresses()
 
     this.setState({ showAddBundledTxs: false })
     showToast(s.strings.fio_request_add_bundled_txs_ok_text)
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
-    if (result.bundledTxs != null && refreshAfterAddBundledTxs) {
-      // @ts-expect-error
-      window.requestAnimationFrame(() => {
-        navigation.setParams({
-          fioWallet,
-          fioAddressName,
-          bundledTxs: result.bundledTxs
-        })
-      })
-    }
   }
 
   afterTransferSuccess = async () => {
     const { navigation, route } = this.props
     const { fioAddressName = '' } = route.params
 
-    const addressName = `@${fioAddressName}`
     // todo: styles for message
-    const transferredMessage = `${addressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
+    const transferredMessage = `${fioAddressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal bridge={bridge} title={s.strings.fio_domain_transferred} buttons={{ ok: { label: s.strings.string_ok_cap } }}>
         <EdgeText>{transferredMessage}</EdgeText>

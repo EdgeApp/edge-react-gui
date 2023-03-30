@@ -198,10 +198,6 @@ interface RouteParamList {
     amounts: ExchangedFlipInputAmounts
   }
   fioRequestList: {}
-  fioRequestApproved: {
-    edgeTransaction: EdgeTransaction
-    thumbnailPath?: string
-  }
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
   }

@@ -507,19 +507,6 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="fioRequestApproved"
-        // @ts-expect-error
-        component={TransactionDetailsScene}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
-        options={{
-          headerTitle: () => <TransactionDetailsTitle />
-        }}
-      />
-      <Stack.Screen
         name="fioRequestConfirmation"
         component={FioRequestConfirmationScene}
         options={{

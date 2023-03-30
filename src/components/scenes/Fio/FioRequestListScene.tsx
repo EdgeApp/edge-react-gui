@@ -8,7 +8,15 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import s from '../../../locales/strings'
-import { addToFioAddressCache, cancelFioRequest, convertFIOToEdgeCodes, FIO_NO_BUNDLED_ERR_CODE } from '../../../modules/FioAddress/util'
+import {
+  addToFioAddressCache,
+  cancelFioRequest,
+  convertFIOToEdgeCodes,
+  FIO_FAKE_RECORD_OBT_DATA_REQUEST,
+  FIO_NO_BUNDLED_ERR_CODE,
+  fioMakeSpend,
+  fioSignAndBroadcast
+} from '../../../modules/FioAddress/util'
 import { getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
@@ -115,13 +123,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsPending = async () => {
-    const { fioWallets = [], account, fioAddresses } = this.props
+    const { fioWallets = [], fioAddresses } = this.props
     const { pendingRequestPaging, fioRequestsPending } = this.state
-    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
     let newRequests: FioRequest[] = []
     try {
-      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING)
+      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, 'PENDING')
     } catch (e: any) {
       showError(e.message)
     }
@@ -138,13 +145,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsSent = async () => {
-    const { fioWallets = [], account } = this.props
+    const { fioWallets = [] } = this.props
     const { fioRequestsSent, sentRequestPaging } = this.state
-    const fioPlugin = account.currencyConfig.fio
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
     let newRequests: FioRequest[] = []
     try {
-      newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
+      newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, 'SENT')
     } catch (e: any) {
       showError(e.message)
     }
@@ -156,7 +162,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  getFioRequests = async (fioWallets: EdgeCurrencyWallet[], paging: { [fioPublicKey: string]: number }, requestsType: string): Promise<FioRequest[]> => {
+  getFioRequests = async (
+    fioWallets: EdgeCurrencyWallet[],
+    paging: { [fioPublicKey: string]: number },
+    requestsType: 'PENDING' | 'SENT'
+  ): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
     if (fioWallets.length) {
       try {
@@ -197,14 +207,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  removeFioPendingRequest = (requestId: string): void => {
+  removeFioPendingRequest = (requestId: number): void => {
     const { fioRequestsPending } = this.state
-    this.setState({ fioRequestsPending: fioRequestsPending.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
+    this.setState({ fioRequestsPending: fioRequestsPending.filter(item => item.fio_request_id !== requestId) })
   }
 
-  removeFioSentRequest = (requestId: string): void => {
+  removeFioSentRequest = (requestId: number): void => {
     const { fioRequestsSent } = this.state
-    this.setState({ fioRequestsSent: fioRequestsSent.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
+    this.setState({ fioRequestsSent: fioRequestsSent.filter(item => item.fio_request_id !== requestId) })
   }
 
   rejectFioRequest = async (request: FioRequest) => {
@@ -219,12 +229,13 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
     if (fioWallet) {
       try {
-        const { fee } = await fioWallet.otherMethods.fioAction('getFeeForRejectFundsRequest', { payerFioAddress })
-        if (fee) {
+        let edgeTx = await fioMakeSpend(fioWallet, 'rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
+        if (edgeTx.networkFee !== '0') {
           this.setState({ fullScreenLoader: false })
           this.showNoBundledTxsAlert(fioWallet, payerFioAddress)
         } else {
-          await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
+          edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
+          await fioWallet.saveTx(edgeTx)
           this.removeFioPendingRequest(request.fio_request_id)
           showToast(s.strings.fio_reject_status)
         }
@@ -249,7 +260,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
     if (fioWallet) {
       try {
-        await cancelFioRequest(fioWallet, parseInt(request.fio_request_id), payeeFioAddress)
+        await cancelFioRequest(fioWallet, request.fio_request_id, payeeFioAddress)
         this.removeFioSentRequest(request.fio_request_id)
         showToast(s.strings.fio_cancel_status)
       } catch (e: any) {
@@ -407,11 +418,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       lockInputs: true,
       beforeTransaction: async () => {
         try {
-          const getFeeResult = await fioWalletByAddress.otherMethods.fioAction('getFee', {
-            endPoint: 'record_obt_data',
-            fioAddress: pendingRequest.payer_fio_address
+          const edgeTx = await fioMakeSpend(fioWalletByAddress, 'recordObtData', {
+            ...FIO_FAKE_RECORD_OBT_DATA_REQUEST,
+            payerFioAddress: pendingRequest.payer_fio_address
           })
-          if (getFeeResult.fee) {
+          if (edgeTx.networkFee !== '0') {
             showError(s.strings.fio_no_bundled_err_msg)
             throw new Error(s.strings.fio_no_bundled_err_msg)
           }
@@ -424,7 +435,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
-          navigation.navigate('fioRequestApproved', { edgeTransaction })
+          navigation.replace('transactionDetails', { edgeTransaction, walletId })
         }
       }
     }
@@ -480,7 +491,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   listKeyExtractor(item: FioRequest) {
-    return item.fio_request_id.toString()
+    return `${item.fio_request_id.toString()}${item.fioWalletId}`
   }
 
   pendingLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
