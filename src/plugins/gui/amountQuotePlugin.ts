@@ -41,8 +41,8 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const pluginId = 'amountquote'
-  const { disablePlugins, showUi, account } = params
+  const { account, disablePlugins, guiPlugin, showUi } = params
+  const { pluginId } = guiPlugin
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []

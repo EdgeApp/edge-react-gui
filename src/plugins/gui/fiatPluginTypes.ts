@@ -4,6 +4,7 @@ import { EdgeAccount } from 'edge-core-js'
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
+import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
@@ -110,9 +111,10 @@ export interface FiatPluginFactoryArgs {
   // io: {
   //   log: EdgeLog, // scoped logs
   // }
-  disablePlugins: DisablePluginMap
-  showUi: FiatPluginUi
   account: EdgeAccount
+  disablePlugins: DisablePluginMap
+  guiPlugin: GuiPlugin
+  showUi: FiatPluginUi
 }
 
 export interface FiatPluginRegionCode {

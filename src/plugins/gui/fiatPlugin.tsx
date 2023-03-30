@@ -149,9 +149,10 @@ export const executePlugin = async (params: {
     if (disablePlugins[key] === true) filteredDisablePlugins[key] = true
   }
   const plugin = await guiPlugin.nativePlugin({
+    account,
     disablePlugins: filteredDisablePlugins,
-    showUi,
-    account
+    guiPlugin,
+    showUi
   })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
