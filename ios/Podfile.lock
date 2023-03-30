@@ -826,7 +826,7 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
-  - ZcashLightClientKit (from `https://github.com/zcash/ZcashLightClientKit.git`, commit `74f3ae20f26748e162c051e5fa343c71febc4294`)
+  - ZcashLightClientKit (from `https://github.com/EdgeApp/ZcashLightClientKit.git`, commit `c36c79c3d3cfdfc01054795d834d1742d1a7914d`)
 
 SPEC REPOS:
   trunk:
@@ -1057,16 +1057,16 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
   ZcashLightClientKit:
-    :commit: 74f3ae20f26748e162c051e5fa343c71febc4294
-    :git: https://github.com/zcash/ZcashLightClientKit.git
+    :commit: c36c79c3d3cfdfc01054795d834d1742d1a7914d
+    :git: https://github.com/EdgeApp/ZcashLightClientKit.git
 
 CHECKOUT OPTIONS:
   PirateLightClientKit:
     :commit: f939db082643d73cead7172da0a862f3b3df34a9
     :git: https://github.com/PirateNetwork/PirateLightClientKit.git
   ZcashLightClientKit:
-    :commit: 74f3ae20f26748e162c051e5fa343c71febc4294
-    :git: https://github.com/zcash/ZcashLightClientKit.git
+    :commit: c36c79c3d3cfdfc01054795d834d1742d1a7914d
+    :git: https://github.com/EdgeApp/ZcashLightClientKit.git
 
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
@@ -1209,8 +1209,8 @@ SPEC CHECKSUMS:
   SwiftProtobuf: b02b5075dcf60c9f5f403000b3b0c202a11b6ae1
   Yoga: 099a946cbf84c9b32ffdc4278d72db26710ecf92
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
-  ZcashLightClientKit: 82bfa46e9cf6667261912b0cf99510a61645131b
+  ZcashLightClientKit: a6c9db6327f05e2d095f10412c581d53dae32f85
 
-PODFILE CHECKSUM: 2c8eb53f773ad98335ff8c0df91d74e83c87b8d6
+PODFILE CHECKSUM: 9a9e60804856c91c38098f56e90032c2f1f967ea
 
 COCOAPODS: 1.12.0
