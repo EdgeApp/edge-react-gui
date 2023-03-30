@@ -62,7 +62,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const newAccount = account.newAccount
 
     if (newAccount) {
-      let defaultFiat = syncedSettings.defaultFiat
+      let { defaultFiat } = syncedSettings
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
         defaultFiat = phoneCurrency
@@ -159,7 +159,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       defaultIsoFiat: '',
       denominationSettings: {},
       developerModeOn: false,
-      spamFilterOn: true,
       isAccountBalanceVisible: false,
       mostRecentWallets: [],
       passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -167,6 +166,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,
       preferredSwapPluginType: undefined,
+      spamFilterOn: true,
       spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',
