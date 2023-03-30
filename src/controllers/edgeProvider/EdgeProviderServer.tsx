@@ -400,8 +400,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
           }
           // Do not expose the entire wallet to the plugin:
           resolve(cleanTx(transaction))
-          this._navigation.pop()
-
           wallet
             .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
             .then(exchangeAmount => {
