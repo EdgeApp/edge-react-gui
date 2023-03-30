@@ -1,6 +1,6 @@
-import { lt, toFixed } from 'biggystring'
+import { lt, mul, toFixed } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -459,9 +459,10 @@ export const bityProvider: FiatProviderFactory = {
               return
             }
 
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { input, output, id, payment_details } = approveQuoteRes
+
             if (isBuy) {
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              const { input, output, id, payment_details } = approveQuoteRes
               if (payment_details == null || output.crypto_address == null) return
 
               // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -493,8 +494,35 @@ export const bityProvider: FiatProviderFactory = {
                 }
               })
             } else {
-              // TODO:
-              console.debug('Sending crypto to approved sell quote address')
+              const { currencyInfo } = coreWallet
+              const denom =
+                inputCurrencyCode === currencyInfo.currencyCode
+                  ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
+                  : currencyInfo.metaTokens
+                      .find(token => token.currencyCode === inputCurrencyCode)
+                      ?.denominations?.find(denom => denom.name === inputCurrencyCode)
+
+              if (denom == null) {
+                // Should not happen - input currencies should be valid before
+                // getting here.
+                throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
+              }
+
+              const spendInfo: EdgeSpendInfo = {
+                currencyCode: inputCurrencyCode,
+                spendTargets: [
+                  {
+                    nativeAmount: mul(denom.multiplier, input.amount),
+                    publicAddress: input.crypto_address
+                  }
+                ],
+                metadata: {
+                  category: `Exchange: ${input.currency}toEUR`,
+                  exchangeAmount: { [output.currency]: parseFloat(output.amount) },
+                  notes: `${pluginDisplayName} ${s.strings.transaction_details_exchange_order_id}: ${id}`
+                }
+              }
+              await showUi.send({ walletId: coreWallet.id, spendInfo })
             }
 
             showUi.popScene()

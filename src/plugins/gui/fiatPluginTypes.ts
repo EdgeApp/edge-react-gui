@@ -2,6 +2,7 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { EdgeTokenId } from '../../types/types'
 import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
@@ -102,6 +103,7 @@ export interface FiatPluginUi {
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   popScene: () => {}
+  send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
