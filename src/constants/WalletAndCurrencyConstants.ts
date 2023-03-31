@@ -127,6 +127,7 @@ interface SpecialCurrencyInfo {
   allowZeroTx?: boolean
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
+  tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
@@ -292,6 +293,7 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_xrp_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
     isImportKeySupported: {
       privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
       privateKeyInstructions: lstrings.create_wallet_import_key_instructions

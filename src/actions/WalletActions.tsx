@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
-import { FIO_WALLET_TYPE, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
+import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
@@ -255,10 +255,9 @@ const activateWalletTokens = async (
     const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${fiatCurrencyCode.replace('iso:', '')})`
     let bodyText = lstrings.activate_wallet_token_scene_body
 
-    // HACK: XRP causes the reserve requirement to increase per token activated. There's
-    // No good way to parametrize this and abstract away the asset
-    if (wallet.currencyInfo.pluginId === 'ripple') {
-      bodyText += '\n\n' + lstrings.activate_wallet_token_scene_body_xrp_extra
+    const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+    if (tokenActivationAdditionalReserveText != null) {
+      bodyText += '\n\n' + tokenActivationAdditionalReserveText
     }
 
     navigation.navigate('confirmScene', {
