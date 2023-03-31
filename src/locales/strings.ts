@@ -14,49 +14,40 @@ import zh from './strings/zh.json'
 
 const allLocales = { en, de, ru, es, it, pt, ja, fr, ko, vi, zh }
 
-const strings = { ...en }
-const out = { strings }
+export const lstrings = { ...en }
 
 // Set the language at boot:
-const [firstLocale = { languageTag: 'en_US' }] = getLocales()
-selectLocale(firstLocale.languageTag)
+const [firstLocale] = getLocales()
+const { languageTag = 'en-US' } = firstLocale ?? {}
+if (languageTag !== 'en-US') selectLocale(languageTag)
 
 function mergeStrings(primary: { [key: string]: string }, secondary: { [key: string]: string }) {
   for (const str of Object.keys(secondary)) {
-    if (secondary[str]) {
+    if (secondary[str] !== '') {
       primary[str] = secondary[str]
     }
   }
 }
 
 // Locale formats can be in the form 'en', 'en-US', 'en_US', or 'enUS'
-export function selectLocale(locale: string = 'en'): boolean {
+export function selectLocale(locale: string): boolean {
   // Break up local into language and region
   const normalizedLocale = locale.replace('-', '').replace('-', '').replace('_', '')
-
-  let found = false
   const lang = normalizedLocale.slice(0, 2)
 
-  if (locale === 'en') return true
-
   // Find pure language match first (ie. find 'es' when 'esMX' is chosen)
-  // @ts-expect-error
-  if (allLocales[lang] !== undefined) {
-    found = true
-    // @ts-expect-error
-    mergeStrings(out.strings, allLocales[lang])
+  const shortMatch = allLocales[lang as keyof typeof allLocales]
+  if (shortMatch != null) {
+    mergeStrings(lstrings, shortMatch)
+    return true
   }
 
   // Find an exact match
-  // @ts-expect-error
-  if (allLocales[normalizedLocale] !== undefined) {
-    found = true
-    // @ts-expect-error
-    mergeStrings(out.strings, allLocales[normalizedLocale])
+  const exactMatch = allLocales[normalizedLocale as keyof typeof allLocales]
+  if (exactMatch != null) {
+    mergeStrings(lstrings, exactMatch)
+    return true
   }
 
-  return found
+  return false
 }
-
-// eslint-disable-next-line import/no-default-export
-export default out

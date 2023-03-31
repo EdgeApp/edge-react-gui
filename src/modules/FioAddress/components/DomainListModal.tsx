@@ -12,7 +12,7 @@ import { ModalFooter, ModalTitle } from '../../../components/themed/ModalParts'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { ThemedModal } from '../../../components/themed/ThemedModal'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { NavigationBase } from '../../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../../types/types'
@@ -46,8 +46,8 @@ type Props = OwnProps & ThemeProps & StateProps
 
 const newDomainItem = {
   createNew: true,
-  value: { ...FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
-  label: s.strings.fio_address_list_register_domain
+  value: { ...FIO_DOMAIN_DEFAULT, name: lstrings.fio_address_list_register_domain },
+  label: lstrings.fio_address_list_register_domain
 }
 
 class DomainListModalComponent extends React.Component<Props, State> {
@@ -127,7 +127,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
         <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
           <ClickableText
             icon={<Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />}
-            label={s.strings.fio_address_list_domain_register}
+            label={lstrings.fio_address_list_domain_register}
             onPress={this.registerNewDomain}
             paddingRem={0}
           />
@@ -139,7 +139,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
         <TouchableOpacity onPress={() => this.selectItem(value)}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
-            <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
+            <EdgeText style={styles.domainListRowFree}>{value.isFree ? lstrings.fio_domain_free : ''}</EdgeText>
           </View>
         </TouchableOpacity>
       )
@@ -156,14 +156,14 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
-          {s.strings.fio_address_choose_domain_label}
+          {lstrings.fio_address_choose_domain_label}
         </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
           <OutlinedTextInput
             autoCorrect={false}
             returnKeyType="search"
             autoCapitalize="none"
-            label={s.strings.fio_domain_label}
+            label={lstrings.fio_domain_label}
             onChangeText={this.onSearchFilterChange}
             onSubmitEditing={this.selectCustom}
             value={input}

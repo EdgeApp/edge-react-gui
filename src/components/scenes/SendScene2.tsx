@@ -25,7 +25,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -250,7 +250,7 @@ const SendComponent = (props: Props) => {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
-      const title = s.strings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
+      const title = lstrings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <AddressTile2
           title={title}
@@ -329,7 +329,7 @@ const SendComponent = (props: Props) => {
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
     const { publicAddress, nativeAmount } = spendTarget
     if (publicAddress != null && !hiddenTilesMap.amount) {
-      const title = s.strings.fio_request_amount + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
+      const title = lstrings.fio_request_amount + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
           title={title}
@@ -368,7 +368,7 @@ const SendComponent = (props: Props) => {
   }
 
   const handleWalletPress = useHandler(() => {
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} navigation={navigation} />)
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.fio_src_wallet} navigation={navigation} />)
       .then((result: WalletListResult) => {
         if (result.walletId == null || result.currencyCode == null) {
           return
@@ -392,7 +392,7 @@ const SendComponent = (props: Props) => {
     return (
       <Tile
         type={lockTilesMap.wallet ? 'static' : 'editable'}
-        title={s.strings.send_scene_send_from_wallet}
+        title={lstrings.send_scene_send_from_wallet}
         onPress={lockTilesMap.wallet ? undefined : handleWalletPress}
         body={`${name} (${currencyCode})`}
       />
@@ -414,14 +414,14 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <Tile type="touchable" title={s.strings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" contentPadding />
+      return <Tile type="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" contentPadding />
     } else {
       return null
     }
   }
 
   const handleTimeoutDone = useHandler(() => {
-    setError(new Error(s.strings.send_address_expired_error_message))
+    setError(new Error(lstrings.send_address_expired_error_message))
   })
 
   const renderTimeout = () => {
@@ -429,7 +429,7 @@ const SendComponent = (props: Props) => {
 
     return (
       <CountdownTile
-        title={s.strings.send_address_expire_title}
+        title={lstrings.send_address_expire_title}
         isoExpireDate={expireDate.toISOString()}
         onDone={handleTimeoutDone}
         maximumHeight="small"
@@ -464,7 +464,7 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={handleFeesChange}>
+        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
           {processingAmountChanged ? (
             <View style={styles.calcFeeView}>
               <EdgeText
@@ -473,7 +473,7 @@ const SendComponent = (props: Props) => {
                   color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText
                 }}
               >
-                {s.strings.send_confirmation_calculating_fee}
+                {lstrings.send_confirmation_calculating_fee}
               </EdgeText>
 
               <ActivityIndicator style={styles.calcFeeSpinner} />
@@ -499,7 +499,7 @@ const SendComponent = (props: Props) => {
     const notes = edgeTransaction?.metadata?.notes
     if (notes != null) {
       return (
-        <Tile type="static" title={s.strings.send_scene_metadata_name_title}>
+        <Tile type="static" title={lstrings.send_scene_metadata_name_title}>
           <EdgeText>{notes}</EdgeText>
         </Tile>
       )
@@ -558,8 +558,8 @@ const SendComponent = (props: Props) => {
             inputLabel={identifierName}
             initialValue={uniqueIdentifier}
             keyboardType={keyboardType}
-            message={sprintf(s.strings.unique_identifier_modal_description, identifierName)}
-            submitLabel={s.strings.unique_identifier_modal_confirm}
+            message={sprintf(lstrings.unique_identifier_modal_description, identifierName)}
+            submitLabel={lstrings.unique_identifier_modal_confirm}
             title={identifierName}
             maxLength={coreWallet?.currencyInfo?.memoMaxLength}
           />
@@ -603,7 +603,7 @@ const SendComponent = (props: Props) => {
 
     const pinLength = pinValue?.length ?? 0
     return (
-      <Tile type="touchable" title={s.strings.four_digit_pin} onPress={handleFocusPin}>
+      <Tile type="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
@@ -613,7 +613,7 @@ const SendComponent = (props: Props) => {
           onChangeText={handleChangePin}
           keyboardType="numeric"
           returnKeyType="done"
-          placeholder={s.strings.spending_limits_enter_pin}
+          placeholder={lstrings.spending_limits_enter_pin}
           placeholderTextColor={theme.textLink}
           style={styles.pinInput}
           value={pinValue}
@@ -629,13 +629,13 @@ const SendComponent = (props: Props) => {
     if (publicAddress === '' || publicAddress == null) {
       return (
         <WarningCard
-          title={s.strings.warning_scam_title}
+          title={lstrings.warning_scam_title}
           points={[
-            s.strings.warning_scam_message_financial_advice,
-            s.strings.warning_scam_message_irreversibility,
-            s.strings.warning_scam_message_unknown_recipients
+            lstrings.warning_scam_message_financial_advice,
+            lstrings.warning_scam_message_irreversibility,
+            lstrings.warning_scam_message_unknown_recipients
           ]}
-          footer={s.strings.warning_scam_footer}
+          footer={lstrings.warning_scam_footer}
           marginRem={[1.5, 1]}
         />
       )
@@ -665,7 +665,7 @@ const SendComponent = (props: Props) => {
         //   })
         // } catch (e: any) {
         //   const message = e?.message ?? ''
-        //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(s.strings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+        //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
         // }
         // } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
         if (!skipRecord) {
@@ -702,7 +702,7 @@ const SendComponent = (props: Props) => {
       if (!isAuthorized) {
         resetSlider()
         setPinValue('')
-        showError(new Error(s.strings.incorrect_pin))
+        showError(new Error(lstrings.incorrect_pin))
         return
       }
     }
@@ -754,8 +754,8 @@ const SendComponent = (props: Props) => {
       }
 
       if (payeeName != null && fioSender != null) {
-        let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}\n`
-        fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}\n` : ''
+        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}\n`
+        fioNotes += fioSender.memo ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}\n` : ''
         if (notes.length > 1) {
           fioNotes += notes.join('\n')
         }
@@ -808,33 +808,33 @@ const SendComponent = (props: Props) => {
           walletId
         })
       }
-      Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+      Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
         {
           onPress() {},
           style: 'default',
-          text: s.strings.string_ok
+          text: lstrings.string_ok
         }
       ])
     } catch (e: any) {
       resetSlider()
       console.log(e)
-      let message = sprintf(s.strings.transaction_failure_message, e.message)
+      let message = sprintf(lstrings.transaction_failure_message, e.message)
       e.message = 'broadcastError'
       if (e.name === 'ErrorEosInsufficientCpu') {
-        message = s.strings.send_confirmation_eos_error_cpu
+        message = lstrings.send_confirmation_eos_error_cpu
       } else if (e.name === 'ErrorEosInsufficientNet') {
-        message = s.strings.send_confirmation_eos_error_net
+        message = lstrings.send_confirmation_eos_error_net
       } else if (e.name === 'ErrorEosInsufficientRam') {
-        message = s.strings.send_confirmation_eos_error_ram
+        message = lstrings.send_confirmation_eos_error_ram
       } else if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
         const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={s.strings.fio_no_bundled_err_msg}
-            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`}
+            title={lstrings.fio_no_bundled_err_msg}
+            message={`${lstrings.fio_no_bundled_non_fio_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`}
             buttons={{
-              ok: { label: s.strings.legacy_address_modal_continue },
-              cancel: { label: s.strings.string_cancel_cap }
+              ok: { label: lstrings.legacy_address_modal_continue },
+              cancel: { label: lstrings.string_cancel_cap }
             }}
           />
         ))
@@ -846,11 +846,11 @@ const SendComponent = (props: Props) => {
         }
       }
 
-      Alert.alert(s.strings.transaction_failure, message, [
+      Alert.alert(lstrings.transaction_failure, message, [
         {
           onPress() {},
           style: 'default',
-          text: s.strings.string_ok
+          text: lstrings.string_ok
         }
       ])
     }
@@ -928,7 +928,7 @@ const SendComponent = (props: Props) => {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true
-    disabledText = s.strings.spending_limits_enter_pin
+    disabledText = lstrings.spending_limits_enter_pin
   }
   return (
     <SceneWrapper background="theme">

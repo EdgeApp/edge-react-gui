@@ -8,7 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -117,7 +117,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         let createdNewWallet = false
         if (newWallet == null) {
           newWallet = await account.createCurrencyWallet(walletType, {
-            name: `${oldWalletName}${s.strings.migrate_wallet_new_fragment}`,
+            name: `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`,
             fiatCurrencyCode,
             migratedFromWalletId: oldWalletId
           })
@@ -125,7 +125,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         }
 
         // Change old wallet name
-        if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${s.strings.migrate_wallet_old_fragment}`)
+        if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
 
         const addressInfo = await newWallet.getReceiveAddress()
         const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
@@ -226,7 +226,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     return (
       <Fade visible={done}>
         <MainButton
-          label={s.strings.string_done_cap}
+          label={lstrings.string_done_cap}
           type="secondary"
           marginRem={[1]}
           onPress={() => navigation.navigate('walletList', {})}
@@ -242,7 +242,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader title={s.strings.migrate_wallets_title} withTopMargin />
+          <SceneHeader title={lstrings.migrate_wallets_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}

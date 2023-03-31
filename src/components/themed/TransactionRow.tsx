@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
 import { triggerHaptic } from '../../util/haptic'
@@ -57,12 +57,12 @@ const TransactionRowComponent = (props: Props) => {
   let transactionText, transactionIcon, transactionStyle
   if (isSentTransaction) {
     transactionText =
-      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
+      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
     transactionStyle = styles.iconSent
   } else {
     transactionText =
-      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
+      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
     transactionStyle = styles.iconRequest
   }
@@ -73,14 +73,14 @@ const TransactionRowComponent = (props: Props) => {
     currentConfirmations === 'confirmed'
       ? transaction.time
       : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-      ? s.strings.fragment_transaction_list_unconfirmed_rbf
+      ? lstrings.fragment_transaction_list_unconfirmed_rbf
       : currentConfirmations === 'unconfirmed'
-      ? s.strings.fragment_wallet_unconfirmed
+      ? lstrings.fragment_wallet_unconfirmed
       : currentConfirmations === 'dropped'
-      ? s.strings.fragment_transaction_list_tx_dropped
+      ? lstrings.fragment_transaction_list_tx_dropped
       : typeof currentConfirmations === 'number'
-      ? sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-      : s.strings.fragment_transaction_list_tx_synchronizing
+      ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      : lstrings.fragment_transaction_list_tx_synchronizing
 
   const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
 

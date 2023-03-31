@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { textStyle } from '../../styles/common/textStylesThemed'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -28,7 +28,7 @@ export function AlertDropdown(props: Props) {
       <View style={styles.container}>
         <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
         <Text style={styles.text}>
-          <Text style={styles.textBold}>{warning ? s.strings.alert_dropdown_warning : s.strings.alert_dropdown_alert}</Text>
+          <Text style={styles.textBold}>{warning ? lstrings.alert_dropdown_warning : lstrings.alert_dropdown_alert}</Text>
           {message}
         </Text>
         <AntDesignIcon name="closecircle" size={theme.rem(1)} style={styles.icon} />

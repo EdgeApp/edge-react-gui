@@ -6,7 +6,7 @@ import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedS
 import { Fontello } from '../../assets/vector'
 import { useHandler } from '../../hooks/useHandler'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { NumericInput } from '../modals/NumericInput'
 import { showError } from '../services/AirshipInstance'
@@ -131,7 +131,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
             style={styles.bottomAmount}
             value={primaryAmount}
             maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
-            placeholder={amountBlank ? s.strings.string_amount : ''}
+            placeholder={amountBlank ? lstrings.string_amount : ''}
             placeholderTextColor={theme.deactivatedText}
             onChangeText={onNumericInputChange}
             autoCorrect={false}

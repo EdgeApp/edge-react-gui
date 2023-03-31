@@ -2,7 +2,7 @@ import { EdgeCurrencyInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { getCurrencyIconUris } from './CdnUris'
 
@@ -46,14 +46,14 @@ export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
   const stakeName = stakeCurrencyCodes.length > 1 ? `${stakeCurrencyCodes.join(' + ')}` : stakeCurrencyCodes[0]
   const rewardName = rewardCurrencyCodes.length > 1 ? `${rewardCurrencyCodes.join(' + ')}` : rewardCurrencyCodes[0]
 
-  return sprintf(s.strings.stake_x_to_earn_y, stakeName, rewardName)
+  return sprintf(lstrings.stake_x_to_earn_y, stakeName, rewardName)
 }
 
 /**
  * Returns a formatted locked until timestamp, if it exists.
  */
 export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => {
-  return allocation.locktime != null ? ` (${sprintf(s.strings.stake_lock_message, formatTimeDate(allocation.locktime))})` : ''
+  return allocation.locktime != null ? ` (${sprintf(lstrings.stake_lock_message, formatTimeDate(allocation.locktime))})` : ''
 }
 
 /**
@@ -84,5 +84,5 @@ export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: St
 }
 
 export const getUnstakeText = (policy: StakePolicy): string => {
-  return policy.rewardsNotClaimable ? s.strings.stake_unstake : s.strings.stake_unstake_claim
+  return policy.rewardsNotClaimable ? lstrings.stake_unstake : lstrings.stake_unstake_claim
 }

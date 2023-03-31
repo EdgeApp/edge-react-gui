@@ -9,7 +9,7 @@ import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controlle
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
@@ -207,7 +207,7 @@ export const newPriceChangeEvent = (
   const changeDownString = '#change#%'
 
   const pushMessage = {
-    title: s.strings.price_alert,
+    title: lstrings.price_alert,
     body: '#direction#',
     data: {
       type: 'price-change',
@@ -221,17 +221,17 @@ export const newPriceChangeEvent = (
 
     directions: [
       // [hourUp, hourDown, dayUp, dayDown]
-      `${sprintf(s.strings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(lstrings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
       `${sprintf(
-        s.strings.notification_hourly_price_change_down,
+        lstrings.notification_hourly_price_change_down,
         String.fromCodePoint(0x1f4c9),
         displayName,
         currencyCode,
         changeDownString,
         fiatSymbolString
       )}`,
-      `${sprintf(s.strings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
-      `${sprintf(s.strings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
+      `${sprintf(lstrings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(lstrings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
     ],
     pluginId: currencyInfo.pluginId,
     dailyChange: dailyChangeEnabled ? 10 : undefined,

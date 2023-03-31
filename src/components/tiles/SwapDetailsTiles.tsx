@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -42,7 +42,7 @@ export function SwapDetailsTiles(props: Props) {
   const payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
 
   const handleExchangeDetails = useHandler(() => {
-    Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={s.strings.transaction_details_exchange_details} />)
+    Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={lstrings.transaction_details_exchange_details} />)
   })
 
   const handleEmail = useHandler(() => {
@@ -51,7 +51,7 @@ export function SwapDetailsTiles(props: Props) {
 
     Mailer.mail(
       {
-        subject: sprintf(s.strings.transaction_details_exchange_support_request, plugin.displayName),
+        subject: sprintf(lstrings.transaction_details_exchange_support_request, plugin.displayName),
         // @ts-expect-error
         recipients: [email],
         body,
@@ -100,33 +100,33 @@ export function SwapDetailsTiles(props: Props) {
     const uniqueIdentifier = spendTargets[0].uniqueIdentifier ?? ''
     const exchangeAddresses = spendTargets.map((target, index) => `${target.publicAddress}${index + 1 !== spendTargets.length ? newline : ''}`).toString()
 
-    return `${s.strings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${s.strings.transaction_details_exchange_order_id}: ${
+    return `${lstrings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${lstrings.transaction_details_exchange_order_id}: ${
       orderId || ''
-    }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
-      s.strings.fragment_send_from_label
-    }: ${sourceAmount} ${symbolString}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
-      s.strings.transaction_details_exchange_destination_wallet
-    }: ${destinationWalletName}${newline}${isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}${newline}${newline}${
-      s.strings.transaction_details_exchange_exchange_address
-    }:${newline}  ${exchangeAddresses}${newline}${s.strings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
-      s.strings.transaction_details_exchange_payout_address
-    }:${newline}  ${payoutAddress}${newline}${s.strings.transaction_details_exchange_refund_address}:${newline}  ${refundAddress || ''}${newline}`
+    }${newline}${lstrings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
+      lstrings.fragment_send_from_label
+    }: ${sourceAmount} ${symbolString}${newline}${lstrings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
+      lstrings.transaction_details_exchange_destination_wallet
+    }: ${destinationWalletName}${newline}${isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}${newline}${newline}${
+      lstrings.transaction_details_exchange_exchange_address
+    }:${newline}  ${exchangeAddresses}${newline}${lstrings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
+      lstrings.transaction_details_exchange_payout_address
+    }:${newline}  ${payoutAddress}${newline}${lstrings.transaction_details_exchange_refund_address}:${newline}  ${refundAddress || ''}${newline}`
   }
 
   return (
     <>
-      <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
+      <Tile type="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
-          <EdgeText style={styles.tileTextBottom}>{s.strings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
-          <EdgeText style={styles.tileTextBottom}>{s.strings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
-          <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</EdgeText>
+          <EdgeText style={styles.tileTextBottom}>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
+          <EdgeText style={styles.tileTextBottom}>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
+          <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
       </Tile>
       {orderUri == null ? null : (
-        <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
+        <Tile type="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
       )}
       {plugin.supportEmail == null ? null : (
-        <Tile type="touchable" title={s.strings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
+        <Tile type="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
       )}
     </>
   )

@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -152,7 +152,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return sections
   }
 
-  emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
+  emptySection = () => [{ title: lstrings.transaction_list_search_no_result, data: [] }]
 
   renderEmptyComponent = () => {
     const { navigation, tokenId, numTransactions, wallet } = this.props

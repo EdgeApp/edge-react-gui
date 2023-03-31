@@ -11,7 +11,7 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
@@ -130,19 +130,19 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     if (receiveAddress.segwitAddress != null) {
       addresses.push({
         addressString: receiveAddress.segwitAddress,
-        label: s.strings.request_qr_your_segwit_address
+        label: lstrings.request_qr_your_segwit_address
       })
     }
     // Handle publicAddress
     addresses.push({
       addressString: receiveAddress.publicAddress,
-      label: receiveAddress.segwitAddress != null ? s.strings.request_qr_your_wrapped_segwit_address : s.strings.request_qr_your_wallet_address
+      label: receiveAddress.segwitAddress != null ? lstrings.request_qr_your_wrapped_segwit_address : lstrings.request_qr_your_wallet_address
     })
     // Handle legacyAddress
     if (receiveAddress.legacyAddress != null) {
       addresses.push({
         addressString: receiveAddress.legacyAddress,
-        label: s.strings.request_qr_your_legacy_address
+        label: lstrings.request_qr_your_legacy_address
       })
     }
 
@@ -196,9 +196,9 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.request_minimum_notification_title}
+        title={lstrings.request_minimum_notification_title}
         message={minimumPopupModals.modalMessage}
-        buttons={{ ok: { label: s.strings.string_ok } }}
+        buttons={{ ok: { label: lstrings.string_ok } }}
       />
     ))
 
@@ -233,11 +233,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.modal_addressexplorer_message}
+        title={lstrings.modal_addressexplorer_message}
         message={requestAddress}
         buttons={{
-          confirm: { label: s.strings.string_ok_cap },
-          cancel: { label: s.strings.string_cancel_cap }
+          confirm: { label: lstrings.string_ok_cap },
+          cancel: { label: lstrings.string_cancel_cap }
         }}
       />
     ))
@@ -249,7 +249,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   handleOpenWalletListModal = () => {
     const { account } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={this.props.navigation} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           const wallet = account.currencyWallets[walletId]
@@ -262,14 +262,14 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
-  handleKeysOnlyModePress = () => showWebViewModal(config.supportSite, s.strings.help_support)
+  handleKeysOnlyModePress = () => showWebViewModal(config.supportSite, lstrings.help_support)
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} underline withTopMargin />
-        <Text style={styles.keysOnlyModeText}>{sprintf(s.strings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
-        <MainButton onPress={this.handleKeysOnlyModePress} label={s.strings.help_support} marginRem={2} type="secondary">
+        <SceneHeader title={sprintf(lstrings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} underline withTopMargin />
+        <Text style={styles.keysOnlyModeText}>{sprintf(lstrings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
+        <MainButton onPress={this.handleKeysOnlyModePress} label={lstrings.help_support} marginRem={2} type="secondary">
           <Fontello name="help_headset" color={this.props.theme.iconTappable} size={this.props.theme.rem(1.5)} />
         </MainButton>
       </SceneWrapper>
@@ -293,15 +293,15 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     }
 
     const selectedAddress = this.state.selectedAddress
-    const requestAddress = selectedAddress?.addressString ?? s.strings.loading
-    const flipInputHeaderText = sprintf(s.strings.send_to_wallet, getWalletName(wallet))
+    const requestAddress = selectedAddress?.addressString ?? lstrings.loading
+    const flipInputHeaderText = sprintf(lstrings.send_to_wallet, getWalletName(wallet))
     const { keysOnlyMode = false } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance
     const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
     const displayBalanceAmount = convertNativeToDenomination(primaryCurrencyInfo.displayDenomination.multiplier)(nativeBalance)
-    const displayBalanceString = sprintf(s.strings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
+    const displayBalanceString = sprintf(lstrings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
 
     // Selected denomination
     const denomString = `1 ${primaryCurrencyInfo.displayDenomination.name}`
@@ -312,7 +312,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme" hasTabs={false}>
         <View style={styles.container}>
           <View style={styles.requestContainer}>
-            <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+            <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </View>
           <View style={styles.balanceContainer}>
@@ -353,10 +353,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
             <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
               <View style={styles.accessoryView}>
                 <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_cancel_cap : ''}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
+                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_next_capitalized : 'Done'}</Text>
                 </TouchableOpacity>
               </View>
             </InputAccessoryView>
@@ -377,7 +377,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           />
           <TouchableOpacity disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
-              <EdgeText>{selectedAddress?.label ?? s.strings.request_qr_your_wallet_address}</EdgeText>
+              <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
               {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
             </View>
             <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
@@ -398,7 +398,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       const encodedUri = uri ?? (await this.getEncodedUri())
       if (encodedUri != null) {
         Clipboard.setString(encodedUri)
-        showToast(s.strings.fragment_request_address_uri_copied)
+        showToast(lstrings.fragment_request_address_uri_copied)
       }
     } catch (error) {
       showError(error)
@@ -446,10 +446,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
       edgePayUri = edgePayUri + `pay/${sharedAddress.replace(':', '/')}`
-      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, config.appName)}\n\n`
+      addOnMessage = `\n\n${sprintf(lstrings.request_qr_email_title, config.appName)}\n\n`
     }
 
-    const subject = wallet != null ? sprintf(s.strings.request_email_subject, config.appName, wallet.currencyInfo.displayName) : ''
+    const subject = wallet != null ? sprintf(lstrings.request_email_subject, config.appName, wallet.currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
 
     const shareOptions = {
@@ -469,16 +469,16 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   fioAddressModal = () => {
     const { navigation } = this.props
     if (!this.props.isConnected) {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
       return
     }
     if (!this.props.fioAddressesExist) {
-      showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
+      showError(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
       return
     }
     if (this.state.amounts == null || lte(this.state.amounts.nativeAmount, '0')) {
       if (Platform.OS === 'android') {
-        showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+        showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
         return
       } else {
         this.fioMode()
@@ -507,7 +507,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   nextFioMode = () => {
     if (this.state.isFioMode && (!this.state.amounts || lte(this.state.amounts.nativeAmount, '0'))) {
-      showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+      showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
         this.flipInput.textInputBottomBlur()

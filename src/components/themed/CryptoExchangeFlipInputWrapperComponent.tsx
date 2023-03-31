@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -71,7 +71,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
 
     return (
       <EdgeText style={styles.balanceText}>
-        {s.strings.string_wallet_balance + ': ' + cryptoAmount + ' ' + primaryCurrencyInfo.displayDenomination.name}
+        {lstrings.string_wallet_balance + ': ' + cryptoAmount + ' ' + primaryCurrencyInfo.displayDenomination.name}
       </EdgeText>
     )
   }

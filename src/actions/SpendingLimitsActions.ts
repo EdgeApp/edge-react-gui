@@ -1,6 +1,6 @@
 import { Alert } from 'react-native'
 
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { setSpendingLimits as setSpendingLimitsSettingsApi } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -12,7 +12,7 @@ export function setSpendingLimits(navigation: NavigationBase, spendingLimits: Sp
     const { account } = state.core
 
     account.checkPassword(password).then(isAuthorized => {
-      if (!isAuthorized) return Alert.alert(s.strings.password_check_incorrect_password_title)
+      if (!isAuthorized) return Alert.alert(lstrings.password_check_incorrect_password_title)
 
       return setSpendingLimitsSettingsApi(account, spendingLimits).then(() => {
         dispatch({

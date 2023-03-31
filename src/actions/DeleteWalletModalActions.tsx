@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { B } from '../styles/common/textStyles'
 import { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
@@ -17,15 +17,15 @@ export function showDeleteWalletModal(walletId: string, additionalMsg?: string):
     const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.fragment_wallets_delete_wallet}
+        title={lstrings.fragment_wallets_delete_wallet}
         buttons={{
-          confirm: { label: s.strings.string_archive },
-          cancel: { label: s.strings.string_cancel_cap }
+          confirm: { label: lstrings.string_archive },
+          cancel: { label: lstrings.string_cancel_cap }
         }}
       >
         <>
           <ModalMessage>
-            {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
+            {lstrings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
             <B>{getWalletName(currencyWallets[walletId])}?</B>
           </ModalMessage>
           {additionalMsg == null ? null : <ModalMessage>{additionalMsg}</ModalMessage>}

@@ -9,7 +9,7 @@ import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } 
 import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp } from '../../types/routerTypes'
@@ -151,7 +151,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     }
 
     if (this.props.toCurrencyCode === '') {
-      showWarning(`${s.strings.loan_select_receiving_wallet}`)
+      showWarning(`${lstrings.loan_select_receiving_wallet}`)
       Keyboard.dismiss()
       return
     }
@@ -166,7 +166,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     }
 
     if (zeroString(data.primaryNativeAmount)) {
-      showError(`${s.strings.no_exchange_amount}. ${s.strings.select_exchange_amount}.`)
+      showError(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
       return
     }
 
@@ -180,13 +180,13 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     if (exchangeInfo != null) {
       const disableSrc = this.checkDisableAsset(exchangeInfo.swap.disableAssets.source, this.props.fromWalletId, this.props.fromWalletPrimaryInfo)
       if (disableSrc) {
-        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, this.props.fromWalletPrimaryInfo.exchangeCurrencyCode))
         return
       }
 
       const disableDest = this.checkDisableAsset(exchangeInfo.swap.disableAssets.destination, this.props.toWalletId, this.props.toWalletPrimaryInfo)
       if (disableDest) {
-        showError(sprintf(s.strings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, this.props.toWalletPrimaryInfo.exchangeCurrencyCode))
         return
       }
     }
@@ -244,7 +244,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
+    return <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -254,12 +254,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
-      return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
+      return <Alert marginRem={[1.5, 1]} title={lstrings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
     }
 
     if (insufficient || genericError != null) {
-      const title = genericError != null ? s.strings.exchange_generic_error_title : insufficient ? s.strings.exchange_insufficient_funds_title : ''
-      const message = genericError != null ? genericError : insufficient ? s.strings.exchange_insufficient_funds_message : ''
+      const title = genericError != null ? lstrings.exchange_generic_error_title : insufficient ? lstrings.exchange_insufficient_funds_title : ''
+      const message = genericError != null ? genericError : insufficient ? lstrings.exchange_insufficient_funds_message : ''
       return <Alert marginRem={[1.5, 1]} title={title} message={message} type="error" />
     }
 
@@ -267,8 +267,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       return (
         <Alert
           marginRem={[1.5, 1]}
-          title={s.strings.exchange_insufficient_funds_title}
-          message={s.strings.exchange_insufficient_funds_below_balance}
+          title={lstrings.exchange_insufficient_funds_title}
+          message={lstrings.exchange_insufficient_funds_below_balance}
           type="error"
         />
       )
@@ -282,7 +282,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       <WalletListModal
         bridge={bridge}
         navigation={this.props.navigation}
-        headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
+        headerTitle={whichWallet === 'to' ? lstrings.select_recv_wallet : lstrings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
         filterActivation
@@ -325,17 +325,17 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     }
     const isFromFocused = this.state.whichWalletFocus === 'from'
     const isToFocused = this.state.whichWalletFocus === 'to'
-    const fromHeaderText = sprintf(s.strings.exchange_from_wallet, fromWalletName)
-    const toHeaderText = sprintf(s.strings.exchange_to_wallet, toWalletName)
+    const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
+    const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
 
     return (
       <SceneWrapper background="theme" hasTabs>
-        <SceneHeader title={s.strings.title_exchange} underline withTopMargin />
+        <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
-          <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
+          <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.fromWalletId}
-            buttonText={s.strings.select_src_wallet}
+            buttonText={lstrings.select_src_wallet}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
             secondaryCurrencyInfo={fromSecondaryInfo}
@@ -347,14 +347,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend ? (
-              <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} />
-            ) : null}
+            {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} /> : null}
           </CryptoExchangeFlipInputWrapper>
-          <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
+          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.toWalletId}
-            buttonText={s.strings.select_recv_wallet}
+            buttonText={lstrings.select_recv_wallet}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
             secondaryCurrencyInfo={toSecondaryInfo}

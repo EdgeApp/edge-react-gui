@@ -6,7 +6,7 @@ import buyPluginJsonRaw from '../../../constants/plugins/buyPluginList.json'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../../constants/plugins/sellPluginList.json'
 import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { asGuiPluginJson } from '../../../types/GuiPluginTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatIcon } from '../../icons/FiatIcon'
@@ -80,7 +80,7 @@ const PaymentMethodRowComponent = (props: Props) => {
       icon={mainIcon}
       leftText={fiatCurrencyCode}
       leftSubtext={name}
-      rightSubText={s.strings.plugin_powered_by_space + ' '}
+      rightSubText={lstrings.plugin_powered_by_space + ' '}
       rightSubTextExtended={renderPluginDisplay()}
       marginRem={marginRem}
     />

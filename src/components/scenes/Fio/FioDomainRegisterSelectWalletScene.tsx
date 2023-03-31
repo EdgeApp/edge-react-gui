@@ -6,7 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { getDomainRegInfo } from '../../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
@@ -109,7 +109,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       }
     }
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
     if (walletId && currencyCode) {
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
@@ -148,23 +148,23 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           nativeAmount,
           publicAddress: allPaymentInfo[paymentCurrencyCode].address,
           metadata: {
-            name: s.strings.fio_address_register_metadata_name,
-            notes: `${s.strings.title_register_fio_domain}\n${fioDomain}`
+            name: lstrings.fio_address_register_metadata_name,
+            notes: `${lstrings.title_register_fio_domain}\n${fioDomain}`
           },
           dismissAlert: true,
           lockInputs: true,
           onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
             if (error) {
               setTimeout(() => {
-                showError(s.strings.create_wallet_account_error_sending_transaction)
+                showError(lstrings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
               Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
-                  title={`${s.strings.fio_domain_label} ${s.strings.fragment_wallet_unconfirmed}`}
-                  message={sprintf(s.strings.fio_address_register_pending, s.strings.fio_domain_label)}
-                  buttons={{ ok: { label: s.strings.string_ok_cap } }}
+                  title={`${lstrings.fio_domain_label} ${lstrings.fragment_wallet_unconfirmed}`}
+                  message={sprintf(lstrings.fio_address_register_pending, lstrings.fio_domain_label)}
+                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               ))
               navigation.navigate('walletsTab', { screen: 'walletList' })
@@ -179,7 +179,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         })
       }
     } else {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
     }
   }
 
@@ -188,9 +188,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, config.appName, loading ? '-' : activationCost)
+    const detailsText = sprintf(lstrings.fio_domain_wallet_selection_text, config.appName, loading ? '-' : activationCost)
 
-    let paymentWalletBody = s.strings.choose_your_wallet
+    let paymentWalletBody = lstrings.choose_your_wallet
     if (paymentWallet != null && paymentWallet.id !== '') {
       const wallet = account.currencyWallets[paymentWallet.id]
       paymentWalletBody = `${getWalletName(wallet)} (${wallet.currencyInfo.currencyCode})`
@@ -203,18 +203,18 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           <EdgeText style={styles.instructionalText} numberOfLines={7}>
             {detailsText}
           </EdgeText>
-          <Tile type="static" title={s.strings.fio_domain_label} body={fioDomain} />
-          <Tile type="static" title={s.strings.create_wallet_account_amount_due} body={loading ? s.strings.loading : `${activationCost} ${FIO_STR}`} />
+          <Tile type="static" title={lstrings.fio_domain_label} body={fioDomain} />
+          <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
           <Tile
             type="touchable"
-            title={s.strings.create_wallet_account_select_wallet}
+            title={lstrings.create_wallet_account_select_wallet}
             body={paymentWalletBody}
             onPress={this.onWalletPress}
             // @ts-expect-error
             disabled={!activationCost || activationCost === 0}
           />
           {!loading && paymentWallet && paymentWallet.id && (
-            <MainButton label={s.strings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
+            <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
           )}
           {errorMessage && (
             <EdgeText style={styles.errorMessage} numberOfLines={3}>

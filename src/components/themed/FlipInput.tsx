@@ -7,7 +7,7 @@ import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, with
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
@@ -392,7 +392,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     if (keyPressed === 'Backspace') {
       this.setStateAmounts(truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
     } else if (!checkKeyPress(keyPressed, decimalAmount)) {
-      this.handleOnError(s.strings.invalid_character_error)
+      this.handleOnError(lstrings.invalid_character_error)
     } else {
       this.clearError()
       this.setStateAmounts(truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
@@ -468,7 +468,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
     const displayAmountCheck = (decimalAmount.match(/^0*$/) && !showCursor) || displayAmount === ''
-    const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
+    const displayAmountString = displayAmountCheck ? lstrings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
     const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency
 
@@ -537,7 +537,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
             <MenuTrigger />
             <MenuOptions>
               <MenuOption>
-                <EdgeText style={styles.clipboardText}>{s.strings.string_paste}</EdgeText>
+                <EdgeText style={styles.clipboardText}>{lstrings.string_paste}</EdgeText>
               </MenuOption>
             </MenuOptions>
           </Menu>

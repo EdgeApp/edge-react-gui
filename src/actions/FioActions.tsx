@@ -4,7 +4,7 @@ import React from 'react'
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   addToFioAddressCache,
   getExpiredSoonFioDomains,
@@ -85,8 +85,8 @@ export function checkFioObtData(walletId: string, transactions: EdgeTransaction[
         if (obtForTx == null) return
 
         if (edgeMetadata.notes == null) edgeMetadata.notes = ''
-        let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
-        if (obtForTx.content.memo != null && obtForTx.content.memo !== '') fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
+        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
+        if (obtForTx.content.memo != null && obtForTx.content.memo !== '') fioNotes += `\n${lstrings.fio_sender_memo_label}: ${obtForTx.content.memo}`
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
         edgeMetadata.name = obtForTx.payer_fio_address
 

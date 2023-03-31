@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
@@ -31,7 +31,7 @@ export function CurrencySettingsScene(props: Props) {
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <ScrollView>
-        <SettingsHeaderRow label={s.strings.settings_denominations_title} />
+        <SettingsHeaderRow label={lstrings.settings_denominations_title} />
         {denominations.map(denomination => {
           const key = denomination.multiplier
           const isSelected = key === selectedDenominationMultiplier

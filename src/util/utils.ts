@@ -23,7 +23,7 @@ import {
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
 import { EdgeTokenId, GuiDenomination, GuiExchangeRates, GuiFiatType, TransactionListTx } from '../types/types'
@@ -40,7 +40,7 @@ export const truncateString = (input: string | number, maxLength: number, isMidT
   const inputStr = typeof input !== 'string' ? String(input) : input
   const strLen = inputStr.length
   if (strLen >= maxLength) {
-    const delimStr = s.strings.util_truncate_delimeter
+    const delimStr = lstrings.util_truncate_delimeter
     if (isMidTrunc) {
       const segmentLen = Math.round(maxLength / 2)
       const seg1 = inputStr.slice(0, segmentLen)
@@ -462,10 +462,10 @@ export function unixToLocaleDateTime(unixDate: number): { date: string; time: st
 export const toListString = (elements: string[]): string => {
   if (elements.length === 0) return ''
   if (elements.length === 1) return elements[0]
-  if (elements.length === 2) return sprintf(s.strings.util_s_and_s, elements[0], elements[1])
+  if (elements.length === 2) return sprintf(lstrings.util_s_and_s, elements[0], elements[1])
 
   const firstPart = elements.slice(0, elements.length - 2)
-  const lastPart = sprintf(s.strings.util_s_and_s, elements[elements.length - 2], elements[elements.length - 1])
+  const lastPart = sprintf(lstrings.util_s_and_s, elements[elements.length - 2], elements[elements.length - 1])
   return firstPart.join(', ') + `, ${lastPart}`
 }
 

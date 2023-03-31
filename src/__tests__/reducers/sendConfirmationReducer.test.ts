@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals'
 import { EdgeTransaction } from 'edge-core-js'
 import { cloneDeep } from 'lodash'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { initialState, sendConfirmation } from '../../reducers/scenes/SendConfirmationReducer'
 
 describe('sendConfirmation reducer', () => {
@@ -125,7 +125,7 @@ describe('sendConfirmation reducer', () => {
           signedTx: '',
           txid: ''
         }
-        const error = new Error(s.strings.incorrect_pin)
+        const error = new Error(lstrings.incorrect_pin)
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone: any = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, {

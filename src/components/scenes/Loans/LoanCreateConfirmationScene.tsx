@@ -11,7 +11,7 @@ import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -217,7 +217,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     ? gt(add(swapFiatAmount, feeFiatAmount), srcBalanceFiatAmount)
     : gt(networkFeeAmount, borrowWalletNativeBalance)
 
-  if (loanAccountError != null) return <Alert title={s.strings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
+  if (loanAccountError != null) return <Alert title={lstrings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
   return loanAccount == null ? (
     <SceneWrapper background="theme">
@@ -225,24 +225,24 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     </SceneWrapper>
   ) : (
     <FormScene
-      headerText={s.strings.loan_create_confirmation_title}
+      headerText={lstrings.loan_create_confirmation_title}
       sliderDisabled={actionProgram == null || isFeesExceedCollateral}
       onSliderComplete={handleSliderComplete}
     >
-      <Tile type="static" title={s.strings.loan_amount_borrow}>
+      <Tile type="static" title={lstrings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
         </EdgeText>
       </Tile>
-      <Tile type="static" title={s.strings.loan_collateral_amount}>
+      <Tile type="static" title={lstrings.loan_collateral_amount}>
         <CryptoFiatAmountRow nativeAmount={nativeSrcAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={[0.25, 0, 0, 0]} />
       </Tile>
 
-      <Tile type="static" title={s.strings.loan_collateral_source}>
+      <Tile type="static" title={lstrings.loan_collateral_source}>
         <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} marginRem={0} />
       </Tile>
 
-      <Tile type="static" title={s.strings.loan_debt_destination}>
+      <Tile type="static" title={lstrings.loan_debt_destination}>
         {paymentMethod != null ? (
           <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={0} />
         ) : (
@@ -251,7 +251,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       </Tile>
       {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmount} />
-      {isFeesExceedCollateral ? <ErrorTile message={s.strings.loan_amount_fees_exceeds_collateral} /> : null}
+      {isFeesExceedCollateral ? <ErrorTile message={lstrings.loan_amount_fees_exceeds_collateral} /> : null}
     </FormScene>
   )
 }

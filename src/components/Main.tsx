@@ -13,7 +13,7 @@ import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -245,7 +245,7 @@ const EdgeApp = () => {
       return true
     } else {
       backPressedOnce.current = true
-      Airship.show(bridge => <AirshipToast bridge={bridge} message={s.strings.back_button_tap_again_to_exit} />).then(() => {
+      Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
         backPressedOnce.current = false
       })
       // Timeout the back press after 3 seconds so the state isn't "sticky"
@@ -311,7 +311,7 @@ const EdgeAppStack = () => {
         name="changePassword"
         component={ChangePasswordScene}
         options={{
-          title: s.strings.title_change_password,
+          title: lstrings.title_change_password,
           headerRight: () => null
         }}
       />
@@ -319,7 +319,7 @@ const EdgeAppStack = () => {
         name="changePin"
         component={ChangePinScene}
         options={{
-          title: s.strings.title_change_pin,
+          title: lstrings.title_change_pin,
           headerRight: () => null
         }}
       />
@@ -335,7 +335,7 @@ const EdgeAppStack = () => {
         name="createWalletAccountSelect"
         component={CreateWalletAccountSelectScene}
         options={{
-          title: s.strings.create_wallet_account_activate,
+          title: lstrings.create_wallet_account_activate,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
       />
@@ -343,7 +343,7 @@ const EdgeAppStack = () => {
         name="createWalletAccountSetup"
         component={CreateWalletAccountSetupScene}
         options={{
-          title: s.strings.create_wallet_create_account,
+          title: lstrings.create_wallet_create_account,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
       />
@@ -400,7 +400,7 @@ const EdgeAppStack = () => {
         // @ts-expect-error-error
         component={SwapSettingsScene}
         options={{
-          title: s.strings.settings_exchange_settings,
+          title: lstrings.settings_exchange_settings,
           headerRight: () => null
         }}
       />
@@ -437,7 +437,7 @@ const EdgeAppStack = () => {
         name="fioAddressRegisterSelectWallet"
         component={FioAddressRegisterSelectWalletScene}
         options={{
-          title: s.strings.title_fio_address_confirmation,
+          title: lstrings.title_fio_address_confirmation,
           headerRight: () => null
         }}
       />
@@ -453,21 +453,21 @@ const EdgeAppStack = () => {
         name="fioAddressSettings"
         component={FioAddressSettingsScene}
         options={{
-          title: s.strings.title_fio_address_settings
+          title: lstrings.title_fio_address_settings
         }}
       />
       <Stack.Screen
         name="fioConnectToWalletsConfirm"
         component={FioConnectWalletConfirmScene}
         options={{
-          title: s.strings.title_fio_connect_to_wallet
+          title: lstrings.title_fio_connect_to_wallet
         }}
       />
       <Stack.Screen
         name="fioCreateHandle"
         component={FioCreateHandleScene}
         options={{
-          title: s.strings.fio_free_handle_title
+          title: lstrings.fio_free_handle_title
         }}
       />
       <Stack.Screen
@@ -488,7 +488,7 @@ const EdgeAppStack = () => {
         name="fioDomainRegisterSelectWallet"
         component={FioDomainRegisterSelectWalletScene}
         options={{
-          title: s.strings.title_register_fio_domain,
+          title: lstrings.title_register_fio_domain,
           headerRight: () => null
         }}
       />
@@ -496,7 +496,7 @@ const EdgeAppStack = () => {
         name="fioDomainSettings"
         component={FioDomainSettingsScene}
         options={{
-          title: s.strings.title_fio_domain_settings
+          title: lstrings.title_fio_domain_settings
         }}
       />
       <Stack.Screen
@@ -510,7 +510,7 @@ const EdgeAppStack = () => {
         name="fioRequestConfirmation"
         component={FioRequestConfirmationScene}
         options={{
-          title: s.strings.fio_confirm_request_header
+          title: lstrings.fio_confirm_request_header
         }}
       />
       <Stack.Screen name="fioRequestList" component={FioRequestListScene} />
@@ -596,7 +596,7 @@ const EdgeAppStack = () => {
         name="notificationSettings"
         component={NotificationScene}
         options={{
-          title: s.strings.settings_notifications,
+          title: lstrings.settings_notifications,
           headerRight: () => null
         }}
       />
@@ -605,7 +605,7 @@ const EdgeAppStack = () => {
         name="otpSetup"
         component={OtpSettingsScene}
         options={{
-          title: s.strings.title_otp,
+          title: lstrings.title_otp,
           headerRight: () => null
         }}
       />
@@ -613,7 +613,7 @@ const EdgeAppStack = () => {
         name="passwordRecovery"
         component={ChangeRecoveryScene}
         options={{
-          title: s.strings.title_password_recovery,
+          title: lstrings.title_password_recovery,
           headerRight: () => null
         }}
       />
@@ -648,7 +648,7 @@ const EdgeAppStack = () => {
         name="promotionSettings"
         component={PromotionSettingsScene}
         options={{
-          title: s.strings.title_promotion_settings,
+          title: lstrings.title_promotion_settings,
           headerRight: () => null
         }}
       />
@@ -666,7 +666,7 @@ const EdgeAppStack = () => {
         name="settingsOverview"
         component={SettingsScene}
         options={{
-          title: s.strings.title_settings
+          title: lstrings.title_settings
         }}
         listeners={{
           focus: () => dispatch(showReEnableOtpModal())
@@ -676,7 +676,7 @@ const EdgeAppStack = () => {
         name="spendingLimits"
         component={SpendingLimitsScene}
         options={{
-          title: s.strings.spending_limits,
+          title: lstrings.spending_limits,
           headerRight: () => null
         }}
       />
@@ -687,7 +687,7 @@ const EdgeAppStack = () => {
         name="termsOfService"
         component={TermsOfServiceComponent}
         options={{
-          title: s.strings.title_terms_of_service
+          title: lstrings.title_terms_of_service
         }}
       />
       <Stack.Screen
@@ -715,7 +715,7 @@ const EdgeAppStack = () => {
         name="transactionsExport"
         component={TransactionsExportScene}
         options={{
-          title: s.strings.title_export_transactions,
+          title: lstrings.title_export_transactions,
           headerRight: () => null
         }}
       />

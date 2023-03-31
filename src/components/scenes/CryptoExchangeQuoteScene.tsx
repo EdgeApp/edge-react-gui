@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
@@ -90,9 +90,9 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.estimated_exchange_rate}
-        message={s.strings.estimated_exchange_rate_body}
-        buttons={{ ok: { label: s.strings.string_ok } }}
+        title={lstrings.estimated_exchange_rate}
+        message={lstrings.estimated_exchange_rate_body}
+        buttons={{ ok: { label: lstrings.string_ok } }}
       />
     ))
   }
@@ -114,10 +114,10 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const styles = getStyles(theme)
     return (
       <SceneWrapper background="theme">
-        <SceneHeader title={s.strings.title_exchange} underline withTopMargin />
+        <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
         <ScrollView contentContainerStyle={styles.container}>
-          <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
-          {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={s.strings.transaction_details_fee_warning} type="warning" />}
+          <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
+          {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
           <ExchangeQuote
             cryptoAmount={fromDisplayAmount}
             currency={fromWalletCurrencyName}
@@ -131,7 +131,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletName={getWalletName(request.fromWallet)}
             showFeeWarning={showFeeWarning}
           />
-          <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
+          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
           <ExchangeQuote
             cryptoAmount={toDisplayAmount}
             currency={toWalletCurrencyName}
@@ -142,15 +142,15 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletName={getWalletName(request.toWallet)}
           />
           <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={this.handlePoweredByTap}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space + ' '}</EdgeText>
+            <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space + ' '}</EdgeText>
             <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
             <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
           </TouchableOpacity>
           {quote.isEstimate && (
             <Alert
-              title={s.strings.estimated_quote}
-              message={s.strings.estimated_exchange_message}
+              title={lstrings.estimated_quote}
+              message={lstrings.estimated_exchange_message}
               type="warning"
               marginRem={[1.5, 1]}
               onPress={this.showExplanationForEstimate}

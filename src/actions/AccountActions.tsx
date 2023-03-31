@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 
@@ -30,7 +30,7 @@ interface ValidatePasswordOptions {
 
 export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
-    const { message, submitLabel, title = s.strings.confirm_password_text, warningMessage } = opts
+    const { message, submitLabel, title = lstrings.confirm_password_text, warningMessage } = opts
     const state = getState()
     const { account } = state.core
     const password = await Airship.show<string | undefined>(bridge => (
@@ -38,7 +38,7 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
         autoFocus={warningMessage == null}
         autoCorrect={false}
         bridge={bridge}
-        inputLabel={s.strings.enter_your_password}
+        inputLabel={lstrings.enter_your_password}
         message={message}
         returnKeyType="go"
         secureTextEntry
@@ -47,7 +47,7 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
         warningMessage={warningMessage}
         onSubmit={async password => {
           const isOk = await account.checkPassword(password)
-          if (!isOk) return s.strings.password_reminder_invalid
+          if (!isOk) return lstrings.password_reminder_invalid
           dispatch({ type: 'PASSWORD_USED' })
           return true
         }}

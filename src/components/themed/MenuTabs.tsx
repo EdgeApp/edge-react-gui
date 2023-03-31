@@ -9,7 +9,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
@@ -19,12 +19,12 @@ import { VectorIcon } from './VectorIcon'
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 const title: { readonly [key: string]: string } = {
-  marketsTab: s.strings.title_markets,
-  walletsTab: s.strings.title_wallets,
-  buyTab: s.strings.title_buy,
-  sellTab: s.strings.title_sell,
-  exchangeTab: s.strings.title_exchange,
-  extraTab: s.strings[extraTabString]
+  marketsTab: lstrings.title_markets,
+  walletsTab: lstrings.title_wallets,
+  buyTab: lstrings.title_buy,
+  sellTab: lstrings.title_sell,
+  exchangeTab: lstrings.title_exchange,
+  extraTab: lstrings[extraTabString]
 }
 
 export const MenuTabs = (props: BottomTabBarProps) => {

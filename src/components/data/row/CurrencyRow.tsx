@@ -5,7 +5,7 @@ import { Text } from 'react-native'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
 import { CryptoIcon } from '../../icons/CryptoIcon'
 import { useTheme } from '../../services/ThemeContext'
@@ -45,7 +45,7 @@ const CurrencyRowComponent = (props: Props) => {
   if (compromised) {
     name = (
       <>
-        <Text style={{ color: theme.warningText }}>{s.strings.compromised_key_label}</Text> {name}
+        <Text style={{ color: theme.warningText }}>{lstrings.compromised_key_label}</Text> {name}
       </>
     )
   }

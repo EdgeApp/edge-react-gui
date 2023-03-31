@@ -12,7 +12,7 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -192,7 +192,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           backgroundImage={backgroundImage}
           primaryLogo={theme.primaryLogo}
           primaryLogoCallback={handleSendLogs}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          parentButton={{ text: lstrings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts
         />
       </View>

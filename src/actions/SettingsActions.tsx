@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
   setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
@@ -206,11 +206,11 @@ export function showReEnableOtpModal(): ThunkAction<Promise<void>> {
     const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.title_otp_keep_modal}
-        message={s.strings.otp_modal_reset_description}
+        title={lstrings.title_otp_keep_modal}
+        message={lstrings.otp_modal_reset_description}
         buttons={{
-          confirm: { label: s.strings.otp_keep },
-          cancel: { label: s.strings.otp_disable }
+          confirm: { label: lstrings.otp_keep },
+          cancel: { label: lstrings.otp_disable }
         }}
       />
     ))
@@ -244,11 +244,11 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
     const response = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.restore_wallets_modal_title}
-        message={s.strings.restore_wallets_modal_description}
+        title={lstrings.restore_wallets_modal_title}
+        message={lstrings.restore_wallets_modal_description}
         buttons={{
-          confirm: { label: s.strings.restore_wallets_modal_confirm },
-          cancel: { label: s.strings.restore_wallets_modal_cancel }
+          confirm: { label: lstrings.restore_wallets_modal_confirm },
+          cancel: { label: lstrings.restore_wallets_modal_cancel }
         }}
       />
     ))

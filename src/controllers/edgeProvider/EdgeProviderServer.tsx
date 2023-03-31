@@ -13,7 +13,7 @@ import { trackConversion } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
@@ -102,13 +102,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     }
 
     const selectedWallet = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={this._navigation}
-        showCreateWallet
-        allowedAssets={allowedAssets}
-        headerTitle={s.strings.choose_your_wallet}
-      />
+      <WalletListModal bridge={bridge} navigation={this._navigation} showCreateWallet allowedAssets={allowedAssets} headerTitle={lstrings.choose_your_wallet} />
     ))
 
     const { walletId, currencyCode } = selectedWallet
@@ -145,7 +139,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       return returnCurrencyCode
     }
 
-    throw new Error(s.strings.user_closed_modal_no_wallet)
+    throw new Error(lstrings.user_closed_modal_no_wallet)
   }
 
   // Get an address from the user's wallet
@@ -255,11 +249,11 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.fragment_wallets_export_transactions}
-        message={sprintf(s.strings.transaction_history_permission, getWalletName(wallet))}
+        title={lstrings.fragment_wallets_export_transactions}
+        message={sprintf(lstrings.transaction_history_permission, getWalletName(wallet))}
         buttons={{
-          ok: { label: s.strings.yes },
-          cancel: { label: s.strings.no }
+          ok: { label: lstrings.yes },
+          cancel: { label: lstrings.no }
         }}
       />
     ))

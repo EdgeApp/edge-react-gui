@@ -5,7 +5,7 @@ import { TextField } from 'react-native-material-textfield'
 
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -56,14 +56,14 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             baseColor={THEME.COLORS.GRAY_2}
             tintColor={THEME.COLORS.GRAY_2}
             secureTextEntry
-            label={s.strings.enter_your_password}
+            label={lstrings.enter_your_password}
             onChangeText={this.onPasswordChanged}
           />
 
           <View style={styles.switchRow}>
             <View style={styles.textBlock}>
-              <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_title}</FormattedText>
-              <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_description}</FormattedText>
+              <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</FormattedText>
+              <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</FormattedText>
             </View>
             <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} />
           </View>
@@ -75,7 +75,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             value={transactionAmount.toString()}
             onChangeText={this.onTransactionAmountChanged}
             containerStyle={[{ flex: 1 }]}
-            label={s.strings.spending_limits_tx_title}
+            label={lstrings.spending_limits_tx_title}
             suffix={currencySymbol}
             autoCorrect={false}
             keyboardType="numeric"
@@ -84,7 +84,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
           <View style={styles.spacer} />
 
           <PrimaryButton onPress={this.onSubmit}>
-            <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
+            <PrimaryButton.Text>{lstrings.save}</PrimaryButton.Text>
           </PrimaryButton>
         </KeyboardAwareScrollView>
       </SceneWrapper>

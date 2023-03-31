@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { useFiatText } from '../../hooks/useFiatText'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -56,7 +56,7 @@ export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount
     nativeCryptoAmount: nativeAmount
   })
 
-  const title = s.strings.loan_estimate_fee
+  const title = lstrings.loan_estimate_fee
   const body = `${feeCryptoAmount} (${feeFiatAmount})`
 
   return <Tile type="static" title={title} body={body} />

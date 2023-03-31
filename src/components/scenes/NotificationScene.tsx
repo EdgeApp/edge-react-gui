@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native'
 import { NotificationSettings, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -54,13 +54,13 @@ export const NotificationScene = (props: Props) => {
       <ScrollView>
         <SettingsSwitchRow
           key="marketing-notifications"
-          label={s.strings.settings_marketing_notifications_switch}
+          label={lstrings.settings_marketing_notifications_switch}
           value={!settings.ignoreMarketing}
           onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
         />
         <SettingsSwitchRow
           key="price-notifications"
-          label={s.strings.settings_price_notifications_switch}
+          label={lstrings.settings_price_notifications_switch}
           value={!settings.ignorePriceChanges}
           onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
         />

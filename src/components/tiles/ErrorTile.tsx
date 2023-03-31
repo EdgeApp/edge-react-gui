@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
@@ -16,7 +16,7 @@ export const ErrorTile = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <Tile type="static" title={s.strings.send_scene_error_title}>
+    <Tile type="static" title={lstrings.send_scene_error_title}>
       <EdgeText style={styles.errorMessage} numberOfLines={numberOfLines}>
         {message}
       </EdgeText>

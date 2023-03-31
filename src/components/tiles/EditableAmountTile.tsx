@@ -2,7 +2,7 @@ import { div, round, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { GuiExchangeRates } from '../../types/types'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers'
@@ -35,7 +35,7 @@ export const EditableAmountTile = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   if (nativeAmount === '' && !lockInputs) {
-    cryptoAmountSyntax = s.strings.string_tap_to_edit
+    cryptoAmountSyntax = lstrings.string_tap_to_edit
     cryptoAmountStyle = styles.amountTextMuted
   } else if (!zeroString(nativeAmount)) {
     const displayAmount = div(nativeAmount, displayDenomination.multiplier, DECIMAL_PRECISION)

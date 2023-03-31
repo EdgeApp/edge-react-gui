@@ -5,7 +5,7 @@ import Evilicons from 'react-native-vector-icons/EvilIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -30,15 +30,15 @@ interface State {
 
 const feeOptions = {
   high: {
-    text: s.strings.mining_fee_high_label_choice,
+    text: lstrings.mining_fee_high_label_choice,
     icon: 'speedometer'
   },
   standard: {
-    text: s.strings.mining_fee_standard_label_choice,
+    text: lstrings.mining_fee_standard_label_choice,
     icon: 'speedometer-medium'
   },
   low: {
-    text: s.strings.mining_fee_low_label_choice,
+    text: lstrings.mining_fee_low_label_choice,
     icon: 'speedometer-slow'
   }
 }
@@ -86,7 +86,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
 
     return (
       <SceneWrapper background="theme" hasTabs={false} avoidKeyboard>
-        <SceneHeader title={s.strings.title_change_mining_fee} underline withTopMargin />
+        <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
         <ScrollView contentContainerStyle={styles.container}>
           {Object.keys(feeOptions).map(feeSetting => {
             return (
@@ -109,8 +109,8 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           })}
           {customFormat != null ? (
             <SettingsRadioRow
-              key={s.strings.mining_fee_custom_label_choice}
-              label={s.strings.mining_fee_custom_label_choice}
+              key={lstrings.mining_fee_custom_label_choice}
+              label={lstrings.mining_fee_custom_label_choice}
               value={networkFeeOption === 'custom'}
               onPress={() => this.setState({ networkFeeOption: 'custom' })}
             >
@@ -119,7 +119,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}
-          <MainButton alignSelf="center" label={s.strings.string_done_cap} marginRem={2} type="secondary" onPress={this.onSubmit} />
+          <MainButton alignSelf="center" label={lstrings.string_done_cap} marginRem={2} type="secondary" onPress={this.onSubmit} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -160,11 +160,11 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     const { theme } = this.props
     const styles = getStyles(theme)
     if (networkFeeOption !== 'custom' && networkFeeOption !== 'low') return null
-    const title = networkFeeOption === 'custom' ? s.strings.warning_custom_fee_selected : s.strings.warning_low_fee_selected
+    const title = networkFeeOption === 'custom' ? lstrings.warning_custom_fee_selected : lstrings.warning_low_fee_selected
 
     return (
       <View style={styles.view}>
-        <Alert title={title} message={s.strings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
+        <Alert title={title} message={lstrings.warning_low_or_custom_fee} type="warning" marginRem={[1.5, 1]} />
       </View>
     )
   }

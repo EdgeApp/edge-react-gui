@@ -5,7 +5,7 @@ import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { getRegInfo } from '../../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
@@ -124,7 +124,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
       }
     }
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
     if (walletId && currencyCode) {
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
@@ -160,21 +160,21 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           nativeAmount,
           publicAddress: allPaymentInfo[paymentCurrencyCode].address,
           metadata: {
-            name: s.strings.fio_address_register_metadata_name,
-            notes: `${s.strings.title_fio_address_confirmation}\n${fioAddress}`
+            name: lstrings.fio_address_register_metadata_name,
+            notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
           },
           dismissAlert: true,
           lockInputs: true,
           onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
             if (error) {
               setTimeout(() => {
-                showError(s.strings.create_wallet_account_error_sending_transaction)
+                showError(lstrings.create_wallet_account_error_sending_transaction)
               }, 750)
             } else if (edgeTransaction) {
               Alert.alert(
-                `${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`,
-                sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
-                [{ text: s.strings.string_ok_cap }]
+                `${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`,
+                sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label),
+                [{ text: lstrings.string_ok_cap }]
               )
               navigation.navigate('walletsTab', { screen: 'walletList' })
             }
@@ -188,7 +188,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         })
       }
     } else {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
     }
   }
 
@@ -198,18 +198,18 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { activationCost, paymentWallet, loading } = this.state
 
     const nextDisabled = !activationCost || activationCost === 0 || (!selectedDomain.walletId && (!paymentWallet || !paymentWallet.id))
-    const costStr = loading ? s.strings.loading : `${activationCost} ${FIO_STR}`
-    const walletName = !paymentWallet || !paymentWallet.id ? s.strings.choose_your_wallet : getWalletName(account.currencyWallets[paymentWallet.id])
+    const costStr = loading ? lstrings.loading : `${activationCost} ${FIO_STR}`
+    const walletName = !paymentWallet || !paymentWallet.id ? lstrings.choose_your_wallet : getWalletName(account.currencyWallets[paymentWallet.id])
 
     return (
       <>
-        <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddress} />
+        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
         {!selectedDomain.walletId && (
-          <Tile type="touchable" title={s.strings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+          <Tile type="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
         )}
-        <Tile type="static" title={s.strings.create_wallet_account_amount_due} body={costStr} />
+        <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={costStr} />
         {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
-          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} type="secondary" />
+          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} marginRem={1} type="secondary" />
         )}
         {loading && <ActivityIndicator color={theme.iconTappable} />}
       </>
@@ -220,7 +220,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { theme } = this.props
     const { errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(s.strings.fio_address_payment_required_text, config.appName)
+    const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
     return (
       <SceneWrapper background="theme">
         <ScrollView>

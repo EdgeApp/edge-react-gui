@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Thermostat } from '../themed/Thermostat'
@@ -51,7 +51,7 @@ export const LoanDetailsSummaryCard = (props: Props) => {
         </View>
         {ltv != null ? (
           <View style={styles.ltvContainer}>
-            <EdgeText style={styles.detailLabel}>{s.strings.loan_loan_to_value_ratio}</EdgeText>
+            <EdgeText style={styles.detailLabel}>{lstrings.loan_loan_to_value_ratio}</EdgeText>
             <Thermostat ratio={ltv} textColor={getLtvColorValue(ltv, theme)} />
           </View>
         ) : null}

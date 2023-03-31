@@ -11,7 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -82,7 +82,7 @@ export function TransactionListRow(props: Props) {
 
   const handlePress = useHandler(() => {
     if (transaction == null) {
-      return showError(s.strings.transaction_details_error_invalid)
+      return showError(lstrings.transaction_details_error_invalid)
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,

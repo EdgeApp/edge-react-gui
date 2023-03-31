@@ -3,7 +3,7 @@ import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
@@ -59,8 +59,8 @@ export function TransactionCryptoAmountTile(props: Props) {
 
       const convertedFee = abs(truncateDecimals(convertNativeToDisplay(walletDefaultDenom.multiplier)(networkFee)))
       const feeString = symbolString
-        ? sprintf(s.strings.fragment_tx_detail_mining_fee_with_symbol, convertedFee)
-        : sprintf(s.strings.fragment_tx_detail_mining_fee_with_denom, convertedFee, walletDefaultDenom.name)
+        ? sprintf(lstrings.fragment_tx_detail_mining_fee_with_symbol, convertedFee)
+        : sprintf(lstrings.fragment_tx_detail_mining_fee_with_denom, convertedFee, walletDefaultDenom.name)
 
       return `${symbolString} ${convertedAmount} (${feeString})`
     }
@@ -70,5 +70,5 @@ export function TransactionCryptoAmountTile(props: Props) {
     return `${symbolString} ${absoluteAmount}`
   }, [currencyCode, currencyInfo, nativeAmount, networkFee, swapData, walletDefaultDenom])
 
-  return <Tile type="static" title={sprintf(s.strings.transaction_details_crypto_amount, currencyName)} body={text} />
+  return <Tile type="static" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
 }

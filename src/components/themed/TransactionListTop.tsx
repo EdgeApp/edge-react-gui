@@ -14,7 +14,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -146,7 +146,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         })
         .catch(err => {
           console.error(err)
-          showWarning(s.strings.stake_unable_to_query_locked)
+          showWarning(lstrings.stake_unable_to_query_locked)
         })
       if (amount == null) return
 
@@ -158,7 +158,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleOpenWalletListModal = () => {
     triggerHaptic('impactLight')
     const { navigation } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} navigation={navigation} />).then(
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId != null && currencyCode != null) {
           navigation.setParams({ currencyCode, walletId })
@@ -213,7 +213,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}</EdgeText>
                 </>
               ) : (
-                <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
+                <EdgeText style={styles.balanceFiatShow}>{lstrings.string_show_balance}</EdgeText>
               )}
             </TouchableOpacity>
           </View>
@@ -251,7 +251,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <View style={styles.stakingBoxContainer}>
         <EdgeText style={styles.stakingStatusText}>
           {sprintf(
-            s.strings.staking_status,
+            lstrings.staking_status,
             stakingCryptoAmountFormat + ' ' + displayDenomination.name,
             fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode
           )}
@@ -370,7 +370,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <OutlinedTextInput
                   returnKeyType="search"
-                  label={s.strings.transaction_list_search}
+                  label={lstrings.transaction_list_search}
                   onChangeText={this.handleOnChangeText}
                   value={this.state.input}
                   onFocus={this.handleTextFieldFocus}
@@ -382,7 +382,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
               {searching && (
                 <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-                  <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+                  <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
                 </TouchableOpacity>
               )}
             </View>
@@ -395,11 +395,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
                   <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
+                  <EdgeText style={styles.buttonsText}>{lstrings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
                   <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
+                  <EdgeText style={styles.buttonsText}>{lstrings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
                 {!isStakePoliciesLoaded ? (
                   <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
@@ -407,7 +407,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   isStakingAvailable && (
                     <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
                       <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{s.strings.stake_earn_button_label}</EdgeText>
+                      <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
                       {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
                     </TouchableOpacity>
                   )
@@ -419,7 +419,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
-            <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
+            <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
           </SceneHeader>
         )}
       </>

@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../modules/FioAddress/util'
 import { ThunkAction } from '../types/reduxTypes'
 import { createCurrencyWallet } from './CreateWalletActions'
@@ -10,7 +10,7 @@ export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {
   return async (dispatch, getState) => {
     const state = getState()
     const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
-    return await dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode))
+    return await dispatch(createCurrencyWallet(lstrings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode))
   }
 }
 

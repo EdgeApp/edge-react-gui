@@ -11,7 +11,7 @@ import { LogsModal } from '../components/modals/LogsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { asActionProgram, asActionProgramState } from '../controllers/action-queue/cleaners'
 import { ActionProgram, ActionProgramState } from '../controllers/action-queue/types'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 
@@ -65,7 +65,7 @@ export function showSendLogsModal(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { isConnected } = state.network
-    if (!isConnected) return showError(s.strings.network_alert_title)
+    if (!isConnected) return showError(lstrings.network_alert_title)
     const logs = await dispatch(getLogOutput())
     await Airship.show(bridge => <LogsModal bridge={bridge} logs={logs} />)
   }
@@ -76,15 +76,15 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
     Airship.show<string | number | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.settings_button_clear_logs}
-        message={s.strings.settings_modal_clear_logs_message}
+        title={lstrings.settings_button_clear_logs}
+        message={lstrings.settings_modal_clear_logs_message}
         buttons={{
           yes: {
             label: 'Clear',
             type: 'secondary',
             onPress: async () => {
               await clearAllLogs()
-              showToast(s.strings.settings_modal_clear_logs_success)
+              showToast(lstrings.settings_modal_clear_logs_success)
               return true
             }
           },

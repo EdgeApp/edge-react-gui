@@ -4,7 +4,7 @@ import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
@@ -117,7 +117,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   selectAddress = () => {
     const { currencyCode, selectedWalletId } = this.props
     Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWalletId} useUserFioAddressesOnly />
+      <AddressModal bridge={bridge} title={lstrings.fio_select_address} currencyCode={currencyCode} walletId={selectedWalletId} useUserFioAddressesOnly />
     )).then(response => {
       if (response) {
         this.setFioAddress(response)
@@ -130,11 +130,11 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
       <TextInputModal
         bridge={bridge}
         initialValue={this.props.memo}
-        inputLabel={s.strings.fio_sender_memo_placeholder}
+        inputLabel={lstrings.fio_sender_memo_placeholder}
         returnKeyType="done"
         multiline
-        submitLabel={s.strings.string_save}
-        title={s.strings.fio_sender_memo_label}
+        submitLabel={lstrings.string_save}
+        title={lstrings.fio_sender_memo_label}
       />
     )).then(memo => {
       if (memo != null) this.handleMemoChange(memo)
@@ -157,7 +157,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     let error = ''
 
     if (!fioWallet) {
-      error = s.strings.fio_select_address_no_wallet_err
+      error = lstrings.fio_select_address_no_wallet_err
       showError(error)
       return
     }
@@ -172,11 +172,11 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
         const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={s.strings.fio_no_bundled_err_msg}
-            message={s.strings.fio_no_bundled_add_err_msg}
+            title={lstrings.fio_no_bundled_err_msg}
+            message={lstrings.fio_no_bundled_add_err_msg}
             buttons={{
-              ok: { label: s.strings.title_fio_add_bundled_txs },
-              cancel: { label: s.strings.string_cancel_cap }
+              ok: { label: lstrings.title_fio_add_bundled_txs },
+              cancel: { label: lstrings.string_cancel_cap }
             }}
           />
         ))
@@ -199,10 +199,10 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
   handleMemoChange = (memo: string) => {
     let memoError = ''
     if (memo && memo.length > 64) {
-      memoError = s.strings.send_fio_request_error_memo_inline
+      memoError = lstrings.send_fio_request_error_memo_inline
     }
     if (memo && !/^[\x20-\x7E]*$/.test(memo)) {
-      memoError = s.strings.send_fio_request_error_memo_invalid_character
+      memoError = lstrings.send_fio_request_error_memo_invalid_character
     }
     this.props.onMemoChange(memo, memoError)
   }
@@ -214,7 +214,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     return (
       <Tile
         type={loading && !selected ? 'loading' : fioRequest ? 'static' : 'touchable'}
-        title={s.strings.select_fio_address_address_from}
+        title={lstrings.select_fio_address_address_from}
         body={selected}
         onPress={fioRequest ? undefined : this.selectAddress}
       />
@@ -231,7 +231,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 
     if (memoError) {
       return (
-        <Tile type="touchable" title={s.strings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
+        <Tile type="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
           <EdgeText style={{ color: theme.dangerText }}>{memoError}</EdgeText>
         </Tile>
       )
@@ -240,8 +240,8 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     return (
       <Tile
         type="touchable"
-        title={s.strings.select_fio_address_address_memo}
-        body={memo || s.strings.fio_sender_memo_placeholder}
+        title={lstrings.select_fio_address_address_memo}
+        body={memo || lstrings.fio_sender_memo_placeholder}
         onPress={this.openMessageInput}
       />
     )

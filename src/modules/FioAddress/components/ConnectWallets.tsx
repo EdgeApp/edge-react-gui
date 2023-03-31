@@ -8,7 +8,7 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { NavigationBase } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
@@ -101,7 +101,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         walletsToDisconnect
       })
     } else {
-      showError(s.strings.fio_wallet_missing_for_fio_address)
+      showError(lstrings.fio_wallet_missing_for_fio_address)
     }
   }
 
@@ -188,7 +188,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   renderNoWallets() {
     const { loading, theme } = this.props
     const styles = getStyles(theme)
-    return <EdgeText style={styles.no_wallets_text}>{loading ? s.strings.loading : s.strings.fio_connect_no_wallets}</EdgeText>
+    return <EdgeText style={styles.no_wallets_text}>{loading ? lstrings.loading : lstrings.fio_connect_no_wallets}</EdgeText>
   }
 
   render() {
@@ -216,7 +216,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           </ScrollView>
         </View>
         <View style={styles.bottomSection}>
-          <MainButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
+          <MainButton onPress={this._onContinuePress} label={lstrings.string_next_capitalized} disabled={continueDisabled || disabled} />
         </View>
       </View>
     )

@@ -4,7 +4,7 @@ import { TouchableOpacity, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
 import { NavigationProp } from '../../types/routerTypes'
@@ -41,8 +41,8 @@ const percentChangeStrings: { [pc: string]: string } = {
   year1: '1y'
 }
 const assetSubTextStrings: { [pc: string]: string } = {
-  marketCap: s.strings.coin_rank_market_cap_abbreviation,
-  volume24h: s.strings.coin_rank_volume_24hr_abbreviation
+  marketCap: lstrings.coin_rank_market_cap_abbreviation,
+  volume24h: lstrings.coin_rank_volume_24hr_abbreviation
 }
 
 type Timeout = ReturnType<typeof setTimeout>
@@ -197,7 +197,7 @@ const CoinRankingComponent = (props: Props) => {
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <OutlinedTextInput
             returnKeyType="search"
-            label={s.strings.search_assets}
+            label={lstrings.search_assets}
             onChangeText={handleOnChangeText}
             value={searchText ?? ''}
             onFocus={handleTextFieldFocus}
@@ -209,14 +209,14 @@ const CoinRankingComponent = (props: Props) => {
         </View>
         {searching && (
           <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
-            <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+            <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
           </TouchableOpacity>
         )}
       </View>
 
       <View style={styles.container}>
         <View style={styles.rankView}>
-          <EdgeText style={styles.rankText}>{s.strings.coin_rank_rank}</EdgeText>
+          <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
         </View>
         <TouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
           <EdgeText style={styles.assetText}>{assetSubTextString}</EdgeText>
@@ -225,7 +225,7 @@ const CoinRankingComponent = (props: Props) => {
           <EdgeText style={styles.percentChangeText}>{timeFrameString}</EdgeText>
         </TouchableOpacity>
         <View style={styles.priceView}>
-          <EdgeText style={styles.priceText}>{s.strings.coin_rank_price}</EdgeText>
+          <EdgeText style={styles.priceText}>{lstrings.coin_rank_price}</EdgeText>
         </View>
       </View>
       <DividerLine marginRem={[0, 0, 0, 1]} />

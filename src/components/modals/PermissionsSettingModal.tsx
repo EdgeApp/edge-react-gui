@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { Permission, permissionNames } from '../../reducers/PermissionsReducer'
 import { showError } from '../services/AirshipInstance'
 import { checkIfDenied } from '../services/PermissionsManager'
@@ -23,8 +23,8 @@ export function PermissionsSettingModal(props: {
   const isAppForeground = useIsAppForeground()
 
   const message = mandatory
-    ? sprintf(s.strings.contacts_permission_modal_enable_settings_mandatory, name, permission)
-    : sprintf(s.strings.contacts_permission_modal_enable_settings, name, permission)
+    ? sprintf(lstrings.contacts_permission_modal_enable_settings_mandatory, name, permission)
+    : sprintf(lstrings.contacts_permission_modal_enable_settings, name, permission)
 
   useAsyncEffect(async () => {
     if (!isAppForeground || !mandatory) return
@@ -43,7 +43,7 @@ export function PermissionsSettingModal(props: {
   return (
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleClose}>
       <ModalMessage>{message}</ModalMessage>
-      <MainButton label={s.strings.string_ok_cap} marginRem={0.5} type="primary" onPress={handlePress} />
+      <MainButton label={lstrings.string_ok_cap} marginRem={0.5} type="primary" onPress={handlePress} />
       <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )

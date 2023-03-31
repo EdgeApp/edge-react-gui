@@ -16,7 +16,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
 import { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
@@ -204,7 +204,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    */
   async checkDisclaimer() {
     const { account } = this.props
-    const message = sprintf(s.strings.plugin_service_provider_disclaimer, config.appName)
+    const message = sprintf(lstrings.plugin_service_provider_disclaimer, config.appName)
     try {
       const text = await account.disklet.getText(MODAL_DATA_FILE)
       const json = JSON.parse(text)
@@ -212,9 +212,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       if (timesPluginWarningModalViewed < 3) {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
-          await Airship.show<'ok' | undefined>(bridge => (
-            <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />
-          ))
+          await Airship.show<'ok' | undefined>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: lstrings.string_ok_cap } }} />)
         }
         const newText = JSON.stringify({
           viewed: newNumber
@@ -227,7 +225,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
       const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
-      await Airship.show<'ok' | undefined>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: s.strings.string_ok_cap } }} />)
+      await Airship.show<'ok' | undefined>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: lstrings.string_ok_cap } }} />)
     }
   }
 
@@ -285,10 +283,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           autoCapitalize="none"
           bridge={bridge}
           initialValue={developerUri}
-          inputLabel={s.strings.plugin_url}
+          inputLabel={lstrings.plugin_url}
           returnKeyType="go"
-          submitLabel={s.strings.load_plugin}
-          title={s.strings.load_plugin}
+          submitLabel={lstrings.load_plugin}
+          title={lstrings.load_plugin}
         />
       ))
       if (deepPath == null) return
@@ -376,7 +374,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           </View>
           {poweredBy != null && item.partnerIconPath != null ? (
             <View style={styles.pluginRowPoweredByRow}>
-              <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by_space}</EdgeText>
+              <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
               <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
               <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
             </View>
@@ -411,7 +409,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme" hasTabs>
-        <SceneHeader title={direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell} underline />
+        <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
             <FastImage
@@ -419,13 +417,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               style={styles.selectedCountryFlag}
             />
           )}
-          <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : s.strings.buy_sell_crypto_select_country_button}</EdgeText>
+          <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}</EdgeText>
           <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
         </TouchableOpacity>
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
             <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
-              {s.strings.buy_sell_crypto_no_plugin_region}
+              {lstrings.buy_sell_crypto_no_plugin_region}
             </EdgeText>
           </View>
         ) : (

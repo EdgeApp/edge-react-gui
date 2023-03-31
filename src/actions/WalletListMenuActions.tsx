@@ -9,7 +9,7 @@ import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { ModalMessage } from '../components/themed/ModalParts'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationProp } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
@@ -65,9 +65,9 @@ export function walletListMenuAction(
 
         if (Object.values(currencyWallets).length === 1) {
           Airship.show(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={s.strings.cannot_delete_last_wallet_modal_title}>
-              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
-              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
+            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
+              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
+              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
             </ButtonsModal>
           ))
           return
@@ -92,9 +92,9 @@ export function walletListMenuAction(
         let additionalMsg: string | undefined
         if (tokenId == null) {
           if (fioAddress) {
-            additionalMsg = s.strings.fragmet_wallets_delete_fio_extra_message_mobile
+            additionalMsg = lstrings.fragmet_wallets_delete_fio_extra_message_mobile
           } else if (wallet.currencyInfo.metaTokens.length > 0) {
-            additionalMsg = s.strings.fragmet_wallets_delete_eth_extra_message
+            additionalMsg = lstrings.fragmet_wallets_delete_eth_extra_message
           }
         }
 
@@ -148,11 +148,11 @@ export function walletListMenuAction(
         const { xpubExplorer } = currencyInfo
 
         const copy: ButtonInfo = {
-          label: s.strings.fragment_request_copy_title,
+          label: lstrings.fragment_request_copy_title,
           type: 'secondary'
         }
         const link: ButtonInfo = {
-          label: s.strings.transaction_details_show_advanced_block_explorer,
+          label: lstrings.transaction_details_show_advanced_block_explorer,
           type: 'secondary'
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
@@ -163,13 +163,13 @@ export function walletListMenuAction(
             buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
             closeArrow
             message={displayPublicSeed ?? ''}
-            title={s.strings.fragment_wallets_view_xpub}
+            title={lstrings.fragment_wallets_view_xpub}
           />
         )).then(result => {
           switch (result) {
             case 'copy':
               Clipboard.setString(displayPublicSeed ?? '')
-              showToast(s.strings.fragment_wallets_pubkey_copied_title)
+              showToast(lstrings.fragment_wallets_pubkey_copied_title)
               break
             case 'link':
               if (xpubExplorer != null) {
@@ -204,9 +204,9 @@ export function walletListMenuAction(
 
         const passwordValid = await dispatch(
           validatePassword({
-            title: s.strings.fragment_wallets_get_seed_title,
-            submitLabel: s.strings.fragment_wallets_get_seed_wallet,
-            warningMessage: s.strings.fragment_wallets_get_seed_warning_message
+            title: lstrings.fragment_wallets_get_seed_title,
+            submitLabel: lstrings.fragment_wallets_get_seed_wallet,
+            warningMessage: lstrings.fragment_wallets_get_seed_warning_message
           })
         )
 
@@ -216,21 +216,21 @@ export function walletListMenuAction(
           // Add a copy button only for development
           let devButtons = {}
           // @ts-expect-error
-          if (global.__DEV__) devButtons = { copy: { label: s.strings.fragment_wallets_copy_seed } }
+          if (global.__DEV__) devButtons = { copy: { label: lstrings.fragment_wallets_copy_seed } }
 
           await Airship.show<'copy' | 'ok' | undefined>(bridge => (
             <ButtonsModal
-              title={s.strings.fragment_wallets_get_seed_wallet}
+              title={lstrings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
               message={wallet.displayPrivateSeed ?? ''}
-              buttons={{ ok: { label: s.strings.string_ok_cap }, ...devButtons }}
+              buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
             // @ts-expect-error
             if (global.__DEV__ && buttonPressed === 'copy') {
               // @ts-expect-error
               Clipboard.setString(wallet.displayPrivateSeed)
-              showToast(s.strings.fragment_wallets_copied_seed)
+              showToast(lstrings.fragment_wallets_copied_seed)
             }
           })
         }
@@ -241,9 +241,9 @@ export function walletListMenuAction(
       return async (dispatch, getState) => {
         const passwordValid = await dispatch(
           validatePassword({
-            title: s.strings.fragment_wallets_get_raw_keys_title,
-            warningMessage: s.strings.fragment_wallets_get_raw_keys_warning_message,
-            submitLabel: s.strings.string_get_raw_keys
+            title: lstrings.fragment_wallets_get_raw_keys_title,
+            warningMessage: lstrings.fragment_wallets_get_raw_keys_warning_message,
+            submitLabel: lstrings.string_get_raw_keys
           })
         )
         if (passwordValid) {
@@ -252,7 +252,7 @@ export function walletListMenuAction(
 
           const keys = account.allKeys.find(key => key.id === walletId)
           const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} disableCopy />)
+          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={lstrings.string_raw_keys} disableCopy />)
         }
       }
     }
@@ -269,9 +269,9 @@ export function walletListMenuAction(
             autoCorrect={false}
             bridge={bridge}
             initialValue={walletName}
-            inputLabel={s.strings.fragment_wallets_rename_wallet}
+            inputLabel={lstrings.fragment_wallets_rename_wallet}
             returnKeyType="go"
-            title={s.strings.fragment_wallets_rename_wallet}
+            title={lstrings.fragment_wallets_rename_wallet}
             onSubmit={async name => {
               await wallet.renameWallet(name)
               return true

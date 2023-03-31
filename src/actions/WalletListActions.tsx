@@ -6,7 +6,7 @@ import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpi
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings'
 import { GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -83,16 +83,16 @@ const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState)
   const { defaultIsoFiat } = state.ui.settings
 
   const createWalletTypes = getCreateWalletType(account, currencyCode)
-  if (!createWalletTypes) throw new Error(s.strings.wallet_list_referral_link_currency_invalid)
+  if (!createWalletTypes) throw new Error(lstrings.wallet_list_referral_link_currency_invalid)
 
   const askUserToCreateWallet = await createWalletCheckModal(currencyCode)
-  if (!askUserToCreateWallet) throw new Error(s.strings.wallet_list_referral_link_cancelled_wallet_creation)
+  if (!askUserToCreateWallet) throw new Error(lstrings.wallet_list_referral_link_cancelled_wallet_creation)
 
   const createWallet = account.createCurrencyWallet(createWalletTypes.walletType, {
     name: createWalletTypes.currencyName,
     fiatCurrencyCode: defaultIsoFiat
   })
-  const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
+  const wallet = await showFullScreenSpinner(lstrings.wallet_list_referral_link_currency_loading, createWallet)
   logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
 
   const receiveAddress = await wallet.getReceiveAddress()
@@ -103,11 +103,11 @@ const createWalletCheckModal = async (currencyCode: string): Promise<boolean> =>
   const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
-      title={s.strings.fragment_create_wallet_create_wallet}
-      message={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
+      title={lstrings.fragment_create_wallet_create_wallet}
+      message={sprintf(lstrings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
       buttons={{
-        ok: { label: s.strings.yes },
-        cancel: { label: s.strings.no }
+        ok: { label: lstrings.yes },
+        cancel: { label: lstrings.no }
       }}
     />
   ))
