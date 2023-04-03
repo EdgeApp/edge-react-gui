@@ -26,7 +26,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
@@ -86,14 +86,8 @@ export const LoanCreateScene = (props: Props) => {
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
   const hardCollateralCurrencyCode = 'WBTC'
-  const { tokenId: hardSrcTokenAddr } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: hardCollateralCurrencyCode, pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
-  const { tokenId: hardDestTokenAddr } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
+  const hardSrcTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
+  const hardDestTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
   const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
   const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
 
@@ -275,7 +269,7 @@ export const LoanCreateScene = (props: Props) => {
           setDestTokenId(hardDestTokenAddr)
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
-          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
+          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)

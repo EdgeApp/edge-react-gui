@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
 import { SortOption } from '../../components/modals/WalletListSortModal'
-import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
+import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 import { Action } from '../../types/reduxTypes'
 import { GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
 import { PasswordReminderState } from '../PasswordReminderReducer'
@@ -34,29 +34,22 @@ export interface AccountInitPayload {
   preferredSwapPluginType: EdgeSwapPluginType | undefined
   spamFilterOn: boolean
   spendingLimits: SpendingLimits
+  securityCheckedWallets: SecurityCheckedWallets
   touchIdInfo: GuiTouchIdInfo
   walletId: string
   walletsSort: SortOption
 }
 
-export const initialState = {
+export const initialState: SettingsState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   changesLocked: true,
-  pinLoginEnabled: false,
-  loginStatus: null,
-  isTouchSupported: false,
-  isTouchEnabled: false,
-  isAccountBalanceVisible: true,
-  walletsSort: 'manual',
-  mostRecentWallets: [],
-  spendingLimits: {
-    transaction: {
-      isEnabled: false,
-      amount: 0
-    }
-  },
   developerModeOn: false,
+  isAccountBalanceVisible: true,
+  isTouchEnabled: false,
+  isTouchSupported: false,
+  loginStatus: null,
+  mostRecentWallets: [],
   // prettier-ignore
   passwordRecoveryRemindersShown: {
     '20': false,
@@ -64,25 +57,35 @@ export const initialState = {
     '2000': false,
     '20000': false,
     '200000': false
-  }
+  },
+  pinLoginEnabled: false,
+  spendingLimits: {
+    transaction: {
+      isEnabled: false,
+      amount: 0
+    }
+  },
+  walletsSort: 'manual'
 }
 
 export interface SettingsState {
-  denominationSettings: DenominationSettings
   autoLogoutTimeInSeconds: number
   changesLocked: any
+  countryCode: string
   defaultFiat: string
   defaultIsoFiat: string
+  denominationSettings: DenominationSettings
+  developerModeOn: boolean
+  isAccountBalanceVisible: boolean
   isTouchEnabled: boolean
-  countryCode: string
   isTouchSupported: boolean
   loginStatus: boolean | null
+  mostRecentWallets: MostRecentWallet[]
+  passwordRecoveryRemindersShown: PasswordReminderLevels
+  pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
   preferredSwapPluginType: EdgeSwapPluginType | undefined
-  pinLoginEnabled: boolean
-  isAccountBalanceVisible: boolean
-  walletsSort: SortOption
-  mostRecentWallets: MostRecentWallet[]
+  securityCheckedWallets: SecurityCheckedWallets
   spamFilterOn: boolean
   spendingLimits: {
     transaction: {
@@ -90,11 +93,9 @@ export interface SettingsState {
       amount: number
     }
   }
-  developerModeOn: boolean
-  passwordRecoveryRemindersShown: PasswordReminderLevels
+  walletsSort: SortOption
 }
 
-// @ts-expect-error
 export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {
   switch (action.type) {
     case 'LOGIN': {
@@ -122,41 +123,43 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'ACCOUNT_INIT_COMPLETE': {
       const {
-        touchIdInfo,
         autoLogoutTimeInSeconds,
+        countryCode,
         defaultFiat,
         defaultIsoFiat,
-        preferredSwapPluginId,
-        preferredSwapPluginType,
-        countryCode,
-        pinLoginEnabled,
         denominationSettings,
+        developerModeOn,
         isAccountBalanceVisible,
-        walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        pinLoginEnabled,
+        preferredSwapPluginId,
+        preferredSwapPluginType,
+        securityCheckedWallets,
         spamFilterOn,
-        developerModeOn
+        touchIdInfo,
+        walletsSort
       } = action.data
       const newState: SettingsState = {
         ...state,
-        loginStatus: true,
         autoLogoutTimeInSeconds,
-        isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
-        isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
+        countryCode,
         defaultFiat,
         defaultIsoFiat,
-        preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
-        preferredSwapPluginType,
-        countryCode,
-        pinLoginEnabled,
         denominationSettings,
+        developerModeOn,
         isAccountBalanceVisible,
-        walletsSort,
+        isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
+        isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
+        loginStatus: true,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        pinLoginEnabled,
+        preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
+        preferredSwapPluginType,
+        securityCheckedWallets,
         spamFilterOn,
-        developerModeOn
+        walletsSort
       }
       return newState
     }
@@ -271,7 +274,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   }
 }
 
-// @ts-expect-error
 export const settings = (state: SettingsState = initialState, action: Action): SettingsState => {
   let result = state
   const legacy = settingsLegacy(state, action)

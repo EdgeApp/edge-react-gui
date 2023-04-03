@@ -384,8 +384,8 @@ export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     account: state.core.account,
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
-    userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-    userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    userFioAddresses: state.ui.fioAddress.fioAddresses,
+    userFioAddressesLoading: state.ui.fioAddress.fioAddressesLoading,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({

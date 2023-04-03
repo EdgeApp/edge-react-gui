@@ -30,6 +30,15 @@ const asDenominationSettings = asMap(asOptional(asObject(asMaybe(asCurrencyCodeD
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
 
+export type SecurityCheckedWallets = Record<string, { checked: boolean; modalShown: number }>
+
+const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
+  asObject({
+    checked: asBoolean,
+    modalShown: asNumber
+  })
+)
+
 export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
   defaultFiat: asOptional(asString, 'USD'),
@@ -50,15 +59,7 @@ export const asSyncedAccountSettings = asObject({
   ),
   walletsSort: asOptional(asSortOption, 'manual'),
   denominationSettings: asOptional(asDenominationSettings, {}),
-  securityCheckedWallets: asMaybe(
-    asObject(
-      asObject({
-        checked: asBoolean,
-        modalShown: asNumber
-      })
-    ),
-    {}
-  )
+  securityCheckedWallets: asMaybe(asSecurityCheckedWallets, {})
 })
 
 // Default Account Settings

@@ -624,7 +624,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
+    const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
 
     return {
       account,

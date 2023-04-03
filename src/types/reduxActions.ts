@@ -6,7 +6,7 @@ import { NotificationSettings } from '../actions/NotificationActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
-import { PasswordReminderTime } from '../modules/Core/Account/settings'
+import { PasswordReminderTime, SecurityCheckedWallets } from '../modules/Core/Account/settings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
 import { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
@@ -139,6 +139,7 @@ export type Action =
   | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'; data: { mostRecentWallets: MostRecentWallet[] } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN'; data: string | undefined }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE'; data: EdgeSwapPluginType | undefined }
+  | { type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS'; data: SecurityCheckedWallets }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK'; data: boolean }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT'; data: { walletsSort: SortOption } }
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'; data: { pinLoginEnabled: boolean } }

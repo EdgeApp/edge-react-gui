@@ -402,6 +402,7 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
         securityCheckedWallets[walletId] = { ...securityCheckedWallets[walletId], checked: true }
       }
     }
+    dispatch({ type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS', data: securityCheckedWallets })
 
     const MigrateWalletsModal = async (walletNames: string[]): Promise<'yes' | 'no' | undefined> => {
       const message = sprintf(s.strings.migrate_wallets_modal_message, walletNames.join('\n'))

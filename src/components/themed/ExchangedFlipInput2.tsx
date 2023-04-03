@@ -196,32 +196,28 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     [convertCurrency, cryptoCurrencyCode, fiatCurrencyCode, forceField]
   )
 
-  return (
+  return coreWallet != null ? (
     <>
-      {coreWallet != null ? (
-        <>
-          <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
-            <CryptoIcon pluginId={pluginId} currencyCode={cryptoCurrencyCode} marginRem={[0, 1, 0, 0]} sizeRem={1.5} />
-            {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
-          </TouchableOpacity>
+      <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
+        <CryptoIcon marginRem={[0, 1, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />
+        {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
+      </TouchableOpacity>
 
-          <FlipInput2
-            onNext={onNext}
-            ref={flipInputRef}
-            convertValue={convertValue}
-            editable={editable}
-            fieldInfos={fieldInfos}
-            returnKeyType={returnKeyType}
-            forceFieldNum={forceFieldMap[overrideForceField]}
-            inputAccessoryViewID={inputAccessoryViewID}
-            keyboardVisible={keyboardVisible}
-            startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
-          />
-        </>
-      ) : (
-        <ActivityIndicator />
-      )}
+      <FlipInput2
+        onNext={onNext}
+        ref={flipInputRef}
+        convertValue={convertValue}
+        editable={editable}
+        fieldInfos={fieldInfos}
+        returnKeyType={returnKeyType}
+        forceFieldNum={forceFieldMap[overrideForceField]}
+        inputAccessoryViewID={inputAccessoryViewID}
+        keyboardVisible={keyboardVisible}
+        startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
+      />
     </>
+  ) : (
+    <ActivityIndicator />
   )
 })
 

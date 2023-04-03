@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { getCreateWalletType } from '../../util/CurrencyInfoHelpers'
+import { getCreateWalletType, guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
@@ -106,9 +106,11 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
   })
 
+  const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
+
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>
-      <CryptoIcon currencyCode={currencyCode} marginRem={1} pluginId={pluginId} sizeRem={2} />
+      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.nameColumn}>
         <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>

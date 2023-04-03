@@ -265,7 +265,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     return {
-      fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      fioAddresses: state.ui.fioAddress.fioAddresses,
       fioWallets: state.ui.wallets.fioWallets
     }
   },

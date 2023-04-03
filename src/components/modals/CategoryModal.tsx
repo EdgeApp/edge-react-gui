@@ -40,7 +40,7 @@ export function CategoryModal(props: Props) {
   const [category, setCategory] = React.useState(split.category)
   const [subcategory, setSubcategory] = React.useState(split.subcategory)
 
-  const categories = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
+  const categories = useSelector(state => state.ui.transactionDetails.subcategories)
 
   // Load the categories from disk:
   useAsyncEffect(async () => {

@@ -295,7 +295,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const AddressTileConnector = connect<StateProps, {}, OwnProps>(
   state => ({
     account: state.core.account,
-    fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
+    fioToAddress: state.ui.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({})

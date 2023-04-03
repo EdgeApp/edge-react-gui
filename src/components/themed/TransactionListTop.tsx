@@ -56,6 +56,7 @@ interface StateProps {
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
+  tokenId?: string
   walletName: string
 }
 
@@ -173,7 +174,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderBalanceBox = () => {
-    const { balances, displayDenomination, exchangeDenomination, exchangeRate, currencyCode, isAccountBalanceVisible, theme, wallet, walletName } = this.props
+    const { balances, currencyCode, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } =
+      this.props
     const styles = getStyles(theme)
 
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
@@ -194,7 +196,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
               <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIcon currencyCode={currencyCode} sizeRem={1.5} walletId={wallet.id} />
+                <CryptoIcon sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
                 <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
@@ -555,6 +557,8 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
   })
 
+  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+
   return (
     <TransactionListTopComponent
       {...props}
@@ -566,6 +570,7 @@ export function TransactionListTop(props: OwnProps) {
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
       onSelectWallet={handleSelectWallet}
+      tokenId={tokenId}
       theme={theme}
     />
   )
