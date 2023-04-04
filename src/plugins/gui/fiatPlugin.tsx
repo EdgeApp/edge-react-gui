@@ -10,7 +10,7 @@ import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
@@ -27,7 +27,7 @@ export const executePlugin = async (params: {
   account: EdgeAccount
   direction: 'buy' | 'sell'
   guiPlugin: GuiPlugin
-  navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
+  navigation: NavigationBase
   paymentType?: FiatPaymentType
   providerId?: string
   regionCode: FiatPluginRegionCode
