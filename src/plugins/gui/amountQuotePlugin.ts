@@ -12,7 +12,14 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
-import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
+import {
+  FiatPlugin,
+  FiatPluginEnterAmountResponse,
+  FiatPluginFactory,
+  FiatPluginFactoryArgs,
+  FiatPluginGetMethodsResponse,
+  FiatPluginStartParams
+} from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
@@ -287,14 +294,16 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           } else {
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
+        },
+        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+          if (bestQuote == null) {
+            return
+          }
+          await bestQuote.approveQuote({ showUi, coreWallet })
         }
       })
 
       showUi.popScene()
-      if (bestQuote == null) {
-        return
-      }
-      await bestQuote.approveQuote({ showUi, coreWallet })
     }
   }
   return fiatPlugin

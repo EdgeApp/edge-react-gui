@@ -63,7 +63,7 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
+      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
       return new Promise((resolve, reject) => {
         logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
@@ -76,6 +76,7 @@ export const executePlugin = async (params: {
           convertValue,
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+            if (onSubmit != null) await onSubmit(value)
             logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
             resolve(value)
           }
@@ -83,13 +84,14 @@ export const executePlugin = async (params: {
       })
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
-      const { countryCode, headerTitle, headerIconUri } = params
+      const { countryCode, headerTitle, headerIconUri, onSubmit } = params
       return new Promise((resolve, reject) => {
         navigation.navigate('guiPluginAddressForm', {
           countryCode,
           headerTitle,
           headerIconUri,
           onSubmit: async (homeAddress: HomeAddress) => {
+            if (onSubmit != null) await onSubmit(homeAddress)
             logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
             resolve(homeAddress)
           }
@@ -97,12 +99,13 @@ export const executePlugin = async (params: {
       })
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
-      const { headerTitle, headerIconUri } = params
+      const { headerTitle, headerIconUri, onSubmit } = params
       return new Promise((resolve, reject) => {
-        navigation.navigate('guiPluginSepaForm', {
+        navigation.replace('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
           onSubmit: async (sepaInfo: SepaInfo) => {
+            if (onSubmit != null) await onSubmit(sepaInfo)
             resolve(sepaInfo)
           }
         })
@@ -112,7 +115,7 @@ export const executePlugin = async (params: {
       console.debug('transferInfo')
       const { headerTitle, headerIconUri, promptMessage, transferInfo } = params
       return new Promise((resolve, reject) => {
-        navigation.navigate('guiPluginSepaTransfer', {
+        navigation.replace('guiPluginSepaTransfer', {
           headerTitle,
           promptMessage,
           transferInfo,

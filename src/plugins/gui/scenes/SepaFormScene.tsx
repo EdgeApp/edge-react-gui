@@ -45,7 +45,7 @@ export const SepaFormScene = React.memo((props: Props) => {
     // Save user input to disk
     await setDiskletForm(disklet, SEPA_FORM_DISKLET_NAME, { name, iban, swift })
 
-    onSubmit({ name, iban, swift })
+    await onSubmit({ name, iban, swift })
   })
 
   // Initialize scene with any saved forms from disklet

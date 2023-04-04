@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import s from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -166,6 +167,7 @@ const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
     body: JSON.stringify(bodyData)
   }
   const result = await fetch('https://exchange.api.bity.com/v2/orders/estimate', request)
+  console.debug(result)
   if (result.status === 200) {
     const newData = await result.json()
     return newData
@@ -214,6 +216,7 @@ const approveBityQuote = async (
     throw new Error('Problem confirming order: Code n200')
   }
   const orderData = await locationRes.json()
+  console.debug(JSON.stringify({ orderData }, null, 2))
 
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
@@ -229,6 +232,8 @@ const approveBityQuote = async (
       body: signedMessage
     }
     const signedTransactionResponse = await fetch(signUrl, request)
+
+    console.debug(JSON.stringify({ signedTransactionResponse }, null, 2))
     if (signedTransactionResponse.status === 400) {
       throw new Error('Could not complete transaction. Code: 400')
     }
@@ -242,13 +247,14 @@ const approveBityQuote = async (
       const bankDetailRes = await fetch(detailUrl, bankDetailsReq)
       if (bankDetailRes.status === 200) {
         const bankDetailResJson = await bankDetailRes.json()
+
+        console.debug(JSON.stringify({ bankDetailResJson }, null, 2))
         return asBityApproveQuoteResponse(bankDetailResJson)
       }
     }
   }
   return asBityApproveQuoteResponse(orderData)
 }
-
 export const bityProvider: FiatProviderFactory = {
   pluginId,
   storeId,
@@ -337,6 +343,7 @@ export const bityProvider: FiatProviderFactory = {
           }
         }
         const bityQuote = await fetchBityQuote(quoteRequest)
+        console.debug(bityQuote)
         console.debug('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
         const minimumAmount = isReverseQuote ? bityQuote.output.minimum_amount : bityQuote.input.minimum_amount
@@ -368,164 +375,74 @@ export const bityProvider: FiatProviderFactory = {
             // Bity only checks SEPA info format validity.
             // Home address and KYC is only required for sell.
 
-            const sepaInfo = await showUi.sepaForm({
-              headerTitle: s.strings.enter_bank_info_title,
-              onSubmit: async (formSepaInfo: SepaInfo) => {
-                // TODO: See fiatPluginTypes.ts
-              }
-            })
-            showUi.popScene()
-
-            if (sepaInfo == null) {
-              return
-            }
-
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
-            let approveQuoteRes: BityApproveQuoteResponse | null = null
 
-            try {
-              if (isBuy) {
-                approveQuoteRes = await approveBityQuote(
-                  coreWallet,
-                  {
-                    client_value: 0,
-                    input: {
-                      amount: bityQuote.input.amount,
-                      currency: fiatCode,
-                      type: 'bank_account',
-                      iban: sepaInfo.iban,
-                      bic_swift: sepaInfo.swift
-                    },
-                    output: {
-                      currency: outputCurrencyCode,
-                      type: 'crypto_address',
-                      crypto_address: cryptoAddress
-                    }
-                  },
-                  clientId
-                )
-              } else {
-                // Sell approval
-                const homeAddress = await showUi.addressForm({
-                  countryCode: regionCode.countryCode,
-                  headerTitle: s.strings.home_address_title,
-                  onSubmit: async (formAddress: HomeAddress) => {
-                    // TODO: See fiatPluginTypes.ts
+            await showUi.sepaForm({
+              headerTitle: s.strings.enter_bank_info_title,
+              onSubmit: async (sepaInfo: SepaInfo) => {
+                let approveQuoteRes: BityApproveQuoteResponse | null = null
+                try {
+                  if (isBuy) {
+                    approveQuoteRes = await approveBityQuote(
+                      coreWallet,
+                      {
+                        client_value: 0,
+                        input: {
+                          amount: bityQuote.input.amount,
+                          currency: fiatCode,
+                          type: 'bank_account',
+                          iban: sepaInfo.iban,
+                          bic_swift: sepaInfo.swift
+                        },
+                        output: {
+                          currency: outputCurrencyCode,
+                          type: 'crypto_address',
+                          crypto_address: cryptoAddress
+                        }
+                      },
+                      clientId
+                    )
+                    console.debug('approveBityQuote done')
+                  } else {
+                    // Sell approval - Needs extra address input step
+                    const homeAddress = await showUi.addressForm({
+                      countryCode: regionCode.countryCode,
+                      headerTitle: s.strings.home_address_title,
+                      onSubmit: async (formAddress: HomeAddress) => {
+                        approveQuoteRes = await executeSellFetch(
+                          coreWallet,
+                          bityQuote,
+                          inputCurrencyCode,
+                          cryptoAddress,
+                          outputCurrencyCode,
+                          sepaInfo,
+                          homeAddress,
+                          clientId
+                        )
+                      }
+                    })
                   }
-                })
-                showUi.popScene()
+                } catch (e) {
+                  // TODO: Post-routing implementation: Route to the appropriate
+                  // scene for the user to fix depending on what was wrong with the
+                  // order.
+                  console.error('Bity order error: ', e)
+                }
 
-                if (homeAddress == null) {
+                if (approveQuoteRes == null) {
                   return
                 }
 
-                approveQuoteRes = await approveBityQuote(
-                  coreWallet,
-                  {
-                    client_value: 0,
-                    input: {
-                      amount: bityQuote.input.amount,
-                      currency: inputCurrencyCode,
-                      type: 'crypto_address',
-                      crypto_address: cryptoAddress
-                    },
-                    output: {
-                      currency: outputCurrencyCode,
-                      type: 'bank_account',
-                      iban: sepaInfo.iban,
-                      bic_swift: sepaInfo.swift,
-                      owner: {
-                        name: sepaInfo.name,
-                        address: homeAddress.address,
-                        address_complement: homeAddress.address2,
-                        city: homeAddress.city,
-                        state: homeAddress.state,
-                        zip: homeAddress.postalCode,
-                        country: homeAddress.country
-                      }
-                    }
-                  },
-                  clientId
-                )
-              }
-            } catch (e) {
-              // TODO: Post-routing implementation: Route to the appropriate
-              // scene for the user to fix depending on what was wrong with the
-              // order.
-              console.error('Bity order error: ', e)
-            }
+                const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
 
-            if (approveQuoteRes == null) {
-              return
-            }
-
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { input, output, id, payment_details } = approveQuoteRes
-
-            if (isBuy) {
-              if (payment_details == null || output.crypto_address == null) return
-
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              const { iban, swift_bic, recipient, reference } = payment_details
-
-              await showUi.sepaTransferInfo({
-                headerTitle: s.strings.payment_details,
-                promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id),
-                transferInfo: {
-                  input: {
-                    amount: input.amount,
-                    currency: input.currency
-                  },
-                  output: {
-                    amount: output.amount,
-                    currency: output.currency,
-                    walletAddress: output.crypto_address
-                  },
-                  paymentDetails: {
-                    id: id,
-                    iban: iban,
-                    swiftBic: swift_bic,
-                    recipient: recipient,
-                    reference: reference
-                  }
-                },
-                onDone: async () => {
-                  // TODO: See fiatPluginTypes.ts
-                }
-              })
-            } else {
-              const { currencyInfo } = coreWallet
-              const denom =
-                inputCurrencyCode === currencyInfo.currencyCode
-                  ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
-                  : currencyInfo.metaTokens
-                      .find(token => token.currencyCode === inputCurrencyCode)
-                      ?.denominations?.find(denom => denom.name === inputCurrencyCode)
-
-              if (denom == null) {
-                // Should not happen - input currencies should be valid before
-                // getting here.
-                throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
-              }
-
-              const spendInfo: EdgeSpendInfo = {
-                currencyCode: inputCurrencyCode,
-                spendTargets: [
-                  {
-                    nativeAmount: mul(denom.multiplier, input.amount),
-                    publicAddress: input.crypto_address
-                  }
-                ],
-                metadata: {
-                  category: `Exchange: ${input.currency}toEUR`,
-                  exchangeAmount: { [output.currency]: parseFloat(output.amount) },
-                  notes: `${pluginDisplayName} ${s.strings.transaction_details_exchange_order_id}: ${id}`
+                if (isBuy) {
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
+                  await completeBuyOrder(paymentDetails, showUi, id, input, output)
+                } else {
+                  await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
                 }
               }
-              await showUi.send({ walletId: coreWallet.id, spendInfo })
-            }
-
-            showUi.popScene()
+            })
           },
           closeQuote: async (): Promise<void> => {}
         }
@@ -539,4 +456,161 @@ export const bityProvider: FiatProviderFactory = {
 const addToAllowedCurrencies = (pluginId: string, currency: BityCurrency, currencyCode: string) => {
   if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = {}
   allowedCurrencyCodes.crypto[pluginId][currencyCode] = currency
+}
+
+const completeSellOrder = async (
+  coreWallet: EdgeCurrencyWallet,
+  inputCurrencyCode: string,
+  input: { amount: string; currency: string; crypto_address: string | undefined },
+  output: { amount: string; currency: string; crypto_address: string | undefined },
+  id: string,
+  showUi: FiatPluginUi
+) => {
+  const { currencyInfo } = coreWallet
+  const denom =
+    inputCurrencyCode === currencyInfo.currencyCode
+      ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
+      : currencyInfo.metaTokens.find(token => token.currencyCode === inputCurrencyCode)?.denominations?.find(denom => denom.name === inputCurrencyCode)
+
+  if (denom == null) {
+    // Should not happen - input currencies should be valid before
+    // getting here.
+    throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
+  }
+
+  const spendInfo: EdgeSpendInfo = {
+    currencyCode: inputCurrencyCode,
+    spendTargets: [
+      {
+        nativeAmount: mul(denom.multiplier, input.amount),
+        publicAddress: input.crypto_address
+      }
+    ],
+    metadata: {
+      category: `Exchange: ${input.currency}toEUR`,
+      exchangeAmount: { [output.currency]: parseFloat(output.amount) },
+      notes: `${pluginDisplayName} ${s.strings.transaction_details_exchange_order_id}: ${id}`
+    }
+  }
+  await showUi.send({ walletId: coreWallet.id, spendInfo })
+}
+
+const completeBuyOrder = async (
+  paymentDetails: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined,
+  showUi: FiatPluginUi,
+  id: string,
+  input: { amount: string; currency: string; crypto_address: string | undefined },
+  output: { amount: string; currency: string; crypto_address: string | undefined }
+) => {
+  if (paymentDetails == null || output.crypto_address == null) return
+
+  const { iban, swift_bic: swiftBic, recipient, reference } = paymentDetails
+
+  await showUi.sepaTransferInfo({
+    headerTitle: s.strings.payment_details,
+    promptMessage: sprintf(s.strings.sepa_transfer_prompt_s, id),
+    transferInfo: {
+      input: {
+        amount: input.amount,
+        currency: input.currency
+      },
+      output: {
+        amount: output.amount,
+        currency: output.currency,
+        walletAddress: output.crypto_address
+      },
+      paymentDetails: {
+        id: id,
+        iban: iban,
+        swiftBic: swiftBic,
+        recipient: recipient,
+        reference: reference
+      }
+    },
+    onDone: async () => {}
+  })
+}
+
+const executeSellFetch = async (
+  coreWallet: EdgeCurrencyWallet,
+  bityQuote: any,
+  inputCurrencyCode: string,
+  cryptoAddress: string,
+  outputCurrencyCode: string,
+  sepaInfo: { name: string; iban: string; swift: string },
+  homeAddress: { address: string; address2: string | undefined; city: string; country: string; state: string; postalCode: string },
+  clientId: string | undefined
+): Promise<{
+  id: string
+  input: {
+    amount: any
+    currency: any
+    crypto_address: any
+  }
+  output: {
+    amount: any
+    currency: any
+    crypto_address: any
+  }
+  payment_details: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined
+} | null> => {
+  return await approveBityQuote(
+    coreWallet,
+    {
+      client_value: 0,
+      input: {
+        amount: bityQuote.input.amount,
+        currency: inputCurrencyCode,
+        type: 'crypto_address',
+        crypto_address: cryptoAddress
+      },
+      output: {
+        currency: outputCurrencyCode,
+        type: 'bank_account',
+        iban: sepaInfo.iban,
+        bic_swift: sepaInfo.swift,
+        owner: {
+          name: sepaInfo.name,
+          address: homeAddress.address,
+          address_complement: homeAddress.address2,
+          city: homeAddress.city,
+          state: homeAddress.state,
+          zip: homeAddress.postalCode,
+          country: homeAddress.country
+        }
+      }
+    },
+    clientId
+  )
+}
+
+const executeBuyFetch = async (
+  coreWallet: EdgeCurrencyWallet,
+  bityQuote: any,
+  fiatCode: string,
+  sepaInfo: { name: string; iban: string; swift: string },
+  outputCurrencyCode: string,
+  cryptoAddress: string,
+  clientId: string | undefined
+) => {
+  console.debug('executeBuyFetch')
+  return await approveBityQuote(
+    coreWallet,
+    {
+      client_value: 0,
+      input: {
+        amount: bityQuote.input.amount,
+        currency: fiatCode,
+        type: 'bank_account',
+        iban: sepaInfo.iban,
+        bic_swift: sepaInfo.swift
+      },
+      output: {
+        currency: outputCurrencyCode,
+        type: 'crypto_address',
+        crypto_address: cryptoAddress
+      }
+    },
+    clientId
+  )
 }

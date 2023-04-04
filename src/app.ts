@@ -5,10 +5,83 @@ import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import ENV from '../env.json'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
-import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
+
+console.log = () => {}
+console.info = () => {}
+// console.warn = () => {}
+
+const realConsDbg = console.debug
+
+type FgColor = 'b' | 'r' | 'g' | 'c' | 'm' | 'y'
+type BgColor = 'B' | 'R' | 'G' | 'C' | 'M' | 'Y'
+
+// console.debug = (message?: any, color?: FgColor | BgColor | [FgColor, BgColor] | string) => {
+//   const reset = '\x1b[0m'
+
+//   const fgColors: Record<FgColor, string> = {
+//     b: '\x1b[34m',
+//     r: '\x1b[31m',
+//     g: '\x1b[32m',
+//     c: '\x1b[36m',
+//     m: '\x1b[35m',
+//     y: '\x1b[33m'
+//   }
+
+//   const bgColors: Record<BgColor, string> = {
+//     B: '\x1b[44m',
+//     R: '\x1b[41m',
+//     G: '\x1b[42m',
+//     C: '\x1b[46m',
+//     M: '\x1b[45m',
+//     Y: '\x1b[43m'
+//   }
+
+//   let foregroundColor = fgColors.y
+//   let backgroundColor = ''
+
+//   if (typeof color === 'string') {
+//     if (color.length === 2) {
+//       if (/[A-Z]/.test(color[0])) {
+//         // 1st char is bg
+//         backgroundColor = bgColors[color[0] as BgColor] ?? ''
+//         foregroundColor = fgColors[color[1].toLowerCase() as FgColor] ?? ''
+//       } else if (/[A-Z]/.test(color[1])) {
+//         // 2nd char is bg
+//         backgroundColor = bgColors[color[1] as BgColor] ?? ''
+//         foregroundColor = fgColors[color[0].toLowerCase() as FgColor] ?? ''
+//       }
+//     } else if (color.length === 1) {
+//       if (/[A-Z]/.test(color)) {
+//         backgroundColor = bgColors[color.trim().toUpperCase() as BgColor] ?? ''
+//       } else if (/[a-z]/.test(color)) {
+//         foregroundColor = fgColors[color.trim().toLowerCase() as FgColor] ?? ''
+//       }
+//     } else {
+//       return console.debug(message, color)
+//     }
+//   }
+
+//   if (!foregroundColor && backgroundColor) {
+//     foregroundColor = fgColors.b ?? ''
+//   }
+
+//   const deco = `${foregroundColor}${backgroundColor}`
+
+//   let fmtMsg = ''
+//   try {
+//     fmtMsg = typeof message === 'string' ? `${message}` : `${JSON.stringify({ message }, null, 2)}`
+//     if (fmtMsg.trim() === '') fmtMsg = '' // Show visible blanks
+//     realConsDbg(`${deco}${fmtMsg}${reset}`)
+//   } catch {
+//     console.debug('!----------------------------------!', color)
+//     realConsDbg(message)
+//     console.debug('!----------------------------------!', color)
+//   }
+// }
 
 Bugsnag.start({
   // @ts-expect-error
@@ -51,7 +124,7 @@ console.ignoredYellowBox = IGNORED_WARNINGS
 
 // Ignore errors and warnings(used for device testing)
 if (ENV.DISABLE_WARNINGS) {
-  LogBox.ignoreLogs(IGNORED_WARNINGS)
+  LogBox.ignoreAllLogs() //  (IGNORED_WARNINGS)
 }
 
 // Disable the font scaling
