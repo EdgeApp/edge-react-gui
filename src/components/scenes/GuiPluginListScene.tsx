@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import { NestedPluginMap } from '../../actions/ExchangeInfoActions'
+import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { updateOneSetting } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
@@ -90,7 +90,7 @@ interface StateProps {
   coreDisklet: Disklet
   countryCode: string
   developerModeOn: boolean
-  disablePlugins: NestedPluginMap
+  disablePlugins: NestedDisableMap
 }
 
 interface DispatchProps {

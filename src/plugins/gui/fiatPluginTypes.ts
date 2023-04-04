@@ -7,7 +7,6 @@ import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
 
 export const asFiatPaymentType = asValue('credit', 'applepay', 'googlepay', 'iach')
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
-export type FiatPaymentTypes = FiatPaymentType[]
 
 export interface FiatPluginGetMethodsResponse {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
@@ -72,7 +71,7 @@ export interface FiatPluginRegionCode {
 }
 export interface FiatPluginStartParams {
   isBuy: boolean
-  paymentTypes: FiatPaymentTypes
+  paymentTypes: FiatPaymentType[]
   regionCode: FiatPluginRegionCode
   providerId?: string
 }
