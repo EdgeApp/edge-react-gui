@@ -5,6 +5,7 @@ import { pickWallet } from '../components/modals/WalletListModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
+import { executePlugin } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -77,14 +78,49 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     case 'plugin': {
       const { pluginId, path, query } = link
       const plugin = guiPlugins[pluginId]
-      if (pluginId === 'custom' || plugin == null || plugin.pluginId == null) {
-        showError(new Error(`No plugin named ${pluginId} exists`))
+      if (plugin?.pluginId == null || plugin?.pluginId === 'custom') {
+        showError(`No plugin named "${pluginId}" exists`)
         return true
       }
+
+      // Check the disabled status:
+      if (state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true || state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true) {
+        showError(`Plugin "${pluginId}" is disabled`)
+        return true
+      }
+
       navigation.push('pluginView', {
         plugin,
         deepPath: path,
         deepQuery: query
+      })
+      return true
+    }
+
+    case 'fiatPlugin': {
+      const { direction = 'buy', paymentType, pluginId, providerId } = link
+      const plugin = guiPlugins[pluginId]
+      if (plugin?.nativePlugin == null) {
+        showError(new Error(`No fiat plugin named "${pluginId}" exists`))
+        return true
+      }
+
+      // Check the disabled status:
+      const disableProviders = state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
+      if (disableProviders === true) {
+        showError(`Plugin "${pluginId}" is disabled`)
+        return true
+      }
+
+      await executePlugin({
+        account,
+        disablePlugins: disableProviders,
+        guiPlugin: plugin,
+        direction,
+        regionCode: { countryCode: state.ui.settings.countryCode },
+        paymentType,
+        providerId,
+        navigation
       })
       return true
     }

@@ -223,6 +223,18 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('fiatPlugin', function () {
+    makeLinkTests({
+      'https://deep.edge.app/plugin/creditcard/buy/moonpay/applepay/rabbit/hole?param=alice': {
+        type: 'fiatPlugin',
+        pluginId: 'creditcard',
+        providerId: 'moonpay',
+        direction: 'buy',
+        paymentType: 'applepay'
+      }
+    })
+  })
+
   describe('promotion', function () {
     makeLinkTests({
       'edge://promotion/bob': {
