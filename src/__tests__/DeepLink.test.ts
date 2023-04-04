@@ -184,66 +184,39 @@ describe('parseDeepLink', function () {
 
   describe('plugin', function () {
     makeLinkTests({
-      'edge://plugin/simplex/buy///rabbit/hole?param=alice': {
+      'edge://plugin/simplex/rabbit/hole?param=alice': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
         path: '/rabbit/hole',
         query: { param: 'alice' }
       },
-      'edge://plugin/simplex/buy?param=alice': {
+      'edge://plugin/simplex/?param=alice': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
-        path: '',
+        path: '/',
         query: { param: 'alice' }
       },
       'edge://plugin/simplex?param=alice': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
         path: '',
         query: { param: 'alice' }
       },
       'edge://plugin/simplex': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
         path: '',
         query: {}
       },
-      'https://deep.edge.app/plugin/simplex/buy///rabbit/hole?param=alice': {
+      'https://deep.edge.app/plugin/simplex/rabbit/hole?param=alice': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
         path: '/rabbit/hole',
         query: { param: 'alice' }
       },
-      'edge-ret://plugins/simplex/buy///rabbit/hole?param=alice': {
+      'edge-ret://plugins/simplex/rabbit/hole?param=alice': {
         type: 'plugin',
         pluginId: 'simplex',
-        providerId: '',
-        direction: 'buy',
-        paymentType: '',
-        path: '/rabbit/hole',
-        query: { param: 'alice' }
-      },
-      'https://deep.edge.app/plugin/creditcard/buy/moonpay/applepay/rabbit/hole?param=alice': {
-        type: 'plugin',
-        pluginId: 'creditcard',
-        providerId: 'moonpay',
-        direction: 'buy',
-        paymentType: 'applepay',
         path: '/rabbit/hole',
         query: { param: 'alice' }
       }

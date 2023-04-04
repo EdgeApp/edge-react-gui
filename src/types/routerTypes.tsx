@@ -5,7 +5,6 @@ import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleScene'
-import { PluginListProps } from '../components/scenes/GuiPluginListScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
@@ -259,8 +258,8 @@ interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: PluginListProps
-  pluginListSell: PluginListProps
+  pluginListBuy: {}
+  pluginListSell: {}
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

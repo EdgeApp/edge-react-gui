@@ -99,10 +99,10 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     }
 
     case 'plugin': {
-      const [pluginId, direction = 'buy', providerId = '', paymentType = '', ...deepPath] = pathParts
+      const [pluginId = '', ...deepPath] = pathParts
       const path = deepPath.length !== 0 ? '/' + deepPath.join('/') : ''
       const query = parseQuery(url.query)
-      return { type: 'plugin', direction, paymentType, pluginId, providerId, path, query }
+      return { type: 'plugin', pluginId, path, query }
     }
 
     case 'price-change': {
