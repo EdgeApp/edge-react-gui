@@ -805,6 +805,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <Stack.Screen
         name="pluginViewSell"
