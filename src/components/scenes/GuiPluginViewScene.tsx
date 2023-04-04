@@ -9,8 +9,10 @@ import { methodCleaners } from '../../controllers/edgeProvider/types/edgeProvide
 import { asRpcCall, rpcErrorCodes, RpcReturn } from '../../controllers/edgeProvider/types/jsonRpcCleaners'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
+import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { UriQueryMap } from '../../types/WebTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -18,6 +20,15 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { setPluginScene } from '../navigation/GuiPluginBackButton'
 import { showToast } from '../services/AirshipInstance'
 import { requestPermissionOnSettings } from '../services/PermissionsManager'
+
+export interface PluginViewParams {
+  // The GUI plugin we are showing the user:
+  plugin: GuiPlugin
+
+  // Set these to add stuff to the plugin URI:
+  deepPath?: string
+  deepQuery?: UriQueryMap
+}
 
 interface Props {
   navigation: NavigationBase
@@ -31,7 +42,15 @@ interface WebViewEvent {
 export function GuiPluginViewScene(props: Props): JSX.Element {
   const { route, navigation } = props
   const { deepPath, deepQuery, plugin } = route.params
-  const { displayName, mandatoryPermissions = false, originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'], permissions = [], pluginId } = plugin
+
+  const {
+    displayName,
+    mandatoryPermissions = false,
+    needsCountryCode = false,
+    originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'],
+    permissions = [],
+    pluginId
+  } = plugin
 
   // Redux stuff:
   const dispatch = useDispatch()
@@ -41,6 +60,7 @@ export function GuiPluginViewScene(props: Props): JSX.Element {
   const accountReferral = useSelector(state => state.account.accountReferral)
   const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
   const selectedCurrencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
 
   // Get the promo information:
   const { promoCode, promoMessage } = React.useMemo(() => {
@@ -107,7 +127,11 @@ export function GuiPluginViewScene(props: Props): JSX.Element {
       reloadWebView,
       selectedTokenId,
       selectedWallet,
-      deepLink: { deepPath, deepQuery, promoCode }
+      deepLink: {
+        deepPath,
+        deepQuery: needsCountryCode ? { ...deepQuery, countryCode } : deepQuery,
+        promoCode
+      }
     })
   })
 

@@ -269,11 +269,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { countryCode, disablePlugins, navigation, account } = this.props
     const plugin = guiPlugins[pluginId]
 
-    // Add countryCode
-    if (plugin.needsCountryCode) {
-      deepQuery.countryCode = countryCode
-    }
-
     // Grab a custom URI if necessary:
     if (pluginId === 'custom') {
       const { developerUri } = this.state
