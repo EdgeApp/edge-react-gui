@@ -19,7 +19,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   kovan: ENV.KOVAN_INIT,
   optimism: ENV.OPTIMISM_INIT,
   polygon: ENV.POLYGON_INIT,
-  avalanche: true,
+  avalanche: ENV.AVALANCHE_INIT,
   ripple: true,
   rsk: true,
   stellar: true,
