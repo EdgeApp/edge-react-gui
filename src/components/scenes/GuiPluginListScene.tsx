@@ -236,10 +236,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const plugin = guiPlugins[pluginId]
 
     // Grab a custom URI if necessary:
-    let { deepPath } = listRow
+    let { deepPath = undefined } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
-      // @ts-expect-error
       deepPath = await Airship.show<string | undefined>(bridge => (
         <TextInputModal
           autoCorrect={false}
@@ -264,18 +263,19 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const direction = this.getSceneDirection()
     if (plugin.nativePlugin != null) {
-      const filteredDisablePlugins: { [pluginId: string]: true } = {}
-      for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
-        if (value === true) filteredDisablePlugins[key] = true
-      }
+      const disableProviders = disablePlugins[pluginId]
+
+      // This should not happen, since we don't show disabled rows:
+      if (disableProviders === true) return
+
       await executePlugin({
-        disablePlugins: filteredDisablePlugins,
-        guiPlugin: plugin,
+        account,
         direction,
-        regionCode: { countryCode },
-        paymentType,
+        disablePlugins: disableProviders,
+        guiPlugin: plugin,
         navigation,
-        account
+        paymentType,
+        regionCode: { countryCode }
       })
     } else {
       // Launch!
