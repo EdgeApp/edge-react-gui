@@ -23,7 +23,6 @@ Array [
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginRight": 22,
         }
       }
     >

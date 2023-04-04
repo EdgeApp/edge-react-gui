@@ -45,8 +45,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginRight: theme.rem(1)
+    alignItems: 'center'
   },
 
   topMargin: {

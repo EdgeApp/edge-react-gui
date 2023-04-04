@@ -83,7 +83,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "space-between",
-              "marginRight": 22,
             }
           }
         >
