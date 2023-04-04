@@ -69,6 +69,7 @@ export const EdgeLoginScene = (props: Props) => {
   })
 
   const handleDecline = useHandler(() => navigation.goBack())
+  const logoUri = theme.isDark ? lobby?.loginRequest?.displayImageDarkUrl : lobby?.loginRequest?.displayImageLightUrl
 
   return (
     <SceneWrapper background="theme">
@@ -78,7 +79,7 @@ export const EdgeLoginScene = (props: Props) => {
             <ActivityIndicator color={theme.iconTappable} size="large" />
           </View>
           <View key="logo" style={styles.header}>
-            <Image style={styles.logo} source={{ uri: lobby?.loginRequest?.displayImageUrl }} resizeMode="contain" />
+            <Image style={styles.logo} source={{ uri: logoUri }} resizeMode="contain" />
             <TitleText style={styles.appName}>{lobby?.loginRequest?.displayName}</TitleText>
           </View>
         </CrossFade>
