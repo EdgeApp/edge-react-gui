@@ -26,6 +26,7 @@ import {
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
+import { EnterAmountState } from './scenes/FiatPluginEnterAmountScene'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
@@ -62,15 +63,15 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount(params: FiatPluginEnterAmountParams) {
-      const { headerTitle, label1, label2, initialAmount1, onFieldChange, onPoweredByClick, onSubmit } = params
+    enterAmount<T extends EnterAmountState>(params: FiatPluginEnterAmountParams<T>) {
+      const { headerTitle, label1, label2, initState, onFieldChange, onPoweredByClick, onSubmit } = params
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       navigation.navigate('guiPluginEnterAmount', {
         headerTitle,
         label1,
         label2,
-        initialAmount1,
+        initState,
         onFieldChange,
         onPoweredByClick,
         onChangeText: async () => undefined,

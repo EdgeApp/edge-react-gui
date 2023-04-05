@@ -14,18 +14,29 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
-import { FiatPluginEnterAmountMethods, FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
+import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
+import { StateManager, useStateManager } from '../hooks/useStateManager'
 
 export interface FiatPluginEnterAmountParams {
+  initState?: Partial<any>
   headerTitle: string
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   label1: string
   label2: string
   onChangeText: (fieldNum: number, value: string) => Promise<void>
-  onFieldChange: (sourceFieldNum: number, value: string, enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<string | undefined>
-  onPoweredByClick: (enterAmountMethods: FiatPluginEnterAmountMethods) => void
-  initialAmount1?: string
+  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<any>) => Promise<string | undefined>
+  onPoweredByClick: (stateManager: StateManager<any>) => void
   headerIconUri?: string
+}
+
+export interface EnterAmountState {
+  poweredBy?: EnterAmountPoweredBy
+  statusText: {
+    content: string
+    textType?: 'warning' | 'error'
+  }
+  value1: string
+  value2: string
 }
 
 export interface EnterAmountPoweredBy {
@@ -37,47 +48,32 @@ interface Props {
   route: RouteProp<'guiPluginEnterAmount'>
 }
 
+const defaultEnterAmountState: EnterAmountState = {
+  statusText: {
+    content: ''
+  },
+  value1: '',
+  value2: ''
+}
+
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText, label1, label2, initialAmount1 = '' } = props.route.params
-  const [value1, setValue1] = React.useState<string>(initialAmount1)
-  const [value2, setValue2] = React.useState<string>('')
+  const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText, label1, label2 } = props.route.params
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
   const [spinner2, setSpinner2] = React.useState<boolean>(false)
-  const [statusTextContent, setStatusTextContent] = React.useState<string>('')
-  const [statusTextType, setStatusTextType] = React.useState<'warning' | 'error' | undefined>()
-  const [poweredBy, setPoweredBy] = React.useState<EnterAmountPoweredBy | undefined>()
   const firstRun = React.useRef<boolean>(true)
   const lastUsed = React.useRef<number>(1)
 
-  const formattedSetValue1 = useHandler((value: string) => {
-    setValue1(value)
-  })
-  const formattedSetValue2 = useHandler((value: string) => {
-    setValue2(value)
-  })
-  const setStatusText = useHandler(params => {
-    const { statusText, options = {} } = params
-    setStatusTextContent(statusText)
-    setStatusTextType(options.textType)
-  })
-  const enterAmountMethod: FiatPluginEnterAmountMethods = React.useMemo(
-    () => ({
-      setStatusText,
-      setPoweredBy,
-      setValue1: formattedSetValue1,
-      setValue2: formattedSetValue2
-    }),
-    [formattedSetValue1, formattedSetValue2, setStatusText]
-  )
+  const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
+  const { value1, value2, poweredBy, statusText } = stateManager.state
 
-  if (firstRun.current && initialAmount1 != null) {
-    setValue2(' ')
+  if (firstRun.current && initState?.value1 != null) {
+    stateManager.update({ value2: ' ' })
     setSpinner2(true)
-    onFieldChange(1, initialAmount1, enterAmountMethod).then(val => {
+    onFieldChange(1, initState?.value1, stateManager).then(val => {
       if (typeof val === 'string') {
-        setValue2(val)
+        stateManager.update({ value2: val })
         setSpinner2(false)
       }
     })
@@ -91,34 +87,32 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
     onChangeText(1, value)
-    setValue1(value)
-    setValue2(' ')
+    stateManager.update({ value1: value, value2: ' ' })
     setSpinner2(true)
-    onFieldChange(1, value, enterAmountMethod).then(v => {
-      if (typeof v === 'string') setValue2(v)
+    onFieldChange(1, value, stateManager).then(v => {
+      if (typeof v === 'string') stateManager.update({ value2: v })
       setSpinner2(false)
     })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
     onChangeText(2, value)
-    setValue2(value)
-    setValue1(' ')
+    stateManager.update({ value1: ' ', value2: value })
     setSpinner1(true)
-    onFieldChange(2, value, enterAmountMethod).then(v => {
-      if (typeof v === 'string') setValue1(v)
+    onFieldChange(2, value, stateManager).then(v => {
+      if (typeof v === 'string') stateManager.update({ value1: v })
       setSpinner1(false)
     })
   })
-  const handlePoweredByPress = useHandler(() => onPoweredByClick(enterAmountMethod))
+  const handlePoweredByPress = useHandler(() => onPoweredByClick(stateManager))
   const handleSubmit = useHandler(() => {
     onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
   })
 
   let statusTextStyle = styles.text
-  if (statusTextType === 'warning') {
+  if (statusText.textType === 'warning') {
     statusTextStyle = styles.textWarning
-  } else if (statusTextType === 'error') {
+  } else if (statusText.textType === 'error') {
     statusTextStyle = styles.textError
   }
 
@@ -157,7 +151,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             value={value2 ?? '0'}
           />
         </View>
-        {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
+        {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
         {poweredBy != null ? (
           <View style={styles.cardContainer}>
             <TouchableOpacity onPress={handlePoweredByPress}>
