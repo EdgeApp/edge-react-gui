@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -385,25 +386,7 @@ export const bityProvider: FiatProviderFactory = {
 
             try {
               if (isBuy) {
-                approveQuoteRes = await approveBityQuote(
-                  coreWallet,
-                  {
-                    client_value: 0,
-                    input: {
-                      amount: bityQuote.input.amount,
-                      currency: fiatCode,
-                      type: 'bank_account',
-                      iban: sepaInfo.iban,
-                      bic_swift: sepaInfo.swift
-                    },
-                    output: {
-                      currency: outputCurrencyCode,
-                      type: 'crypto_address',
-                      crypto_address: cryptoAddress
-                    }
-                  },
-                  clientId
-                )
+                approveQuoteRes = await executeBuyOrderFetch(coreWallet, bityQuote, fiatCode, sepaInfo, outputCurrencyCode, cryptoAddress, clientId)
               } else {
                 // Sell approval
                 const homeAddress = await showUi.addressForm({
@@ -419,32 +402,14 @@ export const bityProvider: FiatProviderFactory = {
                   return
                 }
 
-                approveQuoteRes = await approveBityQuote(
+                approveQuoteRes = await executeSellOrderFetch(
                   coreWallet,
-                  {
-                    client_value: 0,
-                    input: {
-                      amount: bityQuote.input.amount,
-                      currency: inputCurrencyCode,
-                      type: 'crypto_address',
-                      crypto_address: cryptoAddress
-                    },
-                    output: {
-                      currency: outputCurrencyCode,
-                      type: 'bank_account',
-                      iban: sepaInfo.iban,
-                      bic_swift: sepaInfo.swift,
-                      owner: {
-                        name: sepaInfo.name,
-                        address: homeAddress.address,
-                        address_complement: homeAddress.address2,
-                        city: homeAddress.city,
-                        state: homeAddress.state,
-                        zip: homeAddress.postalCode,
-                        country: homeAddress.country
-                      }
-                    }
-                  },
+                  bityQuote,
+                  inputCurrencyCode,
+                  cryptoAddress,
+                  outputCurrencyCode,
+                  sepaInfo,
+                  homeAddress,
                   clientId
                 )
               }
@@ -460,69 +425,12 @@ export const bityProvider: FiatProviderFactory = {
             }
 
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { input, output, id, payment_details } = approveQuoteRes
+            const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
 
             if (isBuy) {
-              if (payment_details == null || output.crypto_address == null) return
-
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              const { iban, swift_bic, recipient, reference } = payment_details
-
-              await showUi.sepaTransferInfo({
-                headerTitle: lstrings.payment_details,
-                promptMessage: sprintf(lstrings.sepa_transfer_prompt_s, id),
-                transferInfo: {
-                  input: {
-                    amount: input.amount,
-                    currency: input.currency
-                  },
-                  output: {
-                    amount: output.amount,
-                    currency: output.currency,
-                    walletAddress: output.crypto_address
-                  },
-                  paymentDetails: {
-                    id: id,
-                    iban: iban,
-                    swiftBic: swift_bic,
-                    recipient: recipient,
-                    reference: reference
-                  }
-                },
-                onDone: async () => {
-                  // TODO: See fiatPluginTypes.ts
-                }
-              })
+              await completeBuyOrder(paymentDetails, showUi, id, input, output)
             } else {
-              const { currencyInfo } = coreWallet
-              const denom =
-                inputCurrencyCode === currencyInfo.currencyCode
-                  ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
-                  : currencyInfo.metaTokens
-                      .find(token => token.currencyCode === inputCurrencyCode)
-                      ?.denominations?.find(denom => denom.name === inputCurrencyCode)
-
-              if (denom == null) {
-                // Should not happen - input currencies should be valid before
-                // getting here.
-                throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
-              }
-
-              const spendInfo: EdgeSpendInfo = {
-                currencyCode: inputCurrencyCode,
-                spendTargets: [
-                  {
-                    nativeAmount: mul(denom.multiplier, input.amount),
-                    publicAddress: input.crypto_address
-                  }
-                ],
-                metadata: {
-                  category: `Exchange: ${input.currency}toEUR`,
-                  exchangeAmount: { [output.currency]: parseFloat(output.amount) },
-                  notes: `${pluginDisplayName} ${s.strings.transaction_details_exchange_order_id}: ${id}`
-                }
-              }
-              await showUi.send({ walletId: coreWallet.id, spendInfo })
+              await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
             }
 
             showUi.popScene()
@@ -539,4 +447,162 @@ export const bityProvider: FiatProviderFactory = {
 const addToAllowedCurrencies = (pluginId: string, currency: BityCurrency, currencyCode: string) => {
   if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = {}
   allowedCurrencyCodes.crypto[pluginId][currencyCode] = currency
+}
+
+const completeSellOrder = async (
+  coreWallet: EdgeCurrencyWallet,
+  inputCurrencyCode: string,
+  input: { amount: string; currency: string; crypto_address: string | undefined },
+  output: { amount: string; currency: string; crypto_address: string | undefined },
+  id: string,
+  showUi: FiatPluginUi
+) => {
+  const { currencyInfo } = coreWallet
+  const denom =
+    inputCurrencyCode === currencyInfo.currencyCode
+      ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
+      : currencyInfo.metaTokens.find(token => token.currencyCode === inputCurrencyCode)?.denominations?.find(denom => denom.name === inputCurrencyCode)
+
+  if (denom == null) {
+    // Should not happen - input currencies should be valid before
+    // getting here.
+    throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
+  }
+
+  const spendInfo: EdgeSpendInfo = {
+    currencyCode: inputCurrencyCode,
+    spendTargets: [
+      {
+        nativeAmount: mul(denom.multiplier, input.amount),
+        publicAddress: input.crypto_address
+      }
+    ],
+    metadata: {
+      category: `Exchange: ${input.currency}toEUR`,
+      exchangeAmount: { [output.currency]: parseFloat(output.amount) },
+      notes: `${pluginDisplayName} ${lstrings.transaction_details_exchange_order_id}: ${id}`
+    }
+  }
+  await showUi.send({ walletId: coreWallet.id, spendInfo })
+}
+
+const completeBuyOrder = async (
+  paymentDetails: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined,
+  showUi: FiatPluginUi,
+  id: string,
+  input: { amount: string; currency: string; crypto_address: string | undefined },
+  output: { amount: string; currency: string; crypto_address: string | undefined }
+) => {
+  if (paymentDetails == null || output.crypto_address == null) return
+
+  const { iban, swift_bic: swiftBic, recipient, reference } = paymentDetails
+
+  await showUi.sepaTransferInfo({
+    headerTitle: lstrings.payment_details,
+    promptMessage: sprintf(lstrings.sepa_transfer_prompt_s, id),
+    transferInfo: {
+      input: {
+        amount: input.amount,
+        currency: input.currency
+      },
+      output: {
+        amount: output.amount,
+        currency: output.currency,
+        walletAddress: output.crypto_address
+      },
+      paymentDetails: {
+        id: id,
+        iban: iban,
+        swiftBic: swiftBic,
+        recipient: recipient,
+        reference: reference
+      }
+    },
+    onDone: async () => {
+      showUi.popScene()
+    }
+  })
+}
+
+const executeSellOrderFetch = async (
+  coreWallet: EdgeCurrencyWallet,
+  bityQuote: any,
+  inputCurrencyCode: string,
+  cryptoAddress: string,
+  outputCurrencyCode: string,
+  sepaInfo: { name: string; iban: string; swift: string },
+  homeAddress: { address: string; address2: string | undefined; city: string; country: string; state: string; postalCode: string },
+  clientId: string | undefined
+): Promise<{
+  id: string
+  input: {
+    amount: any
+    currency: any
+    crypto_address: any
+  }
+  output: {
+    amount: any
+    currency: any
+    crypto_address: any
+  }
+  payment_details: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined
+} | null> => {
+  return await approveBityQuote(
+    coreWallet,
+    {
+      client_value: 0,
+      input: {
+        amount: bityQuote.input.amount,
+        currency: inputCurrencyCode,
+        type: 'crypto_address',
+        crypto_address: cryptoAddress
+      },
+      output: {
+        currency: outputCurrencyCode,
+        type: 'bank_account',
+        iban: sepaInfo.iban,
+        bic_swift: sepaInfo.swift,
+        owner: {
+          name: sepaInfo.name,
+          address: homeAddress.address,
+          address_complement: homeAddress.address2,
+          city: homeAddress.city,
+          state: homeAddress.state,
+          zip: homeAddress.postalCode,
+          country: homeAddress.country
+        }
+      }
+    },
+    clientId
+  )
+}
+
+const executeBuyOrderFetch = async (
+  coreWallet: EdgeCurrencyWallet,
+  bityQuote: any,
+  fiatCode: string,
+  sepaInfo: { name: string; iban: string; swift: string },
+  outputCurrencyCode: string,
+  cryptoAddress: string,
+  clientId: string | undefined
+) => {
+  return await approveBityQuote(
+    coreWallet,
+    {
+      client_value: 0,
+      input: {
+        amount: bityQuote.input.amount,
+        currency: fiatCode,
+        type: 'bank_account',
+        iban: sepaInfo.iban,
+        bic_swift: sepaInfo.swift
+      },
+      output: {
+        currency: outputCurrencyCode,
+        type: 'crypto_address',
+        crypto_address: cryptoAddress
+      }
+    },
+    clientId
+  )
 }
