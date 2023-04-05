@@ -28,7 +28,7 @@ export interface FiatPluginEnterAmountParams<T extends EnterAmountState> {
   initState?: Partial<T>
   label1: string
   label2: string
-  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<T>) => Promise<string | undefined>
+  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<T>) => Promise<void>
   onPoweredByClick: (stateManager: StateManager<T>) => Promise<void>
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   initialAmount1?: string
