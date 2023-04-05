@@ -152,13 +152,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         isBuy,
+        initState: {
+          value1: '500'
+        },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
-        initialAmount1: '500',
-        onFieldChange: async (sourceFieldNum, value, enterAmountMethods): Promise<string | undefined> => {
+        onFieldChange: async (sourceFieldNum, value, stateManager): Promise<string | undefined> => {
           if (!isValidInput(value)) {
-            if (enterAmountMethods != null)
-              enterAmountMethods.setStatusText({ statusText: lstrings.create_wallet_invalid_input, options: { textType: 'error' } })
+            stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })
             return
           }
           bestQuote = undefined
@@ -218,29 +219,29 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           if (goodQuotes.length === 0) {
             // Find the best error to surface
             const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
-            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
+            stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
             return
           }
 
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: lstrings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
+            stateManager.update({ statusText: { content: lstrings.fiat_plugin_buy_no_quote, textType: 'error' } })
             return
           }
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
-          if (enterAmountMethods != null) {
-            enterAmountMethods.setStatusText({ statusText: exchangeRateText })
-            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon })
-          }
+          stateManager.update({
+            statusText: { content: exchangeRateText },
+            poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+          })
           if (sourceFieldNum === 1) {
             return toFixed(bestQuote.cryptoAmount, 0, 6)
           } else {
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
         },
-        onPoweredByClick: async enterAmountMethods => {
+        onPoweredByClick: async stateManager => {
           // 1. Show modal with all the valid quotes
           const items = goodQuotes.map(quote => {
             let text
@@ -274,15 +275,17 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
             // 3. Set the status text and powered by
             const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
-            enterAmountMethods.setStatusText({ statusText })
-            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon })
+            stateManager.update({
+              statusText: { content: statusText },
+              poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+            })
 
             logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
 
             if (lastSourceFieldNum === 1) {
-              enterAmountMethods.setValue2(bestQuote.cryptoAmount)
+              stateManager.update({ value2: bestQuote.cryptoAmount })
             } else {
-              enterAmountMethods.setValue1(bestQuote.fiatAmount)
+              stateManager.update({ value1: bestQuote.fiatAmount })
             }
           }
         },

@@ -6,7 +6,8 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { EdgeTokenId } from '../../types/types'
-import { EnterAmountPoweredBy } from './scenes/FiatPluginEnterAmountScene'
+import { StateManager } from './hooks/useStateManager'
+import { EnterAmountState } from './scenes/FiatPluginEnterAmountScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -21,20 +22,14 @@ export interface FiatPluginAddressFormParams {
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
 }
 
-export interface FiatPluginEnterAmountMethods {
-  setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
-  setPoweredBy: (params: EnterAmountPoweredBy) => void
-  setValue1: (value: string) => void
-  setValue2: (value: string) => void
-}
-
-export interface FiatPluginEnterAmountParams {
+export interface FiatPluginEnterAmountParams<T extends EnterAmountState> {
   headerTitle: string
   isBuy: boolean
+  initState?: Partial<T>
   label1: string
   label2: string
-  onFieldChange: (sourceFieldNum: number, value: string, enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<string | undefined>
-  onPoweredByClick: (enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<void>
+  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<T>) => Promise<string | undefined>
+  onPoweredByClick: (stateManager: StateManager<T>) => Promise<void>
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   initialAmount1?: string
   headerIconUri?: string
@@ -97,7 +92,7 @@ export interface FiatPluginUi {
   }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: (params: FiatPluginEnterAmountParams) => void
+  enterAmount: <T extends EnterAmountState>(params: FiatPluginEnterAmountParams<T>) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
