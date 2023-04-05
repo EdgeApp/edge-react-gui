@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
@@ -14,7 +14,7 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
   const { name } = wallet
   if (name != null) return name
 
-  return sprintf(s.strings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
+  return sprintf(lstrings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 }
 
 export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
@@ -41,5 +41,5 @@ export const enableToken = async (currencyCode: string, wallet: EdgeCurrencyWall
 
   const enabledTokenIds = wallet.enabledTokenIds
   if (enabledTokenIds.find(enabledTokenId => enabledTokenId === newTokenId) == null)
-    await showFullScreenSpinner(s.strings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, newTokenId]))
+    await showFullScreenSpinner(lstrings.wallet_list_modal_enabling_token, wallet.changeEnabledTokenIds([...enabledTokenIds, newTokenId]))
 }

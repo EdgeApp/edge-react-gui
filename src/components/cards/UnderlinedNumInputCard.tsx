@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useLayout } from '../../hooks/useLayout'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { zeroString } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -17,7 +17,7 @@ const UnderlinedNumInputCardComponent = (props: {
   onPress?: () => void | Promise<void>
   title: string
 }) => {
-  const { currencyCode, emptyPlaceholder = s.strings.string_amount, formattedAmount, iconUri, onPress, title } = props
+  const { currencyCode, emptyPlaceholder = lstrings.string_amount, formattedAmount, iconUri, onPress, title } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 

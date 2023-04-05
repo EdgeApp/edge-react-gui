@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
@@ -16,7 +16,7 @@ export const LtvRatioTile = (props: { borrowEngine: BorrowEngine; futureValue: s
 
   return (
     <PercentageChangeArrowTile
-      title={s.strings.loan_loan_to_value_ratio}
+      title={lstrings.loan_loan_to_value_ratio}
       currentValue={currentValue.toString()}
       currentValueColor={currentValueColor}
       futureValue={futureValue}

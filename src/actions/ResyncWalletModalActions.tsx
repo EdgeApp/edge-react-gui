@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 
@@ -15,11 +15,11 @@ export function showResyncWalletModal(walletId: string): ThunkAction<Promise<voi
     const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.fragment_wallets_resync_wallet}
-        message={`${s.strings.fragment_wallets_resync_wallet_first_confirm_message_mobile} ${getWalletName(currencyWallets[walletId])}?`}
+        title={lstrings.fragment_wallets_resync_wallet}
+        message={`${lstrings.fragment_wallets_resync_wallet_first_confirm_message_mobile} ${getWalletName(currencyWallets[walletId])}?`}
         buttons={{
-          confirm: { label: s.strings.string_resync },
-          cancel: { label: s.strings.string_cancel_cap }
+          confirm: { label: lstrings.string_resync },
+          cancel: { label: lstrings.string_cancel_cap }
         }}
       />
     ))

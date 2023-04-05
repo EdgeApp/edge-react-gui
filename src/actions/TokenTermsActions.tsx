@@ -5,12 +5,12 @@ import { sprintf } from 'sprintf-js'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { TOKEN_TERMS_AGREEMENT } from '../constants/constantSettings'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 
 export const approveTokenTerms = async (disklet: Disklet, currencyCode: string) => {
-  const title = sprintf(s.strings.token_agreement_modal_title, currencyCode)
-  const body = sprintf(s.strings.token_agreement_modal_message, currencyCode, config.appName)
+  const title = sprintf(lstrings.token_agreement_modal_title, currencyCode)
+  const body = sprintf(lstrings.token_agreement_modal_message, currencyCode, config.appName)
   const filePath = `${currencyCode}-${TOKEN_TERMS_AGREEMENT}`
 
   try {

@@ -4,7 +4,7 @@ import { Linking, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -64,23 +64,23 @@ function SwapVerifyTermsModal(props: Props) {
         <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
         <ModalTitle>{displayName}</ModalTitle>
       </View>
-      <ModalMessage>{s.strings.swap_terms_statement}</ModalMessage>
-      <MainButton label={s.strings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
-      <MainButton label={s.strings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
+      <ModalMessage>{lstrings.swap_terms_statement}</ModalMessage>
+      <MainButton label={lstrings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
+      <MainButton label={lstrings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
           <Text style={styles.linkText} onPress={async () => await Linking.openURL(termsUri)}>
-            {s.strings.swap_terms_terms_link}
+            {lstrings.swap_terms_terms_link}
           </Text>
         )}
         {privacyUri == null ? null : (
           <Text style={styles.linkText} onPress={async () => await Linking.openURL(privacyUri)}>
-            {s.strings.swap_terms_privacy_link}
+            {lstrings.swap_terms_privacy_link}
           </Text>
         )}
         {kycUri == null ? null : (
           <Text style={styles.linkText} onPress={async () => await Linking.openURL(kycUri)}>
-            {s.strings.swap_terms_kyc_link}
+            {lstrings.swap_terms_kyc_link}
           </Text>
         )}
       </View>

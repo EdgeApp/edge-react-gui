@@ -13,7 +13,7 @@ import {
   SwapActionOp
 } from '../../controllers/action-queue/types'
 import { LocaleStringKey } from '../../locales/en_US'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { queryBorrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -48,8 +48,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
   switch (actionOp.type) {
     case 'seq': {
       return {
-        title: s.strings.action_queue_display_seq_title,
-        message: s.strings.action_queue_display_seq_message,
+        title: lstrings.action_queue_display_seq_title,
+        message: lstrings.action_queue_display_seq_message,
         ...baseDisplayInfo,
         steps: await Promise.all(
           actionOp.actions.map(async (op, index) => {
@@ -83,8 +83,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
       const { title, message } = await getActionOpDisplayKeyMessage(account, actionOp)
 
       return {
-        title: title ?? s.strings.action_queue_display_par_title,
-        message: message ?? s.strings.action_queue_display_par_message,
+        title: title ?? lstrings.action_queue_display_par_title,
+        message: message ?? lstrings.action_queue_display_par_message,
         ...baseDisplayInfo,
         steps: await Promise.all(
           actionOp.actions.map(async (op, index) => {
@@ -124,13 +124,13 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: s.strings.action_display_title_swap,
+        title: lstrings.action_display_title_swap,
         message: sprintf(
-          s.strings.action_queue_display_swap_message,
+          lstrings.action_queue_display_swap_message,
           fromCurrencyCode,
           config.appName,
           toCurrencyCode,
-          s.strings.loan_aave_fragment,
+          lstrings.loan_aave_fragment,
           toWallet.currencyInfo.currencyCode
         )
       }
@@ -142,8 +142,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_fiat_buy_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_fiat_buy_message, currencyCode, 'Wyre')
+        title: sprintf(lstrings.action_queue_display_fiat_buy_title, currencyCode),
+        message: sprintf(lstrings.action_queue_display_fiat_buy_message, currencyCode, 'Wyre')
       }
     }
     case 'wyre-sell': {
@@ -153,8 +153,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: s.strings.action_queue_display_fiat_sell_title,
-        message: sprintf(s.strings.action_queue_display_fiat_sell_message, currencyCode, 'Wyre')
+        title: lstrings.action_queue_display_fiat_sell_title,
+        message: sprintf(lstrings.action_queue_display_fiat_sell_message, currencyCode, 'Wyre')
       }
     }
     case 'loan-borrow': {
@@ -164,8 +164,8 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: s.strings.action_queue_display_loan_borrow_title,
-        message: sprintf(s.strings.action_queue_display_loan_borrow_message_1s, currencyCode)
+        title: lstrings.action_queue_display_loan_borrow_title,
+        message: sprintf(lstrings.action_queue_display_loan_borrow_message_1s, currencyCode)
       }
     }
     case 'loan-deposit': {
@@ -177,22 +177,22 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: sprintf(s.strings.action_queue_display_loan_deposit_title, currencyCode),
-        message: sprintf(s.strings.action_queue_display_loan_deposit_message, currencyCode, borrowPluginDisplayName)
+        title: sprintf(lstrings.action_queue_display_loan_deposit_title, currencyCode),
+        message: sprintf(lstrings.action_queue_display_loan_deposit_message, currencyCode, borrowPluginDisplayName)
       }
     }
     case 'loan-repay': {
       if (actionOp.fromTokenId != null) {
         return {
           ...baseDisplayInfo,
-          title: s.strings.action_queue_display_loan_repay_with_collateral_title,
-          message: s.strings.action_queue_display_loan_repay_with_collateral_message
+          title: lstrings.action_queue_display_loan_repay_with_collateral_title,
+          message: lstrings.action_queue_display_loan_repay_with_collateral_message
         }
       } else {
         return {
           ...baseDisplayInfo,
-          title: s.strings.action_queue_display_loan_repay_title,
-          message: s.strings.action_queue_display_loan_repay_message
+          title: lstrings.action_queue_display_loan_repay_title,
+          message: lstrings.action_queue_display_loan_repay_message
         }
       }
     }
@@ -203,14 +203,14 @@ async function getActionOpDisplayInfo(account: EdgeAccount, actionOp: ActionOp, 
 
       return {
         ...baseDisplayInfo,
-        title: s.strings.action_queue_display_loan_withdraw_title,
-        message: sprintf(s.strings.action_queue_display_loan_withdraw_message, currencyCode)
+        title: lstrings.action_queue_display_loan_withdraw_title,
+        message: sprintf(lstrings.action_queue_display_loan_withdraw_message, currencyCode)
       }
     }
     case 'broadcast-tx': {
       return {
-        title: sprintf(s.strings.action_queue_display_unknown_title),
-        message: sprintf(s.strings.action_queue_display_unknown_message),
+        title: sprintf(lstrings.action_queue_display_unknown_title),
+        message: sprintf(lstrings.action_queue_display_unknown_message),
         ...baseDisplayInfo
       }
     }
@@ -254,7 +254,7 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
         titleData = { stringKey: `action_display_title_swap` }
         messageData = {
           stringKey: `action_display_message_swap_4s`,
-          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, s.strings.loan_aave_fragment]
+          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, lstrings.loan_aave_fragment]
         }
       }
       break
@@ -276,7 +276,7 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
         titleData = { stringKey: `action_display_title_swap` }
         messageData = {
           stringKey: `action_display_message_swap_fees_5s`,
-          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, feeCurrencyCode, s.strings.loan_aave_fragment]
+          wildcards: [config.appName, fromCurrencyCode, toCurrencyCode, feeCurrencyCode, lstrings.loan_aave_fragment]
         }
       }
       break
@@ -303,8 +303,8 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
 
   // Retrieve the strings. Populate wildcards, if applicable
   return {
-    title: titleData.wildcards == null ? s.strings[titleData.stringKey] : sprintf(s.strings[titleData.stringKey], ...titleData.wildcards),
-    message: messageData.wildcards == null ? s.strings[messageData.stringKey] : sprintf(s.strings[messageData.stringKey], ...messageData.wildcards)
+    title: titleData.wildcards == null ? lstrings[titleData.stringKey] : sprintf(lstrings[titleData.stringKey], ...titleData.wildcards),
+    message: messageData.wildcards == null ? lstrings[messageData.stringKey] : sprintf(lstrings[messageData.stringKey], ...messageData.wildcards)
   }
 }
 

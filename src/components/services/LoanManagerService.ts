@@ -10,7 +10,7 @@ import { checkLoanHasFunds } from '../../controllers/loan-manager/util/checkLoan
 import { waitForBorrowEngineSync } from '../../controllers/loan-manager/util/waitForLoanAccountSync'
 import { useAllTokens } from '../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -150,8 +150,8 @@ export const LoanManagerService = (props: Props) => {
           belowRate: thresholdRate
         }
         const pushMessage: PushMessage = {
-          title: s.strings.loan_notification_ltv_threshold_alert_title,
-          body: s.strings.loan_notification_ltv_threshold_alert_message
+          title: lstrings.loan_notification_ltv_threshold_alert_title,
+          body: lstrings.loan_notification_ltv_threshold_alert_message
         }
         const newPushEvent: NewPushEvent = { eventId, trigger, pushMessage }
         const loginUpdatePayload: LoginUpdatePayload = {

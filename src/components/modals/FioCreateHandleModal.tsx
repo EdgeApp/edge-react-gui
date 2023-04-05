@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getFioNewHandleImage } from '../../util/CdnUris'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { styled } from '../hoc/styled'
@@ -35,16 +35,16 @@ export const FioCreateHandleModal = (props: Props) => {
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
         <FastImage source={{ uri: getFioNewHandleImage(theme) }} style={styles.icon} />
-        <GetFioHandleTitle>{parseMarkedText(s.strings.fio_free_handle_title_m)}</GetFioHandleTitle>
+        <GetFioHandleTitle>{parseMarkedText(lstrings.fio_free_handle_title_m)}</GetFioHandleTitle>
         <EdgeText style={styles.message} numberOfLines={4} disableFontScaling>
-          {s.strings.fio_free_handle_congrats}
+          {lstrings.fio_free_handle_congrats}
         </EdgeText>
         <EdgeText style={styles.message} numberOfLines={8} disableFontScaling>
-          {s.strings.fio_free_handle_message}
+          {lstrings.fio_free_handle_message}
         </EdgeText>
       </View>
-      <MainButton type="primary" label={s.strings.get_started_button} onPress={handleConfirm} marginRem={[1, 1, 0.5, 1]} />
-      <MainButton type="escape" label={s.strings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 1, 1]} />
+      <MainButton type="primary" label={lstrings.get_started_button} onPress={handleConfirm} marginRem={[1, 1, 0.5, 1]} />
+      <MainButton type="escape" label={lstrings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 1, 1]} />
     </ThemedModal>
   )
 }

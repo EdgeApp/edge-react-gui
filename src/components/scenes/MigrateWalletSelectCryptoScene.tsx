@@ -5,7 +5,7 @@ import { Switch, View } from 'react-native'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -105,7 +105,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 
   const handleNext = useHandler(async () => {
     if (numSelected === 0) {
-      showError(s.strings.create_wallet_no_assets_selected)
+      showError(lstrings.create_wallet_no_assets_selected)
       return
     }
 
@@ -143,7 +143,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
         <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
-          <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
@@ -156,7 +156,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader title={s.strings.migrate_wallets_select_crypto_title} withTopMargin />
+          <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}

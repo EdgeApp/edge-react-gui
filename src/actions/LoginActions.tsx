@@ -9,7 +9,7 @@ import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   getLocalSettings,
   getSyncedSettings,
@@ -120,8 +120,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
-          title={s.strings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
+          title={lstrings.update_notice_deprecate_electrum_servers_title}
+          body={sprintf(lstrings.update_notice_deprecate_electrum_servers_message, config.appName)}
         />
       ))
         .finally(async () => {
@@ -309,7 +309,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
         fiatCurrencyCode
       }),
       20000,
-      new Error(s.strings.error_creating_wallets)
+      new Error(lstrings.error_creating_wallets)
     )
     if (account.activeWalletIds.length <= 1) {
       dispatch({

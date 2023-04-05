@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
@@ -46,13 +46,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
 
     const { isConnected, fioPlugin } = this.props
     if (!isConnected) {
-      throw new Error(s.strings.fio_network_alert_text)
+      throw new Error(lstrings.fio_network_alert_text)
     }
 
     if (!fee) {
       if (this.isFioAddress()) {
         if (!fioPlugin) {
-          throw new Error(s.strings.fio_register_address_err_msg)
+          throw new Error(lstrings.fio_register_address_err_msg)
         }
         const response = await fioPlugin.otherMethods.buyAddressRequest(
           {
@@ -71,9 +71,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
               await Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
-                  title={s.strings.fio_address_register_pay_title}
-                  message={s.strings.fio_address_register_pay}
-                  buttons={{ ok: { label: s.strings.string_ok_cap } }}
+                  title={lstrings.fio_address_register_pay_title}
+                  message={lstrings.fio_address_register_pay}
+                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               ))
               return navigation.navigate('fioAddressRegisterSelectWallet', {
@@ -96,15 +96,15 @@ class FioNameConfirm extends React.PureComponent<Props> {
         await Airship.show<'ok' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={`${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`}
-            message={s.strings.fio_address_register_pending_free}
-            buttons={{ ok: { label: s.strings.string_ok_cap } }}
+            title={`${lstrings.fio_address_register_form_field_label} ${lstrings.fragment_wallet_unconfirmed}`}
+            message={lstrings.fio_address_register_pending_free}
+            buttons={{ ok: { label: lstrings.string_ok_cap } }}
           />
         ))
         navigation.navigate('walletsTab', { screen: 'walletList' })
       } else {
         // no free domains
-        showError(s.strings.fio_get_fee_err_msg)
+        showError(lstrings.fio_get_fee_err_msg)
       }
     } else {
       try {
@@ -132,7 +132,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
           )
         }
       } catch (e: any) {
-        showError(s.strings.fio_register_address_err_msg)
+        showError(lstrings.fio_register_address_err_msg)
       }
     }
   }
@@ -144,11 +144,11 @@ class FioNameConfirm extends React.PureComponent<Props> {
 
     return (
       <SceneWrapper background="theme">
-        <SceneHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} underline />
+        <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline />
         <View style={styles.scene}>
           <Tile
             type="static"
-            title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
+            title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
             body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
           />
           <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} navigation={this.props.navigation} />

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 
 import { formatDate } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FormattedText } from '../../legacy/FormattedText/FormattedText.ui'
@@ -25,7 +25,7 @@ export class FioAddressRegistered extends React.Component<Props> {
 
       return (
         <FormattedText style={styles.text}>
-          {`${s.strings.fio_address_details_screen_expires} `}
+          {`${lstrings.fio_address_details_screen_expires} `}
           {formatDate(new Date(expiration))}
         </FormattedText>
       )
@@ -46,11 +46,11 @@ export class FioAddressRegistered extends React.Component<Props> {
             <View style={styles.image}>
               <Image source={theme.fioAddressLogo} />
             </View>
-            <FormattedText style={styles.text}>{s.strings.fio_address_details_screen_registered}</FormattedText>
+            <FormattedText style={styles.text}>{lstrings.fio_address_details_screen_registered}</FormattedText>
             <FormattedText style={styles.title}>{fioName}</FormattedText>
             {this.renderExpDate()}
           </View>
-          <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList', {})} label={s.strings.title_fio_names} />
+          <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList', {})} label={lstrings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -91,7 +91,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const handleNext = useHandler(async () => {
     if (numSelected === 0) {
-      showError(s.strings.create_wallet_no_assets_selected)
+      showError(lstrings.create_wallet_no_assets_selected)
       return
     }
 
@@ -139,7 +139,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
                   onPress={() => {
                     bridge.resolve(PLACEHOLDER_WALLET_ID)
                   }}
-                  rightSide={<EdgeText>{s.strings.create_wallet_choice_new_button_fragment}</EdgeText>}
+                  rightSide={<EdgeText>{lstrings.create_wallet_choice_new_button_fragment}</EdgeText>}
                 />
               )
             }
@@ -155,8 +155,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           return (
             <ListModal<string>
               bridge={bridge}
-              title={s.strings.select_wallet}
-              message={sprintf(s.strings.create_wallet_select_wallet_for_assets, displayNames)}
+              title={lstrings.select_wallet}
+              message={sprintf(lstrings.create_wallet_select_wallet_for_assets, displayNames)}
               textInput={false}
               fullScreen={false}
               rowComponent={renderRow}
@@ -226,7 +226,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={s.strings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
@@ -237,13 +237,13 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader title={s.strings.title_create_wallet_select_crypto} withTopMargin />
+          <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
           <OutlinedTextInput
             autoCorrect={false}
             autoCapitalize="words"
             onChangeText={setSearchTerm}
             value={searchTerm}
-            label={s.strings.wallet_list_wallet_search}
+            label={lstrings.wallet_list_wallet_search}
             returnKeyType="next"
             marginRem={[0.5, 1]}
             searchIcon

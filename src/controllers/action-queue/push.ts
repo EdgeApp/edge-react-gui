@@ -1,4 +1,4 @@
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { asHex } from '../../util/cleaners/asHex'
 import { makePushClient } from '../../util/PushClient/PushClient'
 import { filterNull } from '../../util/safeFilters'
@@ -39,8 +39,8 @@ export async function prepareNewPushEvents(
 
   // Final push message to send to the device once server has finished all events
   const pushMessage: PushMessage = {
-    title: s.strings.action_queue_push_notification_title,
-    body: s.strings.action_queue_push_notification_body
+    title: lstrings.action_queue_push_notification_title,
+    body: lstrings.action_queue_push_notification_body
   }
 
   const pushEventInfos: PushEventInfo[] = await Promise.all(

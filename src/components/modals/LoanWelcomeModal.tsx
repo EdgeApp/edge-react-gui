@@ -3,7 +3,7 @@ import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { borrowPlugins } from '../../plugins/helpers/borrowPluginHelpers'
 import { config } from '../../theme/appConfig'
 import { getBorrowPluginIconUri } from '../../util/CdnUris'
@@ -22,10 +22,10 @@ export const LoanWelcomeModal = (props: { bridge: AirshipBridge<'ok' | undefined
   const iconUri = getBorrowPluginIconUri(defaultBorrowPlugin.borrowInfo)
 
   return (
-    <ButtonsModal bridge={bridge} buttons={{ ok: { label: s.strings.legacy_address_modal_continue } }}>
+    <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.legacy_address_modal_continue } }}>
       <Space around={1}>
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
-        <EdgeText numberOfLines={20}>{sprintf(s.strings.loan_welcome_6s, config.appName, s.strings.loan_aave_fragment, 'BTC', 'USDC', '10', '120')}</EdgeText>
+        <EdgeText numberOfLines={20}>{sprintf(lstrings.loan_welcome_6s, config.appName, lstrings.loan_aave_fragment, 'BTC', 'USDC', '10', '120')}</EdgeText>
       </Space>
     </ButtonsModal>
   )

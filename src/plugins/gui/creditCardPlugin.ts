@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ENV } from '../../env'
 import { formatNumber, isValidInput } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
@@ -70,7 +70,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
     startPlugin: async (params: FiatPluginStartParams) => {
       const { isBuy, regionCode, paymentTypes, providerId } = params
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
-      const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
+      const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
       const allowedAssets: EdgeTokenId[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
@@ -96,7 +96,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       // Pop up modal to pick wallet/asset
       const walletListResult: { walletId: string | undefined; currencyCode: string | undefined } = await showUi.walletPicker({
-        headerTitle: s.strings.fiat_plugin_select_asset_to_purchase,
+        headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
         allowedAssets,
         showCreateWallet: true
       })
@@ -118,11 +118,11 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
-        headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
+        headerTitle: sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode),
         isBuy,
 
-        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
-        label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
+        label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
+        label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
           enterAmountMethods = methods
@@ -130,7 +130,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
         convertValue: async (sourceFieldNum: number, value: string): Promise<string | undefined> => {
           if (!isValidInput(value)) {
             if (enterAmountMethods != null)
-              enterAmountMethods.setStatusText({ statusText: s.strings.create_wallet_invalid_input, options: { textType: 'error' } })
+              enterAmountMethods.setStatusText({ statusText: lstrings.create_wallet_invalid_input, options: { textType: 'error' } })
             return
           }
           bestQuote = undefined
@@ -185,7 +185,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
             if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
             return
           }
@@ -193,7 +193,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray)
           if (bestQuote == null) {
-            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: s.strings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
+            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: lstrings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
             return
           }
 

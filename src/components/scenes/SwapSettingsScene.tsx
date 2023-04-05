@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions'
 import { setPreferredSwapPluginId, setPreferredSwapPluginType } from '../../actions/SettingsActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { PluginTweak } from '../../types/TweakTypes'
@@ -95,11 +95,11 @@ export class SwapSettings extends React.Component<Props, State> {
 
     let selected: string
     if (settingsPreferredSwapType === 'DEX') {
-      selected = s.strings.swap_preferred_dex
+      selected = lstrings.swap_preferred_dex
     } else if (settingsPreferredSwapType === 'CEX') {
-      selected = s.strings.swap_preferred_cex
+      selected = lstrings.swap_preferred_cex
     } else {
-      selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : s.strings.swap_preferred_cheapest
+      selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : lstrings.swap_preferred_cheapest
     }
 
     // Process Items
@@ -120,17 +120,17 @@ export class SwapSettings extends React.Component<Props, State> {
       }))
 
     const preferCheapest = {
-      name: s.strings.swap_preferred_cheapest,
+      name: lstrings.swap_preferred_cheapest,
       icon: <AntDesignIcon name="barschart" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
     }
 
     const preferDex = {
-      name: s.strings.swap_preferred_dex,
+      name: lstrings.swap_preferred_dex,
       icon: <Feather name="globe" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
     }
 
     const preferCex = {
-      name: s.strings.swap_preferred_cex,
+      name: lstrings.swap_preferred_cex,
       icon: <MaterialCommunityIcons name="bank-outline" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
     }
 
@@ -138,7 +138,7 @@ export class SwapSettings extends React.Component<Props, State> {
     Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
-        title={s.strings.swap_preferred_header}
+        title={lstrings.swap_preferred_header}
         items={[preferCheapest, preferDex, preferCex, ...exchangeItems]}
         selected={selected}
       />
@@ -161,13 +161,13 @@ export class SwapSettings extends React.Component<Props, State> {
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
           <View style={styles.instructionArea}>
-            <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
+            <Text style={styles.instructionText}>{lstrings.settings_exchange_instruction}</Text>
           </View>
-          <SettingsHeaderRow label={s.strings.swap_options_header_decentralized} />
+          <SettingsHeaderRow label={lstrings.swap_options_header_decentralized} />
           {this.sortedDexIds.map(pluginId => this.renderPlugin(pluginId))}
-          <SettingsHeaderRow label={s.strings.swap_options_header_centralized} />
+          <SettingsHeaderRow label={lstrings.swap_options_header_centralized} />
           {this.sortedCexIds.map(pluginId => this.renderPlugin(pluginId))}
-          <SettingsHeaderRow label={s.strings.swap_preferred_header} />
+          <SettingsHeaderRow label={lstrings.swap_preferred_header} />
           {this.renderPreferredArea()}
         </ScrollView>
       </SceneWrapper>
@@ -218,16 +218,16 @@ export class SwapSettings extends React.Component<Props, State> {
             icon: this.renderPluginIcon(pluginId)
           }
         : {
-            label: s.strings.swap_preferred_cheapest,
+            label: lstrings.swap_preferred_cheapest,
             icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
 
     if (settingsPreferredSwapType != null) {
       if (settingsPreferredSwapType === 'DEX') {
-        label = s.strings.swap_preferred_dex
+        label = lstrings.swap_preferred_dex
         icon = <Feather name="globe" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
       } else if (settingsPreferredSwapType === 'CEX') {
-        label = s.strings.swap_preferred_cex
+        label = lstrings.swap_preferred_cex
         icon = <MaterialCommunityIcons name="bank-outline" color={theme.icon} size={theme.rem(1.25)} style={styles.swapExchangeIcon} />
       }
     }
@@ -237,7 +237,7 @@ export class SwapSettings extends React.Component<Props, State> {
       return (
         <>
           <View style={styles.instructionArea}>
-            <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
+            <Text style={styles.instructionText}>{lstrings.swap_preferred_promo_instructions}</Text>
           </View>
           <SettingsTappableRow action="delete" label={label} onPress={async () => await this.props.removePromotion(swapSource.installerId)}>
             {icon}
@@ -249,7 +249,7 @@ export class SwapSettings extends React.Component<Props, State> {
     return (
       <>
         <View style={styles.instructionArea}>
-          <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
+          <Text style={styles.instructionText}>{lstrings.swap_preferred_instructions}</Text>
         </View>
         <SettingsTappableRow label={label} onPress={this.handlePreferredModal}>
           {icon}

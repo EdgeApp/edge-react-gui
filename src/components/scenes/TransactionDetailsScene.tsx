@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { playSendSound } from '../../actions/SoundActions'
 import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
@@ -97,7 +97,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openPersonInput = () => {
-    const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
+    const personLabel = this.state.direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
     Airship.show<ContactModalResult | undefined>(bridge => <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />).then(
       person => {
         if (person != null) this.onSaveTxDetails({ name: person.contactName })
@@ -118,11 +118,11 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.notes}
-        inputLabel={s.strings.transaction_details_notes_title}
+        inputLabel={lstrings.transaction_details_notes_title}
         returnKeyType="done"
         multiline
-        submitLabel={s.strings.string_save}
-        title={s.strings.transaction_details_notes_title}
+        submitLabel={lstrings.string_save}
+        title={lstrings.transaction_details_notes_title}
       />
     )).then(notes => (notes != null ? this.onSaveTxDetails({ notes }) : null))
   }
@@ -143,7 +143,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
       if (signedTx != null) {
         playSendSound().catch(error => console.log(error))
-        showToast(s.strings.transaction_details_accelerate_transaction_sent)
+        showToast(lstrings.transaction_details_accelerate_transaction_sent)
 
         navigation.pop()
         navigation.push('transactionDetails', {
@@ -155,7 +155,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       if (err?.message === 'transaction underpriced') {
         const newAcceleratedTx = await this.makeAcceleratedTx(acceleratedTx)
         this.setState({ acceleratedTx: newAcceleratedTx })
-        showError(s.strings.transaction_details_accelerate_transaction_fee_too_low)
+        showError(lstrings.transaction_details_accelerate_transaction_fee_too_low)
         return
       }
       showError(err)
@@ -199,9 +199,9 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { direction, acceleratedTx, name, notes, category } = this.state
     const styles = getStyles(theme)
 
-    const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
+    const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
     const personName = name !== '' ? name : personLabel
-    const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
+    const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
     // spendTargets recipient addresses format
     let recipientsAddresses = ''
@@ -231,19 +231,19 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             <TransactionCryptoAmountTile transaction={edgeTransaction} wallet={wallet} />
             <TransactionFiatTiles transaction={edgeTransaction} wallet={wallet} onMetadataEdit={this.onSaveTxDetails} />
-            <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
+            <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={this.openCategoryInput}>
               <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
             </Tile>
-            {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
+            {edgeTransaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {edgeTransaction.swapData == null ? null : <SwapDetailsTiles swapData={edgeTransaction.swapData} transaction={edgeTransaction} wallet={wallet} />}
             {acceleratedTx == null ? null : (
-              <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
+              <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
             )}
-            <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
+            <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-              <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
+              <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <MainButton onPress={navigation.pop} label={s.strings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+            <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
           </View>
         </ScrollView>
       </SceneWrapper>

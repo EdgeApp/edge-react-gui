@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Appearance, Platform, Text, TextStyle, TouchableOpacity } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
 export interface Props {
@@ -65,7 +65,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
         backgroundColor={darkMode ? theme.dateModalBackgroundDark : theme.dateModalBackgroundLight}
       >
         <TouchableOpacity onPress={this.handleDone}>
-          <Text style={textStyle}>{s.strings.string_done_cap}</Text>
+          <Text style={textStyle}>{lstrings.string_done_cap}</Text>
         </TouchableOpacity>
         <DateTimePicker display="spinner" mode="date" onChange={this.handleChange} value={date} />
       </AirshipModal>

@@ -10,7 +10,7 @@ import { Airship, showError } from '../../components/services/AirshipInstance'
 import { getPluginId } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getCreateWalletType, guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -94,7 +94,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
           return (
             <ListModal<EdgeCurrencyWallet>
               bridge={bridge}
-              title={s.strings.select_wallet}
+              title={lstrings.select_wallet}
               textInput={false}
               fullScreen={false}
               rowComponent={renderRow}
@@ -116,7 +116,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>
       </View>
       <View style={styles.labelColumn}>
-        <EdgeText style={styles.labelText}>{walletType != null ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
+        <EdgeText style={styles.labelText}>{walletType != null ? lstrings.fragment_create_wallet_create_wallet : lstrings.wallet_list_add_token}</EdgeText>
       </View>
     </TouchableOpacity>
   )
@@ -154,10 +154,10 @@ function createAndSelectToken({
           ? currencyWallets[parentWalletId]
           : // If no parent chain wallet exists, create it
             await showFullScreenSpinner(
-              s.strings.wallet_list_modal_enabling_token,
+              lstrings.wallet_list_modal_enabling_token,
               (async (): Promise<EdgeCurrencyWallet> => {
                 const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
-                if (walletType == null) throw new Error(s.strings.create_wallet_failed_message)
+                if (walletType == null) throw new Error(lstrings.create_wallet_failed_message)
                 return await createWallet(account, {
                   walletType,
                   walletName: getUniqueWalletName(account, pluginId),
@@ -183,7 +183,7 @@ function createAndSelectWallet({ walletType, fiatCurrencyCode }: CreateWalletOpt
     const walletName = getUniqueWalletName(account, getPluginId(walletType))
     try {
       const wallet = await showFullScreenSpinner(
-        s.strings.wallet_list_modal_creating_wallet,
+        lstrings.wallet_list_modal_creating_wallet,
         createWallet(account, { walletName, walletType, fiatCurrencyCode })
       )
       return wallet.id

@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { GuiFiatType } from '../../types/types'
@@ -45,7 +45,7 @@ export const FiatListModal = (props: Props) => {
     const fiatCountry = FIAT_COUNTRY[item.value]
 
     const key = `currency_label_${item.value}`
-    const subTitle = s.strings[key as keyof typeof s.strings] ?? s.strings.currency_label_
+    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
 
     return (
       <SelectableRow
@@ -71,8 +71,8 @@ export const FiatListModal = (props: Props) => {
   return (
     <ListModal
       bridge={bridge}
-      title={s.strings.title_create_wallet_select_fiat}
-      label={s.strings.fragment_wallets_addwallet_fiat_hint}
+      title={lstrings.title_create_wallet_select_fiat}
+      label={lstrings.fragment_wallets_addwallet_fiat_hint}
       autoFocus
       blurOnClear={false}
       rowsData={supportedFiats}

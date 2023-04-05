@@ -7,7 +7,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
@@ -96,14 +96,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       <SceneWrapper background="theme">
         <ScrollView>
           <SettingsRow label={walletName} onPress={() => undefined} />
-          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_date_range} />
-          <SettingsRow label={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
-          <SettingsRow label={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
-          <SettingsLabelRow label={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
-          <SettingsLabelRow label={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
-          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_export_type} />
+          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_date_range} />
+          <SettingsRow label={lstrings.export_transaction_this_month} onPress={this.setThisMonth} />
+          <SettingsRow label={lstrings.export_transaction_last_month} onPress={this.setLastMonth} />
+          <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
+          <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
+          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
           {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
-          {disabledExport ? null : <MainButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} type="secondary" />}
+          {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={1.5} onPress={this.handleSubmit} type="secondary" />}
         </ScrollView>
       </SceneWrapper>
     )
@@ -113,8 +113,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsRadioRow label={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
-        <SettingsRadioRow label={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
       </>
     )
   }
@@ -123,8 +123,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsSwitchRow label={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
-        <SettingsSwitchRow label={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
+        <SettingsSwitchRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
+        <SettingsSwitchRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
       </>
     )
   }
@@ -163,7 +163,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { sourceWallet, currencyCode } = route.params
     const { isExportQbo, isExportCsv, startDate, endDate } = this.state
     if (startDate.getTime() > endDate.getTime()) {
-      showError(s.strings.export_transaction_error)
+      showError(lstrings.export_transaction_error)
       return
     }
 
@@ -205,7 +205,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     // which we are relying on to determine if the date range is empty:
     const csvFile = await exportTransactionsToCSV(sourceWallet, txs, transactionOptions)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
-      showError(s.strings.export_transaction_export_error)
+      showError(lstrings.export_transaction_export_error)
       return
     }
 

@@ -11,7 +11,7 @@ import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { parseMarkedText } from '../../util/parseMarkedText'
@@ -37,27 +37,27 @@ const sections: SectionData[] = [
   {
     image: slide1HeroImage,
     key: 'slide1',
-    message: s.strings.getting_started_slide_1_message,
-    title: s.strings.getting_started_slide_1_title,
-    footnote: s.strings.getting_started_slide_1_footnote
+    message: lstrings.getting_started_slide_1_message,
+    title: lstrings.getting_started_slide_1_title,
+    footnote: lstrings.getting_started_slide_1_footnote
   },
   {
     image: slide2HeroImage,
     key: 'slide2',
-    message: s.strings.getting_started_slide_2_message,
-    title: s.strings.getting_started_slide_2_title
+    message: lstrings.getting_started_slide_2_message,
+    title: lstrings.getting_started_slide_2_title
   },
   {
     image: slide3HeroImage,
     key: 'slide3',
-    message: s.strings.getting_started_slide_3_message,
-    title: s.strings.getting_started_slide_3_title
+    message: lstrings.getting_started_slide_3_message,
+    title: lstrings.getting_started_slide_3_title
   },
   {
     image: slide4HeroImage,
     key: 'slide4',
-    message: s.strings.getting_started_slide_4_message,
-    title: s.strings.getting_started_slide_4_title
+    message: lstrings.getting_started_slide_4_message,
+    title: lstrings.getting_started_slide_4_title
   }
 ]
 
@@ -92,7 +92,7 @@ export const GettingStartedScene = (props: Props) => {
       <SkipButton swipeOffset={swipeOffset}>
         <Space left horizontal={1} vertical={0.5}>
           <TouchableOpacity onPress={handlePressSkip}>
-            <EdgeText>{s.strings.skip}</EdgeText>
+            <EdgeText>{lstrings.skip}</EdgeText>
           </TouchableOpacity>
         </Space>
       </SkipButton>
@@ -101,9 +101,9 @@ export const GettingStartedScene = (props: Props) => {
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
               <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle>{parseMarkedText(s.strings.getting_started_welcome_title)}</WelcomeHeroTitle>
-              <WelcomeHeroMessage>{s.strings.getting_started_welcome_message}</WelcomeHeroMessage>
-              <WelcomeHeroPrompt>{s.strings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+              <WelcomeHeroTitle>{parseMarkedText(lstrings.getting_started_welcome_title)}</WelcomeHeroTitle>
+              <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
+              <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
             </WelcomeHero>
             {sections.map((section, index) => {
               return (
@@ -130,15 +130,15 @@ export const GettingStartedScene = (props: Props) => {
                     <ScrollView>
                       <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
                       <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
-                      {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{s.strings.getting_started_slide_1_footnote}</Footnote>}
+                      {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{lstrings.getting_started_slide_1_footnote}</Footnote>}
                     </ScrollView>
                   </Section>
                 )
               })}
             </Sections>
             <Space horizontal={2}>
-              <MainButton onPress={handlePressSignUp} label={s.strings.create_wallet_create_account} />
-              <MainButton type="escape" onPress={handlePressSignIn} label={s.strings.getting_started_button_sign_in} />
+              <MainButton onPress={handlePressSignUp} label={lstrings.create_wallet_create_account} />
+              <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
             </Space>
           </SectionCoverAnimated>
         </Container>

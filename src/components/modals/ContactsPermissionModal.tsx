@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -20,17 +20,17 @@ export function ContactsPermissionModal(props: Props) {
   const { bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const message1 = sprintf(s.strings.contacts_permission_modal_body_1, config.appName)
-  const message2 = sprintf(s.strings.contacts_permission_modal_body_2, config.appName)
-  const message3 = sprintf(s.strings.contacts_permission_modal_body_3, config.appName)
+  const message1 = sprintf(lstrings.contacts_permission_modal_body_1, config.appName)
+  const message2 = sprintf(lstrings.contacts_permission_modal_body_2, config.appName)
+  const message3 = sprintf(lstrings.contacts_permission_modal_body_3, config.appName)
 
   return (
     <ButtonsModal
       bridge={bridge}
       disableCancel
       buttons={{
-        allow: { label: s.strings.string_allow },
-        deny: { label: s.strings.string_deny }
+        allow: { label: lstrings.string_allow },
+        deny: { label: lstrings.string_deny }
       }}
       fullScreen
     >
@@ -38,7 +38,7 @@ export function ContactsPermissionModal(props: Props) {
         <View style={styles.iconCircle}>
           <Fontello name="address-book" size={theme.rem(1.5)} color={theme.icon} />
         </View>
-        <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
+        <EdgeText style={styles.header}>{lstrings.contacts_permission_modal_title}</EdgeText>
       </View>
       <EdgeText numberOfLines={0} style={styles.message}>
         {message1}

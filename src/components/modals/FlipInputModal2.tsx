@@ -13,7 +13,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { Card } from '../cards/Card'
@@ -99,7 +99,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   const feeDisplayDenom = useDisplayDenom(pluginId, feeCurrencyCode)
   const walletName = useWalletName(wallet)
 
-  const flipInputHeaderText = headerText ?? sprintf(s.strings.send_from_wallet, walletName)
+  const flipInputHeaderText = headerText ?? sprintf(lstrings.send_from_wallet, walletName)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -143,7 +143,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   const renderExchangeRates = () => {
     return (
       <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{s.strings.string_rate}</EdgeText>
+        <EdgeText style={styles.secondaryTitle}>{lstrings.string_rate}</EdgeText>
         <ExchangeRate2 wallet={wallet} tokenId={tokenId} />
       </View>
     )
@@ -156,7 +156,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
     const parenString = ')'
     return (
       <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
+        <EdgeText style={styles.secondaryTitle}>{lstrings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
           {balance}
           <FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={balanceCrypto} />
@@ -176,7 +176,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
     return (
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
-          <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
+          <EdgeText style={styles.primaryTitle}>{lstrings.string_fee}</EdgeText>
           {onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
@@ -203,7 +203,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           onNext={handleCloseModal}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
+          <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
         ) : null}
       </Card>
     )

@@ -9,7 +9,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -153,7 +153,7 @@ export function WalletListModal(props: Props) {
   const handleWalletListPress = useHandler((walletId: string, currencyCode: string, _tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
-      showError(s.strings.network_alert_title)
+      showError(lstrings.network_alert_title)
     } else bridge.resolve({ walletId, currencyCode, customAsset })
   })
   const handleSearchClear = useHandler(() => {
@@ -168,10 +168,10 @@ export function WalletListModal(props: Props) {
     const result = await Airship.show<'continue' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.deposit_to_bank}
-        message={sprintf(s.strings.wallet_list_modal_confirm_s_bank_withdrawal, config.appName)}
+        title={lstrings.deposit_to_bank}
+        message={sprintf(lstrings.wallet_list_modal_confirm_s_bank_withdrawal, config.appName)}
         buttons={{
-          continue: { label: s.strings.legacy_address_modal_continue }
+          continue: { label: lstrings.legacy_address_modal_continue }
         }}
       />
     ))
@@ -198,7 +198,7 @@ export function WalletListModal(props: Props) {
     if (bankAccountsMap == null) return null
     if (!showBankOptions) return null
     if (Object.keys(bankAccountsMap).length === 0) {
-      return <MainButton label={s.strings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
+      return <MainButton label={lstrings.deposit_to_bank} marginRem={[0, 0.75, 1.5, 0.75]} type="secondary" onPress={handleShowBankPlugin} />
     }
     return (
       <View style={styles.bankMargin}>
@@ -235,10 +235,10 @@ export function WalletListModal(props: Props) {
       <ModalTitle center>{headerTitle}</ModalTitle>
       {bankSection}
       {customAssetSection}
-      {showBankOptions || showCustomAssets ? <EdgeText>{s.strings.your_wallets}</EdgeText> : null}
+      {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
       <OutlinedTextInput
         returnKeyType="search"
-        label={s.strings.search_wallets}
+        label={lstrings.search_wallets}
         onChangeText={setSearchText}
         onFocus={handleSearchFocus}
         onBlur={handleSearchUnfocus}
@@ -320,7 +320,7 @@ export const pickWallet = async ({
   account,
   allowedWalletIds,
   assets,
-  headerTitle = s.strings.select_wallet,
+  headerTitle = lstrings.select_wallet,
   navigation,
   showCreateWallet
 }: {

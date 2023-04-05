@@ -7,7 +7,7 @@ import { checkHandleAvailability } from '../../actions/CreateWalletActions'
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
@@ -89,7 +89,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     return (
       <View style={styles.buttons}>
         <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
-          <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+          <PrimaryButton.Text>{lstrings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
       </View>
     )
@@ -107,11 +107,11 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
 
     let chooseHandleErrorMessage = ''
     if (handleAvailableStatus === 'INVALID') {
-      chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
+      chooseHandleErrorMessage = lstrings.create_wallet_account_invalid_account_name
     } else if (handleAvailableStatus === 'UNAVAILABLE') {
-      chooseHandleErrorMessage = s.strings.create_wallet_account_account_name_unavailable
+      chooseHandleErrorMessage = lstrings.create_wallet_account_account_name_unavailable
     } else if (handleAvailableStatus === 'UNKNOWN_ERROR') {
-      chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
+      chooseHandleErrorMessage = lstrings.create_wallet_account_unknown_error
     }
 
     const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
@@ -125,10 +125,10 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
           <View style={styles.scrollableView}>
             <CryptoIcon marginRem={[1.5, 0, 0, 0]} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
-              <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
+              <Text style={styles.instructionalText}>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
             <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
-              <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>
+              <Text style={styles.handleRequirementsText}>{lstrings.create_wallet_account_requirements_eos}</Text>
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -143,7 +143,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
                 autoFocus
                 autoCorrect={false}
                 onChangeText={this.handleChangeHandle}
-                label={s.strings.create_wallet_account_handle}
+                label={lstrings.create_wallet_account_handle}
                 value={this.state.accountHandle}
                 returnKeyType="next"
                 onSubmitEditing={this.onSetup}

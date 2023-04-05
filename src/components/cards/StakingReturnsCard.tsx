@@ -4,7 +4,7 @@ import { View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
 import { PairIcons } from '../icons/PairIcons'
@@ -35,7 +35,7 @@ export function StakingReturnsCard({ fromCurrencyLogos, toCurrencyLogos, apy, st
   const renderEstimatedReturn = () => {
     if (apy == null || apy <= 0) return null
     const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
-    return <EdgeText>{sprintf(s.strings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
+    return <EdgeText>{sprintf(lstrings.stake_estimated_return, estimatedReturnMsg)}</EdgeText>
   }
 
   const renderStakeProvider = () => {

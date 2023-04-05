@@ -7,7 +7,7 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import { Theme } from '../../types/Theme'
@@ -67,11 +67,11 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
               </View>
               <View style={styles.spacedRow}>
                 <View style={styles.column}>
-                  <EdgeText style={styles.textSecondary}>{s.strings.loan_collateral_value}</EdgeText>
+                  <EdgeText style={styles.textSecondary}>{lstrings.loan_collateral_value}</EdgeText>
                   <EdgeText style={styles.textPrimary}>{displayCollateralTotal}</EdgeText>
                 </View>
                 <View style={styles.column}>
-                  <EdgeText style={styles.textSecondary}>{s.strings.loan_interest_rate}</EdgeText>
+                  <EdgeText style={styles.textSecondary}>{lstrings.loan_interest_rate}</EdgeText>
                   <EdgeText style={styles.textPrimary}>{displayInterestTotal}</EdgeText>
                 </View>
               </View>
@@ -84,7 +84,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     showError(err.message)
 
     // Render a failed card
-    return <Alert marginRem={[0.5, 0.5, 0.5, 0.5]} title={s.strings.send_scene_error_title} message={s.strings.loan_failed_loan} type="error" />
+    return <Alert marginRem={[0.5, 0.5, 0.5, 0.5]} title={lstrings.send_scene_error_title} message={lstrings.loan_failed_loan} type="error" />
   }
 }
 

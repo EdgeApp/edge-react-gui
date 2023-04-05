@@ -9,7 +9,7 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
@@ -111,14 +111,14 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }
 
   const handleSubmit = async () => {
-    if (tx == null) return setError(s.strings.create_wallet_account_error_sending_transaction)
+    if (tx == null) return setError(lstrings.create_wallet_account_error_sending_transaction)
     setLoading(true)
     try {
       const signedTx = await currencyWallet.signTx(tx)
       await currencyWallet.broadcastTx(signedTx)
       const messages = {
-        add: s.strings.staking_success,
-        remove: s.strings.staking_unstake_success
+        add: lstrings.staking_success,
+        remove: lstrings.staking_unstake_success
       }
       showToast(messages[change])
       navigation.goBack()
@@ -148,10 +148,10 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       return (
         <ThemedModal bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
           <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
-            {s.strings.staking_change_unlock_explainer_title}
+            {lstrings.staking_change_unlock_explainer_title}
           </ModalTitle>
-          <ModalMessage>{s.strings.staking_change_unlock_explainer1}</ModalMessage>
-          <ModalMessage>{s.strings.staking_change_unlock_explainer2}</ModalMessage>
+          <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
+          <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
           <ModalFooter onPress={bridge.resolve} />
         </ThemedModal>
       )
@@ -184,7 +184,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       // If no address is found, we do not define the selectedFioAddress
       if (fioAddress == null) return
       // Addresses must have at least 1 bundled transaction; we rely on bundle txs and don't yet support fee-based tx for staking
-      if (fioAddress.bundledTxs < 1) return setError(new Error(sprintf(s.strings.staking_no_bundled_txs_error, fioAddress.name)))
+      if (fioAddress.bundledTxs < 1) return setError(new Error(sprintf(lstrings.staking_no_bundled_txs_error, fioAddress.name)))
 
       setSelectedFioAddress(fioAddress.name)
     }
@@ -199,7 +199,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
 
     // If the selectedFioAddress is not defined, then we will not be able to complete the transaction.
     if (selectedFioAddress == null) {
-      setError(new Error(s.strings.staking_no_fio_address_error))
+      setError(new Error(lstrings.staking_no_fio_address_error))
       return
     }
 
@@ -237,17 +237,17 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   }, [nativeAmount])
 
   const renderAdd = () => {
-    const apyValue = sprintf(apy === maxApy ? s.strings.staking_estimated_return_up_to : s.strings.staking_estimated_return, `${apy}%`)
+    const apyValue = sprintf(apy === maxApy ? lstrings.staking_estimated_return_up_to : lstrings.staking_estimated_return, `${apy}%`)
     return (
       <>
-        <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_add_header, currencyCode)} underline withTopMargin>
+        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <View style={styles.explainer}>
-          <ModalMessage>{s.strings.staking_change_explaner1}</ModalMessage>
-          <ModalMessage>{s.strings.staking_change_explaner2}</ModalMessage>
+          <ModalMessage>{lstrings.staking_change_explaner1}</ModalMessage>
+          <ModalMessage>{lstrings.staking_change_explaner2}</ModalMessage>
         </View>
-        <Tile type="editable" title={s.strings.staking_change_add_amount_title} onPress={handleAmount}>
+        <Tile type="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
           <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
         </Tile>
         {apy != null && apy !== 0 && (
@@ -268,18 +268,18 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     }
     return (
       <>
-        <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_change_remove_header, currencyCode)} underline withTopMargin>
+        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_remove_header, currencyCode)} underline withTopMargin>
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
-        <Tile type="editable" title={s.strings.staking_change_remove_amount_title} onPress={handleAmount}>
+        <Tile type="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
           <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
         </Tile>
         {estReward !== '0' && (
-          <Tile type="static" title={s.strings.staking_estimated_rewards}>
+          <Tile type="static" title={lstrings.staking_estimated_rewards}>
             <EdgeText style={styles.amountText}>{estReward}</EdgeText>
           </Tile>
         )}
-        <Tile type="questionable" title={s.strings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
+        <Tile type="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
           <EdgeText>{unlockDateFormat}</EdgeText>
         </Tile>
       </>
@@ -290,7 +290,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     if (error == null) return null
 
     return (
-      <Tile type="static" title={s.strings.send_scene_error_title}>
+      <Tile type="static" title={lstrings.send_scene_error_title}>
         <EdgeText style={styles.errorMessage} numberOfLines={3}>
           {String(error)}
         </EdgeText>

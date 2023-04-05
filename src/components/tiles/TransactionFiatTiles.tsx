@@ -9,7 +9,7 @@ import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
@@ -75,8 +75,8 @@ export function TransactionFiatTiles(props: Props) {
         inputLabel={fiatCurrencyCode}
         returnKeyType="done"
         keyboardType="numeric"
-        submitLabel={s.strings.string_save}
-        title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
+        submitLabel={lstrings.string_save}
+        title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
     ))
       .then(async inputText => {
@@ -92,13 +92,13 @@ export function TransactionFiatTiles(props: Props) {
 
   return (
     <>
-      <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
+      <Tile type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
         <View style={styles.tileRow}>
           <EdgeText>{fiatSymbol + ' '}</EdgeText>
           <EdgeText>{displayFiatText}</EdgeText>
         </View>
       </Tile>
-      <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
+      <Tile type="static" title={lstrings.transaction_details_amount_current_price}>
         <View style={styles.tileRow}>
           <EdgeText>{fiatSymbol + ' '}</EdgeText>
           <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>

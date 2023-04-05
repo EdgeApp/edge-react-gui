@@ -14,7 +14,7 @@ import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
@@ -69,8 +69,8 @@ export const LoanStatusSceneComponent = (props: Props) => {
     const approve = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
-        title={s.strings.loan_status_cancel_txs}
-        body={sprintf(s.strings.loan_status_cancel_txs_modal_msg, config.appName)}
+        title={lstrings.loan_status_cancel_txs}
+        body={sprintf(lstrings.loan_status_cancel_txs_modal_msg, config.appName)}
         isSkippable
       />
     ))
@@ -102,7 +102,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
-        title={s.strings.loan_status_title}
+        title={lstrings.loan_status_title}
         underline
         withTopMargin
       />
@@ -122,9 +122,9 @@ export const LoanStatusSceneComponent = (props: Props) => {
             ) : null}
           </View>
           {isProgramDone ? (
-            <MainButton label={s.strings.string_done_cap} type="secondary" onPress={handleDonePress} marginRem={buttonMargin} />
+            <MainButton label={lstrings.string_done_cap} type="secondary" onPress={handleDonePress} marginRem={buttonMargin} />
           ) : (
-            <MainButton label={s.strings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={buttonMargin} />
+            <MainButton label={lstrings.loan_status_cancel_txs} type="secondary" onPress={handleCancelPress} marginRem={buttonMargin} />
           )}
           {isProgramDone ? <ConfettiCannon count={250} origin={{ x: -50, y: -50 }} fallSpeed={4000} /> : null}
         </View>

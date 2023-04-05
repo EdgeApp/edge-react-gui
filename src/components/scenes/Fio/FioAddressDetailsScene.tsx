@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { ConnectWalletsConnector as ConnectWallets } from '../../../modules/FioAddress/components/ConnectWallets'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
@@ -41,8 +41,8 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { route } = this.props
     const { fioAddressName } = route.params
     if (!fioAddressName) {
-      Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
-        { text: s.strings.fio_address_details_screen_alert_button }
+      Alert.alert(lstrings.fio_address_details_screen_alert_title, lstrings.fio_address_details_screen_alert_message, [
+        { text: lstrings.fio_address_details_screen_alert_button }
       ])
     }
     this.findFioWallet()
@@ -69,7 +69,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         refreshAfterAddBundledTxs: true
       })
     } else {
-      showError(s.strings.fio_wallet_missing_for_fio_address)
+      showError(lstrings.fio_wallet_missing_for_fio_address)
     }
   }
 
@@ -87,14 +87,14 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         <SettingsTappableRow onPress={this._onPressAccountSettings}>
           <IonIcon name="ios-warning" color={theme.warningIcon} style={styles.settingsIcon} />
           <EdgeText style={styles.settingsWarning} numberOfLines={4}>
-            {!bundledTxs ? s.strings.fio_address_details_no_bundled_txs : s.strings.fio_address_details_bundled_txs_out_soon}
+            {!bundledTxs ? lstrings.fio_address_details_no_bundled_txs : lstrings.fio_address_details_bundled_txs_out_soon}
           </EdgeText>
         </SettingsTappableRow>
       )
     }
 
     return (
-      <SettingsTappableRow label={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
+      <SettingsTappableRow label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
         <IonIcon name="ios-settings" color={theme.icon} style={styles.settingsIcon} />
       </SettingsTappableRow>
     )
@@ -104,7 +104,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { navigation, theme, route } = this.props
     const { fioAddressName, bundledTxs } = route.params
     const styles = getStyles(theme)
-    const bundledTxsLabel = `${s.strings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
+    const bundledTxsLabel = `${lstrings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
 
     return (
       <SceneWrapper background="theme">
@@ -112,7 +112,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         {this.renderAccountSettings()}
         <SettingsHeaderRow
           icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
-          label={s.strings.fio_address_details_connect_to_wallets}
+          label={lstrings.fio_address_details_connect_to_wallets}
         />
         <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
       </SceneWrapper>

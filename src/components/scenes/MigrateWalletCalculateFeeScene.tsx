@@ -8,7 +8,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -180,7 +180,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
               if (e instanceof InsufficientFundsError) {
                 bundlesFeeTotals.set(key, e)
               } else {
-                bundlesFeeTotals.set(key, Error(s.strings.migrate_unknown_error_fragment))
+                bundlesFeeTotals.set(key, Error(lstrings.migrate_unknown_error_fragment))
               }
             }
           }
@@ -217,9 +217,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <View style={styles.content}>
-        <SceneHeader title={s.strings.migrate_wallets_calculate_fee_title} withTopMargin />
+        <SceneHeader title={lstrings.migrate_wallets_calculate_fee_title} withTopMargin />
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
-          {s.strings.migrate_wallet_instructions_fragment}
+          {lstrings.migrate_wallet_instructions_fragment}
         </EdgeText>
         <FlashList
           automaticallyAdjustContentInsets={false}

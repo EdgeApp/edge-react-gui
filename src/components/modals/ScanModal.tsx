@@ -9,7 +9,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import RNQRGenerator from 'rn-qr-generator'
 
 import { useLayout } from '../../hooks/useLayout'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { QrPeephole } from '../common/QrPeephole'
@@ -96,7 +96,7 @@ export const ScanModal = (props: Props) => {
         const asset = result.assets != null ? result.assets[0] : undefined
 
         if (asset == null) {
-          showWarning(s.strings.scan_camera_missing_qrcode)
+          showWarning(lstrings.scan_camera_missing_qrcode)
           return
         }
 
@@ -106,7 +106,7 @@ export const ScanModal = (props: Props) => {
           })
 
           if (response.values.length === 0) {
-            showWarning(s.strings.scan_camera_missing_qrcode)
+            showWarning(lstrings.scan_camera_missing_qrcode)
             return
           }
 
@@ -172,15 +172,15 @@ export const ScanModal = (props: Props) => {
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
                 <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
                   <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
-                  <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
+                  <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
                   <Ionicon style={styles.icon} name="albums-outline" />
-                  <EdgeText>{s.strings.fragment_send_album}</EdgeText>
+                  <EdgeText>{lstrings.fragment_send_album}</EdgeText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={handleTextInput}>
                   <Ionicon style={styles.icon} name="pencil-outline" />
-                  <EdgeText>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+                  <EdgeText>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
                 </TouchableOpacity>
               </View>
             </View>
@@ -191,8 +191,8 @@ export const ScanModal = (props: Props) => {
 
     return (
       <View style={styles.cameraPermissionContainer}>
-        <ModalMessage>{s.strings.scan_camera_permission_denied}</ModalMessage>
-        <MainButton onPress={handleSettings} label={s.strings.open_settings} marginRem={0.5} />
+        <ModalMessage>{lstrings.scan_camera_permission_denied}</ModalMessage>
+        <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={0.5} />
       </View>
     )
   }

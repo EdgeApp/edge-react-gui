@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -64,7 +64,7 @@ const ConfirmComponent = (props: Props) => {
         {renderInfoTiles()}
         <View style={styles.footer}>
           <SafeSlider disabled={false} onSlidingComplete={handleSliderComplete} />
-          <MainButton label={s.strings.string_cancel_cap} type="escape" marginRem={[1]} onPress={handleBackButton} alignSelf="center" />
+          <MainButton label={lstrings.string_cancel_cap} type="escape" marginRem={[1]} onPress={handleBackButton} alignSelf="center" />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

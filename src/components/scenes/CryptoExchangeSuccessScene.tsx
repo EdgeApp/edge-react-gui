@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
@@ -76,15 +76,15 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
     return (
       <SceneWrapper background="theme">
         <View style={styles.container}>
-          <EdgeText style={styles.title}>{s.strings.exchange_congratulations}</EdgeText>
+          <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
           <EdgeText style={styles.text} numberOfLines={2}>
-            {s.strings.exchange_congratulations_msg}
+            {lstrings.exchange_congratulations_msg}
           </EdgeText>
           <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
-            {s.strings.exchange_congratulations_msg_info}
+            {lstrings.exchange_congratulations_msg_info}
           </EdgeText>
           <Fade visible={showButton}>
-            <MainButton label={s.strings.string_done_cap} type="secondary" onPress={this.done} />
+            <MainButton label={lstrings.string_done_cap} type="secondary" onPress={this.done} />
           </Fade>
           {this.renderConfetti()}
         </View>

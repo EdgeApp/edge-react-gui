@@ -11,7 +11,7 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { Slider } from '../../../components/themed/Slider'
 import { Tile } from '../../../components/tiles/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
 import { NavigationBase } from '../../../types/routerTypes'
@@ -87,15 +87,15 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { onSubmit, onSuccess, successMessage, addressTitles } = this.props
     const { paymentWallet, fee } = this.state
     if (!paymentWallet) {
-      const msg = addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain
+      const msg = addressTitles ? lstrings.fio_wallet_missing_for_fio_address : lstrings.fio_wallet_missing_for_fio_domain
       showError(msg)
       this.setState({ error: msg })
       return
     }
 
     if (fee == null) {
-      showError(s.strings.fio_get_fee_err_msg)
-      this.setState({ error: s.strings.fio_get_fee_err_msg })
+      showError(lstrings.fio_get_fee_err_msg)
+      this.setState({ error: lstrings.fio_get_fee_err_msg })
       return
     }
 
@@ -119,7 +119,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { fioWallet } = this.props
     const allowedCurrencyCodes: string[] = [fioWallet.currencyInfo.currencyCode]
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
@@ -166,7 +166,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       const availbleBalance = getAvailableBalance(paymentWallet)
       this.setState({ balance: this.formatFio(availbleBalance) })
     } else {
-      showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
+      showError(addressTitles ? lstrings.fio_wallet_missing_for_fio_address : lstrings.fio_wallet_missing_for_fio_domain)
     }
   }
 
@@ -185,16 +185,16 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     if (feeLoading || !showSlider) return null
 
-    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
+    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? lstrings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <>
         <Tile
           type="static"
-          title={s.strings.fio_action_fee_label}
-          body={displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
+          title={lstrings.fio_action_fee_label}
+          body={displayFee ? `${displayFee} ${lstrings.fio_address_confirm_screen_fio_label}` : lstrings.fio_address_confirm_screen_free_label}
         />
         {displayFee ? (
-          <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
+          <Tile type="static" title={lstrings.fio_address_confirm_screen_balance_label}>
             <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
           </Tile>
         ) : null}
@@ -212,7 +212,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {showPaymentWalletPicker && fioWallets.length > 1 ? (
-          <Tile type="editable" title={s.strings.select_wallet} onPress={this.handleWalletPress} body={paymentWallet ? getWalletName(paymentWallet) : ''} />
+          <Tile type="editable" title={lstrings.select_wallet} onPress={this.handleWalletPress} body={paymentWallet ? getWalletName(paymentWallet) : ''} />
         ) : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
@@ -222,14 +222,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
               onSlidingComplete={this.onConfirm}
               disabled={displayFee > balance || loading}
               showSpinner={loading}
-              disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
+              disabledText={lstrings.fio_address_confirm_screen_disabled_slider_label}
             />
           </View>
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
           {!feeLoading && (
-            <MainButton disabled={loading || feeLoading} label={s.strings.string_cancel_cap} type="secondary" onPress={this.props.cancelOperation} />
+            <MainButton disabled={loading || feeLoading} label={lstrings.string_cancel_cap} type="secondary" onPress={this.props.cancelOperation} />
           )}
         </View>
       </View>

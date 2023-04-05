@@ -4,7 +4,7 @@ import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -34,7 +34,7 @@ export class TileComponent extends React.PureComponent<Props> {
   copy = () => {
     if (!this.props.body) return
     Clipboard.setString(this.props.body)
-    showToast(s.strings.fragment_copied)
+    showToast(lstrings.fragment_copied)
   }
 
   handlePress = () => {

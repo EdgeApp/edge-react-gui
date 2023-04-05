@@ -5,7 +5,7 @@ import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle,
 import Entypo from 'react-native-vector-icons/Entypo'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -34,7 +34,7 @@ export const SafeSlider = (props: Props) => {
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || completed
-  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+  const sliderText = !sliderDisabled ? lstrings.send_confirmation_slide_to_confirm : disabledText || lstrings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
