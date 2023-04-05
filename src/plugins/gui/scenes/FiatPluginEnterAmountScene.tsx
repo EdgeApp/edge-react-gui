@@ -24,7 +24,7 @@ export interface FiatPluginEnterAmountParams {
   label1: string
   label2: string
   onChangeText: (fieldNum: number, value: string) => Promise<void>
-  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<any>) => Promise<string | undefined>
+  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<any>) => void
   onPoweredByClick: (stateManager: StateManager<any>) => void
   headerIconUri?: string
 }
@@ -72,11 +72,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   if (firstRun.current && initState?.value1 != null) {
     stateManager.update({ value2: ' ', spinner2: true })
-    onFieldChange(1, initState?.value1, stateManager).then(val => {
-      if (typeof val === 'string') {
-        stateManager.update({ value2: val, spinner2: false })
-      }
-    })
+    onFieldChange(1, initState?.value1, stateManager)
   }
   firstRun.current = false
   let headerIcon = null
@@ -88,19 +84,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     lastUsed.current = 1
     onChangeText(1, value)
     stateManager.update({ value1: value, value2: ' ', spinner2: true })
-    onFieldChange(1, value, stateManager).then(v => {
-      if (typeof v === 'string') stateManager.update({ value2: v })
-      stateManager.update({ spinner2: false })
-    })
+    onFieldChange(1, value, stateManager)
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
     onChangeText(2, value)
     stateManager.update({ value1: ' ', value2: value, spinner1: true })
-    onFieldChange(2, value, stateManager).then(v => {
-      if (typeof v === 'string') stateManager.update({ value1: v })
-      stateManager.update({ spinner1: false })
-    })
+    onFieldChange(2, value, stateManager)
   })
   const handlePoweredByPress = useHandler(() => onPoweredByClick(stateManager))
   const handleSubmit = useHandler(() => {
