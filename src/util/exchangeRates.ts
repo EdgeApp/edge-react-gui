@@ -75,8 +75,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
       const json = await response.json()
       const cleanedRates = asRatesResponse(json)
       for (const rateObj of cleanedRates.data) {
-        const { currency_pair: currencyPair, exchangeRate, date } = rateObj
-        if (exchangeRate == null) continue
+        const { currency_pair: currencyPair, date } = rateObj
+        let { exchangeRate } = rateObj
+        if (exchangeRate == null) {
+          console.log(`${n} doQuery: ${currencyPair} ${date} exchangeRate=null`)
+          exchangeRate = '0'
+        }
         const rate = parseFloat(exchangeRate)
         const pairDate = makePairDate(currencyPair, date)
         rateMap[pairDate] = rate
