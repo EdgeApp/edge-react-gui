@@ -33,7 +33,7 @@ export interface FiatPluginEnterAmountParams {
   isBuy: boolean
   label1: string
   label2: string
-  convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+  onFieldChange: (sourceFieldNum: number, value: string) => Promise<string | undefined>
   onSubmit: (value: FiatPluginEnterAmountResponse) => Promise<void>
   getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   initialAmount1?: string
