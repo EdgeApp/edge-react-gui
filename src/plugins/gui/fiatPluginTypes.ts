@@ -33,6 +33,7 @@ export interface FiatPluginEnterAmountParams {
   label1: string
   label2: string
   convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+  onSubmit: (value: FiatPluginEnterAmountResponse) => Promise<void>
   getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   initialAmount1?: string
   headerIconUri?: string
@@ -41,9 +42,6 @@ export interface FiatPluginEnterAmountParams {
 export interface FiatPluginSepaFormParams {
   headerTitle: string
   headerIconUri?: string
-  // TODO: onSubmit handling control by the plugin/provider may still be needed
-  // to communicate the working status of the action and success/failure to the
-  // scene, unless some other callback API is designed
   onSubmit: (sepaInfo: SepaInfo) => Promise<void>
 }
 

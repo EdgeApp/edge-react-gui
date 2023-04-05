@@ -369,71 +369,57 @@ export const bityProvider: FiatProviderFactory = {
             // Bity only checks SEPA info format validity.
             // Home address and KYC is only required for sell.
 
-            const sepaInfo = await showUi.sepaForm({
-              headerTitle: lstrings.enter_bank_info_title,
-              onSubmit: async (formSepaInfo: SepaInfo) => {
-                // TODO: See fiatPluginTypes.ts
-              }
-            })
-            showUi.popScene()
-
-            if (sepaInfo == null) {
-              return
-            }
-
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
-            let approveQuoteRes: BityApproveQuoteResponse | null = null
 
-            try {
-              if (isBuy) {
-                approveQuoteRes = await executeBuyOrderFetch(coreWallet, bityQuote, fiatCode, sepaInfo, outputCurrencyCode, cryptoAddress, clientId)
-              } else {
-                // Sell approval
-                const homeAddress = await showUi.addressForm({
-                  countryCode: regionCode.countryCode,
-                  headerTitle: lstrings.home_address_title,
-                  onSubmit: async (formAddress: HomeAddress) => {
-                    // TODO: See fiatPluginTypes.ts
+            await showUi.sepaForm({
+              headerTitle: lstrings.enter_bank_info_title,
+              onSubmit: async (sepaInfo: SepaInfo) => {
+                let approveQuoteRes: BityApproveQuoteResponse | null = null
+                try {
+                  if (isBuy) {
+                    approveQuoteRes = await executeBuyOrderFetch(coreWallet, bityQuote, fiatCode, sepaInfo, outputCurrencyCode, cryptoAddress, clientId)
+                  } else {
+                    // Sell approval - Needs extra address input step
+                    await showUi.addressForm({
+                      countryCode: regionCode.countryCode,
+                      headerTitle: lstrings.home_address_title,
+                      onSubmit: async (homeAddress: HomeAddress) => {
+                        approveQuoteRes = await executeSellOrderFetch(
+                          coreWallet,
+                          bityQuote,
+                          inputCurrencyCode,
+                          cryptoAddress,
+                          outputCurrencyCode,
+                          sepaInfo,
+                          homeAddress,
+                          clientId
+                        )
+                      }
+                    })
                   }
-                })
-                showUi.popScene()
+                } catch (e) {
+                  // TODO: Post-routing implementation: Route to the appropriate
+                  // scene for the user to fix depending on what was wrong with the
+                  // order.
+                  console.error('Bity order error: ', e)
+                }
 
-                if (homeAddress == null) {
+                if (approveQuoteRes == null) {
                   return
                 }
 
-                approveQuoteRes = await executeSellOrderFetch(
-                  coreWallet,
-                  bityQuote,
-                  inputCurrencyCode,
-                  cryptoAddress,
-                  outputCurrencyCode,
-                  sepaInfo,
-                  homeAddress,
-                  clientId
-                )
+                const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
+
+                if (isBuy) {
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
+                  await completeBuyOrder(paymentDetails, showUi, id, input, output)
+                } else {
+                  await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
+                }
+
+                showUi.popScene()
               }
-            } catch (e) {
-              // TODO: Post-routing implementation: Route to the appropriate
-              // scene for the user to fix depending on what was wrong with the
-              // order.
-              console.error('Bity order error: ', e)
-            }
-
-            if (approveQuoteRes == null) {
-              return
-            }
-
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
-
-            if (isBuy) {
-              await completeBuyOrder(paymentDetails, showUi, id, input, output)
-            } else {
-              await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
-            }
-
-            showUi.popScene()
+            })
           },
           closeQuote: async (): Promise<void> => {}
         }

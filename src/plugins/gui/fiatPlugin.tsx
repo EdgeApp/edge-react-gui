@@ -63,7 +63,7 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
+      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
       return await new Promise((resolve, reject) => {
         logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
@@ -77,32 +77,34 @@ export const executePlugin = async (params: {
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
             logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+            if (onSubmit != null) await onSubmit(value)
             resolve(value)
           }
         })
       })
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
-      const { countryCode, headerTitle, headerIconUri } = params
+      const { countryCode, headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
         navigation.navigate('guiPluginAddressForm', {
           countryCode,
           headerTitle,
           headerIconUri,
           onSubmit: async (homeAddress: HomeAddress) => {
-            logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+            if (onSubmit != null) await onSubmit(homeAddress)
             resolve(homeAddress)
           }
         })
       })
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
-      const { headerTitle, headerIconUri } = params
+      const { headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
         navigation.navigate('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
           onSubmit: async (sepaInfo: SepaInfo) => {
+            if (onSubmit != null) await onSubmit(sepaInfo)
             resolve(sepaInfo)
           }
         })
@@ -110,13 +112,14 @@ export const executePlugin = async (params: {
     },
     sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
       return await new Promise((resolve, reject) => {
-        const { headerTitle, promptMessage, transferInfo, headerIconUri } = params
+        const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
         navigation.navigate('guiPluginSepaTransfer', {
           headerTitle,
           promptMessage,
           transferInfo,
           headerIconUri,
           onDone: async () => {
+            if (onDone != null) await onDone()
             resolve()
           }
         })
