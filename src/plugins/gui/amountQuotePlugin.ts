@@ -158,7 +158,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
           enterAmountMethods = methods
         },
-        convertValue: async (sourceFieldNum: number, value: string): Promise<string | undefined> => {
+        onFieldChange: async (sourceFieldNum: number, value: string): Promise<string | undefined> => {
           if (!isValidInput(value)) {
             if (enterAmountMethods != null)
               enterAmountMethods.setStatusText({ statusText: lstrings.create_wallet_invalid_input, options: { textType: 'error' } })

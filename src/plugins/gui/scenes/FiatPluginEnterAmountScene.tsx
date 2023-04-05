@@ -22,7 +22,7 @@ export interface FiatPluginEnterAmountParams {
   label1: string
   label2: string
   onChangeText: (fieldNum: number, value: string) => Promise<void>
-  convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+  onFieldChange: (sourceFieldNum: number, value: string) => Promise<string | undefined>
   getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   initialAmount1?: string
   headerIconUri?: string
@@ -41,7 +41,7 @@ interface Props {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, convertValue, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
+  const { headerIconUri, headerTitle, onSubmit, onFieldChange, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
   const [value1, setValue1] = React.useState<string>(initialAmount1)
   const [value2, setValue2] = React.useState<string>('')
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
@@ -75,7 +75,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   if (firstRun.current && initialAmount1 != null) {
     setValue2(' ')
     setSpinner2(true)
-    convertValue(1, initialAmount1).then(val => {
+    onFieldChange(1, initialAmount1).then(val => {
       if (typeof val === 'string') {
         setValue2(val)
         setSpinner2(false)
@@ -94,7 +94,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     setValue1(value)
     setValue2(' ')
     setSpinner2(true)
-    convertValue(1, value).then(v => {
+    onFieldChange(1, value).then(v => {
       if (typeof v === 'string') setValue2(v)
       setSpinner2(false)
     })
@@ -105,7 +105,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     setValue2(value)
     setValue1(' ')
     setSpinner1(true)
-    convertValue(2, value).then(v => {
+    onFieldChange(2, value).then(v => {
       if (typeof v === 'string') setValue1(v)
       setSpinner1(false)
     })
