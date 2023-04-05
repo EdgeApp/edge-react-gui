@@ -31,6 +31,8 @@ export interface FiatPluginEnterAmountParams {
 
 export interface EnterAmountState {
   poweredBy?: EnterAmountPoweredBy
+  spinner1: boolean
+  spinner2: boolean
   statusText: {
     content: string
     textType?: 'warning' | 'error'
@@ -49,6 +51,8 @@ interface Props {
 }
 
 const defaultEnterAmountState: EnterAmountState = {
+  spinner1: false,
+  spinner2: false,
   statusText: {
     content: ''
   },
@@ -60,21 +64,17 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText, label1, label2 } = props.route.params
-  const [spinner1, setSpinner1] = React.useState<boolean>(false)
-  const [spinner2, setSpinner2] = React.useState<boolean>(false)
   const firstRun = React.useRef<boolean>(true)
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
-  const { value1, value2, poweredBy, statusText } = stateManager.state
+  const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
 
   if (firstRun.current && initState?.value1 != null) {
-    stateManager.update({ value2: ' ' })
-    setSpinner2(true)
+    stateManager.update({ value2: ' ', spinner2: true })
     onFieldChange(1, initState?.value1, stateManager).then(val => {
       if (typeof val === 'string') {
-        stateManager.update({ value2: val })
-        setSpinner2(false)
+        stateManager.update({ value2: val, spinner2: false })
       }
     })
   }
@@ -87,21 +87,19 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
     onChangeText(1, value)
-    stateManager.update({ value1: value, value2: ' ' })
-    setSpinner2(true)
+    stateManager.update({ value1: value, value2: ' ', spinner2: true })
     onFieldChange(1, value, stateManager).then(v => {
       if (typeof v === 'string') stateManager.update({ value2: v })
-      setSpinner2(false)
+      stateManager.update({ spinner2: false })
     })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
     onChangeText(2, value)
-    stateManager.update({ value1: ' ', value2: value })
-    setSpinner1(true)
+    stateManager.update({ value1: ' ', value2: value, spinner1: true })
     onFieldChange(2, value, stateManager).then(v => {
       if (typeof v === 'string') stateManager.update({ value1: v })
-      setSpinner1(false)
+      stateManager.update({ spinner1: false })
     })
   })
   const handlePoweredByPress = useHandler(() => onPoweredByClick(stateManager))
