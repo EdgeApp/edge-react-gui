@@ -703,15 +703,6 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="transactionList"
-        component={TransactionList}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
-      />
-      <Stack.Screen
         name="transactionsExport"
         component={TransactionsExportScene}
         options={{
