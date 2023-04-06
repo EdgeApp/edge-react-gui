@@ -34,6 +34,7 @@
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
 import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
+import { FiatDirection, FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { AppParamList } from './routerTypes'
 
 export interface AztecoLink {
@@ -59,11 +60,16 @@ export interface PasswordRecoveryLink {
 export interface PluginLink {
   type: 'plugin'
   pluginId: string
-  direction: string
-  providerId: string
-  paymentType: string
   path: string
   query: { [key: string]: string | null }
+}
+
+export interface FiatPluginLink {
+  type: 'fiatPlugin'
+  pluginId: string
+  direction?: FiatDirection
+  providerId?: string
+  paymentType?: FiatPaymentType
 }
 
 export interface PromotionLink {
@@ -96,16 +102,17 @@ export interface DevLink {
 
 export type DeepLink =
   | AztecoLink
-  | PaymentProtoLink
+  | DevLink
   | EdgeLoginLink
+  | FiatPluginLink
   | PasswordRecoveryLink
+  | PaymentProtoLink
   | PluginLink
   | PriceChangePayload
   | PromotionLink
   | RequestAddressLink
-  | WalletConnectLink
   | SwapLink
-  | DevLink
+  | WalletConnectLink
   | {
       type: 'other'
       protocol: string // Without the ':'

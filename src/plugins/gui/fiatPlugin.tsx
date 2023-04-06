@@ -5,12 +5,12 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
-import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationProp } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
@@ -23,11 +23,11 @@ import {
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
-  disablePlugins: DisablePluginMap
   account: EdgeAccount
   direction: 'buy' | 'sell'
+  disablePlugins: NestedDisableMap
   guiPlugin: GuiPlugin
-  navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
+  navigation: NavigationBase
   paymentType?: FiatPaymentType
   providerId?: string
   regionCode: FiatPluginRegionCode
@@ -86,7 +86,15 @@ export const executePlugin = async (params: {
     throw new Error('executePlugin: missing nativePlugin')
   }
 
-  const plugin = await guiPlugin.nativePlugin({ disablePlugins, showUi, account })
+  const filteredDisablePlugins: DisablePluginMap = {}
+  for (const key of Object.keys(disablePlugins)) {
+    if (disablePlugins[key] === true) filteredDisablePlugins[key] = true
+  }
+  const plugin = await guiPlugin.nativePlugin({
+    disablePlugins: filteredDisablePlugins,
+    showUi,
+    account
+  })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
   }

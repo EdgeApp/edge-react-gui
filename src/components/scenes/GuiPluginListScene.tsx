@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import { NestedPluginMap } from '../../actions/ExchangeInfoActions'
+import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { updateOneSetting } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
@@ -19,14 +19,12 @@ import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
-import { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
-import { UriQueryMap } from '../../types/WebTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
@@ -69,17 +67,6 @@ const pluginPartnerLogos = {
   bitaccess: 'guiPluginLogoBitaccess'
 }
 
-export interface PluginListProps {
-  direction: 'buy' | 'sell'
-  pluginId?: string
-  providerId?: string
-  paymentType?: FiatPaymentType
-  deepPath?: string
-  deepQuery?: {
-    [key: string]: string | null
-  }
-}
-
 interface OwnProps {
   navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
   route: RouteProp<'pluginListBuy'> | RouteProp<'pluginListSell'>
@@ -92,7 +79,7 @@ interface StateProps {
   coreDisklet: Disklet
   countryCode: string
   developerModeOn: boolean
-  disablePlugins: NestedPluginMap
+  disablePlugins: NestedDisableMap
 }
 
 interface DispatchProps {
@@ -142,11 +129,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         }
       })
       .catch((e: any) => console.error(e.message))
-    if (this.props.route.params.pluginId != null) {
-      const { deepPath, deepQuery = {}, paymentType, pluginId, providerId } = this.props.route.params
-      // The scene was deeplinked into. Route directly to plugin
-      this.openPlugin({ deepPath, deepQuery, paymentType, pluginId, providerId })
-    }
   }
 
   componentWillUnmount() {
@@ -248,33 +230,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPluginRow(listRow: GuiPluginRow) {
-    const { pluginId, paymentType, deepPath, deepQuery } = listRow
-    this.openPlugin({ pluginId, paymentType, deepPath, deepQuery })
-  }
-
-  async openPlugin({
-    pluginId,
-    paymentType,
-    providerId,
-    deepPath,
-    deepQuery = {}
-  }: {
-    pluginId: string
-    paymentType?: FiatPaymentType
-    providerId?: string
-    deepPath?: string
-    deepQuery: UriQueryMap
-  }) {
+  async openPlugin(listRow: GuiPluginRow) {
     const { countryCode, disablePlugins, navigation, account } = this.props
+    const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
-    // Add countryCode
-    if (plugin.needsCountryCode) {
-      deepQuery.countryCode = countryCode
-    }
-
     // Grab a custom URI if necessary:
+    let { deepPath = undefined } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       deepPath = await Airship.show<string | undefined>(bridge => (
@@ -301,19 +263,19 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const direction = this.getSceneDirection()
     if (plugin.nativePlugin != null) {
-      const filteredDisablePlugins: { [pluginId: string]: true } = {}
-      for (const [key, value] of Object.entries(disablePlugins[plugin.pluginId] ?? {})) {
-        if (value === true) filteredDisablePlugins[key] = true
-      }
+      const disableProviders = disablePlugins[pluginId]
+
+      // This should not happen, since we don't show disabled rows:
+      if (disableProviders === true) return
+
       await executePlugin({
-        disablePlugins: filteredDisablePlugins,
-        guiPlugin: plugin,
+        account,
         direction,
-        regionCode: { countryCode },
-        paymentType,
-        providerId,
+        disablePlugins: disableProviders,
+        guiPlugin: plugin,
         navigation,
-        account
+        paymentType,
+        regionCode: { countryCode }
       })
     } else {
       // Launch!

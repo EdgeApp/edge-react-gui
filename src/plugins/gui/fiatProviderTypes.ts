@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { EdgeTokenId } from '../../types/types'
-import { FiatPaymentTypes, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
+import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
   showUi: FiatPluginUi
@@ -20,7 +20,7 @@ export interface FiatProviderQuote {
   readonly direction: 'buy' | 'sell'
   readonly expirationDate?: Date
   readonly regionCode: FiatPluginRegionCode
-  readonly paymentTypes: FiatPaymentTypes
+  readonly paymentTypes: FiatPaymentType[]
 
   approveQuote: (params: FiatProviderApproveQuoteParams) => Promise<void>
   closeQuote: () => Promise<void>
@@ -64,7 +64,7 @@ export interface FiatProviderGetQuoteParams {
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
-  paymentTypes: FiatPaymentTypes
+  paymentTypes: FiatPaymentType[]
 }
 
 export interface FiatProviderStore {

@@ -13,34 +13,22 @@ const asDisableAsset = asObject({
   tokenId: asOptional(asString) // May also be 'all' to disable all tokens
 })
 
-const asDisablePluginsMap = asMaybe(asObject(asValue(true)), {})
+const asTrue = asValue<[true]>(true)
+const asDisablePluginsMap = asObject(asTrue)
 export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
 
-export interface NestedPluginMap {
-  [pluginId: string]: true | NestedPluginMap
+export interface NestedDisableMap {
+  [pluginId: string]: true | NestedDisableMap
 }
+const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(asEither(asTrue, raw => asNestedDisableMap(raw)))
 
-const asNestedPlugin: Cleaner<true | NestedPluginMap> = asEither(
-  raw => {
-    if (raw === true) return raw
-    throw new Error('Must be true')
-  },
-  asObject(raw => {
-    if (typeof raw === 'object' && Object.keys(raw).length === 0) throw new Error('Invalid disablePlugins object')
-    return asNestedPlugin(raw)
-  })
-)
-
-const asNestedPluginMap = asMaybe(
-  asObject({
-    disablePlugins: asObject(asNestedPlugin)
-  }),
-  { disablePlugins: {} }
-)
+const asFiatDirectionInfo = asObject({
+  disablePlugins: asNestedDisableMap
+})
 
 export const asExchangeInfo = asObject({
-  buy: asNestedPluginMap,
-  sell: asNestedPluginMap,
+  buy: asMaybe(asFiatDirectionInfo, { disablePlugins: {} }),
+  sell: asMaybe(asFiatDirectionInfo, { disablePlugins: {} }),
   swap: asMaybe(
     asObject({
       disableAssets: asMaybe(
@@ -50,7 +38,7 @@ export const asExchangeInfo = asObject({
         }),
         { source: [], destination: [] }
       ),
-      disablePlugins: asDisablePluginsMap
+      disablePlugins: asMaybe(asDisablePluginsMap, {})
     }),
     { disableAssets: { source: [], destination: [] }, disablePlugins: {} }
   )
