@@ -540,6 +540,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           initialRenderIndex={0}
           isHorizontal={false}
           keyExtractor={[Function]}
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           layoutProvider={
             GridLayoutProviderWithProps {
@@ -630,6 +631,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "create-undefined-ethereum": false,
                 },
                 "keyExtractor": [Function],
+                "keyboardDismissMode": "on-drag",
                 "keyboardShouldPersistTaps": "handled",
                 "numColumns": 1,
                 "renderItem": [Function],
