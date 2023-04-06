@@ -1,3 +1,4 @@
+import { asOptional } from 'cleaners'
 import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
@@ -119,9 +120,9 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return {
         type: 'fiatPlugin',
         pluginId,
-        direction: asFiatDirection(direction),
+        direction: asOptional(asFiatDirection)(direction),
         providerId,
-        paymentType: asFiatPaymentType(paymentType)
+        paymentType: asOptional(asFiatPaymentType)(paymentType)
       }
     }
 
