@@ -85,13 +85,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
     onChangeText({ value: { fieldNum: 1, value }, stateManager })
-    stateManager.update({ value1: value, value2: ' ', spinner2: true })
+    stateManager.update({ value1: value })
     onFieldChange({ value: { sourceFieldNum: 1, value: value }, stateManager })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
     onChangeText({ value: { fieldNum: 2, value }, stateManager })
-    stateManager.update({ value1: ' ', value2: value, spinner1: true })
+    stateManager.update({ value2: value })
     onFieldChange({ value: { sourceFieldNum: 2, value }, stateManager })
   })
   const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ value: undefined, stateManager }))
