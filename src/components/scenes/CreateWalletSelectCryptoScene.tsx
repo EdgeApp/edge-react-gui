@@ -258,6 +258,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             data={filteredCreateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
+            keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
