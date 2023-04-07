@@ -372,7 +372,7 @@ export const bityProvider: FiatProviderFactory = {
             const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
 
             await showUi.sepaForm({
-              headerTitle: lstrings.enter_bank_info_title,
+              headerTitle: lstrings.sepa_form_title,
               onSubmit: async (sepaInfo: SepaInfo) => {
                 let approveQuoteRes: BityApproveQuoteResponse | null = null
                 try {

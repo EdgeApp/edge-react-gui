@@ -246,7 +246,7 @@ export const AddressFormScene = React.memo((props: Props) => {
         <GuiFormField
           fieldType="address"
           autofocus
-          label={lstrings.address_line_1}
+          label={lstrings.form_field_title_address_line_1}
           value={formData.address}
           fieldRef={rAddressInput}
           onChangeText={handleChangeAddress}
@@ -271,15 +271,21 @@ export const AddressFormScene = React.memo((props: Props) => {
         </Animated.View>
         <GuiFormField
           fieldType="address2"
-          label={lstrings.address_line_2}
+          label={lstrings.form_field_title_address_line_2}
           value={formData.address2}
           onChangeText={handleChangeAddress2}
           onBlur={handleHideAddressHints}
         />
-        <GuiFormField fieldType="city" label={lstrings.address_city} value={formData.city} onChangeText={handleChangeCity} onBlur={handleHideAddressHints} />
+        <GuiFormField
+          fieldType="city"
+          label={lstrings.form_field_title_address_city}
+          value={formData.city}
+          onChangeText={handleChangeCity}
+          onBlur={handleHideAddressHints}
+        />
         <GuiFormField
           fieldType="state"
-          label={lstrings.address_state_province_region}
+          label={lstrings.form_field_title_address_state_province_region}
           value={formData.state}
           onChangeText={handleChangeState}
           onBlur={handleHideAddressHints}
@@ -287,7 +293,7 @@ export const AddressFormScene = React.memo((props: Props) => {
         <GuiFormField
           fieldType="postalcode"
           returnKeyType="done"
-          label={lstrings.address_zip_postal_code}
+          label={lstrings.form_field_title_address_zip_postal_code}
           value={formData.postalCode}
           onChangeText={handleChangePostalCode}
           onBlur={handleHideAddressHints}

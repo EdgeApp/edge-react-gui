@@ -1279,27 +1279,27 @@ const strings = {
 
   // #region GuiPlugins
 
-  account_owner: 'Account Owner',
-  address_city: 'City',
-  address_country: 'Country',
-  address_line_1: 'Address Line 1',
-  address_line_2: 'Address Line 2 (optional)',
-  address_state_province_region: 'Region/Provice/State',
-  address_zip_postal_code: 'Postal Code/Zip',
-  bank_info: 'Bank Info',
-  enter_bank_info_title: 'Enter Bank Info',
+  form_field_title_account_owner: 'Account Owner',
+  form_field_title_address_city: 'City',
+  form_field_title_address_country: 'Country',
+  form_field_title_address_line_1: 'Address Line 1',
+  form_field_title_address_line_2: 'Address Line 2 (optional)',
+  form_field_title_address_state_province_region: 'Region/Provice/State',
+  form_field_title_address_zip_postal_code: 'Postal Code/Zip',
+  form_field_title_iban: 'IBAN',
+  form_field_title_swift_bic: 'SWIFT/BIC',
+
+  bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',
-  iban: 'IBAN',
   input_output_currency: 'Currency',
   n_a: 'n/a',
   payment_details: 'Payment Details',
-  quote_input_title: 'Input',
-  quote_output_title: 'Output',
-  recipient: 'Recipient',
-  reference: 'Reference',
+  buy_sell_quote_input_title: 'Input',
+  buy_sell_quote_output_title: 'Output',
+  bank_transfer_reference: 'Reference',
+  sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
-  swift_bic: 'SWIFT/BIC',
 
   // #endregion GuiPlugins
 

@@ -62,10 +62,10 @@ export const SepaFormScene = React.memo((props: Props) => {
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" extraScrollHeight={theme.rem(2.75)} enableAutomaticScroll enableOnAndroid>
         <SceneHeader title={headerTitle} underline withTopMargin />
-        <EdgeText style={styles.formSectionTitle}>{lstrings.bank_info}</EdgeText>
-        <GuiFormField fieldType="name" value={name} label={lstrings.account_owner} onChangeText={handleNameInput} autofocus />
-        <GuiFormField fieldType="iban" value={iban} label={lstrings.iban} onChangeText={handleIbanInput} />
-        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.swift_bic} onChangeText={handleSwiftInput} />
+        <EdgeText style={styles.formSectionTitle}>{lstrings.bank_info_title}</EdgeText>
+        <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
+        <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
+        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
         <MainButton
           label={lstrings.string_next_capitalized}
           marginRem={[1, 0.5, 1, 0.5]}

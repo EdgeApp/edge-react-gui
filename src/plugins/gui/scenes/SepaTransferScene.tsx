@@ -32,7 +32,7 @@ export const SepaTransferScene = React.memo((props: Props) => {
     const { input, output, paymentDetails } = transferInfo
     return [
       {
-        groupTitle: lstrings.quote_input_title,
+        groupTitle: lstrings.buy_sell_quote_input_title,
         items: [
           {
             label: lstrings.string_amount,
@@ -45,7 +45,7 @@ export const SepaTransferScene = React.memo((props: Props) => {
         ]
       },
       {
-        groupTitle: lstrings.quote_output_title,
+        groupTitle: lstrings.buy_sell_quote_output_title,
         items: [
           {
             label: lstrings.string_amount,
@@ -69,11 +69,11 @@ export const SepaTransferScene = React.memo((props: Props) => {
             value: paymentDetails.id
           },
           {
-            label: lstrings.iban,
+            label: lstrings.form_field_title_iban,
             value: paymentDetails.iban
           },
           {
-            label: lstrings.swift_bic,
+            label: lstrings.form_field_title_swift_bic,
             value: paymentDetails.swiftBic
           },
           {
@@ -81,7 +81,7 @@ export const SepaTransferScene = React.memo((props: Props) => {
             value: paymentDetails.recipient
           },
           {
-            label: lstrings.reference,
+            label: lstrings.bank_transfer_reference,
             value: paymentDetails.reference
           }
         ]
