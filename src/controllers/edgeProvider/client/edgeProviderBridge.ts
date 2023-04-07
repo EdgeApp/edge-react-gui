@@ -34,7 +34,7 @@ declare const document: {
 // JSON-RPC bridge logic
 // ---------------------------------------------------------------------
 
-function getEdgeProvider(): Promise<EdgeProvider> {
+function makeEdgeProvider(): EdgeProvider {
   const pendingCalls = makePendingList()
 
   // Handle return messages from the GUI:
@@ -82,22 +82,27 @@ function getEdgeProvider(): Promise<EdgeProvider> {
       })
     }
   }
-
-  // Make an initial call to both connect with the other side and
-  // load the promo data:
-  return out.getDeepLink().then(deepLink => {
-    out.deepPath = deepLink.deepPath
-    out.deepQuery = deepLink.deepQuery
-    out.promoCode = deepLink.promoCode
-    return out
-  })
+  return out
 }
 
 // ---------------------------------------------------------------------
 // Start-up logic
 // ---------------------------------------------------------------------
 
-getEdgeProvider().then(edgeProvider => {
-  window.edgeProvider = edgeProvider
-  document.dispatchEvent(new Event('edgeProviderReady'))
-})
+// The WebView sometimes executes this script more than once,
+// but we only want one bridge to exist:
+if (window.edgeProviderBridge == null) {
+  const edgeProvider = makeEdgeProvider()
+
+  // Make an initial call to both connect with the other side and
+  // load the promo data:
+  edgeProvider.getDeepLink().then(deepLink => {
+    edgeProvider.deepPath = deepLink.deepPath
+    edgeProvider.deepQuery = deepLink.deepQuery
+    edgeProvider.promoCode = deepLink.promoCode
+
+    // Tell the world:
+    window.edgeProvider = edgeProvider
+    document.dispatchEvent(new Event('edgeProviderReady'))
+  })
+}
