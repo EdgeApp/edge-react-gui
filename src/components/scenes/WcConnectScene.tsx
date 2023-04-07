@@ -31,6 +31,12 @@ interface Props {
   route: RouteProp<'wcConnect'>
 }
 
+interface DappDetails {
+  subTitleText: string
+  bodyTitleText: string
+  dAppImage?: JSX.Element
+}
+
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
   const [selectedWallet, setSelectedWallet] = React.useState({ walletId: '', currencyCode: '' })
@@ -38,7 +44,7 @@ export const WcConnectScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { uri } = props.route.params
-  const [dappDetails, setDappDetails] = React.useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
+  const [dappDetails, setDappDetails] = React.useState<DappDetails>({ subTitleText: '', bodyTitleText: '' })
   const [walletAddress, setWalletAddress] = React.useState('')
 
   const account = useSelector(state => state.core.account)
@@ -64,15 +70,13 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  // @ts-expect-error
-  const handleRequestDapp = async walletId => {
+  const handleRequestDapp = async (walletId: string) => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
       const dAppName = String(dApp.peerMeta.name).split(' ')[0]
       setDappDetails({
         subTitleText: sprintf(lstrings.wc_confirm_subtitle, dAppName),
         bodyTitleText: sprintf(lstrings.wc_confirm_body_title, dAppName),
-        // @ts-expect-error
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e: any) {
@@ -137,7 +141,7 @@ export const WcConnectScene = (props: Props) => {
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>
-          {dAppImage !== '' && dAppImage}
+          {dAppImage == null ? null : dAppImage}
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>

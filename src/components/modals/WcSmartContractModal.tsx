@@ -96,22 +96,9 @@ export const WcSmartContractModal = (props: Props) => {
 
   const renderWarning = () => {
     return isInsufficientBal ? (
-      <Alert
-        // @ts-expect-error
-        marginTop={0.5}
-        title={lstrings.wc_smartcontract_warning_title}
-        message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
-        type="warning"
-      />
+      <Alert title={lstrings.wc_smartcontract_warning_title} message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)} type="warning" />
     ) : (
-      <Alert
-        numberOfLines={0}
-        // @ts-expect-error
-        marginTop={0.5}
-        title={lstrings.wc_smartcontract_warning_title}
-        message={lstrings.wc_smartcontract_warning_text}
-        type="warning"
-      />
+      <Alert numberOfLines={0} title={lstrings.wc_smartcontract_warning_title} message={lstrings.wc_smartcontract_warning_text} type="warning" />
     )
   }
 
