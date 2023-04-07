@@ -39,7 +39,7 @@ export function SwapDetailsTiles(props: Props) {
   )
 
   const { isEstimate, orderId, orderUri, payoutAddress, payoutWalletId, plugin, refundAddress } = swapData
-  const payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
+  const payoutCurrencyCode = swapData.payoutCurrencyCode
 
   const handleExchangeDetails = useHandler(() => {
     Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={lstrings.transaction_details_exchange_details} />)
