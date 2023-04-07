@@ -7,7 +7,6 @@ import * as React from 'react'
 import { Image, Platform, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { sprintf } from 'sprintf-js'
 
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { updateOneSetting } from '../../actions/SettingsActions'
@@ -30,7 +29,6 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ButtonsModal } from '../modals/ButtonsModal'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -94,7 +92,6 @@ interface State {
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
-const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const PLUGIN_LIST_FILE = 'buySellPlugins.json'
 const asDeveloperUri = asObject({ uri: asString })
@@ -115,7 +112,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     this.updatePlugins()
-    await this.checkDisclaimer()
     this.checkCountry()
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
@@ -179,36 +175,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       // This is ok. We just use default values
     }
     this.timeoutId = setTimeout(async () => await this.updatePluginsNetwork(diskPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
-  }
-
-  /**
-   * Verify that we have shown the disclaimer
-   */
-  async checkDisclaimer() {
-    const { account } = this.props
-    const message = sprintf(lstrings.plugin_service_provider_disclaimer, config.appName)
-    try {
-      const text = await account.disklet.getText(MODAL_DATA_FILE)
-      const json = JSON.parse(text)
-      const timesPluginWarningModalViewed = json.viewed
-      if (timesPluginWarningModalViewed < 3) {
-        const newNumber = timesPluginWarningModalViewed + 1
-        if (newNumber === 3) {
-          await Airship.show<'ok' | undefined>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: lstrings.string_ok_cap } }} />)
-        }
-        const newText = JSON.stringify({
-          viewed: newNumber
-        })
-        await account.disklet.setText(MODAL_DATA_FILE, newText)
-      }
-    } catch (e: any) {
-      const json = {
-        viewed: 1
-      }
-      const text = JSON.stringify(json)
-      await account.disklet.setText(MODAL_DATA_FILE, text)
-      await Airship.show<'ok' | undefined>(bridge => <ButtonsModal bridge={bridge} message={message} buttons={{ ok: { label: lstrings.string_ok_cap } }} />)
-    }
   }
 
   /**
