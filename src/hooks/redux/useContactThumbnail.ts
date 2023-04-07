@@ -1,13 +1,26 @@
 import * as React from 'react'
 
+import { showError } from '../../components/services/AirshipInstance'
+import { requestPermission } from '../../components/services/PermissionsManager'
 import { useSelector } from '../../types/reactRedux'
 import { normalizeForSearch } from '../../util/utils'
+
+let isModalShowing = false
 
 /**
  * Looks up a thumbnail image for a contact.
  */
 export function useContactThumbnail(name?: string): string | undefined {
   const contacts = useSelector(state => state.contacts)
+
+  React.useEffect(() => {
+    if (name == null) return
+    if (isModalShowing) return
+    isModalShowing = true
+    requestPermission('contacts')
+      .catch(showError)
+      .then(() => (isModalShowing = false))
+  }, [name])
 
   return React.useMemo(() => {
     if (name == null) return
