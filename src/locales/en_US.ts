@@ -232,6 +232,7 @@ const strings = {
   wallet_list_referral_link_ask_wallet_creation: 'You need %s wallet for this promotion, do you want to create one?',
   wallet_list_referral_link_cancelled_wallet_creation: 'User did not approve creating wallet for the promotion',
   wallet_list_wallet_search: 'Search Wallets',
+  compromised_key_label: 'Compromised Key',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_choice_new_button_fragment: 'New Wallet',
   create_wallet_select_wallet_for_assets: 'Please select the wallet you would like to add the following assets: %s',
