@@ -1,5 +1,3 @@
-/* eslint-disable react-native/no-raw-text */
-
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -7,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -86,7 +85,7 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  const showWalletListModal = () => {
+  const handleWalletListModal = useHandler(() => {
     const allowedCurrencyWallets = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
 
     const allowedAssets = allowedCurrencyWallets.map(walletID => ({ pluginId: currencyWallets[walletID].currencyInfo.pluginId }))
@@ -103,14 +102,13 @@ export const WcConnectScene = (props: Props) => {
         }
       }
     })
-  }
+  })
 
   React.useEffect(() => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      showWalletListModal()
+      handleWalletListModal()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedWallet.walletId, selectedWallet.currencyCode])
+  }, [selectedWallet.walletId, selectedWallet.currencyCode, handleWalletListModal])
 
   React.useEffect(() => {
     return () => {
@@ -121,7 +119,7 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={showWalletListModal} />
+      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
@@ -129,7 +127,7 @@ export const WcConnectScene = (props: Props) => {
       )
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
       return (
-        <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={showWalletListModal} />
+        <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
       )
     }
   }
