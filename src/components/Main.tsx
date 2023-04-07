@@ -224,12 +224,6 @@ export const Main = () => {
     logEvent('Start_App')
   }, [])
 
-  // Animations for the login scene are disabled because when navigating from
-  // the 'gettingStarted' initial route to the 'login' route we wish for there
-  // to be no animation and the transition to be immediate if it is detected
-  // that the device has no localUsers in the core's state.
-  const loginSceneAnimationsEnabled = false
-
   return (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
@@ -240,7 +234,7 @@ export const Main = () => {
       >
         <Stack.Screen name="edgeApp" component={EdgeApp} />
         <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: loginSceneAnimationsEnabled }} />
+        <Stack.Screen name="login" component={LoginScene} />
       </Stack.Navigator>
     </NavigationContainer>
   )
