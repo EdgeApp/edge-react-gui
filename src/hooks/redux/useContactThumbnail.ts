@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { showError } from '../../components/services/AirshipInstance'
-import { requestPermission } from '../../components/services/PermissionsManager'
+import { edgeRequestPermission } from '../../components/services/PermissionsManager'
 import { useSelector } from '../../types/reactRedux'
 import { normalizeForSearch } from '../../util/utils'
 
@@ -17,8 +17,11 @@ export function useContactThumbnail(name?: string): string | undefined {
     if (name == null) return
     if (isModalShowing) return
     isModalShowing = true
-    requestPermission('contacts')
-      .catch(showError)
+    edgeRequestPermission('contacts')
+      .catch((e: any) => {
+        showError(e)
+        isModalShowing = false
+      })
       .then(() => (isModalShowing = false))
   }, [name])
 

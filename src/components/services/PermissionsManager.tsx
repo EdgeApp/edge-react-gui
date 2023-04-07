@@ -28,7 +28,7 @@ export const PermissionsManager = () => {
   return null
 }
 
-export async function requestPermission(data: Permission): Promise<PermissionStatus> {
+export async function edgeRequestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(permissionNames[data])
 
   if (status === 'denied') {
@@ -68,7 +68,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
   // User first time check. If mandatory, it needs to be checked if denied or accepted
   if (status === 'denied') {
-    const result = await requestPermission(data)
+    const result = await edgeRequestPermission(data)
     return mandatory && checkIfDenied(result)
   }
 

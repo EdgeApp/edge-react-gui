@@ -9,7 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
-import { requestPermission } from '../services/PermissionsManager'
+import { edgeRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
@@ -58,7 +58,7 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
 
   React.useEffect(() => {
-    requestPermission('contacts').catch(showError)
+    edgeRequestPermission('contacts').catch(showError)
   }, [])
 
   return (
