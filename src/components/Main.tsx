@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
-import { NavigationContainer } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
@@ -107,6 +107,7 @@ import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectSce
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
 import { Airship, showError } from './services/AirshipInstance'
 import { requestPermission } from './services/PermissionsManager'
+import { useTheme } from './services/ThemeContext'
 import { ControlPanel as ControlPanelComponent } from './themed/ControlPanel'
 import { MenuTabs } from './themed/MenuTabs'
 
@@ -207,6 +208,18 @@ const firstSceneScreenOptions = {
 }
 
 export const Main = () => {
+  const theme = useTheme()
+  // Match react navigation theme background with the patina theme
+  const reactNavigationTheme = React.useMemo(() => {
+    return {
+      ...DefaultTheme,
+      colors: {
+        ...DefaultTheme.colors,
+        background: theme.backgroundGradientColors[0]
+      }
+    }
+  }, [theme])
+
   React.useEffect(() => {
     logEvent('Start_App')
   }, [])
@@ -218,7 +231,7 @@ export const Main = () => {
   const loginSceneAnimationsEnabled = false
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
         initialRouteName="gettingStarted"
         screenOptions={{
