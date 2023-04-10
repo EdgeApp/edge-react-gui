@@ -98,7 +98,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'fiatPlugin': {
-      const { direction = 'buy', paymentType, pluginId, providerId } = link
+      const { direction = 'buy', paymentType = 'credit', pluginId, providerId } = link
       const plugin = guiPlugins[pluginId]
       if (plugin?.nativePlugin == null) {
         showError(new Error(`No fiat plugin named "${pluginId}" exists`))
