@@ -178,7 +178,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
     if (!isReceivedTransaction(edgeTransaction)) return
-    if (spamFilterOn && !zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom))) {
+    if (!spamFilterOn || (!zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom)))) {
       showTransactionDropdown(navigation, edgeTransaction)
     }
   }

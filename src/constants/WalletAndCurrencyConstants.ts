@@ -127,6 +127,7 @@ interface SpecialCurrencyInfo {
   allowZeroTx?: boolean
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
+  tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
@@ -292,6 +293,7 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_xrp_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
     isImportKeySupported: {
       privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
       privateKeyInstructions: lstrings.create_wallet_import_key_instructions
@@ -744,6 +746,18 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isStakingSupported: true,
     isCustomTokensSupported: true
+  },
+  algorand: {
+    initWalletName: lstrings.string_first_algorand_wallet_name,
+    chainCode: 'ALGO',
+    dummyPublicAddress: 'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
+    isCustomTokensSupported: true,
+    noChangeMiningFee: true,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
+    isImportKeySupported: {
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
+    }
   }
 }
 
