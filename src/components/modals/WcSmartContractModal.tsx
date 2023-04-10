@@ -7,9 +7,8 @@ import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
+import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
-import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils'
@@ -32,14 +31,14 @@ interface WcRpcPayload {
 
 interface Props {
   bridge: AirshipBridge<void>
-  walletId: string
+  wallet: EdgeCurrencyWallet
   dApp: JsonObject
   uri: string
   payload: WcRpcPayload
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, walletId, dApp, payload, uri } = props
+  const { bridge, wallet, dApp, payload, uri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dAppName: string = dApp.peerMeta.name
@@ -47,10 +46,6 @@ export const WcSmartContractModal = (props: Props) => {
   const params = payload.params[0]
   const toAddress: string | null = params.to
 
-  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
-  const wallet = currencyWallets[walletId]
-
-  if (wallet == null) return null
   const walletName = getWalletName(wallet)
 
   let amountCurrencyCode = wallet.currencyInfo.currencyCode
@@ -73,8 +68,8 @@ export const WcSmartContractModal = (props: Props) => {
     networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
   }
 
-  const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
-  const feeDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, feeCurrencyCode)
+  const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
+  const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
   const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)
@@ -124,7 +119,7 @@ export const WcSmartContractModal = (props: Props) => {
             title={lstrings.string_amount}
             nativeCryptoAmount={amountCrypto}
             denomination={amountDenom}
-            walletId={walletId}
+            walletId={wallet.id}
             tokenId={tokenId}
           />
         )}
@@ -139,7 +134,7 @@ export const WcSmartContractModal = (props: Props) => {
             title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeCrypto}
             denomination={feeDenom}
-            walletId={walletId}
+            walletId={wallet.id}
           />
         )}
         {!zeroString(totalNativeCrypto) && (

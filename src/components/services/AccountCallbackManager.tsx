@@ -106,7 +106,7 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('wcNewContractCall', obj => {
         const { dApp, payload, uri, walletId } = obj
         if (walletId == null) return
-        Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={walletId} dApp={dApp} payload={payload} uri={uri} />)
+        Airship.show(bridge => <WcSmartContractModal bridge={bridge} wallet={wallet} dApp={dApp} payload={payload} uri={uri} />)
       }),
 
       // These ones defer their work until later:
