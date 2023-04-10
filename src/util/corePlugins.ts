@@ -70,6 +70,7 @@ export const swapPlugins = {
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
   thorchainda: ENV.THORCHAIN_INIT,
+  velodrome: true,
 
   transfer: true
 }

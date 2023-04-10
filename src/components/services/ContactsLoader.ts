@@ -244,6 +244,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Velodrome',
+    hasThumbnail: true,
+    thumbnailPath: 'velodrome.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Wyre',
     hasThumbnail: true,
     thumbnailPath: 'wyre.png',
