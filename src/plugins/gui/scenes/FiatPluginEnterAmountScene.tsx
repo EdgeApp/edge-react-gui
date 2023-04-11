@@ -13,15 +13,28 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
+import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../fiatPluginTypes'
 
-interface Props {
-  route: RouteProp<'guiPluginEnterAmount'>
+export interface FiatPluginEnterAmountParams {
+  headerTitle: string
+  onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
+  label1: string
+  label2: string
+  onChangeText: (fieldNum: number, value: string) => Promise<void>
+  convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
+  initialAmount1?: string
+  headerIconUri?: string
 }
 
 export interface EnterAmountPoweredBy {
   poweredByIcon: string
   poweredByText: string
   poweredByOnClick: () => void
+}
+
+interface Props {
+  route: RouteProp<'guiPluginEnterAmount'>
 }
 
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
