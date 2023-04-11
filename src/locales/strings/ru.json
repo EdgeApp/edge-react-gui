@@ -694,7 +694,6 @@
   "search_region": "Search region",
   "buy_sell_crypto_no_plugin_region": "Извините, но для вашего региона нет доступных плагинов.",
   "user_closed_modal_no_wallet": "Закрытый пользователем капитал. Кошелёк не был выбран",
-  "plugin_service_provider_disclaimer": "The following services are not provided by %1$s. \n\nFor issues and feedback please contact the respective service providers.",
   "plugin_powered_by_space": "Powered by ",
   "tap_to_change_provider": "Tap to Change Provider",
   "send_from_wallet": "Отправить из %s",
