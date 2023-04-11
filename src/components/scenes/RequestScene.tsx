@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { selectWalletToken } from '../../actions/WalletActions'
+import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
@@ -20,6 +21,7 @@ import { NavigationBase, NavigationProp } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
+import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -49,6 +51,7 @@ interface StateProps {
   exchangeSecondaryToPrimaryRatio?: string
   fioAddressesExist?: boolean
   isConnected: boolean
+  showBalance: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
   secondaryCurrencyInfo?: GuiCurrencyInfo
 }
@@ -56,6 +59,7 @@ interface StateProps {
 interface DispatchProps {
   refreshAllFioAddresses: () => void
   onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
+  toggleAccountBalanceVisibility: () => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
@@ -284,6 +288,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     Airship.show(bridge => <QrModal bridge={bridge} data={encodedUri} />)
   }
 
+  toggleBalanceVisibility = () => {
+    triggerHaptic('impactLight')
+    this.props.toggleAccountBalanceVisibility()
+  }
+
   render() {
     const { currencyCode, exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
@@ -316,7 +325,9 @@ export class RequestSceneComponent extends React.Component<Props, State> {
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </View>
           <View style={styles.balanceContainer}>
-            <EdgeText>{displayBalanceString}</EdgeText>
+            <TouchableOpacity onPress={this.toggleBalanceVisibility}>
+              {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
+            </TouchableOpacity>
             <EdgeText style={styles.exchangeRate}>
               <FiatText
                 appendFiatCurrencyCode
@@ -326,7 +337,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             </EdgeText>
           </View>
-
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <Card>
@@ -593,7 +603,8 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
         account,
         publicAddress: '',
         fioAddressesExist: false,
-        isConnected: state.network.isConnected
+        isConnected: state.network.isConnected,
+        showBalance: state.ui.settings.isAccountBalanceVisible
       }
     }
 
@@ -634,7 +645,8 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
       fioAddressesExist,
-      isConnected: state.network.isConnected
+      isConnected: state.network.isConnected,
+      showBalance: state.ui.settings.isAccountBalanceVisible
     }
   },
   dispatch => ({
@@ -643,6 +655,9 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
       dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+    },
+    toggleAccountBalanceVisibility() {
+      dispatch(toggleAccountBalanceVisibility())
     }
   })
 )(withTheme(RequestSceneComponent))

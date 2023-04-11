@@ -53,9 +53,13 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)>
-        You have 0 undefined
-      </WithTheme(EdgeTextComponent)>
+      <TouchableOpacity
+        onPress={[Function]}
+      >
+        <WithTheme(EdgeTextComponent)>
+          You have 0 undefined
+        </WithTheme(EdgeTextComponent)>
+      </TouchableOpacity>
       <WithTheme(EdgeTextComponent)
         style={
           Object {
