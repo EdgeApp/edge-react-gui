@@ -11,6 +11,7 @@ import { FlashNotification } from '../../components/navigation/FlashNotification
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -30,22 +31,17 @@ interface Props extends WcSmartContractModalProps {
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, wallet, dApp, payload, uri } = props
+  const { bridge, wallet, dApp, payload, tokenId, uri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dAppName = dApp.peerMeta.name
   const icon = dApp.peerMeta.icons[0]
   const params = payload.params[0]
-  const toAddress = params.to
 
   const walletName = getWalletName(wallet)
 
-  let amountCurrencyCode = wallet.currencyInfo.currencyCode
-  if (toAddress != null) {
-    const metaTokens = wallet.currencyInfo.metaTokens
-    const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
-    if (token != null) amountCurrencyCode = token.currencyCode
-  }
+  const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
+
   const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId, metaTokens } = wallet.currencyInfo
 
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
@@ -94,9 +90,6 @@ export const WcSmartContractModal = (props: Props) => {
   const slider = isInsufficientBal ? null : (
     <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
   )
-
-  // FIXME: HACK!!1! This is a shortcut so we can remove currency code from the fiat text component without completely refactoring this file
-  const tokenId = contractAddress != null ? contractAddress.toLowerCase().replace('0x', '') : undefined
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
@@ -225,6 +218,7 @@ export const asWcSmartContractModalProps = asObject({
       icons: asArray(asString)
     })
   }),
+  tokenId: asOptional(asString),
   uri: asString,
   payload: asWcRpcPayload
 })
