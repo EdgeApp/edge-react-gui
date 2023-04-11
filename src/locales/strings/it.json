@@ -694,7 +694,6 @@
   "search_region": "Cerca area geografica",
   "buy_sell_crypto_no_plugin_region": "Siamo spiacenti ma non ci sono plugin disponibili per la tua regione.",
   "user_closed_modal_no_wallet": "Finestra chiusa dall'utente. Nessun portafoglio è stato selezionato",
-  "plugin_service_provider_disclaimer": "I seguenti servizi non sono forniti da %1$s.\n\nPer problemi e feedback, si prega di contattare direttamente i rispettivi fornitori di servizi.",
   "plugin_powered_by_space": "Offerto da ",
   "tap_to_change_provider": "Tocca per cambiare provider",
   "send_from_wallet": "Invia da %s",
