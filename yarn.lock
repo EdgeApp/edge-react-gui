@@ -7907,10 +7907,10 @@ edge-exchange-plugins@^0.18.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.3.0.tgz#bca9e703e955b656b93f9bedd116fdd18e817251"
-  integrity sha512-IjHeVzy46WlFKhtyUePtC7zCRE6hfkxXsFcWiRRF23nKlhZp1X8FlPt3e4soHivqhC6uCcHgYjBjpNOOdyQ3xg==
+edge-login-ui-rn@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.4.0.tgz#1c8b6529cc0c20c0acbe54bbb34db9a677afed26"
+  integrity sha512-HcHaqQoMxlLSrYUVeiCUdfzazXYUCC7EYi4zm61SGndvkj8OPGgJ7VoIBniaKPt/Rt/9dawsvr1YRU4kDsSRvA==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -14064,7 +14064,7 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
