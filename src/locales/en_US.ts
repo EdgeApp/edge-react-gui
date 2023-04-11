@@ -1284,7 +1284,7 @@ const strings = {
   form_field_title_address_country: 'Country',
   form_field_title_address_line_1: 'Address Line 1',
   form_field_title_address_line_2: 'Address Line 2 (optional)',
-  form_field_title_address_state_province_region: 'Region/Provice/State',
+  form_field_title_address_state_province_region: 'Province',
   form_field_title_address_zip_postal_code: 'Postal Code/Zip',
   form_field_title_iban: 'IBAN',
   form_field_title_swift_bic: 'SWIFT/BIC',

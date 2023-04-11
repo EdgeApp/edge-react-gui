@@ -3,7 +3,7 @@ import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
 import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
@@ -26,7 +26,9 @@ interface Props {
 }
 
 const FUZZY_SEARCH_INTERVAL = 2000
-const MAX_DISPLAYED_HINTS = 5
+// Make this a fractional number so the user can tell that there are more
+// options to scroll through
+const MAX_DISPLAYED_HINTS = 4.75
 
 const asKmootResponse = asObject({
   features: asArray(
@@ -76,23 +78,29 @@ export const AddressFormScene = React.memo((props: Props) => {
 
   const rAddressInput = React.createRef<OutlinedTextInputRef>()
 
+  const mounted = React.useRef<boolean>(true)
+
   const sAnimationMult = useSharedValue(0)
 
   const dFinalHeight = useDerivedValue(() => {
     return hintHeight * Math.min(searchResults.length, MAX_DISPLAYED_HINTS)
-  }, [searchResults])
+  }, [searchResults, hintHeight])
 
   // Further calculations to determine the height. Also add another
   // conditional animation based on the number of hints changing as
   // the search query changes from user input
-  const aDropContainerStyle = useAnimatedStyle(() => ({
-    height: withTiming(dFinalHeight.value * sAnimationMult.value, {
-      duration: isAnimateHintsNumChange ? 250 : 0,
-      easing: Easing.inOut(Easing.circle)
+  const aDropContainerStyle = useAnimatedStyle(
+    () => ({
+      height: withTiming(dFinalHeight.value * sAnimationMult.value, {
+        duration: isAnimateHintsNumChange ? 250 : 0,
+        easing: Easing.inOut(Easing.circle)
+      }),
+      opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 }),
+
+      borderColor: interpolateColor(sAnimationMult.value, [0, 1], dropdownBorderColor)
     }),
-    opacity: isHintsDropped && searchResults.length > 0 ? 1 : withDelay(500, withTiming(0, { duration: 0 })),
-    borderColor: interpolateColor(sAnimationMult.value, [0, 1], dropdownBorderColor)
-  }))
+    [isHintsDropped, searchResults.length]
+  )
 
   const handleHintLayout = useHandler(event => {
     if (event != null && hintHeight === 0) {
@@ -116,16 +124,16 @@ export const AddressFormScene = React.memo((props: Props) => {
   // Search for address hints
   const handlePeriodicSearch = useHandler(async () => {
     const { address: addressQuery } = formData
-    if (isNeedsFuzzySearch && addressQuery != null) {
+    if (isNeedsFuzzySearch) {
       setIsNeedsFuzzySearch(false)
 
       // Check if address field is ready to search
-      if (addressQuery.split(' ').length < 2) {
+      if (addressQuery.length === 0) {
         setSearchResults([])
       } else if (prevAddressQuery !== addressQuery) {
         // Fetch fuzzy search results
         try {
-          const res = await fetch(`https://photon.komoot.io/api/?q=${addressQuery}`)
+          const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(addressQuery)}`)
           const json = await res.json()
 
           // Filter valid addresses by country code and if the required address
@@ -151,9 +159,11 @@ export const AddressFormScene = React.memo((props: Props) => {
                 country: countrycode
               }
             })
+          if (!mounted.current) return
           setSearchResults([...searchResults])
         } catch (e) {
           console.error('Failed to get search: ', JSON.stringify(e, null, 2))
+          if (!mounted.current) return
           setSearchResults([])
         }
       }
@@ -164,13 +174,13 @@ export const AddressFormScene = React.memo((props: Props) => {
 
   // Populate the address fields with the values from the selected search
   // results
-  const handleAddressHintPress = useHandler((selectedAddressHint: HomeAddress) => () => {
+  const addressHintPress = (selectedAddressHint: HomeAddress) => () => {
     setFormData({ ...selectedAddressHint }) // Update address's value with new value
 
     if (rAddressInput.current != null) {
       rAddressInput.current.blur()
     }
-  })
+  }
 
   const handleChangeAddress = useHandler((inputValue: string) => {
     setIsNeedsFuzzySearch(true)
@@ -222,8 +232,6 @@ export const AddressFormScene = React.memo((props: Props) => {
   React.useEffect(() => {
     setIsAnimateHintsNumChange(isHintsDropped)
 
-    return () => {}
-
     // Don't want to react on isHintsDropped, only changes to the
     // number of results while dropdown is open
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -235,9 +243,13 @@ export const AddressFormScene = React.memo((props: Props) => {
     if (diskletFormData != null && diskletFormData.country === countryCode) {
       setFormData(diskletFormData)
     }
-    return () => {}
   }, [])
 
+  const disableNextButton = (Object.keys(formData) as Array<keyof HomeAddress>).some(
+    key =>
+      // Disable next on empty non-optional fields
+      key !== 'address2' && formData[key].trim() === ''
+  )
   return (
     <SceneWrapper background="theme">
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" extraScrollHeight={theme.rem(2.75)} enableAutomaticScroll enableOnAndroid>
@@ -256,9 +268,9 @@ export const AddressFormScene = React.memo((props: Props) => {
         <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
           <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
             {searchResults.map(searchResult => {
-              const displaySearchResult = `${searchResult.address} ${searchResult.city}, ${searchResult.state} ${searchResult.postalCode}`
+              const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
               return (
-                <TouchableOpacity key={searchResults.indexOf(searchResult)} onPress={handleAddressHintPress(searchResult)}>
+                <TouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
                   <View style={styles.rowContainer} onLayout={handleHintLayout}>
                     <EdgeText style={styles.addressHintText} numberOfLines={2}>
                       {displaySearchResult}
@@ -302,11 +314,7 @@ export const AddressFormScene = React.memo((props: Props) => {
           label={lstrings.string_next_capitalized}
           marginRem={[1, 0.5, 1, 0.5]}
           type="secondary"
-          disabled={(Object.keys(formData) as Array<keyof HomeAddress>).some(
-            key =>
-              // Disable next on empty non-optional fields
-              key !== 'address2' && formData[key].trim() === ''
-          )}
+          disabled={disableNextButton}
           onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
@@ -317,16 +325,14 @@ export const AddressFormScene = React.memo((props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => {
   const dropContainerCommon: ViewStyle = {
     backgroundColor: theme.modal,
-    borderBottomLeftRadius: theme.rem(1),
-    borderBottomRightRadius: theme.rem(1),
+    borderRadius: theme.rem(0.5),
     zIndex: 1,
     borderColor: theme.iconTappable,
-    borderTopWidth: 0,
     borderWidth: theme.thinLineWidth,
     overflow: 'hidden',
     position: 'absolute',
-    left: theme.rem(1),
-    right: theme.rem(1)
+    left: theme.rem(0.5),
+    right: theme.rem(0.5)
   }
   return {
     addressHintText: {
@@ -334,11 +340,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginVertical: theme.rem(0.25)
     },
     dropContainer: {
-      top: theme.rem(9.75),
+      top: theme.rem(10.25),
       ...dropContainerCommon
     },
     dropContainerAndroid: {
-      top: theme.rem(10) - 3,
+      top: theme.rem(10.5) - 3,
       ...dropContainerCommon
     },
     formSectionTitle: {

@@ -1,4 +1,4 @@
-import { lt, mul, toFixed } from 'biggystring'
+import { lt, toFixed } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
@@ -65,7 +65,7 @@ const CURRENCY_PLUGINID_MAP: StringMap = {
 const EDGE_CLIENT_ID = '4949bf59-c23c-4d71-949e-f5fd56ff815b'
 
 const asBityApiKeys = asObject({
-  clientId: asMaybe(asString)
+  clientId: asMaybe(asString, EDGE_CLIENT_ID)
 })
 
 const asBityCurrencyTag = asValue('crypto', 'erc20', 'ethereum', 'fiat')
@@ -167,18 +167,18 @@ const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
     body: JSON.stringify(bodyData)
   }
   const result = await fetch('https://exchange.api.bity.com/v2/orders/estimate', request)
-  if (result.status === 200) {
+  if (result.ok) {
     const newData = await result.json()
     return newData
   } else {
-    throw new Error('Unable to process request: ' + JSON.stringify(result, null, 2))
+    throw new Error('Bity: Unable to fetch quote: ' + (await result.text()))
   }
 }
 
 const approveBityQuote = async (
   wallet: EdgeCurrencyWallet,
   data: BityBuyOrderRequest | BitySellOrderRequest,
-  clientId?: string
+  clientId: string
 ): Promise<BityApproveQuoteResponse> => {
   const baseUrl = 'https://exchange.api.bity.com'
   const orderUrl = 'https://exchange.api.bity.com/v2/orders'
@@ -188,7 +188,7 @@ const approveBityQuote = async (
       Host: 'exchange.api.bity.com',
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Client-Id': clientId ?? EDGE_CLIENT_ID
+      'Client-Id': clientId
     },
     credentials: 'include',
     body: JSON.stringify(data)
@@ -254,7 +254,7 @@ export const bityProvider: FiatProviderFactory = {
   pluginId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const { apiKeys, showUi } = params
+    const { apiKeys } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
     const out = {
@@ -263,7 +263,10 @@ export const bityProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
         const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
-        if (response == null || !response.ok) return allowedCurrencyCodes
+        if (response == null || !response.ok) {
+          console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
+          return allowedCurrencyCodes
+        }
 
         const result = await response.json()
         let bityCurrencies: BityCurrency[] = []
@@ -274,7 +277,7 @@ export const bityProvider: FiatProviderFactory = {
           return allowedCurrencyCodes
         }
         for (const currency of bityCurrencies) {
-          let isAddCurrencySuccess = true
+          let isAddCurrencySuccess = false
           if (currency.tags.length === 1 && currency.tags[0] === 'fiat') {
             allowedCurrencyCodes.fiat['iso:' + currency.code.toUpperCase()] = currency
           } else if (currency.tags.includes('crypto')) {
@@ -283,14 +286,12 @@ export const bityProvider: FiatProviderFactory = {
             if (currency.tags.includes('erc20') && currency.tags.includes('ethereum')) {
               // ETH tokens
               addToAllowedCurrencies('ethereum', currency, currency.code)
+              isAddCurrencySuccess = true
             } else if (Object.keys(CURRENCY_PLUGINID_MAP).includes(currency.code)) {
               // Mainnet currencies
               addToAllowedCurrencies(CURRENCY_PLUGINID_MAP[currency.code], currency, currency.code)
-            } else {
-              isAddCurrencySuccess = false
+              isAddCurrencySuccess = true
             }
-          } else {
-            isAddCurrencySuccess = false
           }
 
           // Unhandled combination not caught by cleaner. Skip to be safe.
@@ -311,7 +312,7 @@ export const bityProvider: FiatProviderFactory = {
         } = params
         const isBuy = direction === 'buy'
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
-        if (paymentTypes[0] !== 'sepa') throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!paymentTypes.some(paymentType => paymentType === 'sepa')) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[tokenId.pluginId][tokenId?.tokenId ?? ''])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
@@ -361,9 +362,9 @@ export const bityProvider: FiatProviderFactory = {
           fiatAmount: isBuy ? bityQuote.input.amount : bityQuote.output.amount,
           cryptoAmount: isBuy ? bityQuote.output.amount : bityQuote.input.amount,
           direction: params.direction,
-          expirationDate: new Date(Date.now() + 8000),
+          expirationDate: new Date(Date.now() + 50000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
-            const { coreWallet } = approveParams
+            const { coreWallet, showUi } = approveParams
             // Either input or output always require SEPA info, depending on if
             // input or output are of type 'bank_account'.
             // Bity only checks SEPA info format validity.
@@ -411,7 +412,6 @@ export const bityProvider: FiatProviderFactory = {
                 const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
 
                 if (isBuy) {
-                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   await completeBuyOrder(paymentDetails, showUi, id, input, output)
                 } else {
                   await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
@@ -443,13 +443,9 @@ const completeSellOrder = async (
   id: string,
   showUi: FiatPluginUi
 ) => {
-  const { currencyInfo } = coreWallet
-  const denom =
-    inputCurrencyCode === currencyInfo.currencyCode
-      ? currencyInfo.denominations.find(denom => denom.name === inputCurrencyCode)
-      : currencyInfo.metaTokens.find(token => token.currencyCode === inputCurrencyCode)?.denominations?.find(denom => denom.name === inputCurrencyCode)
+  const nativeAmount = await coreWallet.denominationToNative(input.amount, inputCurrencyCode)
 
-  if (denom == null) {
+  if (nativeAmount == null) {
     // Should not happen - input currencies should be valid before
     // getting here.
     throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
@@ -459,13 +455,12 @@ const completeSellOrder = async (
     currencyCode: inputCurrencyCode,
     spendTargets: [
       {
-        nativeAmount: mul(denom.multiplier, input.amount),
+        nativeAmount,
         publicAddress: input.crypto_address
       }
     ],
     metadata: {
-      category: `Exchange: ${input.currency}toEUR`,
-      exchangeAmount: { [output.currency]: parseFloat(output.amount) },
+      category: `Exchange: ${input.currency} to EUR`,
       notes: `${pluginDisplayName} ${lstrings.transaction_details_exchange_order_id}: ${id}`
     }
   }
@@ -518,7 +513,7 @@ const executeSellOrderFetch = async (
   outputCurrencyCode: string,
   sepaInfo: { name: string; iban: string; swift: string },
   homeAddress: { address: string; address2: string | undefined; city: string; country: string; state: string; postalCode: string },
-  clientId: string | undefined
+  clientId: string
 ): Promise<{
   id: string
   input: {
@@ -570,7 +565,7 @@ const executeBuyOrderFetch = async (
   sepaInfo: { name: string; iban: string; swift: string },
   outputCurrencyCode: string,
   cryptoAddress: string,
-  clientId: string | undefined
+  clientId: string
 ) => {
   return await approveBityQuote(
     coreWallet,

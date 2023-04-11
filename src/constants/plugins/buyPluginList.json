@@ -264,8 +264,8 @@
     "paymentTypeLogoKey": "credit"
   },
   {
-    "id": "bity",
-    "pluginId": "bity",
+    "id": "sepa",
+    "pluginId": "sepa",
     "forCountries": [
       "AT",
       "BE",
@@ -563,7 +563,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "sortIndex": 6
   },
   {
@@ -1151,7 +1151,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "forCountries": [
       "GB"
     ],

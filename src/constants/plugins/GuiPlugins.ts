@@ -93,9 +93,9 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Simplex'
   },
-  bity: {
+  sepa: {
     pluginId: 'amountquote',
-    storeId: 'com.bity',
+    storeId: '',
     baseUri: '',
     lockUriPath: true,
     needsCountryCode: true,

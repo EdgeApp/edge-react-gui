@@ -356,8 +356,8 @@
     "paymentTypeLogoKey": "giftcard"
   },
   {
-    "id": "bity",
-    "pluginId": "bity",
+    "id": "sepa",
+    "pluginId": "sepa",
     "forCountries": [
       "AT",
       "BE",
@@ -525,7 +525,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "sortIndex": 3
   },
   {
