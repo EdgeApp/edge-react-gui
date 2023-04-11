@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -26,7 +26,7 @@ function CustomServersSettingComponent(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const titleText = extraInfo == null ? s.strings.settings_custom_nodes_title : sprintf(s.strings.settings_custom_servers_title, extraInfo)
+  const titleText = extraInfo == null ? lstrings.settings_custom_nodes_title : sprintf(lstrings.settings_custom_servers_title, extraInfo)
   const customServerSet = new Set(customServers)
 
   async function handleToggleEnabled(): Promise<void> {
@@ -62,8 +62,8 @@ function CustomServersSettingComponent(props: Props) {
         autoCorrect={false}
         bridge={bridge}
         initialValue={server ?? ''}
-        inputLabel={s.strings.settings_custom_node_url}
-        title={s.strings.settings_edit_custom_node}
+        inputLabel={lstrings.settings_custom_node_url}
+        title={lstrings.settings_edit_custom_node}
         onSubmit={handleSubmit}
       />
     ))
@@ -72,17 +72,17 @@ function CustomServersSettingComponent(props: Props) {
   return (
     <>
       <SettingsHeaderRow label={titleText} />
-      <SettingsSwitchRow label={s.strings.settings_enable_custom_nodes} value={enableCustomServers} onPress={handleToggleEnabled} />
+      <SettingsSwitchRow label={lstrings.settings_enable_custom_nodes} value={enableCustomServers} onPress={handleToggleEnabled} />
       {!enableCustomServers ? null : (
         <>
           {Array.from(customServerSet).map(server => (
-            <SettingsTappableRow key={server} action="delete" onPress={async () => handleDeleteNode(server)}>
+            <SettingsTappableRow key={server} action="delete" onPress={async () => await handleDeleteNode(server)}>
               <TouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
                 <Text style={styles.labelText}>{server}</Text>
               </TouchableOpacity>
             </SettingsTappableRow>
           ))}
-          <SettingsTappableRow action="add" label={s.strings.settings_add_custom_node} onPress={handleEditNode} />
+          <SettingsTappableRow action="add" label={lstrings.settings_add_custom_node} onPress={handleEditNode} />
         </>
       )}
     </>
@@ -168,8 +168,8 @@ const asElectrumServersSetting: Cleaner<CustomServersSetting> = asCodec(
 // Individual settings sections:
 //
 
-export const MaybeBlockbookSetting = maybeCurrencySetting(CustomServersSettingComponent, asBlockbookServersSetting, s.strings.settings_blockbook)
+export const MaybeBlockbookSetting = maybeCurrencySetting(CustomServersSettingComponent, asBlockbookServersSetting, lstrings.settings_blockbook)
 
 export const MaybeCustomServersSetting = maybeCurrencySetting(CustomServersSettingComponent, asCustomServersSetting, undefined)
 
-export const MaybeElectrumSetting = maybeCurrencySetting(CustomServersSettingComponent, asElectrumServersSetting, s.strings.settings_electrum)
+export const MaybeElectrumSetting = maybeCurrencySetting(CustomServersSettingComponent, asElectrumServersSetting, lstrings.settings_electrum)

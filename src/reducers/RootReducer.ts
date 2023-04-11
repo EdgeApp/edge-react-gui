@@ -109,7 +109,14 @@ export const rootReducer = combineReducers<RootState, Action>({
   },
 
   sortedWalletList(state: WalletListItem[] = [], action: Action): WalletListItem[] {
-    return action.type === 'UPDATE_SORTED_WALLET_LIST' ? action.data : state
+    switch (action.type) {
+      case 'UPDATE_SORTED_WALLET_LIST':
+        return action.data
+      case 'LOGOUT':
+        return []
+      default:
+        return state
+    }
   },
 
   // Nested reducers:

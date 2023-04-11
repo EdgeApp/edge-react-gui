@@ -1,5 +1,5 @@
 import { ENV } from '../../env'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { ActionOp, ActionProgram, ActionProgramCompleteMessage } from './types'
 
 // TODO: Move handling from ActionProgramUtil methods here, use this instead of
@@ -11,8 +11,8 @@ export async function makeActionProgram(actionOp: ActionOp, completeMessage?: Ac
     programId,
     actionOp,
     completeMessage: completeMessage ?? {
-      title: s.strings.action_display_title_complete_default,
-      message: s.strings.action_display_message_complete_default
+      title: lstrings.action_display_title_complete_default,
+      message: lstrings.action_display_message_complete_default
     },
     mockMode: ENV.ACTION_QUEUE.mockMode
   }

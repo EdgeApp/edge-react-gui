@@ -24,7 +24,7 @@ export function trackConversion(
 
     // Record the event:
     const { accountReferral } = state.account
-    return logEvent(event, {
+    return await logEvent(event, {
       dollarValue,
       pluginId,
       orderId,
@@ -43,7 +43,7 @@ export function trackAccountEvent(event: TrackingEventName, trackingValues: Trac
 
     // Record the event:
     const { accountReferral } = state.account
-    return logEvent(event, {
+    return await logEvent(event, {
       ...trackingValues,
       ...makeTrackingValues(accountReferral)
     })

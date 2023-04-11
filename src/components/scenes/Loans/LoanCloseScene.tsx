@@ -15,7 +15,7 @@ import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { makeAaveCloseAction } from '../../../util/ActionProgramUtils'
@@ -130,22 +130,22 @@ export const LoanCloseSceneComponent = (props: Props) => {
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
-        title={s.strings.loan_close_loan_title}
+        title={lstrings.loan_close_loan_title}
         underline
         withTopMargin
       />
       <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        <TotalDebtCollateralTile title={s.strings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
+        <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <Tile title={s.strings.loan_remaining_principal} type="static" contentPadding={false}>
+          <Tile title={lstrings.loan_remaining_principal} type="static" contentPadding={false}>
             {debts.map(debt => (
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
           </Tile>
         ) : null}
         {collaterals.length > 0 ? (
-          <Tile title={s.strings.loan_collateral_amount} type="static" contentPadding={false}>
+          <Tile title={lstrings.loan_collateral_amount} type="static" contentPadding={false}>
             {collaterals.map(collateral => (
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
@@ -153,18 +153,18 @@ export const LoanCloseSceneComponent = (props: Props) => {
         ) : null}
         {aggregateErrorMessage.length > 0 ? (
           <Alert
-            title={s.strings.fragment_error}
+            title={lstrings.fragment_error}
             message={translateError(aggregateErrorMessage.join('\n\n'))}
             type="error"
             numberOfLines={7}
             marginRem={[1, 1, 0]}
           />
         ) : actionProgram !== null ? (
-          <Alert title={s.strings.loan_close_loan_title} message={s.strings.loan_close_swap_warning} type="warning" numberOfLines={10} marginRem={[1, 1, 0]} />
+          <Alert title={lstrings.loan_close_loan_title} message={lstrings.loan_close_swap_warning} type="warning" numberOfLines={10} marginRem={[1, 1, 0]} />
         ) : (
           <Alert
-            title={s.strings.loan_close_loan_title}
-            message={s.strings.loan_close_loan_no_tx_needed_message}
+            title={lstrings.loan_close_loan_title}
+            message={lstrings.loan_close_loan_no_tx_needed_message}
             type="warning"
             numberOfLines={7}
             marginRem={[1, 1, 0]}
@@ -172,7 +172,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
         )}
 
         <Space top={1} bottom={2}>
-          <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} disabledText={s.strings.send_confirmation_slide_to_confirm} />
+          <SafeSlider onSlidingComplete={handleSliderComplete} disabled={isActionProgramLoading} disabledText={lstrings.send_confirmation_slide_to_confirm} />
         </Space>
       </KeyboardAwareScrollView>
     </SceneWrapper>

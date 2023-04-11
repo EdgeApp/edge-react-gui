@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { USD_FIAT } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
 import { RouteProp } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
@@ -24,31 +24,31 @@ const COINRANKINGDATA_TITLE_MAP: { [key: string]: string } = {
   currencyCode: '',
   currencyName: '',
   imageUrl: '',
-  marketCap: s.strings.coin_rank_title_market_cap,
+  marketCap: lstrings.coin_rank_title_market_cap,
   percentChange: '', // Display the children of this field instead
 
   // Keys of percentChange
-  hours1: s.strings.coin_rank_title_hours_1,
-  hours24: s.strings.coin_rank_title_hours_24,
-  days7: s.strings.coin_rank_title_days_7,
-  days30: s.strings.coin_rank_title_days_30,
-  year1: s.strings.coin_rank_title_year_1,
+  hours1: lstrings.coin_rank_title_hours_1,
+  hours24: lstrings.coin_rank_title_hours_24,
+  days7: lstrings.coin_rank_title_days_7,
+  days30: lstrings.coin_rank_title_days_30,
+  year1: lstrings.coin_rank_title_year_1,
 
-  price: s.strings.coin_rank_price,
-  rank: s.strings.coin_rank_rank,
-  volume24h: s.strings.coin_rank_title_volume_24h,
-  high24h: s.strings.coin_rank_title_high_24h,
-  low24h: s.strings.coin_rank_title_low_24h,
-  priceChange24h: s.strings.coin_rank_title_price_change_24h,
+  price: lstrings.coin_rank_price,
+  rank: lstrings.coin_rank_rank,
+  volume24h: lstrings.coin_rank_title_volume_24h,
+  high24h: lstrings.coin_rank_title_high_24h,
+  low24h: lstrings.coin_rank_title_low_24h,
+  priceChange24h: lstrings.coin_rank_title_price_change_24h,
   priceChangePercent24h: '', // Duplicate of percentChange children
-  marketCapChange24h: s.strings.coin_rank_title_market_cap_change_24h,
+  marketCapChange24h: lstrings.coin_rank_title_market_cap_change_24h,
   marketCapChangePercent24h: '', // Appended to marketCapChange24h
-  circulatingSupply: s.strings.coin_rank_title_circulating_supply,
-  totalSupply: s.strings.coin_rank_title_total_supply,
-  maxSupply: s.strings.coin_rank_title_max_supply,
-  allTimeHigh: s.strings.coin_rank_title_all_time_high,
+  circulatingSupply: lstrings.coin_rank_title_circulating_supply,
+  totalSupply: lstrings.coin_rank_title_total_supply,
+  maxSupply: lstrings.coin_rank_title_max_supply,
+  allTimeHigh: lstrings.coin_rank_title_all_time_high,
   allTimeHighDate: '', // Appended to allTimeHigh
-  allTimeLow: s.strings.coin_rank_title_all_time_low,
+  allTimeLow: lstrings.coin_rank_title_all_time_low,
   allTimeLowDate: '' // Appended to allTimeLow
 }
 

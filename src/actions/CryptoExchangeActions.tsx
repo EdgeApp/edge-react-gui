@@ -18,7 +18,7 @@ import { trackConversion } from '../actions/TrackingActions'
 import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
@@ -222,7 +222,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
 
       return dispatch({
         type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+        data: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
       })
     }
 
@@ -238,7 +238,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
 
       return dispatch({
         type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+        data: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
       })
     }
 
@@ -246,7 +246,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
     if (currencyError != null) {
       return dispatch({
         type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode)
+        data: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
       })
     }
 
@@ -254,7 +254,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
     if (permissionError?.reason === 'geoRestriction') {
       return dispatch({
         type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: s.strings.ss_geolock
+        data: lstrings.ss_geolock
       })
     }
 
@@ -292,7 +292,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
       const name = isTransfer ? toWalletName : swapInfo.displayName
       const swapType = isTransfer ? 'transfer' : 'exchange'
       const swapTarget = isTransfer ? toWalletName : toCurrencyCode
-      const category = `${swapType}:${fromCurrencyCode} ${s.strings.word_to_in_convert_from_to_string} ${swapTarget}`
+      const category = `${swapType}:${fromCurrencyCode} ${lstrings.word_to_in_convert_from_to_string} ${swapTarget}`
 
       const result: EdgeSwapResult = await quote.approve({ metadata: { name, category } })
 
@@ -337,7 +337,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
       logEvent('Exchange_Shift_Failed', { error: String(error) }) // TODO: Do we need to parse/clean all cases?
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
-        showError(`${s.strings.exchange_failed}. ${error.message}`)
+        showError(`${lstrings.exchange_failed}. ${error.message}`)
       }, 1)
     }
   }
@@ -390,7 +390,7 @@ export function checkEnabledExchanges(): ThunkAction<void> {
     }
 
     if (!isAnyExchangeEnabled) {
-      Alert.alert(s.strings.no_exchanges_available, s.strings.check_exchange_settings)
+      Alert.alert(lstrings.no_exchanges_available, lstrings.check_exchange_settings)
     }
   }
 }

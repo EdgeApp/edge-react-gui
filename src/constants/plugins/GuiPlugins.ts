@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { creditCardPlugin } from '../../plugins/gui/creditCardPlugin'
+import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -71,19 +71,19 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     permissions: ['camera']
   },
   creditcard: {
-    pluginId: 'creditcard',
+    pluginId: 'amountquote',
     storeId: '',
     baseUri: '',
     lockUriPath: true,
-    nativePlugin: creditCardPlugin,
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
   iach: {
-    pluginId: 'creditcard',
+    pluginId: 'amountquote',
     storeId: '',
     baseUri: '',
     lockUriPath: true,
-    nativePlugin: creditCardPlugin,
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'ACH Bank Transfer'
   },
   simplex: {
@@ -93,15 +93,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Simplex'
   },
-  bity: {
-    pluginId: 'bity',
-    storeId: 'com.bity',
-    baseUri: hostedUri + 'com.bity/index.html',
+  sepa: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
     lockUriPath: true,
     needsCountryCode: true,
     queryPromoCode: 'client_value',
+    nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Bity'
-    // supportßEmail: 'support@bity.com'
   },
   bitrefill: {
     pluginId: 'bitrefill',

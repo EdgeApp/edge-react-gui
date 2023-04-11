@@ -1,5 +1,44 @@
 # edge-react-gui
 
+## 3.7.0 (2023-04-11)
+
+- Engine now run with just public keys and are passed private keys only when necessary
+- Reimplement EdgeProvider using JSON-RPC instead of YAOB
+- Fix navigation issue when completing BitRefill purchase
+- Fix password recovery for passwords created before new stricter requirements
+- Migrate FIO functionality to use tx flow instead of otherMethods
+- Migrate EVM wallet connect functionality to use tx flow instead of otherMethods
+- Use signMessage core API for EdgeProvider
+- Fix EOS wallet creation
+- Remove legacy PLATFORM variables
+- Fix missing LiFi icon
+- Various visual fixes
+- Update translations
+- Upgrade edge-core-js to v0.19.49
+  - fixed: Incorrectly formed privateKeys argument for signTx call to the engine
+  - fixed: Passing only the private keys to EdgeEnginePrivateKeyOptions['privateKeys'] for syncNetwork, instead of the entire EdgeWalletInfo
+  - added: Pass private keys to EdgeCurrencyEngine.signTx and similar functions.
+  - changed: Only accept base-10 integer balances from currency engines, and ignore all other balance strings.
+  - removed: Make deprecated token methods optional on EdgeCurrencyEngine, so they can be removed.
+- Upgrade edge-currency-accountbased to v0.23.2-1
+  - changed: Refactor all engines to only deal with private keys directly from privileged function
+  - Refactor FIO use makeSpend, signTx, and broadcastTx instead of ambiguous otherMethods
+  - changed: Remove wcRequestResponse and all WalletConnect signing methods
+  - added: Support for signMessage core API for Ethereum engines to be used for Wallet Connect integrations
+  - fixed: Crash in createPrivateKey for EosTools
+  - ARRR: Fix unsafeBroadcastTx flag
+  - FIO: Fix syncNetwork private key handling
+  - FIO: Use promiseNy for balance checking
+  - FIO: Fix promiseNy error handling
+  - EVM: Update node lists
+  - ZEC/ARRR: Update checkpoint files
+- Upgrade edge-currency-plugins to v2.0.1
+  - changed: Upgrade security access to private keys in EdgeWalletInfo
+  - changed: Add signMessage API to replace signMessageBase64 in otherMethods
+  - Improve log detail in order to better troubleshoot spending issues.
+- Upgrade edge-login-ui-rn to v1.2.4
+  - fixed: Calculation of minLength for legacy recovery questions
+
 ## 3.6.0 (2023-03-28)
 
 - Add new Getting Started flow

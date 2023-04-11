@@ -10,7 +10,7 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
@@ -64,7 +64,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.fioCheckQueue = 0
     this.state = {
       uri: '',
-      statusLabel: s.strings.fragment_send_address,
+      statusLabel: lstrings.fragment_send_address,
       cryptoAddress: undefined,
       fieldError: undefined,
       fioAddresses: { addresses: {} },
@@ -153,7 +153,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = `${baseurl}/${domain}`
-    const response = await global.fetch(url).then(async res => res.json())
+    const response = await global.fetch(url).then(async res => await res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
       throw new ResolutionError('UnregisteredDomain', { domain })
@@ -180,7 +180,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   resolveAddress = async (domain: string, currencyTicker: string) => {
     if (!domain) return
     try {
-      this.setStatusLabel(s.strings.resolving)
+      this.setStatusLabel(lstrings.resolving)
       let addr: string
       if (this.checkIfUnstoppableDomain(domain)) addr = await this.fetchUnstoppableDomainAddress(domain, currencyTicker)
       else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
@@ -191,8 +191,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
       this.setCryptoAddress(addr)
     } catch (err: any) {
       if (err instanceof ResolutionError) {
-        const message = sprintf(s.strings[err.code], domain, currencyTicker)
-        if (domain === '') this.setStatusLabel(s.strings.fragment_send_address)
+        const message = sprintf(lstrings[err.code], domain, currencyTicker)
+        if (domain === '') this.setStatusLabel(lstrings.fragment_send_address)
         else {
           this.setStatusLabel(message)
           this.setCryptoAddress(undefined)
@@ -202,7 +202,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   checkFioPubAddressQueue(uri: string) {
-    this.setStatusLabel(s.strings.resolving)
+    this.setStatusLabel(lstrings.resolving)
     this.fioCheckQueue++
     setTimeout(async () => {
       // do not check if user continue typing fio address
@@ -214,16 +214,16 @@ export class AddressModalComponent extends React.Component<Props, State> {
         const { currencyCode, coreWallet, fioPlugin } = this.props
         if (!fioPlugin) return
         await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
-        this.setStatusLabel(s.strings.fragment_send_address)
+        this.setStatusLabel(lstrings.fragment_send_address)
       } catch (e: any) {
-        this.setStatusLabel(s.strings.fragment_send_address)
+        this.setStatusLabel(lstrings.fragment_send_address)
         return this.setState({ fieldError: e.message })
       }
     }, 1000)
   }
 
   checkFioAddressExistQueue = (fioAddress: string) => {
-    this.setStatusLabel(s.strings.resolving)
+    this.setStatusLabel(lstrings.resolving)
     this.fioCheckQueue++
     setTimeout(async () => {
       // do not check if user continue typing fio address
@@ -235,12 +235,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
         const { fioPlugin } = this.props
         if (!fioPlugin) return
         const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
-        this.setStatusLabel(s.strings.fragment_send_address)
+        this.setStatusLabel(lstrings.fragment_send_address)
         if (!doesAccountExist) {
-          return this.setState({ fieldError: s.strings.err_no_address_title })
+          return this.setState({ fieldError: lstrings.err_no_address_title })
         }
       } catch (e: any) {
-        this.setStatusLabel(s.strings.fragment_send_address)
+        this.setStatusLabel(lstrings.fragment_send_address)
         return this.setState({ fieldError: e.message })
       }
     }, 1000)
@@ -316,7 +316,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return (
       <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
         <ModalTitle center paddingRem={[0, 2, 1]}>
-          {title || s.strings.address_modal_default_header}
+          {title || lstrings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
           <OutlinedTextInput
@@ -343,7 +343,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
               <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
           )}
-          <MainButton label={s.strings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
+          <MainButton label={lstrings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
         </View>
         <ModalFooter onPress={this.handleClose} />
       </ThemedModal>
@@ -384,8 +384,8 @@ export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     account: state.core.account,
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
-    userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-    userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    userFioAddresses: state.ui.fioAddress.fioAddresses,
+    userFioAddressesLoading: state.ui.fioAddress.fioAddressesLoading,
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({

@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { WcConnectionInfo, wcGetConnection } from '../../types/types'
@@ -100,9 +100,9 @@ export const WcConnectionsScene = (props: Props) => {
     Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
-        title={s.strings.scan_qr_label}
-        textModalHint={s.strings.wc_scan_modal_text_modal_hint}
-        textModalTitle={s.strings.wc_scan_modal_text_modal_title}
+        title={lstrings.scan_qr_label}
+        textModalHint={lstrings.wc_scan_modal_text_modal_hint}
+        textModalTitle={lstrings.wc_scan_modal_text_modal_title}
       />
     ))
       .then((result: string | undefined) => {
@@ -120,17 +120,17 @@ export const WcConnectionsScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
+      <SceneHeader underline title={lstrings.wc_walletconnect_title} />
       <ScrollView contentContainerStyle={styles.container}>
-        <EdgeText style={styles.subTitle}>{s.strings.wc_walletconnect_subtitle}</EdgeText>
+        <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
-          label={s.strings.wc_walletconnect_new_connection_button}
+          label={lstrings.wc_walletconnect_new_connection_button}
           type="secondary"
           marginRem={[1, 0.5]}
           onPress={() => handleNewConnectionPress()}
           alignSelf="center"
         />
-        <EdgeText style={styles.listTitle}>{s.strings.wc_walletconnect_active_connections}</EdgeText>
+        <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>

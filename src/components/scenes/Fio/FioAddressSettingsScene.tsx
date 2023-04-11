@@ -2,7 +2,7 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
@@ -56,7 +56,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     refreshAllFioAddresses()
 
     this.setState({ showAddBundledTxs: false })
-    showToast(s.strings.fio_request_add_bundled_txs_ok_text)
+    showToast(lstrings.fio_request_add_bundled_txs_ok_text)
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
   }
 
@@ -65,9 +65,9 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     const { fioAddressName = '' } = route.params
 
     // todo: styles for message
-    const transferredMessage = `${fioAddressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
+    const transferredMessage = `${fioAddressName} ${lstrings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal bridge={bridge} title={s.strings.fio_domain_transferred} buttons={{ ok: { label: s.strings.string_ok_cap } }}>
+      <ButtonsModal bridge={bridge} title={lstrings.fio_domain_transferred} buttons={{ ok: { label: lstrings.string_ok_cap } }}>
         <EdgeText>{transferredMessage}</EdgeText>
       </ButtonsModal>
     ))
@@ -86,17 +86,17 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     this.setState({ showTransfer: false, showAddBundledTxs: false })
   }
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet)
 
   onAddBundledTxsSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
     const { isConnected, route } = this.props
     const { fioAddressName } = route.params
 
     if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
       return
     }
-    return addBundledTxs(fioWallet, fioAddressName, fee)
+    return await addBundledTxs(fioWallet, fioAddressName, fee)
   }
 
   goToTransfer = (params: { fee: number }) => {
@@ -104,12 +104,12 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     const { fioWallet, fioAddressName } = route.params
 
     if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
       return
     }
 
     const { fee: transferFee } = params
-    if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
+    if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
     this.cancelOperation()
 
     const guiMakeSpendInfo = {
@@ -140,7 +140,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: s.strings.fio_address_to_transfer, value: fioAddressName }]
+      infoTiles: [{ label: lstrings.fio_address_to_transfer, value: fioAddressName }]
     })
   }
 
@@ -151,14 +151,14 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
 
     return (
       <SceneWrapper background="theme">
-        <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
-        {bundledTxs != null ? <Tile type="static" title={s.strings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+        {bundledTxs != null ? <Tile type="static" title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
         {showAddBundledTxs && (
           <FioActionSubmit
             onSubmit={this.onAddBundledTxsSubmit}
             onSuccess={this.afterAddBundledTxsSuccess}
             getOperationFee={getAddBundledTxsFee}
-            successMessage={s.strings.fio_request_add_bundled_txs_ok_text}
+            successMessage={lstrings.fio_request_add_bundled_txs_ok_text}
             cancelOperation={this.cancelOperation}
             fioWallet={fioWallet}
             addressTitles
@@ -177,8 +177,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         )}
         {!showAddBundledTxs && !showTransfer && (
           <>
-            <MainButton label={s.strings.title_fio_add_bundled_txs} onPress={this.onAddBundledTxsPress} marginRem={[1.5, 1, 0.25]} />
-            <MainButton label={s.strings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
+            <MainButton label={lstrings.title_fio_add_bundled_txs} onPress={this.onAddBundledTxsPress} marginRem={[1.5, 1, 0.25]} />
+            <MainButton label={lstrings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
           </>
         )}
       </SceneWrapper>

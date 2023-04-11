@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { newPriceChangeEvent, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
@@ -57,13 +57,13 @@ export const CurrencyNotificationScene = (props: Props) => {
     () => [
       <SettingsSwitchRow
         key="hourly"
-        label={sprintf(s.strings.settings_currency_notifications_percent_change_hour, 3)}
+        label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
         value={settings.plugins[pluginId].hourlyChange != null}
         onPress={toggleHourlySetting}
       />,
       <SettingsSwitchRow
         key="daily"
-        label={sprintf(s.strings.settings_currency_notifications_percent_change_hours, 10, 24)}
+        label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
         value={settings.plugins[pluginId].dailyChange != null}
         onPress={toggleDailySetting}
       />

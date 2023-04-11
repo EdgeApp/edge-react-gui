@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
@@ -60,17 +60,17 @@ export function ConfirmContinueModal(props: Props) {
       <ScrollView>
         {children}
         {body != null ? <ModalMessage>{body}</ModalMessage> : null}
-        <ModalMessage>{s.strings.confirm_continue_modal_body}</ModalMessage>
+        <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
         <TouchableWithoutFeedback onPress={handleTogggle}>
           <View style={styles.checkBoxContainer}>
-            <EdgeText style={styles.checkboxText}>{s.strings.confirm_continue_modal_button_text}</EdgeText>
+            <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
             <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
               {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} />}
             </View>
           </View>
         </TouchableWithoutFeedback>
         <Fade visible={isAgreed}>
-          <MainButton alignSelf="center" label={s.strings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
+          <MainButton alignSelf="center" label={lstrings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
         </Fade>
       </ScrollView>
       {isSkippable && <ModalFooter onPress={handleClose} />}

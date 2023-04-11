@@ -1,7 +1,7 @@
 import NetInfo, { NetInfoState } from '@react-native-community/netinfo'
 import * as React from 'react'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { showError } from './AirshipInstance'
 
@@ -17,7 +17,7 @@ class NetworkActivityComponent extends React.Component<Props> {
     console.log('NetworkActivity - isConnected changed: ', info.isConnected)
     this.props.changeConnectivity(info.isConnected ?? false)
     if (!info.isConnected) {
-      showError(`${s.strings.network_alert_title}`)
+      showError(`${lstrings.network_alert_title}`)
     }
   }
 

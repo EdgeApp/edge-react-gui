@@ -23,14 +23,14 @@ import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -67,38 +67,38 @@ const MANAGE_ACTION_DATA_MAP: {
 } = {
   'loan-manage-borrow': {
     actionSide: 'debts',
-    amountCard: s.strings.loan_fragment_loan,
-    headerText: s.strings.loan_borrow_more,
+    amountCard: lstrings.loan_fragment_loan,
+    headerText: lstrings.loan_borrow_more,
     isFundDestWallet: true,
     programType: 'loan-borrow',
-    srcDestCard: s.strings.loan_fund_destination,
+    srcDestCard: lstrings.loan_fund_destination,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'borrow-more')
   },
   'loan-manage-deposit': {
     actionSide: 'collaterals',
-    amountCard: s.strings.loan_fragment_deposit,
-    headerText: s.strings.loan_add_collateral,
+    amountCard: lstrings.loan_fragment_deposit,
+    headerText: lstrings.loan_add_collateral,
     isFundDestWallet: false,
     programType: 'loan-deposit',
-    srcDestCard: s.strings.loan_fund_source,
+    srcDestCard: lstrings.loan_fund_source,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'add-collateral')
   },
   'loan-manage-repay': {
     actionSide: 'debts',
-    amountCard: s.strings.loan_fragment_repay,
-    headerText: s.strings.loan_make_payment,
+    amountCard: lstrings.loan_fragment_repay,
+    headerText: lstrings.loan_make_payment,
     isFundDestWallet: false,
     programType: 'loan-repay',
-    srcDestCard: s.strings.loan_fund_source,
+    srcDestCard: lstrings.loan_fund_source,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'make-payment')
   },
   'loan-manage-withdraw': {
     actionSide: 'collaterals',
-    amountCard: s.strings.loan_fragment_withdraw,
-    headerText: s.strings.loan_withdraw_collateral,
+    amountCard: lstrings.loan_fragment_withdraw,
+    headerText: lstrings.loan_withdraw_collateral,
     isFundDestWallet: true,
     programType: 'loan-withdraw',
-    srcDestCard: s.strings.loan_fund_destination,
+    srcDestCard: lstrings.loan_fund_destination,
     supportUrl: sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'withdraw-collateral')
   }
 }
@@ -137,14 +137,8 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const { tokenId: hardDebtTokenId } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
-  const { tokenId: hardCollateralTokenId } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'WBTC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
+  const hardDebtTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardCollateralTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
   if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
   const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
@@ -352,7 +346,7 @@ export const LoanManageSceneComponent = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         navigation={navigation}
-        headerTitle={s.strings.select_wallet}
+        headerTitle={lstrings.select_wallet}
         showCreateWallet={manageActionData.isFundDestWallet}
         createWalletId={manageActionData.isFundDestWallet ? borrowEngineWallet.id : undefined}
         showBankOptions={loanManageType === 'loan-manage-borrow'}
@@ -368,7 +362,7 @@ export const LoanManageSceneComponent = (props: Props) => {
                   wallet: borrowEngineWallet,
                   nativeBalance: collaterals.find(collateral => collateral.tokenId === hardCollateralTokenId)?.nativeAmount ?? '0',
                   referenceTokenId: hardCollateralTokenId ?? '',
-                  displayName: sprintf(s.strings.loan_deposited_collateral_s, 'WBTC'),
+                  displayName: sprintf(lstrings.loan_deposited_collateral_s, 'WBTC'),
                   currencyCode: 'WBTC'
                 }
               ]
@@ -394,7 +388,7 @@ export const LoanManageSceneComponent = (props: Props) => {
           setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtTokenId, paymentMethod })
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
-          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
+          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })
@@ -418,8 +412,8 @@ export const LoanManageSceneComponent = (props: Props) => {
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
-          inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
-          title={sprintf(s.strings.loan_enter_s_amount_s, manageActionData.amountCard, fiatCurrencyCode)}
+          inputModalMessage={sprintf(lstrings.loan_loan_amount_input_message_s, toPercentString(borrowPlugin.borrowInfo.maxLtvRatio.toString()))}
+          title={sprintf(lstrings.loan_enter_s_amount_s, manageActionData.amountCard, fiatCurrencyCode)}
           tokenId={selectedAsset.tokenId}
           onAmountChanged={handleFiatAmountChanged}
         />
@@ -428,25 +422,25 @@ export const LoanManageSceneComponent = (props: Props) => {
         <Space around={0.5}>
           <Shimmer isShown={bankAccountsMap == null} />
           <Peek isShown={bankAccountsMap != null}>
-            <TappableAccountCard emptyLabel={s.strings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
+            <TappableAccountCard emptyLabel={lstrings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
           </Peek>
         </Space>
       </Space>
       <Space vertical={1} around={0.25}>
         <TotalDebtCollateralTile
-          title={isActionSideDebts ? s.strings.loan_current_principal : s.strings.loan_current_collateral}
+          title={isActionSideDebts ? lstrings.loan_current_principal : lstrings.loan_current_collateral}
           wallet={borrowEngineWallet}
           debtsOrCollaterals={isActionSideDebts ? debts : collaterals}
           key="currentAmount"
         />
         <TotalDebtCollateralTile
-          title={isActionSideDebts ? s.strings.loan_new_principal : s.strings.loan_new_collateral}
+          title={isActionSideDebts ? lstrings.loan_new_principal : lstrings.loan_new_collateral}
           wallet={borrowEngineWallet}
           debtsOrCollaterals={isActionSideDebts ? pendingDebts : pendingCollaterals}
           key="newAmount"
         />
         <TotalDebtCollateralTile
-          title={isActionSideDebts ? s.strings.loan_collateral_value : s.strings.loan_principal_value}
+          title={isActionSideDebts ? lstrings.loan_collateral_value : lstrings.loan_principal_value}
           wallet={borrowEngineWallet}
           debtsOrCollaterals={isActionSideDebts ? collaterals : debts}
           key="counterAsset"
@@ -458,8 +452,8 @@ export const LoanManageSceneComponent = (props: Props) => {
           <Alert
             numberOfLines={0}
             marginRem={[1.5, 0.5, -0.75, 0.5]}
-            title={s.strings.exchange_insufficient_funds_title}
-            message={sprintf(s.strings.loan_amount_exceeds_s_collateral, toPercentString(hardLtvRatio))}
+            title={lstrings.exchange_insufficient_funds_title}
+            message={sprintf(lstrings.loan_amount_exceeds_s_collateral, toPercentString(hardLtvRatio))}
             type="error"
           />
         )}

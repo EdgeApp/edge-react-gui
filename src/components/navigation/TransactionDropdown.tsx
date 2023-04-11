@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions'
 import { selectWalletToken } from '../../actions/WalletActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -83,12 +83,12 @@ const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps
       const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
       return {
         account,
-        message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+        message: sprintf(lstrings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
       }
     } else {
       return {
         account,
-        message: sprintf(s.strings.bitcoin_received, currencyCode)
+        message: sprintf(lstrings.bitcoin_received, currencyCode)
       }
     }
   },

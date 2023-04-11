@@ -6,7 +6,7 @@ import { WebView } from 'react-native-webview'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -25,7 +25,7 @@ const HELP_URIS = {
 }
 
 export async function showHelpModal(): Promise<unknown> {
-  return Airship.show(bridge => <HelpModal bridge={bridge} />)
+  return await Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
 export function showWebViewModal(uri: string, title: string): void {
@@ -81,12 +81,12 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
   render() {
     const { bridge, theme } = this.props
     const styles = getStyles(theme)
-    const versionText = `${s.strings.help_version} ${versionNumber}`
-    const buildText = `${s.strings.help_build} ${buildNumber}`
+    const versionText = `${lstrings.help_version} ${versionNumber}`
+    const buildText = `${lstrings.help_build} ${buildNumber}`
     const optionMarginRem = [0.75, 0, 0.5, 1]
     const optionPaddingRem = [0, 1, 1, 0]
-    const helpModalTitle = sprintf(s.strings.help_modal_title_thanks, config.appName)
-    const helpSiteMoreInfoText = sprintf(s.strings.help_site_more_info_text, config.appName)
+    const helpModalTitle = sprintf(lstrings.help_modal_title_thanks, config.appName)
+    const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
@@ -102,10 +102,10 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
-          subTitle={s.strings.help_knowledge_base_text}
-          title={s.strings.help_knowledge_base}
+          subTitle={lstrings.help_knowledge_base_text}
+          title={lstrings.help_knowledge_base}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
+          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, lstrings.help_knowledge_base)}
         />
 
         <SelectableRow
@@ -113,10 +113,10 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
-          subTitle={s.strings.help_support_text}
-          title={s.strings.help_support}
+          subTitle={lstrings.help_support_text}
+          title={lstrings.help_support}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
+          onPress={() => showWebViewModal(HELP_URIS.support, lstrings.help_support)}
         />
 
         <SelectableRow
@@ -124,10 +124,10 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
-          subTitle={s.strings.help_call_text}
-          title={s.strings.help_call}
+          subTitle={lstrings.help_call_text}
+          title={lstrings.help_call}
           underline
-          onPress={async () => Linking.openURL(`tel:${HELP_URIS.call}`)}
+          onPress={async () => await Linking.openURL(`tel:${HELP_URIS.call}`)}
         />
 
         <SelectableRow
@@ -136,7 +136,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
           subTitle={helpSiteMoreInfoText}
-          title={sprintf(s.strings.help_visit_site, config.appName)}
+          title={sprintf(lstrings.help_visit_site, config.appName)}
           onPress={() => this.handleEdgeSitePress(helpSiteMoreInfoText)}
         />
         <View style={styles.footer}>

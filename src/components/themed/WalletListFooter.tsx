@@ -4,7 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
@@ -33,7 +33,7 @@ export const WalletListFooter = (props: Props) => {
       .map(pluginId => ({ pluginId }))
 
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} showCreateWallet />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} showCreateWallet />
     ))
       .then(({ walletId, currencyCode }) => {
         if (walletId != null && currencyCode != null) {
@@ -47,11 +47,11 @@ export const WalletListFooter = (props: Props) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleAddWallet} style={styles.addButtonsContainer}>
         <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-        <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.wallet_list_add_wallet}</EdgeText>
+        <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.wallet_list_add_wallet}</EdgeText>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleAddToken} style={styles.addButtonsContainer}>
         <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-        <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.wallet_list_add_token}</EdgeText>
+        <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.wallet_list_add_token}</EdgeText>
       </TouchableOpacity>
     </View>
   )

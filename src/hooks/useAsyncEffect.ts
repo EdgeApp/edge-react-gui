@@ -75,7 +75,7 @@ function wakeup(state: State): void {
     state.running = true
     // Leave the rendering thread before running the effect:
     Promise.resolve()
-      .then(async () => state.effect())
+      .then(async () => await state.effect())
       .then(cleanup => {
         state.lastCleanup = cleanup ?? undefined
         state.running = false

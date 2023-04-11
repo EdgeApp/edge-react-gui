@@ -66,7 +66,7 @@ function WalletListSortableRowComponent(props: Props) {
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
-          <CryptoIcon currencyCode={currencyCode} walletId={wallet.id} />
+          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsRow}>

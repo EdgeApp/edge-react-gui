@@ -186,7 +186,6 @@ export const banxaProvider: FiatProviderFactory = {
         const promises = [
           banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)
-            consify(cryptoCurrencies)
             for (const coin of cryptoCurrencies.data.coins) {
               for (const chain of coin.blockchains) {
                 // @ts-expect-error
@@ -200,8 +199,6 @@ export const banxaProvider: FiatProviderFactory = {
 
           banxaFetch({ method: 'GET', url, path: 'api/fiats/buy', apiKey }).then(response => {
             const fiatCurrencies = asBanxaFiats(response)
-            consify(fiatCurrencies)
-
             for (const fiat of fiatCurrencies.data.fiats) {
               allowedCurrencyCodes.fiat['iso:' + fiat.fiat_code] = true
             }
@@ -218,8 +215,6 @@ export const banxaProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, tokenId, direction } = params
-        console.log('Start Banxa quote')
-        consify(params)
 
         if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
@@ -281,17 +276,11 @@ export const banxaProvider: FiatProviderFactory = {
           throw new Error('Banxa only supports fiat -> crypto quotes')
         }
 
-        console.log('Getting Banxa quote')
-        consify(queryParams)
-
         const response = await banxaFetch({ method: 'GET', url, path: 'api/prices', apiKey, queryParams })
-        consify(response)
         const banxaPrices = asBanxaPricesResponse(response)
-
-        console.log('Cleaned Banxa quote')
-        consify(banxaPrices)
-
         const priceQuote = banxaPrices.data.prices[0]
+        console.log('Got Banxa Quote:')
+        consify(priceQuote)
 
         const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)

@@ -1,11 +1,11 @@
 import { gt } from 'biggystring'
 import { EdgeSpendInfo } from 'edge-core-js'
 
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePlugin, StakePolicy, StakePosition, StakePositionRequest, StakeProviderInfo } from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
-  displayName: s.strings.stake_resource_display_name,
+  displayName: lstrings.stake_resource_display_name,
   pluginId: 'tronResources',
   stakeProviderId: 'tronResources'
 }
@@ -28,7 +28,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'BANDWIDTH',
-        displayName: s.strings.stake_resource_bandwidth,
+        displayName: lstrings.stake_resource_bandwidth,
         cdnName: 'bandwidth'
       }
     ],
@@ -46,7 +46,7 @@ const policies: StakePolicy[] = [
       {
         pluginId: 'tron',
         currencyCode: 'ENERGY',
-        displayName: s.strings.stake_resource_energy,
+        displayName: lstrings.stake_resource_energy,
         cdnName: 'energy'
       }
     ],

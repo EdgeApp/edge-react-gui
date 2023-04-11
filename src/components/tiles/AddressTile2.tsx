@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { connect } from '../../types/reactRedux'
@@ -142,7 +142,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       if (!parsedUri.publicAddress) {
-        return showError(s.strings.scan_invalid_address_error_title)
+        return showError(lstrings.scan_invalid_address_error_title)
       }
 
       // set address
@@ -158,7 +158,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
           await launchPaymentProto(navigation, this.props.account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
         }
       } else {
-        showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
+        showError(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
       }
 
       this.setState({ loading: false })
@@ -191,13 +191,13 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleScan = () => {
     const { currencyCode } = this.props
-    const title = sprintf(s.strings.send_scan_modal_text_modal_title_s, currencyCode)
-    const message = sprintf(s.strings.send_scan_modal_text_modal_message_s, currencyCode)
+    const title = sprintf(lstrings.send_scan_modal_text_modal_title_s, currencyCode)
+    const message = sprintf(lstrings.send_scan_modal_text_modal_message_s, currencyCode)
     Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
-        title={s.strings.scan_qr_label}
-        textModalHint={s.strings.send_scan_modal_text_modal_hint}
+        title={lstrings.scan_qr_label}
+        textModalHint={lstrings.send_scan_modal_text_modal_hint}
         textModalBody={message}
         textModalTitle={title}
       />
@@ -215,7 +215,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   handleChangeAddress = async () => {
     const { coreWallet, currencyCode } = this.props
     Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />
+      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={lstrings.scan_address_modal_title} />
     ))
       .then(result => {
         if (result) {
@@ -234,7 +234,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        headerTitle={s.strings.your_wallets}
+        headerTitle={lstrings.your_wallets}
         navigation={navigation}
         allowedAssets={[{ pluginId, tokenId: getTokenId(account, pluginId, currencyCode) }]}
         excludeWalletIds={[coreWallet.id]}
@@ -263,7 +263,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     const { currencyWallets } = account
     const { loading } = this.state
     const styles = getStyles(theme)
-    const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
+    const copyMessage = this.state.clipboard ? `${lstrings.string_paste}: ${this.state.clipboard}` : null
     const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
     const tokenId: string | undefined = getTokenId(this.props.account, pluginId, currencyCode)
     const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
@@ -279,22 +279,22 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+                <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
               </TouchableOpacity>
               {canSelfTransfer ? (
                 <TouchableOpacity style={styles.buttonContainer} onPress={this.handleSelfTransfer}>
                   <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonText}>{s.strings.fragment_send_myself}</EdgeText>
+                  <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
                 </TouchableOpacity>
               ) : null}
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan}>
                 <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{s.strings.scan_as_in_scan_barcode}</EdgeText>
+                <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
               </TouchableOpacity>
               {copyMessage ? (
                 <TouchableOpacity style={styles.buttonContainer} onPress={this.handlePasteFromClipboard}>
                   <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonText}>{s.strings.string_paste}</EdgeText>
+                  <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
                 </TouchableOpacity>
               ) : null}
             </View>

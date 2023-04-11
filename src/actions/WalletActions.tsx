@@ -7,8 +7,8 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
-import { FIO_WALLET_TYPE, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { lstrings } from '../locales/strings'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
@@ -30,8 +30,8 @@ export interface SelectWalletTokenParams {
 
 const activateWalletName: MapObject<{ name: string; notes: string }> = {
   ripple: {
-    name: s.strings.activate_wallet_token_transaction_name_xrp,
-    notes: s.strings.activate_wallet_token_transaction_notes_xrp
+    name: lstrings.activate_wallet_token_transaction_name_xrp,
+    notes: lstrings.activate_wallet_token_transaction_notes_xrp
   }
 }
 
@@ -142,9 +142,9 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_account_unfinished_activation_title}
-          message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, currencyCode)}
-          buttons={{ ok: { label: s.strings.string_ok } }}
+          title={lstrings.create_wallet_account_unfinished_activation_title}
+          message={sprintf(lstrings.create_wallet_account_unfinished_activation_message, currencyCode)}
+          buttons={{ ok: { label: lstrings.string_ok } }}
         />
       ))
       return false
@@ -237,7 +237,7 @@ const activateWalletTokens = async (
       const { currencyCode, displayName } = getToken(wallet, tokenId) ?? {}
       return `${displayName} (${currencyCode})`
     })
-    const tileTitle = tokenIds.length > 1 ? s.strings.activate_wallet_tokens_scene_tile_title : s.strings.activate_wallet_token_scene_tile_title
+    const tileTitle = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_scene_tile_title : lstrings.activate_wallet_token_scene_tile_title
     const tileBody = tokensText.join(', ')
 
     const { networkFee } = activationQuote
@@ -253,48 +253,47 @@ const activateWalletTokens = async (
     if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
     fiatFee = round(fiatFee, -3)
     const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${fiatCurrencyCode.replace('iso:', '')})`
-    let bodyText = s.strings.activate_wallet_token_scene_body
+    let bodyText = lstrings.activate_wallet_token_scene_body
 
-    // HACK: XRP causes the reserve requirement to increase per token activated. There's
-    // No good way to parametrize this and abstract away the asset
-    if (wallet.currencyInfo.pluginId === 'ripple') {
-      bodyText += '\n\n' + s.strings.activate_wallet_token_scene_body_xrp_extra
+    const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+    if (tokenActivationAdditionalReserveText != null) {
+      bodyText += '\n\n' + tokenActivationAdditionalReserveText
     }
 
     navigation.navigate('confirmScene', {
-      titleText: s.strings.activate_wallet_token_scene_title,
+      titleText: lstrings.activate_wallet_token_scene_title,
       bodyText,
       infoTiles: [
         { label: tileTitle, value: tileBody },
-        { label: s.strings.mining_fee, value: feeString }
+        { label: lstrings.mining_fee, value: feeString }
       ],
       onConfirm: (resetSlider: () => void) => {
         if (lt(wallet.balances[paymentCurrencyCode] ?? '0', nativeFee)) {
-          const msg = tokenIds.length > 1 ? s.strings.activate_wallet_tokens_insufficient_funds_s : s.strings.activate_wallet_token_insufficient_funds_s
+          const msg = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_insufficient_funds_s : lstrings.activate_wallet_token_insufficient_funds_s
           Airship.show<'ok' | undefined>(bridge => (
             <ButtonsModal
               bridge={bridge}
-              title={s.strings.create_wallet_account_unfinished_activation_title}
+              title={lstrings.create_wallet_account_unfinished_activation_title}
               message={sprintf(msg, feeString)}
-              buttons={{ ok: { label: s.strings.string_ok } }}
+              buttons={{ ok: { label: lstrings.string_ok } }}
             />
           ))
           navigation.pop()
           return
         }
 
-        const name = activateWalletName[pluginId]?.name ?? s.strings.activate_wallet_token_transaction_name_category_generic
-        const notes = activateWalletName[pluginId]?.notes ?? s.strings.activate_wallet_token_transaction_notes_generic
+        const name = activateWalletName[pluginId]?.name ?? lstrings.activate_wallet_token_transaction_name_category_generic
+        const notes = activateWalletName[pluginId]?.notes ?? lstrings.activate_wallet_token_transaction_notes_generic
         activationQuote
           .approve({
             metadata: {
               name,
-              category: `Expense:${s.strings.activate_wallet_token_transaction_name_category_generic}`,
+              category: `Expense:${lstrings.activate_wallet_token_transaction_name_category_generic}`,
               notes
             }
           })
           .then(result => {
-            showToast(s.strings.activate_wallet_token_success, ACTIVATION_TOAST_AUTO_HIDE_MS)
+            showToast(lstrings.activate_wallet_token_success, ACTIVATION_TOAST_AUTO_HIDE_MS)
             navigation.pop()
           })
           .catch(e => {
@@ -402,20 +401,21 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
         securityCheckedWallets[walletId] = { ...securityCheckedWallets[walletId], checked: true }
       }
     }
+    dispatch({ type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS', data: securityCheckedWallets })
 
     const MigrateWalletsModal = async (walletNames: string[]): Promise<'yes' | 'no' | undefined> => {
-      const message = sprintf(s.strings.migrate_wallets_modal_message, walletNames.join('\n'))
+      const message = sprintf(lstrings.migrate_wallets_modal_message, walletNames.join('\n'))
 
       return await Airship.show<'yes' | 'no' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.alert_dropdown_warning}
+          title={lstrings.alert_dropdown_warning}
           message={message}
           fullScreen
           warning
           buttons={{
-            yes: { label: s.strings.yes },
-            no: { label: s.strings.no }
+            yes: { label: lstrings.yes },
+            no: { label: lstrings.no }
           }}
         />
       ))

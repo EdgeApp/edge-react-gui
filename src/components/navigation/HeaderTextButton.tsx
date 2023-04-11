@@ -3,7 +3,7 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -15,8 +15,8 @@ interface Props {
 }
 
 const title = {
-  exit: s.strings.string_exit,
-  help: s.strings.string_help
+  exit: lstrings.string_exit,
+  help: lstrings.string_help
 }
 
 export const HeaderTextButton = (props: Props) => {

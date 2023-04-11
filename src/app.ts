@@ -179,7 +179,7 @@ const realFetch = fetch
 // @ts-expect-error
 fetch = async (...args: any) => {
   // @ts-expect-error
-  return realFetch(...args).catch(e => {
+  return await realFetch(...args).catch(e => {
     Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],
       errorName: e.name,

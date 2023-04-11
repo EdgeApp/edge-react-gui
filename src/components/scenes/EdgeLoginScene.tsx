@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
@@ -35,15 +35,15 @@ export const EdgeLoginScene = (props: Props) => {
 
   const warningMessage =
     lobby?.loginRequest?.appId === ''
-      ? sprintf(s.strings.edge_description_warning, lobby?.loginRequest?.displayName)
-      : sprintf(s.strings.access_wallet_description, config.appName)
+      ? sprintf(lstrings.edge_description_warning, lobby?.loginRequest?.displayName)
+      : sprintf(lstrings.access_wallet_description, config.appName)
 
   useAsyncEffect(async () => {
     try {
       setLobby(await account.fetchLobby(lobbyId))
     } catch (error: any) {
       if (error.message.includes('Account does not')) {
-        showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_stale_qr)
+        showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
       } else {
         showError(error)
       }
@@ -57,11 +57,11 @@ export const EdgeLoginScene = (props: Props) => {
     try {
       await loginRequest.approve()
       navigation.pop()
-      showOkModal(s.strings.send_scan_edge_login_success_title, s.strings.send_scan_edge_login_success_message)
+      showOkModal(lstrings.send_scan_edge_login_success_title, lstrings.send_scan_edge_login_success_message)
     } catch (error: any) {
       navigation.pop()
       if (error.message.includes('Could not reach')) {
-        showOkModal(s.strings.edge_login_failed, s.strings.edge_login_fail_message)
+        showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_message)
       } else {
         showError(error)
       }
@@ -85,19 +85,19 @@ export const EdgeLoginScene = (props: Props) => {
         </CrossFade>
       </View>
       <Fade visible={lobby != null} delay={125}>
-        <WarningCard title={s.strings.string_warning} header={warningMessage} />
+        <WarningCard title={lstrings.string_warning} header={warningMessage} />
       </Fade>
       <Fade visible={lobby != null} delay={250}>
-        <MainButton label={s.strings.accept_button_text} onPress={handleAccept} marginRem={1} />
+        <MainButton label={lstrings.accept_button_text} onPress={handleAccept} marginRem={1} />
       </Fade>
-      <MainButton label={s.strings.string_cancel_cap} onPress={handleDecline} type="escape" marginRem={[0, 1, 1]} />
+      <MainButton label={lstrings.string_cancel_cap} onPress={handleDecline} type="escape" marginRem={[0, 1, 1]} />
     </SceneWrapper>
   )
 }
 
 const showOkModal = async (title: string, message: string) => {
-  return Airship.show<'ok' | undefined>(bridge => (
-    <ButtonsModal bridge={bridge} buttons={{ ok: { label: s.strings.string_ok } }} message={message + '\n'} title={title} />
+  return await Airship.show<'ok' | undefined>(bridge => (
+    <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok } }} message={message + '\n'} title={title} />
   ))
 }
 

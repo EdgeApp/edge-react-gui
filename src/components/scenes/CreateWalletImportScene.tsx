@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -88,10 +88,10 @@ const CreateWalletImportComponent = (props: Props) => {
       await Airship.show<'edit' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_failed_import_header}
-          message={s.strings.create_wallet_all_failed}
+          title={lstrings.create_wallet_failed_import_header}
+          message={lstrings.create_wallet_all_failed}
           buttons={{
-            edit: { label: s.strings.create_wallet_edit }
+            edit: { label: lstrings.create_wallet_edit }
           }}
         />
       ))
@@ -105,11 +105,11 @@ const CreateWalletImportComponent = (props: Props) => {
       const resolveValue = await Airship.show<'continue' | 'edit' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_failed_import_header}
-          message={sprintf(s.strings.create_wallet_some_failed, displayNames)}
+          title={lstrings.create_wallet_failed_import_header}
+          message={sprintf(lstrings.create_wallet_some_failed, displayNames)}
           buttons={{
-            continue: { label: s.strings.legacy_address_modal_continue },
-            cancel: { label: s.strings.string_cancel_cap }
+            continue: { label: lstrings.legacy_address_modal_continue },
+            cancel: { label: lstrings.string_cancel_cap }
           }}
         />
       ))
@@ -128,7 +128,7 @@ const CreateWalletImportComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <SceneHeader title={s.strings.create_wallet_import_title} withTopMargin />
+      <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         scrollEnabled={scrollEnabled}
@@ -139,12 +139,12 @@ const CreateWalletImportComponent = (props: Props) => {
           <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
         </View>
         <EdgeText style={styles.instructionalText} numberOfLines={2}>
-          {s.strings.create_wallet_import_all_instructions}
+          {lstrings.create_wallet_import_all_instructions}
         </EdgeText>
         <OutlinedTextInput
           value={importText}
           returnKeyType="next"
-          label={s.strings.create_wallet_import_input_key_or_seed_prompt}
+          label={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
           blurOnClear={false}
@@ -153,7 +153,7 @@ const CreateWalletImportComponent = (props: Props) => {
           marginRem={[1, 0.75, 1.25]}
           ref={textInputRef}
         />
-        <MainButton label={s.strings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
+        <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )

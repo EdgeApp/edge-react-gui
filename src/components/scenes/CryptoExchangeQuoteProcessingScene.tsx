@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -11,9 +11,9 @@ function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <View style={styles.container}>
-        <EdgeText style={styles.title}>{s.strings.hang_tight}</EdgeText>
+        <EdgeText style={styles.title}>{lstrings.hang_tight}</EdgeText>
         <EdgeText style={styles.findingText} numberOfLines={2}>
-          {s.strings.trying_to_find}
+          {lstrings.trying_to_find}
         </EdgeText>
         <ActivityIndicator style={styles.spinner} color={props.theme.iconTappable} />
       </View>

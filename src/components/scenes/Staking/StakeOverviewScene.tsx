@@ -4,12 +4,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
-import { guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -99,11 +99,11 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Renderers
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
-    const titleBase = allocationType === 'staked' ? s.strings.stake_s_staked : s.strings.stake_s_earned
+    const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : lstrings.stake_s_earned
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
-    const tokenId = guessFromCurrencyCode(account, { currencyCode, pluginId: wallet.currencyInfo.pluginId }).tokenId
+    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 
@@ -135,7 +135,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}
       />
       <MainButton
-        label={s.strings.stake_stake_more_funds}
+        label={lstrings.stake_stake_more_funds}
         disabled={!stakePosition?.canStake}
         type="primary"
         onPress={handleModifyPress('stake')}
@@ -143,7 +143,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       />
       {stakePolicy.rewardsNotClaimable ? null : (
         <MainButton
-          label={s.strings.stake_claim_rewards}
+          label={lstrings.stake_claim_rewards}
           disabled={!stakePosition?.canClaim}
           type="secondary"
           onPress={handleModifyPress('claim')}

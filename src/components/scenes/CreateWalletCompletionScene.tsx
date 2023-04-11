@@ -8,7 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { createWallet, enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -52,7 +52,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   }, [account, fiatCode, importText, newWalletItems, walletNames])
 
   const tokenPromise = React.useMemo(() => {
-    return async () => dispatch(enableTokensAcrossWallets(newTokenItems))
+    return async () => await dispatch(enableTokensAcrossWallets(newTokenItems))
   }, [dispatch, newTokenItems])
 
   // Mainnet wallets first followed by our single token item, if necessary
@@ -120,7 +120,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
         <IconDataRow
           marginRem={[1, 0.5, 0, 1]}
           icon={<FontAwesome5 name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
-          leftText={s.strings.create_wallet_tokens}
+          leftText={lstrings.create_wallet_tokens}
           leftSubtext={
             <EdgeText style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }} ellipsizeMode="tail">
               {tokenNameString}
@@ -137,7 +137,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return (
       <Fade visible={done}>
         <MainButton
-          label={s.strings.string_done_cap}
+          label={lstrings.string_done_cap}
           type="secondary"
           marginRem={[1]}
           onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
@@ -153,7 +153,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     <SceneWrapper background="theme">
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-          <SceneHeader title={s.strings.title_create_wallets} withTopMargin />
+          <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingTop: theme.rem(0.5), paddingBottom: gap.bottom }}

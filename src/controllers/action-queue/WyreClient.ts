@@ -38,7 +38,7 @@ export const makeWyreClient = async (opt: WyreClientOptions): Promise<WyreClient
 
   const wyreSecret = await dataStore
     .getItem('co.edgesecure.wyre', 'wyreSecret')
-    .catch(async _ => dataStore.getItem('co.edgesecure.wyre', 'wyreAccountId'))
+    .catch(async _ => await dataStore.getItem('co.edgesecure.wyre', 'wyreAccountId'))
     .catch(_ => undefined)
   const isAccountSetup = !!wyreSecret
 

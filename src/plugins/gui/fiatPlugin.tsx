@@ -1,5 +1,5 @@
 import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
-import { EdgeAccount, EdgeDataStore } from 'edge-core-js'
+import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -8,16 +8,21 @@ import SafariView from 'react-native-safari-view'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
+import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import {
   FiatPaymentType,
+  FiatPluginAddressFormParams,
   FiatPluginEnterAmountParams,
   FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
+  FiatPluginSepaFormParams,
+  FiatPluginSepaTransferParams,
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
@@ -58,8 +63,8 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount: async (params: FiatPluginEnterAmountParams) => {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods } = params
-      return new Promise((resolve, reject) => {
+      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
+      return await new Promise((resolve, reject) => {
         logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
         navigation.navigate('guiPluginEnterAmount', {
@@ -72,7 +77,60 @@ export const executePlugin = async (params: {
           onChangeText: async () => undefined,
           onSubmit: async (value: FiatPluginEnterAmountResponse) => {
             logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+            if (onSubmit != null) await onSubmit(value)
             resolve(value)
+          }
+        })
+      })
+    },
+    addressForm: async (params: FiatPluginAddressFormParams) => {
+      const { countryCode, headerTitle, headerIconUri, onSubmit } = params
+      return await new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginAddressForm', {
+          countryCode,
+          headerTitle,
+          headerIconUri,
+          onSubmit: async (homeAddress: HomeAddress) => {
+            if (onSubmit != null) await onSubmit(homeAddress)
+            resolve(homeAddress)
+          }
+        })
+      })
+    },
+    sepaForm: async (params: FiatPluginSepaFormParams) => {
+      const { headerTitle, headerIconUri, onSubmit } = params
+      return await new Promise((resolve, reject) => {
+        navigation.navigate('guiPluginSepaForm', {
+          headerTitle,
+          headerIconUri,
+          onSubmit: async (sepaInfo: SepaInfo) => {
+            if (onSubmit != null) await onSubmit(sepaInfo)
+            resolve(sepaInfo)
+          }
+        })
+      })
+    },
+    sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
+      return await new Promise((resolve, reject) => {
+        const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
+        navigation.navigate('guiPluginInfoDisplay', {
+          headerTitle,
+          promptMessage,
+          transferInfo,
+          headerIconUri,
+          onDone: async () => {
+            if (onDone != null) await onDone()
+            resolve()
+          }
+        })
+      })
+    },
+    send: async (params: SendScene2Params) => {
+      return await new Promise<void>((resolve, reject) => {
+        navigation.navigate('send2', {
+          ...params,
+          onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
+            resolve()
           }
         })
       })
@@ -99,9 +157,13 @@ export const executePlugin = async (params: {
     throw new Error(`pluginId ${pluginId} not found`)
   }
 
+  // TODO: Pick one or the other - paymentType or paymentTypes.
+  // We currently always use 'paymentType' and then mask it as 'paymentTypes'
+  // here. The 'paymentTypes' defined in buy/sellList.json gets ignored, causing
+  // confusion.
   const paymentTypes = paymentType != null ? [paymentType] : []
   const startPluginParams = {
-    isBuy,
+    direction,
     regionCode,
     paymentTypes,
     providerId

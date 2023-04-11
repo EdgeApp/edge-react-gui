@@ -9,7 +9,7 @@ import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   getLocalSettings,
   getSyncedSettings,
@@ -62,7 +62,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const newAccount = account.newAccount
 
     if (newAccount) {
-      let defaultFiat = syncedSettings.defaultFiat
+      let { defaultFiat } = syncedSettings
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
         defaultFiat = phoneCurrency
@@ -120,8 +120,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
-          title={s.strings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
+          title={lstrings.update_notice_deprecate_electrum_servers_title}
+          body={sprintf(lstrings.update_notice_deprecate_electrum_servers_message, config.appName)}
         />
       ))
         .finally(async () => {
@@ -159,7 +159,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       defaultIsoFiat: '',
       denominationSettings: {},
       developerModeOn: false,
-      spamFilterOn: true,
       isAccountBalanceVisible: false,
       mostRecentWallets: [],
       passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -167,6 +166,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,
       preferredSwapPluginType: undefined,
+      securityCheckedWallets: {},
+      spamFilterOn: true,
       spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',
@@ -281,7 +282,7 @@ export function logoutRequest(navigation: NavigationBase, username?: string): Th
     // Must use reset in order to avoid being prevented by the useBackEvent:
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login' }]
+      routes: [{ name: 'gettingStarted' }, { name: 'login' }]
     })
     await dispatch(logout(username))
   }
@@ -308,7 +309,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
         fiatCurrencyCode
       }),
       20000,
-      new Error(s.strings.error_creating_wallets)
+      new Error(lstrings.error_creating_wallets)
     )
     if (account.activeWalletIds.length <= 1) {
       dispatch({
@@ -365,7 +366,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
  * Creates wallets inside a new account.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeTokenId[], dispatch: Dispatch) {
-  if (edgeTokenIds.length === 0) return createDefaultWallets(account, fiatCurrencyCode, dispatch)
+  if (edgeTokenIds.length === 0) return await createDefaultWallets(account, fiatCurrencyCode, dispatch)
 
   const pluginIdTokenIdMap: { [pluginId: string]: string[] } = {}
 

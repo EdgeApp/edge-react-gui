@@ -130,10 +130,9 @@ export function SortedWalletList(props: Props) {
 
   // Phase 3: Check for differences.
   const dispatch = useDispatch()
-  const emptyList: WalletListItem[] = [] // Needed for Flow.
-  const lastList = React.useRef(emptyList)
+  const lastList = React.useRef<WalletListItem[] | undefined>()
   React.useEffect(() => {
-    if (!matchWalletList(sorted, lastList.current)) {
+    if (lastList.current == null || !matchWalletList(sorted, lastList.current)) {
       dispatch({ type: 'UPDATE_SORTED_WALLET_LIST', data: sorted })
     }
     lastList.current = sorted

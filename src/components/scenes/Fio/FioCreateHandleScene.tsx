@@ -10,7 +10,7 @@ import { createFioWallet, refreshAllFioAddresses } from '../../../actions/FioAdd
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
@@ -56,7 +56,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
   const accountUserName = useSelector(state => state.core.account.username)
   const fioPlugin = useSelector(state => state.core.account.currencyConfig.fio)
   if (fioPlugin.otherMethods == null) {
-    showError(s.strings.fio_register_handle_error)
+    showError(lstrings.fio_register_handle_error)
     navigation.pop()
   }
 
@@ -92,7 +92,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
     const fioAccountName = `${fioHandle}${domainStr}`
     if (!(await fioPlugin.otherMethods.validateAccount(fioAccountName))) {
       if (!mounted.current) return
-      setErrorText(sprintf(s.strings.fio_register_handle_taken_error_s, fioAccountName))
+      setErrorText(sprintf(lstrings.fio_register_handle_taken_error_s, fioAccountName))
     }
 
     // Register handle
@@ -112,7 +112,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
           redirectUrl: '',
           apiToken: freeRegApiToken
         })
-      }).then(async res => res.json())
+      }).then(async res => await res.json())
 
       // Check registration status
       try {
@@ -130,7 +130,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
       // Registration fetch failed
       console.error(JSON.stringify(e, null, 2))
       if (!mounted.current) return
-      setErrorText(s.strings.fio_register_handle_error)
+      setErrorText(lstrings.fio_register_handle_error)
     }
   }
 
@@ -178,7 +178,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
       try {
         setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
       } catch (e) {
-        setErrorText(s.strings.fio_register_handle_error)
+        setErrorText(lstrings.fio_register_handle_error)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,7 +200,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
     <SceneWrapper background="theme">
       <ScrollView contentContainerStyle={styles.container}>
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
-        <EdgeText style={styles.title}>{s.strings.personalize_wallet_title}</EdgeText>
+        <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
           <OutlinedTextInput
             ref={inputRef}
@@ -222,12 +222,12 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
         <View style={styles.buttonContainer}>
           <MainButton
             type="primary"
-            label={s.strings.fio_register_handle_button}
+            label={lstrings.fio_register_handle_button}
             onPress={handleRegisterPress}
             marginRem={0.5}
             disabled={fioHandle.length < 3 || errorText != null || wallet == null}
           />
-          <MainButton type="escape" label={s.strings.string_cancel_cap} onPress={handleCancelPress} marginRem={0.5} />
+          <MainButton type="escape" label={lstrings.string_cancel_cap} onPress={handleCancelPress} marginRem={0.5} />
         </View>
       </ScrollView>
     </SceneWrapper>

@@ -9,7 +9,7 @@ import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { getSymbolFromCurrency, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
@@ -76,7 +76,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
           // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
           id: new Date(unlockDate).toDateString(),
           // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
-          title: sprintf(s.strings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
+          title: sprintf(lstrings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
           amount: formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
         }))
     )
@@ -104,11 +104,11 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader style={styles.sceneHeader} title={sprintf(s.strings.staking_overview_header, currencyCode)} underline withTopMargin>
+      <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_overview_header, currencyCode)} underline withTopMargin>
         <Image style={styles.currencyLogo} source={fioLogo} />
       </SceneHeader>
       <ScrollView style={styles.scrollContainer}>
-        <EdgeText style={styles.explainerText}>{s.strings.staking_overview_explainer}</EdgeText>
+        <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
         <Tile type="static" title="Currently Staked">
           <EdgeText>
             {staked}
@@ -118,8 +118,8 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
         {renderItems()}
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <MainButton onPress={handlePressStake} type="secondary" label={s.strings.staking_stake_funds_button} />
-        <ClickableText onPress={handlePressUnstake} label={s.strings.staking_unstake_funds_button} />
+        <MainButton onPress={handlePressStake} type="secondary" label={lstrings.staking_stake_funds_button} />
+        <ClickableText onPress={handlePressUnstake} label={lstrings.staking_unstake_funds_button} />
       </View>
     </SceneWrapper>
   )

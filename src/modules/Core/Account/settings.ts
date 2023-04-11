@@ -30,6 +30,15 @@ const asDenominationSettings = asMap(asOptional(asObject(asMaybe(asCurrencyCodeD
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
 
+export type SecurityCheckedWallets = Record<string, { checked: boolean; modalShown: number }>
+
+const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
+  asObject({
+    checked: asBoolean,
+    modalShown: asNumber
+  })
+)
+
 export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
   defaultFiat: asOptional(asString, 'USD'),
@@ -50,15 +59,7 @@ export const asSyncedAccountSettings = asObject({
   ),
   walletsSort: asOptional(asSortOption, 'manual'),
   denominationSettings: asOptional(asDenominationSettings, {}),
-  securityCheckedWallets: asMaybe(
-    asObject(
-      asObject({
-        checked: asBoolean,
-        modalShown: asNumber
-      })
-    ),
-    {}
-  )
+  securityCheckedWallets: asMaybe(asSecurityCheckedWallets, {})
 })
 
 // Default Account Settings
@@ -98,68 +99,68 @@ const CATEGORIES_FILENAME = 'Categories.json'
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = async (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
-  getSyncedSettings(account).then(async settings => {
+  await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { autoLogoutTimeInSeconds })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setDefaultFiatRequest = async (account: EdgeAccount, defaultFiat: string) =>
-  getSyncedSettings(account).then(async settings => {
+  await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setPreferredSwapPluginId = async (account: EdgeAccount, pluginId: string | undefined) => {
-  return getSyncedSettings(account).then(async settings => {
+  return await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId, preferredSwapPluginType: undefined })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 }
 
 export const setPreferredSwapPluginType = async (account: EdgeAccount, swapPluginType: EdgeSwapPluginType | undefined) => {
-  return getSyncedSettings(account).then(async settings => {
+  return await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { preferredSwapPluginType: swapPluginType, preferredSwapPluginId: '' })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 }
 
 export const setMostRecentWalletsSelected = async (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
-  getSyncedSettings(account).then(async settings => {
+  await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { mostRecentWallets })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setWalletsSort = async (account: EdgeAccount, walletsSort: SortOption) =>
-  getSyncedSettings(account).then(async settings => {
+  await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { walletsSort })
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 
 // Local Settings
 export const setPasswordReminderRequest = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
-  getLocalSettings(account).then(async settings => {
+  await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })
-    return setLocalSettings(account, updatedSettings)
+    return await setLocalSettings(account, updatedSettings)
   })
 
 export const setAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
-  return getLocalSettings(account).then(async settings => {
+  return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
-    return setLocalSettings(account, updatedSettings)
+    return await setLocalSettings(account, updatedSettings)
   })
 }
 
 export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: boolean) => {
-  return getLocalSettings(account).then(async settings => {
+  return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { developerModeOn })
-    return setLocalSettings(account, updatedSettings)
+    return await setLocalSettings(account, updatedSettings)
   })
 }
 
 export const setSpamFilterOn = async (account: EdgeAccount, spamFilterOn: boolean) => {
-  return getLocalSettings(account).then(async settings => {
+  return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { spamFilterOn })
-    return setLocalSettings(account, updatedSettings)
+    return await setLocalSettings(account, updatedSettings)
   })
 }
 
@@ -171,11 +172,11 @@ export interface SpendingLimits {
 }
 
 export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits) => {
-  return getLocalSettings(account).then(async settings => {
+  return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
     const out = setLocalSettings(account, updatedSettings)
     logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
-    return out
+    return await out
   })
 }
 export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: PasswordReminderTime) {
@@ -183,14 +184,14 @@ export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, le
   const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
   passwordRecoveryRemindersShown[level] = true
   const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
-  return setSyncedSettings(account, updatedSettings)
+  return await setSyncedSettings(account, updatedSettings)
 }
 
 // Currency Settings
 export const setDenominationKeyRequest = async (account: EdgeAccount, pluginId: string, currencyCode: string, denomination: EdgeDenomination) =>
-  getSyncedSettings(account).then(async settings => {
+  await getSyncedSettings(account).then(async settings => {
     const updatedSettings = updateCurrencySettings(settings, pluginId, currencyCode, denomination)
-    return setSyncedSettings(account, updatedSettings)
+    return await setSyncedSettings(account, updatedSettings)
   })
 
 // Helper Functions
@@ -220,7 +221,7 @@ export interface CategoriesFile {
 
 export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)
-  return setSyncedSubcategories(account, subcategories)
+  return await setSyncedSubcategories(account, subcategories)
 }
 
 export async function setSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
@@ -240,24 +241,25 @@ export async function setSyncedSubcategories(account: EdgeAccount, subcategories
 }
 
 export const getSyncedSubcategories = async (account: EdgeAccount) =>
-  account.disklet
+  await account.disklet
     .getText(CATEGORIES_FILENAME)
     .then(text => {
       const categoriesText = JSON.parse(text)
       return categoriesText.categories
     })
-    .catch(async () =>
-      // If Categories.json doesn't exist yet, create it, and return it
-      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
+    .catch(
+      async () =>
+        // If Categories.json doesn't exist yet, create it, and return it
+        await setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
     )
 
 export const getLocalSettings = async (account: EdgeAccount) => {
-  return account.localDisklet
+  return await account.localDisklet
     .getText(LOCAL_SETTINGS_FILENAME)
     .then(JSON.parse)
     .catch(async () => {
       // If Settings.json doesn't exist yet, create it, and return it
-      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
+      return await setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
     })
     .then(settings => {
       return {
@@ -269,7 +271,7 @@ export const getLocalSettings = async (account: EdgeAccount) => {
 
 export const setLocalSettings = async (account: EdgeAccount, settings: object) => {
   const text = JSON.stringify(settings)
-  return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
 export const updateCurrencySettings = (currentSettings: any, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {

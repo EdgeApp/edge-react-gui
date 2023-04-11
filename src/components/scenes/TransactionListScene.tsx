@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -152,7 +152,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return sections
   }
 
-  emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
+  emptySection = () => [{ title: lstrings.transaction_list_search_no_result, data: [] }]
 
   renderEmptyComponent = () => {
     const { navigation, tokenId, numTransactions, wallet } = this.props
@@ -251,8 +251,8 @@ export const TransactionList = withWallet((props: OwnProps) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const numTransactions = useSelector(state => state.ui.scenes.transactionList.numTransactions)
-  const transactions = useSelector(state => state.ui.scenes.transactionList.transactions)
+  const numTransactions = useSelector(state => state.ui.transactionList.numTransactions)
+  const transactions = useSelector(state => state.ui.transactionList.transactions)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
 

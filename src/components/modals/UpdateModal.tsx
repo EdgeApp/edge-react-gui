@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { getBundleId } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -28,17 +28,17 @@ export function UpdateModal(props: Props) {
   }
 
   const handleClose = () => bridge.resolve()
-  const message = sprintf(s.strings.update_fresh_new_version, config.appName)
+  const message = sprintf(lstrings.update_fresh_new_version, config.appName)
 
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
       <View style={styles.titleContainer}>
         <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
-        <ModalTitle>{s.strings.update_header}</ModalTitle>
+        <ModalTitle>{lstrings.update_header}</ModalTitle>
       </View>
       <ModalMessage>{message}</ModalMessage>
-      <MainButton label={s.strings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
-      <MainButton label={s.strings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
+      <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
+      <MainButton label={lstrings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
       <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )

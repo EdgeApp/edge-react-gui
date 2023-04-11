@@ -19,7 +19,7 @@ import { formatFiatString } from '../../../hooks/useFiatText'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
@@ -91,9 +91,9 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   }, [account, runningActionQueueItem])
 
   const summaryDetails = [
-    { label: s.strings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
+    { label: lstrings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
     {
-      label: s.strings.loan_available_equity,
+      label: lstrings.loan_available_equity,
       value: displayFiatTotal(wallet, availableEquity),
       icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
     }
@@ -137,7 +137,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       isDisabled: boolean
     }> = [
       {
-        title: s.strings.loan_action_add_collateral,
+        title: lstrings.loan_action_add_collateral,
         iconName: 'add-collateral',
         handlePress: () => {
           navigation.navigate('loanManage', { loanManageType: 'loan-manage-deposit', loanAccountId })
@@ -145,7 +145,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         isDisabled: isActionProgramRunning
       },
       {
-        title: s.strings.loan_action_withdraw_collateral,
+        title: lstrings.loan_action_withdraw_collateral,
         iconName: 'withdraw-collateral',
         handlePress: () => {
           navigation.navigate('loanManage', { loanManageType: 'loan-manage-withdraw', loanAccountId })
@@ -153,7 +153,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
       {
-        title: s.strings.loan_borrow_more,
+        title: lstrings.loan_borrow_more,
         iconName: 'borrow-more',
         handlePress: () => {
           navigation.navigate('loanManage', { loanManageType: 'loan-manage-borrow', loanAccountId })
@@ -161,7 +161,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         isDisabled: isActionProgramRunning || !isOpenCollaterals
       },
       {
-        title: s.strings.loan_make_payment,
+        title: lstrings.loan_make_payment,
         iconName: 'make-payment',
         handlePress: () => {
           navigation.navigate('loanManage', { loanManageType: 'loan-manage-repay', loanAccountId })
@@ -169,7 +169,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         isDisabled: isActionProgramRunning || !isOpenDebts
       },
       {
-        title: s.strings.loan_action_close_loan,
+        title: lstrings.loan_action_close_loan,
         iconName: 'close-loan',
         handlePress: () => {
           navigation.navigate('loanClose', { loanAccountId })
@@ -207,6 +207,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   // #endregion
 
   const isDevMode = useSelector(state => state.ui.settings.developerModeOn)
+  const { pluginId } = wallet.currencyInfo
 
   return (
     <SceneWrapper>
@@ -216,7 +217,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
-        title={`${s.strings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
+        title={`${lstrings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
         underline
         withTopMargin
       />
@@ -233,18 +234,16 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         </Space>
         <Space horizontal={1}>
           <Space bottom={1}>
-            <SectionHeading>{s.strings.loan_loan_breakdown_title}</SectionHeading>
+            <SectionHeading>{lstrings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
           {debts.map(debt => {
             if (zeroString(debt.nativeAmount)) return null
-            const token = getToken(wallet, debt.tokenId)
-            const currencyCode = token?.currencyCode ?? 'N/A'
-            const aprText = sprintf(s.strings.loan_apr_s, toPercentString(debt.apr))
+            const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space sideways>
                   <Space right={1}>
-                    <CryptoIcon currencyCode={currencyCode} hideSecondary />
+                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>
@@ -261,9 +260,9 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         {/* Tappable Action Cards */}
         <Space horizontal={1}>
           <Space bottom={1}>
-            <SectionHeading>{s.strings.loan_actions_title}</SectionHeading>
+            <SectionHeading>{lstrings.loan_actions_title}</SectionHeading>
             {isActionProgramRunning ? (
-              <Alert type="warning" title={s.strings.warning_please_wait_title} message={s.strings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
+              <Alert type="warning" title={lstrings.warning_please_wait_title} message={lstrings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />
             ) : null}
           </Space>
           {actionCards}

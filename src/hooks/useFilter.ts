@@ -2,8 +2,7 @@ import * as React from 'react'
 
 const CACHE_MAX_SIZE = 10
 
-// @ts-expect-error
-export function useFilter<T>(allData: T[], filterData?: (filter: string, item: T, index: number) => boolean = () => true): [T[], (filter: string) => void] {
+export function useFilter<T>(allData: T[], filterData: (filter: string, item: T, index: number) => boolean = () => true): [T[], (filter: string) => void] {
   const [filteredData, setFilteredData] = React.useState(allData)
   const [filteredDataCache, setFilteredDataCache] = React.useState<{ [search: string]: T[] }>({ '': allData })
   const [fifoCache, setFifoCache] = React.useState([''])

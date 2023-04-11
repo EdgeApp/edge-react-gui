@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ENV } from '../../env'
 import { formatNumber, isValidInput } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { EdgeTokenId } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
@@ -12,65 +12,94 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
-import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
+import {
+  FiatPlugin,
+  FiatPluginEnterAmountResponse,
+  FiatPluginFactory,
+  FiatPluginFactoryArgs,
+  FiatPluginGetMethodsResponse,
+  FiatPluginStartParams
+} from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
+import { bityProvider } from './providers/bityProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
 
-const asFiatPluginPriorities = asMap(asMap(asNumber))
+// A map keyed by provider pluginIds, and values representing preferred priority
+// for that provider.
+// Higher numbers are preferred over lower. If a provider is not listed or is
+// marked with a priority of 0, it is not considered for quoting.
+const asProviderPriorityMap = asMap(asNumber)
+type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
-interface FiatPluginPriority {
-  [pluginId: string]: number
-}
+// A map keyed by supported payment types and values of ProviderPriorityMap
+const asPaymentTypeProviderPriorityMap = asMap(asProviderPriorityMap)
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-// TODO: Allow other fiat currency codes. Hard code USD for now
-const providerFactories = [simplexProvider, moonpayProvider, banxaProvider]
+const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
-export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const pluginId = 'creditcard'
+export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
+  const pluginId = 'amountquote'
   const { disablePlugins, showUi, account } = params
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
-  let priorityArray = [{}]
-  let pluginPriority = {}
-
-  for (const providerFactory of providerFactories) {
-    if (disablePlugins[providerFactory.pluginId]) continue
-    // @ts-expect-error
-    priorityArray[0][providerFactory.pluginId] = true
-    // @ts-expect-error
-    const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
-    if (apiKeys == null) continue
-    const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
-  }
-  if (providerPromises.length === 0) throw new Error('No enabled creditCardPlugin providers')
-
-  const providers = await Promise.all(providerPromises)
-  for (const provider of providers) {
-    assetPromises.push(provider.getSupportedAssets())
-  }
-
-  try {
-    const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
-    pluginPriority = asFiatPluginPriorities(await response.json())
-    // @ts-expect-error
-    priorityArray = createPriorityArray(pluginPriority[pluginId])
-  } catch (e: any) {
-    console.log(e.message)
-    // This is ok. We just use default values
-  }
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { isBuy, regionCode, paymentTypes, providerId } = params
+      const { direction, regionCode, paymentTypes, providerId } = params
+      // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
+      // buy/sellPluginList.jsons.
+      if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
+
+      let providerPriority: ProviderPriorityMap = {}
+      let priorityArray = [{}]
+      if (paymentTypes.length === 1) {
+        // Fetch provider priorities from the info server based on the payment
+        // type
+        try {
+          const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
+          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())[paymentTypes[0]]
+          priorityArray = createPriorityArray(providerPriority)
+        } catch (e: any) {
+          console.warn('Failed to fetch provider priorities:', e)
+          // This is ok. We will use all configured providers at equal priority.
+        }
+      } else {
+        throw new Error('Multiple paymentTypes not implemented')
+      }
+
+      // Filter providers for which API keys are set and are not explicitly
+      // disabled by disablePlugins.
+      // TODO: Address redundancy of plugin-disabling implementations: info
+      // server vs disablePlugins
+      for (const providerFactory of providerFactories) {
+        if (disablePlugins[providerFactory.pluginId]) continue
+        // @ts-expect-error
+        priorityArray[0][providerFactory.pluginId] = true
+
+        // @ts-expect-error
+        const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
+        if (apiKeys == null) continue
+
+        const store = createStore(providerFactory.storeId, account.dataStore)
+        providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
+      }
+
+      if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
+
+      // Fetch supported assets from all providers
+      // TODO: Filter by supported paymentTypes
+      const providers = await Promise.all(providerPromises)
+      for (const provider of providers) {
+        assetPromises.push(provider.getSupportedAssets())
+      }
+
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
-      const assetArray = await showUi.showToastSpinner(s.strings.fiat_plugin_fetching_assets, ps)
+      const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
       const allowedAssets: EdgeTokenId[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
@@ -95,8 +124,9 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
       }
 
       // Pop up modal to pick wallet/asset
+      // TODO: Filter wallets according to fiats supported by allowed providers
       const walletListResult: { walletId: string | undefined; currencyCode: string | undefined } = await showUi.walletPicker({
-        headerTitle: s.strings.fiat_plugin_select_asset_to_purchase,
+        headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
         allowedAssets,
         showCreateWallet: true
       })
@@ -106,23 +136,26 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
 
       const coreWallet = account.currencyWallets[walletId]
       const currencyPluginId = coreWallet.currencyInfo.pluginId
-      if (!coreWallet) return showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
+      if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
       let goodQuotes: FiatProviderQuote[] = []
 
-      const fiatCurrencyCode = coreWallet.fiatCurrencyCode
+      // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
+      // wallet fiat selection regardless of region.
+      // TODO: Remove when Fiat selection is designed.
+      const fiatCurrencyCode = paymentTypes[0] === 'sepa' ? 'iso:EUR' : coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+      const isBuy = direction === 'buy'
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       await showUi.enterAmount({
-        headerTitle: sprintf(s.strings.fiat_plugin_buy_currencycode, currencyCode),
+        headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         isBuy,
-
-        label1: sprintf(s.strings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
-        label2: sprintf(s.strings.fiat_plugin_amount_currencycode, currencyCode),
+        label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
+        label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
         getMethods: (methods: FiatPluginGetMethodsResponse) => {
           enterAmountMethods = methods
@@ -130,7 +163,7 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
         convertValue: async (sourceFieldNum: number, value: string): Promise<string | undefined> => {
           if (!isValidInput(value)) {
             if (enterAmountMethods != null)
-              enterAmountMethods.setStatusText({ statusText: s.strings.create_wallet_invalid_input, options: { textType: 'error' } })
+              enterAmountMethods.setStatusText({ statusText: lstrings.create_wallet_invalid_input, options: { textType: 'error' } })
             return
           }
           bestQuote = undefined
@@ -140,15 +173,17 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           let quoteParams: FiatProviderGetQuoteParams
           let sourceFieldCurrencyCode
 
+          // TODO: Design UX that supports quoting fiatCurrencyCodes that differ
+          // from the the selected wallet's fiatCurrencyCode
           if (sourceFieldNum === 1) {
             // User entered a fiat value. Convert to crypto
             sourceFieldCurrencyCode = displayFiatCurrencyCode
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode,
               amountType: 'fiat',
-              direction: 'buy',
+              direction,
               paymentTypes,
               regionCode
             }
@@ -158,15 +193,15 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
             quoteParams = {
               tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
               exchangeAmount: value,
-              fiatCurrencyCode: coreWallet.fiatCurrencyCode,
+              fiatCurrencyCode,
               amountType: 'crypto',
-              direction: 'buy',
+              direction,
               paymentTypes,
               regionCode
             }
           }
 
-          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => p.getQuote(quoteParams))
+          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => await p.getQuote(quoteParams))
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
@@ -177,23 +212,23 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           if (myCounter !== counter) return
 
           for (const quote of quotes) {
-            if (quote.direction !== 'buy') continue
+            if (quote.direction !== direction) continue
             // @ts-expect-error
-            if (pluginPriority[pluginId] != null && pluginPriority[pluginId][quote.pluginId] <= 0) continue
+            if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)
           }
 
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? s.strings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
             if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: bestErrorText, options: { textType: 'error' } })
             return
           }
 
           // Find best quote factoring in pluginPriorities
-          bestQuote = getBestQuote(goodQuotes, priorityArray)
+          bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: s.strings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
+            if (enterAmountMethods != null) enterAmountMethods.setStatusText({ statusText: lstrings.fiat_plugin_buy_no_quote, options: { textType: 'error' } })
             return
           }
 
@@ -254,25 +289,31 @@ export const creditCardPlugin: FiatPluginFactory = async (params: FiatPluginFact
           } else {
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
+        },
+        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+          if (bestQuote == null) {
+            return
+          }
+          await bestQuote.approveQuote({ showUi, coreWallet })
         }
       })
 
       showUi.popScene()
-      if (bestQuote == null) {
-        return
-      }
-      await bestQuote.approveQuote({ showUi, coreWallet })
     }
   }
   return fiatPlugin
 }
 
-export const createPriorityArray = (pluginPriority: FiatPluginPriority): PriorityArray => {
+// Returns an array with a sort index according to the desired priority in
+// showing the quotes.
+// TODO: conflict: also defines whether or not to accept a quote from the
+// provider
+export const createPriorityArray = (providerPriority: ProviderPriorityMap): PriorityArray => {
   const priorityArray: PriorityArray = []
-  if (pluginPriority != null) {
+  if (providerPriority != null) {
     const temp: Array<{ pluginId: string; priority: number }> = []
-    for (const pluginId in pluginPriority) {
-      temp.push({ pluginId, priority: pluginPriority[pluginId] })
+    for (const pluginId in providerPriority) {
+      temp.push({ pluginId, priority: providerPriority[pluginId] })
     }
     temp.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity

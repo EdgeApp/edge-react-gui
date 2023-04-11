@@ -9,7 +9,7 @@ import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { upgradeCurrencyCodes, WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
 import { Airship, showError, showWarning } from '../components/services/AirshipInstance'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
@@ -45,23 +45,23 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
   const { assets, post, redir, payer } = link
   try {
     // Check if all required fields are provided in the request
-    if (assets.length === 0) throw new Error(s.strings.reqaddr_error_no_currencies_found)
-    if ((post == null || post === '') && (redir == null || redir === '')) throw new Error(s.strings.reqaddr_error_post_redir)
+    if (assets.length === 0) throw new Error(lstrings.reqaddr_error_no_currencies_found)
+    if ((post == null || post === '') && (redir == null || redir === '')) throw new Error(lstrings.reqaddr_error_post_redir)
   } catch (e: any) {
     showError(e.message)
   }
 
   // Present the request to the user for confirmation
-  const payerStr = payer ?? s.strings.reqaddr_application_fragment
+  const payerStr = payer ?? lstrings.reqaddr_application_fragment
   const assetsStr = toListString(assets.map(asset => asset.tokenCode))
   const confirmResult = await Airship.show<'yes' | 'no' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
-      title={s.strings.reqaddr_confirm_modal_title}
-      message={sprintf(s.strings.reqaddr_confirm_modal_message, payerStr, assetsStr)}
+      title={lstrings.reqaddr_confirm_modal_title}
+      message={sprintf(lstrings.reqaddr_confirm_modal_message, payerStr, assetsStr)}
       buttons={{
-        yes: { label: s.strings.yes },
-        no: { label: s.strings.no }
+        yes: { label: lstrings.yes },
+        no: { label: lstrings.no }
       }}
     />
   ))
@@ -80,7 +80,7 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
 
     // Show warnings or errors for unsupported native currencies
     if (unsupportedNativeCodes.length > 0) {
-      const unsupportedMessage = sprintf(s.strings.reqaddr_error_unsupported_chains, config.appName, toListString(unsupportedNativeCodes))
+      const unsupportedMessage = sprintf(lstrings.reqaddr_error_unsupported_chains, config.appName, toListString(unsupportedNativeCodes))
       if (unsupportedNativeCodes.length === assets.length) {
         showError(unsupportedMessage) // All requested assets unsupported
         return
@@ -94,7 +94,7 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
     const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={s.strings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} allowedAssets={tokenId} showCreateWallet />
     )).then(async ({ walletId, currencyCode }) => {
       if (walletId != null && currencyCode != null) {
         const { currencyWallets } = account
@@ -109,7 +109,7 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
 
   // Handle POST and redir
   if (Object.keys(jsonPayloadMap).length === 0) {
-    showError(s.strings.reqaddr_error_no_wallets_selected)
+    showError(lstrings.reqaddr_error_no_wallets_selected)
   } else {
     if (post != null && post !== '') {
       // Setup and POST the JSON payload
@@ -121,7 +121,7 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
       }
       try {
         const response = await fetch(post, initOpts)
-        if (!response.ok) showError(s.strings.fio_get_requests_error)
+        if (!response.ok) showError(lstrings.fio_get_requests_error)
       } catch (e: any) {
         showError(e.message)
       }
@@ -129,7 +129,7 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
     if (redir != null && redir !== '') {
       // Make sure this isn't some malicious link to cause an infinite redir loop
       const deepLink = parseDeepLink(redir)
-      if (deepLink.type === 'requestAddress' && deepLink.redir != null) throw new Error(s.strings.reqaddr_error_invalid_redir)
+      if (deepLink.type === 'requestAddress' && deepLink.redir != null) throw new Error(lstrings.reqaddr_error_invalid_redir)
 
       const url = new URL(redir, true)
       url.set('query', { ...url.query, ...jsonPayloadMap })
@@ -148,8 +148,8 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
       (await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
-          title={sprintf(s.strings.gateway_agreement_modal_title, currencyCode)}
-          body={s.strings.gateway_agreement_modal_body}
+          title={sprintf(lstrings.gateway_agreement_modal_title, currencyCode)}
+          body={lstrings.gateway_agreement_modal_body}
           isSkippable
         />
       )))
@@ -159,7 +159,7 @@ export const addressWarnings = async (parsedUri: any, currencyCode: string) => {
     approve =
       approve &&
       (await Airship.show<boolean>(bridge => (
-        <ConfirmContinueModal bridge={bridge} title={s.strings.legacy_address_modal_title} body={s.strings.legacy_address_modal_warning} isSkippable />
+        <ConfirmContinueModal bridge={bridge} title={lstrings.legacy_address_modal_title} body={lstrings.legacy_address_modal_warning} isSkippable />
       )))
   }
   return approve
@@ -226,9 +226,9 @@ export function handleWalletUris(
       await Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          buttons={{ ok: { label: s.strings.string_ok } }}
-          message={s.strings.scan_invalid_address_error_description}
-          title={s.strings.scan_invalid_address_error_title}
+          buttons={{ ok: { label: lstrings.string_ok } }}
+          message={lstrings.scan_invalid_address_error_description}
+          title={lstrings.scan_invalid_address_error_title}
         />
       ))
     }
@@ -236,23 +236,23 @@ export function handleWalletUris(
 }
 
 async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
-  const message = sprintf(s.strings.private_key_modal_sweep_from_private_key_message, config.appName)
+  const message = sprintf(lstrings.private_key_modal_sweep_from_private_key_message, config.appName)
 
   await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
-      title={s.strings.private_key_modal_sweep_from_private_address}
+      title={lstrings.private_key_modal_sweep_from_private_address}
       message={message}
       buttons={
         {
           confirm: {
-            label: s.strings.private_key_modal_import,
+            label: lstrings.private_key_modal_import,
             async onPress() {
               await sweepPrivateKeys(wallet, privateKeys)
               return true
             }
           },
-          cancel: { label: s.strings.private_key_modal_cancel }
+          cancel: { label: lstrings.private_key_modal_cancel }
         } as const
       }
     />
@@ -312,30 +312,30 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedW
       let threeButtonModal
       const { displayBuyCrypto } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
       if (displayBuyCrypto) {
-        const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+        const messageSyntax = sprintf(lstrings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
         threeButtonModal = await Airship.show<'buy' | 'exchange' | 'decline' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={s.strings.buy_crypto_modal_title}
+            title={lstrings.buy_crypto_modal_title}
             message={messageSyntax}
             buttons={{
-              buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-              exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'primary' },
-              decline: { label: s.strings.buy_crypto_decline }
+              buy: { label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode) },
+              exchange: { label: lstrings.buy_crypto_modal_exchange, type: 'primary' },
+              decline: { label: lstrings.buy_crypto_decline }
             }}
           />
         ))
       } else {
         // if we're not targetting for buying, but rather exchange
-        const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
+        const messageSyntax = sprintf(lstrings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
         threeButtonModal = await Airship.show<'exchange' | 'decline' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={s.strings.buy_crypto_modal_title}
+            title={lstrings.buy_crypto_modal_title}
             message={messageSyntax}
             buttons={{
-              exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
-              decline: { label: s.strings.buy_crypto_decline }
+              exchange: { label: sprintf(lstrings.buy_crypto_modal_exchange) },
+              decline: { label: lstrings.buy_crypto_decline }
             }}
           />
         ))

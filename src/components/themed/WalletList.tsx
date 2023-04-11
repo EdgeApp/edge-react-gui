@@ -6,7 +6,7 @@ import { SectionList } from 'react-native'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
@@ -176,11 +176,11 @@ export function WalletList(props: Props) {
     return {
       sectionList: [
         {
-          title: s.strings.wallet_list_modal_header_mru,
+          title: lstrings.wallet_list_modal_header_mru,
           data: [...recentWalletList]
         },
         {
-          title: s.strings.wallet_list_modal_header_all,
+          title: lstrings.wallet_list_modal_header_all,
           data: walletList
         }
       ],

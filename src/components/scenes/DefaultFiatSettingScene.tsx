@@ -6,7 +6,7 @@ import { cacheStyles } from 'react-native-patina'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -65,7 +65,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         paddingRem={[0, 1]}
         // @ts-expect-error
-        subTitle={s.strings[`currency_label_${data.item.value}`]}
+        subTitle={lstrings[`currency_label_${data.item.value}`]}
         title={data.item.value}
         onPress={() => this.onSelectFiat(data.item)}
       />
@@ -83,13 +83,13 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader title={s.strings.title_create_wallet_select_fiat} underline withTopMargin>
+            <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
               <OutlinedTextInput
                 autoCorrect={false}
                 autoCapitalize="words"
                 onChangeText={this.handleSearchTermChange}
                 value={this.state.searchTerm}
-                label={s.strings.fragment_wallets_addwallet_fiat_hint}
+                label={lstrings.fragment_wallets_addwallet_fiat_hint}
                 returnKeyType="search"
                 marginRem={[1, 0.5, 0]}
                 searchIcon
@@ -113,7 +113,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
     const { navigation } = this.props
     if (!this.isValidFiat(selectedFiat)) {
-      Alert.alert(s.strings.fragment_create_wallet_select_valid)
+      Alert.alert(lstrings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()

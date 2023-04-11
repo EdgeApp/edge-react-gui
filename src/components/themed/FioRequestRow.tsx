@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../modules/FioAddress/util'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
@@ -59,7 +59,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     const { displayDenomination, fioRequest, theme } = this.props
     const styles = getStyles(theme)
     const name = displayDenomination.name || fioRequest.content.token_code.toUpperCase()
-    const value = `${s.strings.title_fio_requested} ${name}`
+    const value = `${lstrings.title_fio_requested} ${name}`
 
     return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
   }
@@ -69,14 +69,14 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     let statusStyle = styles.requestPartialConfirmation
-    let label = s.strings.fragment_wallet_unconfirmed
+    let label = lstrings.fragment_wallet_unconfirmed
     if (isSentFioRequest(status)) {
       statusStyle = styles.requestDetailsReceivedTx
-      label = s.strings.fragment_transaction_list_receive_prefix
+      label = lstrings.fragment_transaction_list_receive_prefix
     }
     if (isRejectedFioRequest(status)) {
       statusStyle = styles.requestPending
-      label = s.strings.fio_reject_status
+      label = lstrings.fio_reject_status
     }
     return <EdgeText style={[styles.requestPendingTime, statusStyle]}>{label}</EdgeText>
   }
@@ -100,7 +100,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
             : (isActive: SharedValue<boolean>) => (
                 <TouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
                   <SwipeableRowIcon isActive={isActive} minWidth={theme.rem(7)}>
-                    <EdgeText>{isSent ? s.strings.string_cancel_cap : s.strings.swap_terms_reject_button}</EdgeText>
+                    <EdgeText>{isSent ? lstrings.string_cancel_cap : lstrings.swap_terms_reject_button}</EdgeText>
                   </SwipeableRowIcon>
                 </TouchableOpacity>
               )

@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
@@ -109,11 +109,11 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{s.strings.transaction_details_accelerate_transaction_header}</ModalTitle>
-        <ModalMessage>{s.strings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
+        <ModalTitle>{lstrings.transaction_details_accelerate_transaction_header}</ModalTitle>
+        <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
         <View style={styles.container}>
-          <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
         {error == null ? null : (
           <View style={styles.error}>
@@ -127,7 +127,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabled={isSending || !!error}
             onSlidingComplete={this.handleConfirmation}
             showSpinner={isSending}
-            disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
+            disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
         <ModalFooter onPress={this.handleCancel} />

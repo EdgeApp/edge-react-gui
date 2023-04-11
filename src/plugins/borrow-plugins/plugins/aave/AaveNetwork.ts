@@ -89,6 +89,7 @@ export const makeAaveNetworkFactory = (blueprint: AaveNetworkBlueprint): AaveNet
     //
 
     async getAssetPrice(address): Promise<BigNumber> {
+      // eslint-disable-next-line @typescript-eslint/return-await
       return await IPriceOracle.getAssetPrice(address)
     },
 

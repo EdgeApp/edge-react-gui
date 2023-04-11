@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { toPercentString } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -18,7 +18,7 @@ const AprCardComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const aprValue = apr == null || apr === 0 ? '-- ' : toPercentString(apr)
-  const displayApr = React.useMemo(() => sprintf(s.strings.loan_s_apr, aprValue), [aprValue])
+  const displayApr = React.useMemo(() => sprintf(lstrings.loan_s_apr, aprValue), [aprValue])
 
   return (
     <View style={styles.cardContainer}>

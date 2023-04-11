@@ -6,7 +6,7 @@ import { pickWallet } from '../components/modals/WalletListModal'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { PaymentProtoError } from '../types/PaymentProtoError'
 import {
   PaymentProtoInstructionOutput,
@@ -198,7 +198,7 @@ export async function launchPaymentProto(
   }
 
   const metadata = params.metadata ?? {}
-  const paymentIdString = sprintf(s.strings.bitpay_metadata_name, paymentId)
+  const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
   metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
 
   // Make the spend to generate the tx hexes
@@ -231,7 +231,7 @@ export async function launchPaymentProto(
     tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
     lockTilesMap: { amount: true, address: true },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-      if (error) showError(`${s.strings.create_wallet_account_error_sending_transaction}: ${error.message}`)
+      if (error) showError(`${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`)
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
       const unsignedHex = edgeTransaction.otherParams?.unsignedTx
