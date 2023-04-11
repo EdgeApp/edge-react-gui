@@ -1,5 +1,6 @@
 import { abs, add, div, gt, mul } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue } from 'cleaners'
+import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -23,28 +24,19 @@ import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
 import { IconTile } from '../tiles/IconTile'
 
-interface WcRpcPayload {
-  id: string | number
-  method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_signTypedData_v4' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction'
-  params: any[]
-}
-
-interface Props {
+interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
   wallet: EdgeCurrencyWallet
-  dApp: JsonObject
-  uri: string
-  payload: WcRpcPayload
 }
 
 export const WcSmartContractModal = (props: Props) => {
   const { bridge, wallet, dApp, payload, uri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dAppName: string = dApp.peerMeta.name
-  const icon: string = dApp.peerMeta.icons[0]
+  const dAppName = dApp.peerMeta.name
+  const icon = dApp.peerMeta.icons[0]
   const params = payload.params[0]
-  const toAddress: string | null = params.to
+  const toAddress = params.to
 
   const walletName = getWalletName(wallet)
 
@@ -61,10 +53,10 @@ export const WcSmartContractModal = (props: Props) => {
 
   let amountCrypto = '0'
   let networkFeeCrypto = '0'
-  if (isHex(removeHexPrefix(params?.value ?? ''))) {
+  if (isHex(removeHexPrefix(params.value))) {
     amountCrypto = hexToDecimal(params.value)
   }
-  if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
+  if (isHex(removeHexPrefix(params.gas)) && isHex(removeHexPrefix(params.gasPrice))) {
     networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
   }
 
@@ -203,3 +195,37 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
     throw e
   }
 }
+
+const asWcRpcPayload = asObject({
+  id: asEither(asString, asNumber),
+  method: asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction'),
+  params: asEither(
+    asTuple(
+      asObject({
+        from: asString,
+        to: asOptional(asString),
+        data: asString,
+        gas: asOptional(asString),
+        gasPrice: asOptional(asString),
+        value: asString,
+        nonce: asOptional(asString)
+      }),
+      asOptional(asString, '')
+    ),
+    asArray(asString)
+  )
+})
+
+type WcRpcPayload = ReturnType<typeof asWcRpcPayload>
+
+export const asWcSmartContractModalProps = asObject({
+  dApp: asObject({
+    peerMeta: asObject({
+      name: asString,
+      icons: asArray(asString)
+    })
+  }),
+  uri: asString,
+  payload: asWcRpcPayload
+})
+type WcSmartContractModalProps = ReturnType<typeof asWcSmartContractModalProps>
