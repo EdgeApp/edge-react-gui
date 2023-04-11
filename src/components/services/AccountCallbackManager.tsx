@@ -106,9 +106,20 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('wcNewContractCall', obj => {
         try {
           const clean = asWcSmartContractModalProps(obj)
-          const { dApp, payload, tokenId, uri } = clean
+          const { dApp, nativeAmount, networkFee, payload, tokenId, uri } = clean
 
-          Airship.show(bridge => <WcSmartContractModal bridge={bridge} wallet={wallet} dApp={dApp} payload={payload} tokenId={tokenId} uri={uri} />)
+          Airship.show(bridge => (
+            <WcSmartContractModal
+              bridge={bridge}
+              wallet={wallet}
+              dApp={dApp}
+              nativeAmount={nativeAmount}
+              networkFee={networkFee}
+              payload={payload}
+              tokenId={tokenId}
+              uri={uri}
+            />
+          ))
         } catch (e: any) {
           console.warn('Invalid wcNewContractCall params', e)
         }

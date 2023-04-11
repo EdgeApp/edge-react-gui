@@ -13,7 +13,7 @@ import { lstrings } from '../../locales/strings'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils'
+import { zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
@@ -31,12 +31,11 @@ interface Props extends WcSmartContractModalProps {
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, wallet, dApp, payload, tokenId, uri } = props
+  const { bridge, wallet, dApp, payload, tokenId, nativeAmount, networkFee, uri } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dAppName = dApp.peerMeta.name
   const icon = dApp.peerMeta.icons[0]
-  const params = payload.params[0]
 
   const walletName = getWalletName(wallet)
 
@@ -47,24 +46,15 @@ export const WcSmartContractModal = (props: Props) => {
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
   const feeCurrencyBalance = wallet.balances[feeCurrencyCode]
 
-  let amountCrypto = '0'
-  let networkFeeCrypto = '0'
-  if (isHex(removeHexPrefix(params.value))) {
-    amountCrypto = hexToDecimal(params.value)
-  }
-  if (isHex(removeHexPrefix(params.gas)) && isHex(removeHexPrefix(params.gasPrice))) {
-    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
-  }
-
   const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
   const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
   const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)
-  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
-  const totalNativeCrypto = mul(add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
+  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFee)
+  const totalNativeCrypto = mul(add(nativeAmount, amountCryptoAsFeeCrypto), '-1')
 
-  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
+  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFee, feeCurrencyBalance)
 
   const handleSubmit = () => {
     wcRequestResponse(wallet, uri, true, payload)
@@ -99,10 +89,10 @@ export const WcSmartContractModal = (props: Props) => {
       </View>
       <ScrollView>
         {renderWarning()}
-        {!zeroString(amountCrypto) && (
+        {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.string_amount}
-            nativeCryptoAmount={amountCrypto}
+            nativeCryptoAmount={nativeAmount}
             denomination={amountDenom}
             walletId={wallet.id}
             tokenId={tokenId}
@@ -114,15 +104,10 @@ export const WcSmartContractModal = (props: Props) => {
         <IconTile title={lstrings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
-        {!zeroString(networkFeeCrypto) && (
-          <CryptoFiatAmountTile
-            title={lstrings.wc_smartcontract_network_fee}
-            nativeCryptoAmount={networkFeeCrypto}
-            denomination={feeDenom}
-            walletId={wallet.id}
-          />
+        {zeroString(networkFee) ? null : (
+          <CryptoFiatAmountTile title={lstrings.wc_smartcontract_network_fee} nativeCryptoAmount={networkFee} denomination={feeDenom} walletId={wallet.id} />
         )}
-        {!zeroString(totalNativeCrypto) && (
+        {zeroString(totalNativeCrypto) ? null : (
           <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
         )}
         {slider}
@@ -218,6 +203,8 @@ export const asWcSmartContractModalProps = asObject({
       icons: asArray(asString)
     })
   }),
+  nativeAmount: asString,
+  networkFee: asString,
   tokenId: asOptional(asString),
   uri: asString,
   payload: asWcRpcPayload
