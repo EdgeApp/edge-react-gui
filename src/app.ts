@@ -11,8 +11,6 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
-  // @ts-expect-error
-  apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
   }
