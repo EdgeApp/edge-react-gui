@@ -16,8 +16,8 @@ import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
-import { SepaTransferScene } from '../plugins/gui/scenes/SepaTransferScene'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -555,8 +555,8 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="guiPluginSepaTransfer"
-        component={SepaTransferScene}
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
         options={{
           headerRight: () => null
         }}

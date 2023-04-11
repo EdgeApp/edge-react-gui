@@ -12,23 +12,23 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 
-interface SepaDisplayGroup {
+interface InfoDisplayGroup {
   groupTitle: string
   items: Array<{ label: string; value?: string }>
 }
 
 interface Props {
-  route: RouteProp<'guiPluginSepaTransfer'>
+  route: RouteProp<'guiPluginInfoDisplay'>
 }
 
-export const SepaTransferScene = React.memo((props: Props) => {
+export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route } = props
   // TODO: headerIconUri
   const { headerTitle, transferInfo, promptMessage, onDone } = route.params
 
-  const displayData: SepaDisplayGroup[] = React.useMemo(() => {
+  const displayData: InfoDisplayGroup[] = React.useMemo(() => {
     const { input, output, paymentDetails } = transferInfo
     return [
       {

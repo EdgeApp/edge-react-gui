@@ -217,7 +217,7 @@ interface RouteParamList {
     headerIconUri?: string
   }
   guiPluginSepaForm: FiatPluginSepaFormParams
-  guiPluginSepaTransfer: FiatPluginSepaTransferParams
+  guiPluginInfoDisplay: FiatPluginSepaTransferParams
   guiPluginAddressForm: FiatPluginAddressFormParams
   loanDashboard: {}
   loanDetails: {

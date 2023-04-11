@@ -113,7 +113,7 @@ export const executePlugin = async (params: {
     sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
       return await new Promise((resolve, reject) => {
         const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
-        navigation.navigate('guiPluginSepaTransfer', {
+        navigation.navigate('guiPluginInfoDisplay', {
           headerTitle,
           promptMessage,
           transferInfo,
