@@ -290,8 +290,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
       })
-
-      showUi.popScene()
     }
   }
   return fiatPlugin
