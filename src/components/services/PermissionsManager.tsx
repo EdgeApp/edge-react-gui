@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Disklet } from 'disklet'
 import * as React from 'react'
-import { check, checkMultiple, PermissionStatus, request } from 'react-native-permissions'
+import { check, checkMultiple, openSettings, PermissionStatus, request } from 'react-native-permissions'
 
 import { SETTINGS_PERMISSION_LIMITS, SETTINGS_PERMISSION_QUANTITY } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -28,10 +28,10 @@ export const PermissionsManager = () => {
   return null
 }
 
-export async function requestPermission(data: Permission): Promise<PermissionStatus> {
+export async function edgeRequestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(permissionNames[data])
 
-  if (status === 'denied') {
+  if (status === 'denied' || status === 'blocked') {
     if (data === 'contacts') {
       const isContactsPermissionShownBefore = await AsyncStorage.getItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE).catch(showError)
 
@@ -39,11 +39,15 @@ export async function requestPermission(data: Permission): Promise<PermissionSta
       if (isContactsPermissionShownBefore === 'true') return
 
       const result = await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
-      AsyncStorage.setItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE, 'true').catch(showError)
-
-      if (result === 'deny') return status
+      if (result === 'deny') {
+        return status
+      } else if (status === 'blocked') {
+        await openSettings().catch(showError)
+        return await check(permissionNames[data])
+      } else {
+        return await request(permissionNames[data])
+      }
     }
-    return await request(permissionNames[data])
   }
   return status
 }
@@ -68,7 +72,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
   // User first time check. If mandatory, it needs to be checked if denied or accepted
   if (status === 'denied') {
-    const result = await requestPermission(data)
+    const result = await edgeRequestPermission(data)
     return mandatory && checkIfDenied(result)
   }
 

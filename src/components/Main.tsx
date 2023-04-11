@@ -108,8 +108,7 @@ import { WalletListScene as WalletListSceneComponent } from './scenes/WalletList
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
-import { Airship, showError } from './services/AirshipInstance'
-import { requestPermission } from './services/PermissionsManager'
+import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { ControlPanel as ControlPanelComponent } from './themed/ControlPanel'
 import { MenuTabs } from './themed/MenuTabs'
@@ -727,12 +726,8 @@ const EdgeAppStack = () => {
         options={{
           headerTitle: () => <TransactionDetailsTitle />
         }}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
       />
+      <Stack.Screen name="transactionList" component={TransactionList} />
       <Stack.Screen
         name="transactionsExport"
         component={TransactionsExportScene}
@@ -776,21 +771,8 @@ const EdgeWalletsTabScreen = () => {
         options={{
           headerTitle: () => <TransactionDetailsTitle />
         }}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
       />
-      <Stack.Screen
-        name="transactionList"
-        component={TransactionList}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
-      />
+      <Stack.Screen name="transactionList" component={TransactionList} />
       <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
     </Stack.Navigator>
   )

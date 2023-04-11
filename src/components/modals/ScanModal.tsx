@@ -15,7 +15,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
-import { requestPermission } from '../services/PermissionsManager'
+import { edgeRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
@@ -52,7 +52,7 @@ export const ScanModal = (props: Props) => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    requestPermission('camera')
+    edgeRequestPermission('camera')
 
     return () => setScanEnabled(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
