@@ -694,7 +694,6 @@
   "search_region": "Region suchen",
   "buy_sell_crypto_no_plugin_region": "Es tut uns leid, aber es gibt keine Plugins für Ihre Region.",
   "user_closed_modal_no_wallet": "Benutzer gesperrt modal. Keine Wallet ausgewählt",
-  "plugin_service_provider_disclaimer": "Die folgenden Dienste werden nicht von %1$serbracht. \n\nBei Problemen und Rückmeldungen wenden Sie sich bitte an die jeweiligen Dienstleister.",
   "plugin_powered_by_space": "Powered by ",
   "tap_to_change_provider": "Tap to Change Provider",
   "send_from_wallet": "Senden von %s",
