@@ -694,7 +694,6 @@
   "search_region": "Search region",
   "buy_sell_crypto_no_plugin_region": "이 지역에서 사용할 수 있는 플러그인이 없습니다.",
   "user_closed_modal_no_wallet": "모달창이 닫혔습니다.월렛이 선택되지 않았습니다.",
-  "plugin_service_provider_disclaimer": "The following services are not provided by %1$s. \n\nFor issues and feedback please contact the respective service providers.",
   "plugin_powered_by_space": "Powered by ",
   "tap_to_change_provider": "Tap to Change Provider",
   "send_from_wallet": "Send from %s",
