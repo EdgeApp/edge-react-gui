@@ -493,6 +493,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     display: 'flex',
     alignSelf: 'center',
     height: theme.rem(2.25),
+    maxWidth: theme.rem(16),
+    marginLeft: theme.rem(1),
+    marginRight: theme.rem(1),
     marginTop: theme.rem(2),
     marginBottom: theme.rem(0.25)
   },

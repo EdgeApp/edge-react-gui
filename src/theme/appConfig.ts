@@ -1,9 +1,10 @@
 import { ENV } from '../env'
 import { AppConfig } from '../types/types'
+import { deloreanConfig } from './deloreanConfig'
 import { edgeConfig } from './edgeConfig'
 import { testConfig } from './testConfig'
 
-const configs = [edgeConfig, testConfig]
+const configs = [deloreanConfig, edgeConfig, testConfig]
 console.log(`ENV.APP_CONFIG:${ENV.APP_CONFIG}`)
 const configName = ENV.APP_CONFIG ?? 'edge'
 let exportConfig: AppConfig = edgeConfig
