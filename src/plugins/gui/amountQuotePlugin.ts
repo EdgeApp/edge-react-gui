@@ -36,6 +36,8 @@ type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
 // A map keyed by supported payment types and values of ProviderPriorityMap
 const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
+type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPriorityMap>
+
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
@@ -55,15 +57,15 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
 
-      let providerPriority: ProviderPriorityMap = {}
-      let priorityArray = [{}]
+      let providerPriority: PaymentTypeProviderPriorityMap = {}
+      let priorityArray: PriorityArray = [{}]
       if (paymentTypes.length === 1) {
         // Fetch provider priorities from the info server based on the payment
         // type
         try {
           const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
-          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())[paymentTypes[0]]
-          priorityArray = createPriorityArray(providerPriority)
+          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())
+          priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
         } catch (e: any) {
           console.warn('Failed to fetch provider priorities:', e)
           // This is ok. We will use all configured providers at equal priority.
@@ -78,7 +80,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // server vs disablePlugins
       for (const providerFactory of providerFactories) {
         if (disablePlugins[providerFactory.pluginId]) continue
-        // @ts-expect-error
         priorityArray[0][providerFactory.pluginId] = true
 
         // @ts-expect-error
@@ -213,7 +214,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
-            // @ts-expect-error
             if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.pluginId] <= 0) continue
             goodQuotes.push(quote)
           }
@@ -317,14 +317,13 @@ export const createPriorityArray = (providerPriority: ProviderPriorityMap): Prio
     }
     temp.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity
-    let priorityObj = {}
+    let priorityObj: PriorityArray[number] = {}
     for (const t of temp) {
       if (t.priority < currentPriority) {
         priorityArray.push({})
         currentPriority = t.priority
         priorityObj = priorityArray[priorityArray.length - 1]
       }
-      // @ts-expect-error
       priorityObj[t.pluginId] = true
     }
   }
