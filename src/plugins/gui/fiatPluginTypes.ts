@@ -6,7 +6,7 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { EdgeTokenId } from '../../types/types'
-import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
+import { EnterAmountPoweredBy } from './scenes/FiatPluginEnterAmountScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
