@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
-import { createPriorityArray } from '../plugins/gui/creditCardPlugin'
+import { createPriorityArray } from '../plugins/gui/amountQuotePlugin'
 import { FiatProviderError } from '../plugins/gui/fiatProviderTypes'
 import { getBestError } from '../plugins/gui/pluginUtils'
 

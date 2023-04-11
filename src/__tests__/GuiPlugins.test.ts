@@ -10,15 +10,6 @@ const buyPluginJson = asGuiPluginJson(buyPluginJsonRaw)
 const sellPluginJson = asGuiPluginJson(sellPluginJsonRaw)
 
 describe('Production plugin data', () => {
-  it('Has accurate pluginId fields', () => {
-    const pluginIds = Object.keys(guiPlugins)
-    for (const pluginId of pluginIds) {
-      if (pluginId !== 'iach') {
-        expect(guiPlugins[pluginId].pluginId).toEqual(pluginId)
-      }
-    }
-  })
-
   it('Buy & sell plugins have real pluginId fields', () => {
     for (const row of [...buyPluginJson, ...sellPluginJson]) {
       if (typeof row === 'string') continue

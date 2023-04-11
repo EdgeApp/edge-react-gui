@@ -264,8 +264,8 @@
     "paymentTypeLogoKey": "credit"
   },
   {
-    "id": "bity",
-    "pluginId": "bity",
+    "id": "sepa",
+    "pluginId": "sepa",
     "forCountries": [
       "AT",
       "BE",
@@ -300,8 +300,9 @@
     "cryptoCodes": [
       "BTC"
     ],
+    "paymentType": "sepa",
     "paymentTypes": [
-      "bank"
+      "sepa"
     ],
     "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
     "title": "SEPA Bank Transfer",
@@ -562,7 +563,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "sortIndex": 6
   },
   {
@@ -1150,7 +1151,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "forCountries": [
       "GB"
     ],
