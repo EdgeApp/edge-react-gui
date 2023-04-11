@@ -282,7 +282,7 @@ export function logoutRequest(navigation: NavigationBase, username?: string): Th
     // Must use reset in order to avoid being prevented by the useBackEvent:
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login' }]
+      routes: [{ name: 'gettingStarted' }, { name: 'login' }]
     })
     await dispatch(logout(username))
   }

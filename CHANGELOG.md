@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## Unreleased
+
+- changed: Allow routing to GettingStartedScene from LoginScene
+
 ## 3.6.0 (2023-03-28)
 
 - Add new Getting Started flow

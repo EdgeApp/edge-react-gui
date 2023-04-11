@@ -150,6 +150,10 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     showHelpModal()
   }
 
+  onComplete = () => {
+    this.props.navigation.navigate('gettingStarted', {})
+  }
+
   onLogin = async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     const { navigation } = this.props
     this.setState({ passwordRecoveryKey: undefined })
@@ -172,7 +176,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   render() {
     const { context, handleSendLogs, route, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
-    const { loginUiInitialRoute } = route.params ?? {}
+    const { loginUiInitialRoute = 'login' } = route.params ?? {}
     const styles = getStyles(theme)
 
     return this.props.account.username == null ? (
@@ -184,6 +188,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           context={context}
           initialRoute={loginUiInitialRoute}
           recoveryLogin={passwordRecoveryKey}
+          onComplete={this.onComplete}
           onLogin={this.onLogin}
           onNotificationPermit={this.onNotificationPermit}
           fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}

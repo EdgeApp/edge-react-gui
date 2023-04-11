@@ -70,7 +70,7 @@ export const GettingStartedScene = (props: Props) => {
   // Redirect to login screen if device has memory of accounts
   useEffect(() => {
     if (localUsersLength > 0) {
-      navigation.replace('login', {})
+      navigation.navigate('login', {})
     }
   }, [navigation, localUsersLength])
 
