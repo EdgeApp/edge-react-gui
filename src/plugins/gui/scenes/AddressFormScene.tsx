@@ -5,7 +5,6 @@ import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-n
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 
-import { getDiskletFormData, setDiskletForm } from '../../../actions/FormActions'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -18,6 +17,7 @@ import { lstrings } from '../../../locales/strings'
 import { ADDRESS_FORM_DISKLET_NAME, asHomeAddress, HomeAddress } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { RouteProp } from '../../../types/routerTypes'
+import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import { GuiFormField } from '../components/GuiFormField'
 

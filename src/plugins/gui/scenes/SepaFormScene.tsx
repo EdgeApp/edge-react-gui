@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { getDiskletFormData, setDiskletForm } from '../../../actions/FormActions'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -13,6 +12,7 @@ import { lstrings } from '../../../locales/strings'
 import { asSepaInfo, SEPA_FORM_DISKLET_NAME, SepaInfo } from '../../../types/FormTypes'
 import { useSelector } from '../../../types/reactRedux'
 import { RouteProp } from '../../../types/routerTypes'
+import { getDiskletFormData, setDiskletForm } from '../../../util/formUtils'
 import { GuiFormField } from '../components/GuiFormField'
 
 interface Props {
