@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, Keyboard, Linking, Platform, View } from 'react-native'
+import { Dimensions, Image, Keyboard, Linking, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { WebView } from 'react-native-webview'
@@ -8,7 +8,6 @@ import { sprintf } from 'sprintf-js'
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { PLATFORM } from '../../theme/variables/platform'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -151,6 +150,8 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
   }
 }
 
+const deviceHeight = Dimensions.get('window').height
+
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     marginTop: theme.rem(0.5),
@@ -162,8 +163,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2.25)
   },
   footer: {
-    marginTop: PLATFORM.deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
-    paddingVertical: PLATFORM.deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
+    marginTop: deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
+    paddingVertical: deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'

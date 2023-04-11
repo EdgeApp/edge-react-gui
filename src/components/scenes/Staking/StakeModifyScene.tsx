@@ -6,7 +6,6 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../locales/strings'
-import { Slider } from '../../../modules/UI/components/Slider/Slider'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
@@ -27,6 +26,7 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
@@ -457,15 +457,6 @@ const StakeModifySceneComponent = (props: Props) => {
     [modification, policyIcons.rewardAssetUris, styles.icon]
   )
 
-  const sceneHeader = React.useMemo(
-    () => (
-      <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
-        {icon}
-      </SceneHeader>
-    ),
-    [icon, modification, sceneTitleMap, styles.sceneHeader]
-  )
-
   if (stakePosition.allocations.length === 0) {
     return (
       <SceneWrapper background="theme">
@@ -479,7 +470,9 @@ const StakeModifySceneComponent = (props: Props) => {
   return (
     <SceneWrapper scroll background="theme">
       <ScrollView>
-        {sceneHeader}
+        <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
+          {icon}
+        </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
         {renderWarning()}
         <View style={styles.footer}>
@@ -518,7 +511,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   amountTilesContainer: {
-    marginBottom: theme.rem(1)
+    marginBottom: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   footer: {
     marginBottom: theme.rem(2)

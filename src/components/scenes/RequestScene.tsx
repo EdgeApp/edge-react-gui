@@ -267,7 +267,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader withTopMargin underline title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} />
+        <SceneHeader title={sprintf(s.strings.request_deprecated_header, this.props.primaryCurrencyInfo?.displayCurrencyCode)} underline withTopMargin />
         <Text style={styles.keysOnlyModeText}>{sprintf(s.strings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
         <MainButton onPress={this.handleKeysOnlyModePress} label={s.strings.help_support} marginRem={2} type="secondary">
           <Fontello name="help_headset" color={this.props.theme.iconTappable} size={this.props.theme.rem(1.5)} />
@@ -309,7 +309,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     return keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
-      <SceneWrapper background="header" hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <View style={styles.container}>
           <View style={styles.requestContainer}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
@@ -519,10 +519,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   keysOnlyModeText: {
-    padding: theme.rem(1),
+    color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    color: theme.primaryText
+    padding: theme.rem(1),
+    paddingTop: theme.rem(0.5)
   },
   container: {
     flex: 1,

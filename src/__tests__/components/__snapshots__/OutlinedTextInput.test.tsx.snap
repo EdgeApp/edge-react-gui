@@ -255,6 +255,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       onBlur={[Function]}
       onChangeText={[Function]}
       onFocus={[Function]}
+      onSelectionChange={[Function]}
       onSubmitEditing={[Function]}
       returnKeyType="done"
       secureTextEntry={false}

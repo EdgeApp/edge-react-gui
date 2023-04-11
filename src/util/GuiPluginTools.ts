@@ -1,4 +1,4 @@
-import { NestedPluginMap } from '../actions/ExchangeInfoActions'
+import { NestedDisableMap } from '../actions/ExchangeInfoActions'
 import { GuiPlugin, GuiPluginJson, GuiPluginRow } from '../types/GuiPluginTypes'
 import { UriQueryMap } from '../types/WebTypes'
 import { stringifyQuery } from './WebUtils'
@@ -7,7 +7,7 @@ import { stringifyQuery } from './WebUtils'
  * Helper function to turn a GuiPluginJson into a cooked list.
  * Call `asGuiPluginJson` to clean & validate the input file first.
  */
-export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, countryCode: string, disablePlugins: NestedPluginMap): GuiPluginRow[] {
+export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, countryCode: string, disablePlugins: NestedDisableMap): GuiPluginRow[] {
   // Filter and merge related rows:
   const mergedRows: { [id: string]: GuiPluginRow } = {}
   const sortIndexes: { [id: string]: number } = {}

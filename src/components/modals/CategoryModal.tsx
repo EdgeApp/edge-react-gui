@@ -7,13 +7,13 @@ import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDe
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
-import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { scale } from '../../util/scaling'
-import { AirshipModal } from '../common/AirshipModal'
-import { FormField, MaterialInputOnWhite } from '../common/FormField'
+import { AirshipModal } from '../legacy/AirshipModal'
+import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
+import { FormField, MaterialInputOnWhite } from '../legacy/FormField'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>

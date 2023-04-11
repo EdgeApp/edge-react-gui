@@ -8,6 +8,7 @@ import { Airship, showError, showToast } from '../../../components/services/Airs
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
+import { Slider } from '../../../components/themed/Slider'
 import { Tile } from '../../../components/tiles/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import s from '../../../locales/strings'
@@ -16,7 +17,6 @@ import { connect } from '../../../types/reactRedux'
 import { NavigationBase } from '../../../types/routerTypes'
 import { getAvailableBalance, getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
-import { Slider } from '../../UI/components/Slider/Slider'
 
 type ActionResult =
   | {

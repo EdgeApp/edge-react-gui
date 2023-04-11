@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -7,10 +7,8 @@ import { useHandler } from '../../hooks/useHandler'
 import s from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ButtonsModal } from '../modals/ButtonsModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -35,9 +33,7 @@ export function WalletListScene(props: Props) {
   const [sorting, setSorting] = React.useState(false)
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
-  const [showSlidingTutorial, setShowTutorial] = React.useState(false)
 
-  const disklet = useSelector(state => state.core.disklet)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
@@ -61,35 +57,11 @@ export function WalletListScene(props: Props) {
     setSearching(false)
   })
 
-  // Show the tutorial or password reminder on mount:
+  // Show the password reminder on mount if required:
   useAsyncEffect(
     async () => {
       if (needsPasswordCheck) {
         await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
-      } else {
-        const userTutorialList = await getWalletListSlideTutorial(disklet)
-        const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
-
-        if (tutorialCount < 2) {
-          Airship.show<'gotIt' | undefined>(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.wallet_list_swipe_tutorial_title}
-              buttons={{
-                gotIt: { label: s.strings.string_got_it }
-              }}
-            >
-              <Image
-                source={theme.walletListSlideTutorialImage}
-                resizeMode="contain"
-                style={{ height: theme.rem(3), width: 'auto', marginHorizontal: theme.rem(0.5), marginVertical: theme.rem(1) }}
-              />
-            </ButtonsModal>
-          ))
-          setShowTutorial(true)
-          userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
-          await setUserTutorialList(userTutorialList, disklet)
-        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,7 +110,6 @@ export function WalletListScene(props: Props) {
             navigation={navigation}
             searching={searching}
             searchText={searchText}
-            showSlidingTutorial={showSlidingTutorial}
             onRefresh={handleRefresh}
             onReset={handlReset}
           />

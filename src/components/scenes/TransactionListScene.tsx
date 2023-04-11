@@ -214,7 +214,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     const transactions = this.isUnsupported() || reset ? [] : searching ? filteredTransactions : this.props.transactions
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
-      <SceneWrapper>
+      <SceneWrapper hasTabs>
         {SHOW_FLIP_INPUT_TESTER ? (
           <ExchangedFlipInputTester />
         ) : (

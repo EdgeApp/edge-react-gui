@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 
-import { initialState as SendConfirmationInitialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { scenes as scenesReducer } from '../../reducers/scenes/ScenesReducer'
+import { initialState as SendConfirmationInitialState } from '../../reducers/scenes/SendConfirmationReducer'
 
 test('initialState', () => {
   const expected = {

@@ -3,19 +3,17 @@
 import { div, eq } from 'biggystring'
 import { asMaybeNoAmountSpecifiedError, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions'
-import { MINIMUM_DEVICE_HEIGHT } from '../../constants/constantSettings'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl'
 import s from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
-import { deviceHeight } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo } from '../../types/types'
@@ -251,9 +249,11 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 }
 
+const deviceHeight = Dimensions.get('window').height
+
 const getStyles = cacheStyles((theme: Theme) => ({
   hackContainer: {
-    flex: deviceHeight <= MINIMUM_DEVICE_HEIGHT ? 1 : 0
+    flex: deviceHeight <= 580 ? 1 : 0
   },
   flipInput: {
     justifyContent: 'flex-start'

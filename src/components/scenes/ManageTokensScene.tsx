@@ -126,8 +126,8 @@ function ManageTokensSceneComponent(props: Props) {
 
   const extraData = React.useMemo(() => ({ allTokens, enabledTokenSet, customTokens }), [allTokens, enabledTokenSet, customTokens])
 
-  const sceneHeader = React.useMemo(
-    () => (
+  return (
+    <SceneWrapper>
       <SceneHeader underline>
         <TouchableOpacity onPress={handleSelectWallet}>
           <Title
@@ -146,21 +146,7 @@ function ManageTokensSceneComponent(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-    ),
-    [handleSelectWallet, searchValue, styles.rightIcon, styles.subTitle, theme, wallet.id, walletName]
-  )
-
-  return (
-    <SceneWrapper>
-      {sceneHeader}
-      <FlashList
-        estimatedItemSize={theme.rem(4.25)}
-        data={filteredTokenIds}
-        extraData={extraData}
-        keyExtractor={keyExtractor}
-        renderItem={renderRow}
-        style={styles.tokenList}
-      />
+      <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
@@ -181,10 +167,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   subTitle: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.85)
-  },
-  tokenList: {
-    marginTop: theme.rem(-0.5),
-    flex: 4
   }
 }))
 

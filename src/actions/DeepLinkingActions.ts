@@ -5,7 +5,7 @@ import { pickWallet } from '../components/modals/WalletListModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import s from '../locales/strings'
-import { asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
+import { executePlugin } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -76,23 +76,52 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return false
 
     case 'plugin': {
-      const { direction, paymentType: pType, pluginId, providerId, path, query } = link
+      const { pluginId, path, query } = link
       const plugin = guiPlugins[pluginId]
-      if (pluginId === 'custom' || plugin == null || plugin.pluginId == null) {
-        showError(new Error(`No plugin named ${pluginId} exists`))
+      if (plugin?.pluginId == null || plugin?.pluginId === 'custom') {
+        showError(`No plugin named "${pluginId}" exists`)
         return true
       }
 
-      const paymentType = pType === '' ? undefined : asFiatPaymentType(pType)
-
-      if (direction == null) return true
-      if (direction === 'buy') {
-        navigation.navigate('pluginListBuy', { direction: 'buy', pluginId, providerId, deepPath: path, deepQuery: query, paymentType })
-      } else if (direction === 'sell') {
-        navigation.navigate('pluginListSell', { direction: 'sell', pluginId, providerId, deepPath: path, deepQuery: query, paymentType })
-      } else {
-        throw new Error(`Invalid plugin direction ${direction}`)
+      // Check the disabled status:
+      if (state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true || state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true) {
+        showError(`Plugin "${pluginId}" is disabled`)
+        return true
       }
+
+      navigation.push('pluginView', {
+        plugin,
+        deepPath: path,
+        deepQuery: query
+      })
+      return true
+    }
+
+    case 'fiatPlugin': {
+      const { direction = 'buy', paymentType = 'credit', pluginId, providerId } = link
+      const plugin = guiPlugins[pluginId]
+      if (plugin?.nativePlugin == null) {
+        showError(new Error(`No fiat plugin named "${pluginId}" exists`))
+        return true
+      }
+
+      // Check the disabled status:
+      const disableProviders = state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
+      if (disableProviders === true) {
+        showError(`Plugin "${pluginId}" is disabled`)
+        return true
+      }
+
+      await executePlugin({
+        account,
+        disablePlugins: disableProviders,
+        guiPlugin: plugin,
+        direction,
+        regionCode: { countryCode: state.ui.settings.countryCode },
+        paymentType,
+        providerId,
+        navigation
+      })
       return true
     }
 

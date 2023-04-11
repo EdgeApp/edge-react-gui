@@ -217,7 +217,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme">
       <View style={styles.content}>
-        <SceneHeader withTopMargin title={s.strings.migrate_wallets_calculate_fee_title} />
+        <SceneHeader title={s.strings.migrate_wallets_calculate_fee_title} withTopMargin />
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
           {s.strings.migrate_wallet_instructions_fragment}
         </EdgeText>
@@ -251,10 +251,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.backgroundGradientColors[1]
   },
   instructionalText: {
-    fontSize: theme.rem(0.75),
     color: theme.primaryText,
+    fontSize: theme.rem(0.75),
     paddingBottom: theme.rem(1),
     paddingHorizontal: theme.rem(1),
+    paddingTop: theme.rem(0.5),
     textAlign: 'left'
   }
 }))

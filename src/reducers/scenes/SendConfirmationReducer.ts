@@ -3,7 +3,6 @@ import { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { isEqual } from 'lodash'
 import { Reducer } from 'redux'
 
-import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { Action } from '../../types/reduxTypes'
 import { GuiMakeSpendInfo } from '../../types/types'
 
@@ -30,7 +29,55 @@ export interface SendConfirmationState {
   isSendUsingFioAddress: boolean
 }
 
-// @ts-expect-error
+export const initialTransaction: EdgeTransaction = {
+  walletId: '',
+  txid: '',
+  date: 0,
+  currencyCode: '',
+  blockHeight: -1,
+  nativeAmount: '',
+  networkFee: '',
+  parentNetworkFee: '',
+  ourReceiveAddresses: [],
+  signedTx: '',
+  metadata: {},
+  otherParams: {}
+}
+
+export const initialState: SendConfirmationState = {
+  forceUpdateGuiCounter: 0,
+
+  guiMakeSpendInfo: {
+    networkFeeOption: 'standard',
+    customNetworkFee: {},
+    publicAddress: '',
+    nativeAmount: '',
+    metadata: {
+      name: '',
+      category: '',
+      notes: '',
+      amountFiat: 0,
+      bizId: 0
+    }
+  },
+  spendInfo: null,
+  transactionMetadata: null,
+  nativeAmount: '',
+
+  transaction: initialTransaction,
+  error: null,
+
+  pin: '',
+  authRequired: 'none',
+  address: '',
+
+  toggleCryptoOnTop: 0,
+
+  maxSpendSet: false,
+
+  isSendUsingFioAddress: false
+}
+
 const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
@@ -234,7 +281,6 @@ const isSendUsingFioAddress = (state: boolean = false, action: Action): boolean 
   }
 }
 
-// @ts-expect-error
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIRMATION/RESET') return initialState
 

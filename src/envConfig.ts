@@ -71,6 +71,17 @@ export const asEnvConfig = asObject({
   AZTECO_API_KEY: asNullable(asString),
 
   // Core plugin options:
+  AVALANCHE_INIT: asCorePluginInit(
+    asObject({
+      alethioApiKey: asOptional(asString, ''),
+      amberdataApiKey: asOptional(asString, ''),
+      blockchairApiKey: asOptional(asString, ''),
+      evmScanApiKey: asOptional(asArray(asString), []),
+      gasStationApiKey: asOptional(asString, ''),
+      infuraProjectId: asOptional(asString, ''),
+      quiknodeApiKey: asOptional(asString, '')
+    }).withRest
+  ),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(
     asObject({
       bscscanApiKey: asOptional(asArray(asString), []),
@@ -125,7 +136,9 @@ export const asEnvConfig = asObject({
     asOptional(asBoolean, true), // Defaults to true if missing.
     asObject({
       fioRegApiToken: asOptional(asString, ''),
-      tpid: asOptional(asString, 'finance@edge')
+      tpid: asOptional(asString, 'finance@edge'),
+      freeRegApiToken: asOptional(asString, ''),
+      freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
   GODEX_INIT: asCorePluginInit(

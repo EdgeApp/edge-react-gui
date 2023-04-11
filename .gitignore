@@ -30,8 +30,8 @@ coverage/
 /copy-simplex.sh
 
 # Yaob bridge
-/src/util/bridge/rolledUp.js
-/src/util/bridge/injectThisInWebView.js
+/src/controllers/edgeProvider/client/rolledUp.js
+/src/controllers/edgeProvider/injectThisInWebView.js
 
 # Edge core
 /android/app/src/main/assets/edge-core/

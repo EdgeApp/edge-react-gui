@@ -78,9 +78,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(2)
   },
   body: {
-    margin: theme.rem(1),
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
+    margin: theme.rem(1),
+    marginTop: theme.rem(1.5)
   },
   footer: {
     margin: theme.rem(1),

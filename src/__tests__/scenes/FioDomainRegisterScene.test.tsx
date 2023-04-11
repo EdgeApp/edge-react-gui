@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { FioDomainRegister } from '../../components/scenes/FioDomainRegisterScene'
+import { FioDomainRegister } from '../../components/scenes/Fio/FioDomainRegisterScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 

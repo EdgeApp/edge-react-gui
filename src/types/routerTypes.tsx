@@ -4,7 +4,8 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, J
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
-import { PluginListProps } from '../components/scenes/GuiPluginListScene'
+import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleScene'
+import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
@@ -15,7 +16,6 @@ import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../plugins/gui/fiatPluginTypes'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
-import { GuiPlugin } from './GuiPluginTypes'
 import {
   CreateWalletType,
   EdgeTokenId,
@@ -29,20 +29,10 @@ import {
   TransactionListTx,
   WcConnectionInfo
 } from './types'
-import { UriQueryMap } from './WebTypes'
 
-interface PluginViewParams {
-  // The GUI plugin we are showing the user:
-  plugin: GuiPlugin
-
-  // Set these to add stuff to the plugin URI:
-  deepPath?: string
-  deepQuery?: UriQueryMap
-}
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-
 interface RouteParamList {
   // Top-level router:
   login: {
@@ -139,6 +129,7 @@ interface RouteParamList {
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
+  fioCreateHandle: FioCreateHandleProps
   fioAddressDetails: {
     fioAddressName: string
     bundledTxs: number
@@ -196,10 +187,6 @@ interface RouteParamList {
     amounts: ExchangedFlipInputAmounts
   }
   fioRequestList: {}
-  fioRequestApproved: {
-    edgeTransaction: EdgeTransaction
-    thumbnailPath?: string
-  }
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest
   }
@@ -271,8 +258,8 @@ interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: PluginListProps
-  pluginListSell: PluginListProps
+  pluginListBuy: {}
+  pluginListSell: {}
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

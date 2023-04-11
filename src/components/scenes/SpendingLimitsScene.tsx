@@ -6,13 +6,13 @@ import { TextField } from 'react-native-material-textfield'
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui'
-import { FormattedText } from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { SpendingLimits } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
+import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -50,7 +50,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
     const { transactionAmount, transactionIsEnabled } = this.state
 
     return (
-      <SceneWrapper background="body" hasHeader>
+      <SceneWrapper background="legacy" hasHeader>
         <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
           <TextField
             baseColor={THEME.COLORS.GRAY_2}

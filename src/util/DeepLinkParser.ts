@@ -1,6 +1,9 @@
+import { asOptional } from 'cleaners'
 import URL from 'url-parse'
 
+import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
+import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { DeepLink, PromotionLink } from '../types/DeepLinkTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
@@ -99,10 +102,28 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     }
 
     case 'plugin': {
-      const [pluginId, direction = 'buy', providerId = '', paymentType = '', ...deepPath] = pathParts
-      const path = deepPath.length !== 0 ? '/' + deepPath.join('/') : ''
-      const query = parseQuery(url.query)
-      return { type: 'plugin', direction, paymentType, pluginId, providerId, path, query }
+      const [pluginId, ...deepPath] = pathParts
+
+      // Is this a plugin we know about?
+      const plugin = guiPlugins[pluginId]
+      if (plugin?.nativePlugin == null) {
+        return {
+          type: 'plugin',
+          pluginId,
+          path: stringifyPath(deepPath),
+          query: parseQuery(url.query)
+        }
+      }
+
+      // New-style fiat plugins:
+      const [direction, providerId, paymentType] = deepPath
+      return {
+        type: 'fiatPlugin',
+        pluginId,
+        direction: asOptional(asFiatDirection)(direction),
+        providerId,
+        paymentType: asOptional(asFiatPaymentType)(paymentType)
+      }
     }
 
     case 'price-change': {
@@ -152,6 +173,10 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
   }
 
   throw new SyntaxError('Unknown deep link format')
+}
+
+function stringifyPath(path: string[]): string {
+  return path.length === 0 ? '' : '/' + path.join('/')
 }
 
 function parseDownloadLink(url: URL<string>): PromotionLink {

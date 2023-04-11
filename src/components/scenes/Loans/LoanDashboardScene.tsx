@@ -183,7 +183,7 @@ export const LoanDashboardScene = (props: Props) => {
   if (!isWalletsLoaded) {
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader underline title={s.strings.loan_dashboard_title} />
+        <SceneHeader title={s.strings.loan_dashboard_title} underline />
         <FillLoader />
       </SceneWrapper>
     )
@@ -192,14 +192,14 @@ export const LoanDashboardScene = (props: Props) => {
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader
-        underline
-        title={s.strings.loan_dashboard_title}
-        withTopMargin
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
+        title={s.strings.loan_dashboard_title}
+        underline
+        withTopMargin
       />
       <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
       {Object.keys(loanAccountsMap).length === 0 ? (
@@ -269,8 +269,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     textSectionHeader: {
       fontFamily: theme.fontFaceBold,
       fontSize: theme.rem(0.75),
-      marginTop: theme.rem(0.5),
-      marginLeft: theme.rem(1)
+      marginLeft: theme.rem(1),
+      marginTop: theme.rem(1)
     }
   }
 })
