@@ -1,5 +1,5 @@
 import { div, eq, gt, toFixed } from 'biggystring'
-import { asMap, asNumber } from 'cleaners'
+import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
 import { ENV } from '../../env'
@@ -31,11 +31,11 @@ import { simplexProvider } from './providers/simplexProvider'
 // for that provider.
 // Higher numbers are preferred over lower. If a provider is not listed or is
 // marked with a priority of 0, it is not considered for quoting.
-const asProviderPriorityMap = asMap(asNumber)
+const asProviderPriorityMap = asObject(asNumber)
 type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
 // A map keyed by supported payment types and values of ProviderPriorityMap
-const asPaymentTypeProviderPriorityMap = asMap(asProviderPriorityMap)
+const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
