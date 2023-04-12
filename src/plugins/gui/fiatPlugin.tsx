@@ -12,13 +12,10 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationBase } from '../../types/routerTypes'
-import { logEvent } from '../../util/tracking'
+import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
-  FiatPluginEnterAmountParams,
-  FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
@@ -26,7 +23,6 @@ import {
   FiatPluginUi
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
-import { EnterAmountState } from './scenes/FiatPluginEnterAmountScene'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
@@ -40,7 +36,6 @@ export const executePlugin = async (params: {
 }): Promise<void> => {
   const { disablePlugins = {}, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
-  const isBuy = direction === 'buy'
 
   const showUi: FiatPluginUi = {
     showToastSpinner,
@@ -63,23 +58,8 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount<T extends EnterAmountState>(params: FiatPluginEnterAmountParams<T>) {
-      const { headerTitle, label1, label2, initState, onFieldChange, onPoweredByClick, onSubmit } = params
-      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
-
-      navigation.navigate('guiPluginEnterAmount', {
-        headerTitle,
-        label1,
-        label2,
-        initState,
-        onFieldChange,
-        onPoweredByClick,
-        onChangeText: async () => undefined,
-        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-          onSubmit(value)
-        }
-      })
+    enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+      navigation.navigate('guiPluginEnterAmount', params)
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params

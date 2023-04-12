@@ -148,10 +148,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
 
+      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+
       // Navigate to scene to have user enter amount
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
-        isBuy,
         initState: {
           value1: '500'
         },
@@ -296,6 +297,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
         },
         async onSubmit() {
+          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+
           if (bestQuote == null) {
             return
           }

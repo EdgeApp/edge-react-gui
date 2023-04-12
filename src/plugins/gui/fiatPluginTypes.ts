@@ -5,6 +5,7 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { StateManager } from './hooks/useStateManager'
 import { EnterAmountState } from './scenes/FiatPluginEnterAmountScene'
@@ -92,7 +93,7 @@ export interface FiatPluginUi {
   }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: <T extends EnterAmountState>(params: FiatPluginEnterAmountParams<T>) => void
+  enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
