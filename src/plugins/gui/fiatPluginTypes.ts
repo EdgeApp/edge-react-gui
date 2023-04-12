@@ -8,7 +8,6 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { StateManager } from './hooks/useStateManager'
-import { EnterAmountState } from './scenes/FiatPluginEnterAmountScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -21,19 +20,6 @@ export interface FiatPluginAddressFormParams {
   headerTitle: string
   headerIconUri?: string
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
-}
-
-export interface FiatPluginEnterAmountParams<T extends EnterAmountState> {
-  headerTitle: string
-  isBuy: boolean
-  initState?: Partial<T>
-  label1: string
-  label2: string
-  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<T>) => Promise<void>
-  onPoweredByClick: (stateManager: StateManager<T>) => Promise<void>
-  onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
-  initialAmount1?: string
-  headerIconUri?: string
 }
 
 export interface FiatPluginSepaFormParams {
@@ -129,3 +115,8 @@ export interface FiatPlugin {
 }
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>
+
+export interface StatefulSceneEvent<EventValue, State extends object> {
+  value: EventValue
+  stateManager: StateManager<State>
+}

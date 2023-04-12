@@ -158,7 +158,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
-        onFieldChange: async (sourceFieldNum, value, stateManager) => {
+        async onChangeText() {},
+        async onFieldChange(event) {
+          const { stateManager } = event
+          const { sourceFieldNum, value } = event.value
           if (!isValidInput(value)) {
             stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })
             return
@@ -248,7 +251,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             [spinnerKey]: false
           })
         },
-        onPoweredByClick: async stateManager => {
+        async onPoweredByClick(event) {
+          const { stateManager } = event
           // 1. Show modal with all the valid quotes
           const items = goodQuotes.map(quote => {
             let text

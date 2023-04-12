@@ -37,7 +37,7 @@ import {
 /**
  * Defines the acceptable route parameters for each scene key.
  */
-interface RouteParamList {
+export interface RouteParamList {
   // Top-level router:
   login: {
     loginUiInitialRoute?: InitialRouteName
@@ -306,8 +306,10 @@ interface RouteParamList {
   }
 }
 
+export type RouteSceneKey = keyof RouteParamList
+
 export type AppParamList = {
-  [key in keyof RouteParamList]: RouteParamList[key]
+  [key in RouteSceneKey]: RouteParamList[key]
 }
 
 /**

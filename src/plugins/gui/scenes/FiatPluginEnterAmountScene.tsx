@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 import { Image, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -14,18 +15,18 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
-import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
-import { StateManager, useStateManager } from '../hooks/useStateManager'
+import { FiatPluginEnterAmountResponse, StatefulSceneEvent } from '../fiatPluginTypes'
+import { useStateManager } from '../hooks/useStateManager'
 
 export interface FiatPluginEnterAmountParams {
   initState?: Partial<any>
   headerTitle: string
-  onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   label1: string
   label2: string
-  onChangeText?: (fieldNum: number, value: string) => void
-  onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<any>) => void
-  onPoweredByClick: (stateManager: StateManager<any>) => void
+  onChangeText?: (event: StatefulSceneEvent<{ fieldNum: number; value: string }, EnterAmountState>) => Promise<void>
+  onFieldChange: (event: StatefulSceneEvent<{ sourceFieldNum: number; value: string }, EnterAmountState>) => Promise<void>
+  onPoweredByClick: (event: StatefulSceneEvent<void, EnterAmountState>) => Promise<void>
+  onSubmit: (event: StatefulSceneEvent<{ response: FiatPluginEnterAmountResponse }, EnterAmountState>) => Promise<void>
   headerIconUri?: string
 }
 
@@ -64,17 +65,18 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText = () => {}, label1, label2 } = props.route.params
-  const firstRun = React.useRef<boolean>(true)
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
   const { value1, value2, poweredBy, spinner1, spinner2, statusText } = stateManager.state
 
-  if (firstRun.current && initState?.value1 != null) {
-    stateManager.update({ value2: ' ', spinner2: true })
-    onFieldChange(1, initState?.value1, stateManager)
-  }
-  firstRun.current = false
+  useEffect(() => {
+    if (initState?.value1 != null) {
+      stateManager.update({ value2: ' ', spinner2: true })
+      onFieldChange({ value: { sourceFieldNum: 1, value: initState?.value1 }, stateManager })
+    }
+  }, [initState?.value1, onFieldChange, stateManager])
+
   let headerIcon = null
   if (headerIconUri != null) {
     headerIcon = <Image style={styles.icon} source={{ uri: headerIconUri }} />
@@ -82,19 +84,19 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText(1, value)
+    onChangeText({ value: { fieldNum: 1, value }, stateManager })
     stateManager.update({ value1: value, value2: ' ', spinner2: true })
-    onFieldChange(1, value, stateManager)
+    onFieldChange({ value: { sourceFieldNum: 1, value: value }, stateManager })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText(2, value)
+    onChangeText({ value: { fieldNum: 2, value }, stateManager })
     stateManager.update({ value1: ' ', value2: value, spinner1: true })
-    onFieldChange(2, value, stateManager)
+    onFieldChange({ value: { sourceFieldNum: 2, value }, stateManager })
   })
-  const handlePoweredByPress = useHandler(() => onPoweredByClick(stateManager))
+  const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ value: undefined, stateManager }))
   const handleSubmit = useHandler(() => {
-    onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
+    onSubmit({ value: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
   })
 
   let statusTextStyle = styles.text
