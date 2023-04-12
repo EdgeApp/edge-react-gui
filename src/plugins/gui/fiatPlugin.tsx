@@ -63,7 +63,7 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount(params: FiatPluginEnterAmountParams) {
-      const { headerTitle, label1, label2, initialAmount1, onFieldChange, onPoweredByClick, getMethods, onSubmit } = params
+      const { headerTitle, label1, label2, initialAmount1, onFieldChange, onPoweredByClick, onSubmit } = params
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       navigation.navigate('guiPluginEnterAmount', {
@@ -71,7 +71,6 @@ export const executePlugin = async (params: {
         label1,
         label2,
         initialAmount1,
-        getMethods,
         onFieldChange,
         onPoweredByClick,
         onChangeText: async () => undefined,

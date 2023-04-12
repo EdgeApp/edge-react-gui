@@ -21,7 +21,7 @@ export interface FiatPluginAddressFormParams {
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
 }
 
-export interface FiatPluginGetMethodsResponse {
+export interface FiatPluginEnterAmountMethods {
   setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
   setPoweredBy: (params: EnterAmountPoweredBy) => void
   setValue1: (value: string) => void
@@ -33,10 +33,9 @@ export interface FiatPluginEnterAmountParams {
   isBuy: boolean
   label1: string
   label2: string
-  onFieldChange: (sourceFieldNum: number, value: string) => Promise<string | undefined>
-  onPoweredByClick: () => Promise<void>
-  onSubmit: (value: FiatPluginEnterAmountResponse) => Promise<void>
-  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
+  onFieldChange: (sourceFieldNum: number, value: string, enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<string | undefined>
+  onPoweredByClick: (enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<void>
+  onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   initialAmount1?: string
   headerIconUri?: string
 }
