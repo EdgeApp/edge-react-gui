@@ -69,12 +69,18 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
   const inputRef = React.useRef<TextInput>(null)
   const mounted = React.useRef<boolean>(true)
 
+  // TODO: Give feedback to the user to indicate why the input was rejected
   const handleChangeFioHandle = useHandler((userInput: string) => {
-    // Clean the userInput:
-    userInput = userInput.replace(domainStr, '').trim()
+    // Dash '-' allowed,
+    // but cannot be the first...
+    if (userInput.indexOf('-') === 0) {
+      userInput = userInput.slice(1) // remove first character
+    }
 
-    // Dash '-' allowed, but cannot be first or last character
-    userInput = userInput.charAt(0).replace('-', '') + userInput.slice(1, -1) + userInput.slice(-1).replace('-', '')
+    // ... or the last character
+    if (userInput.includes('-', userInput.length - 1)) {
+      userInput = userInput.slice(0, -1) // remove last character
+    }
 
     // ASCII a-z 0-9. Remove all non-alphanumeric characters, convert to
     // lowercase. Allow dashes as they were cleaned above
