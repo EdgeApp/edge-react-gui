@@ -23,7 +23,7 @@ export interface FiatPluginEnterAmountParams {
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   label1: string
   label2: string
-  onChangeText: (fieldNum: number, value: string) => Promise<void>
+  onChangeText?: (fieldNum: number, value: string) => void
   onFieldChange: (sourceFieldNum: number, value: string, stateManager: StateManager<any>) => void
   onPoweredByClick: (stateManager: StateManager<any>) => void
   headerIconUri?: string
@@ -63,7 +63,7 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText, label1, label2 } = props.route.params
+  const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText = () => {}, label1, label2 } = props.route.params
   const firstRun = React.useRef<boolean>(true)
   const lastUsed = React.useRef<number>(1)
 
