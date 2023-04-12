@@ -83,7 +83,7 @@ export interface FiatPluginUi {
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
-  popScene: () => {}
+  exitScene: () => {}
   send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }

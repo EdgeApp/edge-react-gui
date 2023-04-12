@@ -441,7 +441,7 @@ export const bityProvider: FiatProviderFactory = {
                   await completeSellOrder(approveQuoteRes, coreWallet, showUi)
                 }
 
-                showUi.popScene()
+                showUi.exitScene()
               }
             })
           },
@@ -522,7 +522,7 @@ const completeBuyOrder = async (approveQuoteRes: BityApproveQuoteResponse, showU
       }
     },
     onDone: async () => {
-      showUi.popScene()
+      showUi.exitScene()
     }
   })
 }

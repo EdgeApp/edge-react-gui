@@ -113,7 +113,7 @@ export const executePlugin = async (params: {
         })
       })
     },
-    popScene: async () => {
+    exitScene: async () => {
       navigation.pop()
     }
   }
