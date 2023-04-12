@@ -139,6 +139,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       let counter = 0
       let bestQuote: FiatProviderQuote | undefined
       let goodQuotes: FiatProviderQuote[] = []
+      let lastSourceFieldNum: number
 
       // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
       // wallet fiat selection regardless of region.
@@ -166,6 +167,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
           bestQuote = undefined
           goodQuotes = []
+          lastSourceFieldNum = sourceFieldNum
           if (eq(value, '0')) return ''
           const myCounter = ++counter
           let quoteParams: FiatProviderGetQuoteParams
@@ -233,60 +235,59 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
           if (enterAmountMethods != null) {
-            const poweredByOnClick = async () => {
-              // 1. Show modal with all the valid quotes
-              const items = goodQuotes.map(quote => {
-                let text
-                if (sourceFieldNum === 1) {
-                  // User entered a fiat value. Show the crypto value per partner
-                  const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
-                  text = `(${localeAmount} ${quote.displayCurrencyCode})`
-                } else {
-                  // User entered a crypto value. Show the fiat value per partner
-                  const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
-                  text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
-                }
-                const out = {
-                  text,
-                  name: quote.pluginDisplayName,
-                  icon: getPartnerIconUri(quote.partnerIcon)
-                }
-                return out
-              })
-              const rowName = await showUi.listModal({
-                title: 'Providers',
-                selected: bestQuote?.pluginDisplayName ?? '',
-                items
-              })
-              if (bestQuote == null) return
-
-              // 2. Set the best quote to the one chosen by user (if any is chosen)
-              if (rowName != null && rowName !== bestQuote.pluginDisplayName) {
-                bestQuote = goodQuotes.find(quote => quote.pluginDisplayName === rowName)
-                if (bestQuote == null) return
-
-                // 3. Set the status text and powered by
-                const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
-                enterAmountMethods.setStatusText({ statusText })
-                enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
-
-                logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
-
-                if (sourceFieldNum === 1) {
-                  enterAmountMethods.setValue2(bestQuote.cryptoAmount)
-                } else {
-                  enterAmountMethods.setValue1(bestQuote.fiatAmount)
-                }
-              }
-            }
-
             enterAmountMethods.setStatusText({ statusText: exchangeRateText })
-            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon, poweredByOnClick })
+            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon })
           }
           if (sourceFieldNum === 1) {
             return toFixed(bestQuote.cryptoAmount, 0, 6)
           } else {
             return toFixed(bestQuote.fiatAmount, 0, 2)
+          }
+        },
+        async onPoweredByClick() {
+          // 1. Show modal with all the valid quotes
+          const items = goodQuotes.map(quote => {
+            let text
+            if (lastSourceFieldNum === 1) {
+              // User entered a fiat value. Show the crypto value per partner
+              const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
+              text = `(${localeAmount} ${quote.displayCurrencyCode})`
+            } else {
+              // User entered a crypto value. Show the fiat value per partner
+              const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
+              text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+            }
+            const out = {
+              text,
+              name: quote.pluginDisplayName,
+              icon: getPartnerIconUri(quote.partnerIcon)
+            }
+            return out
+          })
+          const rowName = await showUi.listModal({
+            title: 'Providers',
+            selected: bestQuote?.pluginDisplayName ?? '',
+            items
+          })
+          if (bestQuote == null) return
+
+          // 2. Set the best quote to the one chosen by user (if any is chosen)
+          if (rowName != null && rowName !== bestQuote.pluginDisplayName) {
+            bestQuote = goodQuotes.find(quote => quote.pluginDisplayName === rowName)
+            if (bestQuote == null) return
+
+            // 3. Set the status text and powered by
+            const statusText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+            enterAmountMethods.setStatusText({ statusText })
+            enterAmountMethods.setPoweredBy({ poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon })
+
+            logEvent(isBuy ? 'Buy_Quote_Change_Provider' : 'Sell_Quote_Change_Provider')
+
+            if (lastSourceFieldNum === 1) {
+              enterAmountMethods.setValue2(bestQuote.cryptoAmount)
+            } else {
+              enterAmountMethods.setValue1(bestQuote.fiatAmount)
+            }
           }
         },
         async onSubmit() {
