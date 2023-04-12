@@ -21,9 +21,10 @@ export interface FiatPluginEnterAmountParams {
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   label1: string
   label2: string
+  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   onChangeText: (fieldNum: number, value: string) => Promise<void>
   onFieldChange: (sourceFieldNum: number, value: string) => Promise<string | undefined>
-  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
+  onPoweredByClick: () => void
   initialAmount1?: string
   headerIconUri?: string
 }
@@ -31,7 +32,6 @@ export interface FiatPluginEnterAmountParams {
 export interface EnterAmountPoweredBy {
   poweredByIcon: string
   poweredByText: string
-  poweredByOnClick: () => void
 }
 
 interface Props {
@@ -41,7 +41,18 @@ interface Props {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { headerIconUri, headerTitle, onSubmit, onFieldChange, onChangeText, label1, label2, initialAmount1 = '', getMethods } = props.route.params
+  const {
+    headerIconUri,
+    headerTitle,
+    onSubmit,
+    onFieldChange,
+    onPoweredByClick,
+    onChangeText,
+    label1,
+    label2,
+    initialAmount1 = '',
+    getMethods
+  } = props.route.params
   const [value1, setValue1] = React.useState<string>(initialAmount1)
   const [value2, setValue2] = React.useState<string>('')
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
@@ -110,6 +121,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       setSpinner1(false)
     })
   })
+  const handlePoweredByPress = useHandler(() => onPoweredByClick())
   const handleSubmit = useHandler(() => {
     onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
   })
@@ -159,7 +171,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         {statusTextContent != null ? <Text style={statusTextStyle}>{statusTextContent}</Text> : null}
         {poweredBy != null ? (
           <View style={styles.cardContainer}>
-            <TouchableOpacity onPress={poweredBy.poweredByOnClick}>
+            <TouchableOpacity onPress={handlePoweredByPress}>
               <Card paddingRem={0.5}>
                 <View style={styles.poweredByContainer}>
                   <Image style={styles.poweredByIcon} source={poweredByIconPath} />
