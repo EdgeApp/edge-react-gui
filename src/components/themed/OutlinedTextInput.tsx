@@ -1,16 +1,5 @@
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  NativeSyntheticEvent,
-  Platform,
-  TextInput,
-  TextInputSelectionChangeEventData,
-  TextStyle,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle
-} from 'react-native'
+import { ActivityIndicator, Platform, TextInput, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -18,6 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { NumericInput } from '../modals/NumericInput'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from './EdgeText'
 
 export type OutlinedTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
@@ -36,13 +26,13 @@ export interface OutlinedTextInputProps {
   multiline?: boolean // Defaults to 'false'
   searchIcon?: boolean // Defaults to 'false'
   showSpinner?: boolean // Defaults to 'false'
+  suffix?: string // Text input is right-right justified with a persistent suffix
 
   // Callbacks:
   onBlur?: () => void
   onChangeText?: (text: string) => void
   onClear?: () => void
   onFocus?: () => void
-  onSelectionChange?: (event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
@@ -92,13 +82,13 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     multiline = false,
     searchIcon = false,
     showSpinner = false,
+    suffix,
 
     // Callbacks:
     onBlur,
     onChangeText,
     onClear,
     onFocus,
-    onSelectionChange,
 
     // TextInput:
     autoFocus = !searchIcon,
@@ -178,9 +168,6 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     focusAnimationAlt.value = withDelay(animationDelay, withTiming(1, { duration: baseDuration }))
     if (onFocus != null) onFocus()
   }
-  const handleSelectionChange = (event: any) => {
-    if (onSelectionChange != null) onSelectionChange(event)
-  }
 
   // Label dimensions:
   const labelLeft = theme.rem(1)
@@ -210,6 +197,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     paddingLeft: searchIcon ? theme.rem(2.875) : theme.rem(1),
     paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
   }
+
+  const suffixPadding = {
+    paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
+  }
+
   const containerStyle = {
     ...containerPadding,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
@@ -332,47 +324,48 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             </View>
           </TouchableWithoutFeedback>
         ) : null}
-        {numeric ? (
-          <NumericInput
-            ref={inputRef}
-            {...inputProps}
-            minDecimals={minDecimals}
-            maxDecimals={maxDecimals}
-            autoFocus={autoFocus}
-            multiline={multiline}
-            editable={!showSpinner}
-            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-            style={[textStyle, textInputStyle]}
-            textAlignVertical="top"
-            value={value}
-            secureTextEntry={hidePassword}
-            // Callbacks:
-            onBlur={handleBlur}
-            onChangeText={onChangeText}
-            onFocus={handleFocus}
-            maxLength={maxLength}
-            onSelectionChange={handleSelectionChange}
-          />
-        ) : (
-          <TextInput
-            ref={inputRef}
-            {...inputProps}
-            autoFocus={autoFocus}
-            multiline={multiline}
-            editable={!showSpinner}
-            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-            style={[textStyle, textInputStyle]}
-            textAlignVertical="top"
-            value={value}
-            secureTextEntry={hidePassword}
-            // Callbacks:
-            onBlur={handleBlur}
-            onChangeText={onChangeText}
-            onFocus={handleFocus}
-            maxLength={maxLength}
-            onSelectionChange={handleSelectionChange}
-          />
-        )}
+        <View style={[styles.suffixContainer, suffixPadding]}>
+          {numeric ? (
+            <NumericInput
+              ref={inputRef}
+              {...inputProps}
+              minDecimals={minDecimals}
+              maxDecimals={maxDecimals}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          ) : (
+            <TextInput
+              ref={inputRef}
+              {...inputProps}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          )}
+          <EdgeText style={styles.suffixText}>{suffix}</EdgeText>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -425,6 +418,12 @@ const getStyles = cacheStyles((theme: Theme) => {
       top: 0
     },
 
+    // Layout container for grouping the text input and suffix text
+    suffixContainer: {
+      justifyContent: 'flex-start',
+      flexDirection: 'row'
+    },
+
     // The text input and placeholder label both float
     // in their respective containers, allowing React to center them:
     labelText: {
@@ -432,6 +431,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.fontFaceDefault,
       fontSize: theme.rem(1),
       padding: 0
+    },
+    suffixText: {
+      color: theme.secondaryText
     },
     textInput: {
       alignSelf: 'stretch',
