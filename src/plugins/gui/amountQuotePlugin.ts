@@ -12,7 +12,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
-import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
+import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
@@ -148,7 +148,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
 
-      let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
@@ -156,10 +155,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         initialAmount1: '500',
-        getMethods: (methods: FiatPluginGetMethodsResponse) => {
-          enterAmountMethods = methods
-        },
-        onFieldChange: async (sourceFieldNum: number, value: string): Promise<string | undefined> => {
+        onFieldChange: async (sourceFieldNum, value, enterAmountMethods): Promise<string | undefined> => {
           if (!isValidInput(value)) {
             if (enterAmountMethods != null)
               enterAmountMethods.setStatusText({ statusText: lstrings.create_wallet_invalid_input, options: { textType: 'error' } })
@@ -244,7 +240,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
         },
-        async onPoweredByClick() {
+        onPoweredByClick: async enterAmountMethods => {
           // 1. Show modal with all the valid quotes
           const items = goodQuotes.map(quote => {
             let text

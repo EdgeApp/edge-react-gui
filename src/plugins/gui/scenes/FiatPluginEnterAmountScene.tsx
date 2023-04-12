@@ -14,17 +14,16 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
-import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../fiatPluginTypes'
+import { FiatPluginEnterAmountMethods, FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 
 export interface FiatPluginEnterAmountParams {
   headerTitle: string
   onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
   label1: string
   label2: string
-  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
   onChangeText: (fieldNum: number, value: string) => Promise<void>
-  onFieldChange: (sourceFieldNum: number, value: string) => Promise<string | undefined>
-  onPoweredByClick: () => void
+  onFieldChange: (sourceFieldNum: number, value: string, enterAmountMethods: FiatPluginEnterAmountMethods) => Promise<string | undefined>
+  onPoweredByClick: (enterAmountMethods: FiatPluginEnterAmountMethods) => void
   initialAmount1?: string
   headerIconUri?: string
 }
@@ -41,18 +40,7 @@ interface Props {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const {
-    headerIconUri,
-    headerTitle,
-    onSubmit,
-    onFieldChange,
-    onPoweredByClick,
-    onChangeText,
-    label1,
-    label2,
-    initialAmount1 = '',
-    getMethods
-  } = props.route.params
+  const { headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText, label1, label2, initialAmount1 = '' } = props.route.params
   const [value1, setValue1] = React.useState<string>(initialAmount1)
   const [value2, setValue2] = React.useState<string>('')
   const [spinner1, setSpinner1] = React.useState<boolean>(false)
@@ -66,27 +54,28 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const formattedSetValue1 = useHandler((value: string) => {
     setValue1(value)
   })
-
   const formattedSetValue2 = useHandler((value: string) => {
     setValue2(value)
   })
-
-  if (getMethods != null)
-    getMethods({
-      setStatusText: params => {
-        const { statusText, options = {} } = params
-        setStatusTextContent(statusText)
-        setStatusTextType(options.textType)
-      },
+  const setStatusText = useHandler(params => {
+    const { statusText, options = {} } = params
+    setStatusTextContent(statusText)
+    setStatusTextType(options.textType)
+  })
+  const enterAmountMethod: FiatPluginEnterAmountMethods = React.useMemo(
+    () => ({
+      setStatusText,
       setPoweredBy,
       setValue1: formattedSetValue1,
       setValue2: formattedSetValue2
-    })
+    }),
+    [formattedSetValue1, formattedSetValue2, setStatusText]
+  )
 
   if (firstRun.current && initialAmount1 != null) {
     setValue2(' ')
     setSpinner2(true)
-    onFieldChange(1, initialAmount1).then(val => {
+    onFieldChange(1, initialAmount1, enterAmountMethod).then(val => {
       if (typeof val === 'string') {
         setValue2(val)
         setSpinner2(false)
@@ -105,7 +94,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     setValue1(value)
     setValue2(' ')
     setSpinner2(true)
-    onFieldChange(1, value).then(v => {
+    onFieldChange(1, value, enterAmountMethod).then(v => {
       if (typeof v === 'string') setValue2(v)
       setSpinner2(false)
     })
@@ -116,12 +105,12 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     setValue2(value)
     setValue1(' ')
     setSpinner1(true)
-    onFieldChange(2, value).then(v => {
+    onFieldChange(2, value, enterAmountMethod).then(v => {
       if (typeof v === 'string') setValue1(v)
       setSpinner1(false)
     })
   })
-  const handlePoweredByPress = useHandler(() => onPoweredByClick())
+  const handlePoweredByPress = useHandler(() => onPoweredByClick(enterAmountMethod))
   const handleSubmit = useHandler(() => {
     onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
   })
