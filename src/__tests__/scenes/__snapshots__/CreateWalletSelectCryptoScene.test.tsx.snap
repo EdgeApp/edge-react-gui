@@ -354,7 +354,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
-          onSelectionChange={[Function]}
           onSubmitEditing={[Function]}
           returnKeyType="next"
           secureTextEntry={false}

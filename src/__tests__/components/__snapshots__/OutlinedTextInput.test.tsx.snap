@@ -242,42 +242,43 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         }
       />
     </TouchableOpacity>
-    <TextInput
-      autoCapitalize="none"
-      autoCorrect={true}
-      autoFocus={true}
-      blurOnSubmit={true}
-      editable={true}
-      inputAccessoryViewID="string"
-      keyboardType="default"
-      maxLength={11}
-      multiline={true}
-      onBlur={[Function]}
-      onChangeText={[Function]}
-      onFocus={[Function]}
-      onSelectionChange={[Function]}
-      onSubmitEditing={[Function]}
-      returnKeyType="done"
-      secureTextEntry={false}
-      selectionColor="#E85466"
-      style={
-        Array [
-          Object {
-            "alignSelf": "stretch",
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "padding": 0,
-          },
-          Object {
-            "flexGrow": 1,
-          },
-        ]
-      }
-      testID="string"
-      textAlignVertical="top"
-      value="string"
-    />
+    <React.Fragment>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={true}
+        autoFocus={true}
+        blurOnSubmit={true}
+        editable={true}
+        inputAccessoryViewID="string"
+        keyboardType="default"
+        maxLength={11}
+        multiline={true}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        onSubmitEditing={[Function]}
+        returnKeyType="done"
+        secureTextEntry={false}
+        selectionColor="#E85466"
+        style={
+          Array [
+            Object {
+              "alignSelf": "stretch",
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "padding": 0,
+            },
+            Object {
+              "flexGrow": 1,
+            },
+          ]
+        }
+        testID="string"
+        textAlignVertical="top"
+        value="string"
+      />
+    </React.Fragment>
   </View>
 </TouchableWithoutFeedback>
 `;

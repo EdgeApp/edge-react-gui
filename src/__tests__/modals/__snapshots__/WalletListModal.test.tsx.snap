@@ -351,7 +351,6 @@ Array [
         onBlur={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
-        onSelectionChange={[Function]}
         returnKeyType="search"
         secureTextEntry={false}
         selectionColor="#FFFFFF"
