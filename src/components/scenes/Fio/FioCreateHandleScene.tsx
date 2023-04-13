@@ -147,13 +147,6 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
 
   // Create the new FIO wallet, default the handle to a cleaned version of the username
   useAsyncEffect(async () => {
-    const wallet = await dispatch(createFioWallet())
-
-    if (!mounted.current) return
-    setWallet(wallet)
-
-    handleChangeFioHandle(accountUserName)
-
     const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
     if (domains.length === 1) {
       if (!mounted.current) return
@@ -161,8 +154,15 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
         setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
       } catch (e) {
         setErrorText(lstrings.fio_register_handle_error)
+        return
       }
     }
+    handleChangeFioHandle(accountUserName)
+
+    const wallet = await dispatch(createFioWallet())
+
+    if (!mounted.current) return
+    setWallet(wallet)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -187,7 +187,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
           <OutlinedTextInput
             ref={inputRef}
             suffix={domainStr}
-            value={fioHandle}
+            value={domainStr === '' ? '' : fioHandle}
             onChangeText={handleChangeFioHandle}
             autoCapitalize="none"
             autoCorrect={false}
