@@ -73,14 +73,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        // New user FIO handle registration flow (if env is properly configured)
-        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-          Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
-            if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
-          })
-        }
-
         navigation.replace('edgeTabs', {
           screen: 'walletsTab',
           params: {
@@ -88,8 +80,22 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
           }
         })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
-        await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
-        await updateWalletsRequest()(dispatch, getState)
+
+        // New user FIO handle registration flow (if env is properly configured)
+        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+          await Promise.all([
+            createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch),
+            Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
+              if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+            })
+          ]).then(async ([_customWallets, _fioCreate]) => {
+            return await updateWalletsRequest()(dispatch, getState)
+          })
+        } else {
+          await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
+          await updateWalletsRequest()(dispatch, getState)
+        }
       }
 
       navigation.navigate('edgeApp', {
