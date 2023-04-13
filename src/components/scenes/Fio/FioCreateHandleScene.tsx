@@ -1,8 +1,9 @@
 import { asNumber, asObject, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { NativeSyntheticEvent, ScrollView, TextInput, TextInputSelectionChangeEventData, View } from 'react-native'
+import { TextInput, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
@@ -68,12 +69,18 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
   const inputRef = React.useRef<TextInput>(null)
   const mounted = React.useRef<boolean>(true)
 
+  // TODO: Give feedback to the user to indicate why the input was rejected
   const handleChangeFioHandle = useHandler((userInput: string) => {
-    // Clean the userInput:
-    userInput = userInput.replace(domainStr, '').trim()
+    // Dash '-' allowed,
+    // but cannot be the first...
+    if (userInput.indexOf('-') === 0) {
+      userInput = userInput.slice(1) // remove first character
+    }
 
-    // Dash '-' allowed, but cannot be first or last character
-    userInput = userInput.charAt(0).replace('-', '') + userInput.slice(1, -1) + userInput.slice(-1).replace('-', '')
+    // ... or the last character
+    if (userInput.includes('-', userInput.length - 1)) {
+      userInput = userInput.slice(0, -1) // remove last character
+    }
 
     // ASCII a-z 0-9. Remove all non-alphanumeric characters, convert to
     // lowercase. Allow dashes as they were cleaned above
@@ -134,44 +141,12 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
     }
   }
 
-  // Ensure that focus puts the cursor after the handle, but before the domain
-  const handleInputFocus = useHandler(() => {
-    setErrorText(undefined)
-    if (inputRef.current != null) {
-      inputRef.current.focus()
-      inputRef.current.setNativeProps({ selection: { start: fioHandle.length, end: fioHandle.length } })
-    }
-  })
-
-  const handleInputClear = useHandler(() => {
-    if (!mounted.current) return
-    // TODO: BUG: Clearing the field twice consecutively will clear the domain.
-    setFioHandle('')
-  })
-
-  // Ensure the cursor cannot be moved beyond the handle portion of the input
-  const handleSelectionChange = useHandler((event: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
-    const start = event.nativeEvent.selection.start
-    // Check if the cursor is within the handle name and before the domain
-    if (start > fioHandle.length) {
-      // Move the cursor back to the end of the handle name
-      inputRef.current && inputRef.current.setNativeProps({ selection: { start: fioHandle.length, end: fioHandle.length } })
-    }
-  })
-
   const handleCancelPress = useHandler(() => {
     navigation.goBack()
   })
 
   // Create the new FIO wallet, default the handle to a cleaned version of the username
   useAsyncEffect(async () => {
-    const wallet = await dispatch(createFioWallet())
-
-    if (!mounted.current) return
-    setWallet(wallet)
-
-    handleChangeFioHandle(accountUserName)
-
     const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
     if (domains.length === 1) {
       if (!mounted.current) return
@@ -179,8 +154,15 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
         setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
       } catch (e) {
         setErrorText(lstrings.fio_register_handle_error)
+        return
       }
     }
+    handleChangeFioHandle(accountUserName)
+
+    const wallet = await dispatch(createFioWallet())
+
+    if (!mounted.current) return
+    setWallet(wallet)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -198,21 +180,18 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <ScrollView contentContainerStyle={styles.container}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
           <OutlinedTextInput
             ref={inputRef}
-            value={`${fioHandle} ${domainStr}`}
+            suffix={domainStr}
+            value={domainStr === '' ? '' : fioHandle}
             onChangeText={handleChangeFioHandle}
             autoCapitalize="none"
             autoCorrect={false}
-            onFocus={handleInputFocus}
-            onClear={handleInputClear}
-            onSelectionChange={handleSelectionChange}
-            // Actual limit is 64 total, but we added an extra space between domain and handle for prettiness
-            maxLength={65}
+            maxLength={64 - domainStr.length}
             showSpinner={domainStr === ''}
           />
           <EdgeText style={styles.errorText} numberOfLines={5}>
@@ -229,7 +208,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
           />
           <MainButton type="escape" label={lstrings.string_cancel_cap} onPress={handleCancelPress} marginRem={0.5} />
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SceneWrapper>
   )
 }
