@@ -918,6 +918,7 @@ const strings = {
   fio_free_handle_title_m: 'Get a *FIO* Handle',
   fio_free_handle_title: 'Get a FIO Handle',
   fio_free_handle_message: 'Give your wallet an easy-to-read handle to simplify sending/receiving transactions.',
+  fio_free_handle_please_wait: 'Please wait for wallet creation to complete...',
   fio_register_handle_button: 'Register Handle',
   fio_register_handle_error: 'There was an issue registering your handle. Please try again later.',
   fio_register_handle_taken_error_s: 'The handle %1$s has already been taken.',
