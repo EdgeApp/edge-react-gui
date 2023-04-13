@@ -2,7 +2,7 @@
 
 import Bugsnag from '@bugsnag/react-native'
 import { asObject, asString } from 'cleaners'
-import { LogBox, Text, TextInput } from 'react-native'
+import { Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { changeTheme, getTheme } from './components/services/ThemeContext'
@@ -11,8 +11,6 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
 Bugsnag.start({
-  // @ts-expect-error
-  apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
   }
@@ -36,23 +34,6 @@ console.log('***********************')
 
 // @ts-expect-error
 global.clog = console.log
-
-// TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
-const IGNORED_WARNINGS = [
-  'Module RCTSplashScreen requires main queue setup since it overrides `constantsToExport`',
-  /Warning: \w+ has been renamed, and is not recommended for use. See [^\s]* for details./,
-  'slowlog',
-  'Setting a timer for a long period of time',
-  'Warning: isMounted(...) is deprecated'
-]
-// $FlowExpectedError
-// @ts-expect-error
-console.ignoredYellowBox = IGNORED_WARNINGS
-
-// Ignore errors and warnings(used for device testing)
-if (ENV.DISABLE_WARNINGS) {
-  LogBox.ignoreLogs(IGNORED_WARNINGS)
-}
 
 // Disable the font scaling
 // @ts-expect-error
