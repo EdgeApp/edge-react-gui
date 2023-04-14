@@ -178,6 +178,7 @@ Object {
         "blockHeight": -1,
         "currencyCode": "",
         "date": 0,
+        "isSend": true,
         "metadata": Object {},
         "nativeAmount": "",
         "networkFee": "",

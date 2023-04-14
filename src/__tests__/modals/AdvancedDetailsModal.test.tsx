@@ -16,6 +16,7 @@ describe('AdvancedDetailsModal', () => {
             blockHeight: 0,
             currencyCode: 'BCH',
             date: 0,
+            isSend: true,
             nativeAmount: '-681',
             networkFee: '681',
             otherParams: {},

@@ -1,6 +1,6 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { add, lt } from 'biggystring'
-import { EdgeDenomination, EdgeSpendInfo, InsufficientFundsError } from 'edge-core-js'
+import { EdgeDenomination, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
@@ -83,10 +83,11 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         )
       }
     } else {
-      const fakeEdgeTransaction = {
+      const fakeEdgeTransaction: EdgeTransaction = {
         blockHeight: 0,
         currencyCode,
         date: 0,
+        isSend: true,
         nativeAmount: '0',
         networkFee: fee,
         ourReceiveAddresses: [],

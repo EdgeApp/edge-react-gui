@@ -63,6 +63,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
             currencyCode: 'BTC',
             date: 1524486980,
             deviceDescription: 'iphone12',
+            isSend: true,
             metadata: {
               name: 'Crazy Person 2',
               category: 'Expense: Less Money',

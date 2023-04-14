@@ -13,6 +13,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1524476980,
     deviceDescription: 'iphone12',
+    isSend: false,
     metadata: {
       name: 'Crazy Person',
       category: 'Income:Mo Money',
@@ -32,6 +33,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1524576980,
     deviceDescription: 'iphone12',
+    isSend: true,
     metadata: {
       name: 'Crazy Person 2',
       category: 'Expense:Less Money',
@@ -60,6 +62,7 @@ const edgeTxs: EdgeTransaction[] = [
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: false,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
     txid: 'txid3',
     walletId: ''
@@ -78,6 +81,7 @@ const edgeTxs: EdgeTransaction[] = [
     nativeAmount: '321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
     txid: 'txid4',
     walletId: ''
@@ -87,6 +91,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'USDC',
     date: 1524876980,
     deviceDescription: 'iphone12',
+    isSend: true,
     metadata: {
       name: 'Transfer but no fee',
       category: 'Transfer:Edge',
@@ -115,6 +120,7 @@ const edgeTxs: EdgeTransaction[] = [
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
     txid: 'txid5',
     walletId: ''
@@ -124,6 +130,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1525076980,
     deviceDescription: 'iphone12',
+    isSend: true,
     metadata: undefined,
     nativeAmount: '-321000000',
     networkFee: '2000',

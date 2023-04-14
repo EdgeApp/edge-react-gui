@@ -83,6 +83,7 @@ describe('TransactionDetailsScene', () => {
                 blockHeight: 0,
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+                isSend: false,
                 metadata: { name: 'timmy' },
                 nativeAmount: '12300000',
                 networkFee: '1',
@@ -115,6 +116,7 @@ describe('TransactionDetailsScene', () => {
                 blockHeight: 0,
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+                isSend: true,
                 metadata: {
                   amountFiat: -6392.93,
                   name: 'timmy'
