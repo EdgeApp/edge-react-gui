@@ -83,19 +83,17 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
         // New user FIO handle registration flow (if env is properly configured)
         const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+        const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
+
         if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-          await Promise.all([
-            createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch),
-            Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
-              if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
-            })
-          ]).then(async ([_customWallets, _fioCreate]) => {
-            return await updateWalletsRequest()(dispatch, getState)
-          })
-        } else {
-          await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
-          await updateWalletsRequest()(dispatch, getState)
+          const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
+          if (isCreateHandle) {
+            navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+          }
         }
+
+        await createWalletsPromise
+        await updateWalletsRequest()(dispatch, getState)
       }
 
       navigation.navigate('edgeApp', {
