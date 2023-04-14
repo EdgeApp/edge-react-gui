@@ -232,9 +232,7 @@ Object {
       },
       "walletsSort": "manual",
     },
-    "transactionDetails": Object {
-      "subcategories": Array [],
-    },
+    "subcategories": Array [],
     "transactionList": Object {
       "currentCurrencyCode": "",
       "currentEndIndex": 0,
