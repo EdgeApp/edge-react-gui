@@ -10,7 +10,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { isReceivedTransaction, snooze } from '../../util/utils'
+import { snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
@@ -92,7 +92,7 @@ export function AccountCallbackManager(props: Props) {
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
-        if (isReceivedTransaction(transactions[finalTxIndex])) {
+        if (!transactions[finalTxIndex].isSend) {
           dispatch(checkPasswordRecovery(navigation))
         }
       }),

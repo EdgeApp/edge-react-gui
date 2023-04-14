@@ -1,3 +1,4 @@
+import { eq } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -21,7 +22,6 @@ interface Props {
   fiatSymbol: string
   onPress: () => void
   onLongPress: () => void
-  isSentTransaction: boolean
   requiredConfirmations: number
   selectedCurrencyName: string
   thumbnailPath?: string
@@ -35,7 +35,6 @@ const TransactionRowComponent = (props: Props) => {
     denominationSymbol,
     fiatAmount,
     fiatSymbol,
-    isSentTransaction,
     onLongPress,
     onPress,
     requiredConfirmations,
@@ -49,6 +48,8 @@ const TransactionRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const { canReplaceByFee = false } = wallet.currencyInfo
+
+  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
   const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
   const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
@@ -85,10 +86,11 @@ const TransactionRowComponent = (props: Props) => {
   const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
 
   // Transaction Category
+  const defaultCategory = !isSentTransaction ? 'income' : 'expense'
   let categoryText: string | undefined
   const category = transaction.metadata?.category
   if (category != null && category !== '') {
-    categoryText = formatCategory(splitCategory(category))
+    categoryText = formatCategory(splitCategory(category, defaultCategory))
   }
 
   const handlePress = useHandler(() => {

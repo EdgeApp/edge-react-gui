@@ -1,3 +1,4 @@
+import { eq } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
@@ -59,7 +60,9 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = props.route.params
     const { metadata = {} } = edgeTransaction
     const { name = '', notes = '' } = metadata
-    const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
+    const isSentTransaction = edgeTransaction.nativeAmount.startsWith('-') || (eq(edgeTransaction.nativeAmount, '0') && edgeTransaction.isSend)
+
+    const direction = isSentTransaction ? 'send' : 'receive'
     const category = joinCategory(
       splitCategory(
         metadata.category,
