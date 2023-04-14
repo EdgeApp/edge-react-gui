@@ -45,7 +45,7 @@ async function main() {
   const bugsnagFiles = ['./android/app/src/main/AndroidManifest.xml', './ios/edge/Info.plist']
 
   for (const file of bugsnagFiles) {
-    await searchReplace(file, 'BUGSNAG_API_KEY', env.BUGSNAG_API_KEY)
+    await searchReplace(file, '00000000000000000000000000000000', env.BUGSNAG_API_KEY)
   }
 }
 
