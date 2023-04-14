@@ -515,6 +515,7 @@ const strings = {
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
   string_first_algorand_wallet_name: 'My Algorand',
+  string_first_zksync_wallet_name: 'My zkSync',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
