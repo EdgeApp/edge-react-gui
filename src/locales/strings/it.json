@@ -821,6 +821,7 @@
   "fio_free_handle_title_m": "Ottieni un handle *FIO*",
   "fio_free_handle_title": "Ottieni un handle FIO",
   "fio_free_handle_message": "Dai al tuo portafoglio un handle facile da leggere per semplificare l'invio e la ricezione delle transazioni.",
+  "fio_free_handle_please_wait": "Please wait for wallet creation to complete...",
   "fio_register_handle_button": "Registra l'handle",
   "fio_register_handle_error": "Si è verificato un problema durante la registrazione del tuo handle. Riprova più tardi.",
   "fio_register_handle_taken_error_s": "L'handle %1$s esiste giá.",
