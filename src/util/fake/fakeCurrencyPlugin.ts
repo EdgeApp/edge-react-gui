@@ -276,18 +276,18 @@ class FakeCurrencyEngine {
 
     // TODO: Return a high-fidelity transaction
     return {
-      walletId: 'someid',
       blockHeight: 0,
       currencyCode,
       date: defaultTx.date,
+      feeRateUsed: { fakePrice: 0 },
       nativeAmount: total,
       networkFee: tokenSpend ? '0' : this.defaultSettings.networkFee,
-      parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
-      feeRateUsed: { fakePrice: 0 },
       otherParams: {},
       ourReceiveAddresses: [],
+      parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
       signedTx: '',
-      txid: 'spend'
+      txid: 'spend',
+      walletId: 'someid'
     }
   }
 

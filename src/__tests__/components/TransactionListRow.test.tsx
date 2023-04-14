@@ -48,18 +48,18 @@ describe('TransactionListRow', () => {
           wallet={fakeWallet}
           currencyCode="BTC"
           transaction={{
-            walletId: 'lmnop',
-            dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
-            time: '22:53:08',
-            unfilteredIndex: 0,
+            blockHeight: 10,
             currencyCode: 'BTC',
+            date: 123456789,
+            dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
             nativeAmount: '-100001',
             networkFee: '100000',
-            blockHeight: 10,
-            date: 123456789,
-            txid: '0x182748768724897ef897234',
+            ourReceiveAddresses: [],
             signedTx: '0x12897491827459823745',
-            ourReceiveAddresses: []
+            time: '22:53:08',
+            txid: '0x182748768724897ef897234',
+            unfilteredIndex: 0,
+            walletId: 'lmnop'
           }}
         />
       </FakeProviders>

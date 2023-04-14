@@ -84,14 +84,14 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       }
     } else {
       const fakeEdgeTransaction = {
+        blockHeight: 0,
         currencyCode,
+        date: 0,
         nativeAmount: '0',
         networkFee: fee,
-        blockHeight: 0,
-        date: 0,
-        txid: '',
-        signedTx: '',
         ourReceiveAddresses: [],
+        signedTx: '',
+        txid: '',
         walletId
       }
       const exchangeDenom = denominations.find(denom => denom.name === currencyCode) as EdgeDenomination

@@ -31,7 +31,6 @@ describe('sendConfirmation reducer', () => {
           metadata: {}
         }
         const transaction: EdgeTransaction = {
-          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,
@@ -40,7 +39,8 @@ describe('sendConfirmation reducer', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
-          txid: ''
+          txid: '',
+          walletId: ''
         }
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone: any = cloneDeep(initialState)
@@ -67,7 +67,6 @@ describe('sendConfirmation reducer', () => {
           }
         }
         const transaction: EdgeTransaction = {
-          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,
@@ -76,7 +75,8 @@ describe('sendConfirmation reducer', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
-          txid: ''
+          txid: '',
+          walletId: ''
         }
         // use initialState after sendConfirmation reducer not longer mutates state
         const initialStateClone: any = cloneDeep(initialState)
@@ -114,7 +114,6 @@ describe('sendConfirmation reducer', () => {
       test('with pin error', () => {
         const guiMakeSpendInfo = { nativeAmount: '0' }
         const transaction: EdgeTransaction = {
-          walletId: '',
           blockHeight: 0,
           currencyCode: 'BCH',
           date: 0,
@@ -123,7 +122,8 @@ describe('sendConfirmation reducer', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
-          txid: ''
+          txid: '',
+          walletId: ''
         }
         const error = new Error(lstrings.incorrect_pin)
         // use initialState after sendConfirmation reducer not longer mutates state

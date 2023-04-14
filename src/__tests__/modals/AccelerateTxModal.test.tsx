@@ -22,7 +22,6 @@ describe('AccelerateTxModalComponent', () => {
       <AccelerateTxModalComponent
         bridge={fakeAirshipBridge}
         replacedTx={{
-          walletId: '',
           blockHeight: 0,
           currencyCode: 'BTC',
           date: 0,
@@ -31,10 +30,10 @@ describe('AccelerateTxModalComponent', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
-          txid: ''
+          txid: '',
+          walletId: ''
         }}
         acceleratedTx={{
-          walletId: '',
           blockHeight: 0,
           currencyCode: 'BTC',
           date: 0,
@@ -43,7 +42,8 @@ describe('AccelerateTxModalComponent', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
-          txid: ''
+          txid: '',
+          walletId: ''
         }}
         wallet={fakeWallet}
         exchangeRates={{}}

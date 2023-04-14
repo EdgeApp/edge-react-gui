@@ -80,17 +80,17 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
-                walletId: fakeCoreWallet.id,
-                txid: 'this is the txid',
+                blockHeight: 0,
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+                metadata: { name: 'timmy' },
                 nativeAmount: '12300000',
                 networkFee: '1',
+                otherParams: {},
                 ourReceiveAddresses: ['this is an address'],
                 signedTx: 'this is a signed tx',
-                otherParams: {},
-                blockHeight: 0,
-                metadata: { name: 'timmy' }
+                txid: 'this is the txid',
+                walletId: fakeCoreWallet.id
               },
               walletId: fakeCoreWallet.id
             }
@@ -112,20 +112,20 @@ describe('TransactionDetailsScene', () => {
             name: 'transactionDetails',
             params: {
               edgeTransaction: {
-                walletId: fakeCoreWallet.id,
-                txid: 'this is the txid',
+                blockHeight: 0,
                 currencyCode: 'BTC',
                 date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-                nativeAmount: '-12300000',
-                networkFee: '1',
-                ourReceiveAddresses: ['this is an address'],
-                signedTx: 'this is a signed tx',
-                otherParams: {},
-                blockHeight: 0,
                 metadata: {
                   amountFiat: -6392.93,
                   name: 'timmy'
-                }
+                },
+                nativeAmount: '-12300000',
+                networkFee: '1',
+                otherParams: {},
+                ourReceiveAddresses: ['this is an address'],
+                signedTx: 'this is a signed tx',
+                txid: 'this is the txid',
+                walletId: fakeCoreWallet.id
               },
               walletId: fakeCoreWallet.id
             }

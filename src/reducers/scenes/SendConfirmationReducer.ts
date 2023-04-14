@@ -30,18 +30,18 @@ export interface SendConfirmationState {
 }
 
 export const initialTransaction: EdgeTransaction = {
-  walletId: '',
-  txid: '',
-  date: 0,
-  currencyCode: '',
   blockHeight: -1,
+  currencyCode: '',
+  date: 0,
+  metadata: {},
   nativeAmount: '',
   networkFee: '',
-  parentNetworkFee: '',
+  otherParams: {},
   ourReceiveAddresses: [],
+  parentNetworkFee: '',
   signedTx: '',
-  metadata: {},
-  otherParams: {}
+  txid: '',
+  walletId: ''
 }
 
 export const initialState: SendConfirmationState = {

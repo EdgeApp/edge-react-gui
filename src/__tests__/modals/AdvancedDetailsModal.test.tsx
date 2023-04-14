@@ -13,7 +13,6 @@ describe('AdvancedDetailsModal', () => {
         <AdvancedDetailsModal
           bridge={fakeAirshipBridge}
           transaction={{
-            walletId: '',
             blockHeight: 0,
             currencyCode: 'BCH',
             date: 0,
@@ -22,7 +21,8 @@ describe('AdvancedDetailsModal', () => {
             otherParams: {},
             ourReceiveAddresses: ['123123123'],
             signedTx: '',
-            txid: ''
+            txid: '',
+            walletId: ''
           }}
         />
       </FakeProviders>
