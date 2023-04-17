@@ -77,6 +77,7 @@ export const WcConnectScene = (props: Props) => {
       })
     } catch (e: any) {
       showError('Failed to connect, try again.')
+      console.error('wcInit error:', e)
       navigation.navigate('wcConnections', {})
     }
   }
