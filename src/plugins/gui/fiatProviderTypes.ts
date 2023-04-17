@@ -26,9 +26,10 @@ export interface FiatProviderQuote {
 }
 
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
-type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted' | 'paymentUnsupported'
+type FiatProviderQuoteErrorTypesRegion = 'regionRestricted'
+type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'paymentUnsupported'
 
-export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesOther
+export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesRegion | FiatProviderQuoteErrorTypesOther
 
 // FiatProviderQuoteError
 //
@@ -39,6 +40,7 @@ export type FiatProviderQuoteError =
       errorType: FiatProviderQuoteErrorTypesOther
     }
   | { errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
+  | { errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 
 export class FiatProviderError extends Error {
   // @ts-expect-error

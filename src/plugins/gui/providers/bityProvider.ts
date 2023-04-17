@@ -312,7 +312,7 @@ export const bityProvider: FiatProviderFactory = {
           displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
         if (!paymentTypes.some(paymentType => paymentType === 'sepa')) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[pluginId][displayCurrencyCode])

@@ -71,6 +71,8 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
   if (bestError.errorType === 'underLimit' || bestError.errorType === 'overLimit') {
     const localeAmount = formatNumber(bestError.errorAmount.toString())
     errorText = sprintf(errorText, localeAmount + ' ' + currencyCode)
+  } else if (bestError.errorType === 'regionRestricted') {
+    errorText = sprintf(errorText, bestError.displayCurrencyCode)
   }
   return errorText
 }
