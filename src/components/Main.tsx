@@ -15,7 +15,7 @@ import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
-import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { AppParamList } from '../types/routerTypes'
@@ -805,6 +805,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <Stack.Screen
         name="pluginViewSell"

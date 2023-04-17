@@ -5,6 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { Card } from '../../../components/cards/Card'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { MainButton } from '../../../components/themed/MainButton'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
@@ -13,15 +14,28 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
+import { FiatPluginEnterAmountResponse, FiatPluginGetMethodsResponse } from '../fiatPluginTypes'
 
-interface Props {
-  route: RouteProp<'guiPluginEnterAmount'>
+export interface FiatPluginEnterAmountParams {
+  headerTitle: string
+  onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
+  label1: string
+  label2: string
+  onChangeText: (fieldNum: number, value: string) => Promise<void>
+  convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
+  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
+  initialAmount1?: string
+  headerIconUri?: string
 }
 
 export interface EnterAmountPoweredBy {
   poweredByIcon: string
   poweredByText: string
   poweredByOnClick: () => void
+}
+
+interface Props {
+  route: RouteProp<'guiPluginEnterAmount'>
 }
 
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
@@ -97,7 +111,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     })
   })
   const handleSubmit = useHandler(() => {
-    onSubmit({ lastUsed: lastUsed.current, value1, value2 })
+    onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
   })
 
   let statusTextStyle = styles.text
