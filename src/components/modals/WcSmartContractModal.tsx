@@ -199,7 +199,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
         break
       }
       case 'eth_signTransaction': {
-        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signTx = await wallet.signTx(tx)
         await wallet.otherMethods.wcApproveRequest(uri, payload, signTx.signedTx)
@@ -207,7 +207,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       }
       case 'eth_sendTransaction':
       case 'eth_sendRawTransaction': {
-        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signedTx = await wallet.signTx(tx)
         const sentTx = await wallet.broadcastTx(signedTx)
