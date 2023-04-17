@@ -12,14 +12,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
-import {
-  FiatPlugin,
-  FiatPluginEnterAmountResponse,
-  FiatPluginFactory,
-  FiatPluginFactoryArgs,
-  FiatPluginGetMethodsResponse,
-  FiatPluginStartParams
-} from './fiatPluginTypes'
+import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
@@ -152,7 +145,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
-      await showUi.enterAmount({
+      showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         isBuy,
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
@@ -290,7 +283,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
         },
-        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+        async onSubmit() {
           if (bestQuote == null) {
             return
           }

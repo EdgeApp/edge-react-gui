@@ -97,7 +97,7 @@ export interface FiatPluginUi {
   }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
+  enterAmount: (params: FiatPluginEnterAmountParams) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>

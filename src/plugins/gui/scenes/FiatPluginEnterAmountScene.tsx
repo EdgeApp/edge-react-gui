@@ -5,6 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { Card } from '../../../components/cards/Card'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { MainButton } from '../../../components/themed/MainButton'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
@@ -110,7 +111,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     })
   })
   const handleSubmit = useHandler(() => {
-    onSubmit({ lastUsed: lastUsed.current, value1, value2 })
+    onSubmit({ lastUsed: lastUsed.current, value1, value2 }).catch(showError)
   })
 
   let statusTextStyle = styles.text
