@@ -3,7 +3,6 @@ import { gt, lt } from 'biggystring'
 import { asArray, asNumber, asObject, asString } from 'cleaners'
 import URL from 'url-parse'
 
-import { EdgeTokenId } from '../../../types/types'
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
 import { FiatPaymentType } from '../fiatPluginTypes'
@@ -214,7 +213,7 @@ export const banxaProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, tokenId, direction } = params
+        const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
 
         if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
@@ -223,7 +222,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(tokenId)
+          banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
         } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
@@ -292,7 +291,7 @@ export const banxaProvider: FiatProviderFactory = {
           paymentTypes: chosenPaymentTypes,
           partnerIcon,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: priceQuote.fiat_amount,
@@ -444,17 +443,17 @@ const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: 
 }
 
 // Takes an EdgeTokenId and returns the corresponding Banxa chain code and coin code
-const edgeToBanxaCrypto = (tokenId: EdgeTokenId): { banxaChain: string; banxaCoin: string } => {
-  const tokens = allowedCurrencyCodes.crypto[tokenId.pluginId]
-  if (tokens == null) throw new Error(`edgeToBanxaCrypto ${tokenId.pluginId} not allowed`)
-  const banxaCoin = asBanxaCryptoCoin(tokens[tokenId?.tokenId ?? ''])
-  if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${tokenId.pluginId} ${tokenId?.tokenId ?? 'NOTOKENID'} not allowed`)
+const edgeToBanxaCrypto = (pluginId: string, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
+  const tokens = allowedCurrencyCodes.crypto[pluginId]
+  if (tokens == null) throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)
+  const banxaCoin = asBanxaCryptoCoin(tokens[displayCurrencyCode])
+  if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${pluginId} ${displayCurrencyCode} not allowed`)
   for (const chain of banxaCoin.blockchains) {
     // @ts-expect-error
     const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]
-    if (edgePluginId === tokenId.pluginId) {
+    if (edgePluginId === pluginId) {
       return { banxaChain: chain.code, banxaCoin: banxaCoin.coin_code }
     }
   }
-  throw new Error(`edgeToBanxaCrypto No matching pluginId ${tokenId.pluginId}`)
+  throw new Error(`edgeToBanxaCrypto No matching pluginId ${pluginId}`)
 }
