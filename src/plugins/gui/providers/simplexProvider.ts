@@ -211,8 +211,8 @@ export const simplexProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes } = params
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        const { regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
         let foundPaymentType = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
