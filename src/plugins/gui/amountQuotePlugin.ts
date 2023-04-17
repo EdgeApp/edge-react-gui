@@ -179,7 +179,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // User entered a fiat value. Convert to crypto
             sourceFieldCurrencyCode = displayFiatCurrencyCode
             quoteParams = {
-              tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
+              pluginId: currencyPluginId,
+              displayCurrencyCode: currencyCode,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'fiat',
@@ -191,7 +192,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // User entered a crypto value. Convert to fiat
             sourceFieldCurrencyCode = currencyCode
             quoteParams = {
-              tokenId: { pluginId: currencyPluginId, tokenId: currencyCode },
+              pluginId: currencyPluginId,
+              displayCurrencyCode: currencyCode,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'crypto',
@@ -241,7 +243,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
                 if (sourceFieldNum === 1) {
                   // User entered a fiat value. Show the crypto value per partner
                   const localeAmount = formatNumber(toFixed(quote.cryptoAmount, 0, 6))
-                  text = `(${localeAmount} ${quote.tokenId?.tokenId ?? ''})`
+                  text = `(${localeAmount} ${quote.displayCurrencyCode})`
                 } else {
                   // User entered a crypto value. Show the fiat value per partner
                   const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))

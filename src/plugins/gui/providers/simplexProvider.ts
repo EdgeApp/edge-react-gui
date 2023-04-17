@@ -224,7 +224,7 @@ export const simplexProvider: FiatProviderFactory = {
         if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const ts = Math.floor(Date.now() / 1000)
-        const simplexCryptoCode = SIMPLEX_ID_MAP[params.tokenId.pluginId][params.tokenId?.tokenId ?? '']
+        const simplexCryptoCode = SIMPLEX_ID_MAP[params.pluginId][params.displayCurrencyCode]
         const simplexFiatCode = asSimplexFiatCurrency(allowedCurrencyCodes.fiat[params.fiatCurrencyCode]).ticker_symbol
         let socn, tacn
         const soam = parseFloat(exchangeAmount)
@@ -287,7 +287,7 @@ export const simplexProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: goodQuote.fiat_money.amount.toString(),

@@ -35,7 +35,7 @@ const ERROR_TEXT = {
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
-  const exchangeRateText = `1 ${quote.tokenId?.tokenId ?? ''} = ${localeRate} ${fiatCode}`
+  const exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
   return exchangeRateText
 }
 

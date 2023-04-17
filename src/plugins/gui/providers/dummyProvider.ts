@@ -141,12 +141,12 @@ export const dummyProvider: FiatProviderFactory = {
 
         let pairCodes
         const url = 'https://rates2.edge.app/v1/exchangeRate?currency_pair='
-        const { tokenId = 'BTC' } = params.tokenId
+        const { displayCurrencyCode = 'BTC' } = params
         let fiatAmount, cryptoAmount
         if (params.amountType === 'fiat') {
-          pairCodes = `USD_${tokenId}`
+          pairCodes = `USD_${displayCurrencyCode}`
         } else {
-          pairCodes = `${tokenId}_USD`
+          pairCodes = `${displayCurrencyCode}_USD`
         }
 
         const response = await fetch(url + pairCodes).catch(e => undefined)
@@ -185,7 +185,7 @@ export const dummyProvider: FiatProviderFactory = {
           paymentTypes,
           partnerIcon,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount,
