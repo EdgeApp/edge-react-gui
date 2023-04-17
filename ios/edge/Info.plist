@@ -5,7 +5,7 @@
 	<key>bugsnag</key>
 	<dict>
 		<key>apiKey</key>
-		<string>00000000000000000000000000000000</string>
+		<string>a0000000000000000000000000000000</string>
 	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
