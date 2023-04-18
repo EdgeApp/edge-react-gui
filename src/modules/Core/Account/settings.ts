@@ -1,6 +1,6 @@
 /* eslint-disable quote-props */
 
-import { asArray, asBoolean, asMap, asMaybe, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
@@ -25,7 +25,7 @@ export const asCurrencyCodeDenom = asObject({
   symbol: asOptional(asString)
 })
 
-const asDenominationSettings = asMap(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
+const asDenominationSettings = asObject(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
 
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')

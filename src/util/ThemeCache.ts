@@ -1,4 +1,4 @@
-import { asDate, asMap, asObject, uncleaner } from 'cleaners'
+import { asDate, asObject, uncleaner } from 'cleaners'
 import { Disklet } from 'disklet'
 import RNFS from 'react-native-fs'
 
@@ -8,7 +8,7 @@ import { ImageProp } from '../types/Theme'
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 
 const asThemeCache = asObject({
-  assets: asMap(
+  assets: asObject(
     asObject({
       start: asDate,
       expiration: asDate

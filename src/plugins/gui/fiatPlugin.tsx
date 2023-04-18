@@ -1,4 +1,4 @@
-import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
+import { asArray, asNumber, asObject, asString } from 'cleaners'
 import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -177,7 +177,7 @@ export const executePlugin = async (params: {
 // Most of code below was stolen from edge-plugins-wyre
 // ****************************************************************************
 
-const asBlockchainMap = asMap(asString)
+const asBlockchainMap = asObject(asString)
 export const asGetPaymentMethods = asObject({
   data: asArray(
     asObject({
