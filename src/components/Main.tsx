@@ -727,7 +727,6 @@ const EdgeAppStack = () => {
           headerTitle: () => <TransactionDetailsTitle />
         }}
       />
-      <Stack.Screen name="transactionList" component={TransactionList} />
       <Stack.Screen
         name="transactionsExport"
         component={TransactionsExportScene}
