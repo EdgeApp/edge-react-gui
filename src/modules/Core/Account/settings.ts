@@ -46,7 +46,7 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginId: asOptional(asString, ''),
   preferredSwapPluginType: asOptional(asSwapPluginType),
   countryCode: asOptional(asString, ''),
-  mostRecentWallets: asOptional(asArray(asMostRecentWallet), []),
+  mostRecentWallets: asOptional(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asOptional(
     asObject({
       '20': asBoolean,
@@ -58,8 +58,8 @@ export const asSyncedAccountSettings = asObject({
     PASSWORD_RECOVERY_REMINDERS_SHOWN
   ),
   walletsSort: asOptional(asSortOption, 'manual'),
-  denominationSettings: asOptional(asDenominationSettings, {}),
-  securityCheckedWallets: asMaybe(asSecurityCheckedWallets, {})
+  denominationSettings: asOptional<DenominationSettings>(asDenominationSettings, () => ({})),
+  securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
 })
 
 // Default Account Settings

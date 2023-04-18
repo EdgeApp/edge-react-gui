@@ -344,9 +344,9 @@ function unpackAccountReferral(raw: any): AccountReferral {
 
 const asDiskPromotion = asObject({
   installerId: asString,
-  hiddenMessages: asOptional(asObject(asBoolean), {}),
-  messages: asOptional(asArray(asMessageTweak), []),
-  plugins: asOptional(asArray(asPluginTweak), [])
+  hiddenMessages: asOptional(asObject(asBoolean), () => ({})),
+  messages: asOptional(asArray(asMessageTweak), () => []),
+  plugins: asOptional(asArray(asPluginTweak), () => [])
 })
 
 const asDiskAccountReferral = asObject({
