@@ -14872,10 +14872,10 @@ rollup-plugin-node-resolve@4.0.0:
     is-module "^1.0.0"
     resolve "^1.8.1"
 
-rollup@^2.79.1:
-  version "2.79.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.79.1.tgz#bedee8faef7c9f93a2647ac0108748f497f081c7"
-  integrity sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==
+rollup@^3.20.6:
+  version "3.20.6"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.20.6.tgz#53c0fd73e397269d2ce5f0ec12851457dd53cacd"
+  integrity sha512-2yEB3nQXp/tBQDN0hJScJQheXdvU2wFhh6ld7K/aiZ1vYcak6N/BKjY1QrU6BvO2JWYS8bEs14FRaxXosxy2zw==
   optionalDependencies:
     fsevents "~2.3.2"
 
