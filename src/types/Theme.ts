@@ -1,5 +1,6 @@
 import { asNumber, asObject } from 'cleaners'
-import { ImageSourcePropType } from 'react-native'
+
+export type ImageProp = { uri: string } | number
 
 interface ThemeShadowParams {
   shadowColor: string
@@ -79,7 +80,7 @@ export interface Theme {
   backgroundGradientEnd: { x: number; y: number }
 
   backgroundImageServerUrls: string[]
-  backgroundImage?: ImageSourcePropType
+  backgroundImage?: ImageProp
   backgroundLoadingOverlay: string
 
   // Camera Overlay
@@ -146,7 +147,7 @@ export interface Theme {
   // listHeaderText: string,
 
   // Header
-  headerIcon: ImageSourcePropType
+  headerIcon: ImageProp
 
   // Buttons
   buttonBorderRadiusRem: number
@@ -356,27 +357,27 @@ export interface Theme {
   // Images
   iconServerBaseUri: string
 
-  paymentTypeLogoApplePay: ImageSourcePropType
-  paymentTypeLogoAuspost: ImageSourcePropType
-  paymentTypeLogoBankTransfer: ImageSourcePropType
-  paymentTypeLogoCash: ImageSourcePropType
-  paymentTypeLogoCreditCard: ImageSourcePropType
-  paymentTypeLogoDebitCard: ImageSourcePropType
-  paymentTypeLogoFasterPayments: ImageSourcePropType
-  paymentTypeLogoGiftCard: ImageSourcePropType
-  paymentTypeLogoGooglePay: ImageSourcePropType
-  paymentTypeLogoIdeal: ImageSourcePropType
-  paymentTypeLogoInterac: ImageSourcePropType
-  paymentTypeLogoPayid: ImageSourcePropType
-  paymentTypeLogoPaynow: ImageSourcePropType
-  paymentTypeLogoPoli: ImageSourcePropType
-  paymentTypeLogoSofort: ImageSourcePropType
-  paymentTypeLogoUpi: ImageSourcePropType
+  paymentTypeLogoApplePay: ImageProp
+  paymentTypeLogoAuspost: ImageProp
+  paymentTypeLogoBankTransfer: ImageProp
+  paymentTypeLogoCash: ImageProp
+  paymentTypeLogoCreditCard: ImageProp
+  paymentTypeLogoDebitCard: ImageProp
+  paymentTypeLogoFasterPayments: ImageProp
+  paymentTypeLogoGiftCard: ImageProp
+  paymentTypeLogoGooglePay: ImageProp
+  paymentTypeLogoIdeal: ImageProp
+  paymentTypeLogoInterac: ImageProp
+  paymentTypeLogoPayid: ImageProp
+  paymentTypeLogoPaynow: ImageProp
+  paymentTypeLogoPoli: ImageProp
+  paymentTypeLogoSofort: ImageProp
+  paymentTypeLogoUpi: ImageProp
 
-  primaryLogo: ImageSourcePropType
-  fioAddressLogo: ImageSourcePropType
-  walletListSlideTutorialImage: ImageSourcePropType
+  primaryLogo: ImageProp
+  fioAddressLogo: ImageProp
+  walletListSlideTutorialImage: ImageProp
 
-  guiPluginLogoBitaccess: ImageSourcePropType
-  guiPluginLogoMoonpay: ImageSourcePropType
+  guiPluginLogoBitaccess: ImageProp
+  guiPluginLogoMoonpay: ImageProp
 }
