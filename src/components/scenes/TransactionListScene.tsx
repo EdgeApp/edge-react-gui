@@ -13,7 +13,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { calculateSpamThreshold, isReceivedTransaction, zeroString } from '../../util/utils'
+import { calculateSpamThreshold, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ThemeProps, useTheme } from '../services/ThemeContext'
@@ -177,7 +177,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderTransaction = (transaction: FlatListItem<TransactionListTx>) => {
     const { navigation, wallet, currencyCode, spamThreshold } = this.props
-    if (spamThreshold != null && isReceivedTransaction(transaction.item) && lt(transaction.item.nativeAmount, spamThreshold)) {
+    if (spamThreshold != null && !transaction.item.isSend && lt(transaction.item.nativeAmount, spamThreshold)) {
       return null
     }
     return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />

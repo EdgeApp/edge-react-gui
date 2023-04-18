@@ -7,7 +7,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { TransactionListTx } from '../types/types'
-import { calculateSpamThreshold, isReceivedTransaction, unixToLocaleDateTime, zeroString } from '../util/utils'
+import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../util/utils'
 import { checkFioObtData } from './FioActions'
 
 export const updateBalance = () => ({
@@ -159,7 +159,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
     let isTransactionForSelectedWallet = false
     const receivedTxs: EdgeTransaction[] = []
     for (const transaction of edgeTransactions) {
-      if (isReceivedTransaction(transaction)) {
+      if (!transaction.isSend) {
         receivedTxs.push(transaction)
       }
       if (transaction.currencyCode === selectedCurrencyCode && transaction.walletId === selectedWalletId) {
@@ -177,7 +177,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
     }
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
     if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
-    if (!isReceivedTransaction(edgeTransaction)) return
+    if (edgeTransaction.isSend) return
     if (!spamFilterOn || (!zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom)))) {
       showTransactionDropdown(navigation, edgeTransaction)
     }
