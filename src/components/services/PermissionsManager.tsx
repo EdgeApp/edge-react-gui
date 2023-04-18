@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Disklet } from 'disklet'
 import * as React from 'react'
-import { check, checkMultiple, openSettings, PermissionStatus, request } from 'react-native-permissions'
+import { check, checkMultiple, PermissionStatus, request } from 'react-native-permissions'
 
 import { SETTINGS_PERMISSION_LIMITS, SETTINGS_PERMISSION_QUANTITY } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -31,7 +31,7 @@ export const PermissionsManager = () => {
 export async function edgeRequestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(permissionNames[data])
 
-  if (status === 'denied' || status === 'blocked') {
+  if (status === 'denied') {
     if (data === 'contacts') {
       const isContactsPermissionShownBefore = await AsyncStorage.getItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE).catch(showError)
 
@@ -39,15 +39,10 @@ export async function edgeRequestPermission(data: Permission): Promise<Permissio
       if (isContactsPermissionShownBefore === 'true') return
 
       const result = await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
-      if (result === 'deny') {
-        return status
-      } else if (status === 'blocked') {
-        await openSettings().catch(showError)
-        return await check(permissionNames[data])
-      } else {
-        return await request(permissionNames[data])
-      }
+      AsyncStorage.setItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE, 'true').catch(showError)
+      if (result === 'deny') return status
     }
+    return await request(permissionNames[data])
   }
   return status
 }
