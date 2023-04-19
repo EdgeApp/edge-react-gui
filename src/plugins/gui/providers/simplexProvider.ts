@@ -211,8 +211,8 @@ export const simplexProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes } = params
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        const { regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
         let foundPaymentType = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
@@ -224,7 +224,7 @@ export const simplexProvider: FiatProviderFactory = {
         if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const ts = Math.floor(Date.now() / 1000)
-        const simplexCryptoCode = SIMPLEX_ID_MAP[params.tokenId.pluginId][params.tokenId?.tokenId ?? '']
+        const simplexCryptoCode = SIMPLEX_ID_MAP[params.pluginId][params.displayCurrencyCode]
         const simplexFiatCode = asSimplexFiatCurrency(allowedCurrencyCodes.fiat[params.fiatCurrencyCode]).ticker_symbol
         let socn, tacn
         const soam = parseFloat(exchangeAmount)
@@ -287,7 +287,7 @@ export const simplexProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: goodQuote.fiat_money.amount.toString(),

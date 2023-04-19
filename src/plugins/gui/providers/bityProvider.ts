@@ -308,13 +308,14 @@ export const bityProvider: FiatProviderFactory = {
           fiatCurrencyCode,
           paymentTypes,
           regionCode,
-          tokenId
+          pluginId,
+          displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
         if (!paymentTypes.some(paymentType => paymentType === 'sepa')) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
-        const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[tokenId.pluginId][tokenId?.tokenId ?? ''])
+        const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[pluginId][displayCurrencyCode])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
 
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Bity: Could not query supported currencies')
@@ -356,7 +357,7 @@ export const bityProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: isBuy ? bityQuote.input.amount : bityQuote.output.amount,

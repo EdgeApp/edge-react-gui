@@ -165,8 +165,8 @@ export const moonpayProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, paymentTypes } = params
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted' })
+        const { regionCode, paymentTypes, displayCurrencyCode } = params
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
         let foundPaymentType = false
         let useIAch = false
         for (const type of paymentTypes) {
@@ -181,7 +181,7 @@ export const moonpayProvider: FiatProviderFactory = {
         if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         let amountParam = ''
-        const cryptoCurrencyObj = asMoonpayCurrency(allowedCurrencyCodes.crypto[params.tokenId.pluginId][params.tokenId?.tokenId ?? ''])
+        const cryptoCurrencyObj = asMoonpayCurrency(allowedCurrencyCodes.crypto[params.pluginId][params.displayCurrencyCode])
         const fiatCurrencyObj = asMoonpayCurrency(allowedCurrencyCodes.fiat[params.fiatCurrencyCode])
         if (cryptoCurrencyObj == null || fiatCurrencyObj == null) throw new Error('Moonpay could not query supported currencies')
 
@@ -225,7 +225,7 @@ export const moonpayProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginDisplayName,
-          tokenId: params.tokenId,
+          displayCurrencyCode: params.displayCurrencyCode,
           isEstimate: false,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount: moonpayQuote.totalAmount.toString(),
