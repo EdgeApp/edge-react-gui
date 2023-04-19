@@ -1,6 +1,6 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Keyboard, ViewToken } from 'react-native'
+import { Keyboard, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
@@ -67,6 +67,10 @@ export function ListModal<T>({
 
   const handleSubmitEditing = () => (onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text))
 
+  const scrollPadding = React.useMemo<ViewStyle>(() => {
+    return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
+  }, [theme])
+
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
@@ -88,12 +92,13 @@ export function ListModal<T>({
         />
       )}
       <FlashList
+        contentContainerStyle={scrollPadding}
         data={filteredRows}
         estimatedItemSize={theme.rem(5)}
-        onScroll={() => Keyboard.dismiss()}
         keyboardShouldPersistTaps="handled"
-        renderItem={renderItem}
         keyExtractor={(_, i) => `${i}`}
+        renderItem={renderItem}
+        onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
       />
       {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
