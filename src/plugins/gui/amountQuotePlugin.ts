@@ -91,14 +91,18 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
 
-      // Fetch supported assets from all providers
-      // TODO: Filter by supported paymentTypes
+      // Fetch supported assets from all providers, based on the given
+      // paymentTypes this plugin was initialized with.
       const providers = await Promise.all(providerPromises)
       for (const provider of providers) {
-        assetPromises.push(provider.getSupportedAssets())
+        assetPromises.push(provider.getSupportedAssets(paymentTypes))
       }
 
-      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => [])
+      const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {
+        console.error('amountQuotePlugin error fetching assets: ', String(e))
+        return []
+      })
+
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
       const allowedAssets: EdgeTokenId[] = []

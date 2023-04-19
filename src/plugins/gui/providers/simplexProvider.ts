@@ -186,7 +186,10 @@ export const simplexProvider: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if paymentTypes are not supported by this provider
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+
         const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
         if (response == null || !response.ok) return allowedCurrencyCodes
         const result = await response.json()
