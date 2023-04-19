@@ -72,36 +72,23 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   })
 
   const onToggleFlipInput = useHandler(() => {
+    const otherField = primaryField === 1 ? 0 : 1
+    inputRefs[otherField]?.current?.focus()
+
     const jsCallback: AnimationCallback = done => {
       'worklet'
-      if (done) runOnJS(setPrimaryField)(primaryField ? 0 : 1)
+      if (done === true) runOnJS(setPrimaryField)(otherField)
     }
 
-    inputRefs[primaryField]?.current?.blur()
-    inputRefs[Number(!primaryField)]?.current?.focus()
-
-    if (primaryField) {
-      console.log('animating to 0')
-      animatedValue.value = withTiming(
-        0,
-        {
-          duration: FLIP_DURATION,
-          easing: Easing.inOut(Easing.ease)
-        },
-        jsCallback
-      )
-    }
-    if (!primaryField) {
-      console.log('animating to 1')
-      animatedValue.value = withTiming(
-        1,
-        {
-          duration: FLIP_DURATION,
-          easing: Easing.inOut(Easing.ease)
-        },
-        jsCallback
-      )
-    }
+    console.log(`animating to ${otherField}`)
+    animatedValue.value = withTiming(
+      otherField,
+      {
+        duration: FLIP_DURATION,
+        easing: Easing.inOut(Easing.ease)
+      },
+      jsCallback
+    )
   })
 
   const onNumericInputChange = useHandler((text: string) => {
