@@ -18,6 +18,8 @@ import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
+import { defaultAccount } from '../reducers/CoreReducer'
+import { useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -245,24 +247,22 @@ export const Main = () => {
 const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
 
-  useBackEvent(actionType => {
-    if (actionType === 'RESET') {
+  useBackEvent(() => {
+    // Allow back if logged out or this is the second back press
+    if (account === defaultAccount || backPressedOnce.current) {
       return true
     }
-    if (backPressedOnce.current) {
-      return true
-    } else {
-      backPressedOnce.current = true
-      Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
-        backPressedOnce.current = false
-      })
-      // Timeout the back press after 3 seconds so the state isn't "sticky"
-      setTimeout(() => {
-        backPressedOnce.current = false
-      }, 3000)
-      return false
-    }
+    backPressedOnce.current = true
+    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
+      backPressedOnce.current = false
+    })
+    // Timeout the back press after 3 seconds so the state isn't "sticky"
+    setTimeout(() => {
+      backPressedOnce.current = false
+    }, 3000)
+    return false
   })
 
   // Login/Logout events:

@@ -279,12 +279,8 @@ export const mergeSettings = (
 
 export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    // Must use reset in order to avoid being prevented by the useBackEvent:
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'gettingStarted' }, { name: 'login' }]
-    })
     await dispatch(logout(username))
+    navigation.navigate('login', {})
   }
 }
 
