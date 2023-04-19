@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
-import { FiatPluginUi } from '../fiatPluginTypes'
+import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -22,6 +22,7 @@ const pluginId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
+const supportedPaymentType: FiatPaymentType = 'sepa'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { readonly [code: string]: boolean } = {
@@ -261,7 +262,10 @@ export const bityProvider: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if 'sepa' is not included in the props
+        if (!paymentTypes.includes(supportedPaymentType)) return { crypto: {}, fiat: {} }
+
         const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
         if (response == null || !response.ok) {
           console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
@@ -313,7 +317,7 @@ export const bityProvider: FiatProviderFactory = {
         } = params
         const isBuy = direction === 'buy'
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
-        if (!paymentTypes.some(paymentType => paymentType === 'sepa')) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[pluginId][displayCurrencyCode])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])

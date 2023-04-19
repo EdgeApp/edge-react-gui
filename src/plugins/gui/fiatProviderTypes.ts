@@ -81,7 +81,7 @@ export interface FiatProvider {
   pluginId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: () => Promise<FiatProviderAssetMap>
+  getSupportedAssets: (paymentTypes: FiatPaymentType[]) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 

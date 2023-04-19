@@ -21,6 +21,8 @@ const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
 
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false }
+
 const asBanxaApiKeys = asObject({
   partnerUrl: asString,
   apiKey: asString
@@ -181,7 +183,10 @@ export const banxaProvider: FiatProviderFactory = {
       pluginId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if paymentTypes are not supported by this provider
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+
         const promises = [
           banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)
