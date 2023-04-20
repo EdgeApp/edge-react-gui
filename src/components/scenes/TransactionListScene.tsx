@@ -2,21 +2,20 @@ import { lt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
-import { useDispatch } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { calculateSpamThreshold, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { ThemeProps, useTheme } from '../services/ThemeContext'
+import { useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
@@ -33,106 +32,78 @@ interface Section {
   data: TransactionListTx[]
 }
 
-interface StateProps {
-  numTransactions: number
-  wallet: EdgeCurrencyWallet
-  currencyCode: string
-  spamThreshold?: string
-  tokenId?: string
-  transactions: TransactionListTx[]
-}
-
-interface DispatchProps {
-  fetchMoreTransactions: (reset: boolean) => void
-}
-
-interface OwnProps {
+interface Props {
   navigation: NavigationProp<'transactionList'>
   route: RouteProp<'transactionList'>
   wallet: EdgeCurrencyWallet
 }
 
-type Props = StateProps & DispatchProps & ThemeProps & OwnProps
+function TransactionListComponent(props: Props) {
+  const { navigation, route, wallet } = props
+  const { currencyCode, walletId } = route.params
+  const { pluginId } = wallet.currencyInfo
 
-interface State {
-  reset: boolean
-  searching: boolean
-  filteredTransactions: TransactionListTx[]
-  loading: boolean
-}
+  const dispatch = useDispatch()
+  const theme = useTheme()
 
-class TransactionListComponent extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      reset: true,
-      searching: false,
-      filteredTransactions: [],
-      loading: false
+  // State:
+  const [filteredTransactions, setFilteredTransactions] = React.useState<TransactionListTx[]>([])
+  const [loading, setLoading] = React.useState(false)
+  const [reset, setReset] = React.useState(true)
+  const [searching, setSearching] = React.useState(false)
+
+  // Selectors:
+  const account = useSelector(state => state.core.account)
+  const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
+  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
+  const numTransactions = useSelector(state => state.ui.transactionList.numTransactions)
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  const transactions = useSelector(state => state.ui.transactionList.transactions)
+
+  // Effects:
+  React.useEffect(() => {
+    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    if (reset) {
+      setReset(false)
     }
-  }
+  }, [currencyCode, dispatch, reset, walletId])
 
-  componentDidMount = () => {
-    this.props.fetchMoreTransactions(this.state.reset)
-    if (this.state.reset) {
-      this.setState({ reset: false })
+  // ---------------------------------------------------------------------------
+  // Derived values
+  // ---------------------------------------------------------------------------
+
+  const spamThreshold = React.useMemo<string | undefined>(() => {
+    if (spamFilterOn && !zeroString(exchangeRate)) {
+      return calculateSpamThreshold(exchangeRate, exchangeDenom)
     }
-  }
+  }, [exchangeDenom, exchangeRate, spamFilterOn])
 
-  componentDidUpdate(prevProps: Props) {
-    const walletIdChanged = prevProps.wallet.id !== this.props.wallet.id
-    const currencyCodeChanged = prevProps.currencyCode !== this.props.currencyCode
+  const tokenId = React.useMemo(() => getTokenId(account, pluginId, currencyCode), [account, currencyCode, pluginId])
 
-    if (walletIdChanged || currencyCodeChanged) {
-      this.props.fetchMoreTransactions(this.state.reset)
-      if (this.state.reset) {
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({ reset: false })
-      }
+  const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+
+  const finalTransactions = React.useMemo(() => {
+    if (isTransactionListUnsupported || reset) return []
+    if (searching) return filteredTransactions
+    return transactions
+  }, [filteredTransactions, isTransactionListUnsupported, reset, searching, transactions])
+
+  const contentOffset = React.useMemo(
+    () => ({
+      x: 0,
+      y: !searching && finalTransactions.length > 0 ? theme.rem(4.5) : 0
+    }),
+    [finalTransactions.length, searching, theme]
+  )
+
+  const sections = React.useMemo(() => {
+    const checkFilteredTransactions = searching && filteredTransactions.length === 0
+    if (checkFilteredTransactions || loading) {
+      return [{ title: lstrings.transaction_list_search_no_result, data: [] }]
     }
-  }
 
-  isUnsupported(): boolean {
-    return SPECIAL_CURRENCY_INFO[this.props.wallet.currencyInfo.pluginId].isTransactionListUnsupported === true
-  }
-
-  handleScrollEnd = () => {
-    this.props.fetchMoreTransactions(this.state.reset)
-    if (this.state.reset) {
-      this.setState({ reset: false })
-    }
-  }
-
-  handleOnRefresh = () => {
-    if (!this.state.searching) {
-      this.setState({ filteredTransactions: this.props.transactions }, () => this.setState({ searching: true }))
-    }
-  }
-
-  handleSearchTransaction = (searchString: string) => {
-    const { wallet, currencyCode, transactions } = this.props
-
-    this.setState({ loading: true })
-    wallet
-      .getTransactions({
-        currencyCode,
-        searchString
-      })
-      .then(filteredEdgeTransactions => {
-        const filteredTransactions = transactions.filter(transaction => filteredEdgeTransactions.find(item => item.txid === transaction.txid))
-        this.setState({ filteredTransactions, loading: false })
-      })
-      .catch(error => {
-        this.setState({ loading: false })
-        console.log(error)
-      })
-  }
-
-  handleChangeSortingState = (isSearching: boolean) => (isSearching ? this.handleOnRefresh() : this.setState({ searching: false }))
-
-  section = (transactions: TransactionListTx[]) => {
     const sections: Section[] = []
-    for (const transaction of transactions) {
+    for (const transaction of finalTransactions) {
       const dateString = transaction.dateString
       const checkTitle = sections.find(section => section.title === dateString)
       if (!checkTitle) {
@@ -150,134 +121,131 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       }
     }
     return sections
-  }
+  }, [filteredTransactions.length, finalTransactions, loading, searching])
 
-  emptySection = () => [{ title: lstrings.transaction_list_search_no_result, data: [] }]
+  // ---------------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------------
 
-  renderEmptyComponent = () => {
-    const { navigation, tokenId, numTransactions, wallet } = this.props
+  const handleScrollEnd = useHandler(() => {
+    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    if (reset) setReset(false)
+  })
 
-    if (this.isUnsupported()) {
+  const handleOnRefresh = useHandler(() => {
+    if (!searching) {
+      setFilteredTransactions(transactions)
+      setSearching(true)
+    }
+  })
+
+  const handleSearchTransaction = useHandler((searchString: string) => {
+    setLoading(true)
+    wallet
+      .getTransactions({
+        currencyCode,
+        searchString
+      })
+      .then(filteredEdgeTransactions => {
+        setFilteredTransactions(
+          transactions.filter(transaction => {
+            return filteredEdgeTransactions.find(item => item.txid === transaction.txid)
+          })
+        )
+        setLoading(false)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
+  })
+
+  const handleChangeSortingState = useHandler((isSearching: boolean) => {
+    if (isSearching) return handleOnRefresh()
+    setSearching(false)
+  })
+
+  // ---------------------------------------------------------------------------
+  // Renderers
+  // ---------------------------------------------------------------------------
+
+  const refreshControl = React.useMemo(() => {
+    if (finalTransactions.length === 0) return undefined
+    return <RefreshControl refreshing={false} tintColor={theme.searchListRefreshControlIndicator} onRefresh={handleOnRefresh} />
+  }, [finalTransactions.length, handleOnRefresh, theme])
+
+  const renderEmptyComponent = useHandler(() => {
+    if (isTransactionListUnsupported) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
     } else if (numTransactions > 0) {
       return <EmptyLoader />
     } else {
       return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
     }
-  }
+  })
 
-  renderSectionHeader = (section: { section: Section }) => {
-    const { filteredTransactions, loading, searching } = this.state
+  const renderSectionHeader = useHandler((section: { section: Section }) => {
     const checkFilteredTransactions = searching && filteredTransactions.length === 0
     if (checkFilteredTransactions || loading) {
       return <SectionHeaderCentered title={section.section.title} loading={loading} />
     }
     return <SectionHeader title={section.section.title} />
-  }
+  })
 
-  renderTransaction = (transaction: FlatListItem<TransactionListTx>) => {
-    const { navigation, wallet, currencyCode, spamThreshold } = this.props
+  const renderTransaction = useHandler((transaction: FlatListItem<TransactionListTx>) => {
     if (spamThreshold != null && !transaction.item.isSend && lt(transaction.item.nativeAmount, spamThreshold)) {
       return null
     }
     return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
-  }
+  })
 
-  renderTop = () => {
-    const { currencyCode, navigation, tokenId, wallet } = this.props
-    const { searching } = this.state
-
+  const renderTop = useHandler(() => {
     return (
       <TransactionListTop
-        navigation={navigation}
         currencyCode={currencyCode}
-        isEmpty={this.isUnsupported() || this.props.transactions.length < 1}
+        isEmpty={isTransactionListUnsupported || transactions.length < 1}
+        navigation={navigation}
         searching={searching}
         tokenId={tokenId}
         wallet={wallet}
-        onChangeSortingState={this.handleChangeSortingState}
-        onSearchTransaction={this.handleSearchTransaction}
+        onChangeSortingState={handleChangeSortingState}
+        onSearchTransaction={handleSearchTransaction}
       />
     )
-  }
+  })
 
-  keyExtractor = (item: TransactionListTx) => item.txid
+  const keyExtractor = useHandler((item: TransactionListTx) => item.txid)
 
-  getItemLayout = (data: unknown, index: number) => ({
-    length: this.props.theme.rem(4.25),
-    offset: this.props.theme.rem(4.25) * index,
+  const getItemLayout = useHandler((data: unknown, index: number) => ({
+    length: theme.rem(4.25),
+    offset: theme.rem(4.25) * index,
     index
-  })
-
-  render() {
-    const { filteredTransactions, loading, reset, searching } = this.state
-    const transactions = this.isUnsupported() || reset ? [] : searching ? filteredTransactions : this.props.transactions
-    const checkFilteredTransactions = searching && filteredTransactions.length === 0
-    return (
-      <SceneWrapper hasTabs>
-        {SHOW_FLIP_INPUT_TESTER ? (
-          <ExchangedFlipInputTester />
-        ) : (
-          <SectionList
-            sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
-            renderItem={this.renderTransaction}
-            renderSectionHeader={this.renderSectionHeader}
-            initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-            onEndReached={this.handleScrollEnd}
-            onEndReachedThreshold={SCROLL_THRESHOLD}
-            keyExtractor={this.keyExtractor}
-            ListEmptyComponent={this.renderEmptyComponent}
-            ListHeaderComponent={this.renderTop}
-            contentOffset={{ x: 0, y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
-            refreshControl={
-              transactions.length !== 0 ? (
-                <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
-              ) : undefined
-            }
-            keyboardShouldPersistTaps="handled"
-            getItemLayout={this.getItemLayout}
-            stickySectionHeadersEnabled
-          />
-        )}
-      </SceneWrapper>
-    )
-  }
-}
-
-export const TransactionList = withWallet((props: OwnProps) => {
-  const { wallet, route } = props
-  const { walletId, currencyCode } = route.params
-  const theme = useTheme()
-  const dispatch = useDispatch()
-
-  const account = useSelector(state => state.core.account)
-  const numTransactions = useSelector(state => state.ui.transactionList.numTransactions)
-  const transactions = useSelector(state => state.ui.transactionList.transactions)
-  const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
-  const exchangeDenom = useSelector(state => getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode))
-
-  let spamThreshold
-  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
-  if (spamFilterOn && !zeroString(exchangeRate)) {
-    spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
-  }
-
-  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-
-  const handleMoreTransactions = useHandler((reset: boolean): void => {
-    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
-  })
+  }))
 
   return (
-    <TransactionListComponent
-      {...props}
-      currencyCode={currencyCode}
-      numTransactions={numTransactions}
-      spamThreshold={spamThreshold}
-      tokenId={tokenId}
-      theme={theme}
-      transactions={transactions}
-      fetchMoreTransactions={handleMoreTransactions}
-    />
+    <SceneWrapper hasTabs>
+      {SHOW_FLIP_INPUT_TESTER ? (
+        <ExchangedFlipInputTester />
+      ) : (
+        <SectionList
+          contentOffset={contentOffset}
+          getItemLayout={getItemLayout}
+          initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={keyExtractor}
+          ListEmptyComponent={renderEmptyComponent}
+          ListHeaderComponent={renderTop}
+          onEndReachedThreshold={SCROLL_THRESHOLD}
+          refreshControl={refreshControl}
+          renderItem={renderTransaction}
+          renderSectionHeader={renderSectionHeader}
+          sections={sections}
+          stickySectionHeadersEnabled
+          onEndReached={handleScrollEnd}
+        />
+      )}
+    </SceneWrapper>
   )
-})
+}
+
+export const TransactionList = withWallet(TransactionListComponent)
