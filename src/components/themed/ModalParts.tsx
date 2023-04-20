@@ -41,6 +41,13 @@ export function ModalMessage(props: { children: React.ReactNode; paddingRem?: nu
   return <Text style={[styles.messageText, padding, isWarning && styles.warningText]}>{children}</Text>
 }
 
+/**
+ * Renders a close button and an optional fade-out gradient.
+ *
+ * If you use the fade-out gradient, your scroll element's
+ * `contentContainerStyle` needs `theme.rem(ModalFooter.bottomRem)`
+ * worth of bottom padding, so the close button does not cover your content.
+ */
 export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -61,6 +68,8 @@ export function ModalFooter(props: ModalFooterProps) {
   )
 }
 
+ModalFooter.bottomRem = 2.5
+
 export function ModalScrollArea(props: { children: React.ReactNode; onCancel: () => void }) {
   const { children, onCancel } = props
   const theme = useTheme()
@@ -80,7 +89,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(1)
   },
   scrollPadding: {
-    paddingBottom: theme.rem(2.5)
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   },
   titleContainer: {
     alignItems: 'center',

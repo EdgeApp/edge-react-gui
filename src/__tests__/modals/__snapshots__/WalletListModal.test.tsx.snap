@@ -452,6 +452,9 @@ Array [
                 "span": undefined,
               },
               "props": Object {
+                "contentContainerStyle": Object {
+                  "paddingBottom": 56,
+                },
                 "data": Array [],
                 "estimatedItemSize": 96,
                 "keyboardShouldPersistTaps": "handled",
@@ -573,7 +576,7 @@ Array [
               <View
                 style={
                   Object {
-                    "paddingBottom": 0,
+                    "paddingBottom": 56,
                     "paddingRight": 0,
                   }
                 }
