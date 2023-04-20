@@ -439,6 +439,8 @@ PODS:
     - React-Core
   - react-native-image-picker (4.0.6):
     - React-Core
+  - react-native-in-app-review (4.3.3):
+    - React-Core
   - react-native-mail (6.1.1):
     - React-Core
   - react-native-mymonero-core (0.2.7):
@@ -778,6 +780,7 @@ DEPENDENCIES:
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -960,6 +963,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-flipper"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-in-app-review:
+    :path: "../node_modules/react-native-in-app-review"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
   react-native-mymonero-core:
@@ -1143,6 +1148,7 @@ SPEC CHECKSUMS:
   react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
   react-native-flipper: df8e2a7e5dcc857033d925ad8c7e8c52760b8e06
   react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
+  react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 124750b26da01dceea7b59245b17f50d3c265f40
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import InAppReview from 'react-native-in-app-review'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -9,7 +10,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -60,8 +60,16 @@ export function WalletListScene(props: Props) {
   // Show the password reminder on mount if required:
   useAsyncEffect(
     async () => {
+      const isAvail = InAppReview.isAvailable()
+      console.debug('isAvail: ' + isAvail)
+
+      InAppReview.RequestInAppReview()
+
+      // const test = await InAppReview.RequestInAppReview()
+      // const test2 = await InAppReview.RequestInAppReview()
+      // console.debug('Review gotten: ' + test)
       if (needsPasswordCheck) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
+        // await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
