@@ -452,7 +452,7 @@
   "string_first_avalanche_wallet_name": "I miei Avalanche",
   "string_first_optimism_wallet_name": "I miei Optimism",
   "string_first_algorand_wallet_name": "I miei Algorand",
-  "string_first_zksync_wallet_name": "My zkSync",
+  "string_first_zksync_wallet_name": "I miei zkSync",
   "my_crypto_wallet_name": "I miei %s",
   "string_help": "Aiuto",
   "string_exit": "Esci",
