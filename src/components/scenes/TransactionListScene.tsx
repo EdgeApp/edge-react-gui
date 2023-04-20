@@ -40,7 +40,7 @@ interface Props {
 
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
-  const { currencyCode, walletId } = route.params
+  const { currencyCode } = route.params
   const { pluginId } = wallet.currencyInfo
 
   const dispatch = useDispatch()
@@ -62,11 +62,11 @@ function TransactionListComponent(props: Props) {
 
   // Effects:
   React.useEffect(() => {
-    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
     if (reset) {
       setReset(false)
     }
-  }, [currencyCode, dispatch, reset, walletId])
+  }, [currencyCode, dispatch, reset, wallet])
 
   // ---------------------------------------------------------------------------
   // Derived values
@@ -128,7 +128,7 @@ function TransactionListComponent(props: Props) {
   // ---------------------------------------------------------------------------
 
   const handleScrollEnd = useHandler(() => {
-    dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
     if (reset) setReset(false)
   })
 

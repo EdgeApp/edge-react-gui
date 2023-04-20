@@ -87,8 +87,8 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('newTransactions', transactions => {
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        dispatch(refreshTransactionsRequest(wallet.id, transactions))
-        dispatch(newTransactionsRequest(navigation, wallet.id, transactions))
+        dispatch(refreshTransactionsRequest(wallet, transactions))
+        dispatch(newTransactionsRequest(navigation, wallet, transactions))
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
@@ -100,7 +100,7 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('transactionsChanged', transactions => {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        dispatch(refreshTransactionsRequest(wallet.id, transactions))
+        dispatch(refreshTransactionsRequest(wallet, transactions))
       }),
 
       wallet.on('wcNewContractCall', obj => {
