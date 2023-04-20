@@ -23,6 +23,7 @@ const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
 const supportedPaymentType: FiatPaymentType = 'sepa'
+const partnerFee = 0.005
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { readonly [code: string]: boolean } = {
@@ -105,6 +106,7 @@ interface BityBuyOrderRequest {
     type: 'crypto_address'
     crypto_address: string
   }
+  partner_fee: { factor: number }
 }
 
 interface BitySellOrderRequest {
@@ -130,6 +132,7 @@ interface BitySellOrderRequest {
       zip: string
     }
   }
+  partner_fee: { factor: number }
 }
 
 const asBityApproveQuoteResponse = asObject({
@@ -557,7 +560,8 @@ const executeSellOrderFetch = async (
           zip: homeAddress.postalCode,
           country: homeAddress.country
         }
-      }
+      },
+      partner_fee: { factor: partnerFee }
     },
     clientId
   )
@@ -587,7 +591,8 @@ const executeBuyOrderFetch = async (
         currency: outputCurrencyCode,
         type: 'crypto_address',
         crypto_address: cryptoAddress
-      }
+      },
+      partner_fee: { factor: partnerFee }
     },
     clientId
   )
