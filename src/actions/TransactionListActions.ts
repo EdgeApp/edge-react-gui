@@ -10,13 +10,8 @@ import { TransactionListTx } from '../types/types'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../util/utils'
 import { checkFioObtData } from './FioActions'
 
-export const updateBalance = () => ({
-  type: 'noop'
-})
-
-export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'
-export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
-export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
+const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
+const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
 export function fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -184,7 +179,7 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
   }
 }
 
-export function fetchTransactions(
+function fetchTransactions(
   walletId: string,
   currencyCode: string,
   options?: {
