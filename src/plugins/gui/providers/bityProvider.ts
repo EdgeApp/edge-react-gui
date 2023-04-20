@@ -340,7 +340,7 @@ export const bityProvider: FiatProviderFactory = {
           }
         }
         const bityQuote = await fetchBityQuote(quoteRequest)
-        console.debug('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
+        console.log('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
         const minimumAmount = isReverseQuote ? bityQuote.output.minimum_amount : bityQuote.input.minimum_amount
         if (lt(amount, minimumAmount)) {
