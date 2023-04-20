@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
 import { useDispatch } from 'react-redux'
@@ -198,17 +198,19 @@ const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
 const Tab = createBottomTabNavigator<AppParamList>()
 
-const defaultScreenOptions = {
+const defaultScreenOptions: StackNavigationOptions = {
   title: '',
   headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
+  headerTitleAlign: 'center',
   headerTransparent: true
 }
-const firstSceneScreenOptions = {
+const firstSceneScreenOptions: StackNavigationOptions = {
   headerLeft: () => <HeaderTextButton type="help" placement="left" />,
-  headerTitle: EdgeLogoHeader
+  headerTitle: EdgeLogoHeader,
+  headerTitleAlign: 'center'
 }
 
 export const Main = () => {

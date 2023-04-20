@@ -1487,7 +1487,10 @@ const strings = {
   getting_started_slide_4_title: `*Help* Is Here If\nYou Need It`,
   getting_started_welcome_message: `Edge is the open source tool you need\nto invest, secure, and put your crypto in action.`,
   getting_started_welcome_prompt: `Swipe to Learn More`,
-  getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`
+  getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
+
+  // Accessibility Hints
+  app_logo_hint: 'App logo'
 }
 
 // eslint-disable-next-line import/no-default-export
