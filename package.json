@@ -114,7 +114,7 @@
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
-    "edge-core-js": "^0.19.49",
+    "edge-core-js": "^0.19.50",
     "edge-currency-accountbased": "^1.0.0",
     "edge-currency-monero": "^0.5.5",
     "edge-currency-plugins": "^2.0.2",
