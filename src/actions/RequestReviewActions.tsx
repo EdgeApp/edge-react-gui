@@ -13,7 +13,7 @@ import { RootState } from '../types/reduxTypes'
 const SWAP_COUNT_DATA_FILE = 'swapCountData.json'
 const MANY_SWAPS_TO_TRIGGER_REQUEST = 3
 
-const requestReview = async () => {
+export const requestReview = async () => {
   if (Platform.OS === 'ios') {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
