@@ -53,20 +53,20 @@ export const asEnvConfig = asObject({
         })
       )
     }).withRest,
-    {
+    () => ({
       banxa: undefined,
       Bitrefill: undefined,
       moonpay: undefined,
       simplex: undefined
-    }
+    })
   ),
   WYRE_CLIENT_INIT: asOptional(
     asObject({
       baseUri: asString
     }),
-    {
+    () => ({
       baseUri: 'https://api.sendwyre.com'
-    }
+    })
   ),
   AZTECO_API_KEY: asNullable(asString),
 
@@ -76,7 +76,7 @@ export const asEnvConfig = asObject({
       alethioApiKey: asOptional(asString, ''),
       amberdataApiKey: asOptional(asString, ''),
       blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), []),
+      evmScanApiKey: asOptional(asArray(asString), () => []),
       gasStationApiKey: asOptional(asString, ''),
       infuraProjectId: asOptional(asString, ''),
       quiknodeApiKey: asOptional(asString, '')
@@ -84,8 +84,8 @@ export const asEnvConfig = asObject({
   ),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(
     asObject({
-      bscscanApiKey: asOptional(asArray(asString), []),
-      evmScanApiKey: asOptional(asArray(asString), [])
+      bscscanApiKey: asOptional(asArray(asString), () => []),
+      evmScanApiKey: asOptional(asArray(asString), () => [])
     }).withRest
   ),
   CHANGE_NOW_INIT: asCorePluginInit(
@@ -103,7 +103,7 @@ export const asEnvConfig = asObject({
       alethioApiKey: asOptional(asString, ''),
       amberdataApiKey: asOptional(asString, ''),
       blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), []),
+      evmScanApiKey: asOptional(asArray(asString), () => []),
       gasStationApiKey: asOptional(asString, ''),
       infuraProjectId: asOptional(asString, ''),
       quiknodeApiKey: asOptional(asString, '')
@@ -114,7 +114,7 @@ export const asEnvConfig = asObject({
       alethioApiKey: asOptional(asString, ''),
       amberdataApiKey: asOptional(asString, ''),
       blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), []),
+      evmScanApiKey: asOptional(asArray(asString), () => []),
       gasStationApiKey: asOptional(asString, ''),
       infuraProjectId: asOptional(asString, ''),
       quiknodeApiKey: asOptional(asString, '')
@@ -127,7 +127,7 @@ export const asEnvConfig = asObject({
   ),
   FANTOM_INIT: asCorePluginInit(
     asObject({
-      evmScanApiKey: asOptional(asArray(asString), []),
+      evmScanApiKey: asOptional(asArray(asString), () => []),
       ftmscanApiKey: asOptional(asString, ''),
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
@@ -155,7 +155,7 @@ export const asEnvConfig = asObject({
   ),
   KOVAN_INIT: asCorePluginInit(
     asObject({
-      evmScanApiKey: asOptional(asArray(asString), []),
+      evmScanApiKey: asOptional(asArray(asString), () => []),
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
@@ -171,13 +171,13 @@ export const asEnvConfig = asObject({
   ),
   OPTIMISM_INIT: asCorePluginInit(
     asObject({
-      evmScanApiKey: asOptional(asArray(asString), [])
+      evmScanApiKey: asOptional(asArray(asString), () => [])
     }).withRest
   ),
   POLYGON_INIT: asCorePluginInit(
     asObject({
-      evmScanApiKey: asOptional(asArray(asString), []),
-      polygonscanApiKey: asOptional(asArray(asString), [])
+      evmScanApiKey: asOptional(asArray(asString), () => []),
+      polygonscanApiKey: asOptional(asArray(asString), () => [])
     }).withRest
   ),
   SIDESHIFT_INIT: asCorePluginInit(

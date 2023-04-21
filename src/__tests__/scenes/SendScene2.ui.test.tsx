@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
-import { asDate, asMap, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
@@ -32,7 +32,7 @@ const asFakeUser = asObject({
   lastLogin: asOptional(asDate),
   loginId: asString,
   loginKey: asString,
-  repos: asMap(asMap(asUnknown)),
+  repos: asObject(asObject(asUnknown)),
   server: asUnknown
 })
 

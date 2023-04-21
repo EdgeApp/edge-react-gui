@@ -7,14 +7,14 @@
 // render that is trigger via UI interaction
 //
 
-import { asBoolean, asMap, asObject } from 'cleaners'
+import { asBoolean, asObject } from 'cleaners'
 
 import { config } from '../theme/appConfig'
 import { fetchInfo } from './network'
 
 const asAssetOverrides = asObject({
   // Currency pluginIds as key
-  disable: asMap(asBoolean)
+  disable: asObject(asBoolean)
 })
 
 type AssetOverrides = ReturnType<typeof asAssetOverrides>

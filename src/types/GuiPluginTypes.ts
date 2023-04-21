@@ -1,4 +1,4 @@
-import { asArray, asEither, asMap, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
 
 import { asFiatPaymentType, FiatPaymentType, FiatPluginFactory } from '../plugins/gui/fiatPluginTypes'
 import { Permission } from '../reducers/PermissionsReducer'
@@ -86,7 +86,7 @@ const asGuiPluginJsonRow = asObject({
 
   // Optional stuff to add to the plugin URI:
   deepPath: asOptional(asString),
-  deepQuery: asOptional(asMap(asEither(asString, asNull))),
+  deepQuery: asOptional(asObject(asEither(asString, asNull))),
 
   // Optional params to sent to native Fiat Plugins
   paymentType: asOptional(asFiatPaymentType),

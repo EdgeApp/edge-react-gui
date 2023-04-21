@@ -136,7 +136,7 @@ const asPaymentMethodsResponse = asObject({
       status: asString,
       supportsDeposit: asBoolean,
       supportsPayment: asBoolean,
-      blockchains: asOptional(asObject(asString), {})
+      blockchains: asOptional(asObject(asString), () => ({}))
     })
   )
 })

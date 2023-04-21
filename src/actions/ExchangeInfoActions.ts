@@ -25,10 +25,11 @@ const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(asEither(asTrue, 
 const asFiatDirectionInfo = asObject({
   disablePlugins: asNestedDisableMap
 })
+type FiatDirectionInfo = ReturnType<typeof asFiatDirectionInfo>
 
 export const asExchangeInfo = asObject({
-  buy: asMaybe(asFiatDirectionInfo, { disablePlugins: {} }),
-  sell: asMaybe(asFiatDirectionInfo, { disablePlugins: {} }),
+  buy: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({ disablePlugins: {} })),
+  sell: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({ disablePlugins: {} })),
   swap: asMaybe(
     asObject({
       disableAssets: asMaybe(
@@ -36,11 +37,14 @@ export const asExchangeInfo = asObject({
           source: asArray(asDisableAsset),
           destination: asArray(asDisableAsset)
         }),
-        { source: [], destination: [] }
+        () => ({ source: [], destination: [] })
       ),
-      disablePlugins: asMaybe(asDisablePluginsMap, {})
+      disablePlugins: asMaybe(asDisablePluginsMap, () => ({}))
     }),
-    { disableAssets: { source: [], destination: [] }, disablePlugins: {} }
+    () => ({
+      disableAssets: { source: [], destination: [] },
+      disablePlugins: {}
+    })
   )
 })
 
