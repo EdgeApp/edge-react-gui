@@ -16,10 +16,12 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-const pluginId = 'banxa'
+const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
+
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: false }
 
 const asBanxaApiKeys = asObject({
   partnerUrl: asString,
@@ -162,7 +164,7 @@ const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: {}, crypto: {} }
 const banxaPaymentsMap: BanxaPaymentMap = {}
 
 export const banxaProvider: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
@@ -178,10 +180,13 @@ export const banxaProvider: FiatProviderFactory = {
     }
 
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if paymentTypes are not supported by this provider
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+
         const promises = [
           banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)
@@ -222,7 +227,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
+          banxaCrypto = edgeToBanxaCrypto(providerId, displayCurrencyCode)
         } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
@@ -285,7 +290,7 @@ export const banxaProvider: FiatProviderFactory = {
         chosenPaymentTypes.push(paymentType)
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           regionCode,
           direction,
           paymentTypes: chosenPaymentTypes,

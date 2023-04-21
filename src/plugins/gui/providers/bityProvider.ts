@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
-import { FiatPluginUi } from '../fiatPluginTypes'
+import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -18,10 +18,12 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 
-const pluginId = 'bity'
+const providerId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
+const supportedPaymentType: FiatPaymentType = 'sepa'
+const partnerFee = 0.005
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { readonly [code: string]: boolean } = {
@@ -104,6 +106,7 @@ interface BityBuyOrderRequest {
     type: 'crypto_address'
     crypto_address: string
   }
+  partner_fee: { factor: number }
 }
 
 interface BitySellOrderRequest {
@@ -129,6 +132,7 @@ interface BitySellOrderRequest {
       zip: string
     }
   }
+  partner_fee: { factor: number }
 }
 
 const asBityApproveQuoteResponse = asObject({
@@ -251,17 +255,20 @@ const approveBityQuote = async (
 }
 
 export const bityProvider: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const { apiKeys } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if 'sepa' is not included in the props
+        if (!paymentTypes.includes(supportedPaymentType)) return { crypto: {}, fiat: {} }
+
         const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
         if (response == null || !response.ok) {
           console.error(`Bity getSupportedAssets response error: ${await response?.text()}`)
@@ -313,7 +320,7 @@ export const bityProvider: FiatProviderFactory = {
         } = params
         const isBuy = direction === 'buy'
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
-        if (!paymentTypes.some(paymentType => paymentType === 'sepa')) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
 
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[pluginId][displayCurrencyCode])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
@@ -340,7 +347,7 @@ export const bityProvider: FiatProviderFactory = {
           }
         }
         const bityQuote = await fetchBityQuote(quoteRequest)
-        console.debug('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
+        console.log('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
         const minimumAmount = isReverseQuote ? bityQuote.output.minimum_amount : bityQuote.input.minimum_amount
         if (lt(amount, minimumAmount)) {
@@ -352,7 +359,7 @@ export const bityProvider: FiatProviderFactory = {
         }
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           partnerIcon,
           regionCode,
           paymentTypes,
@@ -553,7 +560,8 @@ const executeSellOrderFetch = async (
           zip: homeAddress.postalCode,
           country: homeAddress.country
         }
-      }
+      },
+      partner_fee: { factor: partnerFee }
     },
     clientId
   )
@@ -583,7 +591,8 @@ const executeBuyOrderFetch = async (
         currency: outputCurrencyCode,
         type: 'crypto_address',
         crypto_address: cryptoAddress
-      }
+      },
+      partner_fee: { factor: partnerFee }
     },
     clientId
   )

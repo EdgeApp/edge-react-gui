@@ -15,7 +15,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-const pluginId = 'simplex'
+const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
@@ -168,7 +168,7 @@ const asSimplexCountries = asArray(asString)
 const asInfoJwtSignResponse = asObject({ token: asString })
 
 export const simplexProvider: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
@@ -183,10 +183,13 @@ export const simplexProvider: FiatProviderFactory = {
 
     const { publicKey, partner, jwtTokenProvider } = asSimplexApiKeys(apiKeys)
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+        // Return nothing if paymentTypes are not supported by this provider
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+
         const response = await fetch(`https://api.simplexcc.com/v2/supported_fiat_currencies?public_key=${publicKey}`).catch(e => undefined)
         if (response == null || !response.ok) return allowedCurrencyCodes
         const result = await response.json()
@@ -282,7 +285,7 @@ export const simplexProvider: FiatProviderFactory = {
         const goodQuote = asSimplexQuoteSuccess(quote)
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           partnerIcon,
           regionCode,
           paymentTypes,

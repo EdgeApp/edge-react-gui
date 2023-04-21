@@ -8,7 +8,7 @@ export interface FiatProviderApproveQuoteParams {
 }
 
 export interface FiatProviderQuote {
-  readonly pluginId: string
+  readonly providerId: string
   readonly partnerIcon: string
   readonly pluginDisplayName: string
   readonly displayCurrencyCode: string
@@ -78,10 +78,10 @@ export interface FiatProviderStore {
 }
 
 export interface FiatProvider {
-  pluginId: string
+  providerId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: () => Promise<FiatProviderAssetMap>
+  getSupportedAssets: (paymentTypes: FiatPaymentType[]) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 
@@ -93,7 +93,7 @@ export interface FiatProviderFactoryParams {
 }
 
 export interface FiatProviderFactory {
-  pluginId: string
+  providerId: string
   storeId: string
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
 }
