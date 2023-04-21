@@ -1,4 +1,4 @@
-import { add, div, gte, mul } from 'biggystring'
+import { add, div, gte, lt, mul } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
@@ -64,6 +64,7 @@ export interface SendScene2Params {
   walletId: string
   tokenId?: string
   isoExpireDate?: string
+  minNativeAmount?: string
   spendInfo?: EdgeSpendInfo
   openCamera?: boolean
   lockTilesMap?: {
@@ -121,6 +122,7 @@ const SendComponent = (props: Props) => {
     tokenId: tokenIdProp,
     spendInfo: initSpendInfo,
     isoExpireDate,
+    minNativeAmount: initMinNativeAmount,
     openCamera = false,
     infoTiles,
     lockTilesMap = {},
@@ -138,6 +140,7 @@ const SendComponent = (props: Props) => {
   const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
+  const [minNativeAmount, setMinNativeAmount] = useState<string | undefined>(initMinNativeAmount)
   const [expireDate, setExpireDate] = useState<Date | undefined>(initExpireDate)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [edgeTransaction, setEdgeTransaction] = useState<EdgeTransaction | null>(null)
@@ -185,7 +188,7 @@ const SendComponent = (props: Props) => {
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
       const { parsedUri, fioAddress } = changeAddressResult
 
-      if (parsedUri) {
+      if (parsedUri != null) {
         if (parsedUri.metadata != null) {
           spendInfo.metadata = parsedUri.metadata
         }
@@ -198,6 +201,7 @@ const SendComponent = (props: Props) => {
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
         // should properly re-render with new spendTargets
+        setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
         setSpendInfo({ ...spendInfo })
       }
@@ -891,6 +895,22 @@ const SendComponent = (props: Props) => {
         const fiatAmount = mul(totalExchangeAmount, rate)
         const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
         setSpendingLimitExceeded(exceeded)
+      }
+
+      if (minNativeAmount != null) {
+        for (const target of spendInfo.spendTargets) {
+          if (target.nativeAmount == null) continue
+          if (lt(target.nativeAmount, minNativeAmount)) {
+            const minDisplayAmount = div(minNativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+            const { name } = cryptoDisplayDenomination
+
+            setError(new Error(sprintf(lstrings.error_spend_amount_less_then_min_s, `${minDisplayAmount} ${name}`)))
+            setEdgeTransaction(null)
+            setFeeNativeAmount('')
+            setProcessingAmountChanged(false)
+            return
+          }
+        }
       }
 
       makeSpendCounter.current++
