@@ -157,6 +157,8 @@
   "fragment_wallets_copy_seed": "Seed kopieren",
   "fragment_wallets_copied_seed": "Kopierter Seed",
   "fragment_wallets_get_seed_wallet": "Phrase bekommen",
+  "fragment_wallets_view_private_view_key": "Private View Key",
+  "fragment_wallets_view_private_view_key_warning": "The private view key allows the receiver to see the balance in your Monero wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.",
   "fragment_wallets_view_xpub": "XPub Adresse anzeigen",
   "fragment_wallets_pubkey_copied_title": "XPub Adresse kopiert",
   "fragment_wallets_export_transactions": "Transaktionen exportieren",
