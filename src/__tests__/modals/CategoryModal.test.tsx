@@ -10,9 +10,7 @@ import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 describe('CategoryModal', () => {
   const fakeState: FakeState = {
     ui: {
-      transactionDetails: {
-        subcategories: defaultCategories.slice(0, 4)
-      }
+      subcategories: defaultCategories.slice(0, 4)
     }
   }
 

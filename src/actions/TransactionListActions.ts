@@ -1,5 +1,5 @@
 import { gte } from 'biggystring'
-import { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown'
 import { showError } from '../components/services/AirshipInstance'
@@ -10,15 +10,10 @@ import { TransactionListTx } from '../types/types'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../util/utils'
 import { checkFioObtData } from './FioActions'
 
-export const updateBalance = () => ({
-  type: 'noop'
-})
+const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
+const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 
-export const CHANGED_TRANSACTIONS = 'UI/SCENES/TRANSACTION_LIST/CHANGED_TRANSACTIONS'
-export const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
-export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
-
-export function fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean): ThunkAction<void> {
+export function fetchMoreTransactions(wallet: EdgeCurrencyWallet, currencyCode: string, reset: boolean): ThunkAction<void> {
   return (dispatch, getState) => {
     const state: RootState = getState()
     const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.transactionList
@@ -27,7 +22,7 @@ export function fetchMoreTransactions(walletId: string, currencyCode: string, re
     let existingTransactions = transactions
     const walletTransactionsCount = numTransactions
     // if we are resetting then start over
-    if (reset || (currentWalletId !== '' && currentWalletId !== walletId) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
+    if (reset || (currentWalletId !== '' && currentWalletId !== wallet.id) || (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)) {
       currentEndIndex = 0
       existingTransactions = []
     }
@@ -53,7 +48,7 @@ export function fetchMoreTransactions(walletId: string, currencyCode: string, re
 
     if (
       nextEndIndex !== currentEndIndex || // if there are more tx to fetch
-      (currentWalletId !== '' && currentWalletId !== walletId) || // if the wallet has change
+      (currentWalletId !== '' && currentWalletId !== wallet.id) || // if the wallet has change
       (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode) // maybe you've switched to a token wallet
     ) {
       let startEntries
@@ -61,7 +56,7 @@ export function fetchMoreTransactions(walletId: string, currencyCode: string, re
         startEntries = nextEndIndex - nextStartIndex + 1
       }
       // If startEntries is undefined / null, this means query until the end of the transaction list
-      getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+      getAndMergeTransactions(state, dispatch, wallet, currencyCode, {
         startEntries,
         startIndex: nextStartIndex
       })
@@ -69,10 +64,13 @@ export function fetchMoreTransactions(walletId: string, currencyCode: string, re
   }
 }
 
-const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: EdgeGetTransactionsOptions) => {
-  const { currencyWallets } = state.core.account
-  const wallet = currencyWallets[walletId]
-  if (!wallet) return
+const getAndMergeTransactions = async (
+  state: RootState,
+  dispatch: Dispatch,
+  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  options: EdgeGetTransactionsOptions
+) => {
   // initialize the master array of transactions that will eventually go into Redux
   let transactionsWithKeys: TransactionListTx[] = [] // array of transactions as objects with key included for sorting?
   let transactionIdMap: { [txid: string]: boolean } = {} // maps id to sort order(?)
@@ -116,7 +114,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
         transactionIdMap,
         transactions: transactionsWithKeys,
         currentCurrencyCode: currencyCode,
-        currentWalletId: walletId,
+        currentWalletId: wallet.id,
         currentEndIndex: lastUnfilteredIndex
       }
     })
@@ -125,7 +123,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   }
 }
 
-export function refreshTransactionsRequest(walletId: string, transactions: EdgeTransaction[]): ThunkAction<void> {
+export function refreshTransactionsRequest(wallet: EdgeCurrencyWallet, transactions: EdgeTransaction[]): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const selectedWalletId = state.ui.wallets.selectedWalletId
@@ -138,17 +136,16 @@ export function refreshTransactionsRequest(walletId: string, transactions: EdgeT
       }
     }
     // Check if this is the selected wallet and we are on the transaction list scene
-    if (walletId === selectedWalletId && shouldFetch) {
-      dispatch(fetchTransactions(walletId, selectedCurrencyCode))
+    if (wallet.id === selectedWalletId && shouldFetch) {
+      dispatch(fetchTransactions(wallet, selectedCurrencyCode))
     }
   }
 }
 
-export function newTransactionsRequest(navigation: NavigationBase, walletId: string, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
+export function newTransactionsRequest(navigation: NavigationBase, wallet: EdgeCurrencyWallet, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
   return (dispatch, getState) => {
     const edgeTransaction: EdgeTransaction = edgeTransactions[0]
     const state = getState()
-    const wallet = state.core.account.currencyWallets[walletId]
     const exchangeRate = state.exchangeRates[`${edgeTransaction.currencyCode}_${wallet.fiatCurrencyCode}`]
     const currentViewableTransactions = state.ui.transactionList.transactions
     const selectedWalletId = state.ui.wallets.selectedWalletId
@@ -175,8 +172,8 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
       startIndex: 0,
       startEntries: state.ui.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
     }
-    if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
-    if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
+    if (isTransactionForSelectedWallet) dispatch(fetchTransactions(wallet, selectedCurrencyCode, options))
+    if (receivedTxs.length) dispatch(checkFioObtData(wallet, receivedTxs))
     if (edgeTransaction.isSend) return
     if (!spamFilterOn || (!zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom)))) {
       showTransactionDropdown(navigation, edgeTransaction)
@@ -184,8 +181,8 @@ export function newTransactionsRequest(navigation: NavigationBase, walletId: str
   }
 }
 
-export function fetchTransactions(
-  walletId: string,
+function fetchTransactions(
+  wallet: EdgeCurrencyWallet,
   currencyCode: string,
   options?: {
     startIndex: number
@@ -202,7 +199,7 @@ export function fetchTransactions(
       startEntries = state.ui.transactionList.currentEndIndex + 1
       startIndex = 0
     }
-    getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
+    getAndMergeTransactions(state, dispatch, wallet, currencyCode, {
       startEntries,
       startIndex
     })

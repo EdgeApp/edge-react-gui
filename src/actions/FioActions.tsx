@@ -53,7 +53,7 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
   }
 }
 
-export function checkFioObtData(walletId: string, transactions: EdgeTransaction[]): ThunkAction<Promise<unknown>> {
+export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTransaction[]): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
     if (checkFioObtDataCounter > MAX_OBT_DATA_CHECKS) return // to prevent loop if account does not have fio wallets
     const state = getState()
@@ -62,12 +62,11 @@ export function checkFioObtData(walletId: string, transactions: EdgeTransaction[
     if (account == null || account.currencyConfig == null || fioWallets.length === 0) {
       checkFioObtDataCounter++
       return setTimeout(() => {
-        dispatch(checkFioObtData(walletId, transactions))
+        dispatch(checkFioObtData(wallet, transactions))
       }, 400)
     }
     try {
       const fioPlugin = account.currencyConfig.fio
-      const wallet = account.currencyWallets[walletId]
 
       const obtDataRecords = await getFioObtData(fioWallets)
 
