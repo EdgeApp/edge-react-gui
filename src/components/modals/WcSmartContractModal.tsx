@@ -134,7 +134,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: WcRpcPayload): Promise<void> {
+async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: Payload): Promise<void> {
   if (!approve) {
     await wallet.otherMethods.wcRejectRequest(uri, payload)
     return
@@ -146,25 +146,28 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       case 'eth_sign':
       case 'eth_signTypedData':
       case 'eth_signTypedData_v4': {
-        const typedData = payload.method === 'eth_signTypedData' || payload.method === 'eth_signTypedData_v4'
-        const result = await wallet.signMessage(payload.params[1], { otherParams: { typedData } })
-        await wallet.otherMethods.wcApproveRequest(uri, payload, result)
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
+        const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
         break
       }
       case 'eth_signTransaction': {
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signTx = await wallet.signTx(tx)
-        await wallet.otherMethods.wcApproveRequest(uri, payload, signTx.signedTx)
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signTx.signedTx)
         break
       }
       case 'eth_sendTransaction':
       case 'eth_sendRawTransaction': {
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signedTx = await wallet.signTx(tx)
         const sentTx = await wallet.broadcastTx(signedTx)
-        await wallet.otherMethods.wcApproveRequest(uri, payload, sentTx.txid)
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, sentTx.txid)
         break
       }
     }
@@ -174,7 +177,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
   }
 }
 
-const asWcRpcPayload = asObject({
+const asEvmWcRpcPayload = asObject({
   id: asEither(asString, asNumber),
   method: asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction'),
   params: asEither(
@@ -194,7 +197,8 @@ const asWcRpcPayload = asObject({
   )
 })
 
-type WcRpcPayload = ReturnType<typeof asWcRpcPayload>
+const asPayload = asObject({ method: asString }).withRest
+type Payload = ReturnType<typeof asPayload>
 
 export const asWcSmartContractModalProps = asObject({
   dApp: asObject({
@@ -207,6 +211,6 @@ export const asWcSmartContractModalProps = asObject({
   networkFee: asString,
   tokenId: asOptional(asString),
   uri: asString,
-  payload: asWcRpcPayload
+  payload: asPayload
 })
 type WcSmartContractModalProps = ReturnType<typeof asWcSmartContractModalProps>
