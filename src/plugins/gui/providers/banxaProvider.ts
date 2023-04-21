@@ -16,7 +16,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-const pluginId = 'banxa'
+const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
@@ -164,7 +164,7 @@ const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: {}, crypto: {} }
 const banxaPaymentsMap: BanxaPaymentMap = {}
 
 export const banxaProvider: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
@@ -180,7 +180,7 @@ export const banxaProvider: FiatProviderFactory = {
     }
 
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
@@ -227,7 +227,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
+          banxaCrypto = edgeToBanxaCrypto(providerId, displayCurrencyCode)
         } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
@@ -290,7 +290,7 @@ export const banxaProvider: FiatProviderFactory = {
         chosenPaymentTypes.push(paymentType)
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           regionCode,
           direction,
           paymentTypes: chosenPaymentTypes,

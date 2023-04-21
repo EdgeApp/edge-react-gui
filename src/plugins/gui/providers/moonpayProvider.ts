@@ -14,7 +14,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-const pluginId = 'moonpay'
+const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'icon_white_small.png'
 const pluginDisplayName = 'Moonpay'
@@ -108,13 +108,13 @@ const TOKEN_MAP: StringMap = {
 }
 
 export const moonpayProvider: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
@@ -223,7 +223,7 @@ export const moonpayProvider: FiatProviderFactory = {
         console.log(JSON.stringify(moonpayQuote, null, 2))
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           partnerIcon,
           regionCode,
           paymentTypes,

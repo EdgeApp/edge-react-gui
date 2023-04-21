@@ -10,7 +10,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-const pluginId = 'dummyprovider2'
+const providerId = 'dummyprovider2'
 const storeId = 'com.dummyprovider2'
 const partnerIcon = 'icon_black_small.png'
 const pluginDisplayName = 'Dummy 2'
@@ -125,11 +125,11 @@ for (const pluginId in SIMPLEX_ID_MAP) {
 }
 
 export const dummyProvider2: FiatProviderFactory = {
-  pluginId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const out = {
-      pluginId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async (): Promise<FiatProviderAssetMap> => allowedCurrencyCodes,
@@ -180,7 +180,7 @@ export const dummyProvider2: FiatProviderFactory = {
         }
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId,
+          providerId,
           regionCode,
           paymentTypes,
           partnerIcon,

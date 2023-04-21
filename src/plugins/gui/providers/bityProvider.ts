@@ -255,14 +255,14 @@ const approveBityQuote = async (
 }
 
 export const bityProvider: FiatProviderFactory = {
-  pluginId: providerId,
+  providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const { apiKeys } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
     const out = {
-      pluginId: providerId,
+      providerId,
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
@@ -359,7 +359,7 @@ export const bityProvider: FiatProviderFactory = {
         }
 
         const paymentQuote: FiatProviderQuote = {
-          pluginId: providerId,
+          providerId,
           partnerIcon,
           regionCode,
           paymentTypes,

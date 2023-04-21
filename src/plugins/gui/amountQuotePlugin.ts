@@ -72,11 +72,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // TODO: Address redundancy of plugin-disabling implementations: info
       // server vs disablePlugins
       for (const providerFactory of providerFactories) {
-        if (disablePlugins[providerFactory.pluginId]) continue
-        priorityArray[0][providerFactory.pluginId] = true
+        if (disablePlugins[providerFactory.providerId]) continue
+        priorityArray[0][providerFactory.providerId] = true
 
         // @ts-expect-error
-        const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.pluginId]
+        const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.providerId]
         if (apiKeys == null) continue
 
         const store = createStore(providerFactory.storeId, account.dataStore)
@@ -201,7 +201,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
 
-          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.pluginId)).map(async p => await p.getQuote(quoteParams))
+          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.providerId)).map(async p => await p.getQuote(quoteParams))
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
@@ -213,7 +213,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
-            if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.pluginId] <= 0) continue
+            if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.providerId] <= 0) continue
             goodQuotes.push(quote)
           }
 
@@ -332,7 +332,7 @@ export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: Priorit
   let bestQuoteRatio = '0'
   for (const p of priorityArray) {
     for (const quote of quotes) {
-      if (!p[quote.pluginId]) continue
+      if (!p[quote.providerId]) continue
       const quoteRatio = div(quote.cryptoAmount, quote.fiatAmount, 16)
 
       if (gt(quoteRatio, bestQuoteRatio)) {
