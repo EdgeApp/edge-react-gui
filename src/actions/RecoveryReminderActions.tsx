@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -43,11 +43,11 @@ async function showReminderModal(navigation: NavigationBase) {
   const reply = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
-      title={s.strings.password_recovery_reminder_modal_title}
-      message={s.strings.password_recovery_reminder_modal_message}
+      title={lstrings.password_recovery_reminder_modal_title}
+      message={lstrings.password_recovery_reminder_modal_message}
       buttons={{
-        ok: { label: s.strings.password_recovery_reminder_modal_set_up },
-        cancel: { label: s.strings.password_check_check_later }
+        ok: { label: lstrings.password_recovery_reminder_modal_set_up },
+        cancel: { label: lstrings.password_check_check_later }
       }}
     />
   ))

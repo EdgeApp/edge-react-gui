@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -18,8 +18,8 @@ function CrashSceneComponent(props: ThemeProps): React.ReactNode {
   return (
     <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
       <AntDesignIcon name="frowno" style={styles.icon} />
-      <Text style={styles.titleText}>{s.strings.error_boundary_title}</Text>
-      <Text style={styles.messageText}>{sprintf(s.strings.error_boundary_message_s, config.supportEmail)}</Text>
+      <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
+      <Text style={styles.messageText}>{sprintf(lstrings.error_boundary_message_s, config.supportEmail)}</Text>
     </SceneWrapper>
   )
 }

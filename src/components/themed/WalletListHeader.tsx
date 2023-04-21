@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -55,7 +55,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={{ flex: 1, flexDirection: 'column' }}>
             <OutlinedTextInput
               returnKeyType="search"
-              label={s.strings.wallet_list_wallet_search}
+              label={lstrings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
               value={searchText}
               onFocus={this.handleTextFieldFocus}
@@ -66,14 +66,14 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
           </View>
           {searching && (
             <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-              <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+              <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
             </TouchableOpacity>
           )}
         </View>
         {!searching && <WiredBalanceBox />}
         {!sorting && !searching && (
           <View style={styles.headerContainer}>
-            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+            <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto', {})}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />

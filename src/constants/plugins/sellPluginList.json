@@ -356,8 +356,8 @@
     "paymentTypeLogoKey": "giftcard"
   },
   {
-    "id": "bity",
-    "pluginId": "bity",
+    "id": "sepa",
+    "pluginId": "sepa",
     "forCountries": [
       "AT",
       "BE",
@@ -392,8 +392,9 @@
     "cryptoCodes": [
       "BTC"
     ],
+    "paymentType": "sepa",
     "paymentTypes": [
-      "bank"
+      "sepa"
     ],
     "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
@@ -524,7 +525,7 @@
     "sortIndex": 1
   },
   {
-    "id": "bity",
+    "id": "sepa",
     "sortIndex": 3
   },
   {

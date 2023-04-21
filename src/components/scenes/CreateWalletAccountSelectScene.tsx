@@ -11,13 +11,14 @@ import {
 } from '../../actions/CreateWalletActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, RouteProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
@@ -107,7 +108,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const { supportedAssets } = this.props
 
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={s.strings.select_wallet} allowedAssets={supportedAssets} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.onSelectWallet(walletId, currencyCode)
@@ -154,12 +155,12 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
             {isSelectWalletDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
             ) : (
-              <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
+              <PrimaryButton.Text>{lstrings.create_wallet_account_select_wallet}</PrimaryButton.Text>
             )}
           </PrimaryButton>
         </View>
         <View style={styles.paymentArea}>
-          <Text style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</Text>
+          <Text style={styles.paymentLeft}>{lstrings.create_wallet_account_amount_due}</Text>
           <Text style={styles.paymentRight}>
             {activationCost} {currencyCode}
           </Text>
@@ -204,17 +205,17 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
         </View>
         <View style={styles.accountReviewInfoArea}>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
+            {lstrings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
           </Text>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_fiat_type_label} {selectedFiat.label}
+            {lstrings.create_wallet_fiat_type_label} {selectedFiat.label}
           </Text>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_name_label} {accountName}
+            {lstrings.create_wallet_name_label} {accountName}
           </Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
-          <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
+          <Text style={styles.accountReviewConfirmText}>{lstrings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
           <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
@@ -222,7 +223,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
             {isContinueButtonDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
             ) : (
-              <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>
+              <PrimaryButton.Text>{lstrings.legacy_address_modal_continue}</PrimaryButton.Text>
             )}
           </PrimaryButton>
         </View>
@@ -231,26 +232,27 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, activationCost, walletAccountActivationQuoteError } = this.props
+    const { account, route, activationCost, walletAccountActivationQuoteError } = this.props
     const { selectedWalletType } = route.params
     const { walletId } = this.state
 
     const instructionSyntax = sprintf(
-      s.strings.create_wallet_account_select_instructions_with_cost,
+      lstrings.create_wallet_account_select_instructions_with_cost,
       selectedWalletType.currencyCode,
       selectedWalletType.currencyCode,
       config.appNameShort,
       `${activationCost} ${selectedWalletType.currencyCode}`
     )
-    const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
+    const confirmMessageSyntax = sprintf(lstrings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
+
+    const { tokenId } = guessFromCurrencyCode(account, { currencyCode: selectedWalletType.currencyCode })
 
     return (
       <SceneWrapper>
         <View style={styles.scene}>
           <ScrollView>
             <View style={styles.scrollableView}>
-              <CryptoIcon currencyCode={selectedWalletType.currencyCode} marginRem={[1.5, 0, 0, 0]} sizeRem={4} />
-
+              <CryptoIcon marginRem={[1.5, 0, 0, 0]} sizeRem={4} tokenId={tokenId} />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>
@@ -360,8 +362,8 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     const { currencyWallets } = state.core.account
     const { existingWalletId } = params
 
-    const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
-    const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const handleActivationInfo = state.ui.createWallet.handleActivationInfo
+    const walletAccountActivationPaymentInfo = state.ui.createWallet.walletAccountActivationPaymentInfo
     const { supportedAssets, activationCost } = handleActivationInfo
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
@@ -375,7 +377,7 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     } else {
       paymentDenominationSymbol = ''
     }
-    const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
+    const walletAccountActivationQuoteError = state.ui.createWallet.walletAccountActivationQuoteError
     return {
       account: state.core.account,
       paymentCurrencyCode: currencyCode,

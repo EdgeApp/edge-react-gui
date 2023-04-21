@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -12,15 +12,15 @@ import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../tiles/Tile'
 
 const localizedFeeText = {
-  satPerVByte: s.strings.transaction_details_advance_details_satpervbyte,
-  gasPrice: s.strings.transaction_details_advance_details_gasprice,
-  gasLimit: s.strings.transaction_details_advance_details_gaslimit
+  satPerVByte: lstrings.transaction_details_advance_details_satpervbyte,
+  gasPrice: lstrings.transaction_details_advance_details_gasprice,
+  gasLimit: lstrings.transaction_details_advance_details_gaslimit
 }
 
 const feeString = {
-  high: s.strings.mining_fee_high_label_choice,
-  standard: s.strings.mining_fee_standard_label_choice,
-  low: s.strings.mining_fee_low_label_choice
+  high: lstrings.mining_fee_high_label_choice,
+  standard: lstrings.mining_fee_standard_label_choice,
+  low: lstrings.mining_fee_low_label_choice
 }
 
 interface OwnProps {
@@ -52,10 +52,10 @@ export class AdvancedDetailsModalComponent extends PureComponent<Props> {
     const { networkFeeOption, requestedCustomFee } = this.props.transaction
 
     if (networkFeeOption === 'custom') {
-      return `${s.strings.mining_fee_custom_label_choice}\n${this.renderFees(requestedCustomFee)}`
+      return `${lstrings.mining_fee_custom_label_choice}\n${this.renderFees(requestedCustomFee)}`
     }
 
-    return networkFeeOption != null ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice
+    return networkFeeOption != null ? feeString[networkFeeOption] : lstrings.mining_fee_standard_label_choice
   }
 
   renderFees(fees: any = {}): string {
@@ -83,38 +83,36 @@ export class AdvancedDetailsModalComponent extends PureComponent<Props> {
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
         <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</EdgeText>
+          <EdgeText style={styles.headerText}>{lstrings.transaction_details_advance_details_header}</EdgeText>
         </View>
         <View style={styles.body}>
           <ScrollView>
-            <Tile type="copy" title={s.strings.transaction_details_tx_id_modal_title} body={txid} />
+            <Tile type="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
             {url != null && url !== '' && (
               <Tile
                 type="touchable"
-                title={s.strings.transaction_details_tx_id_modal_title}
-                body={s.strings.transaction_details_advance_details_show_explorer}
+                title={lstrings.transaction_details_tx_id_modal_title}
+                body={lstrings.transaction_details_advance_details_show_explorer}
                 onPress={this.openUrl}
               />
             )}
-            {receiveAddressesString != null && <Tile type="static" title={s.strings.my_receive_addresses_title} body={receiveAddressesString} />}
-            {networkFeeOption != null && (
-              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />
-            )}
-            {feeRateUsed != null && <Tile type="static" title={s.strings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
-            {txSecret != null && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
+            {receiveAddressesString != null && <Tile type="static" title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
+            {networkFeeOption != null && <Tile type="static" title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
+            {feeRateUsed != null && <Tile type="static" title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
+            {txSecret != null && <Tile type="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
             {txSecret != null && recipientAddress !== '' && txid !== '' && (
               <Tile
                 type="touchable"
-                title={s.strings.transaction_details_advance_details_payment_proof}
-                body={s.strings.transaction_details_advance_details_show_explorer}
+                title={lstrings.transaction_details_advance_details_payment_proof}
+                body={lstrings.transaction_details_advance_details_show_explorer}
                 onPress={this.openProveUrl}
               />
             )}
             {signedTx != null && signedTx !== '' ? (
-              <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
+              <Tile type="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
             ) : null}
 
-            {deviceDescription != null && <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={deviceDescription} />}
+            {deviceDescription != null && <Tile type="static" title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
           </ScrollView>
         </View>
         <ModalFooter onPress={this.handleCancel} />

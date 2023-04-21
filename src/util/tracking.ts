@@ -60,7 +60,7 @@ if (ENV.USE_FIREBASE) {
  */
 export async function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
   consify({ logEvent: { event, values } })
-  return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+  return await Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
 /**

@@ -2,6 +2,7 @@ import { beforeAll, expect, it, jest } from '@jest/globals'
 import fetch from 'node-fetch'
 
 import { getHistoricalRate } from '../util/exchangeRates'
+import { snooze } from '../util/utils'
 
 // Uncomment for testing under Node w/o Jest
 // const { getHistoricalRate } = require('../util/exchangeRates')
@@ -12,10 +13,6 @@ import { getHistoricalRate } from '../util/exchangeRates'
 beforeAll(() => {
   jest.useRealTimers()
 })
-
-async function snooze(ms: number): Promise<void> {
-  return new Promise((resolve: any) => setTimeout(() => resolve(), ms))
-}
 
 const TEST_MAX_QUERY_SIZE = 2
 

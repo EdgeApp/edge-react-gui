@@ -3,15 +3,15 @@ import { EdgeDataStore } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { FiatProviderError, FiatProviderQuote, FiatProviderQuoteError, FiatProviderQuoteErrorTypes, FiatProviderStore } from './fiatProviderTypes'
 
 export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
   return {
-    deleteItem: async (itemId: string) => store.deleteItem(storeId, itemId),
-    listItemIds: async () => store.listItemIds(storeId),
-    getItem: async (itemId: string) => store.getItem(storeId, itemId),
-    setItem: async (itemId: string, value: string) => store.setItem(storeId, itemId, value)
+    deleteItem: async (itemId: string) => await store.deleteItem(storeId, itemId),
+    listItemIds: async () => await store.listItemIds(storeId),
+    getItem: async (itemId: string) => await store.getItem(storeId, itemId),
+    setItem: async (itemId: string, value: string) => await store.setItem(storeId, itemId, value)
   }
 }
 
@@ -25,17 +25,17 @@ const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
 }
 
 const ERROR_TEXT = {
-  underLimit: s.strings.fiat_plugin_buy_amount_under_limit,
-  overLimit: s.strings.fiat_plugin_buy_amount_over_limit,
-  paymentUnsupported: s.strings.fiat_plugin_payment_unsupported,
-  regionRestricted: s.strings.fiat_plugin_buy_region_restricted,
-  assetUnsupported: s.strings.fiat_plugin_asset_unsupported
+  underLimit: lstrings.fiat_plugin_buy_amount_under_limit,
+  overLimit: lstrings.fiat_plugin_buy_amount_over_limit,
+  paymentUnsupported: lstrings.fiat_plugin_payment_unsupported,
+  regionRestricted: lstrings.fiat_plugin_buy_region_restricted,
+  assetUnsupported: lstrings.fiat_plugin_asset_unsupported
 }
 
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
-  const exchangeRateText = `1 ${quote.tokenId?.tokenId ?? ''} = ${localeRate} ${fiatCode}`
+  const exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
   return exchangeRateText
 }
 
@@ -71,6 +71,8 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
   if (bestError.errorType === 'underLimit' || bestError.errorType === 'overLimit') {
     const localeAmount = formatNumber(bestError.errorAmount.toString())
     errorText = sprintf(errorText, localeAmount + ' ' + currencyCode)
+  } else if (bestError.errorType === 'regionRestricted') {
+    errorText = sprintf(errorText, bestError.displayCurrencyCode)
   }
   return errorText
 }

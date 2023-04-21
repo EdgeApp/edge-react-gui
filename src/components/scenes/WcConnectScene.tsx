@@ -9,7 +9,7 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -57,7 +57,7 @@ export const WcConnectScene = (props: Props) => {
     try {
       await wallet.otherMethods.wcConnect(uri, walletAddress, wallet.id)
       connected.current = true
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_confirm_return_to_browser} onPress={() => {}} />)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error(`WalletConnect connection error: ${error.message}`)
@@ -70,13 +70,14 @@ export const WcConnectScene = (props: Props) => {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
       const dAppName = String(dApp.peerMeta.name).split(' ')[0]
       setDappDetails({
-        subTitleText: sprintf(s.strings.wc_confirm_subtitle, dAppName),
-        bodyTitleText: sprintf(s.strings.wc_confirm_body_title, dAppName),
+        subTitleText: sprintf(lstrings.wc_confirm_subtitle, dAppName),
+        bodyTitleText: sprintf(lstrings.wc_confirm_body_title, dAppName),
         // @ts-expect-error
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e: any) {
       showError('Failed to connect, try again.')
+      console.error('wcInit error:', e)
       navigation.navigate('wcConnections', {})
     }
   }
@@ -86,7 +87,7 @@ export const WcConnectScene = (props: Props) => {
 
     const allowedAssets = allowedCurrencyWallets.map(walletID => ({ pluginId: currencyWallets[walletID].currencyInfo.pluginId }))
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedAssets={allowedAssets} navigation={navigation} />
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={allowedAssets} navigation={navigation} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         const wallet = account.currencyWallets[walletId]
@@ -116,7 +117,7 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={s.strings.wc_confirm_select_wallet} onPress={showWalletListModal} />
+      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={showWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
@@ -133,7 +134,7 @@ export const WcConnectScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader title={s.strings.wc_confirm_title} underline />
+      <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>
           {dAppImage !== '' && dAppImage}
@@ -143,12 +144,12 @@ export const WcConnectScene = (props: Props) => {
         </View>
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
-        <EdgeText style={styles.body}>{s.strings.wc_confirm_body}</EdgeText>
+        <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
         <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
           {renderWalletSelect()}
         </Card>
         {subTitleText !== '' && (
-          <MainButton label={s.strings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
+          <MainButton label={lstrings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
         )}
       </ScrollView>
     </SceneWrapper>

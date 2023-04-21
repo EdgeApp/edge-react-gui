@@ -19,7 +19,7 @@ import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
@@ -197,12 +197,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={navigation}
-        headerTitle={s.strings.fio_src_wallet}
-        allowedCurrencyCodes={route.params.allowedCurrencyCodes}
-      />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
@@ -344,11 +339,11 @@ class SendComponent extends React.PureComponent<Props, State> {
         const answer = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
-            title={s.strings.fio_no_bundled_err_msg}
-            message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`}
+            title={lstrings.fio_no_bundled_err_msg}
+            message={`${lstrings.fio_no_bundled_non_fio_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`}
             buttons={{
-              ok: { label: s.strings.legacy_address_modal_continue },
-              cancel: { label: s.strings.string_cancel_cap }
+              ok: { label: lstrings.legacy_address_modal_continue },
+              cancel: { label: lstrings.string_cancel_cap }
             }}
           />
         ))
@@ -389,7 +384,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     return (
       <Tile
         type={lockInputs || lockTilesMap.wallet ? 'static' : 'editable'}
-        title={s.strings.send_scene_send_from_wallet}
+        title={lstrings.send_scene_send_from_wallet}
         onPress={lockInputs || lockTilesMap.wallet ? undefined : this.handleWalletPress}
         body={`${name} (${selectedCurrencyCode})`}
       />
@@ -408,7 +403,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (coreWallet && !hiddenTilesMap.address) {
       return (
         <AddressTile
-          title={s.strings.send_scene_send_to_address}
+          title={lstrings.send_scene_send_to_address}
           recipientAddress={recipientAddress}
           coreWallet={coreWallet}
           currencyCode={selectedCurrencyCode}
@@ -430,13 +425,13 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (recipientAddress === '') {
       return (
         <WarningCard
-          title={s.strings.warning_scam_title}
+          title={lstrings.warning_scam_title}
           points={[
-            s.strings.warning_scam_message_financial_advice,
-            s.strings.warning_scam_message_irreversibility,
-            s.strings.warning_scam_message_unknown_recipients
+            lstrings.warning_scam_message_financial_advice,
+            lstrings.warning_scam_message_irreversibility,
+            lstrings.warning_scam_message_unknown_recipients
           ]}
-          footer={s.strings.warning_scam_footer}
+          footer={lstrings.warning_scam_footer}
           marginRem={[1.5, 1]}
         />
       )
@@ -463,7 +458,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
       return (
         <EditableAmountTile
-          title={s.strings.fio_request_amount}
+          title={lstrings.fio_request_amount}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? '0'}
           wallet={currencyWallets[this.state.selectedWalletId]}
@@ -503,7 +498,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
+        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={this.handleFeesChange}>
           <EdgeText
             style={{
               // @ts-expect-error
@@ -524,7 +519,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (transactionMetadata && transactionMetadata.notes) {
       return (
-        <Tile type="static" title={s.strings.send_scene_metadata_name_title}>
+        <Tile type="static" title={lstrings.send_scene_metadata_name_title}>
           <EdgeText>{transactionMetadata.notes}</EdgeText>
         </Tile>
       )
@@ -575,8 +570,8 @@ class SendComponent extends React.PureComponent<Props, State> {
             bridge={bridge}
             inputLabel={identifierName}
             keyboardType={keyboardType}
-            message={sprintf(s.strings.unique_identifier_modal_description, identifierName)}
-            submitLabel={s.strings.unique_identifier_modal_confirm}
+            message={sprintf(lstrings.unique_identifier_modal_description, identifierName)}
+            submitLabel={lstrings.unique_identifier_modal_confirm}
             title={identifierName}
             maxLength={this.state.coreWallet?.currencyInfo?.memoMaxLength}
           />
@@ -610,7 +605,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (authRequired === 'pin') {
       return (
-        <Tile type="touchable" title={s.strings.four_digit_pin} onPress={this.handleFocusPin}>
+        <Tile type="touchable" title={lstrings.four_digit_pin} onPress={this.handleFocusPin}>
           <View style={styles.pinContainer}>
             <PinDots pinLength={pin.length} maxLength={PIN_MAX_LENGTH} />
           </View>
@@ -688,23 +683,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
-    const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.scenes.sendConfirmation
+    const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.sendConfirmation
 
     return {
       account: state.core.account,
-      authRequired: state.ui.scenes.sendConfirmation.authRequired,
+      authRequired: state.ui.sendConfirmation.authRequired,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
       exchangeRates: state.exchangeRates,
       nativeAmount,
-      pin: state.ui.scenes.sendConfirmation.pin,
+      pin: state.ui.sendConfirmation.pin,
       sliderDisabled: !transaction,
       transaction,
       transactionMetadata,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
-      maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet,
+      maxSpendSet: state.ui.sendConfirmation.maxSpendSet,
       currencyWallets: state.core.account.currencyWallets
     }
   },

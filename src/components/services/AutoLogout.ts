@@ -26,7 +26,7 @@ export const AutoLogout = () => {
     if (appForegrounded && loginStatus && timeExpired) dispatch(logoutRequest(navigation))
     // Update the new appState
     stateRef.current = { timestamp, isAppForeground }
-  }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, loginStatus])
+  }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, loginStatus, navigation])
 
   return null
 }

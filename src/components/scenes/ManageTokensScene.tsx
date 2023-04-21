@@ -8,7 +8,7 @@ import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletA
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
@@ -92,7 +92,7 @@ function ManageTokensSceneComponent(props: Props) {
       .map(pluginId => ({ pluginId }))
 
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={s.strings.select_wallet} navigation={navigation} />
+      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />
     ))
 
     if (walletId != null && currencyCode != null) {
@@ -136,9 +136,9 @@ function ManageTokensSceneComponent(props: Props) {
             text={walletName}
           />
         </TouchableOpacity>
-        <EdgeText style={styles.subTitle}>{s.strings.managetokens_top_instructions}</EdgeText>
+        <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <OutlinedTextInput
-          label={s.strings.search_tokens}
+          label={lstrings.search_tokens}
           marginRem={[1, 2, 0, 1]}
           returnKeyType="search"
           searchIcon
@@ -150,7 +150,7 @@ function ManageTokensSceneComponent(props: Props) {
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          <MainButton alignSelf="center" label={s.strings.addtoken_add} marginRem={1} type="secondary" onPress={handleAdd} />
+          <MainButton alignSelf="center" label={lstrings.addtoken_add} marginRem={1} type="secondary" onPress={handleAdd} />
         </>
       )}
     </SceneWrapper>

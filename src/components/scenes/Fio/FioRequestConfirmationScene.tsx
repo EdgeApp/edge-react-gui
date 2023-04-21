@@ -4,7 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { formatNumber } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -126,7 +126,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       const val = div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       try {
         if (!isConnected) {
-          showError(s.strings.fio_network_alert_text)
+          showError(lstrings.fio_network_alert_text)
           return
         }
         // checking fee
@@ -151,10 +151,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             const answer = await Airship.show<'ok' | undefined>(bridge => (
               <ButtonsModal
                 bridge={bridge}
-                title={s.strings.fio_no_bundled_err_msg}
-                message={s.strings.fio_no_bundled_add_err_msg}
+                title={lstrings.fio_no_bundled_err_msg}
+                message={lstrings.fio_no_bundled_add_err_msg}
                 buttons={{
-                  ok: { label: s.strings.title_fio_add_bundled_txs }
+                  ok: { label: lstrings.title_fio_add_bundled_txs }
                 }}
                 closeArrow
               />
@@ -171,7 +171,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         } catch (e: any) {
           this.setState({ loading: false })
           this.resetSlider()
-          return showError(s.strings.fio_get_fee_err_msg)
+          return showError(lstrings.fio_get_fee_err_msg)
         }
 
         let payerPublicKey
@@ -197,18 +197,18 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         })
         await fioSignAndBroadcast(fioWallet, edgeTx)
         this.setState({ loading: false })
-        showToast(s.strings.fio_request_ok_body)
+        showToast(lstrings.fio_request_ok_body)
         addToFioAddressCache(account, [this.state.fioAddressTo])
         navigation.navigate('request', {})
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()
         showError(
-          `${s.strings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
+          `${lstrings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
         )
       }
     } else {
-      showError(s.strings.fio_wallet_missing_for_fio_address)
+      showError(lstrings.fio_wallet_missing_for_fio_address)
     }
   }
 
@@ -228,13 +228,13 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { fioPlugin, walletId, currencyCode } = this.props
     const { walletAddresses } = this.state
     const fioAddressFrom = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
+      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} useUserFioAddressesOnly />
     ))
     if (fioAddressFrom == null) return
     if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
-      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
-    if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
-    if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
+      return showError(`${lstrings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
+    if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(lstrings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
+    if (fioAddressFrom === this.state.fioAddressTo) return showError(lstrings.fio_confirm_request_error_from_same)
     this.setState({ fioAddressFrom })
   }
 
@@ -250,14 +250,14 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show<string | undefined>(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.fio_confirm_request_fio_title} isFioOnly />
+      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} isFioOnly />
     ))
     if (fioAddressTo == null) {
       this.showError()
     } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
-      this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+      this.showError(`${lstrings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
     } else if (this.state.fioAddressFrom === fioAddressTo) {
-      this.showError(s.strings.fio_confirm_request_error_to_same)
+      this.showError(lstrings.fio_confirm_request_error_to_same)
     } else {
       this.setState({ fioAddressTo, settingFioAddressTo: false })
     }
@@ -268,16 +268,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.memo}
-        inputLabel={s.strings.fio_confirm_request_memo}
+        inputLabel={lstrings.fio_confirm_request_memo}
         returnKeyType="done"
         multiline
-        submitLabel={s.strings.string_save}
-        title={s.strings.fio_confirm_request_input_title_memo}
+        submitLabel={lstrings.string_save}
+        title={lstrings.fio_confirm_request_input_title_memo}
       />
     ))
     if (memo == null) return
-    if (memo.length > 64) return showError(s.strings.send_fio_request_error_memo_inline)
-    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) return showError(s.strings.send_fio_request_error_memo_invalid_character)
+    if (memo.length > 64) return showError(lstrings.send_fio_request_error_memo_inline)
+    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) return showError(lstrings.send_fio_request_error_memo_invalid_character)
     this.setState({ memo })
   }
 
@@ -304,18 +304,18 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     return (
       <SceneWrapper background="theme">
-        <Tile type="editable" title={s.strings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+        <Tile type="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
         <Tile
           type="editable"
-          title={s.strings.fio_confirm_request_to}
-          body={settingFioAddressTo ? s.strings.resolving : fioAddressTo}
+          title={lstrings.fio_confirm_request_to}
+          body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
           onPress={this.onAddressToPressed}
         />
-        <Tile type="static" title={s.strings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-        <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+        <Tile type="static" title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+        <Tile type="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
         <View style={styles.sliderContainer}>
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
-            <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={s.strings.loading} />
+            <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />
           ) : null}
         </View>
       </SceneWrapper>

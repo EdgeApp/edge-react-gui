@@ -6,7 +6,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/s
 import { ClickableRow } from '../../../components/themed/ClickableRow'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatDate } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 
 interface FioNameProps {
   name: string
@@ -22,12 +22,12 @@ const FioName = (props: FioNameProps & ThemeProps) => {
 
   const renderSubTitle = () => {
     if (expiration != null) {
-      const subTitle = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+      const subTitle = `${lstrings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 
     if (bundledTxs != null) {
-      const subTitle = `${s.strings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
+      const subTitle = `${lstrings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
       return <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
     }
 

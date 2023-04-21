@@ -22,7 +22,7 @@ export async function fetchWaterfall(
     }
     return result
   })
-  return asyncWaterfall(funcs, timeout)
+  return await asyncWaterfall(funcs, timeout)
 }
 
 export async function cleanMultiFetch<T>(
@@ -51,18 +51,18 @@ async function multiFetch(
   timeout: number = 5000,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> {
-  return fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
+  return await fetchWaterfall(shuffleArray(servers), path, options, timeout, doFetch)
 }
 
 export const fetchInfo = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
+  return await multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
 }
 export const fetchRates = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return multiFetch(RATES_SERVERS, path, options, timeout, doFetch)
+  return await multiFetch(RATES_SERVERS, path, options, timeout, doFetch)
 }
 export const fetchReferral = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return multiFetch(config.referralServers ?? [], path, options, timeout, doFetch)
+  return await multiFetch(config.referralServers ?? [], path, options, timeout, doFetch)
 }
 export const fetchPush = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
-  return multiFetch(config.notificationServers, path, options, timeout, doFetch)
+  return await multiFetch(config.notificationServers, path, options, timeout, doFetch)
 }

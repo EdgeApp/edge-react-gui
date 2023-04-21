@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
-import { EdgeTokenId } from '../../types/types'
 import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
 
 export interface FiatProviderApproveQuoteParams {
@@ -9,10 +8,10 @@ export interface FiatProviderApproveQuoteParams {
 }
 
 export interface FiatProviderQuote {
-  readonly pluginId: string
+  readonly providerId: string
   readonly partnerIcon: string
   readonly pluginDisplayName: string
-  readonly tokenId: EdgeTokenId
+  readonly displayCurrencyCode: string
   readonly cryptoAmount: string
   readonly isEstimate: boolean
   readonly fiatCurrencyCode: string
@@ -27,9 +26,10 @@ export interface FiatProviderQuote {
 }
 
 type FiatProviderQuoteErrorTypesLimit = 'overLimit' | 'underLimit'
-type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'regionRestricted' | 'paymentUnsupported'
+type FiatProviderQuoteErrorTypesRegion = 'regionRestricted'
+type FiatProviderQuoteErrorTypesOther = 'assetUnsupported' | 'paymentUnsupported'
 
-export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesOther
+export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | FiatProviderQuoteErrorTypesRegion | FiatProviderQuoteErrorTypesOther
 
 // FiatProviderQuoteError
 //
@@ -40,6 +40,7 @@ export type FiatProviderQuoteError =
       errorType: FiatProviderQuoteErrorTypesOther
     }
   | { errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
+  | { errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 
 export class FiatProviderError extends Error {
   // @ts-expect-error
@@ -52,13 +53,15 @@ export class FiatProviderError extends Error {
   }
 }
 
+// Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
   crypto: { [pluginId: string]: { [tokenId: string]: boolean | any } }
   fiat: { [currencyCode: string]: boolean | any }
 }
 
 export interface FiatProviderGetQuoteParams {
-  tokenId: EdgeTokenId
+  pluginId: string
+  displayCurrencyCode: string
   exchangeAmount: string
   fiatCurrencyCode: string
   amountType: 'fiat' | 'crypto'
@@ -75,20 +78,22 @@ export interface FiatProviderStore {
 }
 
 export interface FiatProvider {
-  pluginId: string
+  providerId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: () => Promise<FiatProviderAssetMap>
+  getSupportedAssets: (paymentTypes: FiatPaymentType[]) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
 }
 
 export interface FiatProviderFactoryParams {
   io: { store: FiatProviderStore }
-  apiKeys?: unknown
+  apiKeys?: unknown // Data specific to the requirements of each provider,
+  // which lets the provider know that these orders were made from within Edge.
+  // Typically an API key, but can be some other information like a client ID.
 }
 
 export interface FiatProviderFactory {
-  pluginId: string
+  providerId: string
   storeId: string
   makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
 }

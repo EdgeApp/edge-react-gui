@@ -1,4 +1,4 @@
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { StringMap } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -13,9 +13,9 @@ const UTXO_MAX_SPEND_TARGETS = 32
 
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
-  gasLimit: s.strings.gasLimit,
-  gasPrice: s.strings.gasPrice,
-  satPerByte: s.strings.satPerByte
+  gasLimit: lstrings.gasLimit,
+  gasPrice: lstrings.gasPrice,
+  satPerByte: lstrings.satPerByte
 }
 
 /**
@@ -127,6 +127,7 @@ interface SpecialCurrencyInfo {
   allowZeroTx?: boolean
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
+  tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
@@ -155,7 +156,7 @@ export const getSpecialCurrencyInfo = (walletType: string = ''): SpecialCurrency
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
     return {
-      initWalletName: s.strings.string_no_name,
+      initWalletName: lstrings.string_no_name,
       chainCode: '',
       displayBuyCrypto: false
     }
@@ -168,13 +169,13 @@ export const SPECIAL_CURRENCY_INFO: {
   bitcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     hasSegwit: true,
-    initWalletName: s.strings.string_first_bitcoin_wallet_name,
+    initWalletName: lstrings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -183,25 +184,25 @@ export const SPECIAL_CURRENCY_INFO: {
   bitcointestnet: {
     hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_bitcoin_testnet_wallet_name,
+    initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcoincash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_bitcoincash_wallet_name,
+    initWalletName: lstrings.string_first_bitcoincash_wallet_name,
     chainCode: 'BCH',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -209,23 +210,23 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   bitcoinsv: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_bitcoin_sv_wallet_name,
+    initWalletName: lstrings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   digibyte: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_digibyte_wallet_name,
+    initWalletName: lstrings.string_first_digibyte_wallet_name,
     chainCode: 'DGB',
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -233,158 +234,159 @@ export const SPECIAL_CURRENCY_INFO: {
   litecoin: {
     hasSegwit: true,
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_litecoin_wallet_name,
+    initWalletName: lstrings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   rsk: {
-    initWalletName: s.strings.string_first_rsk_wallet_name,
+    initWalletName: lstrings.string_first_rsk_wallet_name,
     chainCode: 'RBTC',
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true
   },
   stellar: {
-    initWalletName: s.strings.string_first_stellar_wallet_name,
+    initWalletName: lstrings.string_first_stellar_wallet_name,
     chainCode: 'XLM',
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
-      identifierName: s.strings.unique_identifier_memo_id,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo_id,
+      identifierName: lstrings.unique_identifier_memo_id,
       keyboardType: 'default'
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
-      modalMessage: s.strings.request_xlm_minimum_notification_body,
-      alertMessage: s.strings.request_xlm_minimum_notification_alert_body
+      modalMessage: lstrings.request_xlm_minimum_notification_body,
+      alertMessage: lstrings.request_xlm_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_key_instructions
     }
   },
   ripple: {
-    initWalletName: s.strings.string_first_ripple_wallet_name,
+    initWalletName: lstrings.string_first_ripple_wallet_name,
     showTokenNames: true,
     chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
-      identifierName: s.strings.unique_identifier_destination_tag,
+      addButtonText: lstrings.unique_identifier_dropdown_option_destination_tag,
+      identifierName: lstrings.unique_identifier_destination_tag,
       keyboardType: 'numeric'
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
-      modalMessage: s.strings.request_xrp_minimum_notification_body,
-      alertMessage: s.strings.request_xrp_minimum_notification_alert_body
+      modalMessage: lstrings.request_xrp_minimum_notification_body,
+      alertMessage: lstrings.request_xrp_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_key_instructions
     }
   },
   monero: {
-    initWalletName: s.strings.string_first_monero_wallet_name,
+    initWalletName: lstrings.string_first_monero_wallet_name,
     chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false
   },
   eos: {
-    initWalletName: s.strings.string_first_eos_wallet_name,
+    initWalletName: lstrings.string_first_eos_wallet_name,
     chainCode: 'EOS',
     isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true
   },
   telos: {
-    initWalletName: s.strings.string_first_telos_wallet_name,
+    initWalletName: lstrings.string_first_telos_wallet_name,
     chainCode: 'TLOS',
     isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true
   },
   wax: {
-    initWalletName: s.strings.string_first_wax_wallet_name,
+    initWalletName: lstrings.string_first_wax_wallet_name,
     chainCode: 'WAX',
     isAccountActivationRequired: false,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: false,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
     keysOnlyMode: true
   },
   ethereum: {
-    initWalletName: s.strings.string_first_ethereum_wallet_name,
+    initWalletName: lstrings.string_first_ethereum_wallet_name,
     chainCode: 'ETH',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
   tron: {
-    initWalletName: s.strings.string_first_tron_wallet_name,
+    initWalletName: lstrings.string_first_tron_wallet_name,
     chainCode: 'TRX',
     dummyPublicAddress: 'TG8dEvp1JHJRRWEBzmURjbUwb4sbGbHgKs',
     allowZeroTx: true,
     noChangeMiningFee: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_note,
-      identifierName: s.strings.unique_identifier_note,
+      addButtonText: lstrings.unique_identifier_dropdown_option_note,
+      identifierName: lstrings.unique_identifier_note,
       keyboardType: 'default'
     },
     isCustomTokensSupported: true,
@@ -392,124 +394,124 @@ export const SPECIAL_CURRENCY_INFO: {
     isStakingSupported: true
   },
   kovan: {
-    initWalletName: s.strings.string_first_ethereum_wallet_name,
+    initWalletName: lstrings.string_first_ethereum_wallet_name,
     chainCode: 'ETH',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
   ethereumclassic: {
-    initWalletName: s.strings.string_first_ethereum_classic_wallet_name,
+    initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     }
   },
   ethereumpow: {
-    initWalletName: s.strings.string_first_ethereum_pow_wallet_name,
+    initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
     chainCode: 'ETHW',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true
   },
   optimism: {
-    initWalletName: s.strings.string_first_optimism_wallet_name,
+    initWalletName: lstrings.string_first_optimism_wallet_name,
     chainCode: 'OP',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
   tezos: {
-    initWalletName: s.strings.string_first_tezos_wallet_name,
+    initWalletName: lstrings.string_first_tezos_wallet_name,
     chainCode: 'XTZ',
     noChangeMiningFee: true,
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     }
   },
   binance: {
-    initWalletName: s.strings.string_first_bnb_wallet_name,
+    initWalletName: lstrings.string_first_bnb_wallet_name,
     chainCode: 'BNB',
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   binancesmartchain: {
-    initWalletName: s.strings.string_first_binance_smart_chain_wallet_name,
+    initWalletName: lstrings.string_first_binance_smart_chain_wallet_name,
     chainCode: 'BNB',
     fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isCustomTokensSupported: true
   },
   solana: {
-    initWalletName: s.strings.string_first_solana_wallet_name,
+    initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_instructions
     },
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
     noChangeMiningFee: true
   },
   celo: {
-    initWalletName: s.strings.string_first_celo_wallet_name,
+    initWalletName: lstrings.string_first_celo_wallet_name,
     chainCode: 'CELO',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true
   },
   fio: {
-    initWalletName: s.strings.string_first_fio_wallet_name,
+    initWalletName: lstrings.string_first_fio_wallet_name,
     chainCode: 'FIO',
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
     noChangeMiningFee: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     stakeActions: {
@@ -521,35 +523,35 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   dash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_dash_wallet_name,
+    initWalletName: lstrings.string_first_dash_wallet_name,
     chainCode: 'DASH',
     displayIoniaRewards: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   ravencoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_ravencoin_wallet_name,
+    initWalletName: lstrings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   dogecoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_doge_wallet_name,
+    initWalletName: lstrings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
     displayIoniaRewards: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -557,22 +559,22 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   zcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_zcoin_wallet_name,
+    initWalletName: lstrings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   smartcash: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_smartcash_wallet_name,
+    initWalletName: lstrings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true,
@@ -580,22 +582,22 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   vertcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_vertcoin_wallet_name,
+    initWalletName: lstrings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcoingold: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_bitcoin_gold_wallet_name,
+    initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isSplittingDisabled: true,
@@ -603,147 +605,159 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   feathercoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_feather_coin_wallet_name,
+    initWalletName: lstrings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   groestlcoin: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_groestlcoin_wallet_name,
+    initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   qtum: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_qtum_wallet_name,
+    initWalletName: lstrings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   eboost: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_eboost_wallet_name,
+    initWalletName: lstrings.string_first_eboost_wallet_name,
     chainCode: 'EBST',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true,
     keysOnlyMode: true
   },
   ufo: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
-    initWalletName: s.strings.string_first_ufo_wallet_name,
+    initWalletName: lstrings.string_first_ufo_wallet_name,
     chainCode: 'ufo',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isPrivateKeySweepable: true
   },
   fantom: {
-    initWalletName: s.strings.string_first_fantom_wallet_name,
+    initWalletName: lstrings.string_first_fantom_wallet_name,
     chainCode: 'FTM',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_instructions
     },
     isStakingSupported: true,
     isCustomTokensSupported: true
   },
   hedera: {
-    initWalletName: s.strings.string_first_hedera_wallet_name,
+    initWalletName: lstrings.string_first_hedera_wallet_name,
     chainCode: 'HBAR',
     dummyPublicAddress: '0.0.14625',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isAccountActivationRequired: true,
     skipAccountNameValidation: true,
     noMaxSpend: true,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     }
   },
   polkadot: {
-    initWalletName: s.strings.string_first_polkadot_wallet_name,
+    initWalletName: lstrings.string_first_polkadot_wallet_name,
     chainCode: 'DOT',
     dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
     noChangeMiningFee: true,
     minimumPopupModals: {
       minimumNativeBalance: '10000000000',
-      modalMessage: s.strings.request_dot_minimum_notification_body,
-      alertMessage: s.strings.request_dot_minimum_notification_alert_body
+      modalMessage: lstrings.request_dot_minimum_notification_body,
+      alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_polkadot_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_polkadot_input_key_or_seed_instructions
     }
   },
   zcash: {
-    initWalletName: s.strings.string_first_zcash_wallet_name,
+    initWalletName: lstrings.string_first_zcash_wallet_name,
     chainCode: 'ZEC',
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     }
   },
   piratechain: {
-    initWalletName: s.strings.string_first_piratechain_wallet_name,
+    initWalletName: lstrings.string_first_piratechain_wallet_name,
     chainCode: 'ARRR',
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
-      identifierName: s.strings.unique_identifier_memo,
+      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
+      identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     }
   },
   polygon: {
-    initWalletName: s.strings.string_first_polygon_wallet_name,
+    initWalletName: lstrings.string_first_polygon_wallet_name,
     chainCode: 'MATIC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true
   },
   avalanche: {
-    initWalletName: s.strings.string_first_avalanche_wallet_name,
+    initWalletName: lstrings.string_first_avalanche_wallet_name,
     chainCode: 'AVAX',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
     },
     isStakingSupported: true,
     isCustomTokensSupported: true
+  },
+  algorand: {
+    initWalletName: lstrings.string_first_algorand_wallet_name,
+    chainCode: 'ALGO',
+    dummyPublicAddress: 'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
+    isCustomTokensSupported: true,
+    noChangeMiningFee: true,
+    tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
+    isImportKeySupported: {
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
+    }
   }
 }
 

@@ -4,7 +4,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
@@ -95,9 +95,9 @@ export function WalletListScene(props: Props) {
       <WiredProgressBar />
       {sorting && (
         <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+          <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
           <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
-            <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
+            <EdgeText style={styles.doneButton}>{lstrings.string_done_cap}</EdgeText>
           </TouchableOpacity>
         </View>
       )}

@@ -13,7 +13,7 @@ import { trackConversion } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
@@ -102,13 +102,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     }
 
     const selectedWallet = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={this._navigation}
-        showCreateWallet
-        allowedAssets={allowedAssets}
-        headerTitle={s.strings.choose_your_wallet}
-      />
+      <WalletListModal bridge={bridge} navigation={this._navigation} showCreateWallet allowedAssets={allowedAssets} headerTitle={lstrings.choose_your_wallet} />
     ))
 
     const { walletId, currencyCode } = selectedWallet
@@ -145,7 +139,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       return returnCurrencyCode
     }
 
-    throw new Error(s.strings.user_closed_modal_no_wallet)
+    throw new Error(lstrings.user_closed_modal_no_wallet)
   }
 
   // Get an address from the user's wallet
@@ -181,7 +175,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
-    return Promise.resolve(returnObject)
+    return await Promise.resolve(returnObject)
   }
 
   async openURL(url: string): Promise<void> {
@@ -216,9 +210,9 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       Object.keys(data).map(async key => {
         const val = data[key]
         if (val != null) {
-          return store.setItem(this._plugin.storeId, key, val)
+          return await store.setItem(this._plugin.storeId, key, val)
         } else {
-          return store.deleteItem(this._plugin.storeId, key)
+          return await store.deleteItem(this._plugin.storeId, key)
         }
       })
     )
@@ -255,11 +249,11 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.fragment_wallets_export_transactions}
-        message={sprintf(s.strings.transaction_history_permission, getWalletName(wallet))}
+        title={lstrings.fragment_wallets_export_transactions}
+        message={sprintf(lstrings.transaction_history_permission, getWalletName(wallet))}
         buttons={{
-          ok: { label: s.strings.yes },
-          cancel: { label: s.strings.no }
+          ok: { label: lstrings.yes },
+          cancel: { label: lstrings.no }
         }}
       />
     ))
@@ -314,7 +308,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       spendTargets,
       tokenId
     }
-    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
+    return await this._requestSpendCommon({ lockInputs, orderId, spendInfo })
   }
 
   // Request that the user spend to a URI
@@ -363,7 +357,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       ],
       tokenId
     }
-    return this._requestSpendCommon({ lockInputs, orderId, spendInfo })
+    return await this._requestSpendCommon({ lockInputs, orderId, spendInfo })
   }
 
   /**
@@ -381,7 +375,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       const lockTilesMap = lockInputs ? { address: true, amount: true, wallet: true } : undefined
 
       this._navigation.navigate('send2', {
@@ -435,78 +429,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
   async hasSafariView(): Promise<boolean> {
     return true
-  }
-
-  // window.fetch.catch(console log then throw)
-  async deprecatedAndNotSupportedDouble(request: any, firstURL: string, url2: string): Promise<unknown> {
-    console.log('Bity firstURL: ' + firstURL)
-    const response = await fetch(firstURL, request).catch(e => {
-      console.log(`throw from fetch firstURL: ${firstURL}`, e)
-      throw e
-    })
-    console.log('Bity response1: ', response)
-    if (response.status !== 201) {
-      const errorData = await response.json()
-      throw new Error(errorData.errors[0].code + ' ' + errorData.errors[0].message)
-    }
-    const secondURL = url2 + response.headers.get('Location')
-    console.log('Bity secondURL: ', secondURL)
-    const request2 = {
-      method: 'GET',
-      credentials: 'include'
-    }
-    // @ts-expect-error
-    const response2 = await fetch(secondURL, request2).catch(e => {
-      console.log(`throw from fetch secondURL: ${secondURL}`, e)
-      throw e
-    })
-    console.log('Bity response2: ', response2)
-    if (response2.status !== 200) {
-      throw new Error('Problem confirming order: Code n200')
-    }
-    const orderData = await response2.json()
-    console.log('Bity orderData: ', orderData)
-    if (orderData.message_to_sign) {
-      const { body } = orderData.message_to_sign
-      const signedTransaction = await this.signMessage(body)
-      const thirdURL = url2 + orderData.message_to_sign.signature_submission_url
-      const request = {
-        method: 'POST',
-        headers: {
-          Host: 'exchange.api.bity.com',
-          'Content-Type': '*/*'
-        },
-        body: signedTransaction
-      }
-      console.log('Bity thirdURL: ' + thirdURL)
-      const signedTransactionResponse = await fetch(thirdURL, request).catch(e => {
-        console.log(`throw from fetch thirdURL: ${thirdURL}`, e)
-        throw e
-      })
-      console.log('Bity signedTransactionResponse: ', signedTransactionResponse)
-      if (signedTransactionResponse.status === 400) {
-        throw new Error('Could not complete transaction. Code: 470')
-      }
-      if (signedTransactionResponse.status === 204) {
-        const bankDetailsRequest = {
-          method: 'GET',
-          credentials: 'include'
-        }
-        const detailUrl = firstURL + '/' + orderData.id
-        console.log('detailURL: ' + detailUrl)
-        // @ts-expect-error
-        const bankDetailResponse = await fetch(detailUrl, bankDetailsRequest).catch(e => {
-          console.log(`throw from fetch detailUrl: ${detailUrl}`, e)
-          throw e
-        })
-        if (bankDetailResponse.status === 200) {
-          const parsedResponse = await bankDetailResponse.json()
-          console.log('Bity parsedResponse: ', parsedResponse)
-          return parsedResponse
-        }
-      }
-    }
-    return orderData
   }
 
   async openSafariView(url: string): Promise<void> {

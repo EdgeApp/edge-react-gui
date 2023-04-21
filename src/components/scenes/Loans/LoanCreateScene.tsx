@@ -19,14 +19,14 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId, guessFromCurrencyCode } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
@@ -86,14 +86,8 @@ export const LoanCreateScene = (props: Props) => {
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
   const hardCollateralCurrencyCode = 'WBTC'
-  const { tokenId: hardSrcTokenAddr } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: hardCollateralCurrencyCode, pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
-  const { tokenId: hardDestTokenAddr } = React.useMemo(
-    () => guessFromCurrencyCode(account, { currencyCode: 'USDC', pluginId: borrowEnginePluginId }),
-    [account, borrowEnginePluginId]
-  )
+  const hardSrcTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
+  const hardDestTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
   const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
   const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
 
@@ -250,7 +244,7 @@ export const LoanCreateScene = (props: Props) => {
       <WalletListModal
         bridge={bridge}
         navigation={navigation}
-        headerTitle={s.strings.select_wallet}
+        headerTitle={lstrings.select_wallet}
         showCreateWallet
         createWalletId={!isSrc ? borrowEngineWallet.id : undefined}
         showBankOptions={!isSrc}
@@ -275,7 +269,7 @@ export const LoanCreateScene = (props: Props) => {
           setDestTokenId(hardDestTokenAddr)
         } else if (walletId != null && currencyCode != null) {
           const selectedWallet = wallets[walletId]
-          const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId: selectedWallet.currencyInfo.pluginId })
+          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)
@@ -311,7 +305,7 @@ export const LoanCreateScene = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   const collateralWarningMsg = React.useMemo(
-    () => sprintf(s.strings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
+    () => sprintf(lstrings.loan_insufficient_funds_warning, srcAssetName, srcWalletName, srcCurrencyCode, config.appName),
     [srcAssetName, srcCurrencyCode, srcWalletName]
   )
   const renderWarning = useHandler(() => {
@@ -321,7 +315,7 @@ export const LoanCreateScene = (props: Props) => {
         <Alert
           numberOfLines={0}
           marginRem={[0.5, 0.5, 0.5, 0.5]}
-          title={s.strings.exchange_insufficient_funds_title}
+          title={lstrings.exchange_insufficient_funds_title}
           message={collateralWarningMsg}
           type="warning"
         />
@@ -339,7 +333,7 @@ export const LoanCreateScene = (props: Props) => {
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
-        title={s.strings.loan_create_title}
+        title={lstrings.loan_create_title}
         underline
         withTopMargin
       />
@@ -349,8 +343,8 @@ export const LoanCreateScene = (props: Props) => {
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
             iconUri={iconUri}
-            inputModalMessage={sprintf(s.strings.loan_loan_amount_input_message_s, displayLtvLimit)}
-            title={sprintf(s.strings.loan_enter_s_amount_s, s.strings.loan_fragment_loan, fiatCurrencyCode)}
+            inputModalMessage={sprintf(lstrings.loan_loan_amount_input_message_s, displayLtvLimit)}
+            title={sprintf(lstrings.loan_enter_s_amount_s, lstrings.loan_fragment_loan, fiatCurrencyCode)}
             tokenId={destTokenId}
             onAmountChanged={handleBorrowAmountChanged}
           />
@@ -365,31 +359,31 @@ export const LoanCreateScene = (props: Props) => {
           )}
 
           {/* Source of Collateral / Source Wallet */}
-          <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_source}</EdgeText>
+          <EdgeText style={styles.textTitle}>{lstrings.loan_collateral_source}</EdgeText>
 
           <TappableAccountCard
-            emptyLabel={s.strings.loan_select_source_collateral}
+            emptyLabel={lstrings.loan_select_source_collateral}
             selectedAsset={{ wallet: srcWallet, tokenId: srcTokenId }}
             onPress={handleShowWalletPickerModal('source')}
             marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Fund Destination */}
-          <EdgeText style={styles.textTitle}>{s.strings.loan_debt_destination}</EdgeText>
+          <EdgeText style={styles.textTitle}>{lstrings.loan_debt_destination}</EdgeText>
 
           <TappableAccountCard
-            emptyLabel={s.strings.loan_select_receiving_wallet}
+            emptyLabel={lstrings.loan_select_receiving_wallet}
             onPress={handleShowWalletPickerModal('destination')}
             selectedAsset={{ wallet: destWallet, tokenId: destTokenId, paymentMethod }}
             marginRem={[0, 0.5, 0.5, 0.5]}
           />
 
           {/* Collateral Amount Required / Collateral Amount */}
-          <EdgeText style={styles.textTitle}>{s.strings.loan_collateral_required}</EdgeText>
+          <EdgeText style={styles.textTitle}>{lstrings.loan_collateral_required}</EdgeText>
           <Card marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
-                {srcWallet == null ? s.strings.loan_select_source_collateral : s.strings.loan_select_receiving_wallet}
+                {srcWallet == null ? lstrings.loan_select_source_collateral : lstrings.loan_select_receiving_wallet}
               </EdgeText>
             ) : (
               <CryptoFiatAmountRow nativeAmount={totalRequiredCollateralNativeAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
@@ -402,7 +396,7 @@ export const LoanCreateScene = (props: Props) => {
           {destWallet == null ? null : (
             <Space around={1}>
               <MainButton
-                label={s.strings.string_next_capitalized}
+                label={lstrings.string_next_capitalized}
                 disabled={isInsufficientCollateral || !isUserInputComplete}
                 type="secondary"
                 onPress={() => {

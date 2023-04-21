@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -52,11 +52,11 @@ function EditTokenSceneComponent(props: Props) {
       <ButtonsModal
         // @ts-expect-error
         bridge={bridge}
-        title={s.strings.string_delete}
-        message={s.strings.edittoken_delete_prompt}
+        title={lstrings.string_delete}
+        message={lstrings.edittoken_delete_prompt}
         buttons={{
           ok: {
-            label: s.strings.string_delete,
+            label: lstrings.string_delete,
             async onPress() {
               await wallet.currencyConfig.removeCustomToken(tokenId)
               logActivity(`Delete Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode}`)
@@ -65,7 +65,7 @@ function EditTokenSceneComponent(props: Props) {
               return true
             }
           },
-          cancel: { label: s.strings.string_cancel_cap }
+          cancel: { label: lstrings.string_cancel_cap }
         }}
       />
     ))
@@ -75,10 +75,10 @@ function EditTokenSceneComponent(props: Props) {
     // Validate input:
     const decimals = parseInt(decimalPlaces)
     if (currencyCode === '' || displayName === '' || contractAddress === '') {
-      return await showMessage(s.strings.addtoken_invalid_information)
+      return await showMessage(lstrings.addtoken_invalid_information)
     }
     if (isNaN(decimals)) {
-      return await showMessage(s.strings.edittoken_invalid_decimal_places)
+      return await showMessage(lstrings.edittoken_invalid_decimal_places)
     }
     // TODO:
     // We need to check for conflicts with the other tokens in the account,
@@ -111,13 +111,13 @@ function EditTokenSceneComponent(props: Props) {
 
   return (
     <SceneWrapper avoidKeyboard>
-      <SceneHeader title={tokenId == null ? s.strings.title_add_token : s.strings.title_edit_token} underline />
+      <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
         <OutlinedTextInput
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={false}
-          label={s.strings.addtoken_currency_code_input_text}
+          label={lstrings.addtoken_currency_code_input_text}
           marginRem={marginRem}
           value={currencyCode}
           onChangeText={setCurrencyCode}
@@ -126,7 +126,7 @@ function EditTokenSceneComponent(props: Props) {
           autoCapitalize="words"
           autoCorrect={false}
           autoFocus={false}
-          label={s.strings.addtoken_name_input_text}
+          label={lstrings.addtoken_name_input_text}
           marginRem={marginRem}
           value={displayName}
           onChangeText={setDisplayName}
@@ -134,7 +134,7 @@ function EditTokenSceneComponent(props: Props) {
         <OutlinedTextInput
           autoCorrect={false}
           autoFocus={false}
-          label={s.strings.addtoken_contract_address_input_text}
+          label={lstrings.addtoken_contract_address_input_text}
           marginRem={marginRem}
           value={contractAddress}
           onChangeText={setContractAddress}
@@ -143,16 +143,16 @@ function EditTokenSceneComponent(props: Props) {
           autoCorrect={false}
           autoFocus={false}
           keyboardType="numeric"
-          label={s.strings.addtoken_denomination_input_text}
+          label={lstrings.addtoken_denomination_input_text}
           marginRem={marginRem}
           value={decimalPlaces}
           onChangeText={setDecimalPlaces}
         />
-        <MainButton alignSelf="center" label={s.strings.string_save} marginRem={marginRem} onPress={handleSave} />
+        <MainButton alignSelf="center" label={lstrings.string_save} marginRem={marginRem} onPress={handleSave} />
         {tokenId == null ? null : (
           <MainButton //
             alignSelf="center"
-            label={s.strings.edittoken_delete_token}
+            label={lstrings.edittoken_delete_token}
             marginRem={marginRem}
             type="secondary"
             onPress={handleDelete}
@@ -176,7 +176,7 @@ async function showMessage(message: string): Promise<void> {
       bridge={bridge}
       message={message}
       buttons={{
-        ok: { label: s.strings.string_ok_cap }
+        ok: { label: lstrings.string_ok_cap }
       }}
     />
   ))

@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -20,9 +20,9 @@ export function ShareButtons(props: Props) {
 
   return (
     <View style={styles.container}>
-      <ShareButton icon="FIO-geometric" text={s.strings.fio_reject_request_title} onPress={fioAddressModal} />
-      <ShareButton icon="Copy-icon" text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} />
-      <ShareButton icon="FIO-share" text={s.strings.string_share} onPress={shareViaShare} />
+      <ShareButton icon="FIO-geometric" text={lstrings.fio_reject_request_title} onPress={fioAddressModal} />
+      <ShareButton icon="Copy-icon" text={lstrings.fragment_request_copy_title} onPress={copyToClipboard} />
+      <ShareButton icon="FIO-share" text={lstrings.string_share} onPress={shareViaShare} />
     </View>
   )
 }

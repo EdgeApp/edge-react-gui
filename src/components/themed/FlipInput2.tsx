@@ -6,7 +6,7 @@ import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedS
 import { Fontello } from '../../assets/vector'
 import { useHandler } from '../../hooks/useHandler'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { NumericInput } from '../modals/NumericInput'
 import { showError } from '../services/AirshipInstance'
@@ -72,36 +72,23 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   })
 
   const onToggleFlipInput = useHandler(() => {
+    const otherField = primaryField === 1 ? 0 : 1
+    inputRefs[otherField]?.current?.focus()
+
     const jsCallback: AnimationCallback = done => {
       'worklet'
-      if (done) runOnJS(setPrimaryField)(primaryField ? 0 : 1)
+      if (done === true) runOnJS(setPrimaryField)(otherField)
     }
 
-    inputRefs[primaryField]?.current?.blur()
-    inputRefs[Number(!primaryField)]?.current?.focus()
-
-    if (primaryField) {
-      console.log('animating to 0')
-      animatedValue.value = withTiming(
-        0,
-        {
-          duration: FLIP_DURATION,
-          easing: Easing.inOut(Easing.ease)
-        },
-        jsCallback
-      )
-    }
-    if (!primaryField) {
-      console.log('animating to 1')
-      animatedValue.value = withTiming(
-        1,
-        {
-          duration: FLIP_DURATION,
-          easing: Easing.inOut(Easing.ease)
-        },
-        jsCallback
-      )
-    }
+    console.log(`animating to ${otherField}`)
+    animatedValue.value = withTiming(
+      otherField,
+      {
+        duration: FLIP_DURATION,
+        easing: Easing.inOut(Easing.ease)
+      },
+      jsCallback
+    )
   })
 
   const onNumericInputChange = useHandler((text: string) => {
@@ -131,7 +118,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
             style={styles.bottomAmount}
             value={primaryAmount}
             maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
-            placeholder={amountBlank ? s.strings.string_amount : ''}
+            placeholder={amountBlank ? lstrings.string_amount : ''}
             placeholderTextColor={theme.deactivatedText}
             onChangeText={onNumericInputChange}
             autoCorrect={false}

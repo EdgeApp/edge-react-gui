@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { Card } from '../cards/Card'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -43,11 +43,11 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
       return (
         <>
           <View>
-            {this.renderRow(<EdgeText style={feeTextStyle}>{s.strings.mining_fee}</EdgeText>, <EdgeText style={feeTextStyle}>{miningFee || '0'}</EdgeText>, {
+            {this.renderRow(<EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>, <EdgeText style={feeTextStyle}>{miningFee || '0'}</EdgeText>, {
               ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
             })}
             {this.renderRow(
-              <EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>,
+              <EdgeText style={styles.bottomText}>{lstrings.string_total_amount}</EdgeText>,
               <EdgeText style={styles.bottomText}>{totalText}</EdgeText>
             )}
           </View>

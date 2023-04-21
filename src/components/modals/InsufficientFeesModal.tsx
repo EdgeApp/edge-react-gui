@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { roundedFee } from '../../util/utils'
@@ -53,11 +53,11 @@ export function InsufficientFeesModal(props: Props) {
 
   return (
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
-      <ModalTitle>{s.strings.buy_crypto_modal_title}</ModalTitle>
-      <ModalMessage>{sprintf(s.strings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
-      <MainButton label={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)} type="primary" marginRem={0.5} onPress={handleBuy} />
-      <MainButton label={s.strings.buy_crypto_modal_exchange} type="primary" marginRem={0.5} onPress={handleSwap} />
-      <MainButton label={s.strings.buy_crypto_decline} type="secondary" marginRem={0.5} onPress={handleCancel} />
+      <ModalTitle>{lstrings.buy_crypto_modal_title}</ModalTitle>
+      <ModalMessage>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
+      <MainButton label={sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode)} type="primary" marginRem={0.5} onPress={handleBuy} />
+      <MainButton label={lstrings.buy_crypto_modal_exchange} type="primary" marginRem={0.5} onPress={handleSwap} />
+      <MainButton label={lstrings.buy_crypto_decline} type="secondary" marginRem={0.5} onPress={handleCancel} />
     </ThemedModal>
   )
 }

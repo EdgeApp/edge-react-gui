@@ -2,9 +2,11 @@ import * as React from 'react'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
+import buyPluginJsonRaw from '../../../constants/plugins/buyPluginList.json'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
+import sellPluginJsonRaw from '../../../constants/plugins/sellPluginList.json'
 import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { asGuiPluginJson } from '../../../types/GuiPluginTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatIcon } from '../../icons/FiatIcon'
@@ -27,8 +29,8 @@ const PaymentMethodRowComponent = (props: Props) => {
   // #region Initialization
 
   // Validate plugin data
-  const buyPluginJson = asGuiPluginJson(require('../../../constants/plugins/buyPluginList.json'))
-  const sellPluginJson = asGuiPluginJson(require('../../../constants/plugins/sellPluginList.json'))
+  const buyPluginJson = asGuiPluginJson(buyPluginJsonRaw)
+  const sellPluginJson = asGuiPluginJson(sellPluginJsonRaw)
   const pluginJson = [...buyPluginJson, ...sellPluginJson]
   const guiPlugin = guiPlugins[pluginId]
 
@@ -78,7 +80,7 @@ const PaymentMethodRowComponent = (props: Props) => {
       icon={mainIcon}
       leftText={fiatCurrencyCode}
       leftSubtext={name}
-      rightSubText={s.strings.plugin_powered_by_space + ' '}
+      rightSubText={lstrings.plugin_powered_by_space + ' '}
       rightSubTextExtended={renderPluginDisplay()}
       marginRem={marginRem}
     />

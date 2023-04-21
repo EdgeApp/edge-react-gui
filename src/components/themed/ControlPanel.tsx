@@ -25,7 +25,7 @@ import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPl
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
@@ -95,18 +95,18 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.forget_account_title}
-        message={sprintf(s.strings.forget_account_message_common, username)}
+        title={lstrings.forget_account_title}
+        message={sprintf(lstrings.forget_account_message_common, username)}
         buttons={{
           ok: {
-            label: s.strings.string_forget,
+            label: lstrings.string_forget,
             onPress: async () => {
               await dispatch(deleteLocalAccount(username))
               return true
             },
             type: 'primary'
           },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
         }}
       />
     ))
@@ -126,15 +126,15 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
-        title={s.strings.scan_qr_label}
+        title={lstrings.scan_qr_label}
         textModalAutoFocus={false}
         textModalBody={
           <ScrollView>
-            <ModalTitle>{s.strings.enter_any_title}</ModalTitle>
-            <ModalMessage>{s.strings.enter_any_body}</ModalMessage>
+            <ModalTitle>{lstrings.enter_any_title}</ModalTitle>
+            <ModalMessage>{lstrings.enter_any_body}</ModalMessage>
           </ScrollView>
         }
-        textModalHint={s.strings.enter_any_input_hint}
+        textModalHint={lstrings.enter_any_input_hint}
       />
     ))
       .then((result: string | undefined) => {
@@ -147,7 +147,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   }
 
   const handleShareApp = () => {
-    const message = `${sprintf(s.strings.share_subject, config.appName)}\n\n${s.strings.share_message}\n\n`
+    const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
 
     const shareOptions = {
       message: Platform.OS === 'ios' ? message : message + EDGE_URL,
@@ -214,7 +214,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio-names',
-      title: s.strings.drawer_fio_names
+      title: lstrings.drawer_fio_names
     },
     {
       pressHandler: () => {
@@ -222,7 +222,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-fio',
-      title: s.strings.drawer_fio_requests
+      title: lstrings.drawer_fio_requests
     },
     {
       pressHandler: () => {
@@ -230,35 +230,35 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-wallet-connect',
-      title: s.strings.wc_walletconnect_title
+      title: lstrings.wc_walletconnect_title
     },
     {
       pressHandler: () => handleScanQr(),
       iconName: 'control-panel-scan-qr',
-      title: s.strings.drawer_scan_qr_send
+      title: lstrings.drawer_scan_qr_send
     },
-    ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: s.strings.drawer_borrow_dollars }] : []),
+    ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
     {
       pressHandler: () => {
         navigation.navigate('termsOfService', {})
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-tos',
-      title: s.strings.title_terms_of_service
+      title: lstrings.title_terms_of_service
     },
-    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: s.strings.string_share + ' ' + config.appName },
+    { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
       pressHandler: () => {
         navigation.navigate('settingsOverview', {})
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconName: 'control-panel-settings',
-      title: s.strings.settings_title
+      title: lstrings.settings_title
     },
     {
-      pressHandler: async () => dispatch(logoutRequest(navigation)),
+      pressHandler: async () => await dispatch(logoutRequest(navigation)),
       iconName: 'control-panel-logout',
-      title: s.strings.settings_button_logout
+      title: lstrings.settings_button_logout
     },
     // Dummy row that goes under the transparent close button
     {
@@ -274,7 +274,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'hand-holding-usd',
-      title: sprintf(s.strings.side_menu_rewards_button_1s, defaultFiat)
+      title: sprintf(lstrings.side_menu_rewards_button_1s, defaultFiat)
     })
   }
 
@@ -293,7 +293,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         {/* ==== Rate Display Start ==== */}
         <View style={styles.rowContainer}>
           {selectedWallet == null || selectedDenomination == null ? (
-            <TitleText style={{ ...styles.text, marginLeft: theme.rem(1), marginRight: theme.rem(1) }}>{s.strings.exchange_rate_loading_singular}</TitleText>
+            <TitleText style={{ ...styles.text, marginLeft: theme.rem(1), marginRight: theme.rem(1) }}>{lstrings.exchange_rate_loading_singular}</TitleText>
           ) : (
             <>
               <View style={styles.rowIconContainer}>

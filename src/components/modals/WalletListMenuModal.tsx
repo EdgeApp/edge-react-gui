@@ -9,7 +9,7 @@ import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletLis
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
@@ -57,23 +57,23 @@ export const WALLET_LIST_MENU: Array<{
   value: WalletListMenuKey
 }> = [
   {
-    label: s.strings.string_rename,
+    label: lstrings.string_rename,
     value: 'rename'
   },
   {
-    label: s.strings.string_resync,
+    label: lstrings.string_resync,
     value: 'resync'
   },
   {
-    label: s.strings.fragment_wallets_export_transactions,
+    label: lstrings.fragment_wallets_export_transactions,
     value: 'exportWalletTransactions'
   },
   {
-    label: s.strings.string_master_private_key,
+    label: lstrings.string_master_private_key,
     value: 'getSeed'
   },
   {
-    label: s.strings.string_add_edit_tokens,
+    label: lstrings.string_add_edit_tokens,
     value: 'manageTokens'
   },
   {
@@ -103,15 +103,15 @@ export const WALLET_LIST_MENU: Array<{
       'piratechain',
       'zcash'
     ],
-    label: s.strings.fragment_wallets_view_xpub,
+    label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
   },
   {
-    label: s.strings.string_get_raw_keys,
+    label: lstrings.string_get_raw_keys,
     value: 'getRawKeys'
   },
   {
-    label: s.strings.string_archive_wallet,
+    label: lstrings.string_archive_wallet,
     value: 'delete'
   }
 ]
@@ -138,8 +138,8 @@ export function WalletListMenuModal(props: Props) {
   useAsyncEffect(async () => {
     if (wallet == null) {
       setOptions([
-        { label: s.strings.string_get_raw_keys, value: 'getRawKeys' },
-        { label: s.strings.string_archive_wallet, value: 'rawDelete' }
+        { label: lstrings.string_get_raw_keys, value: 'getRawKeys' },
+        { label: lstrings.string_archive_wallet, value: 'rawDelete' }
       ])
       return
     }
@@ -147,19 +147,19 @@ export function WalletListMenuModal(props: Props) {
     if (tokenId != null) {
       setOptions([
         {
-          label: s.strings.string_resync,
+          label: lstrings.string_resync,
           value: 'resync'
         },
         {
-          label: s.strings.fragment_wallets_export_transactions,
+          label: lstrings.fragment_wallets_export_transactions,
           value: 'exportWalletTransactions'
         },
         {
-          label: s.strings.string_add_edit_tokens,
+          label: lstrings.string_add_edit_tokens,
           value: 'manageTokens'
         },
         {
-          label: s.strings.fragment_wallets_delete_wallet,
+          label: lstrings.fragment_wallets_delete_wallet,
           value: 'delete'
         }
       ])
@@ -187,7 +187,7 @@ export function WalletListMenuModal(props: Props) {
     for (const splitWalletType of splittable) {
       const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
       if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(s.strings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
+      result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
     }
 
     setOptions(result)

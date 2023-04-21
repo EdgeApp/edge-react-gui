@@ -18,9 +18,9 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const oldSubcats = state.ui.scenes.transactionDetails.subcategories
+    const oldSubcats = state.ui.transactionDetails.subcategories
     const newSubcategories = [...oldSubcats, newSubcategory]
-    return setSubcategoriesRequest(account, { categories: newSubcategories.sort() })
+    return await setSubcategoriesRequest(account, { categories: newSubcategories.sort() })
       .then(() => {
         dispatch({
           type: 'SET_TRANSACTION_SUBCATEGORIES',

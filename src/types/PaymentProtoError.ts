@@ -1,6 +1,6 @@
 import { sprintf } from 'sprintf-js'
 
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 
 export type PaymentProtoErrorCode =
   | 'CurrencyNotSupported'
@@ -65,23 +65,23 @@ export class PaymentProtoError extends Error {
 export function translatePaymentProtoError(error: PaymentProtoError): string {
   switch (error.code) {
     case 'CurrencyNotSupported':
-      return sprintf(s.strings.error_paymentprotocol_currency_not_supported, error.text)
+      return sprintf(lstrings.error_paymentprotocol_currency_not_supported, error.text)
     case 'EmptyOutputInvoice':
-      return s.strings.error_paymentprotocol_empty_output_invoice
+      return lstrings.error_paymentprotocol_empty_output_invoice
     case 'EmptyVerificationHexReq':
-      return s.strings.error_paymentprotocol_empty_verification_hex_req
+      return lstrings.error_paymentprotocol_empty_verification_hex_req
     case 'FetchFailed':
-      return sprintf(s.strings.error_paymentprotocol_fetch, error.header, error.statusCode, error.text)
+      return sprintf(lstrings.error_paymentprotocol_fetch, error.header, error.statusCode, error.text)
     case 'InvalidPaymentOption':
-      return sprintf(s.strings.error_paymentprotocol_invalid_payment_option, error.text)
+      return sprintf(lstrings.error_paymentprotocol_invalid_payment_option, error.text)
     case 'MultiOutputInvoice':
-      return s.strings.error_paymentprotocol_multi_output_invoice
+      return lstrings.error_paymentprotocol_multi_output_invoice
     case 'MultiInstructionInvoice':
-      return s.strings.error_paymentprotocol_multi_tx_invoice
+      return lstrings.error_paymentprotocol_multi_tx_invoice
     case 'NoPaymentOption':
-      return sprintf(s.strings.error_paymentprotocol_no_payment_option, error.text)
+      return sprintf(lstrings.error_paymentprotocol_no_payment_option, error.text)
     case 'TxVerificationMismatch':
-      return sprintf(s.strings.error_paymentprotocol_tx_verification_failed)
+      return sprintf(lstrings.error_paymentprotocol_tx_verification_failed)
     default:
       return error.message
   }

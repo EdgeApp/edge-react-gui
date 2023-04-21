@@ -12,7 +12,7 @@ import { Airship } from '../services/AirshipInstance'
  */
 export async function showFullScreenSpinner<T>(message: string, promise: Promise<T>): Promise<T> {
   Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
-  return promise
+  return await promise
 }
 
 const fadeInTime = 300

@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { THEME } from '../../theme/variables/airbitz'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
@@ -40,7 +40,7 @@ export function CategoryModal(props: Props) {
   const [category, setCategory] = React.useState(split.category)
   const [subcategory, setSubcategory] = React.useState(split.subcategory)
 
-  const categories = useSelector(state => state.ui.scenes.transactionDetails.subcategories)
+  const categories = useSelector(state => state.ui.transactionDetails.subcategories)
 
   // Load the categories from disk:
   useAsyncEffect(async () => {
@@ -121,9 +121,9 @@ export function CategoryModal(props: Props) {
     <AirshipModal bridge={bridge} onCancel={handleCancel}>
       <TouchableWithoutFeedback onPress={handleCancel}>
         <View style={styles.airshipContainer}>
-          <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
+          <FormattedText style={styles.airshipHeader}>{lstrings.transaction_details_category_title}</FormattedText>
           <View style={styles.inputCategoryMainContainter}>
-            <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
+            <FormattedText style={styles.inputCategoryListHeader}>{lstrings.tx_detail_picker_title}</FormattedText>
             <View style={styles.inputCategoryRow}>
               {categoryOrder.map(item => (
                 <TouchableWithoutFeedback onPress={() => setCategory(item)} key={item}>
@@ -145,7 +145,7 @@ export function CategoryModal(props: Props) {
               autoFocus
               returnKeyType="done"
               autoCapitalize="none"
-              label={s.strings.transaction_details_choose_a_sub_category}
+              label={lstrings.transaction_details_choose_a_sub_category}
               fontSize={THEME.rem(0.9)}
               labelFontSize={THEME.rem(0.65)}
               onChangeText={setSubcategory}

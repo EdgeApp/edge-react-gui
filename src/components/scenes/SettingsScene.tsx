@@ -18,7 +18,7 @@ import {
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
@@ -83,7 +83,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
     const { logSettings } = this.props.context
     this.state = {
-      touchIdText: s.strings.settings_button_use_touchID,
+      touchIdText: lstrings.settings_button_use_touchID,
       darkTheme: this.props.theme === config.darkTheme,
       defaultLogLevel: logSettings.defaultLogLevel
     }
@@ -109,17 +109,17 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       const biometryType = await getSupportedBiometryType()
       switch (biometryType) {
         case 'FaceID':
-          this.setState({ touchIdText: s.strings.settings_button_use_faceID })
+          this.setState({ touchIdText: lstrings.settings_button_use_faceID })
           break
         case 'TouchID':
-          this.setState({ touchIdText: s.strings.settings_button_use_touchID })
+          this.setState({ touchIdText: lstrings.settings_button_use_touchID })
           break
 
         case false:
           break
       }
     } else {
-      this.setState({ touchIdText: s.strings.settings_button_use_biometric })
+      this.setState({ touchIdText: lstrings.settings_button_use_biometric })
     }
   }
 
@@ -157,8 +157,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const approveDelete = await Airship.show<boolean>(bridge => (
       <ConfirmContinueModal
         bridge={bridge}
-        body={sprintf(s.strings.delete_account_body, config.appName, config.supportSite)}
-        title={s.strings.delete_account_title}
+        body={sprintf(lstrings.delete_account_body, config.appName, config.supportSite)}
+        title={lstrings.delete_account_title}
         isSkippable
         warning
       />
@@ -170,16 +170,16 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        submitLabel={s.strings.string_delete}
-        message={sprintf(s.strings.delete_account_verification_body, username)}
-        title={s.strings.delete_account_title}
+        submitLabel={lstrings.string_delete}
+        message={sprintf(lstrings.delete_account_verification_body, username)}
+        title={lstrings.delete_account_title}
         warning
         onSubmit={async text => {
-          if (text !== username) return s.strings.delete_account_verification_error
+          if (text !== username) return lstrings.delete_account_verification_error
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest(this.props.navigation)
           await this.props.context.deleteLocalAccount(username)
-          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(s.strings.delete_account_feedback, username)} />)
+          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />)
           return true
         }}
       />
@@ -265,49 +265,49 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
-      seconds: s.strings.settings_seconds,
-      minutes: s.strings.settings_minutes,
-      hours: s.strings.settings_hours,
-      days: s.strings.settings_days
+      seconds: lstrings.settings_seconds,
+      minutes: lstrings.settings_minutes,
+      hours: lstrings.settings_hours,
+      days: lstrings.settings_days
     }
-    const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+    const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${s.strings.settings_account_title_cap}: ${account.username}`}
+            label={`${lstrings.settings_account_title_cap}: ${account.username}`}
           />
           <SettingsTappableRow
             action={isLocked ? 'lock' : 'unlock'}
-            label={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
+            label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
             onPress={this.handleUnlock}
           />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-          <SettingsTappableRow disabled={this.props.isLocked} dangerous label={s.strings.delete_account_title} onPress={this.handleDeleteAccount} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+          <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
 
-          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={s.strings.settings_options_title_cap} />
-          <SettingsTappableRow label={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
-          <SettingsTappableRow label={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
-          <SettingsLabelRow right={autoLogoutRightText} label={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
-          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
+          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
+          <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
+          <SettingsTappableRow label={lstrings.spending_limits} onPress={this.handleSpendingLimits} />
+          <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
+          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
-          <SettingsSwitchRow key="pinRelogin" label={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
+          <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
           {this.props.supportsTouchId && (
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
           <SettingsSwitchRow
             key="spamFilter"
-            label={s.strings.settings_hide_spam_transactions}
+            label={lstrings.settings_hide_spam_transactions}
             value={this.props.spamFilterOn}
             onPress={this.handleSpamToggle}
           />
-          <SettingsTappableRow label={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
+          <SettingsTappableRow label={lstrings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
@@ -324,28 +324,28 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             )
           })}
 
-          <SettingsTappableRow label={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
+          <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
           <SettingsSwitchRow
             key="developerMode"
-            label={s.strings.settings_developer_mode}
+            label={lstrings.settings_developer_mode}
             value={this.props.developerModeOn}
             onPress={this.handleDeveloperToggle}
           />
           {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" label={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
+            <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={s.strings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
-          <SettingsTappableRow label={s.strings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
-          <SettingsTappableRow label={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
+          <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
+          <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
+          <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
-            label={s.strings.settings_verbose_logging}
+            label={lstrings.settings_verbose_logging}
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingToggle}
           />
           <Space around={2}>
-            <MainButton alignSelf="center" label={s.strings.settings_button_export_logs} type="secondary" onPress={handleSendLogs} />
-            <MainButton alignSelf="center" label={s.strings.settings_button_clear_logs} marginRem={[1, 0, 0, 0]} type="escape" onPress={handleClearLogs} />
+            <MainButton alignSelf="center" label={lstrings.settings_button_export_logs} type="secondary" onPress={handleSendLogs} />
+            <MainButton alignSelf="center" label={lstrings.settings_button_clear_logs} marginRem={[1, 0, 0, 0]} type="escape" onPress={handleClearLogs} />
           </Space>
         </ScrollView>
       </SceneWrapper>

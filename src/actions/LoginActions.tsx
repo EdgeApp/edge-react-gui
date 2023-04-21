@@ -9,7 +9,7 @@ import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   getLocalSettings,
   getSyncedSettings,
@@ -62,7 +62,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const newAccount = account.newAccount
 
     if (newAccount) {
-      let defaultFiat = syncedSettings.defaultFiat
+      let { defaultFiat } = syncedSettings
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
         defaultFiat = phoneCurrency
@@ -73,14 +73,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
-        // New user FIO handle registration flow (if env is properly configured)
-        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
-          Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
-            if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
-          })
-        }
-
         navigation.replace('edgeTabs', {
           screen: 'walletsTab',
           params: {
@@ -88,8 +80,22 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
           }
         })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
-        await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
-        await updateWalletsRequest()(dispatch, getState)
+
+        // New user FIO handle registration flow (if env is properly configured)
+        const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+          await Promise.all([
+            createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch),
+            Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />).then(isCreateHandle => {
+              if (isCreateHandle) navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+            })
+          ]).then(async ([_customWallets, _fioCreate]) => {
+            return await updateWalletsRequest()(dispatch, getState)
+          })
+        } else {
+          await createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
+          await updateWalletsRequest()(dispatch, getState)
+        }
       }
 
       navigation.navigate('edgeApp', {
@@ -120,8 +126,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       await Airship.show<boolean>(bridge => (
         <ConfirmContinueModal
           bridge={bridge}
-          title={s.strings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(s.strings.update_notice_deprecate_electrum_servers_message, config.appName)}
+          title={lstrings.update_notice_deprecate_electrum_servers_title}
+          body={sprintf(lstrings.update_notice_deprecate_electrum_servers_message, config.appName)}
         />
       ))
         .finally(async () => {
@@ -159,7 +165,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       defaultIsoFiat: '',
       denominationSettings: {},
       developerModeOn: false,
-      spamFilterOn: true,
       isAccountBalanceVisible: false,
       mostRecentWallets: [],
       passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -167,6 +172,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,
       preferredSwapPluginType: undefined,
+      securityCheckedWallets: {},
+      spamFilterOn: true,
       spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',
@@ -278,12 +285,8 @@ export const mergeSettings = (
 
 export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    // Must use reset in order to avoid being prevented by the useBackEvent:
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'login' }]
-    })
     await dispatch(logout(username))
+    navigation.navigate('login', {})
   }
 }
 
@@ -308,7 +311,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
         fiatCurrencyCode
       }),
       20000,
-      new Error(s.strings.error_creating_wallets)
+      new Error(lstrings.error_creating_wallets)
     )
     if (account.activeWalletIds.length <= 1) {
       dispatch({
@@ -365,7 +368,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
  * Creates wallets inside a new account.
  */
 async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeTokenId[], dispatch: Dispatch) {
-  if (edgeTokenIds.length === 0) return createDefaultWallets(account, fiatCurrencyCode, dispatch)
+  if (edgeTokenIds.length === 0) return await createDefaultWallets(account, fiatCurrencyCode, dispatch)
 
   const pluginIdTokenIdMap: { [pluginId: string]: string[] } = {}
 

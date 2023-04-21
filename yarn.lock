@@ -4347,6 +4347,27 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+algo-msgpack-with-bigint@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/algo-msgpack-with-bigint/-/algo-msgpack-with-bigint-2.1.1.tgz#38bb717220525b3ff42232eefdcd9efb9ad405d6"
+  integrity sha512-F1tGh056XczEaEAqu7s+hlZUDWwOBT70Eq0lfMpBP2YguSQVyxRbprLq5rELXKQOyOaixTWYhMeMQMzP0U5FoQ==
+
+algosdk@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/algosdk/-/algosdk-2.2.0.tgz#12f80b5f68c955b338aa5b9d5fc6cbd64ce6ea7a"
+  integrity sha512-FG3u/60DzjMK9Cffy9itst7WcfsTgZKfsD1r8pT33PfsA7r8NoXiUSL7cf0fNWFus6S3E14BpE2CY64VJ8KV1A==
+  dependencies:
+    algo-msgpack-with-bigint "^2.1.1"
+    buffer "^6.0.3"
+    cross-fetch "^3.1.5"
+    hi-base32 "^0.5.1"
+    js-sha256 "^0.9.0"
+    js-sha3 "^0.8.0"
+    js-sha512 "^0.8.0"
+    json-bigint "^1.0.0"
+    tweetnacl "^1.0.3"
+    vlq "^2.0.4"
+
 "altcoin-js@https://github.com/EdgeApp/altcoin-js.git#master":
   version "5.1.10"
   resolved "https://github.com/EdgeApp/altcoin-js.git#02c16e9686c87a3fee7ae4144e89bcf43d47c8d1"
@@ -6393,6 +6414,11 @@ cleaners@^0.3.1, cleaners@^0.3.11, cleaners@^0.3.12, cleaners@^0.3.13, cleaners@
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.13.tgz#de9954f8c4ef01fcb54e41a8510f48059815b3e8"
   integrity sha512-sCedc8LIXUhLmXT9rkkAToi9mjYhI7J/gKRWiF0Qw6eC0ymILHxq+vhuaKoKdcSWpYi2YqqwSlvNtD+92gf4pA==
 
+cleaners@^0.3.14:
+  version "0.3.15"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.15.tgz#d16738896f22aa5d7fce70516b9b95a391cf4009"
+  integrity sha512-Wa3e4gBYPdz/KI+setDTVsje4soP7uKAho0GQx9HXRAXeVGFMu3twTKEfjhTsepZPaQnjXtzzaHuEM1HlGeBPQ==
+
 cli-boxes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-3.0.0.tgz#71a10c716feeba005e4504f36329ef0b17cf3145"
@@ -6866,7 +6892,7 @@ create-hmac@1.1.7, create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.3, c
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@^3.1.4:
+cross-fetch@^3.1.4, cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
@@ -7791,10 +7817,10 @@ edge-core-js@^0.19.48, edge-core-js@^0.19.50:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^0.23.2-2:
-  version "0.23.2-2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.23.2-2.tgz#1e304f5b21363b8156fe8f89583759093037379c"
-  integrity sha512-6jUsu3oFSwvRVoSNDjRTRl9DVBSt8/E6z+B/917y9vu58NqUX8YJyIyTs9isCCmCFoqsNfeE1LTg/sdFWS0OLg==
+edge-currency-accountbased@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.0.0.tgz#2a7d2ca3a01583b7c16a806ec61a1241f32a73d6"
+  integrity sha512-U4dw6BMQWxK9NMksfrpesFpIJoOz/q3QAbUI4w02C79R1k8JRBQ702hIZKeNNApNmZJsyJVm8l99/PvS3SUWZw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7807,9 +7833,10 @@ edge-currency-accountbased@^0.23.2-2:
     "@solana/web3.js" "^1.32.0"
     "@tronscan/client" "^0.2.81"
     "@walletconnect/client" "1.6.6"
+    algosdk "^2.1.0"
     biggystring "^4.1.3"
     bip39 "^3.0.2"
-    cleaners "^0.3.12"
+    cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     eth-sig-util "^3.0.1"
     ethereumjs-abi "^0.6.8"
@@ -7839,10 +7866,10 @@ edge-currency-monero@^0.5.5:
     uri-js "^3.0.2"
     yaob "^0.3.7"
 
-edge-currency-plugins@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.0.1.tgz#9119f882236603f89a09674eb5cc757ede181672"
-  integrity sha512-cV+eq9mO0LOoCTOOcX6L1VfpniVpANsm6mtWUgcheKpEHexEP7JbgilXUinRwMJghTk86xuVFvxdcfCkxFPd0w==
+edge-currency-plugins@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.0.2.tgz#f7a89f6b36ff5707188ac0c57598f0c1eaa7eb04"
+  integrity sha512-g5U4k7gWGcRecEZpFm8ufOkcOxDhAzPZucAxbMf0MMXZ07w63NbxG/tPEElwV635+JAUgLhLImPPFEYM6BW3ZQ==
   dependencies:
     altcoin-js "https://github.com/EdgeApp/altcoin-js.git#master"
     async-mutex "^0.2.6"
@@ -7868,10 +7895,10 @@ edge-currency-plugins@^2.0.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.17.7:
-  version "0.17.7"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.17.7.tgz#bc09a1981b5128e56033c509655d350c5e5fb18b"
-  integrity sha512-9B298sEtia7G2uVbYBhV52ABRiODMNZIA+tAofFF7DLu3M2kVzBaW+P8BtDY9R27dWf8qAJbiW5ee9s6pnb6OA==
+edge-exchange-plugins@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.18.0.tgz#08659832ab4f745c6b6148103c8c23c8c74b3cbf"
+  integrity sha512-zfqvpDnMRrL4bu4udmES6njss/Qd+Fc6yzsIjCeJuxdWrrk01mfHtKx0daj8a6R+5Sc2065S2c2hc5FaW5vKjw==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -7885,10 +7912,10 @@ edge-exchange-plugins@^0.17.7:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.2.4.tgz#9b98352b77b0ab6f2d58f52c2588aaceb13c4572"
-  integrity sha512-HiN1VhiSWbF/s15OESlfbIU8k9edZ+8NMkCy2P0d44hAhLy/eno8Wb4HZPkFRgJqoFnDkKZbRwNbX0dL2xfsRg==
+edge-login-ui-rn@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.4.3.tgz#33ea8af317d8ffadf8b7da98d5a5161cb5c629b5"
+  integrity sha512-SgiaIQgkYXFQOgpxNeM8TZiyxDirI/CgZ/7Gax0PTC1pgEjRP2s/hVL9KezhWweSe9lG0MzoDM7n/DzzpkBmtw==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -9922,6 +9949,11 @@ hermes-profile-transformer@^0.0.6:
   dependencies:
     source-map "^0.7.3"
 
+hi-base32@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/hi-base32/-/hi-base32-0.5.1.tgz#1279f2ddae2673219ea5870c2121d2a33132857e"
+  integrity sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==
+
 hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -11310,6 +11342,11 @@ js-sha3@^0.7.0:
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.7.0.tgz#0a5c57b36f79882573b2d84051f8bb85dd1bd63a"
   integrity sha512-Wpks3yBDm0UcL5qlVhwW9Jr9n9i4FfeWBFOOXP5puDS/SiudJGhw7DPyBqn3487qD4F0lsC0q3zxink37f7zeA==
 
+js-sha512@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/js-sha512/-/js-sha512-0.8.0.tgz#dd22db8d02756faccf19f218e3ed61ec8249f7d4"
+  integrity sha512-PWsmefG6Jkodqt+ePTvBZCSMFgN7Clckjd0O7su3I0+BW2QWUTJNzjktHsztGLhncP2h8mcF9V9Y2Ha59pAViQ==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -11413,6 +11450,13 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
+
+json-bigint@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-bigint/-/json-bigint-1.0.0.tgz#ae547823ac0cad8398667f8cd9ef4730f5b01ff1"
+  integrity sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==
+  dependencies:
+    bignumber.js "^9.0.0"
 
 json-buffer@3.0.1:
   version "3.0.1"
@@ -16727,6 +16771,11 @@ vlq@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-1.0.1.tgz#c003f6e7c0b4c1edd623fd6ee50bbc0d6a1de468"
   integrity sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==
+
+vlq@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/vlq/-/vlq-2.0.4.tgz#6057b85729245b9829e3cc7755f95b228d4fe041"
+  integrity sha512-aodjPa2wPQFkra1G8CzJBTHXhgk3EVSwxSWXNPr1fgdFLUb8kvLV1iEb6rFgasIsjP82HWI6dsb5Io26DDnasA==
 
 vm-browserify@^1.1.2:
   version "1.1.2"

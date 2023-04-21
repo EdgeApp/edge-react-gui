@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Switch, View } from 'react-native'
 
@@ -8,10 +8,11 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { NavigationBase } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../util'
 
 interface LocalState {
@@ -21,6 +22,7 @@ interface LocalState {
 }
 
 interface StateProps {
+  account: EdgeAccount
   walletItems: { [key: string]: FioConnectionWalletItem }
   loading: boolean
 }
@@ -99,7 +101,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         walletsToDisconnect
       })
     } else {
-      showError(s.strings.fio_wallet_missing_for_fio_address)
+      showError(lstrings.fio_wallet_missing_for_fio_address)
     }
   }
 
@@ -132,7 +134,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   keyExtractor = (item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`
 
   renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
-    const { walletItems, theme } = this.props
+    const { account, walletItems, theme } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const styles = getStyles(theme)
 
@@ -157,11 +159,13 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       const pluginId = wallet.edgeWallet.currencyInfo.pluginId
       const { tokenCode: currencyCode } = convertFIOToEdgeCodes(pluginId, wallet.chainCode, wallet.currencyCode)
 
+      const tokenId = getTokenId(account, pluginId, currencyCode)
+
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet != null ? <CryptoIcon pluginId={pluginId} currencyCode={currencyCode} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
+              {wallet != null ? <CryptoIcon pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
@@ -184,7 +188,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
   renderNoWallets() {
     const { loading, theme } = this.props
     const styles = getStyles(theme)
-    return <EdgeText style={styles.no_wallets_text}>{loading ? s.strings.loading : s.strings.fio_connect_no_wallets}</EdgeText>
+    return <EdgeText style={styles.no_wallets_text}>{loading ? lstrings.loading : lstrings.fio_connect_no_wallets}</EdgeText>
   }
 
   render() {
@@ -212,7 +216,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           </ScrollView>
         </View>
         <View style={styles.bottomSection}>
-          <MainButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
+          <MainButton onPress={this._onContinuePress} label={lstrings.string_next_capitalized} disabled={continueDisabled || disabled} />
         </View>
       </View>
     )
@@ -295,12 +299,17 @@ export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
     const edgeWallets = state.core.account.currencyWallets
     const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
-    if (!ccWalletMap) return { walletItems: {}, loading: true }
-
-    const walletItems = makeConnectWallets(edgeWallets, ccWalletMap)
+    if (!ccWalletMap) {
+      return {
+        account: state.core.account,
+        walletItems: {},
+        loading: true
+      }
+    }
 
     return {
-      walletItems,
+      account: state.core.account,
+      walletItems: makeConnectWallets(edgeWallets, ccWalletMap),
       loading: false
     }
   },

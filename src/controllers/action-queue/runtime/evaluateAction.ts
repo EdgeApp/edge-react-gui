@@ -153,7 +153,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         }
       }
 
-      return makeExecutableAction(context, makeExecutionOutput)
+      return await makeExecutableAction(context, makeExecutionOutput)
     }
     // TODO: Remove once we implement action-queue disk data deletion
     case 'wyre-sell': {
@@ -166,7 +166,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         }
       }
 
-      return makeExecutableAction(context, makeExecutionOutput)
+      return await makeExecutableAction(context, makeExecutionOutput)
     }
 
     case 'loan-borrow': {
@@ -378,7 +378,7 @@ async function makeExecutableAction(
 ): Promise<ExecutableAction> {
   const { account } = context
   return {
-    dryrun: async pendingTxMap => fn(true, pendingTxMap),
+    dryrun: async pendingTxMap => await fn(true, pendingTxMap),
     execute: async () => {
       const output = await fn(false, {})
 

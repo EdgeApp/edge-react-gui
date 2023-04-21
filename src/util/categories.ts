@@ -1,4 +1,4 @@
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
 
@@ -169,10 +169,10 @@ export const defaultCategories = [
  * Use these strings to show categories in a user's language.
  */
 export const displayCategories = {
-  transfer: s.strings.fragment_transaction_transfer,
-  exchange: s.strings.fragment_transaction_exchange,
-  expense: s.strings.fragment_transaction_expense,
-  income: s.strings.fragment_transaction_income
+  transfer: lstrings.fragment_transaction_transfer,
+  exchange: lstrings.fragment_transaction_exchange,
+  expense: lstrings.fragment_transaction_expense,
+  income: lstrings.fragment_transaction_income
 }
 
 /**

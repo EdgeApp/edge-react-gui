@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { showToast } from '../services/AirshipInstance'
@@ -66,10 +66,10 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
       if (isValidPassword) {
         this.props.onSuccess()
         this.setState({ spinning: false })
-        showToast(s.strings.password_reminder_great_job)
+        showToast(lstrings.password_reminder_great_job)
         setTimeout(() => bridge.resolve(), 10)
       } else {
-        this.setState({ errorMessage: s.strings.password_reminder_invalid, spinning: false })
+        this.setState({ errorMessage: lstrings.password_reminder_invalid, spinning: false })
       }
     })
   }
@@ -82,15 +82,15 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{s.strings.password_reminder_remember_your_password}</ModalTitle>
+        <ModalTitle>{lstrings.password_reminder_remember_your_password}</ModalTitle>
         <ScrollView style={{ maxHeight: theme.rem(9) }}>
-          <ModalMessage>{s.strings.password_reminder_you_will_need_your_password}</ModalMessage>
-          <ModalMessage>{s.strings.password_reminder_enter_password_below}</ModalMessage>
+          <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
+          <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
         </ScrollView>
         <EdgeTextField
           secureTextEntry
           error={errorMessage}
-          label={s.strings.password}
+          label={lstrings.password}
           onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
           value={password}
@@ -102,9 +102,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
         {spinning ? (
           <MainButton marginRem={0.5} spinner />
         ) : (
-          <MainButton label={s.strings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
+          <MainButton label={lstrings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
         )}
-        <MainButton label={s.strings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
+        <MainButton label={lstrings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
         <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )

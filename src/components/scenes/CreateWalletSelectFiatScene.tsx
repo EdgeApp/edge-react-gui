@@ -10,7 +10,7 @@ import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
@@ -65,9 +65,9 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         autoCorrect={false}
         bridge={bridge}
         initialValue={currentName}
-        inputLabel={s.strings.fragment_wallets_rename_wallet}
+        inputLabel={lstrings.fragment_wallets_rename_wallet}
         returnKeyType="go"
-        title={s.strings.fragment_wallets_rename_wallet}
+        title={lstrings.fragment_wallets_rename_wallet}
       />
     ))
     if (newName != null) setWalletNames({ ...walletNames, [key]: newName })
@@ -109,10 +109,10 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       await Airship.show<'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_failed_import_header}
-          message={s.strings.create_wallet_all_disabled_import}
+          title={lstrings.create_wallet_failed_import_header}
+          message={lstrings.create_wallet_all_disabled_import}
           buttons={{
-            cancel: { label: s.strings.string_cancel_cap }
+            cancel: { label: lstrings.string_cancel_cap }
           }}
         />
       ))
@@ -126,11 +126,11 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       const resolveValue = await Airship.show<'continue' | 'cancel' | undefined>(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_failed_import_header}
-          message={sprintf(s.strings.create_wallet_some_disabled_import, displayNames)}
+          title={lstrings.create_wallet_failed_import_header}
+          message={sprintf(lstrings.create_wallet_some_disabled_import, displayNames)}
           buttons={{
-            continue: { label: s.strings.legacy_address_modal_continue },
-            cancel: { label: s.strings.string_cancel_cap }
+            continue: { label: lstrings.legacy_address_modal_continue },
+            cancel: { label: lstrings.string_cancel_cap }
           }}
         />
       ))
@@ -154,7 +154,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     const fiatCountry = FIAT_COUNTRY[fiat.value]
 
     const key = `currency_label_${fiat.value}`
-    const subTitle = s.strings[key as keyof typeof s.strings] ?? s.strings.currency_label_
+    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
 
     return (
       <SelectableRow
@@ -184,7 +184,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <CreateWalletSelectCryptoRow
           pluginId={pluginId}
           walletName={walletName}
-          onPress={async () => handleEditWalletName(key, walletName)}
+          onPress={async () => await handleEditWalletName(key, walletName)}
           rightSide={chevron}
         />
       )
@@ -207,11 +207,11 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      <SceneHeader title={s.strings.title_create_wallet} withTopMargin />
+      <SceneHeader title={lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
         {renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
-          {s.strings.fragment_create_wallet_instructions}
+          {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
         <FlashList
           automaticallyAdjustContentInsets={false}
@@ -220,8 +220,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
         />
-        <MainButton label={s.strings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
-        <MainButton label={s.strings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />
+        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
+        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />
       </View>
     </SceneWrapper>
   )

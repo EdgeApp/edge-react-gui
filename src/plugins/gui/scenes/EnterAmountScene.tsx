@@ -10,7 +10,7 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 
@@ -152,11 +152,11 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
                   <View style={styles.poweredByContainerColumn}>
                     <View style={styles.poweredByContainerRow}>
-                      <Text style={styles.poweredByText}>{s.strings.plugin_powered_by_space}</Text>
+                      <Text style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</Text>
                       <Text style={styles.poweredByText}>{poweredBy.poweredByText}</Text>
                     </View>
                     <View style={styles.poweredByContainerRow}>
-                      <Text style={styles.tapToChangeText}>{s.strings.tap_to_change_provider}</Text>
+                      <Text style={styles.tapToChangeText}>{lstrings.tap_to_change_provider}</Text>
                     </View>
                   </View>
 
@@ -166,7 +166,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             </TouchableOpacity>
           </View>
         ) : null}
-        <MainButton label={s.strings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
+        <MainButton label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
     </SceneWrapper>
   )

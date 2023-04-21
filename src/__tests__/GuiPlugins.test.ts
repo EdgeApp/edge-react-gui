@@ -1,22 +1,15 @@
 import { describe, expect, it } from '@jest/globals'
 
+import buyPluginJsonRaw from '../constants/plugins/buyPluginList.json'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
+import sellPluginJsonRaw from '../constants/plugins/sellPluginList.json'
 import { asGuiPluginJson, GuiPlugin, GuiPluginRow } from '../types/GuiPluginTypes'
 import { filterGuiPluginJson, makePluginUri } from '../util/GuiPluginTools'
 
-const buyPluginJson = asGuiPluginJson(require('../constants/plugins/buyPluginList.json'))
-const sellPluginJson = asGuiPluginJson(require('../constants/plugins/sellPluginList.json'))
+const buyPluginJson = asGuiPluginJson(buyPluginJsonRaw)
+const sellPluginJson = asGuiPluginJson(sellPluginJsonRaw)
 
 describe('Production plugin data', () => {
-  it('Has accurate pluginId fields', () => {
-    const pluginIds = Object.keys(guiPlugins)
-    for (const pluginId of pluginIds) {
-      if (pluginId !== 'iach') {
-        expect(guiPlugins[pluginId].pluginId).toEqual(pluginId)
-      }
-    }
-  })
-
   it('Buy & sell plugins have real pluginId fields', () => {
     for (const row of [...buyPluginJson, ...sellPluginJson]) {
       if (typeof row === 'string') continue

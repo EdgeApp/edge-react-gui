@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../modules/FioAddress/util'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { connect } from '../../../types/reactRedux'
@@ -124,9 +124,9 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           throw eitherError
         }
         if (walletsToConnect.length) {
-          showToast(s.strings.fio_connect_wallets_success)
+          showToast(lstrings.fio_connect_wallets_success)
         } else {
-          if (walletsToDisconnect.length) showToast(s.strings.fio_disconnect_wallets_success)
+          if (walletsToDisconnect.length) showToast(lstrings.fio_disconnect_wallets_success)
         }
         navigation.goBack()
       } catch (e: any) {
@@ -135,10 +135,10 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           const answer = await Airship.show<'ok' | undefined>(bridge => (
             <ButtonsModal
               bridge={bridge}
-              title={s.strings.fio_no_bundled_err_msg}
-              message={s.strings.fio_no_bundled_add_err_msg}
+              title={lstrings.fio_no_bundled_err_msg}
+              message={lstrings.fio_no_bundled_add_err_msg}
               buttons={{
-                ok: { label: s.strings.title_fio_add_bundled_txs }
+                ok: { label: lstrings.title_fio_add_bundled_txs }
               }}
               closeArrow
             />
@@ -157,7 +157,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       }
       this.setState({ connectWalletsLoading: false })
     } else {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
     }
   }
 
@@ -190,22 +190,22 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
     return (
       <SceneWrapper background="theme">
         <ScrollView>
-          <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
+          <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
           {walletsToConnect.length ? (
-            <Tile type="static" title={s.strings.title_fio_connect_to_wallet}>
+            <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>
               {walletsToConnect.map(this.renderWalletLine)}
             </Tile>
           ) : null}
 
           {walletsToDisconnect.length ? (
-            <Tile type="static" title={s.strings.title_fio_disconnect_wallets}>
+            <Tile type="static" title={lstrings.title_fio_disconnect_wallets}>
               {walletsToDisconnect.map(this.renderWalletLine)}
             </Tile>
           ) : null}
 
           <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
             <EdgeText style={styles.checkTitle} numberOfLines={4}>
-              {s.strings.fio_connect_checkbox_text}
+              {lstrings.fio_connect_checkbox_text}
             </EdgeText>
           </Radio>
           {showSlider && (
@@ -213,7 +213,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
               parentStyle={styles.slider}
               onSlidingComplete={this.confirm}
               disabled={!acknowledge || connectWalletsLoading}
-              disabledText={s.strings.send_confirmation_slide_to_confirm}
+              disabledText={lstrings.send_confirmation_slide_to_confirm}
               showSpinner={connectWalletsLoading}
             />
           )}

@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { ActionDisplayInfo } from '../../controllers/action-queue/types'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -70,7 +70,7 @@ const StepProgressRowComponent = ({
         ) : (
           <>
             <EdgeText style={titleStyle} numberOfLines={3}>
-              {s.strings.loan_status_failed_title}
+              {lstrings.loan_status_failed_title}
             </EdgeText>
             <EdgeText style={bodyStyle} numberOfLines={100}>
               {nodeError.message}

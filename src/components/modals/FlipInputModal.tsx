@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
@@ -158,7 +158,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{s.strings.string_rate}</EdgeText>
+        <EdgeText style={styles.secondaryTitle}>{lstrings.string_rate}</EdgeText>
         <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} style={styles.rateBalanceText} />
       </View>
     )
@@ -171,7 +171,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} `
     return (
       <View style={styles.rateBalanceContainer}>
-        <EdgeText style={styles.secondaryTitle}>{s.strings.send_confirmation_balance}</EdgeText>
+        <EdgeText style={styles.secondaryTitle}>{lstrings.send_confirmation_balance}</EdgeText>
         <EdgeText style={styles.rateBalanceText}>
           {balance}
           (
@@ -200,7 +200,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
           isFiatOnTop={eq(overridePrimaryExchangeAmount, '0')}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && this.props.hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={s.strings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
+          <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleSendMaxAmount} />
         ) : null}
       </Card>
     )
@@ -216,7 +216,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.feeContainer}>
         <View style={styles.feeTitleContainer}>
-          <EdgeText style={styles.primaryTitle}>{s.strings.string_fee}</EdgeText>
+          <EdgeText style={styles.primaryTitle}>{lstrings.string_fee}</EdgeText>
           {this.props.onFeesChange ? <FontAwesomeIcon name="edit" style={styles.feeIcon} size={theme.rem(0.75)} /> : null}
         </View>
         <EdgeText style={feeTextStyle}>
@@ -347,7 +347,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       exchangeDenomination: fiatDenomination
     }
 
-    const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
+    const { forceUpdateGuiCounter, nativeAmount } = state.ui.sendConfirmation
     const overridePrimaryExchangeAmount = div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
@@ -356,13 +356,13 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     const transactionFee = convertTransactionFeeToDisplayFee(
       wallet,
       state.exchangeRates,
-      state.ui.scenes.sendConfirmation.transaction,
+      state.ui.sendConfirmation.transaction,
       feeDisplayDenomination,
       feeExchangeDenomination
     )
 
     // Error
-    const error = state.ui.scenes.sendConfirmation.error
+    const error = state.ui.sendConfirmation.error
     let errorMessage
     if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && asMaybeNoAmountSpecifiedError(error) == null) {
       errorMessage = error.message
@@ -373,7 +373,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       balanceCrypto: getAvailableBalance(wallet, currencyCode),
 
       // FlipInput
-      flipInputHeaderText: sprintf(s.strings.send_from_wallet, name),
+      flipInputHeaderText: sprintf(lstrings.send_from_wallet, name),
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto ?? '0',

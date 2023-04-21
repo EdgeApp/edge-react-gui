@@ -2,7 +2,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { PriceChangePayload } from '../../controllers/action-queue/types/pushPayloadTypes'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { ThunkAction } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { Airship } from '../services/AirshipInstance'
@@ -17,12 +17,12 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     const threeButtonModal = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.price_change_notification}
-        message={`${body} ${sprintf(s.strings.price_change_buy_sell_trade, currencyCode)}`}
+        title={lstrings.price_change_notification}
+        message={`${body} ${sprintf(lstrings.price_change_buy_sell_trade, currencyCode)}`}
         buttons={{
-          buy: { label: s.strings.title_buy, type: 'secondary' },
-          sell: { label: s.strings.title_sell },
-          exchange: { label: s.strings.buy_crypto_modal_exchange }
+          buy: { label: lstrings.title_buy, type: 'secondary' },
+          sell: { label: lstrings.title_sell },
+          exchange: { label: lstrings.buy_crypto_modal_exchange }
         }}
       />
     ))

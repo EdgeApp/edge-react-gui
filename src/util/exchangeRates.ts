@@ -75,8 +75,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
       const json = await response.json()
       const cleanedRates = asRatesResponse(json)
       for (const rateObj of cleanedRates.data) {
-        const { currency_pair: currencyPair, exchangeRate, date } = rateObj
-        if (exchangeRate == null) continue
+        const { currency_pair: currencyPair, date } = rateObj
+        let { exchangeRate } = rateObj
+        if (exchangeRate == null) {
+          console.log(`${n} doQuery: ${currencyPair} ${date} exchangeRate=null`)
+          exchangeRate = '0'
+        }
         const rate = parseFloat(exchangeRate)
         const pairDate = makePairDate(currencyPair, date)
         rateMap[pairDate] = rate
@@ -134,7 +138,7 @@ const addToQueue = (entry: RateQueueEntry, resolve: Function, maxQuerySize: numb
   }
   if (!inQuery) {
     inQuery = true
-    setTimeout(async () => doQuery(doFetch), FETCH_FREQUENCY)
+    setTimeout(async () => await doQuery(doFetch), FETCH_FREQUENCY)
   }
 }
 
@@ -145,7 +149,7 @@ export const getHistoricalRate = async (
   doFetch?: EdgeFetchFunction
 ): Promise<number> => {
   const roundDate = roundHalfMinute(date)
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     const [code1, code2] = codePair.split('_').sort()
     const pair = `${code1}_${code2}`
     const reverse = pair !== codePair

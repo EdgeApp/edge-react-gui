@@ -4,7 +4,7 @@ import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, 
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { CcWalletMap } from '../../reducers/FioReducer'
 import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -270,7 +270,7 @@ export const updatePubAddressesForFioAddress = async (
   publicAddresses: Array<{ walletId: string; chainCode: string; tokenCode: string; publicAddress: string }>,
   isConnection: boolean = true
 ): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string; walletId: string }>; error?: Error | FioError | null }> => {
-  if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
+  if (!fioWallet) throw new Error(lstrings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
   let updatedCcWallets: WalletArray = []
   const iteration: IterationObj = {
@@ -351,13 +351,13 @@ export const addPublicAddresses = async (
     edgeTx = await fioMakeSpend(fioWallet, 'addPublicAddresses', { fioAddress, publicAddresses })
     fee = edgeTx.networkFee
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
-  if (fee !== '0') throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
+  if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
     await fioSignAndBroadcast(fioWallet, edgeTx)
   } catch (e: any) {
-    throw new Error(s.strings.fio_connect_wallets_err)
+    throw new Error(lstrings.fio_connect_wallets_err)
   }
 }
 
@@ -380,13 +380,13 @@ export const removePublicAddresses = async (
     edgeTx = await fioMakeSpend(fioWallet, 'removePublicAddresses', { fioAddress, publicAddresses })
     fee = edgeTx.networkFee
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
-  if (fee !== '0') throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
+  if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
     await fioSignAndBroadcast(fioWallet, edgeTx)
   } catch (e: any) {
-    throw new Error(s.strings.fio_connect_wallets_err)
+    throw new Error(lstrings.fio_connect_wallets_err)
   }
 }
 
@@ -472,18 +472,15 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
     return publicAddress
   } catch (e: any) {
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-      throw new FioError(s.strings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS)
+      throw new FioError(lstrings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS)
     }
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST) {
-      throw new FioError(s.strings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
+      throw new FioError(lstrings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
     }
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED) {
-      throw new FioError(
-        sprintf(s.strings.err_address_not_linked_title, tokenCode),
-        fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED
-      )
+      throw new FioError(sprintf(lstrings.err_address_not_linked_title, tokenCode), fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED)
     }
-    throw new Error(s.strings.fio_connect_wallets_err)
+    throw new Error(lstrings.fio_connect_wallets_err)
   }
 }
 
@@ -514,7 +511,7 @@ export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddre
 }
 
 export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string) => {
-  if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
+  if (!fioWallet) throw new Error(lstrings.fio_wallet_missing_for_fio_address)
   let getFeeResult: string
   try {
     const edgeTx = await fioMakeSpend(fioWallet, 'recordObtData', {
@@ -523,12 +520,12 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, f
     })
     getFeeResult = edgeTx.networkFee
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
   const bundles = await getRemainingBundles(fioWallet, fioAddress)
   // record_obt_data requires 2 bundled transactions
   if (getFeeResult !== '0' || bundles < 2) {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(`${lstrings.fio_no_bundled_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
 
@@ -615,7 +612,7 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
       }
     }
   } catch (e: any) {
-    throw new Error(s.strings.err_no_address_title)
+    throw new Error(lstrings.err_no_address_title)
   }
 
   return ''
@@ -627,14 +624,14 @@ export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain:
     isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
   } catch (e: any) {
     if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
-      throw new Error(s.strings.fio_get_reg_info_domain_err_msg)
+      throw new Error(lstrings.fio_get_reg_info_domain_err_msg)
     }
 
-    throw new Error(s.strings.fio_connect_wallets_err)
+    throw new Error(lstrings.fio_connect_wallets_err)
   }
 
   if (!isDomainPublic) {
-    throw new Error(s.strings.fio_address_register_domain_is_not_public)
+    throw new Error(lstrings.fio_address_register_domain_is_not_public)
   }
 }
 
@@ -669,7 +666,7 @@ export const getRegInfo = async (
     feeValue = parseInt(edgeTx.networkFee)
     activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
 
   if (selectedDomain.walletId) {
@@ -722,7 +719,7 @@ export const getDomainRegInfo = async (
     feeValue = parseInt(edgeTx.networkFee)
     activationCost = parseFloat(truncateDecimals(div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION)))
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
 
   const reqResult = await buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
@@ -782,18 +779,18 @@ const buyAddressRequest = async (
     }
   } catch (e: any) {
     const errorMessages = {
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS]: s.strings.fio_error_invalid_address,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: s.strings.fio_get_reg_info_domain_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: s.strings.fio_address_register_domain_is_not_public,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.SERVER_ERROR]: s.strings.fio_get_reg_info_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: s.strings.fio_get_reg_info_already_sent_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_REGISTERED]: s.strings.fio_address_register_screen_not_available
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS]: lstrings.fio_error_invalid_address,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: lstrings.fio_get_reg_info_domain_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: lstrings.fio_address_register_domain_is_not_public,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.SERVER_ERROR]: lstrings.fio_get_reg_info_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: lstrings.fio_get_reg_info_already_sent_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_REGISTERED]: lstrings.fio_address_register_screen_not_available
     }
     if (e.labelCode && errorMessages[e.labelCode]) {
       throw new Error(errorMessages[e.labelCode])
     }
   }
-  throw new Error(s.strings.fio_get_reg_info_err_msg)
+  throw new Error(lstrings.fio_get_reg_info_err_msg)
 }
 
 export const getRemainingBundles = async (fioWallet: EdgeCurrencyWallet, fioName: string): Promise<number> => {
@@ -815,10 +812,10 @@ export const getAddBundledTxsFee = async (fioWallet: EdgeCurrencyWallet | null):
       const edgeTx = await fioMakeSpend(fioWallet, 'addBundledTransactions', { fioAddress: '', bundleSets: DEFAULT_BUNDLE_SET_VALUE })
       return parseInt(edgeTx.networkFee)
     } catch (e: any) {
-      throw new Error(s.strings.fio_get_fee_err_msg)
+      throw new Error(lstrings.fio_get_fee_err_msg)
     }
   }
-  throw new Error(s.strings.fio_get_fee_err_msg)
+  throw new Error(lstrings.fio_get_fee_err_msg)
 }
 
 export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string, fee: number): Promise<void> => {
@@ -831,10 +828,10 @@ export const addBundledTxs = async (fioWallet: EdgeCurrencyWallet | null, fioAdd
       const expiration = edgeTx.otherParams?.broadcastResult?.expiration
       return expiration
     } catch (e: any) {
-      throw new Error(s.strings.fio_add_bundled_txs_err_msg)
+      throw new Error(lstrings.fio_add_bundled_txs_err_msg)
     }
   }
-  throw new Error(s.strings.fio_add_bundled_txs_err_msg)
+  throw new Error(lstrings.fio_add_bundled_txs_err_msg)
 }
 
 export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
@@ -843,14 +840,14 @@ export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null): Promi
       const edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', { fioDomain: '' })
       return parseInt(edgeTx.networkFee)
     } catch (e: any) {
-      throw new Error(s.strings.fio_get_fee_err_msg)
+      throw new Error(lstrings.fio_get_fee_err_msg)
     }
   }
-  throw new Error(s.strings.fio_get_fee_err_msg)
+  throw new Error(lstrings.fio_get_fee_err_msg)
 }
 
 export const renewFioDomain = async (fioWallet: EdgeCurrencyWallet | null, fioDomain: string, fee: number): Promise<{ expiration: string }> => {
-  const errorStr = sprintf(s.strings.fio_renew_err_msg, s.strings.fio_domain_label)
+  const errorStr = sprintf(lstrings.fio_renew_err_msg, lstrings.fio_domain_label)
   if (fioWallet) {
     try {
       let edgeTx = await fioMakeSpend(fioWallet, 'renewFioDomain', { fioDomain })
@@ -870,10 +867,10 @@ export const getDomainSetVisibilityFee = async (fioWallet: EdgeCurrencyWallet | 
       const edgeTx = await fioMakeSpend(fioWallet, 'setFioDomainVisibility', { fioDomain: '', isPublic: true })
       return parseInt(edgeTx.networkFee)
     } catch (e: any) {
-      throw new Error(s.strings.fio_get_fee_err_msg)
+      throw new Error(lstrings.fio_get_fee_err_msg)
     }
   }
-  throw new Error(s.strings.fio_get_fee_err_msg)
+  throw new Error(lstrings.fio_get_fee_err_msg)
 }
 
 export const setDomainVisibility = async (
@@ -889,10 +886,10 @@ export const setDomainVisibility = async (
       const expiration = edgeTx.otherParams?.broadcastResult?.expiration
       return { expiration }
     } catch (e: any) {
-      throw new Error(s.strings.fio_domain_set_visibility_err)
+      throw new Error(lstrings.fio_domain_set_visibility_err)
     }
   }
-  throw new Error(s.strings.fio_domain_set_visibility_err)
+  throw new Error(lstrings.fio_domain_set_visibility_err)
 }
 
 export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
@@ -906,30 +903,30 @@ export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDo
         return parseInt(edgeTx.networkFee)
       }
     } catch (e: any) {
-      throw new Error(s.strings.fio_get_fee_err_msg)
+      throw new Error(lstrings.fio_get_fee_err_msg)
     }
   }
-  throw new Error(s.strings.fio_get_fee_err_msg)
+  throw new Error(lstrings.fio_get_fee_err_msg)
 }
 
 export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fioRequestId: number, fioAddress: string) => {
-  if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
+  if (!fioWallet) throw new Error(lstrings.fio_wallet_missing_for_fio_address)
   let getFeeResult: string
   let edgeTx: EdgeTransaction
   try {
     edgeTx = await fioMakeSpend(fioWallet, 'cancelFundsRequest', { fioAddress, fioRequestId })
     getFeeResult = edgeTx.networkFee
   } catch (e: any) {
-    throw new Error(s.strings.fio_get_fee_err_msg)
+    throw new Error(lstrings.fio_get_fee_err_msg)
   }
   if (getFeeResult !== '0') {
-    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+    throw new FioError(`${lstrings.fio_no_bundled_err_msg} ${lstrings.fio_no_bundled_add_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
   try {
     edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
     await fioWallet.saveTx(edgeTx)
   } catch (e: any) {
-    throw new Error(s.strings.fio_cancel_request_error)
+    throw new Error(lstrings.fio_cancel_request_error)
   }
 }
 

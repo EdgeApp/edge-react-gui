@@ -13,8 +13,13 @@ import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
+import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
+import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
+import { defaultAccount } from '../reducers/CoreReducer'
+import { useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -105,8 +110,7 @@ import { WalletListScene as WalletListSceneComponent } from './scenes/WalletList
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
-import { Airship, showError } from './services/AirshipInstance'
-import { requestPermission } from './services/PermissionsManager'
+import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { ControlPanel as ControlPanelComponent } from './themed/ControlPanel'
 import { MenuTabs } from './themed/MenuTabs'
@@ -224,12 +228,6 @@ export const Main = () => {
     logEvent('Start_App')
   }, [])
 
-  // Animations for the login scene are disabled because when navigating from
-  // the 'gettingStarted' initial route to the 'login' route we wish for there
-  // to be no animation and the transition to be immediate if it is detected
-  // that the device has no localUsers in the core's state.
-  const loginSceneAnimationsEnabled = false
-
   return (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
@@ -240,7 +238,7 @@ export const Main = () => {
       >
         <Stack.Screen name="edgeApp" component={EdgeApp} />
         <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: loginSceneAnimationsEnabled }} />
+        <Stack.Screen name="login" component={LoginScene} />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -249,24 +247,22 @@ export const Main = () => {
 const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
 
-  useBackEvent(actionType => {
-    if (actionType === 'RESET') {
+  useBackEvent(() => {
+    // Allow back if logged out or this is the second back press
+    if (account === defaultAccount || backPressedOnce.current) {
       return true
     }
-    if (backPressedOnce.current) {
-      return true
-    } else {
-      backPressedOnce.current = true
-      Airship.show(bridge => <AirshipToast bridge={bridge} message={s.strings.back_button_tap_again_to_exit} />).then(() => {
-        backPressedOnce.current = false
-      })
-      // Timeout the back press after 3 seconds so the state isn't "sticky"
-      setTimeout(() => {
-        backPressedOnce.current = false
-      }, 3000)
-      return false
-    }
+    backPressedOnce.current = true
+    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
+      backPressedOnce.current = false
+    })
+    // Timeout the back press after 3 seconds so the state isn't "sticky"
+    setTimeout(() => {
+      backPressedOnce.current = false
+    }, 3000)
+    return false
   })
 
   // Login/Logout events:
@@ -324,7 +320,7 @@ const EdgeAppStack = () => {
         name="changePassword"
         component={ChangePasswordScene}
         options={{
-          title: s.strings.title_change_password,
+          title: lstrings.title_change_password,
           headerRight: () => null
         }}
       />
@@ -332,7 +328,7 @@ const EdgeAppStack = () => {
         name="changePin"
         component={ChangePinScene}
         options={{
-          title: s.strings.title_change_pin,
+          title: lstrings.title_change_pin,
           headerRight: () => null
         }}
       />
@@ -348,7 +344,7 @@ const EdgeAppStack = () => {
         name="createWalletAccountSelect"
         component={CreateWalletAccountSelectScene}
         options={{
-          title: s.strings.create_wallet_account_activate,
+          title: lstrings.create_wallet_account_activate,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
       />
@@ -356,7 +352,7 @@ const EdgeAppStack = () => {
         name="createWalletAccountSetup"
         component={CreateWalletAccountSetupScene}
         options={{
-          title: s.strings.create_wallet_create_account,
+          title: lstrings.create_wallet_create_account,
           headerRight: () => <HeaderTextButton type="help" placement="right" />
         }}
       />
@@ -413,7 +409,7 @@ const EdgeAppStack = () => {
         // @ts-expect-error-error
         component={SwapSettingsScene}
         options={{
-          title: s.strings.settings_exchange_settings,
+          title: lstrings.settings_exchange_settings,
           headerRight: () => null
         }}
       />
@@ -450,7 +446,7 @@ const EdgeAppStack = () => {
         name="fioAddressRegisterSelectWallet"
         component={FioAddressRegisterSelectWalletScene}
         options={{
-          title: s.strings.title_fio_address_confirmation,
+          title: lstrings.title_fio_address_confirmation,
           headerRight: () => null
         }}
       />
@@ -466,21 +462,21 @@ const EdgeAppStack = () => {
         name="fioAddressSettings"
         component={FioAddressSettingsScene}
         options={{
-          title: s.strings.title_fio_address_settings
+          title: lstrings.title_fio_address_settings
         }}
       />
       <Stack.Screen
         name="fioConnectToWalletsConfirm"
         component={FioConnectWalletConfirmScene}
         options={{
-          title: s.strings.title_fio_connect_to_wallet
+          title: lstrings.title_fio_connect_to_wallet
         }}
       />
       <Stack.Screen
         name="fioCreateHandle"
         component={FioCreateHandleScene}
         options={{
-          title: s.strings.fio_free_handle_title
+          title: lstrings.fio_free_handle_title
         }}
       />
       <Stack.Screen
@@ -501,7 +497,7 @@ const EdgeAppStack = () => {
         name="fioDomainRegisterSelectWallet"
         component={FioDomainRegisterSelectWalletScene}
         options={{
-          title: s.strings.title_register_fio_domain,
+          title: lstrings.title_register_fio_domain,
           headerRight: () => null
         }}
       />
@@ -509,7 +505,7 @@ const EdgeAppStack = () => {
         name="fioDomainSettings"
         component={FioDomainSettingsScene}
         options={{
-          title: s.strings.title_fio_domain_settings
+          title: lstrings.title_fio_domain_settings
         }}
       />
       <Stack.Screen
@@ -523,7 +519,7 @@ const EdgeAppStack = () => {
         name="fioRequestConfirmation"
         component={FioRequestConfirmationScene}
         options={{
-          title: s.strings.fio_confirm_request_header
+          title: lstrings.fio_confirm_request_header
         }}
       />
       <Stack.Screen name="fioRequestList" component={FioRequestListScene} />
@@ -539,6 +535,27 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="guiPluginEnterAmount"
         component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
         options={{
           headerRight: () => null
         }}
@@ -609,7 +626,7 @@ const EdgeAppStack = () => {
         name="notificationSettings"
         component={NotificationScene}
         options={{
-          title: s.strings.settings_notifications,
+          title: lstrings.settings_notifications,
           headerRight: () => null
         }}
       />
@@ -618,7 +635,7 @@ const EdgeAppStack = () => {
         name="otpSetup"
         component={OtpSettingsScene}
         options={{
-          title: s.strings.title_otp,
+          title: lstrings.title_otp,
           headerRight: () => null
         }}
       />
@@ -626,7 +643,7 @@ const EdgeAppStack = () => {
         name="passwordRecovery"
         component={ChangeRecoveryScene}
         options={{
-          title: s.strings.title_password_recovery,
+          title: lstrings.title_password_recovery,
           headerRight: () => null
         }}
       />
@@ -661,7 +678,7 @@ const EdgeAppStack = () => {
         name="promotionSettings"
         component={PromotionSettingsScene}
         options={{
-          title: s.strings.title_promotion_settings,
+          title: lstrings.title_promotion_settings,
           headerRight: () => null
         }}
       />
@@ -679,7 +696,7 @@ const EdgeAppStack = () => {
         name="settingsOverview"
         component={SettingsScene}
         options={{
-          title: s.strings.title_settings
+          title: lstrings.title_settings
         }}
         listeners={{
           focus: () => dispatch(showReEnableOtpModal())
@@ -689,7 +706,7 @@ const EdgeAppStack = () => {
         name="spendingLimits"
         component={SpendingLimitsScene}
         options={{
-          title: s.strings.spending_limits,
+          title: lstrings.spending_limits,
           headerRight: () => null
         }}
       />
@@ -700,7 +717,7 @@ const EdgeAppStack = () => {
         name="termsOfService"
         component={TermsOfServiceComponent}
         options={{
-          title: s.strings.title_terms_of_service
+          title: lstrings.title_terms_of_service
         }}
       />
       <Stack.Screen
@@ -709,17 +726,12 @@ const EdgeAppStack = () => {
         options={{
           headerTitle: () => <TransactionDetailsTitle />
         }}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
       />
       <Stack.Screen
         name="transactionsExport"
         component={TransactionsExportScene}
         options={{
-          title: s.strings.title_export_transactions,
+          title: lstrings.title_export_transactions,
           headerRight: () => null
         }}
       />
@@ -758,21 +770,8 @@ const EdgeWalletsTabScreen = () => {
         options={{
           headerTitle: () => <TransactionDetailsTitle />
         }}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
       />
-      <Stack.Screen
-        name="transactionList"
-        component={TransactionList}
-        listeners={{
-          focus: () => {
-            requestPermission('contacts').catch(showError)
-          }
-        }}
-      />
+      <Stack.Screen name="transactionList" component={TransactionList} />
       <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
     </Stack.Navigator>
   )

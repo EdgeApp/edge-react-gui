@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -85,7 +85,7 @@ export const WcSmartContractModal = (props: Props) => {
 
   const handleSubmit = () => {
     wcRequestResponse(wallet, uri, true, payload)
-      .then(async () => Airship.show(bridge => <FlashNotification bridge={bridge} message={s.strings.wc_smartcontract_confirmed} />))
+      .then(async () => await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />))
       .catch(showError)
       .finally(props.bridge.resolve)
   }
@@ -99,8 +99,8 @@ export const WcSmartContractModal = (props: Props) => {
       <Alert
         // @ts-expect-error
         marginTop={0.5}
-        title={s.strings.wc_smartcontract_warning_title}
-        message={sprintf(s.strings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
+        title={lstrings.wc_smartcontract_warning_title}
+        message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
         type="warning"
       />
     ) : (
@@ -108,8 +108,8 @@ export const WcSmartContractModal = (props: Props) => {
         numberOfLines={0}
         // @ts-expect-error
         marginTop={0.5}
-        title={s.strings.wc_smartcontract_warning_title}
-        message={s.strings.wc_smartcontract_warning_text}
+        title={lstrings.wc_smartcontract_warning_title}
+        message={lstrings.wc_smartcontract_warning_text}
         type="warning"
       />
     )
@@ -118,7 +118,7 @@ export const WcSmartContractModal = (props: Props) => {
   const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
   const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
   const slider = isInsufficientBal ? null : (
-    <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={s.strings.send_confirmation_slide_to_confirm} disabled={false} />
+    <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
   )
 
   // FIXME: HACK!!1! This is a shortcut so we can remove currency code from the fiat text component without completely refactoring this file
@@ -128,35 +128,35 @@ export const WcSmartContractModal = (props: Props) => {
     <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <View style={styles.title}>
         <Image style={styles.logo} source={WalletConnectLogo} />
-        <ModalTitle>{s.strings.wc_smartcontract_title}</ModalTitle>
+        <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
       </View>
       <ScrollView>
         {renderWarning()}
         {!zeroString(amountCrypto) && (
           <CryptoFiatAmountTile
-            title={s.strings.string_amount}
+            title={lstrings.string_amount}
             nativeCryptoAmount={amountCrypto}
             denomination={amountDenom}
             walletId={walletId}
             tokenId={tokenId}
           />
         )}
-        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={walletImageUri}>
+        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={walletImageUri}>
           <EdgeText>{walletName}</EdgeText>
         </IconTile>
-        <IconTile title={s.strings.wc_smartcontract_dapp} iconUri={icon}>
+        <IconTile title={lstrings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
         {!zeroString(networkFeeCrypto) && (
           <CryptoFiatAmountTile
-            title={s.strings.wc_smartcontract_network_fee}
+            title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeCrypto}
             denomination={feeDenom}
             walletId={walletId}
           />
         )}
         {!zeroString(totalNativeCrypto) && (
-          <FiatAmountTile title={s.strings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
+          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
         )}
         {slider}
       </ScrollView>
@@ -199,7 +199,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
         break
       }
       case 'eth_signTransaction': {
-        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signTx = await wallet.signTx(tx)
         await wallet.otherMethods.wcApproveRequest(uri, payload, signTx.signedTx)
@@ -207,7 +207,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       }
       case 'eth_sendTransaction':
       case 'eth_sendRawTransaction': {
-        const spendInfo: EdgeSpendInfo = wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signedTx = await wallet.signTx(tx)
         const sentTx = await wallet.broadcastTx(signedTx)

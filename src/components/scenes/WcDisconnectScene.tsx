@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useWatch } from '../../hooks/useWatch'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { Card } from '../cards/Card'
@@ -45,7 +45,7 @@ export const WcDisconnectScene = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <SceneHeader underline title={s.strings.wc_walletconnect_title} />
+      <SceneHeader underline title={lstrings.wc_walletconnect_title} />
       <View style={styles.container}>
         <Card paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
@@ -57,9 +57,9 @@ export const WcDisconnectScene = (props: Props) => {
           </View>
         </Card>
       </View>
-      <Tile type="static" title={s.strings.wc_details_time_connected} body={wcConnectionInfo.timeConnected} contentPadding={false} />
-      <Tile type="static" title={s.strings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} contentPadding={false} />
-      <MainButton label={s.strings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
+      <Tile type="static" title={lstrings.wc_details_time_connected} body={wcConnectionInfo.timeConnected} contentPadding={false} />
+      <Tile type="static" title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} contentPadding={false} />
+      <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
     </SceneWrapper>
   )
 }

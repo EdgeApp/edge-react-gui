@@ -23,6 +23,8 @@ describe('Request', () => {
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}
+        toggleAccountBalanceVisibility={() => undefined}
+        showBalance
       />
     )
 
@@ -50,6 +52,8 @@ describe('Request', () => {
         theme={getTheme()}
         refreshAllFioAddresses={() => undefined}
         onSelectWallet={(walletId, currencyCode) => undefined}
+        toggleAccountBalanceVisibility={() => undefined}
+        showBalance
       />
     )
 

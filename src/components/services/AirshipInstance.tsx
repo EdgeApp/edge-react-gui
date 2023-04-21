@@ -54,7 +54,7 @@ export async function showToastSpinner<T>(message: string, activity: Promise<T>)
       </AirshipToast>
     )
   })
-  return activity
+  return await activity
 }
 
 /**

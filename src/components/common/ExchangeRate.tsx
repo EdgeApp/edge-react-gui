@@ -4,7 +4,7 @@ import * as React from 'react'
 import { TextStyle } from 'react-native'
 
 import { formatNumber } from '../../locales/intl'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { DECIMAL_PRECISION } from '../../util/utils'
@@ -53,7 +53,7 @@ class ExchangeRateComponent extends React.Component<OwnProps & ThemeProps & Stat
 
     const { primaryDisplayAmount: primaryAmount, secondaryDisplayAmount: secondaryAmount } = exchangeData
     if (primaryAmount == null || primaryDisplayName == null || secondaryAmount == null || secondaryCurrencyCode == null) {
-      return <EdgeText style={style}>{s.strings.drawer_exchange_rate_loading}</EdgeText>
+      return <EdgeText style={style}>{lstrings.drawer_exchange_rate_loading}</EdgeText>
     }
 
     const primaryText = `${formattedPrimaryAmount} ${primaryDisplayName} = `

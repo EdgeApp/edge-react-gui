@@ -7,7 +7,7 @@ import { getCountry } from 'react-native-localize'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import { useHandler } from '../../hooks/useHandler'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { CountryData } from '../../types/types'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -75,8 +75,8 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
   return (
     <ListModal
       bridge={bridge}
-      title={s.strings.buy_sell_crypto_select_country_button}
-      label={s.strings.search_region}
+      title={lstrings.buy_sell_crypto_select_country_button}
+      label={lstrings.search_region}
       autoFocus
       blurOnClear={false}
       rowsData={countryCodes}

@@ -9,7 +9,7 @@ import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSe
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
@@ -52,7 +52,7 @@ export function createCurrencyWallet(
   return async (dispatch, getState) => {
     const state = getState()
     fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
-    return createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
+    return await createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
   }
 }
 
@@ -178,7 +178,7 @@ export function createAccountTransaction(
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
-    const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const { paymentAddress, amount, currencyCode } = state.ui.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
@@ -199,21 +199,21 @@ export function createAccountTransaction(
           if (error) {
             console.log(error)
             setTimeout(() => {
-              Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
+              Alert.alert(lstrings.create_wallet_account_error_sending_transaction)
             }, 750)
           } else if (edgeTransaction) {
             logEvent('Activate_Wallet_Done', {
               currencyCode: createdWalletCurrencyCode
             })
             const edgeMetadata: EdgeMetadata = {
-              name: sprintf(s.strings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
-              category: 'Expense:' + sprintf(s.strings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
-              notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
+              name: sprintf(lstrings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
+              category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
+              notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
               navigation.navigate('walletsTab', { screen: 'walletList' })
               setTimeout(() => {
-                Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
+                Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
               }, 750)
             })
           }
@@ -245,9 +245,9 @@ export function createHandleUnavailableModal(navigation: NavigationBase, newWall
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.create_wallet_account_handle_unavailable_modal_title}
-        message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
-        buttons={{ ok: { label: s.strings.string_ok } }}
+        title={lstrings.create_wallet_account_handle_unavailable_modal_title}
+        message={sprintf(lstrings.create_wallet_account_handle_unavailable_modal_message, accountName)}
+        buttons={{ ok: { label: lstrings.string_ok } }}
       />
     ))
     navigation.pop()
@@ -296,7 +296,7 @@ export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]
     const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
       const wallet = currencyWallets[walletId]
       if (wallet == null) return
-      return wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
+      return await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
     })
 
     await Promise.all(promises)
@@ -306,7 +306,7 @@ export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]
 export const getUniqueWalletName = (account: EdgeAccount, pluginId: string): string => {
   const { currencyWallets, currencyConfig } = account
   const { displayName } = currencyConfig[pluginId].currencyInfo
-  const defaultName = SPECIAL_CURRENCY_INFO[pluginId]?.initWalletName ?? sprintf(s.strings.my_crypto_wallet_name, displayName)
+  const defaultName = SPECIAL_CURRENCY_INFO[pluginId]?.initWalletName ?? sprintf(lstrings.my_crypto_wallet_name, displayName)
 
   const existingWalletNames = Object.keys(currencyWallets)
     .filter(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)

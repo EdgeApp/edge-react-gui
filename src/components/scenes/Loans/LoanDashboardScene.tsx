@@ -14,7 +14,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
@@ -105,7 +105,7 @@ export const LoanDashboardScene = (props: Props) => {
         <WalletListModal
           bridge={bridge}
           navigation={navigation}
-          headerTitle={s.strings.select_wallet}
+          headerTitle={lstrings.select_wallet}
           allowedAssets={allowedAssets}
           excludeWalletIds={Object.keys(loanAccountsMap)}
         />
@@ -173,7 +173,7 @@ export const LoanDashboardScene = (props: Props) => {
         ) : (
           <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
             <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={[styles.addItem, styles.addItemText]}>{s.strings.loan_new_loan}</EdgeText>
+            <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.loan_new_loan}</EdgeText>
           </TouchableOpacity>
         )}
       </>
@@ -183,7 +183,7 @@ export const LoanDashboardScene = (props: Props) => {
   if (!isWalletsLoaded) {
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SceneHeader title={s.strings.loan_dashboard_title} underline />
+        <SceneHeader title={lstrings.loan_dashboard_title} underline />
         <FillLoader />
       </SceneWrapper>
     )
@@ -197,22 +197,22 @@ export const LoanDashboardScene = (props: Props) => {
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
           </TouchableOpacity>
         }
-        title={s.strings.loan_dashboard_title}
+        title={lstrings.loan_dashboard_title}
         underline
         withTopMargin
       />
-      <EdgeText style={styles.textSectionHeader}>{s.strings.loan_active_loans_title}</EdgeText>
+      <EdgeText style={styles.textSectionHeader}>{lstrings.loan_active_loans_title}</EdgeText>
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
             <Space expand around horizontal={1} bottom={2.5}>
-              <EdgeText style={styles.emptyText}>{s.strings.loan_loading_loans}</EdgeText>
+              <EdgeText style={styles.emptyText}>{lstrings.loan_loading_loans}</EdgeText>
             </Space>
           ) : (
             <>
               <Space expand around horizontal={1} top={1}>
                 <EdgeText style={styles.emptyText} numberOfLines={4}>
-                  {s.strings.loan_no_active_loans}
+                  {lstrings.loan_no_active_loans}
                 </EdgeText>
               </Space>
               <Space around bottom={1}>

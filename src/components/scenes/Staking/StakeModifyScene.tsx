@@ -5,7 +5,7 @@ import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
@@ -108,7 +108,7 @@ const StakeModifySceneComponent = (props: Props) => {
           // Display error msg tile
           if (err instanceof StakeBelowLimitError) {
             const { currencyCode, nativeMin } = err
-            let errMessage = changeQuoteRequest.action === 'stake' ? s.strings.stake_error_stake_below_minimum : s.strings.stake_error_unstake_below_minimum
+            let errMessage = changeQuoteRequest.action === 'stake' ? lstrings.stake_error_stake_below_minimum : lstrings.stake_error_unstake_below_minimum
             if (nativeMin != null) {
               wallet.nativeToDenomination(nativeMin, currencyCode).then(minExchangeAmount => {
                 errMessage += `: ${minExchangeAmount} ${currencyCode}`
@@ -119,7 +119,7 @@ const StakeModifySceneComponent = (props: Props) => {
             }
           } else if (err instanceof StakePoolFullError) {
             const { currencyCode } = err
-            const errMessage = sprintf(s.strings.state_error_pool_full_s, currencyCode)
+            const errMessage = sprintf(lstrings.state_error_pool_full_s, currencyCode)
             setErrorMessage(errMessage)
           } else {
             setErrorMessage(err.message)
@@ -155,9 +155,9 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const handleSlideComplete = (reset: () => void) => {
     const message = {
-      stake: s.strings.stake_change_stake_success,
-      unstake: s.strings.stake_change_unstake_success,
-      claim: s.strings.stake_change_claim_success,
+      stake: lstrings.stake_change_stake_success,
+      unstake: lstrings.stake_change_unstake_success,
+      claim: lstrings.stake_change_claim_success,
       unstakeExact: ''
     }
 
@@ -180,7 +180,7 @@ const StakeModifySceneComponent = (props: Props) => {
   }
 
   const handleShowFlipInputModal = (currencyCode: string) => () => {
-    const header = modification === 'stake' ? s.strings.stake_modal_modify_stake_title : s.strings.stake_modal_modify_unstake_title
+    const header = modification === 'stake' ? lstrings.stake_modal_modify_stake_title : lstrings.stake_modal_modify_unstake_title
 
     // TODO: Max button needs to be enabled after max calculation for
     // multi-asset staking is fully implemented and working in plugin
@@ -210,11 +210,11 @@ const StakeModifySceneComponent = (props: Props) => {
     let title: string
     let message: string
     if (modification === 'stake') {
-      title = s.strings.stake_estimated_staking_fee
-      message = s.strings.stake_staking_fee_message
+      title = lstrings.stake_estimated_staking_fee
+      message = lstrings.stake_staking_fee_message
     } else {
-      title = s.strings.stake_estimated_unstaking_fee
-      message = s.strings.stake_unstaking_fee_message
+      title = lstrings.stake_estimated_unstaking_fee
+      message = lstrings.stake_unstaking_fee_message
     }
 
     Airship.show<'ok' | undefined>(bridge => (
@@ -223,7 +223,7 @@ const StakeModifySceneComponent = (props: Props) => {
         title={title}
         message={message}
         buttons={{
-          ok: { label: s.strings.string_ok }
+          ok: { label: lstrings.string_ok }
         }}
       />
     ))
@@ -233,10 +233,10 @@ const StakeModifySceneComponent = (props: Props) => {
     Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.stake_future_unstaking_fee}
-        message={s.strings.stake_future_unstaking_fee_message}
+        title={lstrings.stake_future_unstaking_fee}
+        message={lstrings.stake_future_unstaking_fee_message}
         buttons={{
-          ok: { label: s.strings.string_ok }
+          ok: { label: lstrings.string_ok }
         }}
       />
     ))
@@ -246,10 +246,10 @@ const StakeModifySceneComponent = (props: Props) => {
     Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.stake_break_even_time}
-        message={s.strings.stake_break_even_time_message}
+        title={lstrings.stake_break_even_time}
+        message={lstrings.stake_break_even_time_message}
         buttons={{
-          ok: { label: s.strings.string_ok }
+          ok: { label: lstrings.string_ok }
         }}
       />
     ))
@@ -275,10 +275,10 @@ const StakeModifySceneComponent = (props: Props) => {
 
     const title =
       allocationType === 'stake'
-        ? sprintf(s.strings.stake_amount_s_stake, quoteCurrencyCode)
+        ? sprintf(lstrings.stake_amount_s_stake, quoteCurrencyCode)
         : allocationType === 'unstake'
-        ? sprintf(s.strings.stake_amount_s_unstake, quoteCurrencyCode)
-        : sprintf(s.strings.stake_amount_claim, quoteCurrencyCode)
+        ? sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
+        : sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
     const earnedAmount = existingAllocations.earned[0]?.nativeAmount ?? '0'
@@ -312,7 +312,7 @@ const StakeModifySceneComponent = (props: Props) => {
     if (quoteAllocation == null) return null
 
     const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
-    const title = modification === 'stake' ? s.strings.stake_estimated_staking_fee : s.strings.stake_estimated_unstaking_fee
+    const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
 
     return (
       <CryptoFiatAmountTile
@@ -342,7 +342,7 @@ const StakeModifySceneComponent = (props: Props) => {
     return (
       <CryptoFiatAmountTile
         type="questionable"
-        title={s.strings.stake_future_unstaking_fee}
+        title={lstrings.stake_future_unstaking_fee}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
         walletId={wallet.id}
         denomination={quoteDenom}
@@ -358,12 +358,12 @@ const StakeModifySceneComponent = (props: Props) => {
 
     let message: string
     if (breakEvenDays > 60) {
-      message = sprintf(s.strings.stake_break_even_days_months_s, days, months)
+      message = sprintf(lstrings.stake_break_even_days_months_s, days, months)
     } else {
-      message = sprintf(s.strings.stake_break_even_days_s, days)
+      message = sprintf(lstrings.stake_break_even_days_s, days)
     }
     return (
-      <Tile type="questionable" title={s.strings.stake_break_even_time} contentPadding={false} onPress={handlePressBreakEvenDays}>
+      <Tile type="questionable" title={lstrings.stake_break_even_time} contentPadding={false} onPress={handlePressBreakEvenDays}>
         <EdgeText>{message}</EdgeText>
       </Tile>
     )
@@ -381,19 +381,19 @@ const StakeModifySceneComponent = (props: Props) => {
 
       if (modification === 'stake') {
         if (stakeWarning === null) return null
-        warningMessage = stakeWarning ?? s.strings.stake_warning_stake
+        warningMessage = stakeWarning ?? lstrings.stake_warning_stake
       }
       if (modification === 'claim') {
         if (claimWarning === null) return null
-        warningMessage = claimWarning ?? s.strings.stake_warning_claim
+        warningMessage = claimWarning ?? lstrings.stake_warning_claim
       }
       if (modification === 'unstake') {
         if (unstakeWarning === null) return null
-        warningMessage = unstakeWarning ?? isRemainingStakedAmount ? s.strings.stake_warning_unstake : null
+        warningMessage = unstakeWarning ?? isRemainingStakedAmount ? lstrings.stake_warning_unstake : null
       }
     }
     return warningMessage == null ? null : (
-      <Alert marginRem={[0, 1, 1, 1]} title={s.strings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
+      <Alert marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
     )
   }
 
@@ -402,7 +402,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return (
       <View style={styles.amountTilesContainer}>
-        <IconTile title={s.strings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
+        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
           <EdgeText>{getWalletName(wallet)}</EdgeText>
         </IconTile>
         {
@@ -424,7 +424,7 @@ const StakeModifySceneComponent = (props: Props) => {
         {
           // Render network fee tile
           <CryptoFiatAmountTile
-            title={s.strings.wc_smartcontract_network_fee}
+            title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={wallet.id}
             denomination={nativeAssetDenomination}
@@ -445,7 +445,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return {
       stake: getPolicyTitleName(stakePolicy),
-      claim: s.strings.stake_claim_rewards,
+      claim: lstrings.stake_claim_rewards,
       unstake: unstakeText,
       unstakeExact: '' // Only for internal use
     }
@@ -480,7 +480,7 @@ const StakeModifySceneComponent = (props: Props) => {
             onSlidingComplete={handleSlideComplete}
             disabled={isSliderDisabled}
             showSpinner={sliderLocked}
-            disabledText={s.strings.stake_disabled_slider}
+            disabledText={lstrings.stake_disabled_slider}
           />
         </View>
       </ScrollView>

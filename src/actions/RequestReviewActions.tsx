@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { RootState } from '../types/reduxTypes'
 
@@ -16,20 +16,20 @@ const requestReview = async () => {
   if (Platform.OS === 'ios') {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
-    const title = sprintf(s.strings.request_review_question_title, config.appNameShort)
+    const title = sprintf(lstrings.request_review_question_title, config.appNameShort)
     const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={title}
-        message={s.strings.request_review_question_subtitle}
+        message={lstrings.request_review_question_subtitle}
         buttons={{
-          ok: { label: s.strings.request_review_answer_yes },
-          cancel: { label: s.strings.request_review_answer_no }
+          ok: { label: lstrings.request_review_answer_yes },
+          cancel: { label: lstrings.request_review_answer_no }
         }}
       />
     ))
     if (result === 'ok') {
-      Linking.openURL(s.strings.request_review_android_page_link)
+      Linking.openURL(lstrings.request_review_android_page_link)
     }
   } else {
     console.warn(`Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`)

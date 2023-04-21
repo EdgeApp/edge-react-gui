@@ -9,7 +9,7 @@ import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controlle
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
@@ -110,7 +110,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         } else {
           // v1 settings do exist let's migrate them to v2
           const currencySettings: Array<{ '1': boolean; '24': boolean; fallbackSettings?: boolean }> = await Promise.all(
-            activeCurrencyInfos.map(async info => fetchLegacySettings(userId, info.currencyCode))
+            activeCurrencyInfos.map(async info => await fetchLegacySettings(userId, info.currencyCode))
           )
 
           for (const [i, setting] of currencySettings.entries()) {
@@ -207,7 +207,7 @@ export const newPriceChangeEvent = (
   const changeDownString = '#change#%'
 
   const pushMessage = {
-    title: s.strings.price_alert,
+    title: lstrings.price_alert,
     body: '#direction#',
     data: {
       type: 'price-change',
@@ -221,17 +221,17 @@ export const newPriceChangeEvent = (
 
     directions: [
       // [hourUp, hourDown, dayUp, dayDown]
-      `${sprintf(s.strings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(lstrings.notification_hourly_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
       `${sprintf(
-        s.strings.notification_hourly_price_change_down,
+        lstrings.notification_hourly_price_change_down,
         String.fromCodePoint(0x1f4c9),
         displayName,
         currencyCode,
         changeDownString,
         fiatSymbolString
       )}`,
-      `${sprintf(s.strings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
-      `${sprintf(s.strings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
+      `${sprintf(lstrings.notification_daily_price_change_up, String.fromCodePoint(0x1f4c8), displayName, currencyCode, changeUpString, fiatSymbolString)}`,
+      `${sprintf(lstrings.notification_daily_price_change_down, String.fromCodePoint(0x1f4c9), displayName, currencyCode, changeDownString, fiatSymbolString)}`
     ],
     pluginId: currencyInfo.pluginId,
     dailyChange: dailyChangeEnabled ? 10 : undefined,
@@ -251,7 +251,7 @@ export const fetchLegacySettings = async (userId: string, currencyCode: string) 
   const deviceId = getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
-  return legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
+  return await legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
 }
 
 async function legacyGet(path: string) {

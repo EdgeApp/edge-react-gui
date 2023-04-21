@@ -8,7 +8,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { addToFioAddressCache, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, recordSend } from '../modules/FioAddress/util'
 import { initialState, initialTransaction } from '../reducers/scenes/SendConfirmationReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
@@ -21,9 +21,9 @@ import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode } from 
 import { playSendSound } from './SoundActions'
 
 const XRP_DESTINATION_TAG_ERRORS = {
-  UNIQUE_IDENTIFIER_EXCEEDS_LENGTH: s.strings.send_make_spend_xrp_dest_tag_length_error,
-  UNIQUE_IDENTIFIER_EXCEEDS_LIMIT: s.strings.send_make_spend_xrp_dest_tag_limit_error,
-  UNIQUE_IDENTIFIER_FORMAT: s.strings.send_make_spend_xrp_dest_tag_format_error
+  UNIQUE_IDENTIFIER_EXCEEDS_LENGTH: lstrings.send_make_spend_xrp_dest_tag_length_error,
+  UNIQUE_IDENTIFIER_EXCEEDS_LIMIT: lstrings.send_make_spend_xrp_dest_tag_limit_error,
+  UNIQUE_IDENTIFIER_FORMAT: lstrings.send_make_spend_xrp_dest_tag_format_error
 }
 
 export interface FioSenderInfo {
@@ -66,7 +66,7 @@ export function sendConfirmationUpdateTx(
 
     const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
-    const maxSpendSet = state.ui.scenes.sendConfirmation.maxSpendSet
+    const maxSpendSet = state.ui.sendConfirmation.maxSpendSet
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
     if (maxSpendSet && isFeeChanged) guiMakeSpendInfoClone.nativeAmount = '0'
     const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
@@ -203,8 +203,8 @@ export function signBroadcastAndSave(
     const amountFiatString = abs(mul(exchangeAmount, fiatPerCrypto))
     const amountFiat = parseFloat(amountFiatString)
 
-    const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
-    const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
+    const spendInfo = state.ui.sendConfirmation.spendInfo
+    const guiMakeSpendInfo = state.ui.sendConfirmation.guiMakeSpendInfo
 
     if (guiMakeSpendInfo.beforeTransaction) {
       try {
@@ -214,9 +214,9 @@ export function signBroadcastAndSave(
       }
     }
 
-    if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
+    if (!spendInfo) throw new Error(lstrings.invalid_spend_request)
     const authRequired = getAuthRequired(state, spendInfo, selectedWalletId)
-    const pin = state.ui.scenes.sendConfirmation.pin
+    const pin = state.ui.sendConfirmation.pin
 
     // check hwo high fee is and decide whether to display warninig
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
@@ -246,7 +246,7 @@ export function signBroadcastAndSave(
     try {
       if (authRequired === 'pin') {
         const isAuthorized = await account.checkPin(pin)
-        if (!isAuthorized) throw new Error(s.strings.incorrect_pin)
+        if (!isAuthorized) throw new Error(lstrings.incorrect_pin)
       }
       edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
       if (guiMakeSpendInfo.alternateBroadcast != null) {
@@ -287,8 +287,8 @@ export function signBroadcastAndSave(
       if (spendInfo.spendTargets[0].otherParams != null) {
         payeeFioAddress = spendInfo.spendTargets[0].otherParams.fioAddress
       }
-      if (state.ui.scenes.sendConfirmation.transactionMetadata) {
-        edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
+      if (state.ui.sendConfirmation.transactionMetadata) {
+        edgeMetadata = { ...edgeMetadata, ...state.ui.sendConfirmation.transactionMetadata }
       }
       if (payeeFioAddress != null) {
         edgeMetadata.name = payeeFioAddress
@@ -298,8 +298,8 @@ export function signBroadcastAndSave(
         edgeMetadata.amountFiat = amountFiat
       }
       if (payeeFioAddress != null && fioSender != null) {
-        let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
-        fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
+        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
+        fioNotes += fioSender.memo ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}` : ''
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
       }
       await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
@@ -330,7 +330,7 @@ export function signBroadcastAndSave(
               })
             } catch (e: any) {
               const message = e?.message ?? ''
-              message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(s.strings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+              message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
             }
           } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
             const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
@@ -357,11 +357,11 @@ export function signBroadcastAndSave(
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
       if (!guiMakeSpendInfo.dismissAlert) {
-        Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+        Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
           {
             onPress() {},
             style: 'default',
-            text: s.strings.string_ok
+            text: lstrings.string_ok
           }
         ])
       }
@@ -377,7 +377,7 @@ export function signBroadcastAndSave(
     } catch (e: any) {
       resetSlider()
       console.log(e)
-      let message = sprintf(s.strings.transaction_failure_message, e.message)
+      let message = sprintf(lstrings.transaction_failure_message, e.message)
       e.message = 'broadcastError'
       dispatch({
         type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
@@ -389,11 +389,11 @@ export function signBroadcastAndSave(
         }
       })
       if (e.name === 'ErrorEosInsufficientCpu') {
-        message = s.strings.send_confirmation_eos_error_cpu
+        message = lstrings.send_confirmation_eos_error_cpu
       } else if (e.name === 'ErrorEosInsufficientNet') {
-        message = s.strings.send_confirmation_eos_error_net
+        message = lstrings.send_confirmation_eos_error_net
       } else if (e.name === 'ErrorEosInsufficientRam') {
-        message = s.strings.send_confirmation_eos_error_ram
+        message = lstrings.send_confirmation_eos_error_ram
       } else if (
         edgeSignedTransaction &&
         edgeSignedTransaction.otherParams &&
@@ -403,14 +403,14 @@ export function signBroadcastAndSave(
         e.json.code === 500 &&
         e.json.error.code === 3050003
       ) {
-        message = s.strings.transfer_fio_address_exception
+        message = lstrings.transfer_fio_address_exception
       }
 
-      Alert.alert(s.strings.transaction_failure, message, [
+      Alert.alert(lstrings.transaction_failure, message, [
         {
           onPress() {},
           style: 'default',
-          text: s.strings.string_ok
+          text: lstrings.string_ok
         }
       ])
     }
@@ -419,16 +419,16 @@ export function signBroadcastAndSave(
 
 export const displayFeeAlert = async (currency: string, fee: string) => {
   let additionalMessage = ''
-  if (currency === 'ETH') additionalMessage = s.strings.send_confirmation_fee_modal_alert_message_fragment_eth
-  const message = `${sprintf(s.strings.send_confirmation_fee_modal_alert_message_fragment, fee)} ${additionalMessage}`
+  if (currency === 'ETH') additionalMessage = lstrings.send_confirmation_fee_modal_alert_message_fragment_eth
+  const message = `${sprintf(lstrings.send_confirmation_fee_modal_alert_message_fragment, fee)} ${additionalMessage}`
   const resolveValue = await Airship.show<'send' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
-      title={s.strings.send_confirmation_fee_modal_alert_title}
+      title={lstrings.send_confirmation_fee_modal_alert_title}
       message={message}
       closeArrow
       buttons={{
-        send: { label: s.strings.high_fee_warning_confirm_send }
+        send: { label: lstrings.high_fee_warning_confirm_send }
       }}
     />
   ))
@@ -442,7 +442,7 @@ export function updateTransactionAmount(nativeAmount: string, exchangeAmount: st
   return (dispatch, getState) => {
     const state = getState()
     const edgeWallet = state.core.account.currencyWallets[walletId]
-    const sceneState = state.ui.scenes.sendConfirmation
+    const sceneState = state.ui.sendConfirmation
     const isoFiatCurrencyCode = edgeWallet.fiatCurrencyCode
 
     // Spend Info
@@ -509,8 +509,8 @@ export function updateTransactionAmount(nativeAmount: string, exchangeAmount: st
   }
 }
 
-const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction ?? initialTransaction
-const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+const getTransaction = (state: RootState): EdgeTransaction => state.ui.sendConfirmation.transaction ?? initialTransaction
+const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
 
 const getNetworkFeeOption = (state: RootState): 'high' | 'standard' | 'low' | 'custom' =>
   // @ts-expect-error
@@ -524,23 +524,23 @@ const getPublicAddress = (state: RootState): string => {
       getGuiMakeSpendInfo(state).publicAddress ||
       initialState.guiMakeSpendInfo.publicAddress ||
       // @ts-expect-error
-      state.ui.scenes.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
+      state.ui.sendConfirmation.spendInfo.spendTargets[0].publicAddress ||
       ''
     )
   } catch (e: any) {
     return ''
   }
 }
-const getNativeAmount = (state: RootState): string | undefined => state.ui.scenes.sendConfirmation.nativeAmount
+const getNativeAmount = (state: RootState): string | undefined => state.ui.sendConfirmation.nativeAmount
 
 const getUniqueIdentifier = (state: RootState): string => {
-  const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+  const guiMakeSpendInfo = state.ui.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
   const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
   return uniqueIdentifier || ''
 }
 const getSpendTargetOtherParams = (state: RootState): any => {
   try {
-    const { spendInfo } = state.ui.scenes.sendConfirmation
+    const { spendInfo } = state.ui.sendConfirmation
     if (spendInfo == null) return {}
     return spendInfo.spendTargets[0].otherParams || {}
   } catch (e: any) {
@@ -548,8 +548,7 @@ const getSpendTargetOtherParams = (state: RootState): any => {
   }
 }
 
-// @ts-expect-error
-const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
+const getSpendInfo = (state: RootState, newSpendInfo: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier != null ? newSpendInfo.uniqueIdentifier : getUniqueIdentifier(state)
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -577,8 +576,7 @@ const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, se
   }
 }
 
-// @ts-expect-error
-const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
+const getSpendInfoWithoutState = (newSpendInfo: GuiMakeSpendInfo = {}, sceneState: any, selectedCurrencyCode: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || sceneState.guiMakeSpendInfo.uniqueIdentifier || ''
   let spendTargets = []
   if (newSpendInfo.spendTargets) {

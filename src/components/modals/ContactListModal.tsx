@@ -4,10 +4,12 @@ import { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { showError } from '../services/AirshipInstance'
+import { edgeRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
@@ -55,10 +57,14 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
 
   const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
 
+  React.useEffect(() => {
+    edgeRequestPermission('contacts').catch(showError)
+  }, [])
+
   return (
     <ListModal
       bridge={bridge}
-      title={sprintf(s.strings.transaction_details_person_input, contactType)}
+      title={sprintf(lstrings.transaction_details_person_input, contactType)}
       label={contactType}
       searchIcon={false}
       onSubmitEditing={handleSubmitEditing}

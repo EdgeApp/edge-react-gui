@@ -12,7 +12,7 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -73,7 +73,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   }
 
   async getSkipUpdate() {
-    return this.props.disklet.getText('ignoreUpdate.json').catch(() => '')
+    return await this.props.disklet.getText('ignoreUpdate.json').catch(() => '')
   }
 
   async componentDidMount() {
@@ -150,6 +150,10 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     showHelpModal()
   }
 
+  onComplete = () => {
+    this.props.navigation.navigate('gettingStarted', {})
+  }
+
   onLogin = async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     const { navigation } = this.props
     this.setState({ passwordRecoveryKey: undefined })
@@ -172,7 +176,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
   render() {
     const { context, handleSendLogs, route, theme, username } = this.props
     const { counter, passwordRecoveryKey, backgroundImage } = this.state
-    const { loginUiInitialRoute } = route.params ?? {}
+    const { loginUiInitialRoute = 'login' } = route.params ?? {}
     const styles = getStyles(theme)
 
     return this.props.account.username == null ? (
@@ -184,6 +188,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           context={context}
           initialRoute={loginUiInitialRoute}
           recoveryLogin={passwordRecoveryKey}
+          onComplete={this.onComplete}
           onLogin={this.onLogin}
           onNotificationPermit={this.onNotificationPermit}
           fontDescription={{ regularFontFamily: theme.fontFaceDefault, headingFontFamily: theme.fontFaceMedium }}
@@ -192,7 +197,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           backgroundImage={backgroundImage}
           primaryLogo={theme.primaryLogo}
           primaryLogoCallback={handleSendLogs}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          parentButton={{ text: lstrings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts
         />
       </View>

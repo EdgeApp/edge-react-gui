@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import {
   setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
   setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
@@ -148,7 +148,7 @@ export function setDenominationKeyRequest(pluginId: string, currencyCode: string
     const state = getState()
     const { account } = state.core
 
-    return setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
+    return await setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
       .then(() =>
         dispatch({
           type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
@@ -184,7 +184,7 @@ export function togglePinLoginEnabled(pinLoginEnabled: boolean): ThunkAction<Pro
       type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
       data: { pinLoginEnabled }
     })
-    return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
+    return await account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
       showError(error)
 
       const pinLoginEnabled = await context.pinLoginEnabled(account.username)
@@ -206,11 +206,11 @@ export function showReEnableOtpModal(): ThunkAction<Promise<void>> {
     const resolveValue = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.title_otp_keep_modal}
-        message={s.strings.otp_modal_reset_description}
+        title={lstrings.title_otp_keep_modal}
+        message={lstrings.otp_modal_reset_description}
         buttons={{
-          confirm: { label: s.strings.otp_keep },
-          cancel: { label: s.strings.otp_disable }
+          confirm: { label: lstrings.otp_keep },
+          cancel: { label: lstrings.otp_disable }
         }}
       />
     ))
@@ -244,11 +244,11 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
     const response = await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
-        title={s.strings.restore_wallets_modal_title}
-        message={s.strings.restore_wallets_modal_description}
+        title={lstrings.restore_wallets_modal_title}
+        message={lstrings.restore_wallets_modal_description}
         buttons={{
-          confirm: { label: s.strings.restore_wallets_modal_confirm },
-          cancel: { label: s.strings.restore_wallets_modal_cancel }
+          confirm: { label: lstrings.restore_wallets_modal_confirm },
+          cancel: { label: lstrings.restore_wallets_modal_cancel }
         }}
       />
     ))
@@ -257,10 +257,11 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
       await Promise.all(
         restoreKeys
           .map(key => key.id)
-          .map(async walletId =>
-            account.changeWalletStates({
-              [walletId]: { archived: false, deleted: false }
-            })
+          .map(
+            async walletId =>
+              await account.changeWalletStates({
+                [walletId]: { archived: false, deleted: false }
+              })
           )
       )
       logActivity(`Restore Wallets: ${account.username}`)

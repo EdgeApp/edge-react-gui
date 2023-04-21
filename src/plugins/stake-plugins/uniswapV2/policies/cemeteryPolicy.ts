@@ -4,7 +4,7 @@ import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
 import { BigNumber, ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
-import s from '../../../../locales/strings'
+import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
 import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
@@ -212,7 +212,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const totalBalance = add(balanceAmount, fromLpToken)
               const isBalanceEnough = lte(allocation.nativeAmount, totalBalance)
               if (!isBalanceEnough) {
-                throw new Error(sprintf(s.strings.stake_error_insufficient_s, allocation.currencyCode))
+                throw new Error(sprintf(lstrings.stake_error_insufficient_s, allocation.currencyCode))
               }
             })
         )
@@ -429,7 +429,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
-          throw new Error(sprintf(s.strings.stake_error_insufficient_s, tokenACurrencyCode))
+          throw new Error(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode))
         }
 
         // 3. Withdraw LP-token from Pool Contract

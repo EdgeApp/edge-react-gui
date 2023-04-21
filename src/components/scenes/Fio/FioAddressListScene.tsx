@@ -6,7 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../../assets/vector'
-import s from '../../../locales/strings'
+import { lstrings } from '../../../locales/strings'
 import { FioNameRow } from '../../../modules/FioAddress/components/FioName'
 import { connect } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
@@ -72,7 +72,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
   fetchData() {
     const { refreshAllFioAddresses, isConnected } = this.props
     if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text)
     }
     refreshAllFioAddresses()
   }
@@ -114,13 +114,13 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     const { initLoading } = this.state
     const styles = getStyles(theme)
 
-    const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
-    const noFioAddressesText = `${s.strings.no} ${s.strings.title_fio_address}`
+    const noFioDomainsText = `${lstrings.no} ${lstrings.title_fio_domains}`
+    const noFioAddressesText = `${lstrings.no} ${lstrings.title_fio_address}`
     return (
       <>
         <SceneWrapper background="theme">
           <ScrollView style={styles.row}>
-            <SceneHeader title={s.strings.title_fio_address} underline />
+            <SceneHeader title={lstrings.title_fio_address} underline />
             <View style={styles.list}>
               {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
               {fioAddresses.map((address: FioAddress) => (
@@ -135,7 +135,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 />
               ))}
             </View>
-            <SceneHeader title={s.strings.title_fio_domains} underline withTopMargin />
+            <SceneHeader title={lstrings.title_fio_domains} underline withTopMargin />
             <View style={styles.list}>
               {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
               {fioDomains.map((domain: FioDomain) => (
@@ -159,13 +159,13 @@ export class FioAddressList extends React.Component<Props, LocalState> {
             <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister', {})}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-                <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
+                <EdgeText style={styles.buttonText}>{lstrings.fio_address_list_screen_button_register}</EdgeText>
               </View>
             </ClickableText>
             <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister', {})}>
               <View style={styles.actionButton}>
                 <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-                <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+                <EdgeText style={styles.buttonText}>{lstrings.fio_address_list_domain_register}</EdgeText>
               </View>
             </ClickableText>
           </View>
@@ -223,10 +223,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioAddressListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
-    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-    fioDomains: state.ui.scenes.fioAddress.fioDomains,
+    fioAddresses: state.ui.fioAddress.fioAddresses,
+    fioDomains: state.ui.fioAddress.fioDomains,
     fioWallets: state.ui.wallets.fioWallets,
-    loading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    loading: state.ui.fioAddress.fioAddressesLoading,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

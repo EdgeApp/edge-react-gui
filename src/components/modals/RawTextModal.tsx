@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
@@ -22,7 +22,7 @@ export function RawTextModal(props: Props) {
   const handleCancel = () => bridge.resolve(undefined)
   const handleCopy = () => {
     Clipboard.setString(body)
-    showToast(s.strings.fragment_copied)
+    showToast(lstrings.fragment_copied)
     bridge.resolve()
   }
 
@@ -33,7 +33,7 @@ export function RawTextModal(props: Props) {
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
       {disableCopy ? null : (
-        <MainButton alignSelf="center" label={s.strings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />
+        <MainButton alignSelf="center" label={lstrings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />
       )}
       <ModalFooter onPress={handleCancel} />
     </ThemedModal>

@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { MAX_AMOUNT } from '../constants/valueConstants'
 import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
 import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { BorrowCollateral, BorrowDebt, BorrowEngine } from '../plugins/borrow-plugins/types'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
@@ -106,12 +106,12 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   if (borrowAction.actions.length > 0) loanParallelActions.push(...borrowAction.actions)
 
   // Special complete message for withdraw to bank
-  return makeActionProgram(actionOp, {
-    title: s.strings.action_display_title_complete_default,
+  return await makeActionProgram(actionOp, {
+    title: lstrings.action_display_title_complete_default,
     message:
       destination.paymentMethodId != null
-        ? s.strings.action_display_message_complete_bank
-        : sprintf(s.strings.action_display_message_complete_wallet_2s, getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ?? 'NA', config.appName)
+        ? lstrings.action_display_message_complete_bank
+        : sprintf(lstrings.action_display_message_complete_wallet_2s, getToken(borrowEngineWallet, destination.tokenId)?.currencyCode ?? 'NA', config.appName)
   })
 }
 
@@ -245,7 +245,7 @@ export const makeAaveCloseAction = async ({
   // Closing loans with more than 1 debt/collateral is not supported because
   // we cannot make a judgement to determine which collateral asset to use to
   // repay debts.
-  if (collaterals.length > 1 || debts.length > 1) throw new Error(s.strings.loan_close_multiple_asset_error)
+  if (collaterals.length > 1 || debts.length > 1) throw new Error(lstrings.loan_close_multiple_asset_error)
 
   const collateral: BorrowCollateral | undefined = collaterals[0]
   const debt: BorrowDebt | undefined = debts[0]
@@ -325,7 +325,7 @@ export const makeAaveCloseAction = async ({
 
         throw new Error(
           sprintf(
-            s.strings.loan_close_insufficient_funds_4s,
+            lstrings.loan_close_insufficient_funds_4s,
             toFixed(debtBalanceDeficitFiat, 0, 2),
             debtCurrencyCode,
             toFixed(collateralDeficitAmount, 0, collateralMaxPrecision),

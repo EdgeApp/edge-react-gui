@@ -4,7 +4,7 @@ import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceCha
 import { pickWallet } from '../components/modals/WalletListModal'
 import { showError, showToast } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
-import s from '../locales/strings'
+import { lstrings } from '../locales/strings'
 import { executePlugin } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -203,7 +203,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       if (matchingWalletIdsAndUris.length === 0) {
         if (!allWalletsLoaded) return false
 
-        showError(s.strings.alert_deep_link_no_wallet_for_uri)
+        showError(lstrings.alert_deep_link_no_wallet_for_uri)
         return true
       }
 
@@ -223,7 +223,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       })
       const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
       if (walletListResult == null) {
-        showError(s.strings.scan_camera_no_matching_wallet)
+        showError(lstrings.scan_camera_no_matching_wallet)
         return true
       }
 
@@ -249,19 +249,17 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return true
     }
   }
-
-  return false
 }
 
 async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
   const address = await edgeWallet.getReceiveAddress()
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {
-    showToast(s.strings.azteco_success)
+    showToast(lstrings.azteco_success)
   } else if (response.status === 400) {
-    showError(s.strings.azteco_invalid_code)
+    showError(lstrings.azteco_invalid_code)
   } else {
-    showError(s.strings.azteco_service_unavailable)
+    showError(lstrings.azteco_service_unavailable)
   }
   navigation.navigate('walletsTab', { screen: 'walletList' })
 }

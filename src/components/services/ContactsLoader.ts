@@ -244,6 +244,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Velodrome',
+    hasThumbnail: true,
+    thumbnailPath: 'velodrome.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Wyre',
     hasThumbnail: true,
     thumbnailPath: 'wyre.png',
@@ -267,7 +279,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
   }
 
   loadContacts = async () => {
-    return Contacts.getAll()
+    return await Contacts.getAll()
       .then(contacts => {
         const cleanContacts = contacts
           .filter(item => item.givenName)

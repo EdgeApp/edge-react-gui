@@ -1,12 +1,12 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { SectionList } from 'react-native'
+import { SectionList, ViewStyle } from 'react-native'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
@@ -15,6 +15,7 @@ import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
+import { ModalFooter } from './ModalParts'
 import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 import { WalletListLoadingRow } from './WalletListLoadingRow'
@@ -55,6 +56,10 @@ interface Section {
   data: Array<WalletListItem | WalletCreateItem>
 }
 
+/**
+ * This list is used inside the wallet list modal,
+ * and *only* the wallet list modal.
+ */
 export function WalletList(props: Props) {
   const dispatch = useDispatch()
   const {
@@ -176,11 +181,11 @@ export function WalletList(props: Props) {
     return {
       sectionList: [
         {
-          title: s.strings.wallet_list_modal_header_mru,
+          title: lstrings.wallet_list_modal_header_mru,
           data: [...recentWalletList]
         },
         {
-          title: s.strings.wallet_list_modal_header_all,
+          title: lstrings.wallet_list_modal_header_all,
           data: walletList
         }
       ],
@@ -221,15 +226,26 @@ export function WalletList(props: Props) {
 
   const handleItemLayout = useRowLayout()
 
+  const scrollPadding = React.useMemo<ViewStyle>(() => {
+    return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
+  }, [theme])
+
   return sectionList == null ? (
-    <FlashList data={walletList} estimatedItemSize={theme.rem(4.25)} keyboardShouldPersistTaps="handled" renderItem={renderRow} />
+    <FlashList
+      contentContainerStyle={scrollPadding}
+      data={walletList}
+      estimatedItemSize={theme.rem(4.25)}
+      keyboardShouldPersistTaps="handled"
+      renderItem={renderRow}
+    />
   ) : (
     <SectionList
+      contentContainerStyle={scrollPadding}
+      getItemLayout={handleItemLayout}
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
       renderSectionHeader={renderSectionHeader}
       sections={sectionList}
-      getItemLayout={handleItemLayout}
     />
   )
 }

@@ -5,7 +5,7 @@ import RNFS from 'react-native-fs'
 import Share, { ShareOptions } from 'react-native-share'
 
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
-import s from '../../locales/strings'
+import { lstrings } from '../../locales/strings'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
@@ -37,9 +37,9 @@ export const LogsModal = (props: Props) => {
     const path = `${dir}/edge-log-${username}.json`.replace('-.json', '.json')
 
     const shareOptions: ShareOptions = {
-      title: s.strings.settings_button_export_logs,
-      subject: s.strings.settings_button_export_logs,
-      message: s.strings.settings_button_export_logs,
+      title: lstrings.settings_button_export_logs,
+      subject: lstrings.settings_button_export_logs,
+      message: lstrings.settings_button_export_logs,
       urls: [`file://${path}`],
       type: 'application/json',
       failOnCancel: false
@@ -56,13 +56,13 @@ export const LogsModal = (props: Props) => {
 
     await Promise.all([
       sendLogs(logs.activity).catch((e: any) => {
-        throw new Error(`${s.strings.settings_modal_send_logs_failure} activity logs code ${e?.message}`)
+        throw new Error(`${lstrings.settings_modal_send_logs_failure} activity logs code ${e?.message}`)
       }),
       sendLogs(logs.info).catch((e: any) => {
-        throw new Error(`${s.strings.settings_modal_send_logs_failure} info logs code ${e?.message}`)
+        throw new Error(`${lstrings.settings_modal_send_logs_failure} info logs code ${e?.message}`)
       })
     ])
-    showToast(s.strings.settings_modal_send_logs_success)
+    showToast(lstrings.settings_modal_send_logs_success)
     bridge.resolve()
   }
 
@@ -73,13 +73,13 @@ export const LogsModal = (props: Props) => {
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalScrollArea onCancel={handleCancel}>
-        <ModalTitle>{s.strings.settings_button_export_logs}</ModalTitle>
-        {!isDangerous ? null : <WarningCard key="warning" title={s.strings.string_warning} footer={s.strings.settings_modal_send_unsafe} marginRem={0.5} />}
-        {isDangerous ? null : <ModalMessage>{s.strings.settings_modal_export_logs_message}</ModalMessage>}
+        <ModalTitle>{lstrings.settings_button_export_logs}</ModalTitle>
+        {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
+        {isDangerous ? null : <ModalMessage>{lstrings.settings_modal_export_logs_message}</ModalMessage>}
         <OutlinedTextInput
           autoCorrect
           autoFocus={false}
-          label={s.strings.settings_modal_send_logs_label}
+          label={lstrings.settings_modal_send_logs_label}
           marginRem={1}
           maxLength={1000}
           onChangeText={setUserMessage}
@@ -87,9 +87,9 @@ export const LogsModal = (props: Props) => {
           value={userMessage}
         />
         {isDangerous ? null : (
-          <MainButton label={s.strings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
+          <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
         )}
-        <MainButton label={s.strings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
+        <MainButton label={lstrings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
       </ModalScrollArea>
     </ThemedModal>
   )
