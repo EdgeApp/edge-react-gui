@@ -186,7 +186,15 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
 
 const asEvmWcRpcPayload = asObject({
   id: asEither(asString, asNumber),
-  method: asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction'),
+  method: asValue(
+    'personal_sign',
+    'eth_sign',
+    'eth_signTypedData',
+    'eth_signTypedData_v4',
+    'eth_sendTransaction',
+    'eth_signTransaction',
+    'eth_sendRawTransaction'
+  ),
   params: asEither(
     asTuple(
       asObject({
