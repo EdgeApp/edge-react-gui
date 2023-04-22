@@ -26,7 +26,7 @@ import { IconTile } from '../tiles/IconTile'
 
 interface WcRpcPayload {
   id: string | number
-  method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction'
+  method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_signTypedData_v4' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction'
   params: any[]
 }
 
@@ -192,8 +192,9 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
     switch (payload.method) {
       case 'personal_sign':
       case 'eth_sign':
-      case 'eth_signTypedData': {
-        const typedData = payload.method === 'eth_signTypedData'
+      case 'eth_signTypedData':
+      case 'eth_signTypedData_v4': {
+        const typedData = payload.method === 'eth_signTypedData' || payload.method === 'eth_signTypedData_v4'
         const result = await wallet.signMessage(payload.params[1], { otherParams: { typedData } })
         await wallet.otherMethods.wcApproveRequest(uri, payload, result)
         break
