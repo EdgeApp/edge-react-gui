@@ -1,12 +1,12 @@
-# Edge Wallet
+# Edge
 
 [![Build Status](https://travis-ci.com/EdgeApp/edge-react-gui.svg?branch=develop)](https://travis-ci.com/EdgeApp/edge-react-gui)
 
-## A multi-currency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
+## A multi-currency mobile wallet for Bitcoin, Ethereum, Monero, Dash, Litecoin, Bitcoin Cash, Ripple/XRP, Polkadot, Tron, Solana, Stellar, Fantom, Algorand, Optimism, Zcash, Pirate Chain, and many others
 
-![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
+![Edge Screenshots](https://edge.app/wp-content/uploads/2023/04/Edge-Mock-ups.png)
 
-Edge Wallet is:
+Edge is:
 
 - simple
 - secure
