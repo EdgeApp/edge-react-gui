@@ -184,17 +184,18 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
   }
 }
 
+const asEvmPayloadMethod = asValue(
+  'personal_sign',
+  'eth_sign',
+  'eth_signTypedData',
+  'eth_signTypedData_v4',
+  'eth_sendTransaction',
+  'eth_signTransaction',
+  'eth_sendRawTransaction'
+)
 const asEvmWcRpcPayload = asObject({
   id: asEither(asString, asNumber),
-  method: asValue(
-    'personal_sign',
-    'eth_sign',
-    'eth_signTypedData',
-    'eth_signTypedData_v4',
-    'eth_sendTransaction',
-    'eth_signTransaction',
-    'eth_sendRawTransaction'
-  ),
+  method: asEvmPayloadMethod,
   params: asEither(
     asTuple(
       asObject({
@@ -211,9 +212,10 @@ const asEvmWcRpcPayload = asObject({
     asArray(asString)
   )
 })
+const asAlgoPayloadMethod = asValue('algo_signTxn')
 const asAlgoWcRpcPayload = asObject({
   id: asEither(asString, asNumber),
-  method: asValue('algo_signTxn'),
+  method: asAlgoPayloadMethod,
   params: asTuple(
     asTuple(
       asObject({
@@ -224,7 +226,7 @@ const asAlgoWcRpcPayload = asObject({
   )
 })
 
-const asPayload = asObject({ method: asString }).withRest
+const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmPayloadMethod) }).withRest
 type Payload = ReturnType<typeof asPayload>
 
 export const asWcSmartContractModalProps = asObject({
