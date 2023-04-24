@@ -111,13 +111,13 @@ export function AccountCallbackManager(props: Props) {
           Airship.show(bridge => (
             <WcSmartContractModal
               bridge={bridge}
-              wallet={wallet}
               dApp={dApp}
               nativeAmount={nativeAmount}
               networkFee={networkFee}
               payload={payload}
               tokenId={tokenId}
               uri={uri}
+              wallet={wallet}
             />
           ))
         } catch (e: any) {

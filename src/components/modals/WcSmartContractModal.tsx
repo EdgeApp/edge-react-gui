@@ -31,7 +31,7 @@ interface Props extends WcSmartContractModalProps {
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, wallet, dApp, payload, tokenId, nativeAmount, networkFee, uri } = props
+  const { bridge, dApp, nativeAmount, networkFee, payload, tokenId, uri, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const dAppName = dApp.peerMeta.name
