@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import InAppReview from 'react-native-in-app-review'
-import { requestReview } from 'react-native-store-review'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -13,7 +12,7 @@ import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WalletListFooter } from '../themed/WalletListFooter'
@@ -63,43 +62,45 @@ export function WalletListScene(props: Props) {
   useAsyncEffect(
     async () => {
       const isAvail = InAppReview.isAvailable()
-      console.debug('isAvail: ' + isAvail)
+      showWarning('isAvail: ' + isAvail)
 
-      // InAppReview.RequestInAppReview()
-      //   .then(hasFlowFinishedSuccessfully => {
-      //     // when return true in android it means user finished or close review flow
-      //     console.log('InAppReview in android', hasFlowFinishedSuccessfully)
+      await InAppReview.RequestInAppReview()
+        .then(hasFlowFinishedSuccessfully => {
+          // when return true in android it means user finished or close review flow
+          showWarning('InAppReview in android: ' + hasFlowFinishedSuccessfully)
 
-      //     // when return true in ios it means review flow lanuched to user.
-      //     console.log('InAppReview in ios has launched successfully', hasFlowFinishedSuccessfully)
+          // when return true in ios it means review flow lanuched to user.
+          // console.log('InAppReview in ios has launched successfully', hasFlowFinishedSuccessfully)
 
-      //     // 1- you have option to do something ex: (navigate Home page) (in android).
-      //     // 2- you have option to do something,
-      //     // ex: (save date today to lanuch InAppReview after 15 days) (in android and ios).
+          // 1- you have option to do something ex: (navigate Home page) (in android).
+          // 2- you have option to do something,
+          // ex: (save date today to lanuch InAppReview after 15 days) (in android and ios).
 
-      //     // 3- another option:
-      //     if (hasFlowFinishedSuccessfully) {
-      //       showWarning('Success')
-      //     }
+          // 3- another option:
+          // if (hasFlowFinishedSuccessfully) {
+          //   showWarning('hasFlowFinishedSuccessfully')
+          // }
 
-      //     // for android:
-      //     // The flow has finished. The API does not indicate whether the user
-      //     // reviewed or not, or even whether the review dialog was shown. Thus, no
-      //     // matter the result, we continue our app flow.
+          // for android:
+          // The flow has finished. The API does not indicate whether the user
+          // reviewed or not, or even whether the review dialog was shown. Thus, no
+          // matter the result, we continue our app flow.
 
-      //     // for ios
-      //     // the flow lanuched successfully, The API does not indicate whether the user
-      //     // reviewed or not, or he/she closed flow yet as android, Thus, no
-      //     // matter the result, we continue our app flow.
-      //   })
-      //   .catch(error => {
-      //     // we continue our app flow.
-      //     // we have some error could happen while lanuching InAppReview,
-      //     // Check table for errors and code number that can return in catch.
-      //     console.debug(error)
-      //   })
+          // for ios
+          // the flow lanuched successfully, The API does not indicate whether the user
+          // reviewed or not, or he/she closed flow yet as android, Thus, no
+          // matter the result, we continue our app flow.
+        })
+        .catch(error => {
+          // we continue our app flow.
+          // we have some error could happen while lanuching InAppReview,
+          // Check table for errors and code number that can return in catch.
 
-      await requestReview()
+          showError(error)
+          // console.debug(error)
+        })
+
+      // await requestReview()
 
       // const test = await InAppReview.RequestInAppReview()
       // const test2 = await InAppReview.RequestInAppReview()
