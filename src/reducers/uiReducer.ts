@@ -9,7 +9,6 @@ import { createWallet, CreateWalletState } from './scenes/CreateWalletReducer'
 import { fioAddress, FioAddressSceneState } from './scenes/FioAddressSceneReducer'
 import { sendConfirmation, SendConfirmationState } from './scenes/SendConfirmationReducer'
 import { settings, SettingsState } from './scenes/SettingsReducer'
-import { transactionDetails, TransactionDetailsState } from './scenes/TransactionDetailsReducer'
 import { transactionList, TransactionListState } from './scenes/TransactionListReducer'
 import { wallets, WalletsState } from './scenes/WalletsReducer'
 
@@ -21,7 +20,7 @@ export interface UiState {
   readonly passwordReminder: PasswordReminderState
   readonly sendConfirmation: SendConfirmationState
   readonly settings: SettingsState
-  readonly transactionDetails: TransactionDetailsState
+  readonly subcategories: string[]
   readonly transactionList: TransactionListState
   readonly wallets: WalletsState
 }
@@ -34,7 +33,16 @@ const uiInner = combineReducers<UiState, Action>({
   passwordReminder,
   sendConfirmation,
   settings,
-  transactionDetails,
+
+  subcategories(state = [], action) {
+    switch (action.type) {
+      case 'SET_TRANSACTION_SUBCATEGORIES':
+        return action.data.subcategories
+      default:
+        return state
+    }
+  },
+
   transactionList,
   wallets
 })

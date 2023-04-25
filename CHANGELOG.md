@@ -1,5 +1,68 @@
 # edge-react-gui
 
+## 3.8.0 (2023-04-24)
+
+- Add Algorand (ALGO) and standard asset support
+- Add Velodrome DEX support
+- Simplex: Add Goole Pay support
+- Bity: Migrate to new fiat plugin buy/sell flow
+- Added Ethereum ERC20 tokens: (Amp, ApeCoin, Cronos Coin, EnjinCoin, Gala, Game Coin, Graph Token, Healthcare Administration Token, LoopringCoin V2, PlayDapp Token, Quant, SAND, SHIBA INU, Strike Token, SUKU, and Wrapped FIO)
+- Move permission checking to end of create flow
+- Add live username availability lookup
+- Hide balance on request scene if main balance is hidden
+- Fix usability issues on FIO onboarding scenes
+- Fix eth_signTypedData_v4 support
+- Fix corner case that showed incorrect wallet balances display for new wallets
+- Fix fiat plugin region restricted error message
+- Allow routing to GettingStartedScene from LoginScene
+- Add sticky message to row for compromised wallets
+- Change default strings export to named export
+- Fix unresolved getHistoricalRate promises
+- Enable the following lint rules: @typescript-eslint/no-var-requires, typescript-eslint/return-await, and react-hooks/exhaustive-deps
+- Fix various visual and usability issues
+- Upgrade edge-core-js to v0.19.50
+  - fixed: Remove check that spentTargets.length > 0 in makeSpend
+- Upgrade edge-currency-accountbased to v1.0.1
+  - fixed: Parse URIs as Tron addresses first before PIX addresses to prevent incorrect parsing of Tron addresses as a PIX address
+  - PIX: Support minimum amount
+  - ETH: Add ERC20 tokens
+  - FIO: Fix new account balance object
+  - Audit and fix noisy unused address logging
+  - HBAR/EOS: Fix balance and tx query for new accounts
+  - Upgrade edge-core-js to v0.21.0
+  - Replace asMaybe and asOptional cleaner default objects with functions that return new objects
+  - Upgrade cleaners to v0.3.14
+  - Add zkSync wallet type
+  - EVM: Update node lists
+  - ZEC/ARRR: Update checkpoint files
+  - Add Algorand (ALGO)
+  - OP: Add WETH and VELO tokens
+  - BNB Beacon Chain: Fix transaction date handling
+  - ARRR: Add unsafeBroadcastTx to info
+  - EVM: Query info server fees by pluginId
+  - EVM: Save network fees to engine rather than to disk
+- Upgrade edge-currency-plugins to v2.0.2
+  - Query networkFees endpoint with pluginId instead of currencyCode
+- Upgrade edge-login-ui-rn to v1.4.3
+  - added: OutlinedTextInput prop allowing user edits while spinner is active
+  - changed: Reduce delay for checking username availability to 400ms
+  - fixed: Add missing mount check to the first setState in the timeout to check username availability
+  - fixed: Back on NewAccountPinScene
+  - fixed: New account username input defocuses when auto-checking for availability
+  - fixed: Username persistence on back button
+  - removed: Too much space above brand image on PinLoginScene
+  - fixed: Reinstate onComplete handling from 1.3
+  - changed: Update translations
+  - fixed: Calculation of minLength for legacy recovery questions in login scene
+  - fixed: Calculation of minLength for legacy recovery questions
+  - changed: Move "Security Alerts" notification prompt to after account creation is completed
+  - changed: Update username availability check to be on a per-character-input basis
+  - added: Add an onComplete prop to the LoginScene component
+  - changed: Add a back button to the PasswordLoginScene
+  - changed: Move Help button to the top-right corner for all scenes
+- Upgrade edge-exchange-plugins to v0.18.0
+  - added: Add Velodrome DEX exchange
+
 ## 3.7.0 (2023-04-11)
 
 - Engine now run with just public keys and are passed private keys only when necessary

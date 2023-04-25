@@ -21,7 +21,6 @@ import {
   decimalOrZero,
   DEFAULT_TRUNCATE_PRECISION,
   getDenomFromIsoCode,
-  isSentTransaction,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust,
   truncateDecimals
@@ -106,7 +105,6 @@ export function TransactionListRow(props: Props) {
       fiatSymbol={getSymbolFromCurrency(nonIsoFiatCurrencyCode)}
       onPress={handlePress}
       onLongPress={handleLongPress}
-      isSentTransaction={isSentTransaction(transaction)}
       requiredConfirmations={requiredConfirmations}
       selectedCurrencyName={currencyName || currencyCode}
       thumbnailPath={thumbnailPath}

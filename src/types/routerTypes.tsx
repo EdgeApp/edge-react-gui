@@ -13,13 +13,8 @@ import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInp
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
-import {
-  FiatPluginAddressFormParams,
-  FiatPluginEnterAmountResponse,
-  FiatPluginGetMethodsResponse,
-  FiatPluginSepaFormParams,
-  FiatPluginSepaTransferParams
-} from '../plugins/gui/fiatPluginTypes'
+import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
+import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import { CoinRankingData } from './coinrankTypes'
 import {
@@ -56,6 +51,12 @@ interface RouteParamList {
   sellTab: {}
   exchangeTab: {}
   marketsTab: {}
+
+  // Gui Plugins
+  guiPluginEnterAmount: FiatPluginEnterAmountParams
+  guiPluginAddressForm: FiatPluginAddressFormParams
+  guiPluginInfoDisplay: FiatPluginSepaTransferParams
+  guiPluginSepaForm: FiatPluginSepaFormParams
 
   // Logged-in scenes:
   changeMiningFee: {
@@ -205,20 +206,6 @@ interface RouteParamList {
     currencyCode: string
     walletId: string
   }
-  guiPluginEnterAmount: {
-    headerTitle: string
-    onSubmit: (response: FiatPluginEnterAmountResponse) => Promise<void>
-    label1: string
-    label2: string
-    onChangeText: (fieldNum: number, value: string) => Promise<void>
-    convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
-    getMethods?: (methods: FiatPluginGetMethodsResponse) => void
-    initialAmount1?: string
-    headerIconUri?: string
-  }
-  guiPluginSepaForm: FiatPluginSepaFormParams
-  guiPluginInfoDisplay: FiatPluginSepaTransferParams
-  guiPluginAddressForm: FiatPluginAddressFormParams
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string

@@ -1,6 +1,8 @@
 import * as React from 'react'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 export function EdgeLogoHeader() {
@@ -8,7 +10,7 @@ export function EdgeLogoHeader() {
   const styles = getStyles(theme)
   return (
     <View style={styles.container}>
-      <Image style={styles.icon} source={theme.headerIcon} resizeMode="contain" />
+      <FastImage style={styles.icon} source={theme.headerIcon} resizeMode="contain" accessibilityHint={lstrings.app_logo_hint} />
     </View>
   )
 }

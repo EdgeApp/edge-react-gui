@@ -1,5 +1,5 @@
 import { div, eq, gt, toFixed } from 'biggystring'
-import { asMap, asNumber } from 'cleaners'
+import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
 import { ENV } from '../../env'
@@ -12,14 +12,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
-import {
-  FiatPlugin,
-  FiatPluginEnterAmountResponse,
-  FiatPluginFactory,
-  FiatPluginFactoryArgs,
-  FiatPluginGetMethodsResponse,
-  FiatPluginStartParams
-} from './fiatPluginTypes'
+import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginGetMethodsResponse, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
@@ -31,18 +24,20 @@ import { simplexProvider } from './providers/simplexProvider'
 // for that provider.
 // Higher numbers are preferred over lower. If a provider is not listed or is
 // marked with a priority of 0, it is not considered for quoting.
-const asProviderPriorityMap = asMap(asNumber)
+const asProviderPriorityMap = asObject(asNumber)
 type ProviderPriorityMap = ReturnType<typeof asProviderPriorityMap>
 
 // A map keyed by supported payment types and values of ProviderPriorityMap
-const asPaymentTypeProviderPriorityMap = asMap(asProviderPriorityMap)
+const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
+type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPriorityMap>
+
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const pluginId = 'amountquote'
-  const { disablePlugins, showUi, account } = params
+  const { account, disablePlugins, guiPlugin, showUi } = params
+  const { pluginId } = guiPlugin
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
   const providerPromises: Array<Promise<FiatProvider>> = []
@@ -55,15 +50,15 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
 
-      let providerPriority: ProviderPriorityMap = {}
-      let priorityArray = [{}]
+      let providerPriority: PaymentTypeProviderPriorityMap = {}
+      let priorityArray: PriorityArray = [{}]
       if (paymentTypes.length === 1) {
         // Fetch provider priorities from the info server based on the payment
         // type
         try {
           const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
-          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())[paymentTypes[0]]
-          priorityArray = createPriorityArray(providerPriority)
+          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())
+          priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
         } catch (e: any) {
           console.warn('Failed to fetch provider priorities:', e)
           // This is ok. We will use all configured providers at equal priority.
@@ -78,7 +73,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // server vs disablePlugins
       for (const providerFactory of providerFactories) {
         if (disablePlugins[providerFactory.providerId]) continue
-        // @ts-expect-error
         priorityArray[0][providerFactory.providerId] = true
 
         // @ts-expect-error
@@ -155,7 +149,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       let enterAmountMethods: FiatPluginGetMethodsResponse
       // Navigate to scene to have user enter amount
-      await showUi.enterAmount({
+      showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         isBuy,
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
@@ -219,7 +213,6 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
-            // @ts-expect-error
             if (providerPriority[pluginId] != null && providerPriority[pluginId][quote.providerId] <= 0) continue
             goodQuotes.push(quote)
           }
@@ -296,15 +289,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
         },
-        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+        async onSubmit() {
           if (bestQuote == null) {
             return
           }
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
       })
-
-      showUi.popScene()
     }
   }
   return fiatPlugin
@@ -323,14 +314,13 @@ export const createPriorityArray = (providerPriority: ProviderPriorityMap): Prio
     }
     temp.sort((a, b) => b.priority - a.priority)
     let currentPriority = Infinity
-    let priorityObj = {}
+    let priorityObj: PriorityArray[number] = {}
     for (const t of temp) {
       if (t.priority < currentPriority) {
         priorityArray.push({})
         currentPriority = t.priority
         priorityObj = priorityArray[priorityArray.length - 1]
       }
-      // @ts-expect-error
       priorityObj[t.pluginId] = true
     }
   }

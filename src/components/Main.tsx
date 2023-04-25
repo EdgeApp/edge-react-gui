@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
 import { useDispatch } from 'react-redux'
@@ -15,7 +15,7 @@ import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
-import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/EnterAmountScene'
+import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
@@ -198,17 +198,19 @@ const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
 const Tab = createBottomTabNavigator<AppParamList>()
 
-const defaultScreenOptions = {
+const defaultScreenOptions: StackNavigationOptions = {
   title: '',
   headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
+  headerTitleAlign: 'center',
   headerTransparent: true
 }
-const firstSceneScreenOptions = {
+const firstSceneScreenOptions: StackNavigationOptions = {
   headerLeft: () => <HeaderTextButton type="help" placement="left" />,
-  headerTitle: EdgeLogoHeader
+  headerTitle: EdgeLogoHeader,
+  headerTitleAlign: 'center'
 }
 
 export const Main = () => {
@@ -804,6 +806,7 @@ const EdgeBuyTabScreen = () => {
 const EdgeSellTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
       <Stack.Screen
         name="pluginViewSell"

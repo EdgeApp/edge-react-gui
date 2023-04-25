@@ -552,6 +552,7 @@ function cleanTx(tx: EdgeTransaction): EdgeTransaction {
     currencyCode: tx.currencyCode,
     date: tx.date,
     // feeRateUsed: tx.feeRateUsed,
+    isSend: tx.isSend,
     metadata: tx.metadata,
     nativeAmount: tx.nativeAmount,
     networkFee: tx.networkFee,

@@ -3,7 +3,7 @@ import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
-import { ImageSourcePropType, Keyboard, StatusBar, View } from 'react-native'
+import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { BlurView } from 'rn-id-blurview'
 
@@ -18,6 +18,7 @@ import { DeepLink } from '../../types/DeepLinkTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
+import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
 import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
@@ -54,7 +55,7 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 interface State {
   counter: number
   passwordRecoveryKey?: string
-  backgroundImage: ImageSourcePropType | null
+  backgroundImage: ImageProp | null
   needsUpdate: boolean
   notificationPermissionsInfo?: NotificationPermissionsInfo
 }

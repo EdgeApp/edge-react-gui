@@ -9,128 +9,135 @@ const qboResult = fs.readFileSync('./src/__tests__/exportQboResult.qbo', { encod
 
 const edgeTxs: EdgeTransaction[] = [
   {
-    walletId: '',
-    txid: 'txid1',
-    date: 1524476980,
-    currencyCode: 'BTC',
     blockHeight: 500000,
-    nativeAmount: '123000000',
-    networkFee: '1000',
-    ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
-    signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
-    parentNetworkFee: '10002',
+    currencyCode: 'BTC',
+    date: 1524476980,
+    deviceDescription: 'iphone12',
+    isSend: false,
     metadata: {
       name: 'Crazy Person',
       category: 'Income:Mo Money',
       notes: 'Hell yeah! Thanks for the fish <<&&>>',
       amountFiat: 12000.45
     },
-    deviceDescription: 'iphone12'
+    nativeAmount: '123000000',
+    networkFee: '1000',
+    ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
+    parentNetworkFee: '10002',
+    signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
+    txid: 'txid1',
+    walletId: ''
   },
   {
-    walletId: '',
-    txid: 'txid2',
-    date: 1524576980,
-    currencyCode: 'BTC',
     blockHeight: 500000,
-    nativeAmount: '-321000000',
-    networkFee: '2000',
-    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
-    signedTx: 'fiuwh34f98h3tiuheirgserg',
-    parentNetworkFee: '20001',
+    currencyCode: 'BTC',
+    date: 1524576980,
+    deviceDescription: 'iphone12',
+    isSend: true,
     metadata: {
       name: 'Crazy Person 2',
       category: 'Expense:Less Money',
       notes: 'Hell yeah! Here\'s a fish"',
       amountFiat: 36001.45
     },
-    deviceDescription: 'iphone12'
-  },
-  {
-    walletId: '',
-    txid: 'txid3',
-    date: 1524676980,
-    currencyCode: 'BTC',
-    blockHeight: 500000,
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    txid: 'txid2',
+    walletId: ''
+  },
+  {
+    blockHeight: 500000,
+    currencyCode: 'BTC',
+    date: 1524676980,
+    deviceDescription: 'iphone12',
     metadata: {
       name: 'Transfer',
       category: 'Transfer:Edge',
       notes: '',
       amountFiat: 36001.45
     },
-    deviceDescription: 'iphone12'
-  },
-  {
-    walletId: '',
-    txid: 'txid4',
-    date: 1524776980,
-    currencyCode: 'BTC',
-    blockHeight: 500000,
-    nativeAmount: '321000000',
+    nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: false,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    txid: 'txid3',
+    walletId: ''
+  },
+  {
+    blockHeight: 500000,
+    currencyCode: 'BTC',
+    date: 1524776980,
+    deviceDescription: 'iphone12',
     metadata: {
       name: 'Transfer but actually income',
       category: 'Transfer:Edge',
       notes: '',
       amountFiat: 36001.45
     },
-    deviceDescription: 'iphone12'
+    nativeAmount: '321000000',
+    networkFee: '2000',
+    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: true,
+    signedTx: 'fiuwh34f98h3tiuheirgserg',
+    txid: 'txid4',
+    walletId: ''
   },
   {
-    walletId: '',
-    txid: 'txid4',
-    date: 1524876980,
-    currencyCode: 'USDC',
     blockHeight: 500000,
-    nativeAmount: '-321000000',
-    networkFee: '0',
-    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
-    signedTx: 'fiuwh34f98h3tiuheirgserg',
-    parentNetworkFee: '20001',
+    currencyCode: 'USDC',
+    date: 1524876980,
+    deviceDescription: 'iphone12',
+    isSend: true,
     metadata: {
       name: 'Transfer but no fee',
       category: 'Transfer:Edge',
       notes: '',
       amountFiat: 36001.45
     },
-    deviceDescription: 'iphone12'
+    nativeAmount: '-321000000',
+    networkFee: '0',
+    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    parentNetworkFee: '20001',
+    signedTx: 'fiuwh34f98h3tiuheirgserg',
+    txid: 'txid4',
+    walletId: ''
   },
   {
-    walletId: '',
-    txid: 'txid5',
-    date: 1524976980,
-    currencyCode: 'BTC',
     blockHeight: 500000,
-    nativeAmount: '-321000000',
-    networkFee: '2000',
-    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
-    signedTx: 'fiuwh34f98h3tiuheirgserg',
+    currencyCode: 'BTC',
+    date: 1524976980,
+    deviceDescription: 'iphone12',
     metadata: {
       name: 'Transfer but no fiat amount',
       category: 'Transfer:Edge',
       notes: '',
       amountFiat: 0
     },
-    deviceDescription: 'iphone12'
+    nativeAmount: '-321000000',
+    networkFee: '2000',
+    ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+    isSend: true,
+    signedTx: 'fiuwh34f98h3tiuheirgserg',
+    txid: 'txid5',
+    walletId: ''
   },
   {
-    walletId: '',
-    txid: 'txid6',
-    date: 1525076980,
-    currencyCode: 'BTC',
     blockHeight: 500000,
+    currencyCode: 'BTC',
+    date: 1525076980,
+    deviceDescription: 'iphone12',
+    isSend: true,
+    metadata: undefined,
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     signedTx: 'fiuwh34f98h3tiuheirgserg',
-    metadata: undefined,
-    deviceDescription: 'iphone12'
+    txid: 'txid6',
+    walletId: ''
   }
 ]
 

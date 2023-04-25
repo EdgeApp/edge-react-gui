@@ -4,8 +4,9 @@ import { EdgeAccount } from 'edge-core-js'
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
+import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { EdgeTokenId } from '../../types/types'
-import { EnterAmountPoweredBy } from './scenes/EnterAmountScene'
+import { EnterAmountPoweredBy } from './scenes/FiatPluginEnterAmountScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -96,7 +97,7 @@ export interface FiatPluginUi {
   }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: (params: FiatPluginEnterAmountParams) => Promise<FiatPluginEnterAmountResponse>
+  enterAmount: (params: FiatPluginEnterAmountParams) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
@@ -110,9 +111,10 @@ export interface FiatPluginFactoryArgs {
   // io: {
   //   log: EdgeLog, // scoped logs
   // }
-  disablePlugins: DisablePluginMap
-  showUi: FiatPluginUi
   account: EdgeAccount
+  disablePlugins: DisablePluginMap
+  guiPlugin: GuiPlugin
+  showUi: FiatPluginUi
 }
 
 export interface FiatPluginRegionCode {

@@ -54,9 +54,10 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
   date: asNumber,
 
   // Transaction info:
-  txid: asString,
+  isSend: asBoolean,
+  ourReceiveAddresses: asArray(asString),
   signedTx: asString,
-  ourReceiveAddresses: asArray(asString)
+  txid: asString
 })
 
 const asExtendedCurrencyCode: Cleaner<ExtendedCurrencyCode> = asEither(

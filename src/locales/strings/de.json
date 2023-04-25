@@ -61,6 +61,7 @@
   "error_paymentprotocol_multi_tx_invoice": "Mehrere Transaktionen in Zahlungsanforderung gefunden",
   "error_paymentprotocol_no_payment_option": "Keine Währungen für diese Rechnung des Zahlungsprotokolls verfügbar. Akzeptierte Währungen: %s",
   "error_paymentprotocol_tx_verification_failed": "Überprüfung des Zahlungsprotokolls stimmt nicht überein",
+  "error_spend_amount_less_then_min_s": "Spend amount is less than minimum of %s",
   "warning_low_fee_selected": "Niedrige Gebühr ausgewählt",
   "warning_custom_fee_selected": "Eigene Gebühr ausgewählt",
   "warning_low_or_custom_fee": "Die Verwendung einer niedrigen Gebühr kann die Dauer der Bestätigung Ihrer Transaktion erhöhen. In seltenen Fällen kann Ihre Transaktion fehlschlagen.",
@@ -156,6 +157,8 @@
   "fragment_wallets_copy_seed": "Seed kopieren",
   "fragment_wallets_copied_seed": "Kopierter Seed",
   "fragment_wallets_get_seed_wallet": "Phrase bekommen",
+  "fragment_wallets_view_private_view_key": "Private View Key",
+  "fragment_wallets_view_private_view_key_warning": "The private view key allows the receiver to see the balance in your Monero wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.",
   "fragment_wallets_view_xpub": "XPub Adresse anzeigen",
   "fragment_wallets_pubkey_copied_title": "XPub Adresse kopiert",
   "fragment_wallets_export_transactions": "Transaktionen exportieren",
@@ -452,6 +455,7 @@
   "string_first_avalanche_wallet_name": "Mein Avalanche",
   "string_first_optimism_wallet_name": "My Optimism",
   "string_first_algorand_wallet_name": "My Algorand",
+  "string_first_zksync_wallet_name": "My zkSync",
   "my_crypto_wallet_name": "Meine %s",
   "string_help": "Hilfe",
   "string_exit": "Beenden",
@@ -821,6 +825,7 @@
   "fio_free_handle_title_m": "Get a *FIO* Handle",
   "fio_free_handle_title": "Get a FIO Handle",
   "fio_free_handle_message": "Give your wallet an easy-to-read handle to simplify sending/receiving transactions.",
+  "fio_free_handle_please_wait": "Please wait for wallet creation to complete...",
   "fio_register_handle_button": "Register Handle",
   "fio_register_handle_error": "There was an issue registering your handle. Please try again later.",
   "fio_register_handle_taken_error_s": "The handle %1$s has already been taken.",
@@ -1309,5 +1314,6 @@
   "getting_started_slide_4_title": "*Help* Is Here If\nYou Need It",
   "getting_started_welcome_message": "Edge is the open source tool you need\nto invest, secure, and put your crypto in action.",
   "getting_started_welcome_prompt": "Swipe to Learn More",
-  "getting_started_welcome_title": "Welcome to\nFinancial *Freedom*"
+  "getting_started_welcome_title": "Welcome to\nFinancial *Freedom*",
+  "app_logo_hint": "App logo"
 }

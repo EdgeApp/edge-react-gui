@@ -1,3 +1,4 @@
+import { eq } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
@@ -37,7 +38,7 @@ interface StateProps {
   thumbnailPath?: string
 }
 interface DispatchProps {
-  refreshTransaction: (walletId: string, transaction: EdgeTransaction) => void
+  refreshTransaction: (transaction: EdgeTransaction) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -59,7 +60,9 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { edgeTransaction } = props.route.params
     const { metadata = {} } = edgeTransaction
     const { name = '', notes = '' } = metadata
-    const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
+    const isSentTransaction = edgeTransaction.nativeAmount.startsWith('-') || (eq(edgeTransaction.nativeAmount, '0') && edgeTransaction.isSend)
+
+    const direction = isSentTransaction ? 'send' : 'receive'
     const category = joinCategory(
       splitCategory(
         metadata.category,
@@ -186,7 +189,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
     wallet
       .saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata)
-      .then(() => this.props.refreshTransaction(wallet.id, transaction))
+      .then(() => this.props.refreshTransaction(transaction))
       .catch(showError)
 
     this.setState({ ...this.state, ...newDetails })
@@ -298,7 +301,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
     <TransactionDetailsComponent
       navigation={navigation}
       route={route}
-      refreshTransaction={(walletId: string, transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(walletId, [transaction]))}
+      refreshTransaction={(transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(wallet, [transaction]))}
       theme={theme}
       thumbnailPath={thumbnailPath}
       wallet={wallet}

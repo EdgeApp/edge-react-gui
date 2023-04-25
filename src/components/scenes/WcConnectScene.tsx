@@ -1,5 +1,3 @@
-/* eslint-disable react-native/no-raw-text */
-
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -7,6 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -31,6 +30,12 @@ interface Props {
   route: RouteProp<'wcConnect'>
 }
 
+interface DappDetails {
+  subTitleText: string
+  bodyTitleText: string
+  dAppImage?: JSX.Element
+}
+
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
   const [selectedWallet, setSelectedWallet] = React.useState({ walletId: '', currencyCode: '' })
@@ -38,7 +43,7 @@ export const WcConnectScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { uri } = props.route.params
-  const [dappDetails, setDappDetails] = React.useState({ subTitleText: '', bodyTitleText: '', dAppImage: '' })
+  const [dappDetails, setDappDetails] = React.useState<DappDetails>({ subTitleText: '', bodyTitleText: '' })
   const [walletAddress, setWalletAddress] = React.useState('')
 
   const account = useSelector(state => state.core.account)
@@ -64,15 +69,13 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  // @ts-expect-error
-  const handleRequestDapp = async walletId => {
+  const handleRequestDapp = async (walletId: string) => {
     try {
       const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
       const dAppName = String(dApp.peerMeta.name).split(' ')[0]
       setDappDetails({
         subTitleText: sprintf(lstrings.wc_confirm_subtitle, dAppName),
         bodyTitleText: sprintf(lstrings.wc_confirm_body_title, dAppName),
-        // @ts-expect-error
         dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
       })
     } catch (e: any) {
@@ -82,7 +85,7 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  const showWalletListModal = () => {
+  const handleWalletListModal = useHandler(() => {
     const allowedCurrencyWallets = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
 
     const allowedAssets = allowedCurrencyWallets.map(walletID => ({ pluginId: currencyWallets[walletID].currencyInfo.pluginId }))
@@ -99,14 +102,13 @@ export const WcConnectScene = (props: Props) => {
         }
       }
     })
-  }
+  })
 
   React.useEffect(() => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      showWalletListModal()
+      handleWalletListModal()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedWallet.walletId, selectedWallet.currencyCode])
+  }, [selectedWallet.walletId, selectedWallet.currencyCode, handleWalletListModal])
 
   React.useEffect(() => {
     return () => {
@@ -117,7 +119,7 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={showWalletListModal} />
+      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
@@ -125,7 +127,7 @@ export const WcConnectScene = (props: Props) => {
       )
       const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
       return (
-        <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={showWalletListModal} />
+        <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
       )
     }
   }
@@ -137,7 +139,7 @@ export const WcConnectScene = (props: Props) => {
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>
-          {dAppImage !== '' && dAppImage}
+          {dAppImage == null ? null : dAppImage}
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>

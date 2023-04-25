@@ -245,7 +245,8 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       // @ts-expect-error
       if (!global.__DEV__) return false
 
-      navigation.push(link.sceneName, {})
+      // @ts-expect-error
+      navigation.navigate(link.sceneName, {})
       return true
     }
   }

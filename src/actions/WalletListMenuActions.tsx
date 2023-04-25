@@ -7,6 +7,7 @@ import { ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
+import { Alert } from '../components/themed/Alert'
 import { ModalMessage } from '../components/themed/ModalParts'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
@@ -139,7 +140,7 @@ export function walletListMenuAction(
         dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
       }
     }
-
+    case 'viewPrivateViewKey':
     case 'viewXPub': {
       return (dispatch, getState) => {
         const state = getState()
@@ -157,14 +158,20 @@ export function walletListMenuAction(
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 
+        const title = switchString === 'viewPrivateViewKey' ? lstrings.fragment_wallets_view_private_view_key : lstrings.fragment_wallets_view_xpub
+
         Airship.show<'copy' | 'link' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
-            closeArrow
-            message={displayPublicSeed ?? ''}
-            title={lstrings.fragment_wallets_view_xpub}
-          />
+          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} closeArrow message={displayPublicSeed ?? ''} title={title}>
+            {switchString === 'viewXPub' ? null : (
+              <Alert
+                type="warning"
+                title={lstrings.string_warning}
+                marginRem={0.5}
+                message={lstrings.fragment_wallets_view_private_view_key_warning}
+                numberOfLines={0}
+              />
+            )}
+          </ButtonsModal>
         )).then(result => {
           switch (result) {
             case 'copy':

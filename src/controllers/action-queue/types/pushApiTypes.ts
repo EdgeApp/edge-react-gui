@@ -81,8 +81,8 @@ export const asNewPushEvent = asObject<NewPushEvent>({
 })
 
 export const asDeviceUpdatePayload = asObject<DeviceUpdatePayload>({
-  createEvents: asOptional(asArray(asNewPushEvent), []),
-  removeEvents: asOptional(asArray(asString), []),
+  createEvents: asOptional(asArray(asNewPushEvent), () => []),
+  removeEvents: asOptional(asArray(asString), () => []),
 
   ignoreMarketing: asOptional(asBoolean),
   ignorePriceChanges: asOptional(asBoolean),
@@ -90,8 +90,8 @@ export const asDeviceUpdatePayload = asObject<DeviceUpdatePayload>({
 })
 
 export const asLoginUpdatePayload = asObject<LoginUpdatePayload>({
-  createEvents: asOptional(asArray(asNewPushEvent), []),
-  removeEvents: asOptional(asArray(asString), [])
+  createEvents: asOptional(asArray(asNewPushEvent), () => []),
+  removeEvents: asOptional(asArray(asString), () => [])
 })
 
 export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)

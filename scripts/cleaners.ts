@@ -1,4 +1,4 @@
-import { asJSON, asMap, asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import { asJSON, asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
 
 /**
  * The deploy-config file holds a map of these entries inside itself.
@@ -27,18 +27,18 @@ export const asReleaseConfig = asObject({
   appCenterApiToken: asOptional(asString),
   appCenterGroupName: asOptional(asString),
   appCenterDistroGroup: asOptional(asString),
-  ios: asMap(asObject({ appCenterAppName: asString })),
-  android: asMap(asObject({ appCenterAppName: asString })),
+  ios: asObject(asObject({ appCenterAppName: asString })),
+  android: asObject(asObject({ appCenterAppName: asString })),
 
   // Maps from branch names to env.json settings:
-  envJson: asOptional(asMap(asMap(asUnknown)), {})
+  envJson: asOptional(asObject(asObject(asUnknown)), () => ({}))
 })
 export type ReleaseConfig = ReturnType<typeof asReleaseConfig>
 
 /**
  * deploy-config.json
  */
-export const asReleaseConfigFile = asJSON(asMap(asReleaseConfig))
+export const asReleaseConfigFile = asJSON(asObject(asReleaseConfig))
 export type ReleaseConfigFile = ReturnType<typeof asReleaseConfigFile>
 
 /**

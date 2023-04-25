@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asDate, asMap, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asDate, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
@@ -30,12 +30,12 @@ export interface MessageTweak {
 
 export const asMessageTweak = asObject<MessageTweak>({
   message: asString,
-  localeMessages: asOptional(asMap(asString)),
+  localeMessages: asOptional(asObject(asString)),
   uri: asOptional(asString),
   iconUri: asOptional(asString),
 
   countryCodes: asOptional(asArray(asString)),
-  hasLinkedBankMap: asOptional(asMap(asBoolean)), // Map of pluginIds
+  hasLinkedBankMap: asOptional(asObject(asBoolean)), // Map of pluginIds
   exactBuildNum: asOptional(asString),
   minBuildNum: asOptional(asString),
   maxBuildNum: asOptional(asString),

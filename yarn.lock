@@ -6409,15 +6409,10 @@ cleaner-config@^0.1.9:
     minimist "^1.2.5"
     sucrase "^3.17.1"
 
-cleaners@^0.3.1, cleaners@^0.3.11, cleaners@^0.3.12, cleaners@^0.3.13, cleaners@^0.3.8, cleaners@^0.3.9:
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.13.tgz#de9954f8c4ef01fcb54e41a8510f48059815b3e8"
-  integrity sha512-sCedc8LIXUhLmXT9rkkAToi9mjYhI7J/gKRWiF0Qw6eC0ymILHxq+vhuaKoKdcSWpYi2YqqwSlvNtD+92gf4pA==
-
-cleaners@^0.3.14:
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.15.tgz#d16738896f22aa5d7fce70516b9b95a391cf4009"
-  integrity sha512-Wa3e4gBYPdz/KI+setDTVsje4soP7uKAho0GQx9HXRAXeVGFMu3twTKEfjhTsepZPaQnjXtzzaHuEM1HlGeBPQ==
+cleaners@^0.3.1, cleaners@^0.3.11, cleaners@^0.3.12, cleaners@^0.3.13, cleaners@^0.3.14, cleaners@^0.3.16, cleaners@^0.3.8, cleaners@^0.3.9:
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.16.tgz#d3a7ab936cb78b0d6ac19ba87b2d28ec41f30502"
+  integrity sha512-Ecu8Fwv3wT7GV44K4Zas2CQJI11ZV/yPwoh8Gg9BSV6rAmhNsqFeWceA1RII1czbarFSG3XClUePrpI806OvRw==
 
 cli-boxes@^3.0.0:
   version "3.0.0"
@@ -7790,10 +7785,10 @@ ed2curve@^0.3.0:
   dependencies:
     tweetnacl "1.x.x"
 
-edge-core-js@^0.19.48, edge-core-js@^0.19.50:
-  version "0.19.50"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.50.tgz#578ccb961c86a99a5d3f79796446328546ee73f8"
-  integrity sha512-mFtVrz/HfilqrczHQJyjfssqXftimmy/PIo2SF7tzeg4vwrSbQYmbTWp8jgLQ+PswQhydVCihHjogoHmUu0frw==
+edge-core-js@^0.19.48:
+  version "0.19.49"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.19.49.tgz#96c4208de0e5f6d39ebf19f0877fb735e7bcc162"
+  integrity sha512-CC24oDqqY5v9FvHKzQpm1jRAFf6HnkFT6yuOAM2uwrBNfxbyUD265zgUkda1ZTAIq+eFd8XHzqrw5J3hfZZieQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -7817,10 +7812,37 @@ edge-core-js@^0.19.48, edge-core-js@^0.19.50:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.0.0.tgz#2a7d2ca3a01583b7c16a806ec61a1241f32a73d6"
-  integrity sha512-U4dw6BMQWxK9NMksfrpesFpIJoOz/q3QAbUI4w02C79R1k8JRBQ702hIZKeNNApNmZJsyJVm8l99/PvS3SUWZw==
+edge-core-js@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.21.1.tgz#fc6e86889cdc7bb32f65e6d9688e38e7125c9c32"
+  integrity sha512-TU6SRcsEgU/7c4+NoT8/mLAT/6u4la3Tc5HwNyqDyKu+uQLNAtvP8fIV0h6Z6i8DOQf3n8BddD6r5GgWoBEplQ==
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^4.0.0"
+    cleaners "^0.3.14"
+    currency-codes "^1.1.2"
+    disklet "^0.5.2"
+    edge-sync-client "^0.2.7"
+    elliptic "^6.4.0"
+    ethereumjs-tx "^1.3.7"
+    ethereumjs-util "^5.2.0"
+    hash.js "^1.1.7"
+    hmac-drbg "^1.0.1"
+    node-fetch "^2.6.1"
+    redux "^4.2.0"
+    redux-keto "^0.3.5"
+    redux-pixies "^0.3.6"
+    rfc4648 "^1.4.0"
+    scrypt-js "^2.0.3"
+    serverlet "^0.1.2"
+    yaob "^0.3.9"
+    yavent "^0.1.3"
+
+edge-currency-accountbased@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.2.0.tgz#9a0ab2e18a0858df41ff4562daee51a989b396bd"
+  integrity sha512-OVCu9antjqzJJfgOaleCrIhgz6wrQua4FDNl0jkYXPkHofCmkUA9qR0kA6H1m4pCUYtdBxbQLQtOp5yfv0h4cA==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7895,10 +7917,10 @@ edge-currency-plugins@^2.0.2:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.18.0.tgz#08659832ab4f745c6b6148103c8c23c8c74b3cbf"
-  integrity sha512-zfqvpDnMRrL4bu4udmES6njss/Qd+Fc6yzsIjCeJuxdWrrk01mfHtKx0daj8a6R+5Sc2065S2c2hc5FaW5vKjw==
+edge-exchange-plugins@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.19.0.tgz#ff4f1d2f5b62d1109d9ef3e2a985d7e81e58e777"
+  integrity sha512-Dm1sxAKKvnZPHxm3/K2Gi+7saxqtMKDNf3hscSXOb2uJb2HNb+nNaWqWshdvGY//Kr1cs+SH7sXqJgUXFs1kLw==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -7912,10 +7934,10 @@ edge-exchange-plugins@^0.18.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.4.3.tgz#33ea8af317d8ffadf8b7da98d5a5161cb5c629b5"
-  integrity sha512-SgiaIQgkYXFQOgpxNeM8TZiyxDirI/CgZ/7Gax0PTC1pgEjRP2s/hVL9KezhWweSe9lG0MzoDM7n/DzzpkBmtw==
+edge-login-ui-rn@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-1.4.4.tgz#4c000a445f1b7c347ee87800d152de112d0fd62e"
+  integrity sha512-3QZkvCeQbpQO4S9yhGVzvLFAk/p+0xgdnT5mjvveb0+wtgcRuGPlAInWT9mDfCK6QF23petJK1msfYXrt0WAng==
   dependencies:
     cleaners "^0.3.12"
     date-fns "^2.23.0"
@@ -14002,6 +14024,11 @@ react-native-draggable-flatlist@^4.0.1:
   dependencies:
     "@babel/preset-typescript" "^7.17.12"
 
+react-native-email-link@^1.14.5:
+  version "1.14.5"
+  resolved "https://registry.yarnpkg.com/react-native-email-link/-/react-native-email-link-1.14.5.tgz#05e13002bd850ebaf98477b4cfbfdfa972a57608"
+  integrity sha512-TNi9OeGcJlw6FXl1dWAKEBGJEgKPBfsiB3v8GaHqqCtzmWnKE+8y1Wfhaaloh37OJb2vqp1cwDpW5m6PiTXazA==
+
 react-native-fast-image@^8.5.11:
   version "8.5.11"
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
@@ -14040,6 +14067,11 @@ react-native-image-picker@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.0.6.tgz#0dfa5bb83bcf6ff58635ebb9201a185c2271e8cc"
   integrity sha512-Pp3UWKUADuMG1mz12m6dSO/R2KnvXVEd77bldrfTMFpz4PFc4iVKo+bHeS79It0mUBezfzDMgfesg/OPLSugvQ==
+
+react-native-in-app-review@^4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/react-native-in-app-review/-/react-native-in-app-review-4.3.3.tgz#61f09f110de18f0a470a9bb55b9f49600390085f"
+  integrity sha512-Q9sXBtK8tCBYFPCGmMgeMlkxXC5e6vAyPZK26OC1oOKUuKUd0QORnryk/qbwnuN4fLshHQN8UKlLgyHLGRuK3A==
 
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
@@ -14840,10 +14872,10 @@ rollup-plugin-node-resolve@4.0.0:
     is-module "^1.0.0"
     resolve "^1.8.1"
 
-rollup@^2.79.1:
-  version "2.79.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.79.1.tgz#bedee8faef7c9f93a2647ac0108748f497f081c7"
-  integrity sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==
+rollup@^3.20.6:
+  version "3.20.6"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.20.6.tgz#53c0fd73e397269d2ce5f0ec12851457dd53cacd"
+  integrity sha512-2yEB3nQXp/tBQDN0hJScJQheXdvU2wFhh6ld7K/aiZ1vYcak6N/BKjY1QrU6BvO2JWYS8bEs14FRaxXosxy2zw==
   optionalDependencies:
     fsevents "~2.3.2"
 

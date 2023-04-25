@@ -26,7 +26,7 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { EdgeTokenId, GuiDenomination, GuiExchangeRates, GuiFiatType, TransactionListTx } from '../types/types'
+import { EdgeTokenId, GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
 
@@ -202,14 +202,6 @@ export function fixFiatCurrencyCode(currencyCode: string) {
   if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
 
   return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
-}
-
-export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
-  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) !== '0' && edgeTransaction.nativeAmount.charAt(0) !== '-'
-}
-
-export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
-  return edgeTransaction.ourReceiveAddresses.length === 0 || (!!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-')
 }
 
 // multiplier / exchange rate / ( 1 / unit )

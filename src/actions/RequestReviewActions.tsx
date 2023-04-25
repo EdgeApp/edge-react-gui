@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
+import InAppReview from 'react-native-in-app-review'
 import * as StoreReview from 'react-native-store-review'
 import { sprintf } from 'sprintf-js'
 
@@ -16,20 +17,25 @@ const requestReview = async () => {
   if (Platform.OS === 'ios') {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
-    const title = sprintf(lstrings.request_review_question_title, config.appNameShort)
-    const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={title}
-        message={lstrings.request_review_question_subtitle}
-        buttons={{
-          ok: { label: lstrings.request_review_answer_yes },
-          cancel: { label: lstrings.request_review_answer_no }
-        }}
-      />
-    ))
-    if (result === 'ok') {
-      Linking.openURL(lstrings.request_review_android_page_link)
+    if (InAppReview.isAvailable()) {
+      // In-app review with comment support
+      InAppReview.RequestInAppReview()
+    } else {
+      const title = sprintf(lstrings.request_review_question_title, config.appNameShort)
+      const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={title}
+          message={lstrings.request_review_question_subtitle}
+          buttons={{
+            ok: { label: lstrings.request_review_answer_yes },
+            cancel: { label: lstrings.request_review_answer_no }
+          }}
+        />
+      ))
+      if (result === 'ok') {
+        Linking.openURL(lstrings.request_review_android_page_link)
+      }
     }
   } else {
     console.warn(`Unhandled Platform.OS: ${Platform.OS}. Unable to request review from user`)
