@@ -11,7 +11,7 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { snooze } from '../../util/utils'
-import { WcSmartContractModal } from '../modals/WcSmartContractModal'
+import { asWcSmartContractModalProps, WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
 interface Props {
@@ -104,9 +104,25 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('wcNewContractCall', obj => {
-        const { dApp, payload, uri, walletId } = obj
-        if (walletId == null) return
-        Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={walletId} dApp={dApp} payload={payload} uri={uri} />)
+        try {
+          const clean = asWcSmartContractModalProps(obj)
+          const { dApp, nativeAmount, networkFee, payload, tokenId, uri } = clean
+
+          Airship.show(bridge => (
+            <WcSmartContractModal
+              bridge={bridge}
+              dApp={dApp}
+              nativeAmount={nativeAmount}
+              networkFee={networkFee}
+              payload={payload}
+              tokenId={tokenId}
+              uri={uri}
+              wallet={wallet}
+            />
+          ))
+        } catch (e: any) {
+          console.warn('Invalid wcNewContractCall params', e)
+        }
       }),
 
       // These ones defer their work until later:
