@@ -2,11 +2,12 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { USD_FIAT } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toLocaleDate, toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
+import { useSelector } from '../../types/reactRedux'
 import { RouteProp } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
@@ -15,6 +16,10 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 type CoinRankingDataValueType = string | number | CoinRankingDataPercentChange | undefined
+
+export interface CoinRankingDetailsParams {
+  coinRankingData: CoinRankingData
+}
 
 interface Props {
   route: RouteProp<'coinRankingDetails'>
@@ -75,6 +80,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
 
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+
   const imageUrlObject = React.useMemo(
     () => ({
       uri: coinRankingData.imageUrl ?? ''
@@ -107,7 +114,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'priceChange24h':
       case 'high24h':
       case 'low24h':
-        return `${formatFiatString({ fiatAmount: baseString })} ${USD_FIAT.replace('iso:', '')}`
+        return `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':

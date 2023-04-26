@@ -11,6 +11,8 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { useSelector } from '../../types/reactRedux'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -43,7 +45,7 @@ interface Props {
   assetId: string // The asset's 'id' as defined by CoinGecko
 }
 
-const DATASET_URL_3S = 'https://api.coingecko.com/api/v3/coins/%1$s/market_chart/range?vs_currency=USD&from=%2$s&to=%3$s'
+const DATASET_URL_4S = 'https://api.coingecko.com/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
 const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
 const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
 const UNIX_SECONDS_WEEK_OFFSET = 7 * UNIX_SECONDS_DAY_OFFSET
@@ -119,6 +121,8 @@ const SwipeChartComponent = (params: Props) => {
 
   // #region Chart setup
 
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
     new Map<Timespan, ChartDataPoint[] | undefined>([
@@ -137,7 +141,7 @@ const SwipeChartComponent = (params: Props) => {
   const chartWidth = React.useRef(0)
   const chartHeight = React.useRef(0)
 
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency('iso:USD'), [])
+  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
@@ -183,12 +187,17 @@ const SwipeChartComponent = (params: Props) => {
           // Construct the dataset query
           const unixNow = Math.trunc(new Date().getTime() / 1000)
           const fromParam = unixNow - queryFromTimeOffset
-          const fetchUrl = sprintf(DATASET_URL_3S, assetId, fromParam, unixNow)
+          const fetchUrl = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
           fetch(fetchUrl)
             .then(async res => await res.json())
             .then((data: any) => {
               const marketChartRange = asCoinGeckoMarketChartRange(data)
-              const rawChartData = marketChartRange.prices.map(rawDataPoint => ({ x: new Date(rawDataPoint[0]), y: rawDataPoint[1] }))
+              const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+                return {
+                  x: new Date(rawDataPoint[0]),
+                  y: rawDataPoint[1]
+                }
+              })
               const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
 
               setChartData(reducedChartData)

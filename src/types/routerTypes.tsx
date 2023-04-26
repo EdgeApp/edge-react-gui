@@ -3,6 +3,7 @@ import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
+import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -16,7 +17,6 @@ import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CoinRankingData } from './coinrankTypes'
 import {
   CreateWalletType,
   EdgeTokenId,
@@ -74,9 +74,7 @@ interface RouteParamList {
   changePassword: {}
   changePin: {}
   coinRanking: {}
-  coinRankingDetails: {
-    coinRankingData: CoinRankingData
-  }
+  coinRankingDetails: CoinRankingDetailsParams
   confirmScene: ConfirmSceneParams
   createWalletAccountSelect: {
     accountName: string

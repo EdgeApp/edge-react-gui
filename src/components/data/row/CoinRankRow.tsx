@@ -4,10 +4,13 @@ import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
+import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
+import { getDefaultFiat } from '../../../selectors/SettingsSelectors'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
 import { useState } from '../../../types/reactHooks'
+import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { triggerHaptic } from '../../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../../util/logger'
@@ -30,6 +33,9 @@ type Timeout = ReturnType<typeof setTimeout>
 const CoinRankRowComponent = (props: Props) => {
   const { navigation, index, percentChangeTimeFrame, assetSubText, coinRanking } = props
   const { coinRankingDatas } = coinRanking
+
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
 
   const mounted = React.useRef<boolean>(true)
   const timeoutHandler = React.useRef<Timeout | undefined>()
@@ -89,8 +95,6 @@ const CoinRankRowComponent = (props: Props) => {
 
   const { currencyCode, price, marketCap, volume24h, percentChange, rank } = coinRow
   debugLog(LOG_COINRANK, `CoinRankRow index=${index} rank=${rank} currencyCode=${currencyCode}`)
-
-  const fiatSymbol = '$'
 
   let numDecimals
   let assetSubTextValue
