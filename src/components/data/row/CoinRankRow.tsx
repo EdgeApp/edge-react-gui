@@ -7,6 +7,7 @@ import { cacheStyles } from 'react-native-patina'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
+import { toPercentString } from '../../../locales/intl'
 import { getDefaultFiat } from '../../../selectors/SettingsSelectors'
 import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
 import { useState } from '../../../types/reactHooks'
@@ -129,7 +130,7 @@ const CoinRankRowComponent = (props: Props) => {
   // Calculate percent change string
   const percentChangeRaw = percentChange[percentChangeTimeFrame]
   numDecimals = getNumDecimals(percentChangeRaw, 2)
-  const percentChangeString = round(percentChangeRaw.toString(), -numDecimals)
+  const percentChangeString = toPercentString(percentChangeRaw / 100, { noGrouping: true })
   const negative = lt(percentChangeString, '0')
 
   // Calculate price string
@@ -137,7 +138,7 @@ const CoinRankRowComponent = (props: Props) => {
   const priceStyle = negative ? styles.negativeText : styles.positiveText
   const plusMinus = negative ? '' : '+'
   const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })}`
-  const percentString = `${plusMinus}${percentChangeString}%`
+  const percentString = `${plusMinus}${percentChangeString}`
 
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
