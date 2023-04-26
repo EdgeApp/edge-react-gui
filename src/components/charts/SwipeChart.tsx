@@ -11,6 +11,7 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
+import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { MinimalButton } from '../buttons/MinimalButton'
@@ -502,11 +503,11 @@ const SwipeChartComponent = (params: Props) => {
     <View style={styles.container}>
       {/* Timespan control bar */}
       <View style={styles.controlBar}>
-        {renderTimespanButton('H', 'hour', handleSetTimespanH)}
-        {renderTimespanButton('D', 'day', handleSetTimespanD)}
-        {renderTimespanButton('W', 'week', handleSetTimespanW)}
-        {renderTimespanButton('M', 'month', handleSetTimespanM)}
-        {renderTimespanButton('Y', 'year', handleSetTimespanY)}
+        {renderTimespanButton(lstrings.coin_rank_hour, 'hour', handleSetTimespanH)}
+        {renderTimespanButton(lstrings.coin_rank_day, 'day', handleSetTimespanD)}
+        {renderTimespanButton(lstrings.coin_rank_week, 'week', handleSetTimespanW)}
+        {renderTimespanButton(lstrings.coin_rank_month, 'month', handleSetTimespanM)}
+        {renderTimespanButton(lstrings.coin_rank_year, 'year', handleSetTimespanY)}
       </View>
 
       {/* Chart */}
