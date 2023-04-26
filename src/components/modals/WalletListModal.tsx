@@ -15,7 +15,6 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeTokenId } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { makeCurrencyCodeTable } from '../../util/utils'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -60,12 +59,6 @@ interface Props {
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
-
-  // Deprecated. Use `allowedAssets` and `excludeAssets` instead.
-  // Valid formats include "ETH", "REP", or "ETH-REP",
-  // and an empty list is the same as an undefined list:
-  allowedCurrencyCodes?: string[]
-  excludeCurrencyCodes?: string[]
 }
 
 const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
@@ -92,11 +85,7 @@ export function WalletListModal(props: Props) {
     createWalletId,
     headerTitle,
     showBankOptions = false,
-    showCreateWallet,
-
-    // Deprecated:
-    allowedCurrencyCodes,
-    excludeCurrencyCodes
+    showCreateWallet
   } = props
 
   // #region Constants
@@ -123,22 +112,11 @@ export function WalletListModal(props: Props) {
 
   // #region Init
 
-  // Upgrade deprecated props
-  const [legacyAllowedAssets, legacyExcludeAssets] = React.useMemo(() => {
-    if (allowedCurrencyCodes == null && excludeCurrencyCodes == null) return []
-
-    const lookup = makeCurrencyCodeTable(account.currencyConfig)
-    const allowedAssets = upgradeCurrencyCodes(lookup, allowedCurrencyCodes)
-    const excludeAssets = upgradeCurrencyCodes(lookup, excludeCurrencyCodes)
-
-    return [allowedAssets, excludeAssets]
-  }, [account, allowedCurrencyCodes, excludeCurrencyCodes])
-
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
   const walletListExcludeAssets = React.useMemo(() => {
-    const result = excludeAssets ?? legacyExcludeAssets
+    const result = excludeAssets
     return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
-  }, [allowKeysOnlyMode, excludeAssets, legacyExcludeAssets])
+  }, [allowKeysOnlyMode, excludeAssets])
 
   // #endregion Init
 
@@ -249,7 +227,7 @@ export function WalletListModal(props: Props) {
       />
       <View style={styles.walletsMargin}>
         <WalletList
-          allowedAssets={allowedAssets ?? legacyAllowedAssets}
+          allowedAssets={allowedAssets}
           allowedWalletIds={allowedWalletIds}
           excludeAssets={walletListExcludeAssets}
           excludeWalletIds={excludeWalletIds}

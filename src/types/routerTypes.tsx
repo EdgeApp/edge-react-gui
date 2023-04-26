@@ -266,7 +266,6 @@ interface RouteParamList {
   } // TODO
   securityAlerts: {}
   send: {
-    allowedCurrencyCodes?: string[]
     guiMakeSpendInfo?: GuiMakeSpendInfo
     selectedWalletId?: string
     selectedCurrencyCode?: string
