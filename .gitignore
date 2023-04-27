@@ -110,3 +110,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Maestro
+/maestro/env.js
