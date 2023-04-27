@@ -264,34 +264,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-/**
- * Precisely identify the assets named by a currency-code array.
- * Accepts plain currency codes, such as "ETH" or "REP",
- * but also scoped currency codes like "ETH-REP".
- *
- * The goal is to delete this once the wallet stops using this legacy format
- * internally.
- */
-export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeTokenId[], currencyCodes?: string[]): EdgeTokenId[] | undefined {
-  if (currencyCodes == null || currencyCodes.length === 0) return
-
-  const out: EdgeTokenId[] = []
-  for (const currencyCode of currencyCodes) {
-    const [parentCode, tokenCode] = currencyCode.split('-')
-
-    if (tokenCode == null) {
-      // It's a plain code, like "REP", so add all matches:
-      out.push(...lookup(parentCode))
-    } else {
-      // It's a scoped code, like "ETH-REP", so filter using the parent:
-      const parent = lookup(parentCode).find(match => match.tokenId == null)
-      if (parent == null) continue
-      out.push(...lookup(tokenCode).filter(match => match.pluginId === parent.pluginId))
-    }
-  }
-  return out
-}
-
 // Given a list of assets, shows a modal for a user to pick a wallet for that asset.
 // If only one wallet exists for that asset, auto pick that wallet
 export const pickWallet = async ({
