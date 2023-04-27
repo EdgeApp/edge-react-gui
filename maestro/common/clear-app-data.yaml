@@ -1,0 +1,6 @@
+# Launches the app just to clear the data and closes it back.
+appId: co.edgesecure.app
+---
+- launchApp:
+    clearState: true
+- stopApp
