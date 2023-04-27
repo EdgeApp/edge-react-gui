@@ -60,14 +60,6 @@ function TransactionListComponent(props: Props) {
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const transactions = useSelector(state => state.ui.transactionList.transactions)
 
-  // Effects:
-  React.useEffect(() => {
-    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
-    if (reset) {
-      setReset(false)
-    }
-  }, [currencyCode, dispatch, reset, wallet])
-
   // ---------------------------------------------------------------------------
   // Derived values
   // ---------------------------------------------------------------------------
@@ -122,6 +114,17 @@ function TransactionListComponent(props: Props) {
     }
     return sections
   }, [filteredTransactions.length, finalTransactions, loading, searching])
+
+  // ---------------------------------------------------------------------------
+  // Side-Effects
+  // ---------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
+    if (reset) {
+      setReset(false)
+    }
+  }, [currencyCode, dispatch, reset, wallet])
 
   // ---------------------------------------------------------------------------
   // Handlers
