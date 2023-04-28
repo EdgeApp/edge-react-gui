@@ -218,7 +218,7 @@ export const banxaProvider: FiatProviderFactory = {
         return allowedCurrencyCodes
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
+        const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
 
         if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
@@ -227,7 +227,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(providerId, displayCurrencyCode)
+          banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
         } catch (e: any) {
           throw new FiatProviderError({ errorType: 'assetUnsupported' })
         }
