@@ -193,12 +193,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { account, navigation, selectWalletToken, route } = this.props
+    const { account, navigation, selectWalletToken } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
-    Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />
-    ))
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
         const wallet = account.currencyWallets[walletId]
