@@ -1277,6 +1277,11 @@ const strings = {
   coin_rank_title_all_time_low: 'All Time Low',
   coin_rank_market_cap_abbreviation: 'MCap',
   coin_rank_volume_24hr_abbreviation: 'Vol 24h',
+  coin_rank_hour: '1H',
+  coin_rank_day: '24H',
+  coin_rank_week: '7D',
+  coin_rank_month: '30D',
+  coin_rank_year: '1Y',
 
   // #endregion CoinRanking
 

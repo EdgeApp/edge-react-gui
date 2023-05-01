@@ -5,8 +5,10 @@ import { TouchableOpacity, View } from 'react-native'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
@@ -50,6 +52,9 @@ const CoinRankingComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { navigation } = props
+
+  const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
+
   const mounted = React.useRef<boolean>(true)
   const textInput = React.useRef<OutlinedTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
@@ -60,7 +65,6 @@ const CoinRankingComponent = (props: Props) => {
   const [searching, setSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
-  const [fiatCode] = useState<string>('iso:USD')
   const extraData = React.useMemo(() => ({ assetSubText, percentChangeTimeFrame }), [assetSubText, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
@@ -139,7 +143,7 @@ const CoinRankingComponent = (props: Props) => {
         let start = 1
         debugLog(LOG_COINRANK, `queryLoop dataSize=${dataSize} requestDataSize=${requestDataSize}`)
         while (start < requestDataSize) {
-          const url = `v2/coinrank?fiatCode=${fiatCode}&start=${start}&length=${QUERY_PAGE_SIZE}`
+          const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
           const response = await fetchRates(url)
           if (!response.ok) {
             const text = await response.text()
