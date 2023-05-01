@@ -1234,6 +1234,7 @@ const strings = {
 
   // Tron resource staking
   stake_resource_display_name: 'TRON Resources',
+  stake_resource_display_name_v2: 'TRON Resources v2',
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 

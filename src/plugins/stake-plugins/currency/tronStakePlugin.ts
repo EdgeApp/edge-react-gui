@@ -34,6 +34,46 @@ const policyDefault = {
 const policies: StakePolicy[] = [
   {
     ...policyDefault,
+    mustMaxUnstake: false,
+    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakePolicyId: 'currency:tron:BANDWIDTH_V2',
+    rewardAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'BANDWIDTH_V2',
+        displayName: lstrings.stake_resource_bandwidth,
+        cdnName: 'bandwidth'
+      }
+    ],
+    stakeAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'TRX'
+      }
+    ]
+  },
+  {
+    ...policyDefault,
+    mustMaxUnstake: false,
+    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakePolicyId: 'currency:tron:ENERGY_V2',
+    rewardAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'ENERGY_V2',
+        displayName: lstrings.stake_resource_energy,
+        cdnName: 'energy'
+      }
+    ],
+    stakeAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'TRX'
+      }
+    ]
+  },
+  {
+    ...policyDefault,
     deprecated: true,
     stakePolicyId: 'currency:tron:BANDWIDTH',
     rewardAssets: [
@@ -114,7 +154,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
           }
         ],
         otherParams: {
-          type: isStake ? 'add' : 'remove',
+          type: policy.deprecated ? 'remove' : isStake ? 'addV2' : 'removeV2',
           params: { nativeAmount, resource }
         }
       }
@@ -155,7 +195,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const stakedAmount = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
       const nativeAmount = stakedAmount?.nativeAmount ?? '0'
       const balanceTrx = wallet.balances[currencyCode] ?? '0'
-      const locktime = new Date(stakedAmount?.unlockDate ?? Date.now())
+      const locktime = stakedAmount?.unlockDate != null ? new Date(stakedAmount.unlockDate) : undefined
 
       return {
         allocations: [
@@ -168,7 +208,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
           }
         ],
         canStake: !policy.deprecated && gt(balanceTrx, '0'),
-        canUnstake: new Date() > new Date(locktime),
+        canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
         canClaim: false
       }
     }
