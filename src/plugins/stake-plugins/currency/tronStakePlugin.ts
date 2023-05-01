@@ -34,6 +34,7 @@ const policyDefault = {
 const policies: StakePolicy[] = [
   {
     ...policyDefault,
+    deprecated: true,
     stakePolicyId: 'currency:tron:BANDWIDTH',
     rewardAssets: [
       {
@@ -52,6 +53,7 @@ const policies: StakePolicy[] = [
   },
   {
     ...policyDefault,
+    deprecated: true,
     stakePolicyId: 'currency:tron:ENERGY',
     rewardAssets: [
       {
@@ -79,7 +81,19 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
-      return filterStakePolicies(policies, filter)
+      const out: StakePolicy[] = []
+
+      for (const policy of policies) {
+        if (policy.deprecated && filter?.wallet != null) {
+          const deprecatedPolicyBalance = filter.wallet.stakingStatus.stakedAmounts.find(
+            stakedAmount => policy.rewardAssets[0].currencyCode === stakedAmount.otherParams?.type && gt(stakedAmount.nativeAmount, '0')
+          )
+          if (deprecatedPolicyBalance == null) continue
+        }
+        out.push(policy)
+      }
+
+      return filterStakePolicies(out, filter)
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, nativeAmount, wallet } = request
@@ -153,7 +167,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
             locktime
           }
         ],
-        canStake: gt(balanceTrx, '0'),
+        canStake: !policy.deprecated && gt(balanceTrx, '0'),
         canUnstake: new Date() > new Date(locktime),
         canClaim: false
       }

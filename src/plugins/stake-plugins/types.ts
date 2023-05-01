@@ -92,6 +92,9 @@ export interface StakePolicy {
   // Do not allow Max button when staking
   disableMaxStake?: boolean
   mustMaxUnstake?: boolean
+
+  // Policy is no longer active for staking
+  deprecated?: boolean
 }
 
 // -----------------------------------------------------------------------------
