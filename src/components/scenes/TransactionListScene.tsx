@@ -1,4 +1,4 @@
-import { lt } from 'biggystring'
+import { gte } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
@@ -91,31 +91,33 @@ function TransactionListComponent(props: Props) {
   )
 
   const sections = React.useMemo(() => {
-    const checkFilteredTransactions = searching && filteredTransactions.length === 0
-    if (checkFilteredTransactions || loading) {
+    if (loading || (searching && finalTransactions.length === 0)) {
       return [{ title: lstrings.transaction_list_search_no_result, data: [] }]
     }
 
+    // Spam filter:
+    const transactions = finalTransactions.filter(tx => {
+      if (tx.isSend) return true
+      if (spamThreshold == null) return true
+      return gte(tx.nativeAmount, spamThreshold)
+    })
+
+    // Headers:
     const sections: Section[] = []
-    for (const transaction of finalTransactions) {
+    for (const transaction of transactions) {
       const dateString = transaction.dateString
-      const checkTitle = sections.find(section => section.title === dateString)
-      if (!checkTitle) {
+      const section = sections.find(section => section.title === dateString)
+      if (section == null) {
         sections.push({
           title: dateString,
           data: [transaction]
         })
       } else {
-        for (const section of sections) {
-          if (section.title === dateString) {
-            section.data.push(transaction)
-            break
-          }
-        }
+        section.data.push(transaction)
       }
     }
     return sections
-  }, [filteredTransactions.length, finalTransactions, loading, searching])
+  }, [finalTransactions, loading, searching, spamThreshold])
 
   // ---------------------------------------------------------------------------
   // Side-Effects
@@ -205,9 +207,6 @@ function TransactionListComponent(props: Props) {
   })
 
   const renderTransaction = useHandler((transaction: FlatListItem<TransactionListTx>) => {
-    if (spamThreshold != null && !transaction.item.isSend && lt(transaction.item.nativeAmount, spamThreshold)) {
-      return null
-    }
     return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
   })
 
