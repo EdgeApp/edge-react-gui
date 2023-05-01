@@ -108,12 +108,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
       getStakePlugins().then(stakePlugins => {
-        let stakePolicies: StakePolicy[] = []
+        const stakePolicies: StakePolicy[] = []
         for (const stakePlugin of stakePlugins) {
-          const filteredStatePolicies = stakePlugin.policies.filter(stakePolicy => {
-            return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
-          })
-          stakePolicies = [...stakePolicies, ...filteredStatePolicies]
+          const policies = stakePlugin.getPolicies({ wallet, currencyCode })
+          stakePolicies.push(...policies)
         }
         const newState = { stakePolicies, stakePlugins }
         this.setState(newState)

@@ -2,7 +2,18 @@ import { gt } from 'biggystring'
 import { EdgeSpendInfo } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
-import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePlugin, StakePolicy, StakePosition, StakePositionRequest, StakeProviderInfo } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  filterStakePolicies,
+  QuoteAllocation,
+  StakePlugin,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition,
+  StakePositionRequest,
+  StakeProviderInfo
+} from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: lstrings.stake_resource_display_name,
@@ -67,7 +78,9 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 
 export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
   const instance: StakePlugin = {
-    policies,
+    getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
+      return filterStakePolicies(policies, filter)
+    },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, nativeAmount, wallet } = request
       const { pluginId, currencyCode } = wallet.currencyInfo

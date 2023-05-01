@@ -160,8 +160,28 @@ export interface StakePosition {
 // Stake Plugin
 // -----------------------------------------------------------------------------
 
+export interface StakePolicyFilter {
+  wallet?: EdgeCurrencyWallet
+  currencyCode?: string
+}
+
+export const filterStakePolicies = (policies: StakePolicy[], filter?: StakePolicyFilter): StakePolicy[] => {
+  if (filter == null) return policies
+
+  let out: StakePolicy[] = [...policies]
+  const { currencyCode, wallet } = filter
+
+  if (wallet != null) {
+    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId))
+  }
+  if (currencyCode != null) {
+    out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode))
+  }
+  return out
+}
+
 export interface StakePlugin {
-  policies: StakePolicy[]
+  getPolicies: (filter?: StakePolicyFilter) => StakePolicy[]
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }

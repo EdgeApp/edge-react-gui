@@ -6,12 +6,14 @@ import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/networ
 import {
   ChangeQuote,
   ChangeQuoteRequest,
+  filterStakePolicies,
   PositionAllocation,
   QuoteAllocation,
   QuoteInfo,
   StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
+  StakePolicyFilter,
   StakePoolFullError,
   StakePosition,
   StakePositionRequest,
@@ -222,7 +224,9 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
   }
 
   const instance: StakePlugin = {
-    policies,
+    getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
+      return filterStakePolicies(policies, filter)
+    },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, currencyCode, wallet } = request
       const policy = getPolicyFromId(stakePolicyId)
