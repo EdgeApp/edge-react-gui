@@ -1,8 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { lt, lte } from 'biggystring'
+import { lt } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -215,13 +215,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     }))
   }
 
-  onNext = () => {
-    if (this.state.isFioMode) {
-      this.setState({ isFioMode: false })
-      this.fioAddressModal()
-    }
-  }
-
   flipInputRef = (ref: ExchangedFlipInput | null) => {
     if (ref?.flipInput) {
       this.flipInput = ref.flipInput
@@ -351,26 +344,12 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               keyboardVisible={false}
               isFiatOnTop
               isFocus={false}
-              onNext={this.onNext}
-              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
               inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
               headerCallback={this.handleOpenWalletListModal}
               onError={this.onError}
             />
           </Card>
 
-          {Platform.OS === 'ios' ? (
-            <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
-              <View style={styles.accessoryView}>
-                <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_cancel_cap : ''}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_next_capitalized : 'Done'}</Text>
-                </TouchableOpacity>
-              </View>
-            </InputAccessoryView>
-          ) : null}
           <Carousel
             items={this.state.addresses}
             keyExtractor={item => item.addressString}
@@ -473,7 +452,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   shareViaShare = () => {
     this.shareMessage()
-    // console.log('shareViaShare')
   }
 
   fioAddressModal = () => {
@@ -486,44 +464,13 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       showError(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (this.state.amounts == null || lte(this.state.amounts.nativeAmount, '0')) {
-      if (Platform.OS === 'android') {
-        showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
-        return
-      } else {
-        this.fioMode()
-        return
-      }
+    if (this.state.amounts == null) {
+      showToast(`${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
+      return
     }
     navigation.navigate('fioRequestConfirmation', {
       amounts: this.state.amounts
     })
-  }
-
-  fioMode = () => {
-    if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputBottomFocus()
-      this.setState({ isFioMode: true })
-    }
-  }
-
-  cancelFioMode = () => {
-    this.setState({ isFioMode: false }, () => {
-      if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
-      }
-    })
-  }
-
-  nextFioMode = () => {
-    if (this.state.isFioMode && (!this.state.amounts || lte(this.state.amounts.nativeAmount, '0'))) {
-      showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
-    } else {
-      if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
-      }
-      this.onNext()
-    }
   }
 }
 
@@ -572,7 +519,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   accessoryButton: {
     paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1)
+    paddingHorizontal: theme.rem(1),
+    borderColor: 'red',
+    borderWidth: 0.5
   },
   accessoryText: {
     color: theme.inputAccessoryText
