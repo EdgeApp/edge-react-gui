@@ -1,17 +1,15 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { NavigationButton } from './NavigationButton'
 
 interface Props {
   type: 'exit' | 'help'
-  placement: 'left' | 'right'
 }
 
 const title = {
@@ -20,10 +18,8 @@ const title = {
 }
 
 export const HeaderTextButton = (props: Props) => {
-  const { placement, type } = props
+  const { type } = props
   const navigation = useNavigation()
-  const theme = useTheme()
-  const styles = getStyles(theme)
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
@@ -35,26 +31,8 @@ export const HeaderTextButton = (props: Props) => {
   })
 
   return (
-    <TouchableOpacity style={[styles.container, placement === 'left' ? styles.left : styles.right]} onPress={handlePress}>
+    <NavigationButton paddingRem={[0, 1]} onPress={handlePress}>
       <EdgeText>{title[type]}</EdgeText>
-    </TouchableOpacity>
+    </NavigationButton>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 44 // This is a fixed height of the navigation header no matter what screen size. Default by router-flux
-  },
-  left: {
-    paddingLeft: theme.rem(1),
-    paddingRight: theme.rem(2.5),
-    paddingBottom: theme.rem(0.25)
-  },
-  right: {
-    paddingLeft: theme.rem(2.5),
-    paddingRight: theme.rem(1),
-    paddingBottom: theme.rem(0.25)
-  }
-}))

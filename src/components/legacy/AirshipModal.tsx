@@ -5,11 +5,10 @@ import { BlurView } from 'rn-id-blurview'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
-import { SafeAreaGap } from '../common/LayoutContext'
 
 interface Props<T> {
   bridge: AirshipBridge<T>
-  children: React.ReactNode | ((gap: SafeAreaGap) => React.ReactNode)
+  children: React.ReactNode
 
   // True to have the modal float in the center of the screen,
   // or false for a bottom modal:

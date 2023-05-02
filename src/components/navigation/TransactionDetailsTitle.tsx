@@ -25,10 +25,10 @@ export function TransactionDetailsTitle() {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    alignItems: 'center',
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
-    paddingHorizontal: theme.rem(1.5)
+    justifyContent: 'center'
   },
   date: {
     fontFamily: theme.fontFaceMedium
