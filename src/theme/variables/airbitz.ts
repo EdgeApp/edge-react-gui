@@ -2,17 +2,6 @@ import { Platform } from 'react-native'
 
 import { scale } from '../../util/scaling'
 
-/**
- * Calculates the height of the header (where the back button lives).
- */
-export function getHeaderHeight() {
-  if (Platform.OS === 'ios') {
-    const majorVersionIOS = Number(Platform.Version)
-    return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
-  }
-  return 56
-}
-
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
   websiteUrl: 'https://edge.app',
