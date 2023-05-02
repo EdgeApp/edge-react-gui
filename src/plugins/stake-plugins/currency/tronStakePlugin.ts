@@ -1,4 +1,4 @@
-import { gt } from 'biggystring'
+import { gt, lt } from 'biggystring'
 import { EdgeSpendInfo } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -7,6 +7,7 @@ import {
   ChangeQuoteRequest,
   filterStakePolicies,
   QuoteAllocation,
+  StakeBelowLimitError,
   StakePlugin,
   StakePolicy,
   StakePolicyFilter,
@@ -14,6 +15,8 @@ import {
   StakePositionRequest,
   StakeProviderInfo
 } from '../types'
+
+const MIN_TRX_STAKE = '1000000' // 1 TRX
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: lstrings.stake_resource_display_name,
@@ -141,6 +144,10 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
 
       if (pluginId !== wallet.currencyInfo.pluginId) {
         throw new Error('pluginId mismatch between request and policy')
+      }
+
+      if (lt(nativeAmount, MIN_TRX_STAKE)) {
+        throw new StakeBelowLimitError(request, request.currencyCode, MIN_TRX_STAKE)
       }
 
       const policy = getPolicyFromId(stakePolicyId)
