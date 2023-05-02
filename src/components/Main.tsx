@@ -208,7 +208,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerTransparent: true
 }
 const firstSceneScreenOptions: StackNavigationOptions = {
-  headerLeft: () => <HeaderTextButton type="help" placement="left" />,
+  headerLeft: () => <HeaderTextButton type="help" />,
   headerTitle: EdgeLogoHeader,
   headerTitleAlign: 'center'
 }
@@ -308,14 +308,14 @@ const EdgeAppStack = () => {
         name="changeMiningFee"
         component={ChangeMiningFeeScene}
         options={{
-          headerRight: () => <HeaderTextButton type="help" placement="right" />
+          headerRight: () => <HeaderTextButton type="help" />
         }}
       />
       <Stack.Screen
         name="changeMiningFee2"
         component={ChangeMiningFeeScene2}
         options={{
-          headerRight: () => <HeaderTextButton type="help" placement="right" />
+          headerRight: () => <HeaderTextButton type="help" />
         }}
       />
       <Stack.Screen
@@ -347,7 +347,7 @@ const EdgeAppStack = () => {
         component={CreateWalletAccountSelectScene}
         options={{
           title: lstrings.create_wallet_account_activate,
-          headerRight: () => <HeaderTextButton type="help" placement="right" />
+          headerRight: () => <HeaderTextButton type="help" />
         }}
       />
       <Stack.Screen
@@ -355,7 +355,7 @@ const EdgeAppStack = () => {
         component={CreateWalletAccountSetupScene}
         options={{
           title: lstrings.create_wallet_create_account,
-          headerRight: () => <HeaderTextButton type="help" placement="right" />
+          headerRight: () => <HeaderTextButton type="help" />
         }}
       />
       <Stack.Screen
@@ -426,7 +426,7 @@ const EdgeAppStack = () => {
         name="extraTab"
         component={ExtraTabScene}
         options={{
-          headerLeft: () => <HeaderTextButton type="help" placement="left" />
+          headerLeft: () => <HeaderTextButton type="help" />
         }}
       />
       <Stack.Screen
@@ -654,7 +654,7 @@ const EdgeAppStack = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginView'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
@@ -663,7 +663,7 @@ const EdgeAppStack = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
@@ -672,7 +672,7 @@ const EdgeAppStack = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
@@ -795,7 +795,7 @@ const EdgeBuyTabScreen = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
@@ -813,7 +813,7 @@ const EdgeSellTabScreen = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" placement="right" />,
+          headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
       />
