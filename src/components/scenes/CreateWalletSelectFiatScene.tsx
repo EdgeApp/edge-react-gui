@@ -98,7 +98,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // Remove items that cannot be imported
     const importNotSupportedItems: WalletCreateItem[] = []
     for (let i = newWalletItemsCopy.length - 1; i >= 0; i--) {
-      if (typeof SPECIAL_CURRENCY_INFO[newWalletItemsCopy[i].pluginId].isImportKeySupported !== 'object') {
+      const { isImportKeySupported = false } = SPECIAL_CURRENCY_INFO[newWalletItemsCopy[i].pluginId] ?? {}
+      if (!isImportKeySupported) {
         const removedItem = newWalletItemsCopy.splice(i, 1)
         importNotSupportedItems.push(removedItem[0])
       }
