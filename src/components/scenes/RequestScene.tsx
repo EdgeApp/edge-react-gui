@@ -25,6 +25,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showWebViewModal } from '../modals/HelpModal'
 import { QrModal } from '../modals/QrModal'
@@ -454,8 +455,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     this.shareMessage()
   }
 
-  fioAddressModal = () => {
-    const { navigation } = this.props
+  fioAddressModal = async () => {
+    const { navigation, wallet, currencyCode } = this.props
+    if (wallet?.id == null || currencyCode == null) return
+
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
       return
@@ -464,13 +467,20 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       showError(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (this.state.amounts == null) {
+    if (this.state.amounts == null || zeroString(this.state.amounts?.nativeAmount)) {
       showToast(`${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
       return
     }
-    navigation.navigate('fioRequestConfirmation', {
-      amounts: this.state.amounts
-    })
+
+    const fioAddressTo = await Airship.show<string | undefined>(bridge => (
+      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} />
+    ))
+    if (fioAddressTo != null) {
+      navigation.navigate('fioRequestConfirmation', {
+        amounts: this.state.amounts,
+        fioAddressTo
+      })
+    }
   }
 }
 

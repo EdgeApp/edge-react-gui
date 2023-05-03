@@ -70,7 +70,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       loading: false,
       fioAddressFrom: '',
       walletAddresses: [],
-      fioAddressTo: '',
+      fioAddressTo: this.props.route.params.fioAddressTo,
       memo: '',
       settingFioAddressTo: false,
       showSlider: true
@@ -79,7 +79,6 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   componentDidMount() {
     this.setAddressesState()
-    this.openFioAddressToModal()
   }
 
   setAddressesState = async () => {
