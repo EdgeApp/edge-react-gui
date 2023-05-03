@@ -22,7 +22,7 @@ import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
+import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals, zeroString } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
@@ -36,7 +36,7 @@ import { FiatText } from '../text/FiatText'
 import { AddressQr } from '../themed/AddressQr'
 import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
-import { ExchangedFlipInput, ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
+import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { FlipInput } from '../themed/FlipInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -87,10 +87,12 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestSceneComponent extends React.Component<Props, State> {
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  flipInputRef: React.RefObject<ExchangedFlipInputRef>
   unsubscribeAddressChanged: (() => void) | undefined
 
   constructor(props: Props) {
     super(props)
+    this.flipInputRef = React.createRef<ExchangedFlipInputRef>()
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
       if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
@@ -216,12 +218,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     }))
   }
 
-  flipInputRef = (ref: ExchangedFlipInput | null) => {
-    if (ref?.flipInput) {
-      this.flipInput = ref.flipInput
-    }
-  }
-
   handleAddressBlockExplorer = () => {
     const { wallet } = this.props
     const addressExplorer = wallet != null ? wallet.currencyInfo.addressExplorer : null
@@ -248,11 +244,15 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   handleOpenWalletListModal = () => {
     const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
+      async ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           const wallet = account.currencyWallets[walletId]
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
           this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
+
+          if (this.flipInputRef.current != null) {
+            this.flipInputRef.current.setAmount('fiat', this.state.amounts?.fiatAmount ?? '0')
+          }
         }
       }
     )
@@ -334,20 +334,17 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <Card>
-            <ExchangedFlipInput
-              ref={this.flipInputRef}
-              headerText={flipInputHeaderText}
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-              overridePrimaryExchangeAmount=""
-              onExchangeAmountChanged={this.onExchangeAmountChanged}
-              keyboardVisible={false}
-              isFiatOnTop
-              isFocus={false}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+            <ExchangedFlipInput2
+              forceField="crypto"
               headerCallback={this.handleOpenWalletListModal}
-              onError={this.onError}
+              headerText={flipInputHeaderText}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+              keyboardVisible={false}
+              onAmountChanged={this.onExchangeAmountChanged}
+              ref={this.flipInputRef}
+              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+              tokenId={primaryCurrencyInfo.tokenId}
+              walletId={wallet.id}
             />
           </Card>
 
@@ -515,23 +512,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(2)
   },
-
   rightChevronContainer: {
     flexDirection: 'row',
     alignItems: 'center'
-  },
-
-  accessoryView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: theme.inputAccessoryBackground
-  },
-  accessoryButton: {
-    paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1),
-    borderColor: 'red',
-    borderWidth: 0.5
   },
   accessoryText: {
     color: theme.inputAccessoryText
