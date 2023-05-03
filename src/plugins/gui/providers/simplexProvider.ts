@@ -21,6 +21,7 @@ const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
 const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
+  algorand: { ALGO: 'ALGO' },
   avalanche: { AVAX: 'AVAX-C' },
   binance: { AVA: 'AVA', BNB: 'BNB' },
   binancesmartchain: {
@@ -100,6 +101,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   hedera: { HBAR: 'HBAR' },
   litecoin: { LTC: 'LTC' },
   one: { ONE: 'ONE' },
+  optimism: { ETH: 'ETH-OPTIMISM', OP: 'OP' },
   polkadot: { DOT: 'DOT' },
   polygon: { GMEE: 'GMEE', MATIC: 'MATIC', USDC: 'USDC-MATIC' },
   qtum: { QTUM: 'QTUM' },
