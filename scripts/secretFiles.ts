@@ -1,3 +1,4 @@
+import childProcess from 'child_process'
 import fs from 'fs'
 import { copySync } from 'fs-extra'
 import { join } from 'path'
@@ -6,6 +7,10 @@ const argv = process.argv
 const mylog = console.log
 
 const _rootProjectDir = join(__dirname, '../')
+
+let _currentPath = __dirname
+const baseDir = join(_currentPath, '..')
+const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
 
 const filePaths = [
   { file: 'deploy-config.json', path: './' },
@@ -21,7 +26,18 @@ async function main() {
   }
 
   const repoBranch = argv[2] // master or develop
-  const filesDir = argv[3] // edge or some other app
+  const filesArg = argv[3] // edge or some other app
+  let filesDir: string
+
+  if (filesArg.startsWith('git@') && filesArg.endsWith('.git')) {
+    // Specified a git repo so clone into a local dir
+    filesDir = './jenkins-files'
+    chdir(baseDir)
+    fs.rmSync(filesDir, { recursive: true, force: true })
+    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone --depth 1 ${filesArg} ${filesDir}`)
+  } else {
+    filesDir = filesArg
+  }
 
   if (repoBranch.length < 3) throw new Error(`Invalid branch ${repoBranch}`)
   if (filesDir.length < 3) throw new Error(`Invalid filesDir ${filesDir}`)
@@ -53,6 +69,22 @@ function quietCopy(src: string, dest: string) {
     console.log(`Copying ${src} > ${dest}`)
     fs.copyFileSync(src, dest)
   }
+}
+
+function chdir(path: string) {
+  console.log('chdir: ' + path)
+  _currentPath = path
+}
+
+function call(cmdstring: string) {
+  console.log('call: ' + cmdstring)
+  childProcess.execSync(cmdstring, {
+    encoding: 'utf8',
+    timeout: 3600000,
+    stdio: 'inherit',
+    cwd: _currentPath,
+    killSignal: 'SIGKILL'
+  })
 }
 
 main().catch(e => console.log(e.message))
