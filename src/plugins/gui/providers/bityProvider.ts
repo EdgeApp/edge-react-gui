@@ -296,6 +296,7 @@ export const bityProvider: FiatProviderFactory = {
           let isAddCurrencySuccess = false
           if (currency.tags.length === 1 && currency.tags[0] === 'fiat') {
             allowedCurrencyCodes.fiat['iso:' + currency.code.toUpperCase()] = currency
+            isAddCurrencySuccess = true
           } else if (currency.tags.includes('crypto')) {
             // Bity reports cryptos with a set of multiple tags such that there is
             // overlap, such as USDC being 'crypto', 'ethereum', 'erc20'.
@@ -311,7 +312,7 @@ export const bityProvider: FiatProviderFactory = {
           }
 
           // Unhandled combination not caught by cleaner. Skip to be safe.
-          if (!isAddCurrencySuccess) console.warn('Unhandled Bity supported currency: ', currency)
+          if (!isAddCurrencySuccess) console.log('Unhandled Bity supported currency: ', currency)
         }
 
         return allowedCurrencyCodes
