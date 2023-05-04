@@ -1,8 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { lt, lte } from 'biggystring'
+import { lt } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -22,9 +22,10 @@ import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
+import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals, zeroString } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showWebViewModal } from '../modals/HelpModal'
 import { QrModal } from '../modals/QrModal'
@@ -35,7 +36,7 @@ import { FiatText } from '../text/FiatText'
 import { AddressQr } from '../themed/AddressQr'
 import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
-import { ExchangedFlipInput, ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
+import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { FlipInput } from '../themed/FlipInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -86,10 +87,12 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestSceneComponent extends React.Component<Props, State> {
   flipInput: React.ElementRef<typeof FlipInput> | null = null
+  flipInputRef: React.RefObject<ExchangedFlipInputRef>
   unsubscribeAddressChanged: (() => void) | undefined
 
   constructor(props: Props) {
     super(props)
+    this.flipInputRef = React.createRef<ExchangedFlipInputRef>()
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(SPECIAL_CURRENCY_INFO).forEach(pluginId => {
       if (getSpecialCurrencyInfo(pluginId).minimumPopupModals) {
@@ -215,19 +218,6 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     }))
   }
 
-  onNext = () => {
-    if (this.state.isFioMode) {
-      this.setState({ isFioMode: false })
-      this.fioAddressModal()
-    }
-  }
-
-  flipInputRef = (ref: ExchangedFlipInput | null) => {
-    if (ref?.flipInput) {
-      this.flipInput = ref.flipInput
-    }
-  }
-
   handleAddressBlockExplorer = () => {
     const { wallet } = this.props
     const addressExplorer = wallet != null ? wallet.currencyInfo.addressExplorer : null
@@ -254,11 +244,15 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   handleOpenWalletListModal = () => {
     const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
+      async ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           const wallet = account.currencyWallets[walletId]
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
           this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
+
+          if (this.flipInputRef.current != null) {
+            this.flipInputRef.current.setAmount('fiat', this.state.amounts?.fiatAmount ?? '0')
+          }
         }
       }
     )
@@ -340,37 +334,20 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <Card>
-            <ExchangedFlipInput
-              ref={this.flipInputRef}
-              headerText={flipInputHeaderText}
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-              overridePrimaryExchangeAmount=""
-              onExchangeAmountChanged={this.onExchangeAmountChanged}
-              keyboardVisible={false}
-              isFiatOnTop
-              isFocus={false}
-              onNext={this.onNext}
-              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+            <ExchangedFlipInput2
+              forceField="crypto"
               headerCallback={this.handleOpenWalletListModal}
-              onError={this.onError}
+              headerText={flipInputHeaderText}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+              keyboardVisible={false}
+              onAmountChanged={this.onExchangeAmountChanged}
+              ref={this.flipInputRef}
+              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+              tokenId={primaryCurrencyInfo.tokenId}
+              walletId={wallet.id}
             />
           </Card>
 
-          {Platform.OS === 'ios' ? (
-            <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
-              <View style={styles.accessoryView}>
-                <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_cancel_cap : ''}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? lstrings.string_next_capitalized : 'Done'}</Text>
-                </TouchableOpacity>
-              </View>
-            </InputAccessoryView>
-          ) : null}
           <Carousel
             items={this.state.addresses}
             keyExtractor={item => item.addressString}
@@ -473,11 +450,12 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   shareViaShare = () => {
     this.shareMessage()
-    // console.log('shareViaShare')
   }
 
-  fioAddressModal = () => {
-    const { navigation } = this.props
+  fioAddressModal = async () => {
+    const { navigation, wallet, currencyCode } = this.props
+    if (wallet?.id == null || currencyCode == null) return
+
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
       return
@@ -486,43 +464,19 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       showError(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
       return
     }
-    if (this.state.amounts == null || lte(this.state.amounts.nativeAmount, '0')) {
-      if (Platform.OS === 'android') {
-        showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
-        return
-      } else {
-        this.fioMode()
-        return
-      }
+    if (this.state.amounts == null || zeroString(this.state.amounts?.nativeAmount)) {
+      showToast(`${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
+      return
     }
-    navigation.navigate('fioRequestConfirmation', {
-      amounts: this.state.amounts
-    })
-  }
 
-  fioMode = () => {
-    if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputBottomFocus()
-      this.setState({ isFioMode: true })
-    }
-  }
-
-  cancelFioMode = () => {
-    this.setState({ isFioMode: false }, () => {
-      if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
-      }
-    })
-  }
-
-  nextFioMode = () => {
-    if (this.state.isFioMode && (!this.state.amounts || lte(this.state.amounts.nativeAmount, '0'))) {
-      showError(`${lstrings.fio_request_by_fio_address_error_invalid_amount_header}. ${lstrings.fio_request_by_fio_address_error_invalid_amount}`)
-    } else {
-      if (this.flipInput) {
-        this.flipInput.textInputBottomBlur()
-      }
-      this.onNext()
+    const fioAddressTo = await Airship.show<string | undefined>(bridge => (
+      <AddressModal bridge={bridge} walletId={wallet.id} currencyCode={currencyCode} title={lstrings.fio_confirm_request_fio_title} />
+    ))
+    if (fioAddressTo != null) {
+      navigation.navigate('fioRequestConfirmation', {
+        amounts: this.state.amounts,
+        fioAddressTo
+      })
     }
   }
 }
@@ -558,21 +512,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(2)
   },
-
   rightChevronContainer: {
     flexDirection: 'row',
     alignItems: 'center'
-  },
-
-  accessoryView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: theme.inputAccessoryBackground
-  },
-  accessoryButton: {
-    paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1)
   },
   accessoryText: {
     color: theme.inputAccessoryText

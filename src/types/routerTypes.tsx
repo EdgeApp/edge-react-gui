@@ -190,6 +190,7 @@ interface RouteParamList {
   }
   fioRequestConfirmation: {
     amounts: ExchangedFlipInputAmounts
+    fioAddressTo: string
   }
   fioRequestList: {}
   fioSentRequestDetails: {
