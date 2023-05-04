@@ -206,7 +206,7 @@ const asEvmWcRpcPayload = asObject({
         data: asString,
         gas: asOptional(asString),
         gasPrice: asOptional(asString),
-        value: asString,
+        value: asOptional(asString),
         nonce: asOptional(asString)
       }),
       asOptional(asString, '')
