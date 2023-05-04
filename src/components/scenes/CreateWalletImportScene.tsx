@@ -132,6 +132,7 @@ const CreateWalletImportComponent = (props: Props) => {
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         scrollEnabled={scrollEnabled}
+        keyboardShouldPersistTaps="handled"
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
       >
