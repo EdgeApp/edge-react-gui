@@ -1,5 +1,5 @@
 import { lt, toFixed } from 'biggystring'
-import { asArray, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { asArray, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -135,6 +135,23 @@ interface BitySellOrderRequest {
   partner_fee: { factor: number }
 }
 
+const asBityBuyPaymentDetails = asObject({
+  iban: asString,
+  swift_bic: asString,
+  reference: asString,
+  recipient_name: asString,
+  recipient: asString
+})
+
+type BityBuyPaymentDetails = ReturnType<typeof asBityBuyPaymentDetails>
+
+const asBitySellPaymentDetails = asObject({
+  crypto_address: asString,
+  type: asValue('crypto_address')
+})
+
+type BitySellPaymentDetails = ReturnType<typeof asBitySellPaymentDetails>
+
 const asBityApproveQuoteResponse = asObject({
   id: asString,
   input: asObject({
@@ -147,15 +164,7 @@ const asBityApproveQuoteResponse = asObject({
     currency: asString,
     crypto_address: asOptional(asString)
   }),
-  payment_details: asMaybe(
-    asObject({
-      iban: asString,
-      swift_bic: asString,
-      reference: asString,
-      recipient_name: asString,
-      recipient: asString
-    })
-  )
+  payment_details: asMaybe(asEither(asBityBuyPaymentDetails, asBitySellPaymentDetails))
 })
 
 type BityApproveQuoteResponse = ReturnType<typeof asBityApproveQuoteResponse>
@@ -420,9 +429,9 @@ export const bityProvider: FiatProviderFactory = {
                 const { input, output, id, payment_details: paymentDetails } = approveQuoteRes
 
                 if (isBuy) {
-                  await completeBuyOrder(paymentDetails, showUi, id, input, output)
+                  await completeBuyOrder(asBityBuyPaymentDetails(paymentDetails), showUi, id, input, output)
                 } else {
-                  await completeSellOrder(coreWallet, inputCurrencyCode, input, output, id, showUi)
+                  await completeSellOrder(coreWallet, inputCurrencyCode, input, asBitySellPaymentDetails(paymentDetails), id, showUi)
                 }
 
                 showUi.popScene()
@@ -447,7 +456,7 @@ const completeSellOrder = async (
   coreWallet: EdgeCurrencyWallet,
   inputCurrencyCode: string,
   input: { amount: string; currency: string; crypto_address: string | undefined },
-  output: { amount: string; currency: string; crypto_address: string | undefined },
+  paymentDetails: BitySellPaymentDetails,
   id: string,
   showUi: FiatPluginUi
 ) => {
@@ -464,7 +473,7 @@ const completeSellOrder = async (
     spendTargets: [
       {
         nativeAmount,
-        publicAddress: input.crypto_address
+        publicAddress: paymentDetails.crypto_address
       }
     ],
     metadata: {
@@ -476,13 +485,13 @@ const completeSellOrder = async (
 }
 
 const completeBuyOrder = async (
-  paymentDetails: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined,
+  paymentDetails: BityBuyPaymentDetails,
   showUi: FiatPluginUi,
   id: string,
   input: { amount: string; currency: string; crypto_address: string | undefined },
   output: { amount: string; currency: string; crypto_address: string | undefined }
 ) => {
-  if (paymentDetails == null || output.crypto_address == null) return
+  if (output.crypto_address == null) return
 
   const { iban, swift_bic: swiftBic, recipient, reference } = paymentDetails
 
@@ -522,20 +531,7 @@ const executeSellOrderFetch = async (
   sepaInfo: { name: string; iban: string; swift: string },
   homeAddress: { address: string; address2: string | undefined; city: string; country: string; state: string; postalCode: string },
   clientId: string
-): Promise<{
-  id: string
-  input: {
-    amount: any
-    currency: any
-    crypto_address: any
-  }
-  output: {
-    amount: any
-    currency: any
-    crypto_address: any
-  }
-  payment_details: { iban: string; swift_bic: string; reference: string; recipient_name: string; recipient: string } | undefined
-} | null> => {
+): Promise<BityApproveQuoteResponse | null> => {
   return await approveBityQuote(
     coreWallet,
     {
