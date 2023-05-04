@@ -174,9 +174,8 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       }
       case 'algo_signTxn': {
         const cleanPayload = asAlgoWcRpcPayload(payload)
-        const tx = cleanPayload.params[0][0].txn
-        const signedTx = await wallet.signMessage(tx)
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signedTx)
+        const signedTxs = await Promise.all(cleanPayload.params[0].map(async txnObj => await wallet.signMessage(txnObj.txn)))
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signedTxs)
         break
       }
     }
@@ -219,7 +218,7 @@ const asAlgoWcRpcPayload = asObject({
   id: asEither(asString, asNumber),
   method: asAlgoPayloadMethod,
   params: asTuple(
-    asTuple(
+    asArray(
       asObject({
         txn: asString,
         message: asOptional(asString)
