@@ -1,3 +1,4 @@
+import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
 import { StringMap } from '../types/types'
 
@@ -96,6 +97,14 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 // Strip away 'wallet:' prefix and '-bip' suffix, if present
 export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
 
+interface ImportKeyOption {
+  optionName: string
+  displayName: string
+  required: boolean
+  inputType: OutlinedTextInputProps['keyboardType']
+  inputValidation: RegExp
+}
+
 interface SpecialCurrencyInfo {
   initWalletName: string
   chainCode: string
@@ -117,6 +126,7 @@ interface SpecialCurrencyInfo {
     keyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
   }
   isImportKeySupported: boolean
+  importKeyOptions?: ImportKeyOption[]
 
   // Flags that could move to EdgeCurrencyInfo:
   fioChainCode?: string
@@ -597,6 +607,15 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     isImportKeySupported: false,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: /^\d+$/
+      }
+    ],
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
@@ -609,6 +628,15 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: false,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: /^\d+$/
+      }
+    ],
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
