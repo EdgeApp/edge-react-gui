@@ -97,7 +97,7 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 // Strip away 'wallet:' prefix and '-bip' suffix, if present
 export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
 
-interface ImportKeyOption {
+export interface ImportKeyOption {
   optionName: string
   displayName: string
   required: boolean
@@ -606,7 +606,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ZEC',
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
-    isImportKeySupported: false,
+    isImportKeySupported: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
@@ -627,7 +627,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ARRR',
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
-    isImportKeySupported: false,
+    isImportKeySupported: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',

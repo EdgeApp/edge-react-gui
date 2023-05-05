@@ -43,6 +43,7 @@ import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene as CreateWalletAccountSelectSceneComponent } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene as CreateWalletAccountSetupSceneComponent } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene as CreateWalletCompletionSceneComponent } from './scenes/CreateWalletCompletionScene'
+import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneComponent } from './scenes/CreateWalletImportOptionsScene'
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
@@ -128,6 +129,7 @@ const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectScene
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
 const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
+const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsSceneComponent)
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
@@ -369,6 +371,13 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="createWalletImport"
         component={CreateWalletImportScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="createWalletImportOptions"
+        component={CreateWalletImportOptionsScene}
         options={{
           headerRight: () => null
         }}

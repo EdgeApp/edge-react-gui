@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -119,6 +120,10 @@ const CreateWalletImportComponent = (props: Props) => {
       }
     }
 
+    if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
+      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
+      return
+    }
     navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
   })
 

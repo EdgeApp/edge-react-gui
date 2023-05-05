@@ -101,6 +101,12 @@ interface RouteParamList {
     walletNames: { [key: string]: string }
     fiatCode: string
   }
+  createWalletImportOptions: {
+    createWalletList: WalletCreateItem[]
+    walletNames: { [key: string]: string }
+    fiatCode: string
+    importText: string
+  }
   createWalletSelectCrypto: {
     newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
     defaultSelection?: EdgeTokenId[]
