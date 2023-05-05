@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -27,15 +27,16 @@ export interface CreateWalletOptions {
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
   walletName?: string
+  keyOptions?: JsonObject
 }
 
-export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText }: CreateWalletOptions) => {
+export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText, keyOptions = {} }: CreateWalletOptions) => {
   // Try and get the new format param from the legacy walletType if it's mentioned
   const [type, format] = walletType.split('-')
   const opts = {
     name: walletName,
     fiatCurrencyCode,
-    keyOptions: format ? { format } : {},
+    keyOptions: format != null ? { ...keyOptions, format } : { ...keyOptions },
     importText
   }
   const out = await account.createCurrencyWallet(type, opts)

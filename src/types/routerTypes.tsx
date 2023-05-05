@@ -94,6 +94,7 @@ interface RouteParamList {
     walletNames: { [key: string]: string }
     fiatCode: string
     importText?: string
+    keyOptions?: Map<string, { [opt: string]: string | undefined }>
   }
   createWalletImport: {
     createWalletList: WalletCreateItem[]

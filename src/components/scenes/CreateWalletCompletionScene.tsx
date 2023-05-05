@@ -29,7 +29,7 @@ interface Props {
 
 const CreateWalletCompletionComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList, walletNames, fiatCode, importText } = route.params
+  const { createWalletList, walletNames, fiatCode, keyOptions = new Map(), importText } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -47,9 +47,15 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const walletPromises = React.useMemo<Array<() => Promise<EdgeCurrencyWallet>>>(() => {
     return newWalletItems.map(item => {
       return async () =>
-        await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiatCode}`, importText })
+        await createWallet(account, {
+          walletType: item.walletType,
+          walletName: walletNames[item.key],
+          fiatCurrencyCode: `iso:${fiatCode}`,
+          keyOptions: keyOptions.get(item.pluginId),
+          importText
+        })
     })
-  }, [account, fiatCode, importText, newWalletItems, walletNames])
+  }, [account, fiatCode, importText, keyOptions, newWalletItems, walletNames])
 
   const tokenPromise = React.useMemo(() => {
     return async () => await dispatch(enableTokensAcrossWallets(newTokenItems))
