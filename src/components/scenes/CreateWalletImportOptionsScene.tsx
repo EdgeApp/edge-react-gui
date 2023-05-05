@@ -16,7 +16,15 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { WalletCreateItem } from '../themed/WalletList'
 import { Tile } from '../tiles/Tile'
+
+export interface CreateWalletImportOptionsParams {
+  createWalletList: WalletCreateItem[]
+  walletNames: { [key: string]: string }
+  fiatCode: string
+  importText: string
+}
 
 interface Props {
   navigation: NavigationProp<'createWalletImportOptions'>

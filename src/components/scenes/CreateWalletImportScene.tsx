@@ -21,6 +21,12 @@ import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextI
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
+export interface CreateWalletImportParams {
+  createWalletList: WalletCreateItem[]
+  walletNames: { [key: string]: string }
+  fiatCode: string
+}
+
 interface Props {
   navigation: NavigationProp<'createWalletImport'>
   route: RouteProp<'createWalletImport'>

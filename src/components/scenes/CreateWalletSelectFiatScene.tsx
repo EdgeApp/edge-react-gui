@@ -31,6 +31,10 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { WalletCreateItem } from '../themed/WalletList'
 
+export interface CreateWalletSelectFiatParams {
+  createWalletList: WalletCreateItem[]
+}
+
 interface Props {
   navigation: NavigationProp<'createWalletSelectFiat'>
   route: RouteProp<'createWalletSelectFiat'>

@@ -5,13 +5,17 @@ import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
 import { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
+import { CreateWalletCompletionParams } from '../components/scenes/CreateWalletCompletionScene'
+import { CreateWalletImportOptionsParams } from '../components/scenes/CreateWalletImportOptionsScene'
+import { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
+import { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
+import { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
 import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
-import { WalletCreateItem } from '../components/themed/WalletList'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
@@ -19,7 +23,6 @@ import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnt
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import {
   CreateWalletType,
-  EdgeTokenId,
   FeeOption,
   FioConnectionWalletItem,
   FioDomain,
@@ -89,31 +92,11 @@ interface RouteParamList {
     selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
   }
-  createWalletCompletion: {
-    createWalletList: WalletCreateItem[]
-    walletNames: { [key: string]: string }
-    fiatCode: string
-    importText?: string
-    keyOptions?: Map<string, { [opt: string]: string | undefined }>
-  }
-  createWalletImport: {
-    createWalletList: WalletCreateItem[]
-    walletNames: { [key: string]: string }
-    fiatCode: string
-  }
-  createWalletImportOptions: {
-    createWalletList: WalletCreateItem[]
-    walletNames: { [key: string]: string }
-    fiatCode: string
-    importText: string
-  }
-  createWalletSelectCrypto: {
-    newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
-    defaultSelection?: EdgeTokenId[]
-  }
-  createWalletSelectFiat: {
-    createWalletList: WalletCreateItem[]
-  }
+  createWalletCompletion: CreateWalletCompletionParams
+  createWalletImport: CreateWalletImportParams
+  createWalletImportOptions: CreateWalletImportOptionsParams
+  createWalletSelectCrypto: CreateWalletSelectCryptoParams
+  createWalletSelectFiat: CreateWalletSelectFiatParams
   currencyNotificationSettings: {
     currencyInfo: EdgeCurrencyInfo
   }

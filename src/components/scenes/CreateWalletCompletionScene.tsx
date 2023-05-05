@@ -22,6 +22,14 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
+export interface CreateWalletCompletionParams {
+  createWalletList: WalletCreateItem[]
+  walletNames: { [key: string]: string }
+  fiatCode: string
+  importText?: string
+  keyOptions?: Map<string, { [opt: string]: string | undefined }>
+}
+
 interface Props {
   navigation: NavigationProp<'createWalletCompletion'>
   route: RouteProp<'createWalletCompletion'>
