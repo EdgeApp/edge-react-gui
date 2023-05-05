@@ -216,6 +216,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <FlashList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
+          estimatedItemSize={theme.rem(4.25)}
           extraData={walletNames}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
