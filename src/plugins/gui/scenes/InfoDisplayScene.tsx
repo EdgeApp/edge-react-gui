@@ -111,7 +111,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
         <EdgeText style={styles.groupTitle}>{group.groupTitle}</EdgeText>
         {group.items.map(item => (
           <View style={styles.textRow} key={item.label}>
-            <EdgeText style={styles.itemLabel}>{item.label}:</EdgeText>
+            <EdgeText style={styles.itemLabel} numberOfLines={2}>{`${item.label}:`}</EdgeText>
             <View style={styles.itemValueRow}>
               <EdgeText style={styles.itemValue} numberOfLines={3}>
                 {item.value ?? lstrings.n_a}
