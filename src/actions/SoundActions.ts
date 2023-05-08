@@ -2,7 +2,7 @@ import Sound from 'react-native-sound'
 
 let receiveSoundPromise: Promise<Sound> | undefined
 let sendSoundPromise: Promise<Sound> | undefined
-Sound.setCategory('Ambient')
+Sound.setCategory('Ambient', true)
 
 export async function playReceiveSound(): Promise<void> {
   if (!receiveSoundPromise) receiveSoundPromise = loadSound('audio_received.mp3')
