@@ -147,7 +147,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const { context } = state.core
 
     // Sign up for push notifications:
-    await dispatch(registerNotificationsV2())
+    dispatch(registerNotificationsV2()).catch(e => console.error(e))
 
     const walletInfos = account.allKeys
     const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
