@@ -72,8 +72,8 @@ function unpackDeviceReferral(raw: any): DeviceReferral {
 const asDiskDeviceReferral = asObject({
   installerId: asOptional(asString),
   currencyCodes: asOptional(asArray(asCurrencyCode)),
-  messages: asOptional(asArray(asMessageTweak), []),
-  plugins: asOptional(asArray(asPluginTweak), []),
+  messages: asOptional(asArray(asMessageTweak), () => []),
+  plugins: asOptional(asArray(asPluginTweak), () => []),
 
   // Legacy fields:
   currencyCode: asOptional(asString)

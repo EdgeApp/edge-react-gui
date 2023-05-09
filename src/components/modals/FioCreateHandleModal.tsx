@@ -15,19 +15,26 @@ import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
   bridge: AirshipBridge<boolean>
+  createWalletsPromise: Promise<void>
 }
 
 export const FioCreateHandleModal = (props: Props) => {
-  const { bridge } = props
+  const { bridge, createWalletsPromise } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const isCreateWalletsInProgress = typeof createWalletsPromise === 'object' && createWalletsPromise instanceof Promise
+  const [showPleaseWait, setShowPleaseWait] = React.useState(false)
 
   const handleCancel = useHandler(() => {
     bridge.resolve(false)
   })
 
-  const handleConfirm = useHandler(() => {
+  const handleConfirm = useHandler(async () => {
+    if (isCreateWalletsInProgress) {
+      setShowPleaseWait(true)
+      await createWalletsPromise
+    }
     bridge.resolve(true)
   })
 
@@ -43,6 +50,11 @@ export const FioCreateHandleModal = (props: Props) => {
           {lstrings.fio_free_handle_message}
         </EdgeText>
       </View>
+      {showPleaseWait ? (
+        <EdgeText style={styles.waitMessage} numberOfLines={3}>
+          {lstrings.fio_free_handle_please_wait}
+        </EdgeText>
+      ) : null}
       <MainButton type="primary" label={lstrings.get_started_button} onPress={handleConfirm} marginRem={[1, 1, 0.5, 1]} />
       <MainButton type="escape" label={lstrings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 1, 1]} />
     </ThemedModal>
@@ -80,6 +92,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   message: {
     fontSize: theme.rem(1),
     textAlign: 'center'
+  },
+  waitMessage: {
+    fontSize: theme.rem(0.75),
+    textAlign: 'center',
+    fontColor: theme.secondaryText
   },
   button: {
     paddingHorizontal: theme.rem(1)

@@ -1,5 +1,6 @@
 import { abs, add, div, gt, mul } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue } from 'cleaners'
+import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -7,12 +8,12 @@ import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
+import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
-import { getDenominationFromCurrencyInfo } from '../../selectors/DenominationSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { hexToDecimal, isHex, removeHexPrefix, zeroString } from '../../util/utils'
+import { zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
@@ -24,68 +25,42 @@ import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
 import { IconTile } from '../tiles/IconTile'
 
-interface WcRpcPayload {
-  id: string | number
-  method: 'personal_sign' | 'eth_sign' | 'eth_signTypedData' | 'eth_signTypedData_v4' | 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sendRawTransaction'
-  params: any[]
-}
-
-interface Props {
+interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
-  walletId: string
-  dApp: JsonObject
-  uri: string
-  payload: WcRpcPayload
+  wallet: EdgeCurrencyWallet
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, walletId, dApp, payload, uri } = props
+  const { bridge, dApp, nativeAmount, networkFee, payload, tokenId, uri, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const dAppName: string = dApp.peerMeta.name
-  const icon: string = dApp.peerMeta.icons[0]
-  const params = payload.params[0]
-  const toAddress: string | null = params.to
+  const dAppName = dApp.peerMeta.name
+  const icon = dApp.peerMeta.icons[0]
 
-  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
-  const wallet = currencyWallets[walletId]
-
-  if (wallet == null) return null
   const walletName = getWalletName(wallet)
 
-  let amountCurrencyCode = wallet.currencyInfo.currencyCode
-  if (toAddress != null) {
-    const metaTokens = wallet.currencyInfo.metaTokens
-    const token = metaTokens.find(token => token.contractAddress != null && token.contractAddress.toLowerCase() === toAddress.toLowerCase())
-    if (token != null) amountCurrencyCode = token.currencyCode
-  }
+  const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
+
   const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId, metaTokens } = wallet.currencyInfo
 
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
   const feeCurrencyBalance = wallet.balances[feeCurrencyCode]
 
-  let amountCrypto = '0'
-  let networkFeeCrypto = '0'
-  if (isHex(removeHexPrefix(params?.value ?? ''))) {
-    amountCrypto = hexToDecimal(params.value)
-  }
-  if (isHex(removeHexPrefix(params?.gas ?? '')) && isHex(removeHexPrefix(params?.gasPrice ?? ''))) {
-    networkFeeCrypto = hexToDecimal(removeHexPrefix(mul(params.gas, params.gasPrice, 16)))
-  }
-
-  const amountDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, amountCurrencyCode)
-  const feeDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, feeCurrencyCode)
+  const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
+  const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
   const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)
-  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFeeCrypto)
-  const totalNativeCrypto = mul(add(amountCrypto, amountCryptoAsFeeCrypto), '-1')
+  const amountCryptoAsFeeCrypto = mul(amountCurrencyToFeeCurrencyExchangeRate, networkFee)
+  const totalNativeCrypto = mul(add(nativeAmount, amountCryptoAsFeeCrypto), '-1')
 
-  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFeeCrypto, feeCurrencyBalance)
+  const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFee, feeCurrencyBalance)
 
   const handleSubmit = () => {
     wcRequestResponse(wallet, uri, true, payload)
-      .then(async () => await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />))
+      .then(() => {
+        Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />).catch(() => {})
+      })
       .catch(showError)
       .finally(props.bridge.resolve)
   }
@@ -96,22 +71,9 @@ export const WcSmartContractModal = (props: Props) => {
 
   const renderWarning = () => {
     return isInsufficientBal ? (
-      <Alert
-        // @ts-expect-error
-        marginTop={0.5}
-        title={lstrings.wc_smartcontract_warning_title}
-        message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)}
-        type="warning"
-      />
+      <Alert title={lstrings.wc_smartcontract_warning_title} message={sprintf(lstrings.wc_smartcontract_insufficient_text, feeCurrencyStr)} type="warning" />
     ) : (
-      <Alert
-        numberOfLines={0}
-        // @ts-expect-error
-        marginTop={0.5}
-        title={lstrings.wc_smartcontract_warning_title}
-        message={lstrings.wc_smartcontract_warning_text}
-        type="warning"
-      />
+      <Alert numberOfLines={0} title={lstrings.wc_smartcontract_warning_title} message={lstrings.wc_smartcontract_warning_text} type="warning" />
     )
   }
 
@@ -121,9 +83,6 @@ export const WcSmartContractModal = (props: Props) => {
     <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
   )
 
-  // FIXME: HACK!!1! This is a shortcut so we can remove currency code from the fiat text component without completely refactoring this file
-  const tokenId = contractAddress != null ? contractAddress.toLowerCase().replace('0x', '') : undefined
-
   return (
     <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <View style={styles.title}>
@@ -132,12 +91,12 @@ export const WcSmartContractModal = (props: Props) => {
       </View>
       <ScrollView>
         {renderWarning()}
-        {!zeroString(amountCrypto) && (
+        {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.string_amount}
-            nativeCryptoAmount={amountCrypto}
+            nativeCryptoAmount={nativeAmount}
             denomination={amountDenom}
-            walletId={walletId}
+            walletId={wallet.id}
             tokenId={tokenId}
           />
         )}
@@ -147,15 +106,10 @@ export const WcSmartContractModal = (props: Props) => {
         <IconTile title={lstrings.wc_smartcontract_dapp} iconUri={icon}>
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
-        {!zeroString(networkFeeCrypto) && (
-          <CryptoFiatAmountTile
-            title={lstrings.wc_smartcontract_network_fee}
-            nativeCryptoAmount={networkFeeCrypto}
-            denomination={feeDenom}
-            walletId={walletId}
-          />
+        {zeroString(networkFee) ? null : (
+          <CryptoFiatAmountTile title={lstrings.wc_smartcontract_network_fee} nativeCryptoAmount={networkFee} denomination={feeDenom} walletId={wallet.id} />
         )}
-        {!zeroString(totalNativeCrypto) && (
+        {zeroString(totalNativeCrypto) ? null : (
           <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
         )}
         {slider}
@@ -182,7 +136,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: WcRpcPayload): Promise<void> {
+async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: Payload): Promise<void> {
   if (!approve) {
     await wallet.otherMethods.wcRejectRequest(uri, payload)
     return
@@ -194,25 +148,34 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       case 'eth_sign':
       case 'eth_signTypedData':
       case 'eth_signTypedData_v4': {
-        const typedData = payload.method === 'eth_signTypedData' || payload.method === 'eth_signTypedData_v4'
-        const result = await wallet.signMessage(payload.params[1], { otherParams: { typedData } })
-        await wallet.otherMethods.wcApproveRequest(uri, payload, result)
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
+        const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
         break
       }
       case 'eth_signTransaction': {
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signTx = await wallet.signTx(tx)
-        await wallet.otherMethods.wcApproveRequest(uri, payload, signTx.signedTx)
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signTx.signedTx)
         break
       }
       case 'eth_sendTransaction':
       case 'eth_sendRawTransaction': {
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(payload.params[0])
+        const cleanPayload = asEvmWcRpcPayload(payload)
+        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signedTx = await wallet.signTx(tx)
         const sentTx = await wallet.broadcastTx(signedTx)
-        await wallet.otherMethods.wcApproveRequest(uri, payload, sentTx.txid)
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, sentTx.txid)
+        break
+      }
+      case 'algo_signTxn': {
+        const cleanPayload = asAlgoWcRpcPayload(payload)
+        const signedTxs = await Promise.all(cleanPayload.params[0].map(async txnObj => await wallet.signMessage(txnObj.txn)))
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signedTxs)
         break
       }
     }
@@ -221,3 +184,63 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
     throw e
   }
 }
+
+const asEvmPayloadMethod = asValue(
+  'personal_sign',
+  'eth_sign',
+  'eth_signTypedData',
+  'eth_signTypedData_v4',
+  'eth_sendTransaction',
+  'eth_signTransaction',
+  'eth_sendRawTransaction'
+)
+const asEvmWcRpcPayload = asObject({
+  id: asEither(asString, asNumber),
+  method: asEvmPayloadMethod,
+  params: asEither(
+    asTuple(
+      asObject({
+        from: asString,
+        to: asOptional(asString),
+        data: asString,
+        gas: asOptional(asString),
+        gasPrice: asOptional(asString),
+        value: asOptional(asString),
+        nonce: asOptional(asString)
+      }),
+      asOptional(asString, '')
+    ),
+    asArray(asString)
+  )
+})
+const asAlgoPayloadMethod = asValue('algo_signTxn')
+const asAlgoWcRpcPayload = asObject({
+  id: asEither(asString, asNumber),
+  method: asAlgoPayloadMethod,
+  params: asTuple(
+    asArray(
+      asObject({
+        txn: asString,
+        message: asOptional(asString)
+      })
+    )
+  )
+})
+
+const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmPayloadMethod) }).withRest
+type Payload = ReturnType<typeof asPayload>
+
+export const asWcSmartContractModalProps = asObject({
+  dApp: asObject({
+    peerMeta: asObject({
+      name: asString,
+      icons: asArray(asString)
+    })
+  }),
+  nativeAmount: asString,
+  networkFee: asString,
+  tokenId: asOptional(asString),
+  uri: asString,
+  payload: asPayload
+})
+type WcSmartContractModalProps = ReturnType<typeof asWcSmartContractModalProps>

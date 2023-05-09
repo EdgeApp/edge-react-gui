@@ -98,6 +98,7 @@ const strings = {
   error_paymentprotocol_multi_tx_invoice: 'Multiple transactions found in payment request',
   error_paymentprotocol_no_payment_option: 'No currencies available for this Payment Protocol invoice. Accepted currencies: %s',
   error_paymentprotocol_tx_verification_failed: 'Payment Protocol transaction verification mismatch',
+  error_spend_amount_less_then_min_s: 'Spend amount is less than minimum of %s',
 
   // Warning messages:
   warning_low_fee_selected: 'Low Fee Selected',
@@ -208,6 +209,8 @@ const strings = {
   fragment_wallets_copy_seed: 'Copy Seed',
   fragment_wallets_copied_seed: 'Copied Seed',
   fragment_wallets_get_seed_wallet: 'Get Seed',
+  fragment_wallets_view_private_view_key: 'Private View Key',
+  fragment_wallets_view_private_view_key_warning: `The private view key allows the receiver to see the balance in your Monero wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
@@ -515,6 +518,7 @@ const strings = {
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
   string_first_algorand_wallet_name: 'My Algorand',
+  string_first_zksync_wallet_name: 'My zkSync',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -918,6 +922,7 @@ const strings = {
   fio_free_handle_title_m: 'Get a *FIO* Handle',
   fio_free_handle_title: 'Get a FIO Handle',
   fio_free_handle_message: 'Give your wallet an easy-to-read handle to simplify sending/receiving transactions.',
+  fio_free_handle_please_wait: 'Please wait for wallet creation to complete...',
   fio_register_handle_button: 'Register Handle',
   fio_register_handle_error: 'There was an issue registering your handle. Please try again later.',
   fio_register_handle_taken_error_s: 'The handle %1$s has already been taken.',
@@ -1485,7 +1490,10 @@ const strings = {
   getting_started_slide_4_title: `*Help* Is Here If\nYou Need It`,
   getting_started_welcome_message: `Edge is the open source tool you need\nto invest, secure, and put your crypto in action.`,
   getting_started_welcome_prompt: `Swipe to Learn More`,
-  getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`
+  getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
+
+  // Accessibility Hints
+  app_logo_hint: 'App logo'
 }
 
 // eslint-disable-next-line import/no-default-export

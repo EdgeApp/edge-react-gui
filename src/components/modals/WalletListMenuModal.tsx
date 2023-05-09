@@ -42,6 +42,7 @@ const icons = {
   manageTokens: 'plus',
   rename: 'edit',
   resync: 'sync',
+  viewPrivateViewKey: 'eye',
   viewXPub: 'eye'
 }
 
@@ -99,12 +100,16 @@ export const WALLET_LIST_MENU: Array<{
       'ufo',
       'vertcoin',
       'wax',
-      'monero',
       'piratechain',
       'zcash'
     ],
     label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
+  },
+  {
+    pluginIds: ['monero', 'piratechain'],
+    label: lstrings.fragment_wallets_view_private_view_key,
+    value: 'viewPrivateViewKey'
   },
   {
     label: lstrings.string_get_raw_keys,

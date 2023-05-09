@@ -1,5 +1,5 @@
 import { add, lt, mul } from 'biggystring'
-import { asArray, asMap, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import {
   EdgeCreatePrivateKeyOptions,
   EdgeCurrencyCodeOptions,
@@ -35,7 +35,7 @@ interface State {
 
 const asFakeSettings = asObject({
   customFeeSettings: asOptional(asArray(asString)),
-  balances: asMap(asString),
+  balances: asObject(asString),
   publicAddress: asString,
   networkFee: asString,
   parentNetworkFee: asString
@@ -44,11 +44,11 @@ const asFakeSettings = asObject({
 export type FakeSettings = ReturnType<typeof asFakeSettings>
 
 const asState = asObject({
-  balances: asOptional(asMap(asString)),
+  balances: asOptional(asObject(asString)),
   stakedBalance: asOptional(asNumber),
   blockHeight: asOptional(asNumber),
   progress: asOptional(asNumber),
-  txs: asOptional(asMap((raw: any) => raw))
+  txs: asOptional(asObject((raw: any) => raw))
 })
 
 const defaultTx = {
@@ -276,18 +276,19 @@ class FakeCurrencyEngine {
 
     // TODO: Return a high-fidelity transaction
     return {
-      walletId: 'someid',
       blockHeight: 0,
       currencyCode,
       date: defaultTx.date,
+      feeRateUsed: { fakePrice: 0 },
+      isSend: true,
       nativeAmount: total,
       networkFee: tokenSpend ? '0' : this.defaultSettings.networkFee,
-      parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
-      feeRateUsed: { fakePrice: 0 },
       otherParams: {},
       ourReceiveAddresses: [],
+      parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
       signedTx: '',
-      txid: 'spend'
+      txid: 'spend',
+      walletId: 'someid'
     }
   }
 

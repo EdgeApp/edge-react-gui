@@ -178,6 +178,7 @@ Object {
         "blockHeight": -1,
         "currencyCode": "",
         "date": 0,
+        "isSend": true,
         "metadata": Object {},
         "nativeAmount": "",
         "networkFee": "",
@@ -231,9 +232,7 @@ Object {
       },
       "walletsSort": "manual",
     },
-    "transactionDetails": Object {
-      "subcategories": Array [],
-    },
+    "subcategories": Array [],
     "transactionList": Object {
       "currentCurrencyCode": "",
       "currentEndIndex": 0,

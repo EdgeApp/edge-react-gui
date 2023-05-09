@@ -59,23 +59,24 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         approve: async () => ({
           orderId: 'demo',
           transaction: {
-            walletId: '',
-            txid: 'txid2',
-            date: 1524486980,
-            currencyCode: 'BTC',
             blockHeight: 500000,
-            nativeAmount: '-321000000',
-            networkFee: '2000',
-            ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
-            signedTx: 'fiuwh34f98h3tiuheirgserg',
-            parentNetworkFee: '20001',
+            currencyCode: 'BTC',
+            date: 1524486980,
+            deviceDescription: 'iphone12',
+            isSend: true,
             metadata: {
               name: 'Crazy Person 2',
               category: 'Expense: Less Money',
               notes: 'Hell yeah! Here\'s a fish"',
               amountFiat: 36001.45
             },
-            deviceDescription: 'iphone12'
+            nativeAmount: '-321000000',
+            networkFee: '2000',
+            ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
+            parentNetworkFee: '20001',
+            signedTx: 'fiuwh34f98h3tiuheirgserg',
+            txid: 'txid2',
+            walletId: ''
           }
         }),
         close: async () => undefined

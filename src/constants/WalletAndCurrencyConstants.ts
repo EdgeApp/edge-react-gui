@@ -55,6 +55,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monero',
   'wallet:ethereum',
   'wallet:zcash',
+  'wallet:zksync',
   'wallet:tron',
   'wallet:polkadot',
   'wallet:optimism',
@@ -439,6 +440,19 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
+  },
+  zksync: {
+    initWalletName: lstrings.string_first_zksync_wallet_name,
+    chainCode: 'OP',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: {
+      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
+    },
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    isTransactionListUnsupported: true
   },
   tezos: {
     initWalletName: lstrings.string_first_tezos_wallet_name,

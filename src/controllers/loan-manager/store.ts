@@ -32,4 +32,4 @@ export const LOAN_ACCOUNT_MAP = 'loanAccountMap'
 export interface LoanAccountMapRecord {
   [pluginId: string]: LoanAccountEntry
 }
-export const asLoanAccountMapRecord: Cleaner<LoanAccountMapRecord> = asOptional(asJSON(asObject(asLoanAccountEntry)), {})
+export const asLoanAccountMapRecord: Cleaner<LoanAccountMapRecord> = asOptional(asJSON(asObject(asLoanAccountEntry)), () => ({}))

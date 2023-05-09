@@ -10,8 +10,8 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { isReceivedTransaction, snooze } from '../../util/utils'
-import { WcSmartContractModal } from '../modals/WcSmartContractModal'
+import { snooze } from '../../util/utils'
+import { asWcSmartContractModalProps, WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
 interface Props {
@@ -87,12 +87,12 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('newTransactions', transactions => {
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        dispatch(refreshTransactionsRequest(wallet.id, transactions))
-        dispatch(newTransactionsRequest(navigation, wallet.id, transactions))
+        dispatch(refreshTransactionsRequest(wallet, transactions))
+        dispatch(newTransactionsRequest(navigation, wallet, transactions))
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1
-        if (isReceivedTransaction(transactions[finalTxIndex])) {
+        if (!transactions[finalTxIndex].isSend) {
           dispatch(checkPasswordRecovery(navigation))
         }
       }),
@@ -100,13 +100,29 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('transactionsChanged', transactions => {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        dispatch(refreshTransactionsRequest(wallet.id, transactions))
+        dispatch(refreshTransactionsRequest(wallet, transactions))
       }),
 
       wallet.on('wcNewContractCall', obj => {
-        const { dApp, payload, uri, walletId } = obj
-        if (walletId == null) return
-        Airship.show(bridge => <WcSmartContractModal bridge={bridge} walletId={walletId} dApp={dApp} payload={payload} uri={uri} />)
+        try {
+          const clean = asWcSmartContractModalProps(obj)
+          const { dApp, nativeAmount, networkFee, payload, tokenId, uri } = clean
+
+          Airship.show(bridge => (
+            <WcSmartContractModal
+              bridge={bridge}
+              dApp={dApp}
+              nativeAmount={nativeAmount}
+              networkFee={networkFee}
+              payload={payload}
+              tokenId={tokenId}
+              uri={uri}
+              wallet={wallet}
+            />
+          ))
+        } catch (e: any) {
+          console.warn('Invalid wcNewContractCall params', e)
+        }
       }),
 
       // These ones defer their work until later:

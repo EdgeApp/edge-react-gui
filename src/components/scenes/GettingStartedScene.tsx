@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, ImageSourcePropType, Pressable, Text, View } from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Animated, { Extrapolation, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -14,6 +14,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -27,7 +28,7 @@ interface Props {
 }
 
 interface SectionData {
-  image: ImageSourcePropType
+  image: ImageProp
   key: string
   footnote?: string
   message: string

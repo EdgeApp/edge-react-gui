@@ -17,6 +17,7 @@ export function parseMarkedText(str: string): React.ReactNode[] {
   let match
   let lastIndex = 0
   const parsedArr: React.ReactNode[] = []
+  let lastKey = 0
 
   while ((match = regex.exec(str)) !== null) {
     const startIndex = match.index
@@ -25,7 +26,7 @@ export function parseMarkedText(str: string): React.ReactNode[] {
       const fixed = str.substring(lastIndex, startIndex).replace(/(\\)(\*)/g, '*') // Fix escaped markers
       parsedArr.push(fixed)
     }
-    parsedArr.push(<Em>{str.substring(startIndex + 1, endIndex + 1)}</Em>)
+    parsedArr.push(<Em key={`em${lastKey++}`}>{str.substring(startIndex + 1, endIndex + 1)}</Em>)
     lastIndex = endIndex + 2
   }
   if (lastIndex < str.length) {

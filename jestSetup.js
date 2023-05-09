@@ -24,6 +24,10 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
+jest.mock('@react-navigation/elements', () => ({
+  getDefaultHeaderHeight: () => 44
+}))
+
 jest.mock('react-native-gesture-handler', () => ({
   PanGestureHandler({ children }) {
     return children

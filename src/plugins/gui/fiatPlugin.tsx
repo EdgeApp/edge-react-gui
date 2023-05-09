@@ -1,4 +1,4 @@
-import { asArray, asMap, asNumber, asObject, asString } from 'cleaners'
+import { asArray, asNumber, asObject, asString } from 'cleaners'
 import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -62,25 +62,22 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount: async (params: FiatPluginEnterAmountParams) => {
+    enterAmount(params: FiatPluginEnterAmountParams) {
       const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
-      return await new Promise((resolve, reject) => {
-        logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
+      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
-        navigation.navigate('guiPluginEnterAmount', {
-          headerTitle,
-          label1,
-          label2,
-          initialAmount1,
-          getMethods,
-          convertValue,
-          onChangeText: async () => undefined,
-          onSubmit: async (value: FiatPluginEnterAmountResponse) => {
-            logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-            if (onSubmit != null) await onSubmit(value)
-            resolve(value)
-          }
-        })
+      navigation.navigate('guiPluginEnterAmount', {
+        headerTitle,
+        label1,
+        label2,
+        initialAmount1,
+        getMethods,
+        convertValue,
+        onChangeText: async () => undefined,
+        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
+          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
+          onSubmit(value)
+        }
       })
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
@@ -149,9 +146,10 @@ export const executePlugin = async (params: {
     if (disablePlugins[key] === true) filteredDisablePlugins[key] = true
   }
   const plugin = await guiPlugin.nativePlugin({
+    account,
     disablePlugins: filteredDisablePlugins,
-    showUi,
-    account
+    guiPlugin,
+    showUi
   })
   if (plugin == null) {
     throw new Error(`pluginId ${pluginId} not found`)
@@ -179,7 +177,7 @@ export const executePlugin = async (params: {
 // Most of code below was stolen from edge-plugins-wyre
 // ****************************************************************************
 
-const asBlockchainMap = asMap(asString)
+const asBlockchainMap = asObject(asString)
 export const asGetPaymentMethods = asObject({
   data: asArray(
     asObject({

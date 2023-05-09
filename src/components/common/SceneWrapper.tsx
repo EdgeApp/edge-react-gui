@@ -1,11 +1,12 @@
+import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import * as React from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { getHeaderHeight, THEME } from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz'
 import { useTheme } from '../services/ThemeContext'
 import { KeyboardTracker } from './KeyboardTracker'
-import { LayoutContext, SafeAreaGap } from './LayoutContext'
 
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
@@ -17,7 +18,7 @@ interface Props {
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: React.ReactNode | ((gap: SafeAreaGap) => React.ReactNode)
+  children: React.ReactNode | ((gap: EdgeInsets) => React.ReactNode)
 
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
@@ -64,7 +65,11 @@ export function SceneWrapper(props: Props): JSX.Element {
   } = props
   const theme = useTheme()
 
-  const renderScene = (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
+  // Subscribe to the window size:
+  const frame = useSafeAreaFrame()
+  const insets = useSafeAreaInsets()
+
+  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
     const scene =
@@ -82,38 +87,31 @@ export function SceneWrapper(props: Props): JSX.Element {
     if (background === 'none') return scene
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {background !== 'legacy' ? null : <View style={[styles.body, { top: gap.top + bodySplit }]} />}
+        {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
         {scene}
       </LinearGradient>
     )
   }
 
-  return (
-    <LayoutContext>
-      {metrics => {
-        const { safeAreaInsets } = metrics
-        const gap = {
-          ...safeAreaInsets,
-          bottom: hasTabs ? 0 : safeAreaInsets.bottom,
-          top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
-        }
-        const downValue = metrics.layout.height - gap.top
-        const upValue = (keyboardHeight: number) => downValue - keyboardHeight
+  const gap: EdgeInsets = {
+    ...insets,
+    bottom: hasTabs ? 0 : insets.bottom,
+    top: insets.top + (hasHeader ? getDefaultHeaderHeight(frame, false, 0) : 0)
+  }
+  const downValue = frame.height - gap.top
+  const upValue = (keyboardHeight: number) => downValue - keyboardHeight
 
-        return avoidKeyboard ? (
-          <KeyboardTracker downValue={downValue} upValue={upValue}>
-            {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
-          </KeyboardTracker>
-        ) : (
-          renderScene(gap, null, 0)
-        )
-      }}
-    </LayoutContext>
+  return avoidKeyboard ? (
+    <KeyboardTracker downValue={downValue} upValue={upValue}>
+      {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+    </KeyboardTracker>
+  ) : (
+    renderScene(gap, null, 0)
   )
 }
 
 const styles = StyleSheet.create({
-  body: {
+  legacyBackground: {
     // Layout:
     position: 'absolute',
     bottom: 0,

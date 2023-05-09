@@ -173,7 +173,7 @@ export function handleWalletUris(
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const { account } = getState().core
-    const { legacyAddress, metadata, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
+    const { legacyAddress, metadata, minNativeAmount, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
     const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
     // Coin operations
@@ -220,7 +220,7 @@ export function handleWalletUris(
       // React navigation doesn't like passing non-serializable objects as params. Convert date to string first
       // https://github.com/react-navigation/react-navigation/issues/7925
       const isoExpireDate = parsedUri?.expireDate?.toISOString()
-      navigation.push('send2', { walletId: wallet.id, spendInfo, isoExpireDate })
+      navigation.push('send2', { walletId: wallet.id, minNativeAmount, spendInfo, isoExpireDate })
     } catch (error: any) {
       // INVALID URI
       await Airship.show<'ok' | undefined>(bridge => (

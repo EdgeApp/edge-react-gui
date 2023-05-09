@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
+import { asArray, asBoolean, asDate, asObject, asOptional, asString } from 'cleaners'
 import { EdgeDataStore } from 'edge-core-js'
 import { EdgeAccount } from 'edge-core-js/types'
 import { Platform } from 'react-native'
@@ -344,9 +344,9 @@ function unpackAccountReferral(raw: any): AccountReferral {
 
 const asDiskPromotion = asObject({
   installerId: asString,
-  hiddenMessages: asOptional(asMap(asBoolean), {}),
-  messages: asOptional(asArray(asMessageTweak), []),
-  plugins: asOptional(asArray(asPluginTweak), [])
+  hiddenMessages: asOptional(asObject(asBoolean), () => ({})),
+  messages: asOptional(asArray(asMessageTweak), () => []),
+  plugins: asOptional(asArray(asPluginTweak), () => [])
 })
 
 const asDiskAccountReferral = asObject({
@@ -357,7 +357,7 @@ const asDiskAccountReferral = asObject({
 
   // User overrides:
   ignoreAccountSwap: asOptional(asBoolean, false),
-  hiddenAccountMessages: asOptional(asMap(asBoolean), {}),
+  hiddenAccountMessages: asOptional(asObject(asBoolean), {}),
 
   // Legacy:
   currencyCode: asOptional(asString)

@@ -2,23 +2,17 @@
   {
     "id": "moonpay",
     "pluginId": "moonpay",
-    "paymentTypes": [
-      "credit"
-    ],
+    "paymentTypes": ["credit"],
     "description": "Fee: 4-5% / Settlement: 1 - 4 days",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "icon_black_small.png",
-    "forCountries": [
-      "US"
-    ],
+    "forCountries": ["US"],
     "paymentTypeLogoKey": "bank"
   },
   {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
-    "paymentTypes": [
-      "bank"
-    ],
+    "paymentTypes": ["bank"],
     "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "bits-of-gold-logo-sm.png",
@@ -72,10 +66,7 @@
       "VA",
       "YT"
     ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH"
-    ],
+    "cryptoCodes": ["BTC", "ETH"],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/sell",
     "deepQuery": {
@@ -90,9 +81,7 @@
   {
     "id": "bitrefill",
     "pluginId": "bitrefill",
-    "paymentTypes": [
-      "giftcard"
-    ],
+    "paymentTypes": ["giftcard"],
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
     "partnerIconPath": "bitrefill-2.png",
@@ -346,13 +335,7 @@
       "ZM",
       "ZW"
     ],
-    "cryptoCodes": [
-      "BTC",
-      "DASH",
-      "DOGE",
-      "ETH",
-      "LTC"
-    ],
+    "cryptoCodes": ["BTC", "DASH", "DOGE", "ETH", "LTC"],
     "paymentTypeLogoKey": "giftcard"
   },
   {
@@ -389,13 +372,9 @@
       "SM",
       "GB"
     ],
-    "cryptoCodes": [
-      "BTC"
-    ],
+    "cryptoCodes": ["BTC"],
     "paymentType": "sepa",
-    "paymentTypes": [
-      "sepa"
-    ],
+    "paymentTypes": ["sepa"],
     "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "logoBity.png",
@@ -407,30 +386,12 @@
   {
     "id": "bitaccess",
     "pluginId": "bitaccess",
-    "paymentTypes": [
-      "cash"
-    ],
+    "paymentTypes": ["cash"],
     "description": "Fee: Varies / Settlement: 10 - 20 minutes\nLimit: Varies",
     "title": "Cash",
     "partnerIconPath": "mktg/bitaccess.png",
-    "forCountries": [
-      "US",
-      "CA",
-      "HR",
-      "NL",
-      "NG",
-      "ES",
-      "VN",
-      "CH",
-      "GB"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-      "LINK",
-      "DAI",
-      "LTC"
-    ],
+    "forCountries": ["US", "CA", "HR", "NL", "NG", "ES", "VN", "CH", "GB"],
+    "cryptoCodes": ["BTC", "ETH", "LINK", "DAI", "LTC"],
     "paymentTypeLogoKey": "cash",
     "deepQuery": {
       "country": "US"
@@ -439,18 +400,12 @@
   {
     "id": "banxa.bank",
     "pluginId": "banxa",
-    "paymentTypes": [
-      "bank"
-    ],
+    "paymentTypes": ["bank"],
     "description": "Fee: 1.5% / Settlement: 5 min - 24 hours\nDaily Limit: $30000\nMonthly Limit: $500000",
     "title": "Bank Transfer",
     "partnerIconPath": "banxa.png",
-    "forCountries": [
-      "AU"
-    ],
-    "cryptoCodes": [
-      "BTC"
-    ],
+    "forCountries": ["AU"],
+    "cryptoCodes": ["BTC"],
     "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "sellMode": null,
@@ -461,12 +416,8 @@
   {
     "id": "banxa.bank",
     "pluginId": "banxa",
-    "forCountries": [
-      "GB"
-    ],
-    "cryptoCodes": [
-      "BTC"
-    ],
+    "forCountries": ["GB"],
+    "cryptoCodes": ["BTC"],
     "deepQuery": {
       "sellMode": null,
       "country": "GB",
@@ -481,12 +432,8 @@
   {
     "id": "banxa.bank",
     "pluginId": "banxa",
-    "forCountries": [
-      "CA"
-    ],
-    "cryptoCodes": [
-      "BTC"
-    ],
+    "forCountries": ["CA"],
+    "cryptoCodes": ["BTC"],
     "deepQuery": {
       "sellMode": null,
       "country": "CA",
@@ -501,14 +448,11 @@
   {
     "id": "xanpool",
     "pluginId": "xanpool",
-    "paymentTypes": [
-      "bank"
-    ],
+    "paymentTypes": ["bank"],
     "description": "Fee: 1.8% / Settlement: Instant",
     "title": "PayNow",
     "partnerIconPath": "xanpool-logo.png",
-    "forCountries": [
-    ],
+    "forCountries": [],
     "paymentTypeLogoKey": "paynow",
     "deepQuery": {
       "transactionType": "sell",
@@ -548,81 +492,63 @@
   "----- Country Specifics -----",
   {
     "id": "bits of gold",
-    "forCountries": [
-      "IL"
-    ],
+    "forCountries": ["IL"],
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
     "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "CA"
-    ],
+    "forCountries": ["CA"],
     "deepQuery": {
       "country": "CA"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "HR"
-    ],
+    "forCountries": ["HR"],
     "deepQuery": {
       "country": "HR"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "NL"
-    ],
+    "forCountries": ["NL"],
     "deepQuery": {
       "country": "NL"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "NG"
-    ],
+    "forCountries": ["NG"],
     "deepQuery": {
       "country": "NG"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "ES"
-    ],
+    "forCountries": ["ES"],
     "deepQuery": {
       "country": "ES"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "GB"
-    ],
+    "forCountries": ["GB"],
     "deepQuery": {
       "country": "GB"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "CH"
-    ],
+    "forCountries": ["CH"],
     "deepQuery": {
       "country": "CH"
     }
   },
   {
     "id": "bitaccess",
-    "forCountries": [
-      "VN"
-    ],
+    "forCountries": ["VN"],
     "deepQuery": {
       "country": "VN"
     }

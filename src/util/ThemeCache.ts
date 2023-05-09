@@ -1,14 +1,14 @@
-import { asDate, asMap, asObject, uncleaner } from 'cleaners'
+import { asDate, asObject, uncleaner } from 'cleaners'
 import { Disklet } from 'disklet'
-import { ImageSourcePropType } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { BACKGROUND_IMAGE_FILE_NAME, BACKGROUND_IMAGE_LOCAL_URI } from '../constants/CdnConstants'
+import { ImageProp } from '../types/Theme'
 
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 
 const asThemeCache = asObject({
-  assets: asMap(
+  assets: asObject(
     asObject({
       start: asDate,
       expiration: asDate
@@ -61,7 +61,7 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
   await setThemeCache(disklet, cache)
 }
 
-export async function getBackgroundImage(disklet: Disklet, imageServer?: string | null, fallback?: ImageSourcePropType): Promise<ImageSourcePropType | null> {
+export async function getBackgroundImage(disklet: Disklet, imageServer?: string | null, fallback?: ImageProp): Promise<ImageProp | null> {
   // @ts-expect-error
   if (imageServer == null) return fallback
   const backgroundImageUrl = `${imageServer}/${BACKGROUND_IMAGE_FILE_NAME}`
