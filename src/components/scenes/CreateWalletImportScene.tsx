@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -19,6 +20,12 @@ import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
+
+export interface CreateWalletImportParams {
+  createWalletList: WalletCreateItem[]
+  walletNames: { [key: string]: string }
+  fiatCode: string
+}
 
 interface Props {
   navigation: NavigationProp<'createWalletImport'>
@@ -119,6 +126,10 @@ const CreateWalletImportComponent = (props: Props) => {
       }
     }
 
+    if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
+      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
+      return
+    }
     navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
   })
 
@@ -132,6 +143,7 @@ const CreateWalletImportComponent = (props: Props) => {
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
         scrollEnabled={scrollEnabled}
+        keyboardShouldPersistTaps="handled"
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
       >

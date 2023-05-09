@@ -9,6 +9,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -21,6 +22,11 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
+
+export interface CreateWalletSelectCryptoParams {
+  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
+  defaultSelection?: EdgeTokenId[]
+}
 
 interface Props {
   navigation: NavigationProp<'createWalletSelectCrypto'>
