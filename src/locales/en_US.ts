@@ -178,6 +178,7 @@ const strings = {
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
+  fragment_required: 'Required',
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_subtitle: 'Send',
@@ -240,6 +241,8 @@ const strings = {
   create_wallet_choice_new_button_fragment: 'New Wallet',
   create_wallet_select_wallet_for_assets: 'Please select the wallet you would like to add the following assets: %s',
   create_wallet_import_title: 'Import Wallet',
+  create_wallet_import_options_title: 'Import Options',
+  create_wallet_import_options_birthday_height: 'Wallet Birthday Height',
   create_wallet_imports_title: 'Import Wallets',
   create_wallet_import_all_instructions: 'Enter your private seed, private key, or active key to verify and restore the associated wallet',
   create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
@@ -1234,6 +1237,7 @@ const strings = {
 
   // Tron resource staking
   stake_resource_display_name: 'TRON Resources',
+  stake_resource_display_name_v2: 'TRON Resources v2',
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 
@@ -1277,6 +1281,11 @@ const strings = {
   coin_rank_title_all_time_low: 'All Time Low',
   coin_rank_market_cap_abbreviation: 'MCap',
   coin_rank_volume_24hr_abbreviation: 'Vol 24h',
+  coin_rank_hour: '1H',
+  coin_rank_day: '24H',
+  coin_rank_week: '7D',
+  coin_rank_month: '30D',
+  coin_rank_year: '1Y',
 
   // #endregion CoinRanking
 

@@ -4,7 +4,6 @@ import { LayoutChangeEvent, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
-import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
@@ -184,16 +183,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   selectFioWallet = async () => {
-    const allowedCurrencyCodes: string[] = [FIO_STR]
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
     ))
     if (walletId && currencyCode) {
-      if (currencyCode === FIO_STR) {
-        this.handleFioWalletChange(walletId)
-      } else {
-        showError(`${lstrings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
-      }
+      this.handleFioWalletChange(walletId)
     }
   }
 

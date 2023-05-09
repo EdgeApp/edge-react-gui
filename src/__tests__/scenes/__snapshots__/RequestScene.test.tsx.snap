@@ -87,86 +87,15 @@ exports[`Request should render with loaded props 1`] = `
       </WithTheme(EdgeTextComponent)>
     </View>
     <WithTheme(CardComponent)>
-      <ExchangedFlipInput
-        exchangeSecondaryToPrimaryRatio={Object {}}
+      <Memo
+        forceField="crypto"
         headerCallback={[Function]}
         headerText="Receive to My Bitcoin"
-        isEditable={true}
-        isFiatOnTop={true}
-        isFocus={false}
         keyboardVisible={false}
-        onError={[Function]}
-        onExchangeAmountChanged={[Function]}
-        onNext={[Function]}
-        overridePrimaryExchangeAmount=""
-        primaryCurrencyInfo={
-          Object {
-            "displayDenomination": Object {
-              "multiplier": "100000000",
-            },
-            "exchangeDenomination": Object {
-              "multiplier": "100000000",
-            },
-          }
-        }
-        secondaryCurrencyInfo={Object {}}
-        topReturnKeyType="done"
+        onAmountChanged={[Function]}
+        returnKeyType="done"
       />
     </WithTheme(CardComponent)>
-    <InputAccessoryView
-      backgroundColor="#FFFFFF"
-      nativeID="cancelHeaderId"
-    >
-      <View
-        style={
-          Object {
-            "backgroundColor": "#FFFFFF",
-            "flex": 1,
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          }
-        }
-      >
-        <TouchableOpacity
-          onPress={[Function]}
-          style={
-            Object {
-              "paddingHorizontal": 22,
-              "paddingVertical": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              Object {
-                "color": "#0073D9",
-              }
-            }
-          >
-            
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={[Function]}
-          style={
-            Object {
-              "paddingHorizontal": 22,
-              "paddingVertical": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              Object {
-                "color": "#0073D9",
-              }
-            }
-          >
-            Done
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </InputAccessoryView>
     <Carousel
       items={Array []}
       keyExtractor={[Function]}

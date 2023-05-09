@@ -1,8 +1,22 @@
-import { gt } from 'biggystring'
+import { gt, lt } from 'biggystring'
 import { EdgeSpendInfo } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
-import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakePlugin, StakePolicy, StakePosition, StakePositionRequest, StakeProviderInfo } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  filterStakePolicies,
+  QuoteAllocation,
+  StakeBelowLimitError,
+  StakePlugin,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition,
+  StakePositionRequest,
+  StakeProviderInfo
+} from '../types'
+
+const MIN_TRX_STAKE = '1000000' // 1 TRX
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: lstrings.stake_resource_display_name,
@@ -23,6 +37,47 @@ const policyDefault = {
 const policies: StakePolicy[] = [
   {
     ...policyDefault,
+    mustMaxUnstake: false,
+    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakePolicyId: 'currency:tron:BANDWIDTH_V2',
+    rewardAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'BANDWIDTH_V2',
+        displayName: lstrings.stake_resource_bandwidth,
+        cdnName: 'bandwidth'
+      }
+    ],
+    stakeAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'TRX'
+      }
+    ]
+  },
+  {
+    ...policyDefault,
+    mustMaxUnstake: false,
+    stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
+    stakePolicyId: 'currency:tron:ENERGY_V2',
+    rewardAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'ENERGY_V2',
+        displayName: lstrings.stake_resource_energy,
+        cdnName: 'energy'
+      }
+    ],
+    stakeAssets: [
+      {
+        pluginId: 'tron',
+        currencyCode: 'TRX'
+      }
+    ]
+  },
+  {
+    ...policyDefault,
+    deprecated: true,
     stakePolicyId: 'currency:tron:BANDWIDTH',
     rewardAssets: [
       {
@@ -41,6 +96,7 @@ const policies: StakePolicy[] = [
   },
   {
     ...policyDefault,
+    deprecated: true,
     stakePolicyId: 'currency:tron:ENERGY',
     rewardAssets: [
       {
@@ -67,13 +123,31 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 
 export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
   const instance: StakePlugin = {
-    policies,
+    getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
+      const out: StakePolicy[] = []
+
+      for (const policy of policies) {
+        if (policy.deprecated && filter?.wallet != null) {
+          const deprecatedPolicyBalance = filter.wallet.stakingStatus.stakedAmounts.find(
+            stakedAmount => policy.rewardAssets[0].currencyCode === stakedAmount.otherParams?.type && gt(stakedAmount.nativeAmount, '0')
+          )
+          if (deprecatedPolicyBalance == null) continue
+        }
+        out.push(policy)
+      }
+
+      return filterStakePolicies(out, filter)
+    },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { action, stakePolicyId, nativeAmount, wallet } = request
       const { pluginId, currencyCode } = wallet.currencyInfo
 
       if (pluginId !== wallet.currencyInfo.pluginId) {
         throw new Error('pluginId mismatch between request and policy')
+      }
+
+      if (lt(nativeAmount, MIN_TRX_STAKE)) {
+        throw new StakeBelowLimitError(request, request.currencyCode, MIN_TRX_STAKE)
       }
 
       const policy = getPolicyFromId(stakePolicyId)
@@ -87,7 +161,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
           }
         ],
         otherParams: {
-          type: isStake ? 'add' : 'remove',
+          type: policy.deprecated ? 'remove' : isStake ? 'addV2' : 'removeV2',
           params: { nativeAmount, resource }
         }
       }
@@ -128,7 +202,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const stakedAmount = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
       const nativeAmount = stakedAmount?.nativeAmount ?? '0'
       const balanceTrx = wallet.balances[currencyCode] ?? '0'
-      const locktime = new Date(stakedAmount?.unlockDate ?? Date.now())
+      const locktime = stakedAmount?.unlockDate != null ? new Date(stakedAmount.unlockDate) : undefined
 
       return {
         allocations: [
@@ -140,8 +214,8 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
             locktime
           }
         ],
-        canStake: gt(balanceTrx, '0'),
-        canUnstake: new Date() > new Date(locktime),
+        canStake: !policy.deprecated && gt(balanceTrx, '0'),
+        canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
         canClaim: false
       }
     }

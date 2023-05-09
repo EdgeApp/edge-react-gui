@@ -15,7 +15,7 @@ import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
   bridge: AirshipBridge<boolean>
-  createWalletsPromise: Promise<void>
+  createWalletsPromise?: Promise<void>
 }
 
 export const FioCreateHandleModal = (props: Props) => {
@@ -23,7 +23,6 @@ export const FioCreateHandleModal = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const isCreateWalletsInProgress = typeof createWalletsPromise === 'object' && createWalletsPromise instanceof Promise
   const [showPleaseWait, setShowPleaseWait] = React.useState(false)
 
   const handleCancel = useHandler(() => {
@@ -31,7 +30,7 @@ export const FioCreateHandleModal = (props: Props) => {
   })
 
   const handleConfirm = useHandler(async () => {
-    if (isCreateWalletsInProgress) {
+    if (createWalletsPromise != null) {
       setShowPleaseWait(true)
       await createWalletsPromise
     }

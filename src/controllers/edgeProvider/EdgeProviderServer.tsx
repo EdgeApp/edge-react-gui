@@ -21,7 +21,8 @@ import { EdgeTokenId, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { CurrencyConfigMap, makeCurrencyCodeTable } from '../../util/utils'
+import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
+import { CurrencyConfigMap } from '../../util/utils'
 import {
   EdgeGetReceiveAddressOptions,
   EdgeGetWalletHistoryResult,

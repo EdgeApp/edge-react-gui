@@ -1,0 +1,7 @@
+# Hacky close modal utility flow
+# Replace with clicking on the "X" button when it's targetable.
+
+appId: co.edgesecure.app
+---
+- tapOn:
+    point: '0%,50%' # Left side + verticlaly middle edge of the screen

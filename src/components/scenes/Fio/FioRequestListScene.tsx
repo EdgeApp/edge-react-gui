@@ -465,25 +465,24 @@ class FioRequestList extends React.Component<Props, LocalState> {
   requestHeaders = (fioRequests: FioRequest[]) => {
     const headers: Array<{ title: string; data: FioRequest[] }> = []
     let requestsInSection: FioRequest[] = []
-    let previousTimestamp = 0
+    let previousTimestamp = '0'
     let previousTitle = ''
     if (fioRequests) {
       // Sort newest to oldest
       const sortedArrayFioRequests = fioRequests.sort((requestA, requestB) => Date.parse(requestB.time_stamp) - Date.parse(requestA.time_stamp))
       sortedArrayFioRequests.forEach((fioRequest, i) => {
+        const reqTimestamp = fioRequest.time_stamp.includes('Z') ? fioRequest.time_stamp : `${fioRequest.time_stamp}Z`
         if (i === 0) {
           requestsInSection = []
-          // @ts-expect-error
-          previousTimestamp = fioRequest.time_stamp
+          previousTimestamp = reqTimestamp
         }
-        if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
+        if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(reqTimestamp))) {
           headers.push({ title: previousTitle, data: requestsInSection })
           requestsInSection = []
         }
         requestsInSection.push(fioRequest)
-        // @ts-expect-error
-        previousTimestamp = fioRequest.time_stamp
-        previousTitle = formatDate(new Date(fioRequest.time_stamp), SHORT_DATE_FMT)
+        previousTimestamp = reqTimestamp
+        previousTitle = formatDate(new Date(reqTimestamp), SHORT_DATE_FMT)
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }

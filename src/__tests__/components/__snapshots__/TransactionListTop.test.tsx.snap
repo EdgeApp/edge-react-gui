@@ -405,6 +405,7 @@ Array [
                     <RNSVGCircle
                       cx={17}
                       cy={17}
+                      opacity={0}
                       propList={
                         Array [
                           "strokeWidth",

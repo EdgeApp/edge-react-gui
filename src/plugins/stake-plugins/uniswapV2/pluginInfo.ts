@@ -22,7 +22,7 @@ export const pluginInfo: StakePluginInfo = {
       stakePolicyId: 'ftm_tombswap_masonry_v1_0',
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
-      policy: makeMasonryPolicy(),
+      policy: makeMasonryPolicy({ disableStake: true }),
       stakeAssets: [
         {
           pluginId: 'fantom',
@@ -42,6 +42,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 0,
         lpTokenContract: makeContract('TOMBSWAP_FTM_TOMB_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -61,6 +62,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 1,
         lpTokenContract: makeContract('TOMBSWAP_TOMB_USDC_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -80,6 +82,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 2,
         lpTokenContract: makeContract('TOMBSWAP_ZOO_TOMB_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -99,6 +102,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 4,
         lpTokenContract: makeContract('TOMBSWAP_BTC_TSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -118,6 +122,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 5,
         lpTokenContract: makeContract('TOMBSWAP_TSHARE_ETH_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -137,6 +142,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 6,
         lpTokenContract: makeContract('TOMBSWAP_USDC_TSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -156,6 +162,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 7,
         lpTokenContract: makeContract('TOMBSWAP_USDC_FUSDT_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -175,6 +182,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 8,
         lpTokenContract: makeContract('TOMBSWAP_USDC_MIM_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -195,6 +203,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 10,
         lpTokenContract: makeContract('TOMBSWAP_USDC_FTM_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -214,6 +223,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 11,
         lpTokenContract: makeContract('TOMBSWAP_FTM_DAI_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -233,6 +243,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 12,
         lpTokenContract: makeContract('TOMBSWAP_FTM_ETH_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -252,6 +263,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 13,
         lpTokenContract: makeContract('TOMBSWAP_FUSDT_FTM_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -271,6 +283,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 14,
         lpTokenContract: makeContract('TOMBSWAP_FTM_BTC_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -290,6 +303,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 15,
         lpTokenContract: makeContract('TOMBSWAP_FTM_MIM_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -309,6 +323,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 16,
         lpTokenContract: makeContract('TOMBSWAP_FTM_BNB_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -328,6 +343,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 17,
         lpTokenContract: makeContract('TOMBSWAP_FTM_AVAX_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -347,6 +363,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 18,
         lpTokenContract: makeContract('TOMBSWAP_FTM_LINK_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -366,6 +383,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 19,
         lpTokenContract: makeContract('TOMBSWAP_CRV_FTM_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -385,6 +403,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 20,
         lpTokenContract: makeContract('TOMBSWAP_BTC_ETH_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -404,6 +423,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 21,
         lpTokenContract: makeContract('TOMBSWAP_TOMB_LIF3_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -423,6 +443,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 22,
         lpTokenContract: makeContract('TOMBSWAP_TSHARE_LSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -442,6 +463,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 23,
         lpTokenContract: makeContract('TOMBSWAP_USDC_LIF3_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -461,6 +483,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 24,
         lpTokenContract: makeContract('TOMBSWAP_USDC_LSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -480,6 +503,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 25,
         lpTokenContract: makeContract('TOMBSWAP_FTM_LIF3_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -499,6 +523,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 26,
         lpTokenContract: makeContract('TOMBSWAP_TBOND_TOMB_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -518,6 +543,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 27,
         lpTokenContract: makeContract('TOMBSWAP_FTM_LSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -537,6 +563,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 28,
         lpTokenContract: makeContract('TOMBSWAP_TOMB_LSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -556,6 +583,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 29,
         lpTokenContract: makeContract('TOMBSWAP_LIF3_LSHARE_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -575,6 +603,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 33,
         lpTokenContract: makeContract('TOMBSWAP_L3USD_USDC_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -594,6 +623,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 34,
         lpTokenContract: makeContract('TOMBSWAP_L3USD_FUSDT_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),
@@ -613,6 +643,7 @@ export const pluginInfo: StakePluginInfo = {
       parentPluginId: 'fantom',
       parentCurrencyCode: 'FTM',
       policy: makeCemeteryPolicy({
+        disableStake: true,
         poolId: 35,
         lpTokenContract: makeContract('TOMBSWAP_L3USD_DAI_LP'),
         poolContract: makeContract('CEMETERY_V2_REWARD_POOL'),

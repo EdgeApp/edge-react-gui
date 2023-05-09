@@ -116,10 +116,8 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { fioWallet } = this.props
-    const allowedCurrencyCodes: string[] = [fioWallet.currencyInfo.currencyCode]
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
     ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {

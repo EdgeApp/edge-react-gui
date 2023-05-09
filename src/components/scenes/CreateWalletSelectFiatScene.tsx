@@ -31,6 +31,10 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { WalletCreateItem } from '../themed/WalletList'
 
+export interface CreateWalletSelectFiatParams {
+  createWalletList: WalletCreateItem[]
+}
+
 interface Props {
   navigation: NavigationProp<'createWalletSelectFiat'>
   route: RouteProp<'createWalletSelectFiat'>
@@ -98,7 +102,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     // Remove items that cannot be imported
     const importNotSupportedItems: WalletCreateItem[] = []
     for (let i = newWalletItemsCopy.length - 1; i >= 0; i--) {
-      if (typeof SPECIAL_CURRENCY_INFO[newWalletItemsCopy[i].pluginId].isImportKeySupported !== 'object') {
+      const { isImportKeySupported = false } = SPECIAL_CURRENCY_INFO[newWalletItemsCopy[i].pluginId] ?? {}
+      if (!isImportKeySupported) {
         const removedItem = newWalletItemsCopy.splice(i, 1)
         importNotSupportedItems.push(removedItem[0])
       }
@@ -216,6 +221,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <FlashList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
+          estimatedItemSize={theme.rem(4.25)}
           extraData={walletNames}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}

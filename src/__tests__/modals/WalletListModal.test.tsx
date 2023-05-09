@@ -2,11 +2,12 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { upgradeCurrencyCodes, WalletListModal } from '../../components/modals/WalletListModal'
+import { WalletListModal } from '../../components/modals/WalletListModal'
 import { EdgeTokenId } from '../../types/types'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders } from '../../util/fake/FakeProviders'
+import { upgradeCurrencyCodes } from '../../util/tokenIdTools'
 
 describe('WalletListModal', () => {
   it('should render with loading props', () => {

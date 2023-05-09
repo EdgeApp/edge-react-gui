@@ -70,7 +70,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
   return (
     <SceneWrapper scroll background="theme">
       <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        <CryptoIcon marginRem={[0, 0.5, 0, 0]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
+        <CryptoIcon marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>
