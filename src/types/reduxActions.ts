@@ -98,17 +98,6 @@ export type Action =
       type: 'UPDATE_FIO_WALLETS'
       data: { fioWallets: EdgeCurrencyWallet[] }
     }
-  | {
-      type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
-      data: {
-        numTransactions: number
-        transactions: EdgeTransaction[]
-        transactionIdMap: { [txid: string]: boolean }
-        currentCurrencyCode: string
-        currentWalletId: string
-        currentEndIndex: number
-      }
-    }
   | { type: 'UI/SEND_CONFIRMATION/NEW_PIN'; data: { pin: string } }
   | {
       type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO'

@@ -373,7 +373,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         <View style={styles.container}>
-          {isEmpty ? null : (
+          {!searching && isEmpty ? null : (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <OutlinedTextInput

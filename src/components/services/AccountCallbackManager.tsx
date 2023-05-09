@@ -6,7 +6,6 @@ import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkFioObtData } from '../../actions/FioActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
-import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
@@ -89,9 +88,6 @@ export function AccountCallbackManager(props: Props) {
       wallet.on('newTransactions', transactions => {
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
-        dispatch(refreshTransactionsRequest(wallet, transactions))
-        dispatch(newTransactionsRequest(navigation, wallet, transactions))
-
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
         if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs))
@@ -111,8 +107,6 @@ export function AccountCallbackManager(props: Props) {
 
       wallet.on('transactionsChanged', transactions => {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
-
-        dispatch(refreshTransactionsRequest(wallet, transactions))
       }),
 
       wallet.on('wcNewContractCall', obj => {
