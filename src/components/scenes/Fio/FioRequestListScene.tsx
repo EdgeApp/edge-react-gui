@@ -465,7 +465,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   requestHeaders = (fioRequests: FioRequest[]) => {
     const headers: Array<{ title: string; data: FioRequest[] }> = []
     let requestsInSection: FioRequest[] = []
-    let previousTimestamp = 0
+    let previousTimestamp = '0'
     let previousTitle = ''
     if (fioRequests) {
       // Sort newest to oldest
@@ -473,7 +473,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
       sortedArrayFioRequests.forEach((fioRequest, i) => {
         if (i === 0) {
           requestsInSection = []
-          // @ts-expect-error
           previousTimestamp = fioRequest.time_stamp
         }
         if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
@@ -481,7 +480,6 @@ class FioRequestList extends React.Component<Props, LocalState> {
           requestsInSection = []
         }
         requestsInSection.push(fioRequest)
-        // @ts-expect-error
         previousTimestamp = fioRequest.time_stamp
         previousTitle = formatDate(new Date(fioRequest.time_stamp), SHORT_DATE_FMT)
       })
