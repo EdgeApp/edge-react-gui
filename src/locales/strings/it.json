@@ -824,6 +824,7 @@
   "fio_address_to_transfer": "Indirizzo da trasferire",
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
+  "fio_free_handle_complete": "Successfully created your FIO handle",
   "fio_free_handle_congrats": "Complimenti per aver creato il tuo account Edge!",
   "fio_free_handle_title_m": "Ottieni un handle *FIO*",
   "fio_free_handle_title": "Ottieni un handle FIO",
