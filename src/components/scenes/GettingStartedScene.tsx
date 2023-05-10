@@ -2,7 +2,17 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import Animated, { Extrapolation, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
@@ -65,16 +75,23 @@ const sections: SectionData[] = [
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
   const localUsersLength = useSelector(state => state.core.context.localUsers.length)
+
+  // An extra index is added to account for the extra initial usp slide OR to
+  // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
+  // trigger the final navigation
   const paginationCount = sections.length + 1
   const swipeOffset = useSharedValue(0)
 
-  // Redirect to login screen if device has memory of accounts
-  useEffect(() => {
-    if (localUsersLength > 0) {
-      navigation.navigate('login', {})
-    }
-  }, [navigation, localUsersLength])
+  const handleFinalSwipe = useHandler(() => {
+    // This delay is necessary to properly reset the scene since it remains on
+    // the stack.
+    setTimeout(() => {
+      swipeOffset.value = 0
+    }, 500)
 
+    if (localUsersLength > 0) navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
+    else navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+  })
   const handlePressIndicator = useHandler((itemIndex: number) => {
     swipeOffset.value = withTiming(itemIndex)
   })
@@ -88,6 +105,24 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', {})
   })
 
+  // Redirect to login or new account screen if the user swipes past the last
+  // USP section
+  useAnimatedReaction(
+    () => swipeOffset.value,
+    value => {
+      if (value === 5) {
+        runOnJS(handleFinalSwipe)()
+      }
+    }
+  )
+
+  // Redirect to login screen if device has memory of accounts
+  useEffect(() => {
+    if (localUsersLength > 0) {
+      navigation.navigate('login', {})
+    }
+  }, [navigation, localUsersLength])
+
   return (
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
@@ -97,7 +132,7 @@ export const GettingStartedScene = (props: Props) => {
           </TouchableOpacity>
         </Space>
       </SkipButton>
-      <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={sections.length}>
+      <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={paginationCount}>
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
