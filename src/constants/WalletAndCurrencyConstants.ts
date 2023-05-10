@@ -102,7 +102,7 @@ export interface ImportKeyOption {
   displayName: string
   required: boolean
   inputType: OutlinedTextInputProps['keyboardType']
-  inputValidation: RegExp
+  inputValidation: (input: string) => boolean
 }
 
 interface SpecialCurrencyInfo {
@@ -613,7 +613,7 @@ export const SPECIAL_CURRENCY_INFO: {
         displayName: lstrings.create_wallet_import_options_birthday_height,
         required: true,
         inputType: 'number-pad',
-        inputValidation: /^\d+$/
+        inputValidation: (input: string) => /^\d+$/.test(input)
       }
     ],
     uniqueIdentifierInfo: {
@@ -634,7 +634,7 @@ export const SPECIAL_CURRENCY_INFO: {
         displayName: lstrings.create_wallet_import_options_birthday_height,
         required: true,
         inputType: 'number-pad',
-        inputValidation: /^\d+$/
+        inputValidation: (input: string) => /^\d+$/.test(input)
       }
     ],
     uniqueIdentifierInfo: {

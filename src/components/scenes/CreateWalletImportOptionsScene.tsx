@@ -83,7 +83,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
   const handleValueChange = useHandler((input: string, pluginId: string, opt: ImportKeyOption) => {
     const key = getOptionKey(pluginId, opt)
 
-    if (input === '' || opt.inputValidation.test(input)) {
+    if (input === '' || opt.inputValidation(input)) {
       setValues(map => new Map(map.set(key, { value: input, error: false })))
     } else {
       setValues(map => new Map(map.set(key, { value: input, error: true })))
