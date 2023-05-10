@@ -1,3 +1,5 @@
+import { gte } from 'biggystring'
+
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
 import { StringMap } from '../types/types'
@@ -613,7 +615,7 @@ export const SPECIAL_CURRENCY_INFO: {
         displayName: lstrings.create_wallet_import_options_birthday_height,
         required: true,
         inputType: 'number-pad',
-        inputValidation: (input: string) => /^\d+$/.test(input)
+        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
       }
     ],
     uniqueIdentifierInfo: {
@@ -634,7 +636,7 @@ export const SPECIAL_CURRENCY_INFO: {
         displayName: lstrings.create_wallet_import_options_birthday_height,
         required: true,
         inputType: 'number-pad',
-        inputValidation: (input: string) => /^\d+$/.test(input)
+        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
       }
     ],
     uniqueIdentifierInfo: {
