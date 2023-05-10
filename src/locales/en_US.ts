@@ -921,6 +921,7 @@ const strings = {
   fio_address_to_transfer: 'Address to Transfer',
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
+  fio_free_handle_complete: 'Successfully created your FIO handle',
   fio_free_handle_congrats: 'Congrats on creating your Edge account!',
   fio_free_handle_title_m: 'Get a *FIO* Handle',
   fio_free_handle_title: 'Get a FIO Handle',
