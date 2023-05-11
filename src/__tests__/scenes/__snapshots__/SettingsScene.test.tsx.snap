@@ -1120,6 +1120,134 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#888888",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                change username
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    selectable={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 12,
+                        },
+                        {
+                          "color": "rgba(255, 255, 255, .75)",
+                          "fontSize": 22,
+                          "marginHorizontal": 11,
+                        },
+                        {
+                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {
+                          "fontWeight": "900",
+                        },
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
         <View

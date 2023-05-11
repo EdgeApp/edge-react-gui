@@ -43,6 +43,7 @@ import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/Asse
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
 import { ChangePinScene as ChangePinSceneComponent } from './scenes/ChangePinScene'
+import { ChangeUsernameScene as ChangeUsernameSceneComponent } from './scenes/ChangeUsernameScene'
 import { CoinRankingDetailsScene as CoinRankingDetailsSceneComponent } from './scenes/CoinRankingDetailsScene'
 import { CoinRankingScene as CoinRankingSceneComponent } from './scenes/CoinRankingScene'
 import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
@@ -128,6 +129,7 @@ const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
+const ChangeUsernameScene = ifLoggedIn(ChangeUsernameSceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
@@ -637,6 +639,14 @@ const EdgeAppStack = () => {
         component={UpgradeUsernameScene}
         options={{
           headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="changeUsername"
+        component={ChangeUsernameScene}
+        options={{
+          title: 'change username',
+          headerRight: () => null
         }}
       />
       <Stack.Screen

@@ -163,6 +163,7 @@ export interface RouteParamList {
   upgradeUsername: {}
   pluginListBuy: GuiPluginListParams
   pluginListSell: GuiPluginListParams
+  changeUsername: {}
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

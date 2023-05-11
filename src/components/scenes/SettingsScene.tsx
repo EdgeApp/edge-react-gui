@@ -222,6 +222,10 @@ export const SettingsScene = (props: Props) => {
     ))
   })
 
+  const handleChangeUsername = (): void => {
+    isLocked ? handleUnlock() : navigation.navigate('changeUsername', {})
+  }
+
   const handleExchangeSettings = useHandler((): void => {
     navigation.navigate('swapSettings', {})
   })
@@ -326,6 +330,7 @@ export const SettingsScene = (props: Props) => {
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_setup_two_factor} onPress={handleChangeOtp} />
               <SettingsTappableRow disabled={isLocked} label={lstrings.settings_button_password_recovery} onPress={handleChangeRecovery} />
               <SettingsTappableRow disabled={isLocked} dangerous label={lstrings.delete_account_title} onPress={handleDeleteAccount} />
+              <SettingsTappableRow disabled={isLocked} label="change username" onPress={handleChangeUsername} />
             </CardUi4>
           )}
         </>
