@@ -3,7 +3,7 @@ import { lt } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
-import Share from 'react-native-share'
+import Share, { ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -371,7 +371,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           </TouchableOpacity>
         </View>
 
-        <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
+        <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
       </SceneWrapper>
     )
   }
@@ -380,7 +380,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     this.setState({ amounts })
   }
 
-  copyToClipboard = async (uri?: string) => {
+  copyToClipboard = async (uri?: string): Promise<void> => {
     try {
       const encodedUri = uri ?? (await this.getEncodedUri())
       if (encodedUri != null) {
@@ -412,7 +412,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     return false
   }
 
-  shareMessage = async () => {
+  openShareModal = async (): Promise<void> => {
     const { currencyCode, wallet } = this.props
     const { selectedAddress } = this.state
     if (currencyCode == null || wallet == null || selectedAddress == null) {
@@ -439,20 +439,17 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const subject = wallet != null ? sprintf(lstrings.request_email_subject, config.appName, wallet.currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
 
-    const shareOptions = {
+    const shareOptions: ShareOptions = {
       subject,
       message: Platform.OS === 'ios' ? message : message + edgePayUri,
-      url: Platform.OS === 'ios' ? edgePayUri : ''
+      url: Platform.OS === 'ios' ? edgePayUri : '',
+      failOnCancel: false
     }
 
-    Share.open(shareOptions).catch(e => console.log(e))
+    await Share.open(shareOptions).catch(showError)
   }
 
-  shareViaShare = () => {
-    this.shareMessage()
-  }
-
-  fioAddressModal = async () => {
+  openFioAddressModal = async (): Promise<void> => {
     const { navigation, wallet, currencyCode } = this.props
     if (wallet?.id == null || currencyCode == null) return
 

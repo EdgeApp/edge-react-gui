@@ -137,8 +137,8 @@ exports[`Request should render with loaded props 1`] = `
   </View>
   <ShareButtons
     copyToClipboard={[Function]}
-    fioAddressModal={[Function]}
-    shareViaShare={[Function]}
+    openFioAddressModal={[Function]}
+    openShareModal={[Function]}
   />
 </SceneWrapper>
 `;
