@@ -1745,9 +1745,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+"@fioprotocol/fiosdk@git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
   version "1.8.0"
-  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
+  resolved "git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -7274,10 +7274,10 @@ edge-core-js@^0.21.3:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.2.4.tgz#f3e1571f683011e93194175276d536aebc027a04"
-  integrity sha512-fwRHfCipoglUGdyB/2APD3SdHk3uF0eTuGdboLxfepnIhYacYk5bXH4/CnQl0O9N9fUDp3XKnL8ApaanE+g8eQ==
+edge-currency-accountbased@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.2.5.tgz#fbdc27ceff3248ec4b235ab0fc44f4a66485d8f2"
+  integrity sha512-TzxgeMiBvaVnEewub8T8N2m5ORIuXH485slnp+vIUjuoLoWNnmOcIy0heAK/16WMjcY6tU4nJGH7T1kzl7fvyQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7350,10 +7350,10 @@ edge-currency-plugins@^2.0.2:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.19.4:
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.19.4.tgz#15938f330b5b48c0c3c819eb1a685c6f71553d72"
-  integrity sha512-pBTFCnLxFDudwpJH7omr/gkzKWArTvQxg5WoKawxw0UN+aYKNe+3GXoNn9Pl/kh0Zv/FxTKwbHlzT1QoDT/mzw==
+edge-exchange-plugins@^0.19.5:
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.19.5.tgz#1b2e66f09a967fe2c04129e193dcdd1fcb3aa416"
+  integrity sha512-MtuKpAjn1Ct1swm734EBOfDhEqZP1kOWzCoXuU8M7oS50RrK88+XHmQlOay9g0OU0zncZBT3w/kstgz46zi6iA==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -8536,9 +8536,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
