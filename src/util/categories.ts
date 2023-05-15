@@ -13,6 +13,9 @@ export interface SplitCategory {
  * The subcategory can be localized and freely edited.
  */
 export function splitCategory(fullCategory: string = '', defaultCategory: Category = 'income'): SplitCategory {
+  if (fullCategory.length > 0 && !fullCategory.includes(':')) {
+    fullCategory += ':'
+  }
   for (const [category, test, n] of tests) {
     if (test.test(fullCategory)) {
       return {
