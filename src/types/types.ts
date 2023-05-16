@@ -313,7 +313,6 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
-  hideIoniaRewards?: boolean
 }
 
 /**

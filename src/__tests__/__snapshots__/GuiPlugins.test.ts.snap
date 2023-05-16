@@ -225,25 +225,6 @@ Settlement: Instant",
     "pluginId": "libertyx",
     "title": "In-person Cash and Debit Card",
   },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
-      "BCH",
-      "DASH",
-      "DOGE",
-      "LTC",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {},
-    "description": "Spend at thousands of merchants and earn crypto back",
-    "partnerIconPath": "ionia.png",
-    "paymentTypeLogoKey": "giftcard",
-    "paymentTypes": Array [
-      "giftcard",
-    ],
-    "pluginId": "ionia",
-    "title": "Spend USD → Earn Crypto",
-  },
 ]
 `;
 

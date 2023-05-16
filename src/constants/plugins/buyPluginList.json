@@ -448,17 +448,6 @@
       "currency": "SGD"
     }
   },
-  {
-    "id": "ionia",
-    "pluginId": "ionia",
-    "paymentTypes": ["giftcard"],
-    "description": "Spend at thousands of merchants and earn crypto back",
-    "title": "Spend USD → Earn Crypto",
-    "partnerIconPath": "ionia.png",
-    "forCountries": ["US"],
-    "cryptoCodes": ["BTC", "BCH", "DASH", "DOGE", "LTC"],
-    "paymentTypeLogoKey": "giftcard"
-  },
   "----- Sorting -----",
   {
     "id": "applepay",
@@ -507,10 +496,6 @@
   {
     "id": "moonpay",
     "sortIndex": 4
-  },
-  {
-    "id": "ionia",
-    "sortIndex": 10
   },
   "----- iOS specifics -----",
   {
