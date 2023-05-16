@@ -95,8 +95,8 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     onFieldChange({ value: { sourceFieldNum: 2, value }, stateManager })
   })
   const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ value: undefined, stateManager }))
-  const handleSubmit = useHandler(() => {
-    onSubmit({ value: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
+  const handleSubmit = useHandler(async () => {
+    await onSubmit({ value: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
   })
 
   let statusTextStyle = styles.text
