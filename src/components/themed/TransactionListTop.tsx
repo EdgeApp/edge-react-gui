@@ -25,7 +25,6 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
-import { EarnCryptoCard } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -353,7 +352,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   render() {
-    const { wallet, isEmpty, searching, theme, tokenId } = this.props
+    const { isEmpty, searching, theme } = this.props
     const { stakePolicies } = this.state
     const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
@@ -413,7 +412,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
