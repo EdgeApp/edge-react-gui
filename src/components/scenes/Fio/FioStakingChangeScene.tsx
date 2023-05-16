@@ -96,10 +96,11 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
         break
       }
       case 'remove': {
-        onAmountChanged(
-          stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native,
-          stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].crypto
-        )
+        const nativeAmt = stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native
+        currencyWallet
+          .nativeToDenomination(nativeAmt, 'FIO')
+          .then(exchangeAmt => onAmountChanged(nativeAmt, exchangeAmt))
+          .catch(e => console.error(e))
         break
       }
       default:
