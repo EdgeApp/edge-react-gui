@@ -20,7 +20,6 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
@@ -34,6 +33,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -46,7 +46,7 @@ import { ModalMessage, ModalTitle } from './ModalParts'
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-export function ControlPanel(props: DrawerContentComponentProps) {
+export function SideMenu(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
   const navigation: NavigationBase = props.navigation as any
   const isDrawerOpen = useDrawerStatus() === 'open'
