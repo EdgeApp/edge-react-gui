@@ -106,7 +106,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       // Pop up modal to pick wallet/asset
       // TODO: Filter wallets according to fiats supported by allowed providers
-      const walletListResult: { walletId: string | undefined; currencyCode: string | undefined } = await showUi.walletPicker({
+      const walletListResult = await showUi.walletPicker({
         headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
         allowedAssets,
         showCreateWallet: true
