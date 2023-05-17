@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
-import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import { Airship, showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
 import { runWithTimeout, snooze } from '../../util/utils'
@@ -19,7 +19,7 @@ import { initializeProviders } from './util/initializeProviders'
 const SUPPORT_URL = 'https://edge.app/cards/'
 
 export interface RewardsCardItem {
-  id: string
+  id: number
   expiration: Date
   url: string
 }
@@ -42,13 +42,13 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   async function getRewardCards(): Promise<RewardsCardItem[]> {
     const giftCards = await provider.otherMethods.getGiftCards()
-    const rewardCards: RewardsCardItem[] = giftCards.map(card => {
+    const rewardCards: RewardsCardItem[] = giftCards.cards.map(card => {
       // Expires 6 calendar months from the creation date
       const expirationDate = new Date(card.CreatedDate.valueOf())
       expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
 
       return {
-        id: card.Id.toString(),
+        id: card.Id,
         // Expires in 180 days (6 months) from creation date
         expiration: expirationDate,
         url: card.CardNumber
@@ -106,7 +106,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     })
   }
 
-  const showDeleteItemModal = async (item: RewardsCardItem) => {
+  const showDeleteItemModal = async (card: RewardsCardItem) => {
     const answer = await Airship.show<'delete' | 'keep' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -115,10 +115,17 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           delete: { label: lstrings.string_delete, type: 'escape' }
         }}
         title={lstrings.rewards_card_delete_modal_title}
-        message={sprintf(lstrings.rewards_card_delete_modal_message_s, item.expiration)}
+        message={sprintf(lstrings.rewards_card_delete_modal_message_s, card.expiration)}
       />
     ))
-    if (answer === 'delete') showToast('Deleted it!')
+    if (answer === 'delete') {
+      // Hide the card
+      provider.otherMethods.hideCard(card.id)
+      // Remove card from plugin state
+      rewardCards = rewardCards.filter(c => c.id !== card.id)
+      // Reset state for dashboard
+      showDashboard()
+    }
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {

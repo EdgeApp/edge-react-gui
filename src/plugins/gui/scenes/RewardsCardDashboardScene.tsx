@@ -73,12 +73,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
                         <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
                       </Details>
                       {/* TODO: Add delete button after card presentation redesign */}
-                      {Math.random() === -1 ? (
-                        <TouchableOpacity onPress={() => handleRemovePress(item)}>
-                          <Icon name="remove-circle-outline" size={theme.rem(2)} color={theme.iconTappable} />
-                        </TouchableOpacity>
-                      ) : null}
-                      <Icon name="chevron-forward-outline" size={theme.rem(2)} color={theme.iconTappable} />
+                      <TouchableOpacity onPress={() => handleRemovePress(item)}>
+                        <Icon name="remove-circle-outline" size={theme.rem(2)} color={theme.iconTappable} />
+                      </TouchableOpacity>
                     </CardListItemContainer>
                     <DividerLine marginRem={[0, 0]} />
                   </TouchableOpacity>
