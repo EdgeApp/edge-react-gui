@@ -144,18 +144,23 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
 
   try {
     switch (payload.method) {
-      case 'personal_sign':
+      case 'personal_sign': {
+        const cleanPayload = asEvmSignPayload(payload)
+        const result = await wallet.signMessage(cleanPayload.params[0])
+        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
+        break
+      }
       case 'eth_sign':
       case 'eth_signTypedData':
       case 'eth_signTypedData_v4': {
-        const cleanPayload = asEvmWcRpcPayload(payload)
+        const cleanPayload = asEvmSignPayload(payload)
         const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
         const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
         await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
         break
       }
       case 'eth_signTransaction': {
-        const cleanPayload = asEvmWcRpcPayload(payload)
+        const cleanPayload = asEvmTransactionPayload(payload)
         const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signTx = await wallet.signTx(tx)
@@ -164,7 +169,7 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
       }
       case 'eth_sendTransaction':
       case 'eth_sendRawTransaction': {
-        const cleanPayload = asEvmWcRpcPayload(payload)
+        const cleanPayload = asEvmTransactionPayload(payload)
         const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
         const tx = await wallet.makeSpend(spendInfo)
         const signedTx = await wallet.signTx(tx)
@@ -185,32 +190,31 @@ async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approv
   }
 }
 
-const asEvmPayloadMethod = asValue(
-  'personal_sign',
-  'eth_sign',
-  'eth_signTypedData',
-  'eth_signTypedData_v4',
-  'eth_sendTransaction',
-  'eth_signTransaction',
-  'eth_sendRawTransaction'
-)
-const asEvmWcRpcPayload = asObject({
+// [message, account, password]: personal_sign (password not supported yet)
+// [address, message]: eth_sign, eth_signTypedData, eth_signTypedData_v4
+
+const asEvmSignMethod = asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_signTypedData_v4')
+const asEvmSignPayload = asObject({
   id: asEither(asString, asNumber),
-  method: asEvmPayloadMethod,
-  params: asEither(
-    asTuple(
-      asObject({
-        from: asString,
-        to: asOptional(asString),
-        data: asString,
-        gas: asOptional(asString),
-        gasPrice: asOptional(asString),
-        value: asOptional(asString),
-        nonce: asOptional(asString)
-      }),
-      asOptional(asString, '')
-    ),
-    asArray(asString)
+  method: asEvmSignMethod,
+  params: asTuple(asString, asString)
+})
+
+const asEvmTransactionMethod = asValue('eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction')
+const asEvmTransactionPayload = asObject({
+  id: asEither(asString, asNumber),
+  method: asEvmTransactionMethod,
+  params: asTuple(
+    asObject({
+      from: asString,
+      to: asOptional(asString),
+      data: asString,
+      gas: asOptional(asString),
+      gasPrice: asOptional(asString),
+      value: asOptional(asString),
+      nonce: asOptional(asString)
+    }),
+    asOptional(asString, '')
   )
 })
 const asAlgoPayloadMethod = asValue('algo_signTxn')
@@ -227,7 +231,7 @@ const asAlgoWcRpcPayload = asObject({
   )
 })
 
-const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmPayloadMethod) }).withRest
+const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod) }).withRest
 type Payload = ReturnType<typeof asPayload>
 
 export const asWcSmartContractModalProps = asObject({
