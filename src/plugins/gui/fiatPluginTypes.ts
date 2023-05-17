@@ -70,13 +70,15 @@ export interface FiatPluginOpenWebViewParams {
   url: string
 }
 
+export interface FiatPluginWalletPickerResult {
+  walletId?: string
+  currencyCode?: string
+}
+
 export interface FiatPluginUi {
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
-  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<{
-    walletId: string | undefined
-    currencyCode: string | undefined
-  }>
+  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
