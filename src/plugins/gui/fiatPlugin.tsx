@@ -147,7 +147,7 @@ export const executePlugin = async (params: {
     paymentTypes,
     providerId
   }
-  plugin.startPlugin(startPluginParams)
+  plugin.startPlugin(startPluginParams).catch(showError)
 }
 
 // ****************************************************************************
