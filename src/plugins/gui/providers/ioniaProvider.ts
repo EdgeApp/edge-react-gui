@@ -1,5 +1,5 @@
 import { div, mul } from 'biggystring'
-import { asArray, asBoolean, asDate, asEither, asJSON, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asDate, asEither, asJSON, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner, uncleaner } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -60,9 +60,13 @@ const asIoniaResponse = <Data extends any>(asData: Cleaner<Data>) =>
     ErrorMessage: asString
   })
 
+const asStoreHiddenCards = asOptional(asJSON(asArray(asNumber)), [])
+const wasStoreHiddenCards = uncleaner(asStoreHiddenCards)
+
 export interface IoniaMethods {
   authenticate: (shouldCreate?: boolean) => Promise<boolean>
-  getGiftCards: () => Promise<GiftCard[]>
+  getGiftCards: () => Promise<{ cards: GiftCard[]; archivedCards: GiftCard[] }>
+  hideCard: (cardId: number) => Promise<void>
   queryPurchaseCard: (currencyCode: string, cardAmount: number) => Promise<IoniaPurchaseCard>
 }
 
@@ -75,6 +79,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     const STORE_USERNAME_KEY = `${pluginKeys.scope}:userName`
     const STORE_EMAIL_KEY = `${pluginKeys.scope}:uuidEmail`
+    const STORE_HIDDEN_CARDS_KEY = `${pluginKeys.scope}:hiddenCards`
 
     //
     // Fetch API
@@ -223,6 +228,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     // State:
     //
 
+    let hiddenCardIds: number[] = asStoreHiddenCards(await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined))
     const ratesCache: { [currencyCode: string]: { expiry: number; rateQueryPromise: Promise<number> } } = {}
 
     //
@@ -391,12 +397,25 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
           return true
         },
+        hideCard: async cardId => {
+          const set = new Set(hiddenCardIds)
+          set.add(cardId)
+          hiddenCardIds = Array.from(set)
+          await store.setItem(STORE_HIDDEN_CARDS_KEY, wasStoreHiddenCards(hiddenCardIds))
+        },
         async getGiftCards() {
           const giftCardsResponse = await fetchGetGiftCards({
             headers: userAuthenticatedFetchOptions.headers
           })
           const { Data: giftCards } = giftCardsResponse
-          return giftCards
+
+          const out: { cards: GiftCard[]; archivedCards: GiftCard[] } = { cards: [], archivedCards: [] }
+          // Filter all deleted cards:
+          for (const card of giftCards) {
+            if (hiddenCardIds.includes(card.Id)) out.archivedCards.push(card)
+            else out.cards.push(card)
+          }
+          return out
         },
         queryPurchaseCard
       }
