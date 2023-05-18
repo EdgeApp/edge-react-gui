@@ -57,7 +57,8 @@ const paymentTypeLogosById = {
   paynow: 'paymentTypeLogoPaynow',
   poli: 'paymentTypeLogoPoli',
   sofort: 'paymentTypeLogoSofort',
-  upi: 'paymentTypeLogoUpi'
+  upi: 'paymentTypeLogoUpi',
+  visa: 'paymentTypeVisa'
 }
 
 const pluginPartnerLogos = {

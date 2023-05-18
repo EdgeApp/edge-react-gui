@@ -75,6 +75,12 @@ export const executePlugin = async (params: {
         })
       })
     },
+    async rewardsCardDashboard(params) {
+      navigation.navigate('rewardsCardDashboard', params)
+    },
+    async rewardsCardWelcome(params) {
+      navigation.navigate('rewardsCardWelcome', params)
+    },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
       const { headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
