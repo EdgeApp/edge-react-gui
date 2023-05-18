@@ -229,7 +229,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     walletId: selectedWallet.id,
     spendInfo,
     tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
-    lockTilesMap: { amount: true, address: true },
+    lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`)
       if (onDone != null) onDone()
