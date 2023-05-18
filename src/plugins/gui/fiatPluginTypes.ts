@@ -2,6 +2,7 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
@@ -88,6 +89,7 @@ export interface FiatPluginUi {
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
   send: (params: SendScene2Params) => Promise<void>
+  sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   exitScene: () => {}
@@ -100,6 +102,7 @@ export interface FiatPluginFactoryArgs {
   //   log: EdgeLog, // scoped logs
   // }
   account: EdgeAccount
+  deviceId: string
   disablePlugins: DisablePluginMap
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi

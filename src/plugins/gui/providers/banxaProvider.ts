@@ -325,7 +325,8 @@ export const banxaProvider: FiatProviderFactory = {
           closeQuote: async (): Promise<void> => {}
         }
         return paymentQuote
-      }
+      },
+      otherMethods: null
     }
     return out
   }

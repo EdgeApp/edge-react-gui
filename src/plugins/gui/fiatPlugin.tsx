@@ -6,6 +6,7 @@ import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
@@ -27,6 +28,7 @@ import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
+  deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
   guiPlugin: GuiPlugin
@@ -35,7 +37,7 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins = {}, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
+  const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
@@ -119,6 +121,9 @@ export const executePlugin = async (params: {
         })
       })
     },
+    sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
+      await launchPaymentProto(navigation, account, params.uri, params.params)
+    },
     exitScene: async () => {
       navigation.pop()
     }
@@ -134,6 +139,7 @@ export const executePlugin = async (params: {
   }
   const plugin = await guiPlugin.nativePlugin({
     account,
+    deviceId,
     disablePlugins: filteredDisablePlugins,
     guiPlugin,
     showUi

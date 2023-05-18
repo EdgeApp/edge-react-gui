@@ -51,13 +51,20 @@ export const asEnvConfig = asObject({
           jwtTokenProvider: asString,
           publicKey: asString
         })
+      ),
+      ionia: asOptional(
+        asObject({
+          clientId: asString,
+          clientSecret: asString
+        })
       )
     }).withRest,
     () => ({
       banxa: undefined,
       Bitrefill: undefined,
       moonpay: undefined,
-      simplex: undefined
+      simplex: undefined,
+      ionia: undefined
     })
   ),
   WYRE_CLIENT_INIT: asOptional(

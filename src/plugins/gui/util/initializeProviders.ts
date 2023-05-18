@@ -7,9 +7,9 @@ import { createStore } from '../pluginUtils'
 // disabled by disablePlugins.
 // TODO: Address redundancy of plugin-disabling implementations: info
 // server vs disablePlugins
-export async function initializeProviders(providerFactories: FiatProviderFactory[], params: FiatPluginFactoryArgs): Promise<FiatProvider[]> {
-  const { account, disablePlugins } = params
-  const providerPromises: Array<Promise<FiatProvider>> = []
+export async function initializeProviders<T>(providerFactories: Array<FiatProviderFactory<T>>, params: FiatPluginFactoryArgs): Promise<Array<FiatProvider<T>>> {
+  const { account, deviceId, disablePlugins } = params
+  const providerPromises: Array<Promise<FiatProvider<T>>> = []
 
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue
@@ -18,7 +18,7 @@ export async function initializeProviders(providerFactories: FiatProviderFactory
     if (apiKeys == null) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
+    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, io: { store } }))
   }
 
   return await Promise.all(providerPromises)

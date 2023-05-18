@@ -1509,7 +1509,8 @@ const strings = {
   rewards_card_dashboard_expires_label: `Expires`,
   rewards_card_dashboard_title: `Visa® Card Program`,
   rewards_card_delete_modal_title: 'Delete Card?',
-  rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`
+  rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`,
+  rewards_card_error_missing_payment_address: `Missing payment address from provider`
 }
 
 // eslint-disable-next-line import/no-default-export

@@ -11,6 +11,7 @@ import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
@@ -58,6 +59,7 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Pr
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account } = state.core
   const { activeWalletIds, currencyWallets } = account
+  const deviceId = base58ToUuid(state.core.context.clientId)
   const isLoggedIn = state.isLoggedIn
 
   // Wait for all wallets to load before handling deep links
@@ -114,6 +116,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       await executePlugin({
         account,
+        deviceId,
         disablePlugins: disableProviders,
         guiPlugin: plugin,
         direction,

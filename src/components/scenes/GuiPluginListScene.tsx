@@ -28,6 +28,7 @@ import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { base58ToUuid } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -78,6 +79,7 @@ interface StateProps {
   coreDisklet: Disklet
   countryCode: string
   developerModeOn: boolean
+  deviceId: string
   disablePlugins: NestedDisableMap
 }
 
@@ -198,7 +200,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, disablePlugins, navigation, account } = this.props
+    const { countryCode, deviceId, disablePlugins, navigation, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -237,6 +239,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
+        deviceId,
         direction,
         disablePlugins: disableProviders,
         guiPlugin: plugin,
@@ -438,6 +441,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, props) => {
+    const context = state.core.context
+    const deviceId = base58ToUuid(context.clientId)
     const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
     return {
       account: state.core.account,
@@ -446,6 +451,7 @@ export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
       coreDisklet: state.core.disklet,
       countryCode: state.ui.settings.countryCode,
       developerModeOn: state.ui.settings.developerModeOn,
+      deviceId,
       disablePlugins: state.ui.exchangeInfo[direction].disablePlugins
     }
   },

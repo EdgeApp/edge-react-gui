@@ -60,6 +60,7 @@ export interface FiatProviderAssetMap {
 }
 
 export interface FiatProviderGetQuoteParams {
+  wallet?: EdgeCurrencyWallet
   pluginId: string
   displayCurrencyCode: string
   exchangeAmount: string
@@ -77,23 +78,25 @@ export interface FiatProviderStore {
   readonly setItem: (itemId: string, value: string) => Promise<void>
 }
 
-export interface FiatProvider {
+export interface FiatProvider<OtherMethods = null> {
   providerId: string
   partnerIcon: string
   pluginDisplayName: string
   getSupportedAssets: (paymentTypes: FiatPaymentType[]) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
+  otherMethods: OtherMethods
 }
 
 export interface FiatProviderFactoryParams {
+  deviceId: string
   io: { store: FiatProviderStore }
   apiKeys?: unknown // Data specific to the requirements of each provider,
   // which lets the provider know that these orders were made from within Edge.
   // Typically an API key, but can be some other information like a client ID.
 }
 
-export interface FiatProviderFactory {
+export interface FiatProviderFactory<OtherMethods = null> {
   providerId: string
   storeId: string
-  makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider>
+  makeProvider: (params: FiatProviderFactoryParams) => Promise<FiatProvider<OtherMethods>>
 }

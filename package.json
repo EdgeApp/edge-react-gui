@@ -113,6 +113,7 @@
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
+    "deepmerge": "^4.3.1",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^0.21.3",
