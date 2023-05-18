@@ -17,7 +17,6 @@ export type TrackingEventName =
   | 'Create_Wallet_From_Search_Failed'
   | 'Create_Wallet_From_Search_Success'
   | 'Create_Wallet_Success'
-  | 'Earn_Spend_Launch'
   | 'EdgeProvider_Conversion_Success'
   | 'Exchange_Shift_Failed'
   | 'Exchange_Shift_Quote'
@@ -32,6 +31,8 @@ export type TrackingEventName =
   | 'Signup_Wallets_Created_Success'
   | 'Start_App'
   | 'purchase'
+  // No longer used:
+  | 'Earn_Spend_Launch'
 
 export interface TrackingValues {
   accountDate?: string // Account creation date

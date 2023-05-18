@@ -3,15 +3,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { ioniaPluginIds } from '../cards/EarnCryptoCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -31,20 +26,12 @@ export const BuyCrypto = (props: Props) => {
   const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { hideIoniaRewards = false } = config
 
   const handlePress = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
   })
 
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-
   const { displayName, pluginId } = wallet.currencyInfo
-
-  let message = lstrings.transaction_list_buy_crypto_message
-  if (!hideIoniaRewards && ioniaPluginIds.includes(pluginId) && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
-    message = lstrings.transaction_list_buy_and_earn_crypto_message
-  }
 
   return (
     <>
@@ -54,7 +41,7 @@ export const BuyCrypto = (props: Props) => {
             <View style={styles.buyCrypto}>
               <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
-              <EdgeText style={styles.buyCryptoText}>{sprintf(message, displayName)}</EdgeText>
+              <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
             </View>
           </View>
         </ButtonBox>

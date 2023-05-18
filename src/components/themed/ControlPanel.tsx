@@ -21,13 +21,11 @@ import { logoutRequest } from '../../actions/LoginActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
-import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -54,11 +52,9 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const insets = useSafeAreaInsets()
-  const { hideIoniaRewards = false } = config
 
   // ---- Redux State ----
 
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -266,17 +262,6 @@ export function ControlPanel(props: DrawerContentComponentProps) {
       title: ''
     }
   ]
-
-  if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
-    rowDatas.unshift({
-      pressHandler: () => {
-        navigation.navigate('pluginViewSell', { plugin: guiPlugins.ionia })
-        navigation.dispatch(DrawerActions.closeDrawer())
-      },
-      iconNameFontAwesome: 'hand-holding-usd',
-      title: sprintf(lstrings.side_menu_rewards_button_1s, defaultFiat)
-    })
-  }
 
   const handlePressClose = () => {
     navigation.dispatch(DrawerActions.closeDrawer())
