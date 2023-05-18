@@ -37,6 +37,7 @@ export interface LaunchPaymentProtoParams {
 const CHAIN_MAP: StringMap = {
   BCH: 'bitcoincash',
   BTC: 'bitcoin',
+  DASH: 'dash',
   DOGE: 'dogecoin',
   ETH: 'ethereum',
   LTC: 'litecoin',
