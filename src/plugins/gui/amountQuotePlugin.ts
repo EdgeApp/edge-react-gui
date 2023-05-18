@@ -2,7 +2,6 @@ import { div, eq, gt, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
-import { ENV } from '../../env'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
@@ -13,12 +12,13 @@ import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
-import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
-import { createStore, getBestError, getRateFromQuote } from './pluginUtils'
+import { FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import { getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { simplexProvider } from './providers/simplexProvider'
+import { initializeProviders } from './util/initializeProviders'
 
 // A map keyed by provider pluginIds, and values representing preferred priority
 // for that provider.
@@ -36,11 +36,13 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const { account, disablePlugins, guiPlugin, showUi } = params
+  const { account, guiPlugin, showUi } = params
   const { pluginId } = guiPlugin
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
-  const providerPromises: Array<Promise<FiatProvider>> = []
+
+  const providers = await initializeProviders(providerFactories, params)
+  if (providers.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
 
   const fiatPlugin: FiatPlugin = {
     pluginId,
@@ -67,27 +69,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         throw new Error('Multiple paymentTypes not implemented')
       }
 
-      // Filter providers for which API keys are set and are not explicitly
-      // disabled by disablePlugins.
-      // TODO: Address redundancy of plugin-disabling implementations: info
-      // server vs disablePlugins
-      for (const providerFactory of providerFactories) {
-        if (disablePlugins[providerFactory.providerId]) continue
-        priorityArray[0][providerFactory.providerId] = true
-
-        // @ts-expect-error
-        const apiKeys = ENV.PLUGIN_API_KEYS[providerFactory.providerId]
-        if (apiKeys == null) continue
-
-        const store = createStore(providerFactory.storeId, account.dataStore)
-        providerPromises.push(providerFactory.makeProvider({ io: { store }, apiKeys }))
-      }
-
-      if (providerPromises.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')
-
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
-      const providers = await Promise.all(providerPromises)
       for (const provider of providers) {
         assetPromises.push(provider.getSupportedAssets(paymentTypes))
       }
@@ -123,7 +106,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       // Pop up modal to pick wallet/asset
       // TODO: Filter wallets according to fiats supported by allowed providers
-      const walletListResult: { walletId: string | undefined; currencyCode: string | undefined } = await showUi.walletPicker({
+      const walletListResult = await showUi.walletPicker({
         headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
         allowedAssets,
         showCreateWallet: true

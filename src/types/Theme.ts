@@ -373,6 +373,7 @@ export interface Theme {
   paymentTypeLogoPoli: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
+  paymentTypeVisa: ImageProp
 
   primaryLogo: ImageProp
   fioAddressLogo: ImageProp

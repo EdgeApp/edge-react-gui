@@ -17,6 +17,8 @@ import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
+import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
+import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
 import { useSelector } from '../types/reactRedux'
@@ -183,6 +185,8 @@ const SendScene = ifLoggedIn(SendSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
 const SpendingLimitsScene = ifLoggedIn(SpendingLimitsSceneComponent)
+const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
+const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
 const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
@@ -817,6 +821,20 @@ const EdgeSellTabScreen = () => {
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
       <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="rewardsCardDashboard"
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+        component={RewardsCardDashboardScene}
+      />
+      <Stack.Screen
+        name="rewardsCardWelcome"
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+        component={RewardsCardWelcomeScene}
+      />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}

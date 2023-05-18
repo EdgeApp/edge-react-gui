@@ -2,6 +2,7 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
+import { makeRewardsCardPlugin } from '../../plugins/gui/RewardsCardPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -116,6 +117,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: 'https://edge.bitaccessbtm.com',
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
+  },
+  rewardscard: {
+    pluginId: 'rewardscard',
+    storeId: 'rewardscard',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: makeRewardsCardPlugin,
+    displayName: 'Edge Reward Card'
   },
   xanpool: {
     pluginId: 'xanpool',

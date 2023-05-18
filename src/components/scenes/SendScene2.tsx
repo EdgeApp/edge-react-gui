@@ -69,8 +69,9 @@ export interface SendScene2Params {
   openCamera?: boolean
   lockTilesMap?: {
     address?: boolean
-    wallet?: boolean
     amount?: boolean
+    fee?: boolean
+    wallet?: boolean
   }
   hiddenTilesMap?: {
     address?: boolean
@@ -468,7 +469,7 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type={noChangeMiningFee ? 'static' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
+        <Tile type={noChangeMiningFee || lockTilesMap.fee ? 'static' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
           {processingAmountChanged ? (
             <View style={styles.calcFeeView}>
               <EdgeText

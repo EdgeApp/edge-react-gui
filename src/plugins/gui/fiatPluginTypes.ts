@@ -2,12 +2,16 @@ import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
+import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { StateManager } from './hooks/useStateManager'
+import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
+import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -70,21 +74,29 @@ export interface FiatPluginOpenWebViewParams {
   url: string
 }
 
+export interface FiatPluginWalletPickerResult {
+  walletId?: string
+  currencyCode?: string
+}
+
 export interface FiatPluginUi {
+  buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(
+    params: Omit<ButtonModalProps<Buttons>, 'bridge' | 'children'>
+  ) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
-  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<{
-    walletId: string | undefined
-    currencyCode: string | undefined
-  }>
+  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
+  rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
+  rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
+  send: (params: SendScene2Params) => Promise<void>
+  sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   exitScene: () => {}
-  send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
@@ -94,6 +106,7 @@ export interface FiatPluginFactoryArgs {
   //   log: EdgeLog, // scoped logs
   // }
   account: EdgeAccount
+  deviceId: string
   disablePlugins: DisablePluginMap
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi

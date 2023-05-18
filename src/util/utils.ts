@@ -29,6 +29,7 @@ import { RootState } from '../types/reduxTypes'
 import { GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
+import { base58 } from './encoding'
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -581,4 +582,10 @@ export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
 
 export const makeUuid = () => {
   return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
+}
+
+export const base58ToUuid = (base58String: string): string => {
+  const bytes = base58.parse(base58String)
+  const uuid = v4({ random: bytes })
+  return uuid
 }

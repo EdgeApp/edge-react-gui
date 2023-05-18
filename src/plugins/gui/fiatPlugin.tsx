@@ -6,6 +6,8 @@ import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
@@ -20,12 +22,14 @@ import {
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
-  FiatPluginUi
+  FiatPluginUi,
+  FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
+  deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
   guiPlugin: GuiPlugin
@@ -34,17 +38,19 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins = {}, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
+  const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
+    buttonModal: async params => {
+      return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
+    },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
     },
-    // @ts-expect-error
-    walletPicker: async (params): Promise<WalletListResult> => {
+    walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
       const walletListResult = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
@@ -74,6 +80,12 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    async rewardsCardDashboard(params) {
+      navigation.navigate('rewardsCardDashboard', params)
+    },
+    async rewardsCardWelcome(params) {
+      navigation.navigate('rewardsCardWelcome', params)
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
       const { headerTitle, headerIconUri, onSubmit } = params
@@ -113,6 +125,9 @@ export const executePlugin = async (params: {
         })
       })
     },
+    sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
+      await launchPaymentProto(navigation, account, params.uri, params.params)
+    },
     exitScene: async () => {
       navigation.pop()
     }
@@ -128,6 +143,7 @@ export const executePlugin = async (params: {
   }
   const plugin = await guiPlugin.nativePlugin({
     account,
+    deviceId,
     disablePlugins: filteredDisablePlugins,
     guiPlugin,
     showUi
@@ -147,7 +163,7 @@ export const executePlugin = async (params: {
     paymentTypes,
     providerId
   }
-  plugin.startPlugin(startPluginParams)
+  plugin.startPlugin(startPluginParams).catch(showError)
 }
 
 // ****************************************************************************
