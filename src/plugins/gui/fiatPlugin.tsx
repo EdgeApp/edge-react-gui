@@ -12,13 +12,10 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationBase } from '../../types/routerTypes'
-import { logEvent } from '../../util/tracking'
+import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
-  FiatPluginEnterAmountParams,
-  FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
@@ -39,7 +36,6 @@ export const executePlugin = async (params: {
 }): Promise<void> => {
   const { disablePlugins = {}, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
-  const isBuy = direction === 'buy'
 
   const showUi: FiatPluginUi = {
     showToastSpinner,
@@ -62,23 +58,8 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount(params: FiatPluginEnterAmountParams) {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
-      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
-
-      navigation.navigate('guiPluginEnterAmount', {
-        headerTitle,
-        label1,
-        label2,
-        initialAmount1,
-        getMethods,
-        convertValue,
-        onChangeText: async () => undefined,
-        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-          onSubmit(value)
-        }
-      })
+    enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+      navigation.navigate('guiPluginEnterAmount', params)
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
@@ -132,7 +113,7 @@ export const executePlugin = async (params: {
         })
       })
     },
-    popScene: async () => {
+    exitScene: async () => {
       navigation.pop()
     }
   }

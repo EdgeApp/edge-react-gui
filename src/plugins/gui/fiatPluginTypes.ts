@@ -5,8 +5,9 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
-import { EnterAmountPoweredBy } from './scenes/FiatPluginEnterAmountScene'
+import { StateManager } from './hooks/useStateManager'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -19,25 +20,6 @@ export interface FiatPluginAddressFormParams {
   headerTitle: string
   headerIconUri?: string
   onSubmit: (homeAddress: HomeAddress) => Promise<void>
-}
-
-export interface FiatPluginGetMethodsResponse {
-  setStatusText: (params: { statusText: string; options?: { textType?: 'warning' | 'error' } }) => void
-  setPoweredBy: (params: EnterAmountPoweredBy) => void
-  setValue1: (value: string) => void
-  setValue2: (value: string) => void
-}
-
-export interface FiatPluginEnterAmountParams {
-  headerTitle: string
-  isBuy: boolean
-  label1: string
-  label2: string
-  convertValue: (sourceFieldNum: number, value: string) => Promise<string | undefined>
-  onSubmit: (value: FiatPluginEnterAmountResponse) => Promise<void>
-  getMethods?: (methods: FiatPluginGetMethodsResponse) => void
-  initialAmount1?: string
-  headerIconUri?: string
 }
 
 export interface FiatPluginSepaFormParams {
@@ -97,11 +79,11 @@ export interface FiatPluginUi {
   }>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
-  enterAmount: (params: FiatPluginEnterAmountParams) => void
+  enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
-  popScene: () => {}
+  exitScene: () => {}
   send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
@@ -133,3 +115,8 @@ export interface FiatPlugin {
 }
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>
+
+export interface StatefulSceneEvent<EventValue, State extends object> {
+  value: EventValue
+  stateManager: StateManager<State>
+}
