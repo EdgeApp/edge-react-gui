@@ -464,6 +464,8 @@ const strings = {
   staking_estimated_return_up_to: 'Estimated Return: up to %1$s APY',
   staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
   staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1$s',
+  string_i_agree: 'I Agree',
+  string_decline: 'Decline',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
@@ -1510,7 +1512,8 @@ const strings = {
   rewards_card_dashboard_title: `Visa® Card Program`,
   rewards_card_delete_modal_title: 'Delete Card?',
   rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`,
-  rewards_card_error_missing_payment_address: `Missing payment address from provider`
+  rewards_card_error_missing_payment_address: `Missing payment address from provider`,
+  rewards_card_terms_of_use_message: `Review Terms of Use:\n\nI understand that virtual cards via this program can only be purchased by United States based users.\n\nI understand that purchased cards are not eligible for refunds.`
 }
 
 // eslint-disable-next-line import/no-default-export

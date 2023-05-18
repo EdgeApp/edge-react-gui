@@ -7,6 +7,7 @@ import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
@@ -41,6 +42,9 @@ export const executePlugin = async (params: {
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
+    buttonModal: async params => {
+      return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
+    },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })

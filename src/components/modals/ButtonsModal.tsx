@@ -20,18 +20,7 @@ export interface ButtonInfo {
   onPress?: () => Promise<boolean>
 }
 
-/**
- * A modal with a title, message, and buttons.
- * This is an alternative to the native `Alert` component.
- *
- * Child components appear between the message and the buttons,
- * but this feature is only meant for inserting extra message elements,
- * like images or custom text formatting.
- *
- * Build a custom modal component if you need form fields, check boxes,
- * or other interactive elements.
- */
-export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: {
+export interface ButtonModalProps<Buttons> {
   bridge: AirshipBridge<keyof Buttons | undefined>
   title?: string
   message?: string
@@ -43,7 +32,20 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
 
   // Adds a border:
   warning?: boolean
-}) {
+}
+
+/**
+ * A modal with a title, message, and buttons.
+ * This is an alternative to the native `Alert` component.
+ *
+ * Child components appear between the message and the buttons,
+ * but this feature is only meant for inserting extra message elements,
+ * like images or custom text formatting.
+ *
+ * Build a custom modal component if you need form fields, check boxes,
+ * or other interactive elements.
+ */
+export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
   const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
 

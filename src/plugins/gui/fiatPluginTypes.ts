@@ -3,6 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
@@ -79,6 +80,9 @@ export interface FiatPluginWalletPickerResult {
 }
 
 export interface FiatPluginUi {
+  buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(
+    params: Omit<ButtonModalProps<Buttons>, 'bridge' | 'children'>
+  ) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
