@@ -235,13 +235,35 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     showNewCardEnterAmount(walletListResult)
   }
 
-  const showWelcome = () => {
+  const showWelcome = async () => {
     showUi.rewardsCardWelcome({
       onMoreInfo() {
         openBrowserUri(SUPPORT_URL)
       },
       onNewCard() {
-        showNewCardWalletListModal().catch(showUi.showError)
+        // First time user are shown TOS and authenticate with account creation)
+        showUi
+          .buttonModal({
+            title: lstrings.rewards_card_dashboard_title,
+            message: lstrings.rewards_card_terms_of_use_message,
+            buttons: {
+              yes: {
+                label: lstrings.string_i_agree,
+                type: 'primary'
+              },
+              no: {
+                label: lstrings.string_decline,
+                type: 'escape'
+              }
+            }
+          })
+          .then(async answer => {
+            if (answer !== 'yes') return
+
+            await provider.otherMethods.authenticate(true)
+            await showNewCardWalletListModal()
+          })
+          .catch(showUi.showError)
       }
     })
   }
@@ -253,11 +275,13 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
-      // Create/auth User:
-      await provider.otherMethods.authenticate()
+      // Auth User:
+      const isAuthenticated = await provider.otherMethods.authenticate()
 
       // Get/refresh rewards cards:
-      rewardCards = await getRewardCards()
+      if (isAuthenticated) {
+        rewardCards = await getRewardCards()
+      }
 
       redundantQuoteParams = {
         direction: startParams.direction,
@@ -266,9 +290,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       }
 
       if (rewardCards.length > 0) {
-        showDashboard()
+        await showDashboard()
       } else {
-        showWelcome()
+        await showWelcome()
       }
     }
   }
