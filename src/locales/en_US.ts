@@ -469,6 +469,7 @@ const strings = {
   string_ok_cap: 'OK',
   string_forget: 'Forget',
   string_delete: 'Delete',
+  string_keep: 'Keep',
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
   satPerByte: 'Satoshi Per Byte',
@@ -1497,7 +1498,17 @@ const strings = {
   getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
 
   // Accessibility Hints
-  app_logo_hint: 'App logo'
+  app_logo_hint: 'App logo',
+
+  // Reward Card
+  rewards_card_add_new_input_amount_title: `Buy Visa® Card`,
+  rewards_card_welcome_intro: `Purchase Visa® prepaid cards that can be used at millions of merchants in the U.S. Cards can be purchased up to $1,000 in value, with a daily limit of $10,000.`,
+  rewards_card_welcome_more_info: `Learn More`,
+  rewards_card_new_card_button_label: `Buy New Card`,
+  rewards_card_dashboard_expires_label: `Expires`,
+  rewards_card_dashboard_title: `Visa® Card Program`,
+  rewards_card_delete_modal_title: 'Delete Card?',
+  rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`
 }
 
 // eslint-disable-next-line import/no-default-export

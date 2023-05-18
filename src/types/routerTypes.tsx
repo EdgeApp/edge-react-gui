@@ -20,6 +20,8 @@ import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
+import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
+import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
 import {
   CreateWalletType,
@@ -60,6 +62,8 @@ export interface RouteParamList {
   guiPluginAddressForm: FiatPluginAddressFormParams
   guiPluginInfoDisplay: FiatPluginSepaTransferParams
   guiPluginSepaForm: FiatPluginSepaFormParams
+  rewardsCardDashboard: RewardsCardDashboardParams
+  rewardsCardWelcome: RewardsCardWelcomeParams
 
   // Logged-in scenes:
   changeMiningFee: {

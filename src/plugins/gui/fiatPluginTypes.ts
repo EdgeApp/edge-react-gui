@@ -8,6 +8,8 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { StateManager } from './hooks/useStateManager'
+import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
+import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
@@ -83,10 +85,12 @@ export interface FiatPluginUi {
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
+  rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
+  rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
+  send: (params: SendScene2Params) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   exitScene: () => {}
-  send: (params: SendScene2Params) => Promise<void>
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
