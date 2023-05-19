@@ -16,6 +16,7 @@ import {
   Cleaner,
   uncleaner
 } from 'cleaners'
+import { EdgeParsedUri } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -111,7 +112,6 @@ export interface IoniaMethods {
   authenticate: (shouldCreate?: boolean) => Promise<boolean>
   getRewardsCards: () => Promise<UserRewardsCards>
   hideCard: (cardId: number) => Promise<void>
-  queryPurchaseCard: (currencyCode: string, cardAmount: number) => Promise<IoniaPurchaseCard>
 }
 
 export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
@@ -273,11 +273,29 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     //
 
     let hiddenCardIds: number[] = asStoreHiddenCards(await store.getItem(STORE_HIDDEN_CARDS_KEY).catch(_ => undefined))
+    let purchaseCardTimeoutId: NodeJS.Timeout
     const ratesCache: { [currencyCode: string]: { expiry: number; rateQueryPromise: Promise<number> } } = {}
 
     //
     // Private methods:
     //
+
+    async function getPurchaseCard(currencyCode: string, cardAmount: number): Promise<IoniaPurchaseCard | null> {
+      return await new Promise<IoniaPurchaseCard | null>((resolve, reject) => {
+        // Hastily invoke the task promise with a debounce:
+        const newPurchaseCardTimeoutId = setTimeout(() => {
+          if (purchaseCardTimeoutId === newPurchaseCardTimeoutId) {
+            queryPurchaseCard(currencyCode, cardAmount).then(resolve, reject)
+          } else {
+            // Aborted
+            resolve(null)
+          }
+        }, 1000)
+
+        // Set the new task to the provider state
+        purchaseCardTimeoutId = newPurchaseCardTimeoutId
+      })
+    }
 
     /**
      * Get the purchase rate for a card in units of crypto amount per fiat unit
@@ -390,17 +408,20 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         }
         return fiatProviderAssetMap
       },
-      async getQuote(params: FiatProviderGetQuoteParams) {
-        if (params.wallet == null) throw new Error('missing wallet')
+      async getQuote(quoteParams: FiatProviderGetQuoteParams) {
+        if (quoteParams.wallet == null) throw new Error('missing wallet')
 
-        const rateAmount = await getCardPurchaseRateAmount(params.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
-        const rateExchangeAmount = await params.wallet.nativeToDenomination(toBigNumberString(rateAmount), params.displayCurrencyCode)
-        console.log(`Ionia rates a $${RATE_QUOTE_CARD_AMOUNT} card at ${rateExchangeAmount} ${params.displayCurrencyCode}`)
+        const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
+        const rateExchangeAmount = await quoteParams.wallet.nativeToDenomination(toBigNumberString(rateAmount), quoteParams.displayCurrencyCode)
+        console.log(`Ionia rates a $${RATE_QUOTE_CARD_AMOUNT} card at ${rateExchangeAmount} ${quoteParams.displayCurrencyCode}`)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
         const cryptoAmount =
-          params.amountType === 'crypto' ? params.exchangeAmount : div(params.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
-        const fiatAmount = params.amountType === 'fiat' ? params.exchangeAmount : mul(params.exchangeAmount, toBigNumberString(price))
+          quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
+        const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, toBigNumberString(price))
+
+        // Concurrently get the purchase card
+        const purchaseCardPromise = getPurchaseCard(quoteParams.displayCurrencyCode, parseFloat(fiatAmount))
 
         checkAmountMinMax(parseFloat(fiatAmount))
 
@@ -408,16 +429,59 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           providerId: makeIoniaProvider.providerId,
           partnerIcon: fiatProvider.partnerIcon,
           pluginDisplayName: '',
-          displayCurrencyCode: params.displayCurrencyCode,
+          displayCurrencyCode: quoteParams.displayCurrencyCode,
           cryptoAmount,
           isEstimate: true,
-          fiatCurrencyCode: params.fiatCurrencyCode,
+          fiatCurrencyCode: quoteParams.fiatCurrencyCode,
           fiatAmount,
           direction: 'sell',
-          regionCode: params.regionCode,
-          paymentTypes: params.paymentTypes,
+          regionCode: quoteParams.regionCode,
+          paymentTypes: quoteParams.paymentTypes,
 
-          approveQuote: async params => {},
+          approveQuote: async approveParams => {
+            const { showUi, coreWallet: wallet } = approveParams
+
+            // Unbox the latest purchase card:
+            const purchaseCard = await purchaseCardPromise
+
+            if (purchaseCard == null) throw new Error('Cannot approve replaced quote')
+
+            // Use the purchase card URI to complete the payment over the Payment Protocol:
+            const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await wallet.parseUri(purchaseCard.uri, quoteParams.displayCurrencyCode)
+            const { paymentProtocolUrl } = parsedUri
+            if (paymentProtocolUrl == null) {
+              throw new Error(lstrings.missing_provider_payment_address_message)
+            }
+
+            // Check if the URI requires a warning to the user:
+            const approved = await showUi.addressWarnings(parsedUri, quoteParams.displayCurrencyCode)
+            if (!approved) return
+
+            console.log(`Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`)
+
+            return await new Promise((resolve, reject) => {
+              showUi
+                .sendPaymentProto({
+                  uri: paymentProtocolUrl,
+                  params: {
+                    wallet: wallet,
+                    currencyCode: quoteParams.displayCurrencyCode,
+                    onBack: () => {
+                      reject(
+                        new Error(
+                          `User cancelled quote of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`
+                        )
+                      )
+                    },
+                    onDone: resolve
+                  }
+                })
+                .catch(err => {
+                  console.error(new Error(err))
+                  reject(err)
+                })
+            })
+          },
           closeQuote: async () => {}
         }
 
@@ -460,8 +524,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
             else out.activeCards.push(card)
           }
           return out
-        },
-        queryPurchaseCard
+        }
       }
     }
 

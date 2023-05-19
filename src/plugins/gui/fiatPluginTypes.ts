@@ -79,6 +79,7 @@ export interface FiatPluginWalletPickerResult {
 }
 
 export interface FiatPluginUi {
+  addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
