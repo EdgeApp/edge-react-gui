@@ -1508,6 +1508,7 @@ const strings = {
   rewards_card_welcome_intro: `Purchase Visa® prepaid cards that can be used at millions of merchants in the U.S. Cards can be purchased up to $1,000 in value, with a daily limit of $10,000.`,
   rewards_card_welcome_more_info: `Learn More`,
   rewards_card_new_card_button_label: `Buy New Card`,
+  rewards_card_call_to_action: `Buy Prepaid Visa® Cards`,
   rewards_card_dashboard_expires_label: `Expires`,
   rewards_card_dashboard_title: `Visa® Card Program`,
   rewards_card_delete_modal_title: 'Delete Card?',
