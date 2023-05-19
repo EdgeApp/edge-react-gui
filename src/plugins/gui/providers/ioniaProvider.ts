@@ -78,6 +78,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     // Fetch API
     //
 
+    // OAuth Access Token Request:
     const fetchAccessToken = cleanFetch({
       resource: `https://auth.craypay.com/connect/token`,
       options: {
@@ -97,6 +98,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       )
     })
 
+    // Ionia Create User:
     const fetchCreateUserBase = cleanFetch({
       resource: `${pluginKeys.ioniaBaseUrl}/CreateUser`,
       options: ioniaBaseRequestOptions,
@@ -119,6 +121,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       )
     })
 
+    // Ionia Get Gift Cards:
     const fetchGetGiftCardsBase = cleanFetch({
       resource: `${pluginKeys.ioniaBaseUrl}/GetGiftCards`,
       options: ioniaBaseRequestOptions,
@@ -136,6 +139,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       asResponse: asJSON(asIoniaResponse(asArray(asGiftCard)))
     })
 
+    // Ionia Purchase Card Request:
     const fetchPurchaseGiftCardBase = cleanFetch({
       resource: `${pluginKeys.ioniaBaseUrl}/PurchaseGiftCard`,
       options: ioniaBaseRequestOptions,
@@ -149,6 +153,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       asResponse: asJSON(asIoniaResponse(asMaybe(asIoniaPurchaseCard)))
     })
 
+    // Payment Protocol Request Payment Options:
     const fetchPaymentOptions = cleanFetch({
       resource: input => input.endpoint,
       asResponse: asJSON(
@@ -179,6 +184,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       }
     })
 
+    // Fetch Access Token From OAuth Protocol:
     if (ACCESS_TOKEN == null) {
       const credentialsString = `${pluginKeys.clientId}:${pluginKeys.clientSecret}`
       const credentialsBytes = Uint8Array.from(credentialsString.split('').map(char => char.charCodeAt(0)))
@@ -192,10 +198,6 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
       ACCESS_TOKEN = accessTokenResponse.access_token
     }
-
-    //
-    // Fetchers:
-    //
 
     const authorizedFetchOptions: RequestInit = {
       headers: {
