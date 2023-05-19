@@ -3,8 +3,6 @@ import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 
 import { showError } from '../components/services/AirshipInstance'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { TransactionListTx } from '../types/types'
-import { unixToLocaleDateTime } from '../util/utils'
 
 const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
@@ -68,7 +66,7 @@ const getAndMergeTransactions = async (
   options: EdgeGetTransactionsOptions
 ) => {
   // initialize the master array of transactions that will eventually go into Redux
-  let transactionsWithKeys: TransactionListTx[] = [] // array of transactions as objects with key included for sorting?
+  let transactionsWithKeys: EdgeTransaction[] = [] // array of transactions as objects with key included for sorting?
   let transactionIdMap: { [txid: string]: boolean } = {} // maps id to sort order(?)
   // assume counter starts at zero (eg this is the first fetch)
   // if there are any options and the starting index is non-zero (eg this is a subsequent fetch)
@@ -84,17 +82,10 @@ const getAndMergeTransactions = async (
 
     for (const tx of transactions) {
       // for each transaction, add some meta info
-      const { date, time } = unixToLocaleDateTime(tx.date)
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
         transactionIdMap[tx.txid] = true
-        // @ts-expect-error
-        transactionsWithKeys.push({
-          // then add it
-          ...tx,
-          dateString: date,
-          time
-        })
+        transactionsWithKeys.push(tx)
       }
     }
     const transactionCount = transactionsWithKeys.length

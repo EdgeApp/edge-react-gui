@@ -33,7 +33,6 @@ import {
   GuiFiatType,
   GuiMakeSpendInfo,
   GuiSwapInfo,
-  TransactionListTx,
   WcConnectionInfo
 } from './types'
 
@@ -280,7 +279,7 @@ export interface RouteParamList {
   termsOfService: {}
   testScene: {}
   transactionDetails: {
-    edgeTransaction: EdgeTransaction | TransactionListTx
+    edgeTransaction: EdgeTransaction
     walletId: string
   }
   transactionList: {

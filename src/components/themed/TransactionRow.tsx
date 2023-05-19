@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -8,9 +8,9 @@ import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { TransactionListTx } from '../../types/types'
 import { formatCategory, splitCategory } from '../../util/categories'
 import { triggerHaptic } from '../../util/haptic'
+import { unixToLocaleDateTime } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
@@ -25,7 +25,7 @@ interface Props {
   requiredConfirmations: number
   selectedCurrencyName: string
   thumbnailPath?: string
-  transaction: TransactionListTx
+  transaction: EdgeTransaction
   wallet: EdgeCurrencyWallet
 }
 
@@ -72,7 +72,7 @@ const TransactionRowComponent = (props: Props) => {
   const currentConfirmations = transaction.confirmations
   const pendingText =
     currentConfirmations === 'confirmed'
-      ? transaction.time
+      ? unixToLocaleDateTime(transaction.date).time
       : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
       ? lstrings.fragment_transaction_list_unconfirmed_rbf
       : currentConfirmations === 'unconfirmed'

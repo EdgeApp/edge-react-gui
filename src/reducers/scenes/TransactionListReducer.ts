@@ -1,7 +1,7 @@
+import { EdgeTransaction } from 'edge-core-js'
 import { combineReducers, Reducer } from 'redux'
 
 import { Action } from '../../types/reduxTypes'
-import { TransactionListTx } from '../../types/types'
 
 export interface TransactionListState {
   readonly currentCurrencyCode: string
@@ -9,10 +9,10 @@ export interface TransactionListState {
   readonly currentWalletId: string
   readonly numTransactions: number
   readonly transactionIdMap: { [txid: string]: boolean }
-  readonly transactions: TransactionListTx[]
+  readonly transactions: EdgeTransaction[]
 }
 
-const transactions: Reducer<TransactionListTx[], Action> = (state = [], action) => {
+const transactions: Reducer<EdgeTransaction[], Action> = (state = [], action) => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
       return action.data.transactions

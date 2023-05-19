@@ -25,7 +25,6 @@ import {
   MostRecentWallet,
   SpendAuthType,
   SpendingLimits,
-  TransactionListTx,
   WalletListItem
 } from './types'
 
@@ -103,7 +102,7 @@ export type Action =
       type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
       data: {
         numTransactions: number
-        transactions: TransactionListTx[]
+        transactions: EdgeTransaction[]
         transactionIdMap: { [txid: string]: boolean }
         currentCurrencyCode: string
         currentWalletId: string

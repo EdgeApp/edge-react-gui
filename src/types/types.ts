@@ -92,12 +92,6 @@ export interface GuiFiatType {
   value: string
 }
 
-export type TransactionListTx = EdgeTransaction & {
-  dateString: string
-  time: string
-  unfilteredIndex: number
-}
-
 export interface FlatListItem<T> {
   index: number
   item: T

@@ -1,5 +1,5 @@
 import { gte } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
 
@@ -11,9 +11,9 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { FlatListItem, TransactionListTx } from '../../types/types'
+import { FlatListItem } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { calculateSpamThreshold, zeroString } from '../../util/utils'
+import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
@@ -30,7 +30,7 @@ const SHOW_FLIP_INPUT_TESTER = false
 
 interface Section {
   title: string
-  data: TransactionListTx[]
+  data: EdgeTransaction[]
 }
 
 interface Props extends EdgeSceneProps<'transactionList'> {
@@ -46,7 +46,7 @@ function TransactionListComponent(props: Props) {
   const theme = useTheme()
 
   // State:
-  const [filteredTransactions, setFilteredTransactions] = React.useState<TransactionListTx[]>([])
+  const [filteredTransactions, setFilteredTransactions] = React.useState<EdgeTransaction[]>([])
   const [loading, setLoading] = React.useState(false)
   const [reset, setReset] = React.useState(true)
   const [searching, setSearching] = React.useState(false)
@@ -103,7 +103,7 @@ function TransactionListComponent(props: Props) {
     // Headers:
     const sections: Section[] = []
     for (const transaction of transactions) {
-      const dateString = transaction.dateString
+      const { date: dateString } = unixToLocaleDateTime(transaction.date)
       const section = sections.find(section => section.title === dateString)
       if (section == null) {
         sections.push({
@@ -204,7 +204,7 @@ function TransactionListComponent(props: Props) {
     return <SectionHeader title={section.section.title} />
   })
 
-  const renderTransaction = useHandler((transaction: FlatListItem<TransactionListTx>) => {
+  const renderTransaction = useHandler((transaction: FlatListItem<EdgeTransaction>) => {
     return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
   })
 
@@ -223,7 +223,7 @@ function TransactionListComponent(props: Props) {
     )
   })
 
-  const keyExtractor = useHandler((item: TransactionListTx) => item.txid)
+  const keyExtractor = useHandler((item: EdgeTransaction) => item.txid)
 
   const getItemLayout = useHandler((data: unknown, index: number) => ({
     length: theme.rem(4.25),
