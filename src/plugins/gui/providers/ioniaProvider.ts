@@ -12,7 +12,7 @@ import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGe
 let ACCESS_TOKEN: string
 
 const ONE_MINUTE = 1000 * 60
-const EDGE_MERCHANT_ID = 413 // 413 default edge merchant ID
+const EDGE_MERCHANT_ID = 416 // Edge merchant ID
 const RATE_QUOTE_CARD_AMOUNT = 300
 const HARD_CURRENCY_PRECISION = 8
 const MAX_FIAT_CARD_PURCHASE_AMOUNT = '1000'
@@ -21,7 +21,7 @@ const MIN_FIAT_CARD_PURCHASE_AMOUNT = '10'
 const STORE_USERNAME_KEY = 'userName'
 const STORE_EMAIL_KEY = 'uuidEmail'
 
-const ioniaBaseUrl = 'https://apidev.ionia.io/Edge'
+const ioniaBaseUrl = 'https://apistaging.ionia.io/Edge'
 const ioniaBaseRequestOptions = {
   method: 'POST',
   headers: {
@@ -65,7 +65,7 @@ const fetchAccessToken = cleanFetch({
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   },
-  asRequest: asOptional(asString, 'grant_type=client_credentials&scope=edge_dev'),
+  asRequest: asOptional(asString, 'grant_type=client_credentials&scope=edge_staging'),
   asResponse: asJSON(
     asObject({
       access_token: asString,
