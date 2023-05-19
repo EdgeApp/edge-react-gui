@@ -12,16 +12,11 @@ import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGe
 let ACCESS_TOKEN: string
 
 const ONE_MINUTE = 1000 * 60
-const EDGE_MERCHANT_ID = 413 // 413 default edge merchant ID
 const RATE_QUOTE_CARD_AMOUNT = 300
 const HARD_CURRENCY_PRECISION = 8
 const MAX_FIAT_CARD_PURCHASE_AMOUNT = '1000'
 const MIN_FIAT_CARD_PURCHASE_AMOUNT = '10'
 
-const STORE_USERNAME_KEY = 'userName'
-const STORE_EMAIL_KEY = 'uuidEmail'
-
-const ioniaBaseUrl = 'https://apidev.ionia.io/Edge'
 const ioniaBaseRequestOptions = {
   method: 'POST',
   headers: {
@@ -31,7 +26,17 @@ const ioniaBaseRequestOptions = {
 
 const asIoniaPluginApiKeys = asObject({
   clientId: asString,
-  clientSecret: asString
+  clientSecret: asString,
+  ioniaBaseUrl: asString,
+  merchantId: asNumber,
+  scope: asString
+})
+
+export type GiftCard = ReturnType<typeof asGiftCard>
+export const asGiftCard = asObject({
+  Id: asNumber,
+  CardNumber: asString,
+  CreatedDate: asDate
 })
 
 export type IoniaPurchaseCard = ReturnType<typeof asIoniaPurchaseCard>
@@ -53,117 +58,6 @@ const asIoniaResponse = <Data extends any>(asData: Cleaner<Data>) =>
     ErrorMessage: asString
   })
 
-//
-// Fetch API
-//
-
-const fetchAccessToken = cleanFetch({
-  resource: `https://auth.craypay.com/connect/token`,
-  options: {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  },
-  asRequest: asOptional(asString, 'grant_type=client_credentials&scope=edge_dev'),
-  asResponse: asJSON(
-    asObject({
-      access_token: asString,
-      expires_in: asNumber,
-      token_type: asString,
-      scope: asString
-    })
-  )
-})
-
-const fetchCreateUserBase = cleanFetch({
-  resource: `${ioniaBaseUrl}/CreateUser`,
-  options: ioniaBaseRequestOptions,
-  asRequest: asJSON(
-    asObject({
-      requestedUUID: asString,
-      Email: asString
-    })
-  ),
-  asResponse: asJSON(
-    asIoniaResponse(
-      asEither(
-        asNull,
-        asObject({
-          UserName: asString,
-          ErrorMessage: asEither(asNull, asString)
-        })
-      )
-    )
-  )
-})
-
-export type GiftCard = ReturnType<typeof asGiftCard>
-export const asGiftCard = asObject({
-  Id: asNumber,
-  CardNumber: asString,
-  CreatedDate: asDate
-})
-const fetchGetGiftCardsBase = cleanFetch({
-  resource: `${ioniaBaseUrl}/GetGiftCards`,
-  options: ioniaBaseRequestOptions,
-  asRequest: asJSON(
-    asOptional(
-      asEither(
-        asObject({}),
-        asObject({
-          Id: asNumber
-        })
-      ),
-      {}
-    )
-  ),
-  asResponse: asJSON(asIoniaResponse(asArray(asGiftCard)))
-})
-
-const fetchPurchaseGiftCardBase = cleanFetch({
-  resource: `${ioniaBaseUrl}/PurchaseGiftCard`,
-  options: ioniaBaseRequestOptions,
-  asRequest: asJSON(
-    asObject({
-      MerchantId: asNumber,
-      Amount: asNumber,
-      Currency: asString
-    })
-  ),
-  asResponse: asJSON(asIoniaResponse(asMaybe(asIoniaPurchaseCard)))
-})
-
-const fetchPaymentOptions = cleanFetch({
-  resource: input => input.endpoint,
-  asResponse: asJSON(
-    asObject({
-      time: asString,
-      expires: asString,
-      memo: asString,
-      paymentUrl: asString,
-      paymentId: asString,
-      paymentOptions: asArray(
-        asObject({
-          currency: asString,
-          chain: asString,
-          network: asString,
-          estimatedAmount: asNumber,
-          requiredFeeRate: asNumber,
-          minerFee: asNumber,
-          decimals: asNumber,
-          selected: asBoolean
-        })
-      )
-    })
-  ),
-  options: {
-    headers: {
-      Accept: 'application/payment-options'
-    }
-  }
-})
-
 export interface IoniaMethods {
   authenticate: (shouldCreate?: boolean) => Promise<boolean>
   getGiftCards: () => Promise<GiftCard[]>
@@ -177,6 +71,120 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     const { store } = params.io
     const pluginKeys = asIoniaPluginApiKeys(params.apiKeys)
 
+    const STORE_USERNAME_KEY = `${pluginKeys.scope}:userName`
+    const STORE_EMAIL_KEY = `${pluginKeys.scope}:uuidEmail`
+
+    //
+    // Fetch API
+    //
+
+    // OAuth Access Token Request:
+    const fetchAccessToken = cleanFetch({
+      resource: `https://auth.craypay.com/connect/token`,
+      options: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      },
+      asRequest: asOptional(asString, `grant_type=client_credentials&scope=${pluginKeys.scope}`),
+      asResponse: asJSON(
+        asObject({
+          access_token: asString,
+          expires_in: asNumber,
+          token_type: asString,
+          scope: asString
+        })
+      )
+    })
+
+    // Ionia Create User:
+    const fetchCreateUserBase = cleanFetch({
+      resource: `${pluginKeys.ioniaBaseUrl}/CreateUser`,
+      options: ioniaBaseRequestOptions,
+      asRequest: asJSON(
+        asObject({
+          requestedUUID: asString,
+          Email: asString
+        })
+      ),
+      asResponse: asJSON(
+        asIoniaResponse(
+          asEither(
+            asNull,
+            asObject({
+              UserName: asString,
+              ErrorMessage: asEither(asNull, asString)
+            })
+          )
+        )
+      )
+    })
+
+    // Ionia Get Gift Cards:
+    const fetchGetGiftCardsBase = cleanFetch({
+      resource: `${pluginKeys.ioniaBaseUrl}/GetGiftCards`,
+      options: ioniaBaseRequestOptions,
+      asRequest: asJSON(
+        asOptional(
+          asEither(
+            asObject({}),
+            asObject({
+              Id: asNumber
+            })
+          ),
+          {}
+        )
+      ),
+      asResponse: asJSON(asIoniaResponse(asArray(asGiftCard)))
+    })
+
+    // Ionia Purchase Card Request:
+    const fetchPurchaseGiftCardBase = cleanFetch({
+      resource: `${pluginKeys.ioniaBaseUrl}/PurchaseGiftCard`,
+      options: ioniaBaseRequestOptions,
+      asRequest: asJSON(
+        asObject({
+          MerchantId: asNumber,
+          Amount: asNumber,
+          Currency: asString
+        })
+      ),
+      asResponse: asJSON(asIoniaResponse(asMaybe(asIoniaPurchaseCard)))
+    })
+
+    // Payment Protocol Request Payment Options:
+    const fetchPaymentOptions = cleanFetch({
+      resource: input => input.endpoint,
+      asResponse: asJSON(
+        asObject({
+          time: asString,
+          expires: asString,
+          memo: asString,
+          paymentUrl: asString,
+          paymentId: asString,
+          paymentOptions: asArray(
+            asObject({
+              currency: asString,
+              chain: asString,
+              network: asString,
+              estimatedAmount: asNumber,
+              requiredFeeRate: asNumber,
+              minerFee: asNumber,
+              decimals: asNumber,
+              selected: asBoolean
+            })
+          )
+        })
+      ),
+      options: {
+        headers: {
+          Accept: 'application/payment-options'
+        }
+      }
+    })
+
+    // Fetch Access Token From OAuth Protocol:
     if (ACCESS_TOKEN == null) {
       const credentialsString = `${pluginKeys.clientId}:${pluginKeys.clientSecret}`
       const credentialsBytes = Uint8Array.from(credentialsString.split('').map(char => char.charCodeAt(0)))
@@ -190,10 +198,6 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
       ACCESS_TOKEN = accessTokenResponse.access_token
     }
-
-    //
-    // Fetchers:
-    //
 
     const authorizedFetchOptions: RequestInit = {
       headers: {
@@ -291,7 +295,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     async function queryPurchaseCard(currencyCode: string, cardAmount: number): Promise<IoniaPurchaseCard> {
       const purchaseResponse = await fetchPurchaseGiftCard({
         payload: {
-          MerchantId: EDGE_MERCHANT_ID,
+          MerchantId: pluginKeys.merchantId,
           Amount: cardAmount,
           Currency: currencyCode
         }
