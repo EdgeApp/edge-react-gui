@@ -1,7 +1,9 @@
-import { div, gt, lt, mul } from 'biggystring'
+import { div, mul } from 'biggystring'
 import { asArray, asBoolean, asDate, asEither, asJSON, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
+import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { toBigNumberString } from '../../../util/toBigNumberString'
@@ -14,8 +16,8 @@ let ACCESS_TOKEN: string
 const ONE_MINUTE = 1000 * 60
 const RATE_QUOTE_CARD_AMOUNT = 500
 const HARD_CURRENCY_PRECISION = 8
-const MAX_FIAT_CARD_PURCHASE_AMOUNT = '1000'
-const MIN_FIAT_CARD_PURCHASE_AMOUNT = '10'
+const MAX_FIAT_CARD_PURCHASE_AMOUNT = 1000
+const MIN_FIAT_CARD_PURCHASE_AMOUNT = 10
 
 const ioniaBaseRequestOptions = {
   method: 'POST',
@@ -247,6 +249,15 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       return await ratePromise
     }
 
+    function checkAmountMinMax(fiatAmount: number) {
+      if (fiatAmount > MAX_FIAT_CARD_PURCHASE_AMOUNT) {
+        throw new Error(sprintf(lstrings.rewards_card_error_amount_max_s, MAX_FIAT_CARD_PURCHASE_AMOUNT))
+      }
+      if (fiatAmount < MIN_FIAT_CARD_PURCHASE_AMOUNT) {
+        throw new Error(sprintf(lstrings.rewards_card_error_amount_min_s, MIN_FIAT_CARD_PURCHASE_AMOUNT))
+      }
+    }
+
     async function createUser(): Promise<string> {
       const uuid = makeUuid()
       const uuidEmail = `${uuid}@edge.app`
@@ -293,6 +304,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     }
 
     async function queryPurchaseCard(currencyCode: string, cardAmount: number): Promise<IoniaPurchaseCard> {
+      checkAmountMinMax(cardAmount)
       const purchaseResponse = await fetchPurchaseGiftCard({
         payload: {
           MerchantId: pluginKeys.merchantId,
@@ -340,12 +352,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           params.amountType === 'crypto' ? params.exchangeAmount : div(params.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
         const fiatAmount = params.amountType === 'fiat' ? params.exchangeAmount : mul(params.exchangeAmount, toBigNumberString(price))
 
-        if (gt(fiatAmount, MAX_FIAT_CARD_PURCHASE_AMOUNT)) {
-          throw new Error(`Card amount maximum ${MAX_FIAT_CARD_PURCHASE_AMOUNT}`)
-        }
-        if (lt(fiatAmount, MIN_FIAT_CARD_PURCHASE_AMOUNT)) {
-          throw new Error(`Card amount minimum ${MIN_FIAT_CARD_PURCHASE_AMOUNT}`)
-        }
+        checkAmountMinMax(parseFloat(fiatAmount))
 
         const fiatProviderQuote: FiatProviderQuote = {
           providerId: makeIoniaProvider.providerId,
