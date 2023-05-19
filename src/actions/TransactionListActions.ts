@@ -1,14 +1,10 @@
-import { gte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 
-import { showTransactionDropdown } from '../components/navigation/TransactionDropdown'
 import { showError } from '../components/services/AirshipInstance'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { TransactionListTx } from '../types/types'
-import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../util/utils'
-import { checkFioObtData } from './FioActions'
+import { unixToLocaleDateTime } from '../util/utils'
 
 const SUBSEQUENT_TRANSACTION_BATCH_QUANTITY = 30
 const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
@@ -144,21 +140,15 @@ export function refreshTransactionsRequest(wallet: EdgeCurrencyWallet, transacti
 
 export function newTransactionsRequest(navigation: NavigationBase, wallet: EdgeCurrencyWallet, edgeTransactions: EdgeTransaction[]): ThunkAction<void> {
   return (dispatch, getState) => {
-    const edgeTransaction: EdgeTransaction = edgeTransactions[0]
     const state = getState()
-    const exchangeRate = state.exchangeRates[`${edgeTransaction.currencyCode}_${wallet.fiatCurrencyCode}`]
+
     const currentViewableTransactions = state.ui.transactionList.transactions
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-    const spamFilterOn = state.ui.settings.spamFilterOn
-    const exchangeDenom = getExchangeDenomination(state, wallet.currencyInfo.pluginId, edgeTransaction.currencyCode)
+
     let numberOfRelevantTransactions = 0
     let isTransactionForSelectedWallet = false
-    const receivedTxs: EdgeTransaction[] = []
     for (const transaction of edgeTransactions) {
-      if (!transaction.isSend) {
-        receivedTxs.push(transaction)
-      }
       if (transaction.currencyCode === selectedCurrencyCode && transaction.walletId === selectedWalletId) {
         isTransactionForSelectedWallet = true
         // this next part may be unnecessary
@@ -173,11 +163,6 @@ export function newTransactionsRequest(navigation: NavigationBase, wallet: EdgeC
       startEntries: state.ui.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
     }
     if (isTransactionForSelectedWallet) dispatch(fetchTransactions(wallet, selectedCurrencyCode, options))
-    if (receivedTxs.length) dispatch(checkFioObtData(wallet, receivedTxs))
-    if (edgeTransaction.isSend) return
-    if (!spamFilterOn || (!zeroString(exchangeRate) && gte(edgeTransaction.nativeAmount, calculateSpamThreshold(exchangeRate, exchangeDenom)))) {
-      showTransactionDropdown(navigation, edgeTransaction)
-    }
   }
 }
 
