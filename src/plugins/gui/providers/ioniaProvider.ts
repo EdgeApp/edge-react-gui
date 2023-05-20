@@ -12,7 +12,7 @@ import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGe
 let ACCESS_TOKEN: string
 
 const ONE_MINUTE = 1000 * 60
-const RATE_QUOTE_CARD_AMOUNT = 300
+const RATE_QUOTE_CARD_AMOUNT = 500
 const HARD_CURRENCY_PRECISION = 8
 const MAX_FIAT_CARD_PURCHASE_AMOUNT = '1000'
 const MIN_FIAT_CARD_PURCHASE_AMOUNT = '10'

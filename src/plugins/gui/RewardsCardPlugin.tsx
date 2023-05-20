@@ -3,7 +3,6 @@ import { EdgeParsedUri } from 'edge-core-js'
 import React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
@@ -122,10 +121,6 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     if (answer === 'delete') showToast('Deleted it!')
   }
 
-  const showNewCardConfirm = async (uri: string, params: LaunchPaymentProtoParams) => {
-    showUi.sendPaymentProto({ uri, params })
-  }
-
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
     const { walletId, currencyCode } = walletListResult
     if (walletId == null || currencyCode == null) return
@@ -140,6 +135,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
       label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
       label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
+      initState: {
+        value1: '500'
+      },
       async onChangeText() {},
       async onFieldChange(event) {
         const myCounter = ++counter
@@ -199,7 +197,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
-        const fiatAmount = parseFloat(event.value.response.value1)
+        const fiatAmount = parseFloat(toFixed(event.value.response.value1, 0, 2))
         const exchangeAmount = event.value.response.value2
         const nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
         const purchaseCard = await provider.otherMethods.queryPurchaseCard(currencyCode, fiatAmount)
@@ -221,7 +219,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           refreshRewardsCards(0).catch(showError)
         }
 
-        showNewCardConfirm(parsedUri.paymentProtocolUrl, { wallet, currencyCode, onDone })
+        showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, onDone } })
       }
     })
   }
