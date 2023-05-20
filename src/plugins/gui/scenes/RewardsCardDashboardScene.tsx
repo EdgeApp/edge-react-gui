@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
@@ -33,6 +34,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
   const { items, onCardPress, onHelpPress, onNewPress, onRemovePress } = route.params
   const theme = useTheme()
   const [bottomFloatHeight, setBottomFloatHeight] = useState(0)
+  const insets = useSafeAreaInsets()
 
   const handleHelpPress = useHandler(() => {
     onHelpPress()
@@ -88,7 +90,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
           )}
         </CardListContainer>
       </SceneWrapper>
-      <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
+      <BottomFloat bottomSpace={insets.bottom} onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
         <Space around={1}>
           <MainButton onPress={onNewPress} label={lstrings.rewards_card_new_card_button_label} />
         </Space>
@@ -114,9 +116,9 @@ const CardListItemContainer = styled(View)(props => ({
   marginRight: props.theme.rem(1)
 }))
 
-const BottomFloat = styled(View)(props => ({
+const BottomFloat = styled(View)<{ bottomSpace: number }>(props => ({
   alignSelf: 'center',
-  bottom: 0,
+  bottom: props.bottomSpace,
   position: 'absolute'
 }))
 
