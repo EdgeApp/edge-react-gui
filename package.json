@@ -22,6 +22,8 @@
   ],
   "scripts": {
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
+    "android:dev": "react-native run-android --active-arch-only --variant=debug",
+    "android:dev:test-release": "react-native run-android --active-arch-only --variant=release",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:release-clean-install": "npm run android:clean && npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "android:release-install": "npm run android:release && adb install -r android/app/build/outputs/apk/release/app-release.apk",
