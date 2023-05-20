@@ -338,19 +338,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       plugins.push(customPluginRow)
     }
 
-    const { launchPluginId } = this.props.route.params ?? {}
-    if (launchPluginId != null) {
-      const { countryCode, disablePlugins } = this.props
-      const direction = this.getSceneDirection()
-      const { buy = [], sell = [] } = this.state.buySellPlugins
-      // Pick a filter based on our direction:
-      const pluginRows = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins)
-      const pluginRow = pluginRows.find(plugin => plugin.pluginId === launchPluginId)
-      if (pluginRow != null) {
-        this.openPlugin(pluginRow)
-      }
-    }
-
     return (
       <SceneWrapper background="theme" hasTabs>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
