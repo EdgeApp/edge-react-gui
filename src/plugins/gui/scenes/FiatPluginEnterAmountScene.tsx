@@ -165,7 +165,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
             </TouchableOpacity>
           </View>
         ) : null}
-        <MainButton label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
+        <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
     </SceneWrapper>
   )
