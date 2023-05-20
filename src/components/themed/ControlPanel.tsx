@@ -18,10 +18,10 @@ import { sprintf } from 'sprintf-js'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
+import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -270,12 +270,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        navigation.navigate('sellTab', {
-          screen: 'pluginListSell',
-          params: {
-            launchPluginId: guiPlugins.rewardscard.pluginId
-          }
-        })
+        dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'cc-visa',

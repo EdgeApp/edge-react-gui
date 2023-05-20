@@ -3,12 +3,12 @@ import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
+import { executePluginAction } from '../../actions/PluginActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
@@ -30,15 +30,11 @@ export const VisaCardCard = (props: Props) => {
   const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const handlePress = useHandler(() => {
     logEvent('Visa_Card_Launch')
-    navigation.navigate('sellTab', {
-      screen: 'pluginListSell',
-      params: {
-        launchPluginId: guiPlugins.rewardscard.pluginId
-      }
-    })
+    dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
