@@ -30,7 +30,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const { showUi, account, guiPlugin } = params
   const { pluginId } = guiPlugin
 
-  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dash', 'doge', 'litecoin'].map(pluginId => ({ pluginId }))
+  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dash', 'dogecoin', 'litecoin'].map(pluginId => ({ pluginId }))
 
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
   if (providers.length === 0) throw new Error('No enabled providers for RewardsCardPlugin')
