@@ -226,7 +226,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
-      headerTitle: lstrings.select_wallet,
+      headerTitle: lstrings.rewards_card_select_wallet,
       allowedAssets: SUPPORTED_ASSETS,
       showCreateWallet: false
     })
