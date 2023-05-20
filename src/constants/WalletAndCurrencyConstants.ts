@@ -113,6 +113,7 @@ interface SpecialCurrencyInfo {
 
   // Marketing:
   displayBuyCrypto?: boolean
+  displayIoniaRewards?: boolean
 
   // Localized GUI text:
   dummyPublicAddress?: string
@@ -180,6 +181,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_wallet_name,
     chainCode: 'BTC',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -200,6 +202,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoincash_wallet_name,
     chainCode: 'BCH',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -228,6 +231,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_litecoin_wallet_name,
     chainCode: 'LTC',
     displayBuyCrypto: true,
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
@@ -468,6 +472,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_dash_wallet_name,
     chainCode: 'DASH',
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -484,6 +489,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,

@@ -247,8 +247,12 @@ export interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
-  pluginListBuy: {}
-  pluginListSell: {}
+  pluginListBuy: {
+    launchPluginId?: string
+  }
+  pluginListSell: {
+    launchPluginId?: string
+  }
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams

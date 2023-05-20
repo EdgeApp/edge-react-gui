@@ -31,6 +31,7 @@ export type TrackingEventName =
   | 'Signup_Wallets_Created_Success'
   | 'Start_App'
   | 'purchase'
+  | 'Visa_Card_Launch'
   // No longer used:
   | 'Earn_Spend_Launch'
 

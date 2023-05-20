@@ -21,15 +21,18 @@ import { logoutRequest } from '../../actions/LoginActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -55,6 +58,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
 
   // ---- Redux State ----
 
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
   const activeUsername = useSelector(state => state.core.account.username)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
@@ -262,6 +266,22 @@ export function ControlPanel(props: DrawerContentComponentProps) {
       title: ''
     }
   ]
+
+  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+    rowDatas.unshift({
+      pressHandler: () => {
+        navigation.navigate('sellTab', {
+          screen: 'pluginListSell',
+          params: {
+            launchPluginId: guiPlugins.rewardscard.pluginId
+          }
+        })
+        navigation.dispatch(DrawerActions.closeDrawer())
+      },
+      iconNameFontAwesome: 'cc-visa',
+      title: sprintf(lstrings.rewards_card_call_to_action, defaultFiat)
+    })
+  }
 
   const handlePressClose = () => {
     navigation.dispatch(DrawerActions.closeDrawer())
@@ -482,8 +502,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(0.25)
   },
   icon: {
-    height: theme.rem(1.5),
-    width: theme.rem(1.5)
+    height: theme.rem(1.5)
   },
   text: {
     fontFamily: theme.sideMenuFont,
