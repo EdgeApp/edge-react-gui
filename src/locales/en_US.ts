@@ -1514,6 +1514,8 @@ const strings = {
   rewards_card_delete_modal_title: 'Delete Card?',
   rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`,
   rewards_card_error_missing_payment_address: `Missing payment address from provider`,
+  rewards_card_error_amount_max_s: `Maximum card purchase amount is $%s`,
+  rewards_card_error_amount_min_s: `Minimum card purchase amount is $%s`,
   rewards_card_terms_of_use_message: `Review Terms of Use:\n\nI understand that virtual cards via this program can only be purchased by United States based users.\n\nI understand that purchased cards are not eligible for refunds.`
 }
 
