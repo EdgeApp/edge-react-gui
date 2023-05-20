@@ -135,6 +135,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
       label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
       label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
+      initState: {
+        value1: '500'
+      },
       async onChangeText() {},
       async onFieldChange(event) {
         const myCounter = ++counter
