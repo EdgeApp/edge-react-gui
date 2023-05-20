@@ -8,7 +8,7 @@ import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
-import { snooze } from '../../util/utils'
+import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
@@ -285,12 +285,24 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const isAuthenticated = await provider.otherMethods.authenticate()
+      const startPluginInner = async (): Promise<RewardsCardItem[]> => {
+        const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+          throw new Error(lstrings.rewards_card_error_authenticate)
+        })
 
-      // Get/refresh rewards cards:
-      if (isAuthenticated) {
-        rewardCards = await getRewardCards()
+        // Get/refresh rewards cards:
+        if (isAuthenticated) {
+          return await getRewardCards().catch(e => {
+            throw new Error(lstrings.rewards_card_error_retrieving_cards)
+          })
+        }
+        return rewardCards
       }
+
+      rewardCards = await showUi.showToastSpinner(
+        lstrings.loading,
+        runWithTimeout(startPluginInner(), 11000, new Error(lstrings.rewards_card_error_timeout_loading))
+      )
 
       redundantQuoteParams = {
         direction: startParams.direction,
