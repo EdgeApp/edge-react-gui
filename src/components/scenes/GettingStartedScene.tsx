@@ -28,6 +28,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
@@ -110,6 +111,7 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
   })
   const handlePressSignUp = useHandler(() => {
+    logEvent('Signup_Account_Review_Done', { variantId: isFinalSwipeEnabled ? 'A' : 'B' })
     navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
   })
   const handlePressSkip = useHandler(() => {
