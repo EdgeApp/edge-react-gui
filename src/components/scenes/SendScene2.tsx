@@ -77,6 +77,7 @@ export interface SendScene2Params {
     address?: boolean
     amount?: boolean
     fioAddressSelect?: boolean
+    scamWarning?: boolean
   }
   infoTiles?: Array<{ label: string; value: string }>
   // fioAddress?: string // TODO: Implement specifying fio address
@@ -180,7 +181,9 @@ const SendComponent = (props: Props) => {
   spendInfo.currencyCode = currencyCode
 
   if (initialMount.current) {
-    dismissScamWarning(account.disklet)
+    if (hiddenTilesMap.scamWarning !== true) {
+      dismissScamWarning(account.disklet)
+    }
     initialMount.current = false
   }
 
