@@ -108,7 +108,7 @@ const paymentProtoSupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter
  */
 export async function launchPaymentProto(navigation: NavigationBase, account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
   const { currencyWallets } = account
-  const { currencyCode, hideScamWarning, navigateReplace, wallet, onDone } = params
+  const { currencyCode, hideScamWarning, metadata = {}, navigateReplace, wallet, onDone } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -198,7 +198,6 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     throw new PaymentProtoError('EmptyOutputInvoice', { errorData })
   }
 
-  const metadata = params.metadata ?? {}
   const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
   metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
 
