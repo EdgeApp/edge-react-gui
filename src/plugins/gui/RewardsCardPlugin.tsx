@@ -1,5 +1,5 @@
 import { eq, toFixed } from 'biggystring'
-import { EdgeParsedUri } from 'edge-core-js'
+import { EdgeMetadata, EdgeParsedUri } from 'edge-core-js'
 import React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -216,10 +216,17 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
         const onDone = () => {
           showDashboard()
-          refreshRewardsCards(0).catch(showError)
+          showUi.showToastSpinner(lstrings.rewards_card_purchase_successful, refreshRewardsCards(0).catch(showError))
         }
 
-        showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, onDone } })
+        const metadata: EdgeMetadata = {
+          name: 'Visa Prepaid Card',
+          category: 'expense:Visa Prepaid Card'
+        }
+        showUi.showToastSpinner(
+          lstrings.rewards_card_getting_invoice,
+          showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, metadata, onDone } })
+        )
       }
     })
   }
