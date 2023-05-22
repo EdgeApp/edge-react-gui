@@ -181,7 +181,7 @@ const SendComponent = (props: Props) => {
   spendInfo.currencyCode = currencyCode
 
   if (initialMount.current) {
-    if (hiddenFeaturesMap.scamWarning !== true) {
+    if (hiddenFeaturesMap.scamWarning === false) {
       triggerScamWarningModal(account.disklet)
     }
     initialMount.current = false
