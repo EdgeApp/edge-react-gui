@@ -15,7 +15,7 @@ export const triggerScamWarningModal = async (disklet: Disklet) => {
   try {
     await disklet.getText(SCAM_WARNING)
   } catch (error: any) {
-    Airship.show<boolean>(bridge => {
+    await Airship.show<boolean>(bridge => {
       const warningMessage = `\u2022 ${lstrings.warning_scam_message_financial_advice}\n\n\u2022 ${lstrings.warning_scam_message_irreversibility}\n\n\u2022 ${lstrings.warning_scam_message_unknown_recipients}`
 
       return (
@@ -23,10 +23,9 @@ export const triggerScamWarningModal = async (disklet: Disklet) => {
           <ModalMessage isWarning>{warningMessage}</ModalMessage>
         </ConfirmContinueModal>
       )
-    }).then(async () => {
-      await disklet.setText(SCAM_WARNING, '')
-
-      isWarningChecked = true
     })
+    await disklet.setText(SCAM_WARNING, '')
+
+    isWarningChecked = true
   }
 }
