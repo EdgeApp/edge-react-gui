@@ -175,7 +175,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'paymentProto': {
       if (!allWalletsLoaded) return false
-      launchPaymentProto(navigation, account, link.uri, {}).catch(showError)
+      launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false }).catch(showError)
       return true
     }
 
