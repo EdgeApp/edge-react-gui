@@ -59,7 +59,7 @@ xcode-select -p
 
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/EdgeApp/edge-react-gui/maestro.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/EdgeApp/edge-react-gui/develop/maestro.sh)"
 ```
 
 
