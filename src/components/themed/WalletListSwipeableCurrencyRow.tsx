@@ -76,7 +76,10 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
         navigation.navigate('send2', {
           walletId: wallet.id,
           tokenId,
-          openCamera: true
+          openCamera: true,
+          hiddenFeaturesMap: {
+            scamWarning: false
+          }
         })
       }
     })
