@@ -302,7 +302,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     triggerHaptic('impactLight')
     const { wallet, tokenId } = this.props
-    navigation.push('send2', { walletId: wallet.id, tokenId })
+    navigation.push('send2', { walletId: wallet.id, tokenId, hiddenFeaturesMap: { scamWarning: false } })
   }
 
   handleSearchDone = () => {
