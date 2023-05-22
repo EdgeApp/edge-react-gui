@@ -14,7 +14,7 @@ import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -73,10 +73,11 @@ export interface SendScene2Params {
     fee?: boolean
     wallet?: boolean
   }
-  hiddenTilesMap?: {
+  hiddenFeaturesMap?: {
     address?: boolean
     amount?: boolean
     fioAddressSelect?: boolean
+    scamWarning?: boolean
   }
   infoTiles?: Array<{ label: string; value: string }>
   // fioAddress?: string // TODO: Implement specifying fio address
@@ -127,7 +128,7 @@ const SendComponent = (props: Props) => {
     openCamera = false,
     infoTiles,
     lockTilesMap = {},
-    hiddenTilesMap = {},
+    hiddenFeaturesMap = {},
     onDone,
     onBack,
     beforeTransaction,
@@ -180,7 +181,9 @@ const SendComponent = (props: Props) => {
   spendInfo.currencyCode = currencyCode
 
   if (initialMount.current) {
-    dismissScamWarning(account.disklet)
+    if (hiddenFeaturesMap.scamWarning !== true) {
+      triggerScamWarningModal(account.disklet)
+    }
     initialMount.current = false
   }
 
@@ -251,7 +254,7 @@ const SendComponent = (props: Props) => {
   }
 
   const renderAddressTile = (index: number, spendTarget: EdgeSpendTarget) => {
-    if (coreWallet != null && !hiddenTilesMap.address) {
+    if (coreWallet != null && !hiddenFeaturesMap.address) {
       // TODO: Change API of AddressTile to access undefined recipientAddress
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
@@ -333,7 +336,7 @@ const SendComponent = (props: Props) => {
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
     const { publicAddress, nativeAmount } = spendTarget
-    if (publicAddress != null && !hiddenTilesMap.amount) {
+    if (publicAddress != null && !hiddenFeaturesMap.amount) {
       const title = lstrings.fio_request_amount + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
@@ -412,7 +415,7 @@ const SendComponent = (props: Props) => {
   const renderAddAddress = () => {
     const type = coreWallet.type
     const maxSpendTargets = getSpecialCurrencyInfo(type)?.maxSpendTargets ?? 1
-    if (maxSpendTargets < 2 || hiddenTilesMap.address || hiddenTilesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
+    if (maxSpendTargets < 2 || hiddenFeaturesMap.address || hiddenFeaturesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
       return null
     }
     const numTargets = spendInfo.spendTargets.length
@@ -529,7 +532,7 @@ const SendComponent = (props: Props) => {
   })
 
   const renderSelectFioAddress = () => {
-    if (hiddenTilesMap.fioAddressSelect) return null
+    if (hiddenFeaturesMap.fioAddressSelect) return null
     const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
     return (
       <SelectFioAddress2

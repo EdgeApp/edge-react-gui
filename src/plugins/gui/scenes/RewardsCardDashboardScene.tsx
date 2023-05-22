@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
@@ -33,6 +34,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
   const { items, onCardPress, onHelpPress, onNewPress, onRemovePress } = route.params
   const theme = useTheme()
   const [bottomFloatHeight, setBottomFloatHeight] = useState(0)
+  const insets = useSafeAreaInsets()
 
   const handleHelpPress = useHandler(() => {
     onHelpPress()
@@ -56,32 +58,39 @@ export const RewardsCardDashboardScene = (props: Props) => {
         />
         <DividerLine marginRem={[0, 1]} />
         <CardListContainer bottomSpace={bottomFloatHeight}>
-          {items.map(item => {
-            return (
-              <CardListItem key={item.id}>
-                <TouchableOpacity onPress={() => onCardPress(item)}>
-                  <CardListItemContainer>
-                    <Details>
-                      <VisaBrandImage source={visaBrandImage} />
-                      <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-                      <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
-                    </Details>
-                    {/* TODO: Add delete button after card presentation redesign */}
-                    {Math.random() === -1 ? (
-                      <TouchableOpacity onPress={() => handleRemovePress(item)}>
-                        <Icon name="remove-circle-outline" size={theme.rem(2)} color={theme.iconTappable} />
-                      </TouchableOpacity>
-                    ) : null}
-                    <Icon name="chevron-forward-outline" size={theme.rem(2)} color={theme.iconTappable} />
-                  </CardListItemContainer>
-                  <DividerLine marginRem={[0, 0]} />
-                </TouchableOpacity>
-              </CardListItem>
-            )
-          })}
+          {items.length === 0 ? (
+            <LoadingContainer>
+              <LoadingText>{lstrings.rewards_card_loading}</LoadingText>
+              <ActivityIndicator color={theme.iconTappable} size="large" />
+            </LoadingContainer>
+          ) : (
+            items.map(item => {
+              return (
+                <CardListItem key={item.id}>
+                  <TouchableOpacity onPress={() => onCardPress(item)}>
+                    <CardListItemContainer>
+                      <Details>
+                        <VisaBrandImage source={visaBrandImage} />
+                        <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
+                        <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
+                      </Details>
+                      {/* TODO: Add delete button after card presentation redesign */}
+                      {Math.random() === -1 ? (
+                        <TouchableOpacity onPress={() => handleRemovePress(item)}>
+                          <Icon name="remove-circle-outline" size={theme.rem(2)} color={theme.iconTappable} />
+                        </TouchableOpacity>
+                      ) : null}
+                      <Icon name="chevron-forward-outline" size={theme.rem(2)} color={theme.iconTappable} />
+                    </CardListItemContainer>
+                    <DividerLine marginRem={[0, 0]} />
+                  </TouchableOpacity>
+                </CardListItem>
+              )
+            })
+          )}
         </CardListContainer>
       </SceneWrapper>
-      <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
+      <BottomFloat bottomSpace={insets.bottom} onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
         <Space around={1}>
           <MainButton onPress={onNewPress} label={lstrings.rewards_card_new_card_button_label} />
         </Space>
@@ -107,10 +116,28 @@ const CardListItemContainer = styled(View)(props => ({
   marginRight: props.theme.rem(1)
 }))
 
-const BottomFloat = styled(View)(props => ({
+const BottomFloat = styled(View)<{ bottomSpace: number }>(props => ({
   alignSelf: 'center',
-  bottom: 0,
+  bottom: props.bottomSpace,
   position: 'absolute'
+}))
+
+const LoadingContainer = styled(View)(props => ({
+  alignItems: 'center',
+  flex: 1,
+  marginHorizontal: props.theme.rem(1),
+  justifyContent: 'flex-start'
+}))
+
+const LoadingText = styled(Text)(props => ({
+  alignSelf: 'stretch',
+  color: props.theme.primaryText,
+  fontFamily: props.theme.fontFaceDefault,
+  fontSize: props.theme.rem(1),
+  includeFontPadding: false,
+  margin: props.theme.rem(1),
+  marginBottom: props.theme.rem(1.5),
+  textAlign: 'left'
 }))
 
 const Icon = styled(Ionicon)(props => ({}))

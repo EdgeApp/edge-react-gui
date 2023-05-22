@@ -272,7 +272,7 @@ export interface RouteParamList {
       wallet?: boolean
       amount?: boolean
     }
-    hiddenTilesMap?: {
+    hiddenFeaturesMap?: {
       address?: boolean
       amount?: boolean
       fioAddressSelect?: boolean

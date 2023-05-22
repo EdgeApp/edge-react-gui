@@ -1504,6 +1504,13 @@ const strings = {
   app_logo_hint: 'App logo',
 
   // Reward Card
+  rewards_card_getting_invoice: 'Getting payment invoice',
+  rewards_card_error_retrieving_cards: 'Error retrieving Visa cards. Please try again later.',
+  rewards_card_error_authenticate: 'Error authenticating with Visa Card program. Please try again later.',
+  rewards_card_error_timeout_loading: 'Timeout error loading Visa Card program. Please try again later.',
+  rewards_card_purchase_successful:
+    'Card purchase successful!\n\nNote that newly purchased cards take a few seconds to become available. \n\nCards purchased with Bitcoin require 1 confirmation and could take 10-30 minutes to become available.',
+  rewards_card_loading: 'Loading your Visa® Cards...',
   rewards_card_add_new_input_amount_title: `Buy Visa® Card`,
   rewards_card_welcome_intro: `Purchase Visa® prepaid cards that can be used at millions of merchants in the U.S. Cards can be purchased up to $1,000 in value, with a daily limit of $10,000.`,
   rewards_card_welcome_more_info: `Learn More`,
@@ -1516,6 +1523,7 @@ const strings = {
   rewards_card_error_missing_payment_address: `Missing payment address from provider`,
   rewards_card_error_amount_max_s: `Maximum card purchase amount is $%s`,
   rewards_card_error_amount_min_s: `Minimum card purchase amount is $%s`,
+  rewards_card_select_wallet: `Select wallet to use to purchase card`,
   rewards_card_terms_of_use_message: `Review Terms of Use:\n\nI understand that virtual cards via this program can only be purchased by United States based users.\n\nI understand that purchased cards are not eligible for refunds.`
 }
 

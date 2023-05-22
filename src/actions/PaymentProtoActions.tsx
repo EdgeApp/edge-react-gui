@@ -26,6 +26,7 @@ export interface LaunchPaymentProtoParams {
   wallet?: EdgeCurrencyWallet
   currencyCode?: string
   metadata?: EdgeMetadata
+  hideScamWarning?: boolean
 
   // User is already on SendScene2 and router should replace vs navigate
   navigateReplace?: boolean
@@ -107,7 +108,7 @@ const paymentProtoSupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter
  */
 export async function launchPaymentProto(navigation: NavigationBase, account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
   const { currencyWallets } = account
-  const { currencyCode, navigateReplace, wallet, onDone } = params
+  const { currencyCode, hideScamWarning, metadata = {}, navigateReplace, wallet, onDone } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -197,7 +198,6 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     throw new PaymentProtoError('EmptyOutputInvoice', { errorData })
   }
 
-  const metadata = params.metadata ?? {}
   const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
   metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
 
@@ -227,6 +227,9 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
 
   const sendParams: SendScene2Params = {
     walletId: selectedWallet.id,
+    hiddenFeaturesMap: {
+      scamWarning: hideScamWarning
+    },
     spendInfo,
     tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
     lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },

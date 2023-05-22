@@ -195,7 +195,7 @@ describe('SendScene2', () => {
       key: `send2-${nonce()}`,
       name: 'send2',
       params: {
-        hiddenTilesMap: { address: true },
+        hiddenFeaturesMap: { address: true },
         walletId: btcWallet.id,
         spendInfo: {
           spendTargets: [
@@ -217,7 +217,7 @@ describe('SendScene2', () => {
 
     // Hide Amount
     // @ts-expect-error
-    route.params.hiddenTilesMap = { amount: true }
+    route.params.hiddenFeaturesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />
@@ -227,7 +227,7 @@ describe('SendScene2', () => {
 
     // Hide Both
     // @ts-expect-error
-    route.params.hiddenTilesMap = { amount: true, address: true }
+    route.params.hiddenFeaturesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SendScene2 route={route} navigation={navigation} />

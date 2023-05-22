@@ -116,6 +116,11 @@ export const executePlugin = async (params: {
       })
     },
     send: async (params: SendScene2Params) => {
+      // Always avoid the scam warning with plugins since we trust our plugins
+      params.hiddenFeaturesMap = {
+        ...params.hiddenFeaturesMap,
+        scamWarning: true
+      }
       return await new Promise<void>((resolve, reject) => {
         navigation.navigate('send2', {
           ...params,
@@ -126,7 +131,8 @@ export const executePlugin = async (params: {
       })
     },
     sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
-      await launchPaymentProto(navigation, account, params.uri, params.params)
+      // Always avoid the scam warning with plugins since we trust our plugins
+      await launchPaymentProto(navigation, account, params.uri, { ...params.params, hideScamWarning: true })
     },
     exitScene: async () => {
       navigation.pop()

@@ -1,5 +1,5 @@
 import { eq, toFixed } from 'biggystring'
-import { EdgeParsedUri } from 'edge-core-js'
+import { EdgeMetadata, EdgeParsedUri } from 'edge-core-js'
 import React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -8,7 +8,7 @@ import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
-import { snooze } from '../../util/utils'
+import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
@@ -30,7 +30,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const { showUi, account, guiPlugin } = params
   const { pluginId } = guiPlugin
 
-  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dash', 'doge', 'litecoin'].map(pluginId => ({ pluginId }))
+  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dash', 'dogecoin', 'litecoin'].map(pluginId => ({ pluginId }))
 
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
   if (providers.length === 0) throw new Error('No enabled providers for RewardsCardPlugin')
@@ -216,17 +216,24 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
         const onDone = () => {
           showDashboard()
-          refreshRewardsCards(0).catch(showError)
+          showUi.showToastSpinner(lstrings.rewards_card_purchase_successful, refreshRewardsCards(0).catch(showError))
         }
 
-        showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, onDone } })
+        const metadata: EdgeMetadata = {
+          name: 'Visa Prepaid Card',
+          category: 'expense:Visa Prepaid Card'
+        }
+        showUi.showToastSpinner(
+          lstrings.rewards_card_getting_invoice,
+          showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, metadata, onDone } })
+        )
       }
     })
   }
 
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
-      headerTitle: lstrings.select_wallet,
+      headerTitle: lstrings.rewards_card_select_wallet,
       allowedAssets: SUPPORTED_ASSETS,
       showCreateWallet: false
     })
@@ -278,12 +285,24 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const isAuthenticated = await provider.otherMethods.authenticate()
+      const startPluginInner = async (): Promise<RewardsCardItem[]> => {
+        const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+          throw new Error(lstrings.rewards_card_error_authenticate)
+        })
 
-      // Get/refresh rewards cards:
-      if (isAuthenticated) {
-        rewardCards = await getRewardCards()
+        // Get/refresh rewards cards:
+        if (isAuthenticated) {
+          return await getRewardCards().catch(e => {
+            throw new Error(lstrings.rewards_card_error_retrieving_cards)
+          })
+        }
+        return rewardCards
       }
+
+      rewardCards = await showUi.showToastSpinner(
+        lstrings.loading,
+        runWithTimeout(startPluginInner(), 11000, new Error(lstrings.rewards_card_error_timeout_loading))
+      )
 
       redundantQuoteParams = {
         direction: startParams.direction,
