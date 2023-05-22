@@ -14,7 +14,7 @@ import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -182,7 +182,7 @@ const SendComponent = (props: Props) => {
 
   if (initialMount.current) {
     if (hiddenTilesMap.scamWarning !== true) {
-      dismissScamWarning(account.disklet)
+      triggerScamWarningModal(account.disklet)
     }
     initialMount.current = false
   }
