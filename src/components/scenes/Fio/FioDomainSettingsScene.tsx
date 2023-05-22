@@ -149,7 +149,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       lockTilesMap: {
         wallet: true
       },
-      hiddenTilesMap: {
+      hiddenFeaturesMap: {
         amount: true,
         fioAddressSelect: true
       },

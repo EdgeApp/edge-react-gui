@@ -117,8 +117,8 @@ export const executePlugin = async (params: {
     },
     send: async (params: SendScene2Params) => {
       // Always avoid the scam warning with plugins since we trust our plugins
-      params.hiddenTilesMap = {
-        ...params.hiddenTilesMap,
+      params.hiddenFeaturesMap = {
+        ...params.hiddenFeaturesMap,
         scamWarning: true
       }
       return await new Promise<void>((resolve, reject) => {
