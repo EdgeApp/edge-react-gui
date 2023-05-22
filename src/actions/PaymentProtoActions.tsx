@@ -227,7 +227,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
 
   const sendParams: SendScene2Params = {
     walletId: selectedWallet.id,
-    hiddenTilesMap: {
+    hiddenFeaturesMap: {
       scamWarning: hideScamWarning
     },
     spendInfo,

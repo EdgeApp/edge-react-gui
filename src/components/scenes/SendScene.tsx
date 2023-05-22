@@ -395,10 +395,10 @@ class SendComponent extends React.PureComponent<Props, State> {
       guiMakeSpendInfo: { lockInputs },
       navigation
     } = this.props
-    const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
+    const { isCameraOpen, lockTilesMap = {}, hiddenFeaturesMap = {} } = route.params
     const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
 
-    if (coreWallet && !hiddenTilesMap.address) {
+    if (coreWallet && !hiddenFeaturesMap.address) {
       return (
         <AddressTile
           title={lstrings.send_scene_send_to_address}
@@ -447,10 +447,10 @@ class SendComponent extends React.PureComponent<Props, State> {
       getExchangeDenomination,
       getDisplayDenomination
     } = this.props
-    const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
+    const { lockTilesMap = {}, hiddenFeaturesMap = {} } = route.params
     const { selectedCurrencyCode, recipientAddress } = this.state
 
-    if (recipientAddress && !hiddenTilesMap.amount) {
+    if (recipientAddress && !hiddenFeaturesMap.amount) {
       const cryptoDisplayDenomination = getDisplayDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
       const cryptoExchangeDenomination = getExchangeDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
 
@@ -529,10 +529,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderSelectFioAddress() {
     const { navigation, isSendUsingFioAddress, route } = this.props
     const { fioSender } = this.state
-    const { hiddenTilesMap = {}, guiMakeSpendInfo } = route.params
+    const { hiddenFeaturesMap = {}, guiMakeSpendInfo } = route.params
     const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
 
-    if (hiddenTilesMap.fioAddressSelect) return null
+    if (hiddenFeaturesMap.fioAddressSelect) return null
     return (
       <View>
         <SelectFioAddress
