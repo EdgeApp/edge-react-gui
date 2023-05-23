@@ -110,8 +110,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       <ButtonsModal
         bridge={bridge}
         buttons={{
-          keep: { label: lstrings.string_keep, type: 'primary' },
-          delete: { label: lstrings.string_delete, type: 'escape' }
+          delete: { label: lstrings.string_delete, type: 'secondary' },
+          keep: { label: lstrings.string_keep, type: 'escape' }
         }}
         title={lstrings.rewards_card_delete_modal_title}
         message={sprintf(lstrings.rewards_card_delete_modal_message_s, card.expiration)}
