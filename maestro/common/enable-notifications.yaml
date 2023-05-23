@@ -1,0 +1,15 @@
+# Title: Enable notifications
+# Expected Result:
+#  1. User is able to enable notifications
+
+
+appId: co.edgesecure.app
+---
+- tapOn: "Enable"
+# Android system settings
+- tapOn: "Notifications"
+- assertVisible: "Edge"
+- tapOn:
+    id: "com.android.settings:id/switch_widget"
+- back
+- back
