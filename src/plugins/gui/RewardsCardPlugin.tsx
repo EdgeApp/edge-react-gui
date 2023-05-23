@@ -220,8 +220,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         }
 
         const metadata: EdgeMetadata = {
-          name: 'Visa Prepaid Card',
-          category: 'expense:Visa Prepaid Card'
+          name: 'Visa® Prepaid Card',
+          category: 'expense:Visa® Prepaid Card'
         }
         showUi.showToastSpinner(
           lstrings.rewards_card_getting_invoice,
