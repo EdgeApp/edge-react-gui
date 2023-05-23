@@ -96,6 +96,7 @@
     "@react-native-firebase/analytics": "^14.9.1",
     "@react-native-firebase/app": "^14.9.1",
     "@react-native-firebase/messaging": "^14.9.1",
+    "@react-native-firebase/remote-config": "^14.9.1",
     "@react-native-picker/picker": "^2.4.0",
     "@react-navigation/bottom-tabs": "^6.5.4",
     "@react-navigation/drawer": "^6.5.8",
