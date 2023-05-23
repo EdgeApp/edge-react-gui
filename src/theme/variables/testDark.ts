@@ -89,6 +89,7 @@ export const testDark: Theme = {
   icon: palette.white,
   iconTappable: palette.glowPurple,
   iconDeactivated: palette.whiteOp75,
+  dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkBlue,
