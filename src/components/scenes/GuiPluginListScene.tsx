@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
@@ -61,7 +61,7 @@ const paymentTypeLogosById = {
   upi: 'paymentTypeLogoUpi',
   visa: 'paymentTypeVisa'
 }
-const pluginPartnerLogos = {
+const pluginPartnerLogos: { [key: string]: 'guiPluginLogoBitaccess' | 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay',
   bitaccess: 'guiPluginLogoBitaccess'
 }
@@ -279,14 +279,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  // @ts-expect-error
-  renderPlugin = ({ item }) => {
+  renderPlugin = ({ item }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
-    // @ts-expect-error
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
+    const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
+    const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
