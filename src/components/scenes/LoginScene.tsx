@@ -162,11 +162,15 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
     const { notificationPermissionsInfo } = this.state
     if (notificationPermissionsInfo) {
-      const newSettings = await this.props.dispatch(setDeviceSettings(notificationPermissionsInfo.notificationOptIns))
-      this.props.dispatch({
-        type: 'NOTIFICATION_SETTINGS_UPDATE',
-        data: serverSettingsToNotificationSettings(newSettings)
-      })
+      try {
+        const newSettings = await this.props.dispatch(setDeviceSettings(notificationPermissionsInfo.notificationOptIns))
+        this.props.dispatch({
+          type: 'NOTIFICATION_SETTINGS_UPDATE',
+          data: serverSettingsToNotificationSettings(newSettings)
+        })
+      } catch (e) {
+        console.error(String(e))
+      }
     }
   }
 
