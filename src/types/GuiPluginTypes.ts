@@ -54,6 +54,9 @@ export interface GuiPlugin {
 
   // Sometimes plugins pass weird strings for their currency codes:
   fixCurrencyCodes?: { [badString: string]: EdgeTokenId }
+
+  // Plugin would show only with BETA_FEATURE env flag
+  betaOnly?: boolean
 }
 
 /**
