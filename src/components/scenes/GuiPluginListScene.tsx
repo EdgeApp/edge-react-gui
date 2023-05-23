@@ -15,6 +15,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
+import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -283,6 +284,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
+
+    if (plugin.betaOnly === true && !ENV.BETA_FEATURES) return null
+
     const styles = getStyles(this.props.theme)
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
     const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
