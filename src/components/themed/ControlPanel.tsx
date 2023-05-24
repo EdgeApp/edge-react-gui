@@ -267,7 +267,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     }
   ]
 
-  if (ENV.BETA_FEATURES && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
         dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
