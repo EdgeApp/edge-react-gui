@@ -66,12 +66,12 @@ Array [
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "marginVertical": 6,
               },
               null,
@@ -101,7 +101,7 @@ Array [
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },

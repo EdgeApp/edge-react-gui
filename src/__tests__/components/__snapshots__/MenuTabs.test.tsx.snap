@@ -5,8 +5,8 @@ exports[`MenuTabs should render with loading props 1`] = `
   <BVLinearGradient
     colors={
       Array [
-        4279377189,
-        4279377189,
+        4281349434,
+        4281349434,
       ]
     }
     endPoint={
@@ -40,8 +40,8 @@ exports[`MenuTabs should render with loading props 1`] = `
   <BVLinearGradient
     colors={
       Array [
-        4279377189,
-        4279377189,
+        4281349434,
+        4281349434,
       ]
     }
     endPoint={

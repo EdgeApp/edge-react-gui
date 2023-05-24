@@ -164,7 +164,7 @@ Array [
                 Array [
                   Object {
                     "alignSelf": "flex-start",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "padding": 0,
                   },
@@ -195,7 +195,7 @@ Array [
                 Object {
                   "bottom": -28,
                   "color": "#E85466",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "left": 28,
                   "position": "absolute",
@@ -213,7 +213,7 @@ Array [
               Array [
                 Object {
                   "bottom": -10,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "position": "absolute",
                   "right": 28,
@@ -277,7 +277,7 @@ Array [
                 Object {
                   "alignSelf": "stretch",
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "padding": 0,
                 },
@@ -468,7 +468,7 @@ Array [
                   Array [
                     Object {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -489,7 +489,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -528,7 +528,7 @@ Array [
                 style={
                   Array [
                     Object {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -570,12 +570,12 @@ Array [
                 Array [
                   Object {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   Object {
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 45,
                   },
                   null,
@@ -592,7 +592,7 @@ Array [
                 Array [
                   Object {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -644,7 +644,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -667,13 +667,13 @@ Array [
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -711,7 +711,7 @@ Array [
           style={
             Array [
               Object {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -734,13 +734,13 @@ Array [
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -752,7 +752,7 @@ Array [
         </Text>
       </View>
       <ActivityIndicator
-        color="#00f1a2"
+        color="#e27226"
         style={
           Object {
             "alignItems": "center",
@@ -794,12 +794,12 @@ Array [
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           Object {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
           },
           null,
         ]
@@ -811,8 +811,8 @@ Array [
   <BVLinearGradient
     colors={
       Array [
-        452984831,
-        452984831,
+        4293030438,
+        4293030438,
       ]
     }
     endPoint={

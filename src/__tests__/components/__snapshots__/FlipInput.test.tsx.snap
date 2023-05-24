@@ -147,7 +147,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
                 style={
                   Object {
                     "color": "#87939E",
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
@@ -248,7 +248,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
                 style={
                   Object {
                     "color": "#87939E",
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
@@ -302,7 +302,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="exchange"
         size={39}
         style={

@@ -4,8 +4,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -83,7 +83,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           }
         >
           <ActivityIndicator
-            color="#00f1a2"
+            color="#e27226"
             size="large"
           />
         </View>
@@ -161,13 +161,13 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               Array [
                 Object {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 Object {
                   "color": "#F1AA19",
-                  "fontFamily": "Quicksand-Bold",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 17,
                   "marginLeft": 6,
                 },
@@ -186,13 +186,13 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
                 "color": "#F1AA19",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 17,
                 "marginTop": 22,
               },
@@ -200,7 +200,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             ]
           }
         >
-          This application would like to create or access its wallet in your Edge account.
+          This application would like to create or access its wallet in your Coinhub Bitcoin Wallet account.
 
  It will not have access to any other wallets.
         </Text>
@@ -232,23 +232,23 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           Object {
-            "elevation": 2,
+            "elevation": 0,
             "opacity": 1,
-            "shadowColor": "#FFFFFF",
+            "shadowColor": "#000000",
             "shadowOffset": Object {
               "height": 0,
               "width": 0,
             },
-            "shadowOpacity": 0.25,
-            "shadowRadius": 8,
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
           }
         }
       >
         <BVLinearGradient
           colors={
             Array [
-              4278754931,
-              4278251938,
+              4280723937,
+              4280723937,
             ]
           }
           endPoint={
@@ -270,7 +270,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "alignItems": "center",
                 "borderColor": "rgba(255, 255, 255, 0)",
                 "borderRadius": 6,
-                "borderWidth": 0,
+                "borderWidth": 1,
                 "flexDirection": "row",
                 "justifyContent": "center",
                 "minHeight": 67,
@@ -302,8 +302,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             numberOfLines={1}
             style={
               Object {
-                "color": "#1b2f3b",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#30353a",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
@@ -412,8 +412,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           numberOfLines={1}
           style={
             Object {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Regular",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "marginHorizontal": 0,
               "paddingBottom": 11,

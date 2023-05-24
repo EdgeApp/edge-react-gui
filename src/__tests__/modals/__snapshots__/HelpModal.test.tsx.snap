@@ -33,7 +33,7 @@ exports[`HelpModal should render with loading props 1`] = `
       resizeMode="contain"
       source={
         Object {
-          "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+          "testUri": "../../../src/assets/images/coinhubLogo/Coin_logo_L.png",
         }
       }
       style={
@@ -52,7 +52,7 @@ exports[`HelpModal should render with loading props 1`] = `
         ]
       }
     >
-      Thanks for using Edge!
+      Thanks for using Coinhub Bitcoin Wallet!
     </ModalTitle>
   </View>
   <WithTheme(SelectableRowComponent)
@@ -60,7 +60,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="help_idea"
         size={34}
       />
@@ -91,7 +91,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="help_headset"
         size={34}
       />
@@ -122,7 +122,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="help_call"
         size={34}
       />
@@ -153,7 +153,7 @@ exports[`HelpModal should render with loading props 1`] = `
     icon={
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="globe"
         size={34}
       />
@@ -175,8 +175,8 @@ exports[`HelpModal should render with loading props 1`] = `
         0,
       ]
     }
-    subTitle="More info on Edge"
-    title="Visit the Edge site"
+    subTitle="More info on Coinhub Bitcoin Wallet"
+    title="Visit the Coinhub Bitcoin Wallet site"
   />
   <View
     style={
@@ -192,7 +192,7 @@ exports[`HelpModal should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "color": "#A4C7DF",
+          "color": "#A5D4FF",
           "fontSize": 17,
         }
       }
@@ -202,7 +202,7 @@ exports[`HelpModal should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "color": "#A4C7DF",
+          "color": "#A5D4FF",
           "fontSize": 17,
         }
       }

@@ -4,8 +4,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -55,8 +55,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             Array [
-              4279377189,
-              4279377189,
+              4281349434,
+              4281349434,
             ]
           }
           endPoint={
@@ -116,7 +116,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -152,7 +152,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -170,7 +170,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -213,7 +213,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -276,7 +276,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -339,7 +339,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -402,7 +402,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -465,7 +465,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -504,8 +504,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             Array [
-              4279377189,
-              4279377189,
+              4281349434,
+              4281349434,
             ]
           }
           endPoint={
@@ -565,7 +565,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -601,7 +601,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -619,7 +619,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -664,7 +664,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -682,7 +682,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -727,7 +727,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -739,8 +739,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           <Text
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }
@@ -776,7 +776,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -788,8 +788,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           <Text
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }
@@ -825,7 +825,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -848,7 +848,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -893,7 +893,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -916,7 +916,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -961,7 +961,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -979,7 +979,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1024,7 +1024,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1042,7 +1042,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1087,7 +1087,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1110,7 +1110,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -1155,7 +1155,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1178,7 +1178,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -1223,7 +1223,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1241,7 +1241,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1286,7 +1286,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1304,7 +1304,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1349,7 +1349,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1367,7 +1367,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1412,7 +1412,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1435,7 +1435,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -1524,7 +1524,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Array [
                   Object {
                     "alignItems": "center",
-                    "borderColor": "#00f1a2",
+                    "borderColor": "#e27226",
                     "borderRadius": 6,
                     "borderWidth": 1.5,
                     "flexDirection": "row",
@@ -1558,8 +1558,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#3fa6f2",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -1661,8 +1661,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -1687,8 +1687,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -1738,8 +1738,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             Array [
-              4279377189,
-              4279377189,
+              4281349434,
+              4281349434,
             ]
           }
           endPoint={
@@ -1799,7 +1799,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -1835,7 +1835,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1853,7 +1853,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1896,7 +1896,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1914,7 +1914,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -1959,7 +1959,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1977,7 +1977,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2022,7 +2022,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2040,7 +2040,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2085,7 +2085,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2103,7 +2103,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2148,7 +2148,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#E85466",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2166,7 +2166,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2187,8 +2187,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             Array [
-              4279377189,
-              4279377189,
+              4281349434,
+              4281349434,
             ]
           }
           endPoint={
@@ -2248,7 +2248,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -2284,7 +2284,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2302,7 +2302,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2347,7 +2347,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2365,7 +2365,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2410,7 +2410,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2422,8 +2422,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           <Text
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }
@@ -2459,7 +2459,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2471,8 +2471,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           <Text
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 11,
               }
@@ -2508,7 +2508,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2531,7 +2531,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -2576,7 +2576,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2599,7 +2599,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -2644,7 +2644,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2662,7 +2662,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2707,7 +2707,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2725,7 +2725,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2770,7 +2770,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2793,7 +2793,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -2838,7 +2838,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2861,7 +2861,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -2906,7 +2906,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2924,7 +2924,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -2969,7 +2969,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2987,7 +2987,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -3032,7 +3032,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3050,7 +3050,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 12,
                 },
                 Object {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 22,
                   "marginHorizontal": 11,
                 },
@@ -3095,7 +3095,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3118,7 +3118,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -3207,7 +3207,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 Array [
                   Object {
                     "alignItems": "center",
-                    "borderColor": "#00f1a2",
+                    "borderColor": "#e27226",
                     "borderRadius": 6,
                     "borderWidth": 1.5,
                     "flexDirection": "row",
@@ -3241,8 +3241,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#3fa6f2",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -3344,8 +3344,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   Object {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,

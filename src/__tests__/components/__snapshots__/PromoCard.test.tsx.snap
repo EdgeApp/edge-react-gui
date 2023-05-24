@@ -76,7 +76,7 @@ exports[`PromoCard should render 1`] = `
         Array [
           Object {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -112,7 +112,7 @@ exports[`PromoCard should render 1`] = `
         style={
           Array [
             Object {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 22,
             },
             Object {

@@ -4,8 +4,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -79,7 +79,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -102,7 +102,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {
@@ -147,7 +147,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -170,7 +170,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               onChange={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+              onTintColor="#e27226"
               style={
                 Array [
                   Object {

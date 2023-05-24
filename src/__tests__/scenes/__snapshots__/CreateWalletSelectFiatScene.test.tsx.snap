@@ -4,8 +4,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
 <BVLinearGradient
   colors={
     Array [
-      4278585612,
-      4279971643,
+      4279309078,
+      4280360218,
     ]
   }
   endPoint={
@@ -82,12 +82,12 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             Array [
               Object {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               Object {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 27,
               },
               null,
@@ -179,7 +179,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "overflow": "hidden",
                     },
                     Object {
-                      "backgroundColor": "#1b2f3b",
+                      "backgroundColor": "#211D1A",
                       "borderRadius": 22,
                       "height": 45,
                       "marginLeft": 6,
@@ -226,7 +226,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     Array [
                       Object {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -245,12 +245,12 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     Array [
                       Object {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       Object {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                         "maxWidth": "85%",
@@ -296,7 +296,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           Array [
             Object {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -635,7 +635,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             Array [
               Object {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
+                "borderColor": "#e27226",
                 "borderRadius": 6,
                 "borderWidth": 1.5,
                 "flexDirection": "row",
@@ -669,8 +669,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#3fa6f2",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
@@ -772,8 +772,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
