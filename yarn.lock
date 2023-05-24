@@ -7257,10 +7257,10 @@ edge-core-js@^0.19.48:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-core-js@^0.21.3:
-  version "0.21.3"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.21.3.tgz#dd2c73154926370ad628bb305aeec8ab1882568e"
-  integrity sha512-K7UV1X19+2y/EDHgRMbL7NlQTNUKH6gLdym4lMRvi8ZEND1Xo75Ape/DnnLF3LGBHXKZqgLHlhZLc48rLtzh4g==
+edge-core-js@^0.21.4:
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.21.4.tgz#b07dcbf8292b10d0376759b38537c748fa51b17a"
+  integrity sha512-6Q2AmEP1l2nCovcqca/4ziEI98aLK/HV91XSWtpjAFanZ4LG2Ju6k7m32rBOpN1PXBkLHfIVdZN3ATLXd0656w==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
