@@ -49,13 +49,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
       return {
         id: card.Id,
-        // Expires in 180 days (6 months) from creation date
         expiration: expirationDate,
         url: card.CardNumber
       }
     })
     // Reverse order to show latest first
-    return rewardCards.reverse()
+    return rewardCards
   }
 
   async function refreshRewardsCards(retries: number) {
