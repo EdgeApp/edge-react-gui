@@ -4,8 +4,8 @@ import React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { addressWarnings } from '../../actions/ScanActions'
-import { ButtonsModal } from '../../components/modals/ButtonsModal'
-import { Airship, showError } from '../../components/services/AirshipInstance'
+import { Space } from '../../components/layout/Space'
+import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
 import { runWithTimeout, snooze } from '../../util/utils'
@@ -14,6 +14,7 @@ import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletP
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/cards/'
@@ -106,17 +107,20 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showDeleteItemModal = async (card: RewardsCardItem) => {
-    const answer = await Airship.show<'delete' | 'keep' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{
-          delete: { label: lstrings.string_delete, type: 'secondary' },
-          keep: { label: lstrings.string_keep, type: 'escape' }
-        }}
-        title={lstrings.rewards_card_delete_modal_title}
-        message={sprintf(lstrings.rewards_card_delete_modal_message_s, card.expiration)}
-      />
-    ))
+    const answer = await showUi.buttonModal({
+      buttons: {
+        delete: { label: lstrings.string_delete, type: 'secondary' },
+        keep: { label: lstrings.string_keep, type: 'escape' }
+      },
+      title: lstrings.rewards_card_delete_modal_title,
+      message: lstrings.rewards_card_delete_modal_message,
+      children: (
+        <Space around={1}>
+          <RewardCard item={card} />
+        </Space>
+      )
+    })
+
     if (answer === 'delete') {
       // Hide the card
       provider.otherMethods.hideCard(card.id)
