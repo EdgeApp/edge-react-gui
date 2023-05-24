@@ -22,6 +22,7 @@ export interface RewardsCardDashboardParams {
   onHelpPress: () => void
   onNewPress: () => void
   onRemovePress: (item: RewardsCardItem) => void
+  showLoading?: boolean
 }
 
 interface Props {
@@ -30,7 +31,7 @@ interface Props {
 
 export const RewardsCardDashboardScene = (props: Props) => {
   const { route } = props
-  const { items, onCardPress, onHelpPress, onNewPress, onRemovePress } = route.params
+  const { items, onCardPress, onHelpPress, onNewPress, onRemovePress, showLoading = false } = route.params
   const theme = useTheme()
   const [bottomFloatHeight, setBottomFloatHeight] = useState(0)
 
@@ -56,20 +57,26 @@ export const RewardsCardDashboardScene = (props: Props) => {
         />
         <DividerLine marginRem={[0, 1]} />
         <CardListContainer bottomSpace={bottomFloatHeight}>
-          {items.length === 0 ? (
-            <LoadingContainer>
-              <LoadingText>{lstrings.rewards_card_loading}</LoadingText>
-              <ActivityIndicator color={theme.iconTappable} size="large" />
-            </LoadingContainer>
-          ) : (
-            items.map(item => {
-              return (
-                <CardListItemWrapper key={item.id}>
-                  <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
-                </CardListItemWrapper>
-              )
-            })
-          )}
+          {items.map(item => {
+            return (
+              <CardListItemWrapper key={item.id}>
+                <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
+              </CardListItemWrapper>
+            )
+          })}
+          {items.length === 0 || showLoading ? (
+            <CardListItem>
+              <CardListItemContainer>
+                <LoadingContainer>
+                  <ActivityIndicator color={theme.iconTappable} size="large" style={{ margin: theme.rem(1) }} />
+                  <LoadingText numberOfLines={0}>{lstrings.rewards_card_loading}</LoadingText>
+                  <LoadingTextDisclaimer numberOfLines={0} minimumFontScale={0.75} adjustsFontSizeToFit>
+                    {lstrings.rewards_card_purchase_disclaimer}
+                  </LoadingTextDisclaimer>
+                </LoadingContainer>
+              </CardListItemContainer>
+            </CardListItem>
+          ) : null}
         </CardListContainer>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
@@ -143,8 +150,8 @@ const BottomFloat = styled(View)(props => ({
 const LoadingContainer = styled(View)(props => ({
   alignItems: 'center',
   flex: 1,
-  marginHorizontal: props.theme.rem(1),
-  justifyContent: 'flex-start'
+  justifyContent: 'center',
+  paddingVertical: props.theme.rem(1)
 }))
 
 const LoadingText = styled(Text)(props => ({
@@ -153,8 +160,15 @@ const LoadingText = styled(Text)(props => ({
   fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(1),
   includeFontPadding: false,
-  margin: props.theme.rem(1),
-  marginBottom: props.theme.rem(1.5),
+  marginBottom: props.theme.rem(0.5),
+  textAlign: 'left'
+}))
+
+const LoadingTextDisclaimer = styled(Text)(props => ({
+  alignSelf: 'stretch',
+  color: props.theme.secondaryText,
+  fontFamily: props.theme.fontFaceDefault,
+  includeFontPadding: false,
   textAlign: 'left'
 }))
 

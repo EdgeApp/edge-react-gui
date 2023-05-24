@@ -70,7 +70,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           return await refreshRewardsCards(retries + 1)
         }
         rewardCards = cards
-        showDashboard()
+        showDashboard({ showLoading: false })
       })
       .catch(async error => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
@@ -90,9 +90,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // State Machine:
   //
 
-  const showDashboard = async () => {
+  const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
       items: rewardCards,
+      showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
       },
@@ -129,7 +130,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Remove card from plugin state
       rewardCards = rewardCards.filter(c => c.id !== card.id)
       // Reset state for dashboard
-      showDashboard()
+      showDashboard({ showLoading: false })
     }
   }
 
@@ -227,8 +228,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         }
 
         const onDone = () => {
-          showDashboard()
-          showUi.showToastSpinner(lstrings.rewards_card_purchase_successful, refreshRewardsCards(0).catch(showError))
+          showDashboard({ showLoading: true })
+          refreshRewardsCards(0)
+            .then(async () => await showDashboard({ showLoading: false }))
+            .catch(showError)
         }
 
         const metadata: EdgeMetadata = {
@@ -322,7 +325,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       }
 
       if (rewardCards.length > 0) {
-        await showDashboard()
+        await showDashboard({ showLoading: false })
       } else {
         await showWelcome()
       }
