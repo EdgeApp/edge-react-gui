@@ -136,7 +136,7 @@ export const GettingStartedScene = (props: Props) => {
     await remoteConfig.setDefaults(REMOTE_CONFIG_DEFAULT)
     await remoteConfig.fetchAndActivate().catch((err: any) => {
       const errorMessage = err instanceof Error ? err.message : String(err)
-      console.error(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
+      console.warn(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
     })
 
     const featureVal = remoteConfig.getValue('swipe_last_usp').asBoolean()
