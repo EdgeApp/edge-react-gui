@@ -65,22 +65,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
             items.map(item => {
               return (
                 <CardListItemWrapper key={item.id}>
-                  <CardListItem>
-                    <TouchableOpacity onPress={() => onCardPress(item)}>
-                      <CardListItemContainer>
-                        <Details>
-                          <VisaBrandImage source={visaBrandImage} />
-                          <DetailItem>
-                            <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-                            <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
-                          </DetailItem>
-                        </Details>
-                        <TouchableOpacity onPress={() => handleRemovePress(item)}>
-                          <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
-                        </TouchableOpacity>
-                      </CardListItemContainer>
-                    </TouchableOpacity>
-                  </CardListItem>
+                  <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
                 </CardListItemWrapper>
               )
             })
@@ -93,6 +78,31 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </Space>
       </BottomFloat>
     </>
+  )
+}
+
+export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCardItem; onPress?: () => void; onRemovePress?: () => void }) => {
+  const theme = useTheme()
+
+  return (
+    <CardListItem>
+      <TouchableOpacity onPress={onPress}>
+        <CardListItemContainer>
+          <Details>
+            <VisaBrandImage source={visaBrandImage} />
+            <DetailItem>
+              <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
+              <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
+            </DetailItem>
+          </Details>
+          {onRemovePress == null ? null : (
+            <TouchableOpacity onPress={onRemovePress}>
+              <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
+            </TouchableOpacity>
+          )}
+        </CardListItemContainer>
+      </TouchableOpacity>
+    </CardListItem>
   )
 }
 

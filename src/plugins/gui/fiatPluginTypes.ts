@@ -80,9 +80,7 @@ export interface FiatPluginWalletPickerResult {
 }
 
 export interface FiatPluginUi {
-  buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(
-    params: Omit<ButtonModalProps<Buttons>, 'bridge' | 'children'>
-  ) => Promise<keyof Buttons | undefined>
+  buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
