@@ -21,23 +21,23 @@ tags:
     id: usernameFormField
     optional: true
 - inputText: ${output.logins.C753.USERNAME}
-- pressKey: "Enter"
+- pressKey: Enter
 
 # Password
 - tapOn:
     id: passwordFormField
     optional: true
 - inputText: ${output.logins.C753.PASSWORD}
-- pressKey: "Enter"
+- pressKey: Enter
 
 # 2FA - Backup code option
 - tapOn: Enter Backup Code
 - inputText: ${output.logins.C753.BACKUP_CODE}
 - tapOn:
-    text: "Submit"
+    text: Submit
     retryTapIfNoChange: false
 
 # Wallet list scene
 - extendedWaitUntil:
-    visible: "LTC C753"
+    visible: LTC C753
     timeout: 60000

@@ -2,4 +2,4 @@
 appId: co.edgesecure.app
 ---
 - assertVisible: Exit PIN
-- tapOn: "Exit PIN"
+- tapOn: Exit PIN

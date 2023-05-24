@@ -5,11 +5,12 @@
 #   1. Edge should not crash when relaunching the App
 
 appId: co.edgesecure.app
+tags:
+- launch
+- crash
 ---
 - runFlow:
     file: ../common/launch.yaml
-
 - pressKey: home
-
 - runFlow:
     file: ../common/launch.yaml

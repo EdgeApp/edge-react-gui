@@ -2,7 +2,7 @@
 # Test ID: C431
 # Title: Account will successfully create and goes to wallets list screen
 # Expected Result:
-# 1. Tapping "Create" takes user to new Wallet List Scene with:
+# 1. Tapping Create takes user to new Wallet List Scene with:
 #   - BTC
 #   - ETH
 #   - LTC
@@ -11,68 +11,69 @@
 
 appId: co.edgesecure.app
 tags:
-- create-account
+- create
+- account
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
 - runFlow:
     when:
-      visible: "Security Alerts"
+      visible: Security Alerts
     file: ../common/cancel.yaml
-- tapOn: "Create account"
-- assertVisible: "Username"
-- tapOn: "Username"
-- inputText: "test-"
+- tapOn: Create account
+- assertVisible: Username
+- tapOn: Username
+- inputText: test-
 - inputRandomText
-- pressKey: "Enter"
+- pressKey: Enter
 - extendedWaitUntil:
-    notVisible: "Choose Username"
+    notVisible: Choose Username
     timeout: 10000
-- tapOn: "Password"
-- inputText: "Test123456"
-- pressKey: "Enter"
-- tapOn: "Confirm Password"
-- inputText: "Test123456"
-- pressKey: "Enter"
-- inputText: "1111"
-- pressKey: "Enter"
-- tapOn: "Next"
-- tapOn: "I understand that my funds are held securely on this device, not by Edge"
-- tapOn: "I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password"
-- tapOn: "I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery"
-- tapOn: "I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost"
-- tapOn: "Confirm"
-- tapOn: "Create"
-- assertVisible: "Choose Wallets to Add"
+- tapOn: Password
+- inputText: Test123456
+- pressKey: Enter
+- tapOn: Confirm Password
+- inputText: Test123456
+- pressKey: Enter
+- inputText: 1111
+- pressKey: Enter
+- tapOn: Next
+- tapOn: I understand that my funds are held securely on this device, not by Edge
+- tapOn: I understand that if I lose this device or uninstall the app, my digital assets can only be recovered with my username and password
+- tapOn: I understand that if I lose my username and password, Edge will not be able to recover my account, unless I set up password recovery
+- tapOn: I understand that I am responsible for safekeeping of my passwords, private key pairs, PIN, and any other codes to access the software. Edge is not responsible if my information is compromised or accessed by a 3rd party where funds are lost
+- tapOn: Confirm
+- tapOn: Create
+- assertVisible: Choose Wallets to Add
 
 # Allow notifications
 - runFlow:
     when:
-      visible: "Security is Our Priority"
+      visible: Security is Our Priority
     file: ../common/enable-notifications.yaml
 
 # Pin scene
-- inputText: "1111"
+- inputText: 1111
 
 - extendedWaitUntil:
-    visible: "BTC"
+    visible: BTC
     timeout: 15000
 
 - tapOn:
-    point: "50%,95%"
+    point: 50%,95%
 
 - extendedWaitUntil:
-    visible: "My Bitcoin"
+    visible: My Bitcoin
     timeout: 60000
 - extendedWaitUntil:
-    visible: "My Bitcoin Cash"
+    visible: My Bitcoin Cash
     timeout: 60000
 - extendedWaitUntil:
-    visible: "My Dash"
+    visible: My Dash
     timeout: 60000
 - extendedWaitUntil:
-    visible: "My Ether"
+    visible: My Ether
     timeout: 60000
 - extendedWaitUntil:
-    visible: "My Litecoin"
+    visible: My Litecoin
     timeout: 60000

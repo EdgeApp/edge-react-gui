@@ -15,7 +15,7 @@ tags:
 
 - runFlow:
     when:
-      visible: "Security Alerts"
+      visible: Security Alerts
     file: ../common/close-modal-hack.yaml
 
 # Check we are logged into the correct account
@@ -23,17 +23,17 @@ tags:
 
 - runFlow:
     when:
-      visible: "Exit PIN"
+      visible: Exit PIN
     file: ../common/exit-pin-login.yaml
 
 # Login scene
-- assertVisible: "Username"
+- assertVisible: Username
 
-- pressKey: "Enter"
+- pressKey: Enter
 - inputText: ${output.logins.C314.PASSWORD}
-- pressKey: "Enter"
+- pressKey: Enter
 
 # Wait for the wallets to appear
 - extendedWaitUntil:
-    visible: "LTC C314"
+    visible: LTC C314
     timeout: 30000
