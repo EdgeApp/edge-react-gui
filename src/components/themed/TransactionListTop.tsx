@@ -10,7 +10,6 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
@@ -414,7 +413,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {ENV.BETA_FEATURES && !isEmpty && !searching ? <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} /> : null}
+          {!isEmpty && !searching ? <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} /> : null}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>
