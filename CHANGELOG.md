@@ -1,5 +1,59 @@
 # edge-react-gui
 
+## 3.10.0 (2023-04-25)
+
+- Add Pepe (PEPE)
+- Added Visa® Debit Card (beta)
+- Add ZEC/ARRR import wallet support
+- Add Tron Stake v2 support
+- Add default fiat support to Markets scene
+- Fix Wallet Connect personal_sign method
+- Fix background audio pause while playing send/receive chimes
+- Refactor Request Scene to use ExchangedFlipInput2
+- Cleanup SEPA details input scene
+- Remove deprecated allowed/excluded currencyCode props from WalletListModal
+- Deprecate Tomb Finance v1/v2 staking
+- Deprecate Tron Stake v1
+- Fix sync circle discrepancy between wallet list and transaction list view
+- Fix section header date display in FIO requests lists
+- Lock Next button in fiat plugin while amounts are fetched
+- Update translations
+- Various visual fixes
+- Upgrade edge-core-js to v0.21.3
+  - fixed: Return transactions from getTransactions, even if they have no on-disk metadata
+  - changed: Remove deprecated methods in unit tests
+  - fixed: Return transactions from getTransactions, even if they have no on-disk metadata
+  - added: EdgeUserInfo.username.
+  - added: Provide EdgeAccount methods for reading public and private keys:
+    - getDisplayPrivateKey
+    - getDisplayPublicKey
+    - getRawPrivateKey
+    - getRawPublicKey
+  - added: Matching EdgeCurrencyTools methods for getting display keys.
+  - deprecated: EdgeCurrencyEngine methods for getting display keys.
+  - deprecated: EdgeAccount and EdgeCurrencyWallet key properties.
+- Upgrade edge-currency-accountbased to v1.2.9
+  - FIO: Handle empty otherParams objects as null
+  - Add Pepe token
+  - Tron: Pass nativeAmount directly to TRC20 encoder
+  - Tron: Make fee optional in asTRC20TransactionInfo cleaner
+  - EVM: Fix null gas price handling in txRpcParamsToSpendInfo
+  - Ripple: Fix api reconnect logic
+  - Fixed: Find XLM memos in all three makeSpend API locations
+  - ZEC/ARR: Add import private key birthdayHeight option handling
+  - FIO: Replace public key with recipient public key
+  - Rename files to the network name, not the currency code
+  - Use uppercase names for files that export classes and use loweracse names for files that export types and utilities
+  - Fix: Added dynamic gas limit calculation for zkSync
+  - Add Tron Stake v2
+  - Algorand: Support signing multiple transactions in wallet connect request
+- Upgrade edge-exchange-plugins to v0.19.5
+  - Fixed: Fix swapuz refund address
+  - Fixed: Prevent Thorchain swaps that would receive negative amount
+  - Changed: Update exolix to v2 api
+- Upgrade edge-login-ui-rn to v1.4.6
+  - Fixed: Background brand image handling and display.
+
 ## 3.9.0 (2023-05-10)
 
 - Add zkSync
