@@ -61,12 +61,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   async function refreshRewardsCards(retries: number) {
-    if (retries > 9) return
+    if (retries > 15) return
     await getRewardCards()
       .then(async cards => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
-          await snooze(1000)
+          await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
         rewardCards = cards
