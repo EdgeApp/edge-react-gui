@@ -64,25 +64,9 @@ export const RewardsCardDashboardScene = (props: Props) => {
           ) : (
             items.map(item => {
               return (
-                <CardListItem key={item.id}>
-                  <TouchableOpacity onPress={() => onCardPress(item)}>
-                    <CardListItemContainer>
-                      <Details>
-                        <VisaBrandImage source={visaBrandImage} />
-                        <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-                        <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
-                      </Details>
-                      {/* TODO: Add delete button after card presentation redesign */}
-                      {Math.random() === -1 ? (
-                        <TouchableOpacity onPress={() => handleRemovePress(item)}>
-                          <Icon name="remove-circle-outline" size={theme.rem(2)} color={theme.iconTappable} />
-                        </TouchableOpacity>
-                      ) : null}
-                      <Icon name="chevron-forward-outline" size={theme.rem(2)} color={theme.iconTappable} />
-                    </CardListItemContainer>
-                    <DividerLine marginRem={[0, 0]} />
-                  </TouchableOpacity>
-                </CardListItem>
+                <CardListItemWrapper key={item.id}>
+                  <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
+                </CardListItemWrapper>
               )
             })
           )}
@@ -97,21 +81,57 @@ export const RewardsCardDashboardScene = (props: Props) => {
   )
 }
 
+export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCardItem; onPress?: () => void; onRemovePress?: () => void }) => {
+  const theme = useTheme()
+
+  return (
+    <CardListItem>
+      <TouchableOpacity onPress={onPress}>
+        <CardListItemContainer>
+          <Details>
+            <VisaBrandImage source={visaBrandImage} />
+            <DetailItem>
+              <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
+              <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
+            </DetailItem>
+          </Details>
+          {onRemovePress == null ? null : (
+            <TouchableOpacity onPress={onRemovePress}>
+              <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
+            </TouchableOpacity>
+          )}
+        </CardListItemContainer>
+      </TouchableOpacity>
+    </CardListItem>
+  )
+}
+
 const CardListContainer = styled(View)<{ bottomSpace: number }>(props => ({
   justifyContent: 'space-around',
-  marginBottom: props.bottomSpace
+  marginBottom: props.bottomSpace,
+  padding: props.theme.rem(1.5)
 }))
 
+const CardListItemWrapper = styled(View)(props => ({
+  height: props.theme.rem(7)
+}))
 const CardListItem = styled(View)(props => ({
-  marginLeft: props.theme.rem(1)
+  backgroundColor: props.theme.modal,
+  // Math for figuring out 1/8th inches border radius ((1/8)/3.375 * 314)/16:
+  borderRadius: props.theme.rem(0.7268518519),
+  borderWidth: 1,
+  borderTopColor: 'rgba(255,255,255,.2)',
+  borderColor: 'rgba(255,255,255,.1)',
+  shadowOpacity: 0.5,
+  shadowRadius: props.theme.rem(0.5)
 }))
 
 const CardListItemContainer = styled(View)(props => ({
+  aspectRatio: 1.5882352941,
   flexDirection: 'row',
-  alignItems: 'center',
   justifyContent: 'space-between',
-  marginVertical: props.theme.rem(1),
-  marginRight: props.theme.rem(1)
+  padding: props.theme.rem(1.25),
+  width: '100%'
 }))
 
 const BottomFloat = styled(View)(props => ({
@@ -142,15 +162,17 @@ const Icon = styled(Ionicon)(props => ({}))
 
 const Details = styled(View)(props => ({}))
 
+const DetailItem = styled(View)(prop => ({}))
+
 const VisaBrandImage = styled(Image)(props => ({
   resizeMode: 'contain',
   height: props.theme.rem(1.75),
   width: props.theme.rem(4),
-  marginBottom: props.theme.rem(0.5)
+  marginBottom: props.theme.rem(1.25)
 }))
 
 const ExpiryLabel = styled(Text)(props => ({
-  color: props.theme.primaryText,
+  color: props.theme.secondaryText,
   fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(0.75),
   includeFontPadding: false
@@ -159,6 +181,6 @@ const ExpiryLabel = styled(Text)(props => ({
 const DateLabel = styled(Text)(props => ({
   color: props.theme.primaryText,
   fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(1),
+  fontSize: props.theme.rem(0.75),
   includeFontPadding: false
 }))

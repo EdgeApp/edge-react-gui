@@ -4,8 +4,8 @@ import React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { addressWarnings } from '../../actions/ScanActions'
-import { ButtonsModal } from '../../components/modals/ButtonsModal'
-import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import { Space } from '../../components/layout/Space'
+import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
 import { runWithTimeout, snooze } from '../../util/utils'
@@ -14,12 +14,13 @@ import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletP
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/cards/'
 
 export interface RewardsCardItem {
-  id: string
+  id: number
   expiration: Date
   url: string
 }
@@ -42,20 +43,19 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   async function getRewardCards(): Promise<RewardsCardItem[]> {
     const giftCards = await provider.otherMethods.getGiftCards()
-    const rewardCards: RewardsCardItem[] = giftCards.map(card => {
+    const rewardCards: RewardsCardItem[] = giftCards.cards.map(card => {
       // Expires 6 calendar months from the creation date
       const expirationDate = new Date(card.CreatedDate.valueOf())
       expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
 
       return {
-        id: card.Id.toString(),
-        // Expires in 180 days (6 months) from creation date
+        id: card.Id,
         expiration: expirationDate,
         url: card.CardNumber
       }
     })
     // Reverse order to show latest first
-    return rewardCards.reverse()
+    return rewardCards
   }
 
   async function refreshRewardsCards(retries: number) {
@@ -106,19 +106,29 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     })
   }
 
-  const showDeleteItemModal = async (item: RewardsCardItem) => {
-    const answer = await Airship.show<'delete' | 'keep' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{
-          keep: { label: lstrings.string_keep, type: 'primary' },
-          delete: { label: lstrings.string_delete, type: 'escape' }
-        }}
-        title={lstrings.rewards_card_delete_modal_title}
-        message={sprintf(lstrings.rewards_card_delete_modal_message_s, item.expiration)}
-      />
-    ))
-    if (answer === 'delete') showToast('Deleted it!')
+  const showDeleteItemModal = async (card: RewardsCardItem) => {
+    const answer = await showUi.buttonModal({
+      buttons: {
+        delete: { label: lstrings.string_delete, type: 'secondary' },
+        keep: { label: lstrings.string_keep, type: 'escape' }
+      },
+      title: lstrings.rewards_card_delete_modal_title,
+      message: lstrings.rewards_card_delete_modal_message,
+      children: (
+        <Space around={1}>
+          <RewardCard item={card} />
+        </Space>
+      )
+    })
+
+    if (answer === 'delete') {
+      // Hide the card
+      provider.otherMethods.hideCard(card.id)
+      // Remove card from plugin state
+      rewardCards = rewardCards.filter(c => c.id !== card.id)
+      // Reset state for dashboard
+      showDashboard()
+    }
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {

@@ -80,6 +80,7 @@ export const testLight: Theme = {
   icon: palette.black,
   iconTappable: palette.edgeBlue,
   iconDeactivated: palette.whiteOp75,
+  dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
