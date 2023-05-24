@@ -1,8 +1,19 @@
+import { firebase } from '@react-native-firebase/remote-config'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import Animated, { Extrapolation, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
@@ -10,12 +21,14 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
@@ -62,18 +75,34 @@ const sections: SectionData[] = [
   }
 ]
 
+const REMOTE_CONFIG_DEFAULT = {
+  swipe_last_usp: true
+}
+
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
   const localUsersLength = useSelector(state => state.core.context.localUsers.length)
-  const paginationCount = sections.length + 1
+  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(REMOTE_CONFIG_DEFAULT.swipe_last_usp)
+
+  // An extra index is added to account for the extra initial usp slide OR to
+  // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
+  // trigger the final navigation.
+  // Feature is under A/B testing.
+  const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
   const swipeOffset = useSharedValue(0)
 
-  // Redirect to login screen if device has memory of accounts
-  useEffect(() => {
-    if (localUsersLength > 0) {
-      navigation.navigate('login', {})
+  const handleFinalSwipe = useHandler(() => {
+    if (isFinalSwipeEnabled) {
+      // This delay is necessary to properly reset the scene since it remains on
+      // the stack.
+      setTimeout(() => {
+        swipeOffset.value = 0
+      }, 500)
+
+      if (localUsersLength > 0) navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
+      else navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
     }
-  }, [navigation, localUsersLength])
+  })
 
   const handlePressIndicator = useHandler((itemIndex: number) => {
     swipeOffset.value = withTiming(itemIndex)
@@ -82,11 +111,44 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
   })
   const handlePressSignUp = useHandler(() => {
+    logEvent('Signup_Account_Review_Done', { variantId: isFinalSwipeEnabled ? 'A' : 'B' })
     navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
   })
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})
   })
+
+  // Redirect to login or new account screen if the user swipes past the last
+  // USP section
+  useAnimatedReaction(
+    () => swipeOffset.value,
+    value => {
+      if (value === 5) {
+        runOnJS(handleFinalSwipe)()
+      }
+    }
+  )
+
+  // Fetch and activate remote config (A/B testing).
+  useAsyncEffect(async () => {
+    const remoteConfig = firebase.remoteConfig()
+
+    await remoteConfig.setDefaults(REMOTE_CONFIG_DEFAULT)
+    await remoteConfig.fetchAndActivate().catch((err: any) => {
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      console.error(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
+    })
+
+    const featureVal = remoteConfig.getValue('swipe_last_usp').asBoolean()
+    setIsFinalSwipeEnabled(featureVal)
+  }, [])
+
+  // Redirect to login screen if device has memory of accounts
+  useEffect(() => {
+    if (localUsersLength > 0) {
+      navigation.navigate('login', {})
+    }
+  }, [navigation, localUsersLength])
 
   return (
     <SceneWrapper hasHeader={false}>
@@ -97,7 +159,7 @@ export const GettingStartedScene = (props: Props) => {
           </TouchableOpacity>
         </Space>
       </SkipButton>
-      <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={sections.length}>
+      <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={paginationCount}>
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>

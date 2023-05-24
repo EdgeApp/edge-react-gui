@@ -231,7 +231,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     const { account, coreWallet, navigation, currencyCode } = this.props
     const { currencyWallets } = account
     const { pluginId } = coreWallet.currencyInfo
-    await Airship.show<WalletListResult>(bridge => (
+    const walletList = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
@@ -239,14 +239,15 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         allowedAssets={[{ pluginId, tokenId: getTokenId(account, pluginId, currencyCode) }]}
         excludeWalletIds={[coreWallet.id]}
       />
-    )).then(async ({ walletId }) => {
-      if (walletId != null) {
-        const wallet = currencyWallets[walletId]
-        const receiveAddress = await wallet.getReceiveAddress()
-        if (receiveAddress == null) return
-        this.onChangeAddress(receiveAddress.publicAddress)
-      }
-    })
+    ))
+    const { walletId } = walletList
+    if (walletId == null) return
+    const wallet = currencyWallets[walletId]
+
+    // Prefer segwit address if the selected wallet has one
+    const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
+    const address = segwitAddress != null ? segwitAddress : publicAddress
+    this.onChangeAddress(address)
   }
 
   handleTilePress = () => {

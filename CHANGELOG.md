@@ -1,5 +1,70 @@
 # edge-react-gui
 
+## 3.9.0 (2023-05-10)
+
+- Add zkSync
+- Simplex: Add ALGO, OP-ETH and OP asset support
+- Add Google Play in-app reviews API
+- Banxa: Fix buy flow
+- Add many new ERC20 tokens: AMP, APE, CRO, ENJ, LRC, PLA, QNT, SUKU, SHIB, SOLVE, STRK, GRT, SAND, GAME, and GALA
+- Add Algorand Wallet Connect support
+- Display EVM Checksum Address in as default in Receive scene
+- Fix scene header side button display alignment issues
+- Fix login lag on slow networks caused by notification registration
+- Fix EVM wallet connect payload parsing
+- Fix edited transaction metadata saving
+- Monero: Rename "View Xpub Address" to "Private View Key"
+- Use 'isSend' flag on transactions for display
+- Support checking parsedUri.minNativeAmount
+- Cleanup FiatPlugin implementation
+- Android: Fix 'Confirm and Email'
+- Android: Fix image caching issues by downgrading fresco:animated-gif
+- Port TransactionListScene to hooks
+- Upgrade edge-core-js to v0.21.1-1
+  - fixed: Return transactions from getTransactions, even if they have no on-disk metadata
+  - added: Log any swap plugins that time out.
+  - added: EdgeParsedUri.minNativeAmount. Note: This is not a breaking change, but we incorrectly updated the version number as if it were.
+  - fixed: Stop incorrectly writing metadata for sends. This should make editing metadata more stable.
+  - fixed: Remove check that spentTargets.length > 0 in makeSpend
+  - changed: Removed private keys from walletInfo for makeCurrencyEngine
+  - added: Add an EdgeTransaction.isSend flag.
+- Upgrade edge-currency-accountbased to v1.2.2-3
+  - FIO: Fix pubkey in request and obt data
+- Fix: Added dynamic gas limit calculation for zkSync
+  - Fix: Precision bug in min gas price checks for EVM currencies
+  - Change: Lower zkSync minGasPrice to 0.01 gwei
+- Removed non-checksum addresses for EVM-based currencies (legacyAddress)
+  - Add: ALGO 'appl' transaction type processing
+- Fix: Properly handle ALGO wallet connect payloads with multiple transactions
+  - FIO: Update node list
+  - ZEC/ARRR: Prevent sending overlapping queries to synchronizer
+  - Fix accessing already deleted wallet connector
+  - ZEC/ARRR: Update checkpoints
+  - Add WalletConnect v1 support to Algorand
+  - Update EVM WalletConnect call_request response to include nativeAmount and networkFee
+  - Break out WalletConnect types to common folder
+  - Update ZEC checkpoints
+  - fixed: Parse URIs as Tron addresses first before PIX addresses to prevent incorrect parsing of Tron addresses as a PIX address
+  - Added: ERC-55 checksum address returned by getFreshAddress for ethereum plugin
+  - fixed: Parse URIs as Tron addresses first before PIX addresses to prevent incorrect parsing of Tron addresses as a PIX address
+  - Upgrade edge-currency-monero v1.0.0
+  - fixed: Return the correct walletId on EdgeTransaction instances.
+  - fixed: Add a missing await to saveTx, ensuring the transaction is on-disk.
+  - changed: Upgrade to react-native-mymonero-core v0.3.0.
+  - changed: Allow engine to run without private keys. This requires edge-core-js v0.19.47 or greater.
+- Upgrade edge-exchange-plugins to v0.19.3
+  - Lifi: Fix passing gasLimit as a float
+  - Fixed: Fix zkSync mainnet code transcription for LetsExchange.
+  - Fixed: Disable zkSync explicitly for Swapuz.
+  - Fixed: Lifi gasLimit calculation for ETH
+  - Changed: Transcribe zkSync mainnet code to ZKSYNC
+  - Upgrade edge-login-ui-rn to v1.4.5
+  - Changed: Reword IP OTP warning text
+  - fixed: Broken 'Confirm and Email' Recovery setup button
+- react-native-mymonero-core to v0.3.0
+  - changed: Do not allow multiple parallel calls to createTransaction. Instead, wait for the previous call to complete before starting the next one.
+  - changed: Simplify and document the relationship between the React Native bridge and the CppBridge object.
+
 ## 3.8.1 (2023-04-25)
 
 - Upgrade edge-currency-accountbased to v1.0.1

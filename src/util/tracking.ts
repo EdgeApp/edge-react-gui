@@ -27,6 +27,7 @@ export type TrackingEventName =
   | 'Sell_Quote'
   | 'Sell_Quote_Change_Provider'
   | 'Sell_Quote_Next'
+  | 'Signup_Account_Review_Done'
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
   | 'Start_App'
@@ -36,13 +37,19 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch'
 
 export interface TrackingValues {
+  // For new features initially deployed with vanilla A/B testing, 'A' denotes
+  // the new feature was enabled for the event reported.
+  // This prop can also arbitrarily be named depending on the context of the
+  // event, i.e.: 'Plan A' | 'Experiment B' | 'Mod C' | 'Something Else'
+  variantId?: string
+
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
-  installerId?: string // Account installerId, i.e. referralId
-  pluginId?: string // Plugin that provided the conversion
-  orderId?: string // Unique order identifier provided by plugin
   error?: string // Any error message string
+  installerId?: string // Account installerId, i.e. referralId
+  orderId?: string // Unique order identifier provided by plugin
+  pluginId?: string // Plugin that provided the conversion
 }
 
 // Set up the global Firebase instance at boot:
