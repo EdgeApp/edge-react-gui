@@ -472,7 +472,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_dash_wallet_name,
     chainCode: 'DASH',
-    displayIoniaRewards: false,
+    displayIoniaRewards: true,
     isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true

@@ -30,11 +30,13 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const { showUi, account, guiPlugin } = params
   const { pluginId } = guiPlugin
 
-  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dogecoin', 'litecoin'].map(pluginId => ({ pluginId }))
-
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
   if (providers.length === 0) throw new Error('No enabled providers for RewardsCardPlugin')
   const provider = providers[0]
+
+  // Get supported crypto assets:
+  const supportedAssetMap = await provider.getSupportedAssets([])
+  const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
 
   //
   // Helpers:
@@ -234,7 +236,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
       headerTitle: lstrings.rewards_card_select_wallet,
-      allowedAssets: SUPPORTED_ASSETS,
+      allowedAssets,
       showCreateWallet: false
     })
     showNewCardEnterAmount(walletListResult)
