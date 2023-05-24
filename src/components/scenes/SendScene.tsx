@@ -14,7 +14,7 @@ import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { dismissScamWarning } from '../../actions/ScamWarningActions'
+import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWalletToken } from '../../actions/WalletActions'
@@ -182,7 +182,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       // A SendScene with the above initialization hides the scam warning that
       // is visible only when accessing the SendScene without a pre-populated
       // address
-      dismissScamWarning(this.props.account.disklet)
+      triggerScamWarningModal(this.props.account.disklet)
     }
     this.setState({ recipientAddress })
   }
@@ -193,12 +193,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { account, navigation, selectWalletToken, route } = this.props
+    const { account, navigation, selectWalletToken } = this.props
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
-    Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />
-    ))
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
         const wallet = account.currencyWallets[walletId]
@@ -254,7 +252,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     // scam warning card is **technically** visible, but only for a split second
     // before the QR scanner appears.
     // Ensure the user sees the scam warning, if necessary.
-    dismissScamWarning(this.props.account.disklet)
+    triggerScamWarningModal(this.props.account.disklet)
     this.setState({ recipientAddress: recipientAddress ?? '' })
   }
 
@@ -397,10 +395,10 @@ class SendComponent extends React.PureComponent<Props, State> {
       guiMakeSpendInfo: { lockInputs },
       navigation
     } = this.props
-    const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
+    const { isCameraOpen, lockTilesMap = {}, hiddenFeaturesMap = {} } = route.params
     const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
 
-    if (coreWallet && !hiddenTilesMap.address) {
+    if (coreWallet && !hiddenFeaturesMap.address) {
       return (
         <AddressTile
           title={lstrings.send_scene_send_to_address}
@@ -449,10 +447,10 @@ class SendComponent extends React.PureComponent<Props, State> {
       getExchangeDenomination,
       getDisplayDenomination
     } = this.props
-    const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
+    const { lockTilesMap = {}, hiddenFeaturesMap = {} } = route.params
     const { selectedCurrencyCode, recipientAddress } = this.state
 
-    if (recipientAddress && !hiddenTilesMap.amount) {
+    if (recipientAddress && !hiddenFeaturesMap.amount) {
       const cryptoDisplayDenomination = getDisplayDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
       const cryptoExchangeDenomination = getExchangeDenomination(currencyWallets[this.state.selectedWalletId].currencyInfo.pluginId, selectedCurrencyCode)
 
@@ -531,10 +529,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderSelectFioAddress() {
     const { navigation, isSendUsingFioAddress, route } = this.props
     const { fioSender } = this.state
-    const { hiddenTilesMap = {}, guiMakeSpendInfo } = route.params
+    const { hiddenFeaturesMap = {}, guiMakeSpendInfo } = route.params
     const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
 
-    if (hiddenTilesMap.fioAddressSelect) return null
+    if (hiddenFeaturesMap.fioAddressSelect) return null
     return (
       <View>
         <SelectFioAddress

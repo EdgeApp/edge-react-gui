@@ -256,6 +256,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'Visa® Prepaid Card',
+    hasThumbnail: true,
+    thumbnailPath: 'visa.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'Wyre',
     hasThumbnail: true,
     thumbnailPath: 'wyre.png',

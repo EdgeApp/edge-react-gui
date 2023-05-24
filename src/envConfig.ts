@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asObject, asOptional, asString, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -51,13 +51,23 @@ export const asEnvConfig = asObject({
           jwtTokenProvider: asString,
           publicKey: asString
         })
+      ),
+      ionia: asOptional(
+        asObject({
+          clientId: asString,
+          clientSecret: asString,
+          ioniaBaseUrl: asString,
+          merchantId: asNumber,
+          scope: asString
+        })
       )
     }).withRest,
     () => ({
       banxa: undefined,
       Bitrefill: undefined,
       moonpay: undefined,
-      simplex: undefined
+      simplex: undefined,
+      ionia: undefined
     })
   ),
   WYRE_CLIENT_INIT: asOptional(

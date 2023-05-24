@@ -18,10 +18,10 @@ import { sprintf } from 'sprintf-js'
 import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
+import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
-import { guiPlugins, IONIA_SUPPORTED_FIATS } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -32,6 +32,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -54,7 +55,6 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const insets = useSafeAreaInsets()
-  const { hideIoniaRewards = false } = config
 
   // ---- Redux State ----
 
@@ -267,14 +267,14 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     }
   ]
 
-  if (!hideIoniaRewards && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (ENV.BETA_FEATURES && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        navigation.navigate('pluginViewSell', { plugin: guiPlugins.ionia })
+        dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
-      iconNameFontAwesome: 'hand-holding-usd',
-      title: sprintf(lstrings.side_menu_rewards_button_1s, defaultFiat)
+      iconNameFontAwesome: 'cc-visa',
+      title: sprintf(lstrings.rewards_card_call_to_action, defaultFiat)
     })
   }
 
@@ -497,8 +497,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(0.25)
   },
   icon: {
-    height: theme.rem(1.5),
-    width: theme.rem(1.5)
+    height: theme.rem(1.5)
   },
   text: {
     fontFamily: theme.sideMenuFont,

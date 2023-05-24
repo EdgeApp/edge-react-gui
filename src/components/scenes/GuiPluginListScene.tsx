@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
@@ -15,6 +15,7 @@ import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
+import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -28,6 +29,7 @@ import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { base58ToUuid } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -57,10 +59,10 @@ const paymentTypeLogosById = {
   paynow: 'paymentTypeLogoPaynow',
   poli: 'paymentTypeLogoPoli',
   sofort: 'paymentTypeLogoSofort',
-  upi: 'paymentTypeLogoUpi'
+  upi: 'paymentTypeLogoUpi',
+  visa: 'paymentTypeVisa'
 }
-
-const pluginPartnerLogos = {
+const pluginPartnerLogos: { [key: string]: 'guiPluginLogoBitaccess' | 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay',
   bitaccess: 'guiPluginLogoBitaccess'
 }
@@ -77,6 +79,7 @@ interface StateProps {
   coreDisklet: Disklet
   countryCode: string
   developerModeOn: boolean
+  deviceId: string
   disablePlugins: NestedDisableMap
 }
 
@@ -197,7 +200,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { countryCode, disablePlugins, navigation, account } = this.props
+    const { countryCode, deviceId, disablePlugins, navigation, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -236,6 +239,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
+        deviceId,
         direction,
         disablePlugins: disableProviders,
         guiPlugin: plugin,
@@ -276,14 +280,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  // @ts-expect-error
-  renderPlugin = ({ item }) => {
+  renderPlugin = ({ item }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
+
+    if (plugin.betaOnly === true && !ENV.BETA_FEATURES) return null
+
     const styles = getStyles(this.props.theme)
-    // @ts-expect-error
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: getPartnerIconUri(item.partnerIconPath) }
+    const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
+    const pluginPartnerLogo = partnerLogoThemeKey ? theme[partnerLogoThemeKey] : { uri: getPartnerIconUri(item.partnerIconPath ?? '') }
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
@@ -437,6 +443,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, props) => {
+    const context = state.core.context
+    const deviceId = base58ToUuid(context.clientId)
     const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
     return {
       account: state.core.account,
@@ -445,6 +453,7 @@ export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
       coreDisklet: state.core.disklet,
       countryCode: state.ui.settings.countryCode,
       developerModeOn: state.ui.settings.developerModeOn,
+      deviceId,
       disablePlugins: state.ui.exchangeInfo[direction].disablePlugins
     }
   },

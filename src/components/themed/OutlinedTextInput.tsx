@@ -285,6 +285,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   // @ts-expect-error
   const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
   const textStyle = numpad ? styles.numberInput : styles.textInput
+  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixTextAndroidAdjust : null], [styles])
 
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
@@ -365,7 +366,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
                 maxLength={maxLength}
               />
             )}
-            <EdgeText style={styles.suffixText}>{suffix}</EdgeText>
+            <EdgeText style={suffixStyle}>{suffix}</EdgeText>
           </View>
         ) : (
           // TODO: Remove this duplication
@@ -479,6 +480,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     suffixText: {
       color: theme.secondaryText
+    },
+    suffixTextAndroidAdjust: {
+      marginTop: 3.5
     },
     textInput: {
       alignSelf: 'stretch',

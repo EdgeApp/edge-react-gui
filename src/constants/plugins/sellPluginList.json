@@ -446,6 +446,17 @@
     "sortIndex": 1
   },
   {
+    "id": "rewardscard",
+    "pluginId": "rewardscard",
+    "description": "Buy prepaid, single-load Visa® cards\nFee: 0% / Settlement: Instant\nLimit: $1,000 per card, $10,000 per day\n",
+    "paymentType": "credit",
+    "paymentTypes": ["credit"],
+    "title": "Visa® Card Program",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "visa"
+  },
+  {
     "id": "xanpool",
     "pluginId": "xanpool",
     "paymentTypes": ["bank"],

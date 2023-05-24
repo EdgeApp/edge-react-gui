@@ -6,29 +6,30 @@ import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
+import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { NavigationBase } from '../../types/routerTypes'
-import { logEvent } from '../../util/tracking'
+import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
-  FiatPluginEnterAmountParams,
-  FiatPluginEnterAmountResponse,
   FiatPluginListModalParams,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
-  FiatPluginUi
+  FiatPluginUi,
+  FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
 import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
+  deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
   guiPlugin: GuiPlugin
@@ -37,18 +38,19 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins = {}, account, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
+  const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
-  const isBuy = direction === 'buy'
 
   const showUi: FiatPluginUi = {
+    buttonModal: async params => {
+      return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
+    },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') SafariView.show({ url: params.url })
       else CustomTabs.openURL(params.url)
     },
-    // @ts-expect-error
-    walletPicker: async (params): Promise<WalletListResult> => {
+    walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
       const walletListResult = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
@@ -62,23 +64,8 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount(params: FiatPluginEnterAmountParams) {
-      const { headerTitle, label1, label2, initialAmount1, convertValue, getMethods, onSubmit } = params
-      logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
-
-      navigation.navigate('guiPluginEnterAmount', {
-        headerTitle,
-        label1,
-        label2,
-        initialAmount1,
-        getMethods,
-        convertValue,
-        onChangeText: async () => undefined,
-        onSubmit: async (value: FiatPluginEnterAmountResponse) => {
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-          onSubmit(value)
-        }
-      })
+    enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+      navigation.navigate('guiPluginEnterAmount', params)
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
@@ -93,6 +80,12 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    async rewardsCardDashboard(params) {
+      navigation.navigate('rewardsCardDashboard', params)
+    },
+    async rewardsCardWelcome(params) {
+      navigation.navigate('rewardsCardWelcome', params)
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
       const { headerTitle, headerIconUri, onSubmit } = params
@@ -123,6 +116,11 @@ export const executePlugin = async (params: {
       })
     },
     send: async (params: SendScene2Params) => {
+      // Always avoid the scam warning with plugins since we trust our plugins
+      params.hiddenFeaturesMap = {
+        ...params.hiddenFeaturesMap,
+        scamWarning: true
+      }
       return await new Promise<void>((resolve, reject) => {
         navigation.navigate('send2', {
           ...params,
@@ -132,7 +130,11 @@ export const executePlugin = async (params: {
         })
       })
     },
-    popScene: async () => {
+    sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
+      // Always avoid the scam warning with plugins since we trust our plugins
+      await launchPaymentProto(navigation, account, params.uri, { ...params.params, hideScamWarning: true })
+    },
+    exitScene: async () => {
       navigation.pop()
     }
   }
@@ -147,6 +149,7 @@ export const executePlugin = async (params: {
   }
   const plugin = await guiPlugin.nativePlugin({
     account,
+    deviceId,
     disablePlugins: filteredDisablePlugins,
     guiPlugin,
     showUi
@@ -166,7 +169,7 @@ export const executePlugin = async (params: {
     paymentTypes,
     providerId
   }
-  plugin.startPlugin(startPluginParams)
+  plugin.startPlugin(startPluginParams).catch(showError)
 }
 
 // ****************************************************************************

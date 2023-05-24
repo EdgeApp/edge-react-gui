@@ -10,6 +10,7 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
@@ -25,7 +26,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../util/utils'
-import { EarnCryptoCard } from '../cards/EarnCryptoCard'
+import { VisaCardCard } from '../cards/VisaCardCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -108,12 +109,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
       getStakePlugins().then(stakePlugins => {
-        let stakePolicies: StakePolicy[] = []
+        const stakePolicies: StakePolicy[] = []
         for (const stakePlugin of stakePlugins) {
-          const filteredStatePolicies = stakePlugin.policies.filter(stakePolicy => {
-            return [...stakePolicy.rewardAssets, ...stakePolicy.stakeAssets].some(asset => asset.pluginId === pluginId && asset.currencyCode === currencyCode)
-          })
-          stakePolicies = [...stakePolicies, ...filteredStatePolicies]
+          const policies = stakePlugin.getPolicies({ wallet, currencyCode })
+          stakePolicies.push(...policies)
         }
         const newState = { stakePolicies, stakePlugins }
         this.setState(newState)
@@ -415,7 +414,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching && <EarnCryptoCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
+          {ENV.BETA_FEATURES && !isEmpty && !searching ? <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} /> : null}
         </View>
         {!isEmpty && !searching && (
           <SceneHeader underline>

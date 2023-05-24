@@ -1,3 +1,6 @@
+import { gte } from 'biggystring'
+
+import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
 import { StringMap } from '../types/types'
 
@@ -96,6 +99,14 @@ export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 // Strip away 'wallet:' prefix and '-bip' suffix, if present
 export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
 
+export interface ImportKeyOption {
+  optionName: string
+  displayName: string
+  required: boolean
+  inputType: OutlinedTextInputProps['keyboardType']
+  inputValidation: (input: string) => boolean
+}
+
 interface SpecialCurrencyInfo {
   initWalletName: string
   chainCode: string
@@ -116,12 +127,8 @@ interface SpecialCurrencyInfo {
     identifierName: string
     keyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
   }
-  isImportKeySupported?:
-    | false
-    | {
-        privateKeyLabel: string
-        privateKeyInstructions: string
-      }
+  isImportKeySupported: boolean
+  importKeyOptions?: ImportKeyOption[]
 
   // Flags that could move to EdgeCurrencyInfo:
   fioChainCode?: string
@@ -159,7 +166,8 @@ export const getSpecialCurrencyInfo = (walletType: string = ''): SpecialCurrency
     return {
       initWalletName: lstrings.string_no_name,
       chainCode: '',
-      displayBuyCrypto: false
+      displayBuyCrypto: false,
+      isImportKeySupported: false
     }
   }
 }
@@ -174,10 +182,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BTC',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -188,10 +193,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_testnet_wallet_name,
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -201,10 +203,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BCH',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -213,10 +212,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -225,10 +221,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_digibyte_wallet_name,
     chainCode: 'DGB',
     displayBuyCrypto: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -239,10 +232,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'LTC',
     displayBuyCrypto: true,
     displayIoniaRewards: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -252,10 +242,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'RBTC',
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true
   },
   stellar: {
@@ -273,10 +260,7 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_xlm_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_key_instructions
-    }
+    isImportKeySupported: true
   },
   ripple: {
     initWalletName: lstrings.string_first_ripple_wallet_name,
@@ -295,10 +279,7 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     displayBuyCrypto: false,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_xrp_extra,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_key_instructions
-    }
+    isImportKeySupported: true
   },
   monero: {
     initWalletName: lstrings.string_first_monero_wallet_name,
@@ -318,10 +299,7 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true
   },
   telos: {
@@ -336,10 +314,7 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true
   },
   wax: {
@@ -354,10 +329,7 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_active_key_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true,
     keysOnlyMode: true
   },
@@ -367,10 +339,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
@@ -381,10 +350,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'TG8dEvp1JHJRRWEBzmURjbUwb4sbGbHgKs',
     allowZeroTx: true,
     noChangeMiningFee: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_note,
       identifierName: lstrings.unique_identifier_note,
@@ -400,10 +366,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
@@ -411,20 +374,14 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    }
+    isImportKeySupported: true
   },
   ethereumpow: {
     initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
     chainCode: 'ETHW',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true
@@ -434,10 +391,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'OP',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
@@ -446,10 +400,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'OP',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true
@@ -461,10 +412,7 @@ export const SPECIAL_CURRENCY_INFO: {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    }
+    isImportKeySupported: true
   },
   binance: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
@@ -474,10 +422,7 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
     },
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   binancesmartchain: {
@@ -485,20 +430,14 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BNB',
     fioChainCode: 'BSC',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isCustomTokensSupported: true
   },
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_instructions
-    },
+    isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
@@ -512,10 +451,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'CELO',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true
   },
   fio: {
@@ -523,10 +459,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'FIO',
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
     noChangeMiningFee: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     stakeActions: {
       add: 'stakeFioTokens',
@@ -539,11 +472,8 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_dash_wallet_name,
     chainCode: 'DASH',
-    displayIoniaRewards: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    displayIoniaRewards: false,
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -551,10 +481,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -563,10 +490,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_doge_wallet_name,
     chainCode: 'DOGE',
     displayIoniaRewards: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
@@ -575,10 +499,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -586,10 +507,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true,
     keysOnlyMode: true
@@ -598,10 +516,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -609,10 +524,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isSplittingDisabled: true,
     isPaymentProtocolSupported: true
@@ -621,10 +533,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -632,10 +541,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -643,10 +549,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
@@ -654,10 +557,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_eboost_wallet_name,
     chainCode: 'EBST',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true,
     keysOnlyMode: true
   },
@@ -665,20 +565,14 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ufo_wallet_name,
     chainCode: 'ufo',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isPrivateKeySweepable: true
   },
   fantom: {
     initWalletName: lstrings.string_first_fantom_wallet_name,
     chainCode: 'FTM',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isCustomTokensSupported: true
   },
@@ -686,10 +580,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_hedera_wallet_name,
     chainCode: 'HBAR',
     dummyPublicAddress: '0.0.14625',
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isAccountActivationRequired: true,
     skipAccountNameValidation: true,
     noMaxSpend: true,
@@ -710,16 +601,23 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_dot_minimum_notification_body,
       alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_polkadot_input_key_or_seed_instructions
-    }
+    isImportKeySupported: true
   },
   zcash: {
     initWalletName: lstrings.string_first_zcash_wallet_name,
     chainCode: 'ZEC',
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
+    isImportKeySupported: true,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
+      }
+    ],
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
@@ -731,6 +629,16 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ARRR',
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
+    isImportKeySupported: true,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
+      }
+    ],
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
@@ -743,10 +651,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isCustomTokensSupported: true
   },
   avalanche: {
@@ -754,10 +659,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'AVAX',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    },
+    isImportKeySupported: true,
     isStakingSupported: true,
     isCustomTokensSupported: true
   },
@@ -768,10 +670,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isCustomTokensSupported: true,
     noChangeMiningFee: true,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
-    isImportKeySupported: {
-      privateKeyLabel: lstrings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: lstrings.create_wallet_import_input_key_or_seed_instructions
-    }
+    isImportKeySupported: true
   }
 }
 

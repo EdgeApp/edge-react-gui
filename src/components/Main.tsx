@@ -17,6 +17,8 @@ import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
+import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
+import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
 import { useSelector } from '../types/reactRedux'
@@ -43,6 +45,7 @@ import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene as CreateWalletAccountSelectSceneComponent } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene as CreateWalletAccountSetupSceneComponent } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene as CreateWalletCompletionSceneComponent } from './scenes/CreateWalletCompletionScene'
+import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneComponent } from './scenes/CreateWalletImportOptionsScene'
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
@@ -128,6 +131,7 @@ const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectScene
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
 const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
+const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsSceneComponent)
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
@@ -181,6 +185,8 @@ const SendScene = ifLoggedIn(SendSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
 const SpendingLimitsScene = ifLoggedIn(SpendingLimitsSceneComponent)
+const RewardsCardDashboardScene = ifLoggedIn(RewardsCardListSceneComponent)
+const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
 const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
@@ -369,6 +375,13 @@ const EdgeAppStack = () => {
       <Stack.Screen
         name="createWalletImport"
         component={CreateWalletImportScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="createWalletImportOptions"
+        component={CreateWalletImportOptionsScene}
         options={{
           headerRight: () => null
         }}
@@ -808,6 +821,20 @@ const EdgeSellTabScreen = () => {
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
       <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="rewardsCardDashboard"
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+        component={RewardsCardDashboardScene}
+      />
+      <Stack.Screen
+        name="rewardsCardWelcome"
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+        component={RewardsCardWelcomeScene}
+      />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}

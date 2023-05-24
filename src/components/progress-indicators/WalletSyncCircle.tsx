@@ -26,29 +26,29 @@ export const WalletSyncCircle = (props: Props) => {
   const { size = theme.rem(2), wallet } = props
   // Animation shared state
   const syncRatio = useSharedValue(wallet.syncRatio < RESYNC_THRESHOLD ? MIN_RATIO : wallet.syncRatio)
-  const isDone = useSharedValue(false)
 
   // Subscribe to the sync ratio:
-  React.useEffect(
-    () =>
-      wallet.watch('syncRatio', (ratio: number) => {
-        // If already done but needs to resync reset the flags and animations
-        if (isDone.value && ratio < RESYNC_THRESHOLD) {
-          isDone.value = false
+  React.useEffect(() => {
+    const handler = (ratio: number) => {
+      if (ratio < RESYNC_THRESHOLD) {
+        // Do not animate backwards if a resync happens after the sync is done:
+        if (syncRatio.value > DONE_THRESHOLD) {
           syncRatio.value = RESYNC_THRESHOLD
+        } else {
+          syncRatio.value = withTiming(RESYNC_THRESHOLD, { duration: 1000 })
         }
-        // If the wallet hasn't fully synced show progress animation
-        if (!isDone.value) {
-          // Sync is done
-          if (ratio > DONE_THRESHOLD) isDone.value = true
+      } else if (ratio > MAX_RATIO && ratio < DONE_THRESHOLD) {
+        syncRatio.value = withTiming(MAX_RATIO, { duration: 1000 })
+      } else {
+        syncRatio.value = withTiming(ratio, { duration: 1000 })
+      }
+    }
 
-          if (ratio < RESYNC_THRESHOLD) syncRatio.value = withTiming(RESYNC_THRESHOLD, { duration: 1000 })
-          else if (ratio > MAX_RATIO && ratio < DONE_THRESHOLD) syncRatio.value = withTiming(MAX_RATIO, { duration: 1000 })
-          else syncRatio.value = withTiming(ratio, { duration: 1000 })
-        }
-      }),
-    [isDone, syncRatio, wallet]
-  )
+    // Immediately invoke handler incase the wallet prop is updated.
+    handler(wallet.syncRatio)
+
+    return wallet.watch('syncRatio', handler)
+  }, [syncRatio, wallet])
 
   const strokeWidth = theme.rem(3 / 16)
   // Calculate circle params based on size
@@ -62,8 +62,8 @@ export const WalletSyncCircle = (props: Props) => {
   // Animated Params
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - syncRatio.value),
-    opacity: withTiming(syncRatio.value === 1 ? 0 : 1, { duration: 500 }),
-    stroke: withTiming(isDone.value ? theme.walletProgressIconDone : theme.walletProgressIconFill)
+    opacity: withTiming(syncRatio.value > DONE_THRESHOLD ? 0 : 1, { duration: 500 }),
+    stroke: withTiming(syncRatio.value > DONE_THRESHOLD ? theme.walletProgressIconDone : theme.walletProgressIconFill)
   }))
 
   // Memoized SvgStyle to reduce rerenders
@@ -86,6 +86,7 @@ export const WalletSyncCircle = (props: Props) => {
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeWidth={strokeWidth}
+        opacity={0}
         animatedProps={animatedProps}
       />
     </Svg>

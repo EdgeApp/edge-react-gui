@@ -178,6 +178,7 @@ const strings = {
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
   fragment_send_album: 'Album',
+  fragment_required: 'Required',
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_subtitle: 'Send',
@@ -197,7 +198,6 @@ const strings = {
   fragment_transaction_list_unconfirmed_rbf: 'Awaiting confirmation, may be cancelled',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
-  transaction_list_buy_and_earn_crypto_message: 'Buy or Earn %s',
   transaction_list_no_tx_yet: 'No transactions yet',
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
@@ -240,6 +240,8 @@ const strings = {
   create_wallet_choice_new_button_fragment: 'New Wallet',
   create_wallet_select_wallet_for_assets: 'Please select the wallet you would like to add the following assets: %s',
   create_wallet_import_title: 'Import Wallet',
+  create_wallet_import_options_title: 'Import Options',
+  create_wallet_import_options_birthday_height: 'Wallet Birthday Height',
   create_wallet_imports_title: 'Import Wallets',
   create_wallet_import_all_instructions: 'Enter your private seed, private key, or active key to verify and restore the associated wallet',
   create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
@@ -462,11 +464,14 @@ const strings = {
   staking_estimated_return_up_to: 'Estimated Return: up to %1$s APY',
   staking_no_fio_address_error: 'Unable to stake without a FIO addresses',
   staking_no_bundled_txs_error: 'Not enough bundled transactions for FIO address %1$s',
+  string_i_agree: 'I Agree',
+  string_decline: 'Decline',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_forget: 'Forget',
   string_delete: 'Delete',
+  string_keep: 'Keep',
   string_archive: 'Archive',
   string_archive_wallet: 'Archive Wallet',
   satPerByte: 'Satoshi Per Byte',
@@ -651,10 +656,6 @@ const strings = {
   fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
   fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
-
-  // Rewards
-  side_menu_rewards_button_1s: 'Spend %1$s → Earn Crypto',
-  side_menu_rewards_tx_list_button_2s: 'Spend %1$s → Earn %2$s',
 
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
@@ -1234,6 +1235,7 @@ const strings = {
 
   // Tron resource staking
   stake_resource_display_name: 'TRON Resources',
+  stake_resource_display_name_v2: 'TRON Resources v2',
   stake_resource_bandwidth: 'Bandwidth',
   stake_resource_energy: 'Energy',
 
@@ -1277,6 +1279,11 @@ const strings = {
   coin_rank_title_all_time_low: 'All Time Low',
   coin_rank_market_cap_abbreviation: 'MCap',
   coin_rank_volume_24hr_abbreviation: 'Vol 24h',
+  coin_rank_hour: '1H',
+  coin_rank_day: '24H',
+  coin_rank_week: '7D',
+  coin_rank_month: '30D',
+  coin_rank_year: '1Y',
 
   // #endregion CoinRanking
 
@@ -1493,7 +1500,30 @@ const strings = {
   getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
 
   // Accessibility Hints
-  app_logo_hint: 'App logo'
+  app_logo_hint: 'App logo',
+
+  // Reward Card
+  rewards_card_getting_invoice: 'Getting payment invoice',
+  rewards_card_error_retrieving_cards: 'Error retrieving Visa cards. Please try again later.',
+  rewards_card_error_authenticate: 'Error authenticating with Visa Card program. Please try again later.',
+  rewards_card_error_timeout_loading: 'Timeout error loading Visa Card program. Please try again later.',
+  rewards_card_purchase_successful:
+    'Card purchase successful!\n\nNote that newly purchased cards take a few seconds to become available. \n\nCards purchased with Bitcoin require 1 confirmation and could take 10-30 minutes to become available.',
+  rewards_card_loading: 'Loading your Visa® Cards...',
+  rewards_card_add_new_input_amount_title: `Buy Visa® Card`,
+  rewards_card_welcome_intro: `Purchase Visa® prepaid cards that can be used at millions of merchants in the U.S. Cards can be purchased up to $1,000 in value, with a daily limit of $10,000.`,
+  rewards_card_welcome_more_info: `Learn More`,
+  rewards_card_new_card_button_label: `Buy New Card`,
+  rewards_card_call_to_action: `Buy Prepaid Visa® Cards`,
+  rewards_card_dashboard_expires_label: `Expires`,
+  rewards_card_dashboard_title: `Visa® Card Program`,
+  rewards_card_delete_modal_title: 'Delete Card?',
+  rewards_card_delete_modal_message_s: `Are you sure you want to delete the Visa® Card with expiration?\n\n%s`,
+  rewards_card_error_missing_payment_address: `Missing payment address from provider`,
+  rewards_card_error_amount_max_s: `Maximum card purchase amount is $%s`,
+  rewards_card_error_amount_min_s: `Minimum card purchase amount is $%s`,
+  rewards_card_select_wallet: `Select wallet to use to purchase card`,
+  rewards_card_terms_of_use_message: `Review Terms of Use:\n\nI understand that virtual cards via this program can only be purchased by United States based users.\n\nI understand that purchased cards are not eligible for refunds.`
 }
 
 // eslint-disable-next-line import/no-default-export

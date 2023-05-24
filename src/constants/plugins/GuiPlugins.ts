@@ -2,6 +2,7 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
+import { makeRewardsCardPlugin } from '../../plugins/gui/RewardsCardPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -117,12 +118,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bitaccess',
     permissions: ['location', 'camera']
   },
-  ionia: {
-    pluginId: 'ionia',
-    storeId: 'ioniarewards',
-    baseUri: 'https://ionia-edge.web.app',
-    displayName: 'Ionia',
-    permissions: [] // TODO: need permissions?
+  rewardscard: {
+    pluginId: 'rewardscard',
+    storeId: 'rewardscard',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: makeRewardsCardPlugin,
+    displayName: 'Edge Reward Card',
+    betaOnly: true
   },
   xanpool: {
     pluginId: 'xanpool',
@@ -148,8 +151,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     permissions: ['camera', 'location']
   }
 }
-
-export const IONIA_SUPPORTED_FIATS = ['USD']
 
 export const customPluginRow: GuiPluginRow = {
   pluginId: 'custom',

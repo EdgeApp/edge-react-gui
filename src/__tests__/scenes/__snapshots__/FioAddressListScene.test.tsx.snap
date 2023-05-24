@@ -269,6 +269,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeLogoUpi": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
               },
+              "paymentTypeVisa": Object {
+                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
+              },
               "pickerTextDark": "#FFFFFF",
               "pickerTextLight": "#000000",
               "pinUsernameButton": Array [
@@ -714,6 +717,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "paymentTypeLogoUpi": Object {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
+              },
+              "paymentTypeVisa": Object {
+                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
               },
               "pickerTextDark": "#FFFFFF",
               "pickerTextLight": "#000000",

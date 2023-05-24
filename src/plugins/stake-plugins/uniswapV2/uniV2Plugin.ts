@@ -1,7 +1,16 @@
 import { EdgeCorePluginOptions } from 'edge-core-js'
 
 import { fetchInfo } from '../../../util/network'
-import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePosition, StakePositionRequest } from '../types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  filterStakePolicies,
+  StakePlugin,
+  StakePolicy,
+  StakePolicyFilter,
+  StakePosition,
+  StakePositionRequest
+} from '../types'
 import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
 import { toStakePolicy } from './stakePolicy'
@@ -23,7 +32,9 @@ export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promis
   const policies = pluginInfo.policyInfo.map(toStakePolicy(infoServerResponse))
 
   const instance: StakePlugin = {
-    policies,
+    getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
+      return filterStakePolicies(policies, filter)
+    },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { stakePolicyId } = request
 

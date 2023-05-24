@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
 import { Fontello } from '../../../assets/vector'
-import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
+import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { DomainListModal } from '../../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../../modules/FioAddress/util'
@@ -294,16 +294,11 @@ export class FioAddressRegister extends React.Component<Props, State> {
   }
 
   selectFioWallet = () => {
-    const allowedCurrencyCodes: string[] = [FIO_STR]
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
-        if (currencyCode === FIO_STR) {
-          this.handleFioWalletChange(walletId)
-        } else {
-          showError(`${lstrings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
-        }
+        this.handleFioWalletChange(walletId)
       }
     })
   }

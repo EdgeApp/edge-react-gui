@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 3.8.1 (2023-04-25)
+
+- Upgrade edge-currency-accountbased to v1.0.1
+  - fixed: Parse URIs as Tron addresses first before PIX addresses to prevent incorrect parsing of Tron addresses as a PIX address
+
 ## 3.8.0 (2023-04-24)
 
 - Add Algorand (ALGO) and standard asset support

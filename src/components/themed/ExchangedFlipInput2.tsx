@@ -191,6 +191,12 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     }
   }))
 
+  /**
+   * Override the 'forceField' prop in some cases.
+   * If we set 'forceField' to fiat and we don't yet have exchange rates, ensure
+   * that we force the user to input a crypto amount, even if the caller wanted
+   * to initialize the focused flip input field with fiat.
+   */
   const overrideForceField = useMemo(
     () => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField),
     [convertCurrency, cryptoCurrencyCode, fiatCurrencyCode, forceField]

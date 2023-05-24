@@ -6,6 +6,7 @@ import { RefreshControl, SectionList } from 'react-native'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -60,14 +61,6 @@ function TransactionListComponent(props: Props) {
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const transactions = useSelector(state => state.ui.transactionList.transactions)
 
-  // Effects:
-  React.useEffect(() => {
-    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
-    if (reset) {
-      setReset(false)
-    }
-  }, [currencyCode, dispatch, reset, wallet])
-
   // ---------------------------------------------------------------------------
   // Derived values
   // ---------------------------------------------------------------------------
@@ -78,6 +71,7 @@ function TransactionListComponent(props: Props) {
     }
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
+  const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
   const tokenId = React.useMemo(() => getTokenId(account, pluginId, currencyCode), [account, currencyCode, pluginId])
 
   const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -124,6 +118,24 @@ function TransactionListComponent(props: Props) {
     }
     return sections
   }, [finalTransactions, loading, searching, spamThreshold])
+
+  // ---------------------------------------------------------------------------
+  // Side-Effects
+  // ---------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    dispatch(fetchMoreTransactions(wallet, currencyCode, reset))
+    if (reset) {
+      setReset(false)
+    }
+  }, [currencyCode, dispatch, reset, wallet])
+
+  // Navigate back if the token is disabled from Archive Wallet action
+  React.useEffect(() => {
+    if (tokenId != null && !enabledTokenIds.includes(tokenId)) {
+      navigation.goBack()
+    }
+  }, [enabledTokenIds, navigation, tokenId])
 
   // ---------------------------------------------------------------------------
   // Handlers

@@ -9,7 +9,7 @@ import { lstrings } from '../locales/strings'
 
 let isWarningChecked = false
 
-export const dismissScamWarning = async (disklet: Disklet) => {
+export const triggerScamWarningModal = async (disklet: Disklet) => {
   if (isWarningChecked) return
 
   try {

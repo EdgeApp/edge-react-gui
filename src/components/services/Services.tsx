@@ -1,3 +1,5 @@
+import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
@@ -5,6 +7,7 @@ import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -12,8 +15,10 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
+import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
+import { Airship } from './AirshipInstance'
 import { AutoLogout } from './AutoLogout'
 import { ContactsLoader } from './ContactsLoader'
 import { DeepLinkingManager } from './DeepLinkingManager'
@@ -32,6 +37,13 @@ interface Props {
 
 const REFRESH_INFO_SERVER_MS = 60000
 
+const FIO_CREATE_HANDLE_ITEM_ID = 'fioCreateHandleRecord'
+const asFioCreateHandleRecord = asJSON(
+  asObject({
+    ignored: asDate
+  })
+)
+
 /**
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
@@ -40,6 +52,35 @@ export function Services(props: Props) {
   const dispatch = useDispatch()
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
   const { navigation } = props
+
+  // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
+  const maybeShowFioHandleModal = useHandler(async (account: EdgeAccount) => {
+    const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+    const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
+
+    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && !hasFioWallets) {
+      const fioCreateHandleRecord = await account.dataStore
+        .getItem('', FIO_CREATE_HANDLE_ITEM_ID)
+        .then(asFioCreateHandleRecord)
+        .catch(() => undefined)
+
+      if (fioCreateHandleRecord == null) {
+        const shouldCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
+        if (shouldCreateHandle) {
+          navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+        } else {
+          account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
+        }
+      }
+    }
+  })
+
+  // Methods to call immediately after login:
+  useAsyncEffect(async () => {
+    if (account != null) {
+      maybeShowFioHandleModal(account)
+    }
+  }, [account, maybeShowFioHandleModal])
 
   // Methods to call once all of the currency wallets have been loaded
   useAsyncEffect(async () => {

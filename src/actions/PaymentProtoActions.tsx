@@ -22,10 +22,23 @@ import { NavigationBase } from '../types/routerTypes'
 import { EdgeTokenId, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
+export interface LaunchPaymentProtoParams {
+  wallet?: EdgeCurrencyWallet
+  currencyCode?: string
+  metadata?: EdgeMetadata
+  hideScamWarning?: boolean
+
+  // User is already on SendScene2 and router should replace vs navigate
+  navigateReplace?: boolean
+
+  onDone?: () => void
+}
+
 // Maps payment protocol chain ids to Edge currency pluginIds
 const CHAIN_MAP: StringMap = {
   BCH: 'bitcoincash',
   BTC: 'bitcoin',
+  DASH: 'dash',
   DOGE: 'dogecoin',
   ETH: 'ethereum',
   LTC: 'litecoin',
@@ -93,21 +106,9 @@ const paymentProtoSupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter
  * 3. Make preliminary transaction hexes to pass onto the Payment Protocol for verification
  * 4. Pass transaction to spend scene for confirmation and broadcast
  */
-export async function launchPaymentProto(
-  navigation: NavigationBase,
-  account: EdgeAccount,
-  uri: string,
-  params: {
-    wallet?: EdgeCurrencyWallet
-    currencyCode?: string
-    metadata?: EdgeMetadata
-
-    // User is already on SendScene2 and router should replace vs navigate
-    navigateReplace?: boolean
-  }
-): Promise<void> {
+export async function launchPaymentProto(navigation: NavigationBase, account: EdgeAccount, uri: string, params: LaunchPaymentProtoParams): Promise<void> {
   const { currencyWallets } = account
-  const { currencyCode, navigateReplace, wallet } = params
+  const { currencyCode, hideScamWarning, metadata = {}, navigateReplace, wallet, onDone } = params
   // Fetch payment options
   let responseJson = await fetchPaymentProtoJsonResponse(uri, {
     method: 'GET',
@@ -197,7 +198,6 @@ export async function launchPaymentProto(
     throw new PaymentProtoError('EmptyOutputInvoice', { errorData })
   }
 
-  const metadata = params.metadata ?? {}
   const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
   metadata.notes = metadata.notes ? metadata.notes + '\n\n' + paymentIdString : paymentIdString
 
@@ -227,11 +227,15 @@ export async function launchPaymentProto(
 
   const sendParams: SendScene2Params = {
     walletId: selectedWallet.id,
+    hiddenFeaturesMap: {
+      scamWarning: hideScamWarning
+    },
     spendInfo,
     tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
-    lockTilesMap: { amount: true, address: true },
+    lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {
       if (error) showError(`${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`)
+      if (onDone != null) onDone()
     },
     alternateBroadcast: async (edgeTransaction: EdgeTransaction) => {
       const unsignedHex = edgeTransaction.otherParams?.unsignedTx

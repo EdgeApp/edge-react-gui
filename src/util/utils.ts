@@ -26,9 +26,10 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { EdgeTokenId, GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
+import { GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
+import { base58 } from './encoding'
 
 export const DECIMAL_PRECISION = 18
 export const DEFAULT_TRUNCATE_PRECISION = 6
@@ -488,34 +489,6 @@ export interface MiniCurrencyConfig {
 }
 export type CurrencyConfigMap = EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
 
-/**
- * Creates a function that returns all matching tokenId's for a currency code.
- */
-export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeTokenId[] {
-  const map = new Map<string, EdgeTokenId[]>()
-
-  function addMatch(currencyCode: string, location: EdgeTokenId): void {
-    const key = currencyCode.toLowerCase()
-    const list = map.get(key)
-    if (list != null) list.push(location)
-    else map.set(key, [location])
-  }
-
-  for (const pluginId of Object.keys(currencyConfigMap)) {
-    const currencyConfig = currencyConfigMap[pluginId]
-    const { allTokens, currencyInfo } = currencyConfig
-
-    addMatch(currencyInfo.currencyCode, { pluginId })
-
-    for (const tokenId of Object.keys(allTokens)) {
-      const token = allTokens[tokenId]
-      addMatch(token.currencyCode, { pluginId, tokenId })
-    }
-  }
-
-  return currencyCode => map.get(currencyCode.toLowerCase()) ?? []
-}
-
 export const shuffleArray = <T>(array: T[]): T[] => {
   let currentIndex = array.length
   let temporaryValue, randomIndex
@@ -609,4 +582,10 @@ export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
 
 export const makeUuid = () => {
   return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
+}
+
+export const base58ToUuid = (base58String: string): string => {
+  const bytes = base58.parse(base58String)
+  const uuid = v4({ random: bytes })
+  return uuid
 }
