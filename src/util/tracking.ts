@@ -42,6 +42,7 @@ export interface TrackingValues {
   // This prop can also arbitrarily be named depending on the context of the
   // event, i.e.: 'Plan A' | 'Experiment B' | 'Mod C' | 'Something Else'
   variantId?: string
+  variantParams?: { [key: string]: string | number } // Any additional params to report
 
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
@@ -76,7 +77,7 @@ export async function logEvent(event: TrackingEventName, values: TrackingValues 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, variantId, variantParams } = values
 
   // @ts-expect-error
   if (!global.firebase) return
@@ -92,6 +93,14 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (installerId != null) params.aid = installerId
   if (pluginId != null) params.plugin = pluginId
   if (error != null) params.error = error
+
+  if (variantId != null) params.variant = variantId
+  if (variantParams != null) {
+    for (const variantParamKey of Object.keys(variantParams)) {
+      params[`${variantId}_${variantParamKey}`] = variantParams[variantParamKey]
+    }
+  }
+
   // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 
