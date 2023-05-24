@@ -297,24 +297,23 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const startPluginInner = async (): Promise<RewardsCardItem[]> => {
-        const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
-          throw new Error(lstrings.rewards_card_error_authenticate)
-        })
+      const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+        throw new Error(lstrings.rewards_card_error_authenticate)
+      })
 
+      if (isAuthenticated) {
         // Get/refresh rewards cards:
-        if (isAuthenticated) {
-          return await getRewardCards().catch(e => {
-            throw new Error(lstrings.rewards_card_error_retrieving_cards)
-          })
-        }
-        return rewardCards
+        rewardCards = await showUi.showToastSpinner(
+          lstrings.loading,
+          runWithTimeout(
+            getRewardCards().catch(e => {
+              throw new Error(lstrings.rewards_card_error_retrieving_cards)
+            }),
+            11000,
+            new Error(lstrings.rewards_card_error_timeout_loading)
+          )
+        )
       }
-
-      rewardCards = await showUi.showToastSpinner(
-        lstrings.loading,
-        runWithTimeout(startPluginInner(), 11000, new Error(lstrings.rewards_card_error_timeout_loading))
-      )
 
       redundantQuoteParams = {
         direction: startParams.direction,
