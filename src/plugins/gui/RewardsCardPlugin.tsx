@@ -61,16 +61,16 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   async function refreshRewardsCards(retries: number) {
-    if (retries > 9) return
+    if (retries > 15) return
     await getRewardCards()
       .then(async cards => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
-          await snooze(1000)
+          await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
         rewardCards = cards
-        showDashboard()
+        showDashboard({ showLoading: false })
       })
       .catch(async error => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
@@ -90,9 +90,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // State Machine:
   //
 
-  const showDashboard = async () => {
+  const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
       items: rewardCards,
+      showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
       },
@@ -129,7 +130,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Remove card from plugin state
       rewardCards = rewardCards.filter(c => c.id !== card.id)
       // Reset state for dashboard
-      showDashboard()
+      showDashboard({ showLoading: false })
     }
   }
 
@@ -227,8 +228,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         }
 
         const onDone = () => {
-          showDashboard()
-          showUi.showToastSpinner(lstrings.rewards_card_purchase_successful, refreshRewardsCards(0).catch(showError))
+          showDashboard({ showLoading: true })
+          refreshRewardsCards(0)
+            .then(async () => await showDashboard({ showLoading: false }))
+            .catch(showError)
         }
 
         const metadata: EdgeMetadata = {
@@ -297,24 +300,23 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const startPluginInner = async (): Promise<RewardsCardItem[]> => {
-        const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
-          throw new Error(lstrings.rewards_card_error_authenticate)
-        })
+      const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+        throw new Error(lstrings.rewards_card_error_authenticate)
+      })
 
+      if (isAuthenticated) {
         // Get/refresh rewards cards:
-        if (isAuthenticated) {
-          return await getRewardCards().catch(e => {
-            throw new Error(lstrings.rewards_card_error_retrieving_cards)
-          })
-        }
-        return rewardCards
+        rewardCards = await showUi.showToastSpinner(
+          lstrings.loading,
+          runWithTimeout(
+            getRewardCards().catch(e => {
+              throw new Error(lstrings.rewards_card_error_retrieving_cards)
+            }),
+            11000,
+            new Error(lstrings.rewards_card_error_timeout_loading)
+          )
+        )
       }
-
-      rewardCards = await showUi.showToastSpinner(
-        lstrings.loading,
-        runWithTimeout(startPluginInner(), 11000, new Error(lstrings.rewards_card_error_timeout_loading))
-      )
 
       redundantQuoteParams = {
         direction: startParams.direction,
@@ -323,7 +325,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       }
 
       if (rewardCards.length > 0) {
-        await showDashboard()
+        await showDashboard({ showLoading: false })
       } else {
         await showWelcome()
       }
