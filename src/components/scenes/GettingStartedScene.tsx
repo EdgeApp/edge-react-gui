@@ -91,6 +91,8 @@ export const GettingStartedScene = (props: Props) => {
   const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
   const swipeOffset = useSharedValue(0)
 
+  const variantId = isFinalSwipeEnabled ? 'A' : 'B'
+
   const handleFinalSwipe = useHandler(() => {
     if (isFinalSwipeEnabled) {
       // This delay is necessary to properly reset the scene since it remains on
@@ -100,7 +102,13 @@ export const GettingStartedScene = (props: Props) => {
       }, 500)
 
       if (localUsersLength > 0) navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
-      else navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+      else {
+        logEvent('Signup_Account_Review_Done', {
+          variantId,
+          variantParams: { method: 'swipe' }
+        })
+        navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+      }
     }
   })
 
@@ -111,7 +119,7 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
   })
   const handlePressSignUp = useHandler(() => {
-    logEvent('Signup_Account_Review_Done', { variantId: isFinalSwipeEnabled ? 'A' : 'B' })
+    logEvent('Signup_Account_Review_Done', { variantId, variantParams: { method: 'click' } })
     navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
   })
   const handlePressSkip = useHandler(() => {
@@ -136,7 +144,7 @@ export const GettingStartedScene = (props: Props) => {
     await remoteConfig.setDefaults(REMOTE_CONFIG_DEFAULT)
     await remoteConfig.fetchAndActivate().catch((err: any) => {
       const errorMessage = err instanceof Error ? err.message : String(err)
-      console.error(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
+      console.warn(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
     })
 
     const featureVal = remoteConfig.getValue('swipe_last_usp').asBoolean()
