@@ -17,7 +17,7 @@ import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
-const SUPPORT_URL = 'https://edge.app/cards/'
+const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
 export interface RewardsCardItem {
   id: number
