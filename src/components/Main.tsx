@@ -1,9 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerContentComponentProps } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
+import { View } from 'react-native'
 import { AirshipToast } from 'react-native-airship'
 import { useDispatch } from 'react-redux'
 
@@ -24,6 +25,7 @@ import { defaultAccount } from '../reducers/CoreReducer'
 import { useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
+import { FloatingCard } from './cards/FloatingCard'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
@@ -238,6 +240,14 @@ export const Main = () => {
 
   return (
     <NavigationContainer theme={reactNavigationTheme}>
+      <MainContent />
+    </NavigationContainer>
+  )
+}
+
+const MainContent = () => {
+  return (
+    <View style={{ flex: 1 }}>
       <Stack.Navigator
         initialRouteName="gettingStarted"
         screenOptions={{
@@ -248,7 +258,27 @@ export const Main = () => {
         <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
         <Stack.Screen name="login" component={LoginScene} />
       </Stack.Navigator>
-    </NavigationContainer>
+      {/* <FloatingCard /> */}
+    </View>
+  )
+}
+
+const CustomDrawer = (props: DrawerContentComponentProps) => {
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          left: 0,
+          right: 0,
+          alignItems: 'center'
+        }}
+      >
+        <FloatingCard />
+      </View>
+      <ControlPanel {...props} />
+    </View>
   )
 }
 
@@ -282,18 +312,21 @@ const EdgeApp = () => {
   })
 
   return (
-    <Drawer.Navigator
-      drawerContent={props => ControlPanel(props)}
-      initialRouteName="edgeAppStack"
-      screenOptions={{
-        drawerPosition: 'right',
-        drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0 },
-        headerShown: false
-      }}
-    >
-      <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
-    </Drawer.Navigator>
+    <View style={{ flex: 1 }}>
+      <Drawer.Navigator
+        drawerContent={props => <CustomDrawer {...props} />}
+        initialRouteName="edgeAppStack"
+        screenOptions={{
+          drawerPosition: 'right',
+          drawerType: 'front',
+          drawerStyle: { backgroundColor: 'transparent', bottom: 0 },
+          headerShown: false
+        }}
+      >
+        <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
+      </Drawer.Navigator>
+      {/* <FloatingCard /> */}
+    </View>
   )
 }
 
