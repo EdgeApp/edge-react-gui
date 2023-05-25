@@ -11,6 +11,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logout } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
+import { ENV } from '../env'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
@@ -239,7 +240,7 @@ export const Main = () => {
   return (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
-        initialRouteName="gettingStarted"
+        initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
         screenOptions={{
           headerShown: false
         }}
