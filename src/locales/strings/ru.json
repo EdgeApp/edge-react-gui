@@ -1330,7 +1330,7 @@
   "rewards_card_error_retrieving_cards": "Error retrieving Visa cards. Please try again later.",
   "rewards_card_error_authenticate": "Error authenticating with Visa Card program. Please try again later.",
   "rewards_card_error_timeout_loading": "Timeout error loading Visa Card program. Please try again later.",
-  "rewards_card_purchase_successful": "Card purchase successful!\n\nNote that newly purchased cards take a few seconds to become available. \n\nCards purchased with Bitcoin require 1 confirmation and could take 10-30 minutes to become available.",
+  "rewards_card_purchase_disclaimer": "Newly purchased cards take a few seconds to become available. Cards purchased with BTC require 1 confirmation and could take 10-30 minutes to become available.",
   "rewards_card_loading": "Loading your Visa® Cards...",
   "rewards_card_add_new_input_amount_title": "Buy Visa® Card",
   "rewards_card_welcome_intro": "Purchase Visa® prepaid cards that can be used at millions of merchants in the U.S. Cards can be purchased up to $1,000 in value, with a daily limit of $10,000.",
