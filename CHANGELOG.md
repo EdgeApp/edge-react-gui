@@ -1,6 +1,6 @@
 # edge-react-gui
 
-## 3.10.0 (2023-04-25)
+## 3.10.0 (2023-05-25)
 
 - Add Pepe (PEPE)
 - Added Visa® Debit Card (beta)
