@@ -325,7 +325,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         regionCode: startParams.regionCode
       }
 
-      if (rewardCards.length > 0) {
+      if (isAuthenticated) {
         await showDashboard({ showLoading: false })
       } else {
         await showWelcome()
