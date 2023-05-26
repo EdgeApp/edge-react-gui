@@ -78,6 +78,8 @@ const asBityCurrency = asObject({
 })
 const asBityCurrencyResponse = asObject({ currencies: asArray(asBityCurrency) })
 
+const asBityErrorResponse = asObject({ errors: asArray(asObject({ code: asString, message: asString })) })
+
 export type BityCurrency = ReturnType<typeof asBityCurrency>
 export type BityCurrencyTag = ReturnType<typeof asBityCurrencyTag>
 
@@ -191,7 +193,17 @@ const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
     const newData = await result.json()
     return newData
   } else {
-    throw new Error('Bity: Unable to fetch quote: ' + (await result.text()))
+    let bityErrorRes
+    try {
+      bityErrorRes = asBityErrorResponse(await result.json())
+    } catch (e) {
+      // TODO: Implement typed generic provider error handling now that providerId
+      // is a required FiatProviderQuoteError param.
+      throw new Error('Bity: Unable to fetch quote: ' + (await result.text()))
+    }
+    if (bityErrorRes.errors.some((bityError: { code: string; message: string }) => bityError.code === 'amount_too_large')) {
+      throw new FiatProviderError({ providerId, errorType: 'overLimit' })
+    }
   }
 }
 

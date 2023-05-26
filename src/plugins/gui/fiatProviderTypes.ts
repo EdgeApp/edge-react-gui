@@ -37,12 +37,10 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 // amountType
 export type FiatProviderQuoteError =
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
-  | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number }
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 
 export class FiatProviderError extends Error {
-  // @ts-expect-error
-  name: string
   readonly quoteError: FiatProviderQuoteError
 
   constructor(info: FiatProviderQuoteError) {
