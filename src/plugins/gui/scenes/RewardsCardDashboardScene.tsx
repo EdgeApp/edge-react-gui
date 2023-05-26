@@ -8,6 +8,7 @@ import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
 import { useTheme } from '../../../components/services/ThemeContext'
 import { DividerLine } from '../../../components/themed/DividerLine'
+import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
@@ -64,7 +65,8 @@ export const RewardsCardDashboardScene = (props: Props) => {
               </CardListItemWrapper>
             )
           })}
-          {items.length === 0 || showLoading ? (
+          {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
+          {showLoading ? (
             <CardListItem>
               <CardListItemContainer>
                 <LoadingContainer>
@@ -112,6 +114,12 @@ export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCard
     </CardListItem>
   )
 }
+
+const MessageText = styled(EdgeText)(props => ({
+  fontFamily: props.theme.fontFaceMedium,
+  color: props.theme.secondaryText,
+  textAlign: 'center'
+}))
 
 const CardListContainer = styled(View)<{ bottomSpace: number }>(props => ({
   justifyContent: 'space-around',
