@@ -336,8 +336,8 @@ export const bityProvider: FiatProviderFactory = {
           displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
-        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const cryptoCurrencyObj = asBityCurrency(allowedCurrencyCodes.crypto[pluginId][displayCurrencyCode])
         const fiatCurrencyObj = asBityCurrency(allowedCurrencyCodes.fiat[fiatCurrencyCode])
@@ -370,6 +370,7 @@ export const bityProvider: FiatProviderFactory = {
         if (lt(amount, minimumAmount)) {
           throw new FiatProviderError({
             // TODO: direction,
+            providerId,
             errorType: 'underLimit',
             errorAmount: parseFloat(minimumAmount)
           })
