@@ -185,23 +185,15 @@ function buildIos(buildObj: BuildObj) {
 
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
+  const xcarchive = join(buildObj.tmpDir, 'app.xcarchive')
+  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} -archivePath ${xcarchive} archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
-  const buildDate = builddate()
-  const buildDir = `${process.env.HOME || ''}/Library/Developer/Xcode/Archives/${buildDate}`
-
-  chdir(buildDir)
-  let archiveDir = cmd('ls -t')
-  const archiveDirArray = archiveDir.split('\n')
-  archiveDir = archiveDirArray[0]
-
-  buildObj.dSymFile = join(`${buildDir}`, `${archiveDir}`, `dSYMs`, `${buildObj.productName}.app.dSYM`)
-  // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = join(`${buildObj.tmpDir}`, `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
-  buildObj.ipaFile = join(`${buildObj.tmpDir}`, `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
+  buildObj.dSymFile = join(xcarchive, `dSYMs`, `${buildObj.productName}.app.dSYM`)
+  buildObj.dSymZip = join(buildObj.tmpDir, `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
+  buildObj.ipaFile = join(buildObj.tmpDir, `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
 
   if (fs.existsSync(buildObj.ipaFile)) {
     fs.unlinkSync(buildObj.ipaFile)
@@ -224,7 +216,7 @@ function buildIos(buildObj: BuildObj) {
 
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath "${buildObj.tmpDir}/" -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -exportArchive -archivePath "${xcarchive}" -exportPath "${buildObj.tmpDir}/" -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
@@ -235,7 +227,7 @@ function buildIos(buildObj: BuildObj) {
   const buildOutputIpaFile = join(buildObj.tmpDir, `${buildObj.productName}.ipa`)
   fs.renameSync(buildOutputIpaFile, buildObj.ipaFile)
 
-  const src = join(buildDir, archiveDir, 'Products', 'Applications', `${buildObj.productName}.app`, 'main.jsbundle')
+  const src = join(xcarchive, 'Products', 'Applications', `${buildObj.productName}.app`, 'main.jsbundle')
   const dst = join(buildObj.guiPlatformDir, 'main.jsbundle')
   fs.copyFileSync(src, dst)
   call(cmdStr)
@@ -342,13 +334,6 @@ function buildCommonPost(buildObj: BuildObj) {
     )
     mylog('\n*** Upload to App Center Complete ***')
   }
-}
-
-function builddate() {
-  const date = new Date()
-
-  const dateStr = sprintf('%d-%02d-%02d', date.getFullYear(), date.getMonth() + 1, date.getDate())
-  return dateStr
 }
 
 function rmNewline(text: string) {
