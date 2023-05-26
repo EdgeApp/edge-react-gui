@@ -1344,6 +1344,7 @@
   "rewards_card_error_missing_payment_address": "Indirizzo di pagamento mancante dal provider",
   "rewards_card_error_amount_max_s": "L'importo massimo di acquisto della carta è $%s",
   "rewards_card_error_amount_min_s": "L'importo minimo d'acquisto è %s",
+  "rewards_card_no_cards": "You have no active cards.",
   "rewards_card_select_wallet": "Seleziona il portafoglio da usare per acquistare la carta",
   "rewards_card_terms_of_use_message": "Rivedi i Termini d'Uso:\n\nComprendo che le carte virtuali tramite questo programma possono essere acquistate solo dagli utenti statunitensi.\n\nComprendo che le carte acquistate non sono soggette a rimborso."
 }
