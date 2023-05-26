@@ -99,8 +99,8 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.projectName = argv[2]
-  buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
-  buildObj.tmpDir = `${buildObj.guiDir}/temp`
+  buildObj.guiPlatformDir = buildObj.guiDir + buildObj.platformType
+  buildObj.tmpDir = `${buildObj.guiDir}temp`
   buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
@@ -197,7 +197,6 @@ function buildIos(buildObj: BuildObj) {
 
   buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  const buildOutputIpaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.ipa`)
   buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
   buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
 
@@ -230,6 +229,7 @@ function buildIos(buildObj: BuildObj) {
   call(cmdStr)
 
   mylog(`Renaming IPA file to ${buildObj.ipaFile}`)
+  const buildOutputIpaFile = `${buildObj.tmpDir}/${buildObj.productName}.ipa`
   fs.renameSync(buildOutputIpaFile, buildObj.ipaFile)
 
   cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
