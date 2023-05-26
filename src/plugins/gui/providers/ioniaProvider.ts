@@ -337,7 +337,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
             bitcoin: { BTC: true },
             bitcoincash: { BCH: true },
             dash: { DASH: true },
-            doge: { DOGE: true },
+            dogecoin: { DOGE: true },
             litecoin: { LTC: true }
           },
           fiat: {
