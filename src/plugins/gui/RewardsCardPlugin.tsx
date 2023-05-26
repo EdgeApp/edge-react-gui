@@ -129,6 +129,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
       rewardCards = rewardCards.filter(c => c.id !== card.id)
+
       // Reset state for dashboard
       showDashboard({ showLoading: false })
     }
@@ -230,7 +231,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         const onDone = () => {
           showDashboard({ showLoading: true })
           refreshRewardsCards(0)
-            .then(async () => await showDashboard({ showLoading: false }))
+            .finally(async () => await showDashboard({ showLoading: false }))
             .catch(showError)
         }
 
