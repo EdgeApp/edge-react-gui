@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
@@ -25,6 +25,7 @@ import { defaultAccount } from '../reducers/CoreReducer'
 import { useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
+import { FloatingCard } from './cards/FloatingCard'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
@@ -118,6 +119,13 @@ import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu as SideMenuComponent } from './themed/SideMenu'
+
+// This is necessary to lift the drawer state up to components outside of the
+// Drawer.Navigator. The hook useDrawerStatus() is accessible only from
+// components within the Drawer.Navigator component.
+interface LiftDrawerStateProps {
+  setIsDrawerOpen: (isOpen: boolean) => void
+}
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
@@ -222,6 +230,9 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
+
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+
   // Match react navigation theme background with the patina theme
   const reactNavigationTheme = React.useMemo(() => {
     return {
@@ -239,21 +250,37 @@ export const Main = () => {
 
   return (
     <NavigationContainer theme={reactNavigationTheme}>
-      <Stack.Navigator
-        initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="edgeApp" component={EdgeApp} />
-        <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} />
-      </Stack.Navigator>
+      <MainContent setIsDrawerOpen={setIsDrawerOpen} />
+      {/* TODO: Figure out how to get navigation in here... */}
+      {/* <FloatingCard visible={!isDrawerOpen} navigation={navigation} /> */}
     </NavigationContainer>
   )
 }
 
-const EdgeApp = () => {
+const MainContent = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
+  return (
+    <Stack.Navigator
+      initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen name="edgeApp">{() => <EdgeApp setIsDrawerOpen={setIsDrawerOpen} />}</Stack.Screen>
+      <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
+      <Stack.Screen name="login" component={LoginScene} />
+    </Stack.Navigator>
+  )
+}
+
+// Wrapper to pass the drawer status out of Drawer.Navigator
+const DrawerContent = (props: DrawerContentComponentProps & LiftDrawerStateProps) => {
+  const isDrawerOpen = useDrawerStatus() === 'open'
+  props.setIsDrawerOpen(isDrawerOpen)
+
+  return <SideMenu {...props} />
+}
+
+const EdgeApp = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
   const backPressedOnce = React.useRef(false)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
@@ -284,7 +311,7 @@ const EdgeApp = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
+      drawerContent={props => <DrawerContent {...props} setIsDrawerOpen={setIsDrawerOpen} />}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',
