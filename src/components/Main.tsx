@@ -36,6 +36,7 @@ import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
+import { NotificationView } from './notification/NotificationView'
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 as ChangeMiningFeeScene2Component } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
@@ -760,20 +761,23 @@ const EdgeAppStack = () => {
 
 const EdgeTabs = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="walletsTab"
-      tabBar={props => <MenuTabs {...props} />}
-      screenOptions={{
-        headerShown: false
-      }}
-    >
-      <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
-      <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
-      <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
-      <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
-      <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
-      <Tab.Screen name="extraTab" component={ExtraTabScene} />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        initialRouteName="walletsTab"
+        tabBar={props => <MenuTabs {...props} />}
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
+        <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
+        <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
+        <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
+        <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
+        <Tab.Screen name="extraTab" component={ExtraTabScene} />
+      </Tab.Navigator>
+      <NotificationView />
+    </>
   )
 }
 

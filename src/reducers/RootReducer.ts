@@ -23,6 +23,10 @@ export interface RootState {
 
   readonly isLoggedIn: boolean
 
+  // Flag to signal scrolling components to add extra padding at the bottom to
+  // avoid blocking content with the notification view
+  readonly isNotificationViewActive: boolean
+
   // Next username to auto-fill at the login screen, or blank if none:
   readonly nextUsername: string | null
 
@@ -72,6 +76,15 @@ export const rootReducer = combineReducers<RootState, Action>({
         return true
       case 'LOGOUT':
         return false
+      default:
+        return state
+    }
+  },
+
+  isNotificationViewActive: (state = false, action: Action): boolean => {
+    switch (action.type) {
+      case 'IS_NOTIFICATION_VIEW_ACTIVE':
+        return action.data.isNotificationViewActive
       default:
         return state
     }
