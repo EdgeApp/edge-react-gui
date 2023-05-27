@@ -1314,6 +1314,13 @@ const strings = {
 
   // #endregion GuiPlugins
 
+  // #region Light Account
+
+  light_account_card_backup_title: 'Back up your account',
+  light_account_card_backup_message: 'Without a backup, you risk losing your funds!',
+
+  // #endregion Light Account
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

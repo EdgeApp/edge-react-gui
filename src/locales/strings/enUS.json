@@ -1143,6 +1143,8 @@
   "bank_transfer_reference": "Reference",
   "sepa_form_title": "Enter Bank Info",
   "sepa_transfer_prompt_s": "Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.",
+  "light_account_card_backup_title": "Back up your account",
+  "light_account_card_backup_message": "Without a backup, you risk losing your funds!",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",
   "currency_label_DZD": "Algerian Dinar",
