@@ -128,6 +128,7 @@ export interface RouteParamList {
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
+  floatingCard: undefined
   fioCreateHandle: FioCreateHandleProps
   fioAddressDetails: {
     fioAddressName: string
