@@ -18,7 +18,7 @@ interface State {
  * Runs an effect when its dependencies change, just like `useEffect`,
  * but awaits the returned promise before starting the next run.
  */
-export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[]): void {
+export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[], tag?: string): void {
   const state = React.useRef<State>({
     closed: false,
     dirty: false,
@@ -32,9 +32,9 @@ export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[]): void {
   React.useEffect(
     () => () => {
       state.current.closed = true
-      wakeup(state.current)
+      wakeup(state.current, tag)
     },
-    []
+    [tag]
   )
 
   // Check for differences:
@@ -59,7 +59,7 @@ function matchDeps(a?: unknown[], b?: unknown[]): boolean {
 /**
  * Does the next thing based on the current state.
  */
-function wakeup(state: State): void {
+function wakeup(state: State, tag?: string): void {
   // We can't do anything if the effect is already running:
   if (state.running) return
 
@@ -82,7 +82,7 @@ function wakeup(state: State): void {
         wakeup(state)
       })
       .catch(error => {
-        showError(error)
+        showError(error, { tag })
         state.running = false
         wakeup(state)
       })
