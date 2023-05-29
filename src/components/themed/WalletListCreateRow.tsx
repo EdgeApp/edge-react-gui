@@ -54,16 +54,17 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
+
   const handlePress = useHandler(() => {
-    // @ts-expect-error
-    const handleRes = walletId => (onPress != null ? onPress(walletId, currencyCode) : null)
+    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, currencyCode) : null)
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType })).then(handleRes)
-    } else if (pluginId != null) {
+    } else if (pluginId != null && tokenId != null) {
       if (createWalletIds.length < 2) {
         dispatch(
           createAndSelectToken({
-            tokenCode: currencyCode,
+            tokenId,
             pluginId,
             createWalletId: createWalletIds[0],
             trackingEventFailed: trackingEventFailed,
@@ -78,7 +79,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
               onPress={walletId => {
                 dispatch(
                   createAndSelectToken({
-                    tokenCode: currencyCode,
+                    tokenId,
                     pluginId: currencyWallets[walletId].currencyInfo.pluginId,
                     createWalletId: walletId,
                     trackingEventFailed: trackingEventFailed,
@@ -106,8 +107,6 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
   })
 
-  const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
-
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>
       <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
@@ -123,13 +122,13 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 }
 
 function createAndSelectToken({
-  tokenCode,
+  tokenId,
   pluginId,
   createWalletId,
   trackingEventFailed,
   trackingEventSuccess
 }: {
-  tokenCode: string
+  tokenId: string
   pluginId: string
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
@@ -165,7 +164,7 @@ function createAndSelectToken({
                 })
               })()
             )
-      await wallet.enableTokens([tokenCode])
+      await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
       return wallet.id
     } catch (error: any) {
