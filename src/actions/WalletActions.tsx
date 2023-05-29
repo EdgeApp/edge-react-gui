@@ -343,7 +343,7 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
         const wallet = currencyWallets[walletId]
         if (wallet == null) continue
 
-        const pubKey = wallet.displayPublicSeed
+        const pubKey = await account.getDisplayPublicKey(wallet.id)
         if (pubKey == null) continue
 
         const hash = hashjs.sha256().update(pubKey).digest('hex')
