@@ -54,12 +54,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     await await provider.otherMethods
       .getRewardsCards()
       .then(async ({ activeCards, archivedCards }) => {
-        if (activeCards.length === rewardsCards.activeCards.length) {
+        if (activeCards.length === userRewardsCards.activeCards.length) {
           console.log(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
-        rewardsCards = { activeCards, archivedCards }
+        userRewardsCards = { activeCards, archivedCards }
         showDashboard({ showLoading: false })
       })
       .catch(async error => {
@@ -73,14 +73,14 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   //
 
   let redundantQuoteParams: Pick<FiatPluginStartParams, 'direction' | 'paymentTypes' | 'regionCode'>
-  let rewardsCards: UserRewardsCards = { activeCards: [], archivedCards: [] }
+  let userRewardsCards: UserRewardsCards = { activeCards: [], archivedCards: [] }
   //
   // State Machine:
   //
 
   const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
-      items: rewardsCards.activeCards,
+      items: userRewardsCards.activeCards,
       showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
@@ -116,7 +116,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Hide the card
       provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
-      rewardsCards.activeCards = rewardsCards.activeCards.filter(c => c.id !== card.id)
+      userRewardsCards.activeCards = userRewardsCards.activeCards.filter(c => c.id !== card.id)
 
       // Reset state for dashboard
       showDashboard({ showLoading: false })
@@ -295,7 +295,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
-        rewardsCards = await showUi.showToastSpinner(
+        userRewardsCards = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
             provider.otherMethods.getRewardsCards().catch(e => {
@@ -307,7 +307,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         )
       }
 
-      const hasCards = rewardsCards.activeCards.length + rewardsCards.activeCards.length > 0
+      const hasCards = userRewardsCards.activeCards.length + userRewardsCards.activeCards.length > 0
 
       redundantQuoteParams = {
         direction: startParams.direction,
