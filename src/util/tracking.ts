@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
@@ -62,6 +63,34 @@ if (ENV.USE_FIREBASE) {
     analytics() {
       return inner
     }
+  }
+}
+
+/**
+ * Track error to external reporting service (ie. Bugsnag)
+ */
+
+export async function trackError(
+  error: unknown,
+  tag?: string,
+  metadata?: {
+    [key: string]: any
+  }
+): Promise<void> {
+  let err: Error | string
+  if (error instanceof Error || typeof error === 'string') {
+    err = error
+  } else {
+    // At least send an error which should give us the callstack
+    err = 'Unknown error occurred'
+  }
+
+  if (tag == null) {
+    Bugsnag.notify(err)
+  } else {
+    Bugsnag.notify(err, report => {
+      report.addMetadata(tag, metadata ?? {})
+    })
   }
 }
 

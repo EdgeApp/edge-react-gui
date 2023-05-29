@@ -20,6 +20,7 @@ import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
+import { trackError } from '../../util/tracking'
 import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
@@ -169,7 +170,8 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           data: serverSettingsToNotificationSettings(newSettings)
         })
       } catch (e) {
-        console.error(String(e))
+        trackError(e, 'LoginScene:onLogin:setDeviceSettings')
+        console.error(e)
       }
     }
   }
