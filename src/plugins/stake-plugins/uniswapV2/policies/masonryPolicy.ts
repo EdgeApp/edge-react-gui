@@ -7,7 +7,6 @@ import { cacheTxMetadata } from '../../metadataCache'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
 import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
-import { getSeed } from '../../util/getSeed'
 import { fromHex } from '../../util/hex'
 import { makeContract, makeSigner, multipass } from '../contracts'
 import { pluginInfo } from '../pluginInfo'
@@ -91,7 +90,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
 
   const instance: StakePluginPolicy = {
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
-      const { action, stakePolicyId, wallet } = request
+      const { action, stakePolicyId, wallet, account } = request
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
@@ -103,7 +102,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const metadataRewardCurrencyCode = policyInfo.rewardAssets.map(asset => asset.currencyCode)[0]
 
       // Get the signer for the wallet
-      const signerSeed = getSeed(wallet)
+      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
       const signerAddress = makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
@@ -356,8 +355,8 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
     },
     // TODO: Implement support for multi-asset staking
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
-      const { stakePolicyId, wallet } = request
-      const signerSeed = getSeed(wallet)
+      const { stakePolicyId, wallet, account } = request
+      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
 
       const policyInfo = pluginInfo.policyInfo.find(p => p.stakePolicyId === stakePolicyId)
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
