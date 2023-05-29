@@ -101,12 +101,13 @@ export const GettingStartedScene = (props: Props) => {
         swipeOffset.value = 0
       }, 500)
 
-      if (localUsersLength > 0) navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
-      else {
-        logEvent('Signup_Account_Review_Done', {
-          variantId,
-          variantParams: { method: 'swipe' }
-        })
+      logEvent('Signup_Welcome', {
+        variantId,
+        variantParams: { doneMethod: 'swipe' }
+      })
+      if (localUsersLength > 0) {
+        navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
+      } else {
         navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
       }
     }
@@ -119,7 +120,7 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
   })
   const handlePressSignUp = useHandler(() => {
-    logEvent('Signup_Account_Review_Done', { variantId, variantParams: { method: 'click' } })
+    logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
     navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
   })
   const handlePressSkip = useHandler(() => {
