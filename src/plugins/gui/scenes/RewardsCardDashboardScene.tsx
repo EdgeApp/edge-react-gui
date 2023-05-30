@@ -191,7 +191,7 @@ const LoadingTextDisclaimer = styled(Text)(props => ({
   color: props.theme.secondaryText,
   fontFamily: props.theme.fontFaceDefault,
   includeFontPadding: false,
-  textAlign: 'left'
+  textAlign: 'justify'
 }))
 
 const Icon = styled(Ionicon)(props => ({}))
