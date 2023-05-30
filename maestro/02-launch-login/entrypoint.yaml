@@ -1,6 +1,0 @@
-appId: co.edgesecure.app
----
-- runFlow:
-    file: C310-launch-no-crash.yaml
-- runFlow:
-    file: C311-relaunch-no-crash.yaml

@@ -4,10 +4,12 @@
 # Expected Result:
 #   1. Edge should not crash when relaunching the App
 
-appId: co.edgesecure.app
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
 ---
 - runFlow:
-    file: ../common/launch.yaml
+    file: ../common/launch-cleared.yaml
 
 - pressKey: home
 

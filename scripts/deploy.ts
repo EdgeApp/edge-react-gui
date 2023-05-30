@@ -434,20 +434,21 @@ function buildCommonPost(buildObj: BuildObj) {
           gitHash: guiHash
         }
 
+        const platformBranch = `${repoBranch}/${platformType}`
         chdir(repoPath)
         try {
-          call(`git checkout -b ${repoBranch} origin/${repoBranch}`)
+          call(`git checkout -b ${platformBranch} origin/${platformBranch}`)
         } catch (e) {
-          call(`git checkout -b ${repoBranch}`)
+          call(`git checkout -b ${platformBranch}`)
         }
 
         const latestTestFileString = JSON.stringify(latestTestFileObj, null, 2)
         fs.writeFileSync(testFilePath, latestTestFileString, { encoding: 'utf8' })
 
         call(`git add ${LATEST_TEST_FILE}`)
-        call(`git commit -m "Update latest test file. ${platformType} ${repoBranch} ${buildNum} ${version} ${guiHash}"`)
+        call(`git commit -m "latestTestFile. ${buildNum} ${version} ${guiHash} ${platformBranch}"`)
         try {
-          call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push -u origin ${repoBranch}`)
+          call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push -u origin ${platformBranch}`)
           success = true
           break
         } catch (e: any) {

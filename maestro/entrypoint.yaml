@@ -1,6 +1,0 @@
-appId: co.edgesecure.app
----
-- runFlow:
-    file: common/clear-app-data.yaml
-- runFlow:
-    file: 02-launch-login/entrypoint.yaml
