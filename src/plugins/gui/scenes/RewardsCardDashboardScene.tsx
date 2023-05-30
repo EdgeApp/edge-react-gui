@@ -109,7 +109,10 @@ export const RewardsCard = (props: RewardsCardProps) => {
       >
         <CardInner shouldStack={shouldStack}>
           <CardHeader>
-            <VisaBrandImage source={visaBrandImage} />
+            <Space sideways>
+              <VisaBrandImage source={visaBrandImage} />
+              {onPress == null ? null : <Ionicon name="chevron-forward-outline" size={theme.rem(1.5)} color={theme.iconTappable} />}
+            </Space>
             {onRemovePress == null ? null : (
               <TouchableOpacity onPress={onRemovePress}>
                 <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
@@ -219,7 +222,8 @@ const VisaBrandImage = styled(Image)(props => ({
   resizeMode: 'contain',
   height: props.theme.rem(1.75),
   width: props.theme.rem(4),
-  marginBottom: props.theme.rem(1.25)
+  marginBottom: props.theme.rem(1.25),
+  marginRight: props.theme.rem(0.5)
 }))
 
 const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
