@@ -97,6 +97,7 @@ export interface RewardsCardProps {
 export const RewardsCard = (props: RewardsCardProps) => {
   const { item, onPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
+  const purchaseAmount = `$${item.amount.toString()}`
 
   return (
     <CardContainer>
@@ -107,18 +108,36 @@ export const RewardsCard = (props: RewardsCardProps) => {
         activeOpacity={onPress == null ? 1 : undefined}
       >
         <CardInner shouldStack={shouldStack}>
-          <Details>
+          <CardHeader>
             <VisaBrandImage source={visaBrandImage} />
-            <DetailItem>
-              <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-              <DateLabel>{item.expirationDate.toLocaleString()}</DateLabel>
-            </DetailItem>
-          </Details>
-          {onRemovePress == null ? null : (
-            <TouchableOpacity onPress={onRemovePress}>
-              <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
-            </TouchableOpacity>
-          )}
+            {onRemovePress == null ? null : (
+              <TouchableOpacity onPress={onRemovePress}>
+                <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
+              </TouchableOpacity>
+            )}
+          </CardHeader>
+          <Space expand>
+            <Space bottom={0.5} sideways expand>
+              <Space>
+                <CardFieldLabel>{lstrings.rewards_card_dashboard_field_purchase_date_label}</CardFieldLabel>
+                <CardFieldValue>{item.purchaseDate.toLocaleString()}</CardFieldValue>
+              </Space>
+              <Space>
+                <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_price_label}</CardFieldLabel>
+                <CardFieldValue textAlign="right">{purchaseAmount}</CardFieldValue>
+              </Space>
+            </Space>
+            <Space sideways expand>
+              <Space>
+                <CardFieldLabel>{lstrings.rewards_card_dashboard_field_expires_label}</CardFieldLabel>
+                <CardFieldValue>{item.expirationDate.toLocaleString()}</CardFieldValue>
+              </Space>
+              <Space>
+                <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_asset_label}</CardFieldLabel>
+                <CardFieldValue textAlign="right">{item.purchaseAsset}</CardFieldValue>
+              </Space>
+            </Space>
+          </Space>
         </CardInner>
       </TouchableOpacity>
     </CardContainer>
@@ -137,7 +156,7 @@ const CardList = styled(View)<{ bottomSpace: number }>(props => ({
   padding: props.theme.rem(1.5)
 }))
 
-const CardContainer = styled(View)(props => ({}))
+const CardContainer = styled(View)(_props => ({}))
 
 const CardBackground = styled(View)(props => ({
   aspectRatio: 1.5882352941,
@@ -158,10 +177,7 @@ const CardBackground = styled(View)(props => ({
 
 const CardInner = styled(View)<{ shouldStack?: boolean }>(props => ({
   aspectRatio: props.shouldStack === false ? 1.5882352941 : undefined,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  padding: props.theme.rem(1.25),
-  width: '100%'
+  padding: props.theme.rem(1.25)
 }))
 
 const BottomFloat = styled(View)(props => ({
@@ -170,7 +186,7 @@ const BottomFloat = styled(View)(props => ({
   position: 'absolute'
 }))
 
-const LoadingContainer = styled(View)(props => ({
+const LoadingContainer = styled(View)(_props => ({
   alignItems: 'center',
   flex: 1,
   justifyContent: 'center'
@@ -194,11 +210,10 @@ const LoadingTextDisclaimer = styled(Text)(props => ({
   textAlign: 'justify'
 }))
 
-const Icon = styled(Ionicon)(props => ({}))
-
-const Details = styled(View)(props => ({}))
-
-const DetailItem = styled(View)(prop => ({}))
+const CardHeader = styled(View)(_props => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+}))
 
 const VisaBrandImage = styled(Image)(props => ({
   resizeMode: 'contain',
@@ -207,16 +222,18 @@ const VisaBrandImage = styled(Image)(props => ({
   marginBottom: props.theme.rem(1.25)
 }))
 
-const ExpiryLabel = styled(Text)(props => ({
+const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
   color: props.theme.secondaryText,
   fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.75),
-  includeFontPadding: false
+  fontSize: props.theme.rem(0.7),
+  includeFontPadding: false,
+  textAlign: props.textAlign ?? 'left'
 }))
 
-const DateLabel = styled(Text)(props => ({
+const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
   color: props.theme.primaryText,
   fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(0.75),
-  includeFontPadding: false
+  includeFontPadding: false,
+  textAlign: props.textAlign ?? 'left'
 }))
