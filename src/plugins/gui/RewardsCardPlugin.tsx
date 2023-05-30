@@ -106,7 +106,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       title: lstrings.rewards_card_delete_modal_title,
       message: lstrings.rewards_card_delete_modal_message,
       children: (
-        <Space around={1}>
+        <Space around={0.5}>
           <RewardsCard item={card} />
         </Space>
       )
