@@ -76,10 +76,10 @@ export const EdgeLoginScene = (props: Props) => {
       <View style={styles.topArea}>
         <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
           <View key="loader" style={styles.header}>
-            <ActivityIndicator color={theme.iconTappable} size="large" />
+            <ActivityIndicator color={theme.iconTappable} size="large" accessibilityHint={lstrings.spinner_hint} />
           </View>
           <View key="logo" style={styles.header}>
-            <Image style={styles.logo} source={{ uri: logoUri }} resizeMode="contain" />
+            <Image style={styles.logo} source={{ uri: logoUri }} resizeMode="contain" accessibilityHint={lstrings.app_logo_hint} />
             <TitleText style={styles.appName}>{lobby?.loginRequest?.displayName}</TitleText>
           </View>
         </CrossFade>

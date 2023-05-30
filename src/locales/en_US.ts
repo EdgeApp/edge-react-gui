@@ -1502,6 +1502,21 @@ const strings = {
 
   // Accessibility Hints
   app_logo_hint: 'App logo',
+  check_icon_hint: 'Confirmed',
+  close_control_panel_hint: 'Close control panel',
+  close_hint: 'Close',
+  create_wallet_hint: 'Create Wallet %s',
+  edit_icon_hint: 'Edit',
+  import_key_icon_hint: 'Import Key',
+  modal_close_hint: 'Close modal',
+  off_hint: 'Off',
+  on_hint: 'On',
+  sort_wallets_hint: 'Sort Wallets',
+  spinner_hint: 'Loading',
+  toggle_button_hint: 'Toggle',
+
+  // Accessibility Labels
+  wallet_settings_label: 'Wallet settings',
 
   // Reward Card
   rewards_card_getting_invoice: 'Getting payment invoice',

@@ -7,6 +7,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress'
+import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -86,13 +87,16 @@ export const ManageTokensRowComponent = (props: Props) => {
       </View>
       {!isCustom ? null : (
         <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
-          <FontAwesomeIcon color={theme.iconTappable} name="edit" size={theme.rem(1)} />
+          <FontAwesomeIcon color={theme.iconTappable} name="edit" size={theme.rem(1)} accessibilityHint={lstrings.edit_icon_hint} accessibilityRole="button" />
         </TouchableOpacity>
       )}
       <View pointerEvents="none" style={styles.switchBox}>
-        <AnimatedSpinner color={theme.iconTappable} style={[styles.spinner, spinnerStyle]} />
+        <AnimatedSpinner color={theme.iconTappable} style={[styles.spinner, spinnerStyle]} accessibilityHint={lstrings.spinner_hint} />
         <AnimatedSwitch
           ios_backgroundColor={theme.toggleButtonOff}
+          accessibilityHint={lstrings.toggle_button_hint}
+          accessibilityActions={[{ name: 'activate', label: lstrings.toggle_button_hint }]}
+          accessibilityValue={{ text: isEnabled ? lstrings.on_hint : lstrings.off_hint }}
           trackColor={{
             false: theme.toggleButtonOff,
             true: theme.toggleButton

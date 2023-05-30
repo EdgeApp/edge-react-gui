@@ -347,7 +347,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
                   <TitleText style={styles.text}>{username}</TitleText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)}>
-                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
+                  <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -378,7 +378,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         {/* === Translucent X Close Button Start === */}
         <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
           <TouchableOpacity onPress={handlePressClose}>
-            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
+            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} accessibilityHint={lstrings.close_control_panel_hint} />
           </TouchableOpacity>
         </LinearGradient>
         {/* === Translucent X Close Button End === */}
