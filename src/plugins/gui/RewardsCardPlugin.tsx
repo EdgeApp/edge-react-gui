@@ -289,7 +289,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+      const isAuthenticated = await provider.otherMethods.authenticate().catch(error => {
+        console.error(error)
         throw new Error(lstrings.rewards_card_error_authenticate)
       })
 
@@ -298,7 +299,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         userRewardsCards = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
-            provider.otherMethods.getRewardsCards().catch(e => {
+            provider.otherMethods.getRewardsCards().catch(error => {
+              console.error(error)
               throw new Error(lstrings.rewards_card_error_retrieving_cards)
             }),
             11000,
