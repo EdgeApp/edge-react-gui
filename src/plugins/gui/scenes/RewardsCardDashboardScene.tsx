@@ -59,7 +59,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         <DividerLine marginRem={[0, 1]} />
         <CardList bottomSpace={bottomFloatHeight}>
           {items.map(item => {
-            return <RewardCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
+            return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
           })}
           {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
           {showLoading ? (

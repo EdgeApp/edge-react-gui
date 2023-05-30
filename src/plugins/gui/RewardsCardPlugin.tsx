@@ -14,7 +14,7 @@ import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletP
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
-import { RewardCard } from './scenes/RewardsCardDashboardScene'
+import { RewardsCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
@@ -107,7 +107,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       message: lstrings.rewards_card_delete_modal_message,
       children: (
         <Space around={1}>
-          <RewardCard item={card} />
+          <RewardsCard item={card} />
         </Space>
       )
     })
