@@ -53,11 +53,15 @@ export const LoanManagerService = (props: Props) => {
   // Initialization
   //
 
-  useAsyncEffect(async () => {
-    if (account.disklet != null) {
-      dispatch(loadLoanAccounts(account))
-    }
-  }, [account, dispatch])
+  useAsyncEffect(
+    async () => {
+      if (account.disklet != null) {
+        dispatch(loadLoanAccounts(account))
+      }
+    },
+    [account, dispatch],
+    'LoanManagerService 1'
+  )
 
   //
   // Cleanup Routine
@@ -95,50 +99,54 @@ export const LoanManagerService = (props: Props) => {
 
   // Cache changes to specific watched properties of the loan accounts to detect
   // deltas
-  useAsyncEffect(async () => {
-    for (const loanAccountId of Object.keys(loanAccountMap)) {
-      await waitForBorrowEngineSync(loanAccountMap[loanAccountId].borrowEngine)
-      const { borrowEngine } = loanAccountMap[loanAccountId]
-      const { debts, collaterals } = borrowEngine
+  useAsyncEffect(
+    async () => {
+      for (const loanAccountId of Object.keys(loanAccountMap)) {
+        await waitForBorrowEngineSync(loanAccountMap[loanAccountId].borrowEngine)
+        const { borrowEngine } = loanAccountMap[loanAccountId]
+        const { debts, collaterals } = borrowEngine
 
-      // Cache accounts only if we can support liquidation price calculations
-      const filteredDebts = debts.filter(debt => !zeroString(debt.nativeAmount))
-      const filteredCollaterals = collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
-      const onlyOneCollateral = filteredCollaterals.length === 1
-      // TODO: Find a less crude way to determine if a token is USD-based
-      const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
+        // Cache accounts only if we can support liquidation price calculations
+        const filteredDebts = debts.filter(debt => !zeroString(debt.nativeAmount))
+        const filteredCollaterals = collaterals.filter(collateral => !zeroString(collateral.nativeAmount))
+        const onlyOneCollateral = filteredCollaterals.length === 1
+        // TODO: Find a less crude way to determine if a token is USD-based
+        const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
 
-      if (onlyOneCollateral && onlyUsdBasedDebts) {
-        // Only trigger push events after the exchange rates are available for
-        // all loan assets on this account
-        const loanAssetTokenIds = [...filteredDebts, ...filteredCollaterals].map(loanAsset => loanAsset.tokenId)
-        if (loanAssetTokenIds.every(tokenId => tokenId == null || !zeroString(exchangeRates[`${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`]))) {
-          if (debts.length > 0) {
-            // If it's the first time the account has been seen, we want to
-            // avoid a notification if it already exceeds the liquidation price
-            // right when the app is booted. Newly created loans can never
-            // exceed the liquidation price.
-            if (cachedLoanAssetsMap[loanAccountId] == null) {
-              cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
+        if (onlyOneCollateral && onlyUsdBasedDebts) {
+          // Only trigger push events after the exchange rates are available for
+          // all loan assets on this account
+          const loanAssetTokenIds = [...filteredDebts, ...filteredCollaterals].map(loanAsset => loanAsset.tokenId)
+          if (loanAssetTokenIds.every(tokenId => tokenId == null || !zeroString(exchangeRates[`${getCurrencyCode(borrowEngine, tokenId)}_iso:USD`]))) {
+            if (debts.length > 0) {
+              // If it's the first time the account has been seen, we want to
+              // avoid a notification if it already exceeds the liquidation price
+              // right when the app is booted. Newly created loans can never
+              // exceed the liquidation price.
+              if (cachedLoanAssetsMap[loanAccountId] == null) {
+                cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
+                await uploadLiquidationPushEvents(loanAccountId, false)
+              }
+              // If we already have a cache of this account and the LTV changed,
+              // upload a push notification even if the liquidation price has been
+              // exceeded
+              else if (JSON.stringify([...debts, ...collaterals]) !== cachedLoanAssetsMap[loanAccountId]) {
+                cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
+                await uploadLiquidationPushEvents(loanAccountId, true)
+              }
+            } else {
+              // Ensure push event is cleared if account is closed or debts no
+              // longer exist
               await uploadLiquidationPushEvents(loanAccountId, false)
             }
-            // If we already have a cache of this account and the LTV changed,
-            // upload a push notification even if the liquidation price has been
-            // exceeded
-            else if (JSON.stringify([...debts, ...collaterals]) !== cachedLoanAssetsMap[loanAccountId]) {
-              cachedLoanAssetsMap[loanAccountId] = JSON.stringify([...debts, ...collaterals])
-              await uploadLiquidationPushEvents(loanAccountId, true)
-            }
-          } else {
-            // Ensure push event is cleared if account is closed or debts no
-            // longer exist
-            await uploadLiquidationPushEvents(loanAccountId, false)
           }
         }
+        setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
       }
-      setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
-    }
-  }, [loanAccountMap, exchangeRates])
+    },
+    [loanAccountMap, exchangeRates],
+    'LoanManagerService 2'
+  )
 
   const uploadLiquidationPushEvents = React.useCallback(
     async (loanAccountId: string, isSkipPriceCheck: boolean) => {

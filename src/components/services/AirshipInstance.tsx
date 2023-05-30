@@ -8,13 +8,21 @@ import { AirshipToast } from '../common/AirshipToast'
 import { AlertDropdown } from '../navigation/AlertDropdown'
 export const Airship = makeAirship()
 
+export interface ShowErrorWarningOptions {
+  // Report error to external bug tracking tool (ie. Bugsnag)
+  trackError?: boolean
+  tag?: string
+}
 /**
  * Shows an error to the user.
  * Used when some user-requested operation fails.
  */
-export function showError(error: unknown): void {
-  const translatedError = translateError(error)
-  Bugsnag.notify(`showError: ${translatedError}`)
+export function showError(error: unknown, options: ShowErrorWarningOptions = {}): void {
+  const { trackError = true, tag } = options
+  const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
+  if (trackError) {
+    Bugsnag.notify(`showError: ${translatedError}`)
+  }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} />)
 }
@@ -23,9 +31,12 @@ export function showError(error: unknown): void {
  * Shows a warning to the user.
  * Used when some user-requested operation succeeds but with a warning.
  */
-export function showWarning(error: unknown): void {
-  const translatedError = translateError(error)
-  Bugsnag.notify(`showWarning: ${translatedError}`)
+export function showWarning(error: unknown, options: ShowErrorWarningOptions = {}): void {
+  const { trackError = true, tag } = options
+  const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
+  if (trackError) {
+    Bugsnag.notify(`showWarning: ${translatedError}`)
+  }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />)
 }
