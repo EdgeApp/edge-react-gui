@@ -154,12 +154,15 @@ const MessageText = styled(EdgeText)(props => ({
 }))
 
 const CardList = styled(View)<{ bottomSpace: number }>(props => ({
-  justifyContent: 'space-around',
   marginBottom: props.bottomSpace,
   padding: props.theme.rem(1.5)
 }))
 
-const CardContainer = styled(View)(_props => ({}))
+const CardContainer = styled(View)(props => ({
+  maxWidth: props.theme.rem(20),
+  width: '100%',
+  alignSelf: 'center'
+}))
 
 const CardBackground = styled(View)(props => ({
   aspectRatio: 1.5882352941,
@@ -169,9 +172,6 @@ const CardBackground = styled(View)(props => ({
   borderWidth: 1,
   borderTopColor: 'rgba(255,255,255,.2)',
   borderColor: 'rgba(255,255,255,.1)',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  padding: props.theme.rem(1.25),
   position: 'absolute',
   shadowOpacity: 0.5,
   shadowRadius: props.theme.rem(0.5),
