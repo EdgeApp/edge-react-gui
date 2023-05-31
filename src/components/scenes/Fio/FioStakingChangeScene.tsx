@@ -88,7 +88,15 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
         currencyWallet
           .getMaxSpendable({
             currencyCode,
-            spendTargets: [{ nativeAmount: '', otherParams: {}, publicAddress: '' }]
+            spendTargets: [{ publicAddress: '' }],
+            otherParams: {
+              action: {
+                name: 'stakeFioTokens',
+                params: {
+                  fioAddress: selectedFioAddress
+                }
+              }
+            }
           })
           .then(nativeAmount => {
             onAmountChanged(nativeAmount, add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
