@@ -26,6 +26,11 @@ export interface RewardsCardItem {
   url: string
 }
 
+export interface UserRewardsCards {
+  activeCards: RewardsCardItem[]
+  archivedCards: RewardsCardItem[]
+}
+
 const PROVIDER_FACTORIES = [makeIoniaProvider]
 
 export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
@@ -48,13 +53,13 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     if (retries > 15) return
     await await provider.otherMethods
       .getRewardsCards()
-      .then(async ({ activeCards: cards }) => {
-        if (cards.length === rewardCards.length) {
+      .then(async ({ activeCards, archivedCards }) => {
+        if (activeCards.length === rewardsCards.activeCards.length) {
           console.log(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
-        rewardCards = cards
+        rewardsCards = { activeCards, archivedCards }
         showDashboard({ showLoading: false })
       })
       .catch(async error => {
@@ -68,16 +73,14 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   //
 
   let redundantQuoteParams: Pick<FiatPluginStartParams, 'direction' | 'paymentTypes' | 'regionCode'>
-  // Get the reward cards:
-  let rewardCards: RewardsCardItem[] = []
-
+  let rewardsCards: UserRewardsCards = { activeCards: [], archivedCards: [] }
   //
   // State Machine:
   //
 
   const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
-      items: rewardCards,
+      items: rewardsCards.activeCards,
       showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
@@ -113,7 +116,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Hide the card
       provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
-      rewardCards = rewardCards.filter(c => c.id !== card.id)
+      rewardsCards.activeCards = rewardsCards.activeCards.filter(c => c.id !== card.id)
 
       // Reset state for dashboard
       showDashboard({ showLoading: false })
@@ -289,11 +292,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
         throw new Error(lstrings.rewards_card_error_authenticate)
       })
-      let hasCards = false
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
-        const { activeCards, archivedCards } = await showUi.showToastSpinner(
+        rewardsCards = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
             provider.otherMethods.getRewardsCards().catch(e => {
@@ -303,9 +305,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             new Error(lstrings.rewards_card_error_timeout_loading)
           )
         )
-        rewardCards = activeCards
-        hasCards = activeCards.length + archivedCards.length > 0
       }
+
+      const hasCards = rewardsCards.activeCards.length + rewardsCards.activeCards.length > 0
 
       redundantQuoteParams = {
         direction: startParams.direction,
