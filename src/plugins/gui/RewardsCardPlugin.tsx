@@ -13,7 +13,7 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
-import { GiftCard, IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
@@ -21,7 +21,8 @@ const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
 export interface RewardsCardItem {
   id: number
-  expiration: Date
+  creationDate: Date
+  expirationDate: Date
   url: string
 }
 
@@ -43,27 +44,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // Helpers:
   //
 
-  async function getRewardCards(): Promise<{ activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] }> {
-    const giftCards = await provider.otherMethods.getGiftCards()
-    const convert = (card: GiftCard) => {
-      // Expires 6 calendar months from the creation date
-      const expirationDate = new Date(card.CreatedDate.valueOf())
-      expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
-
-      return {
-        id: card.Id,
-        expiration: expirationDate,
-        url: card.CardNumber
-      }
-    }
-    const activeCards: RewardsCardItem[] = giftCards.cards.map(convert)
-    const archivedCards: RewardsCardItem[] = giftCards.archivedCards.map(convert)
-    return { activeCards, archivedCards }
-  }
-
   async function refreshRewardsCards(retries: number) {
     if (retries > 15) return
-    await getRewardCards()
+    await await provider.otherMethods
+      .getRewardsCards()
       .then(async ({ activeCards: cards }) => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
@@ -312,7 +296,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         const { activeCards, archivedCards } = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
-            getRewardCards().catch(e => {
+            provider.otherMethods.getRewardsCards().catch(e => {
               throw new Error(lstrings.rewards_card_error_retrieving_cards)
             }),
             11000,
