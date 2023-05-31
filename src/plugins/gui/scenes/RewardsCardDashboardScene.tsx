@@ -1,11 +1,14 @@
 import * as React from 'react'
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
+import { ButtonsModal } from '../../../components/modals/ButtonsModal'
+import { Shimmer } from '../../../components/progress-indicators/Shimmer'
+import { Airship, showError } from '../../../components/services/AirshipInstance'
 import { useTheme } from '../../../components/services/ThemeContext'
 import { DividerLine } from '../../../components/themed/DividerLine'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -43,6 +46,11 @@ export const RewardsCardDashboardScene = (props: Props) => {
   const handleRemovePress = useHandler((item: RewardsCardItem) => {
     onRemovePress(item)
   })
+  const handleQuestionPress = useHandler(() => {
+    Airship.show<string | number | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} title={lstrings.rewards_card_loading} message={lstrings.rewards_card_purchase_disclaimer} closeArrow buttons={{}} />
+    )).catch(showError)
+  })
 
   return (
     <>
@@ -63,20 +71,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
             return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
           })}
           {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
-          {showLoading ? (
-            <CardContainer>
-              <CardBackground />
-              <CardInner>
-                <LoadingContainer>
-                  <ActivityIndicator color={theme.iconTappable} size="large" style={{ margin: theme.rem(1) }} />
-                  <LoadingText numberOfLines={0}>{lstrings.rewards_card_loading}</LoadingText>
-                  <LoadingTextDisclaimer numberOfLines={0} minimumFontScale={0.75} adjustsFontSizeToFit>
-                    {lstrings.rewards_card_purchase_disclaimer}
-                  </LoadingTextDisclaimer>
-                </LoadingContainer>
-              </CardInner>
-            </CardContainer>
-          ) : null}
+          {showLoading ? <RewardsCard onQuestionPress={handleQuestionPress} /> : null}
         </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
@@ -89,16 +84,17 @@ export const RewardsCardDashboardScene = (props: Props) => {
 }
 
 export interface RewardsCardProps {
-  item: RewardsCardItem
+  item?: RewardsCardItem
   onPress?: () => void
+  onQuestionPress?: () => void
   onRemovePress?: () => void
   shouldStack?: boolean
 }
 
 export const RewardsCard = (props: RewardsCardProps) => {
-  const { item, onPress, onRemovePress, shouldStack = false } = props
+  const { item, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
-  const purchaseAmount = `$${item.amount.toString()}`
+  const purchaseAmount = item == null ? undefined : `$${item.amount.toString()}`
 
   return (
     <CardContainer>
@@ -119,26 +115,43 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
               </TouchableOpacity>
             )}
+            {onQuestionPress == null ? null : (
+              <TouchableOpacity onPress={onQuestionPress}>
+                <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
+            )}
           </CardHeader>
           <Space expand>
             <Space bottom={0.5} sideways expand>
               <Space>
                 <CardFieldLabel>{lstrings.rewards_card_dashboard_field_purchase_date_label}</CardFieldLabel>
-                <CardFieldValue>{toLocaleDate(item.purchaseDate)}</CardFieldValue>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.purchaseDate)}</CardFieldValue>
+                </Space>
               </Space>
               <Space>
                 <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_price_label}</CardFieldLabel>
-                <CardFieldValue textAlign="right">{purchaseAmount}</CardFieldValue>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue textAlign="right">{purchaseAmount ?? ' '}</CardFieldValue>
+                </Space>
               </Space>
             </Space>
             <Space sideways expand>
               <Space>
                 <CardFieldLabel>{lstrings.string_expires}</CardFieldLabel>
-                <CardFieldValue>{toLocaleDate(item.expirationDate)}</CardFieldValue>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.expirationDate)}</CardFieldValue>
+                </Space>
               </Space>
               <Space>
                 <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_asset_label}</CardFieldLabel>
-                <CardFieldValue textAlign="right">{item.purchaseAsset}</CardFieldValue>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue textAlign="right">{item?.purchaseAsset ?? ' '}</CardFieldValue>
+                </Space>
               </Space>
             </Space>
           </Space>
@@ -189,30 +202,6 @@ const BottomFloat = styled(View)(props => ({
   alignSelf: 'center',
   bottom: 0,
   position: 'absolute'
-}))
-
-const LoadingContainer = styled(View)(_props => ({
-  alignItems: 'center',
-  flex: 1,
-  justifyContent: 'center'
-}))
-
-const LoadingText = styled(Text)(props => ({
-  alignSelf: 'stretch',
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(1),
-  includeFontPadding: false,
-  marginBottom: props.theme.rem(0.5),
-  textAlign: 'left'
-}))
-
-const LoadingTextDisclaimer = styled(Text)(props => ({
-  alignSelf: 'stretch',
-  color: props.theme.secondaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  includeFontPadding: false,
-  textAlign: 'justify'
 }))
 
 const CardHeader = styled(View)(_props => ({
