@@ -111,13 +111,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Bitrefill'
   },
-  bitaccess: {
-    pluginId: 'bitaccess',
-    storeId: 'bitaccess',
-    baseUri: 'https://edge.bitaccessbtm.com',
-    displayName: 'Bitaccess',
-    permissions: ['location', 'camera']
-  },
   rewardscard: {
     pluginId: 'rewardscard',
     storeId: 'rewardscard',
