@@ -135,6 +135,7 @@ const policyDefault = {
   apy: 0,
   stakeProviderInfo,
   disableMaxStake: true,
+  rewardsNotClaimable: true,
   stakeWarning: null,
   unstakeWarning: null,
   claimWarning: null
