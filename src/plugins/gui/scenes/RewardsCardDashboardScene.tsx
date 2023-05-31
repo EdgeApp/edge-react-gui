@@ -101,7 +101,7 @@ export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCard
             <VisaBrandImage source={visaBrandImage} />
             <DetailItem>
               <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-              <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
+              <DateLabel>{item.expirationDate.toLocaleString()}</DateLabel>
             </DetailItem>
           </Details>
           {onRemovePress == null ? null : (

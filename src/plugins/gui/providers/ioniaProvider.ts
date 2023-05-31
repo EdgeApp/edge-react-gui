@@ -1,5 +1,21 @@
 import { div, mul } from 'biggystring'
-import { asArray, asBoolean, asDate, asEither, asJSON, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner, uncleaner } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asCodec,
+  asDate,
+  asEither,
+  asJSON,
+  asMaybe,
+  asNull,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  Cleaner,
+  uncleaner
+} from 'cleaners'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -9,6 +25,7 @@ import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { makeUuid } from '../../../util/utils'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
+import { RewardsCardItem } from '../RewardsCardPlugin'
 
 // JWT 24 hour access token for Edge
 let ACCESS_TOKEN: string
@@ -34,12 +51,31 @@ const asIoniaPluginApiKeys = asObject({
   scope: asString
 })
 
-export type GiftCard = ReturnType<typeof asGiftCard>
-export const asGiftCard = asObject({
-  Id: asNumber,
-  CardNumber: asString,
-  CreatedDate: asDate
-})
+export const asRewardsCard = asCodec<RewardsCardItem>(
+  raw => {
+    const ioniaCard = asObject({
+      Id: asNumber,
+      CardNumber: asString,
+      CreatedDate: asDate
+    })(raw)
+
+    // Expires 6 calendar months from the creation date
+    const expirationDate = new Date(ioniaCard.CreatedDate.valueOf())
+    expirationDate.setMonth(ioniaCard.CreatedDate.getMonth() + 6)
+
+    return {
+      id: ioniaCard.Id,
+      creationDate: ioniaCard.CreatedDate,
+      expirationDate,
+      url: ioniaCard.CardNumber
+    }
+  },
+  rewardCard => ({
+    Id: rewardCard.id,
+    CreatedDate: rewardCard.creationDate,
+    CardNumber: rewardCard.url
+  })
+)
 
 export type IoniaPurchaseCard = ReturnType<typeof asIoniaPurchaseCard>
 export const asIoniaPurchaseCard = asObject({
@@ -65,7 +101,7 @@ const wasStoreHiddenCards = uncleaner(asStoreHiddenCards)
 
 export interface IoniaMethods {
   authenticate: (shouldCreate?: boolean) => Promise<boolean>
-  getGiftCards: () => Promise<{ cards: GiftCard[]; archivedCards: GiftCard[] }>
+  getRewardsCards: () => Promise<{ activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] }>
   hideCard: (cardId: number) => Promise<void>
   queryPurchaseCard: (currencyCode: string, cardAmount: number) => Promise<IoniaPurchaseCard>
 }
@@ -143,7 +179,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           {}
         )
       ),
-      asResponse: asJSON(asIoniaResponse(asArray(asGiftCard)))
+      asResponse: asJSON(asIoniaResponse(asArray(asRewardsCard)))
     })
 
     // Ionia Purchase Card Request:
@@ -403,17 +439,17 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           hiddenCardIds = Array.from(set)
           await store.setItem(STORE_HIDDEN_CARDS_KEY, wasStoreHiddenCards(hiddenCardIds))
         },
-        async getGiftCards() {
+        async getRewardsCards() {
           const giftCardsResponse = await fetchGetGiftCards({
             headers: userAuthenticatedFetchOptions.headers
           })
-          const { Data: giftCards } = giftCardsResponse
+          const { Data: cards } = giftCardsResponse
 
-          const out: { cards: GiftCard[]; archivedCards: GiftCard[] } = { cards: [], archivedCards: [] }
+          const out: { activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] } = { activeCards: [], archivedCards: [] }
           // Filter all deleted cards:
-          for (const card of giftCards) {
-            if (hiddenCardIds.includes(card.Id)) out.archivedCards.push(card)
-            else out.cards.push(card)
+          for (const card of cards) {
+            if (hiddenCardIds.includes(card.id)) out.archivedCards.push(card)
+            else out.activeCards.push(card)
           }
           return out
         },

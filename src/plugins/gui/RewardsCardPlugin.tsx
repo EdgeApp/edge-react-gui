@@ -21,7 +21,8 @@ const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
 export interface RewardsCardItem {
   id: number
-  expiration: Date
+  creationDate: Date
+  expirationDate: Date
   url: string
 }
 
@@ -43,27 +44,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // Helpers:
   //
 
-  async function getRewardCards(): Promise<RewardsCardItem[]> {
-    const giftCards = await provider.otherMethods.getGiftCards()
-    const rewardCards: RewardsCardItem[] = giftCards.cards.map(card => {
-      // Expires 6 calendar months from the creation date
-      const expirationDate = new Date(card.CreatedDate.valueOf())
-      expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
-
-      return {
-        id: card.Id,
-        expiration: expirationDate,
-        url: card.CardNumber
-      }
-    })
-    // Reverse order to show latest first
-    return rewardCards
-  }
-
   async function refreshRewardsCards(retries: number) {
     if (retries > 15) return
-    await getRewardCards()
-      .then(async cards => {
+    await await provider.otherMethods
+      .getRewardsCards()
+      .then(async ({ activeCards: cards }) => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
@@ -307,16 +292,17 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
-        rewardCards = await showUi.showToastSpinner(
+        const { activeCards } = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
-            getRewardCards().catch(e => {
+            provider.otherMethods.getRewardsCards().catch(e => {
               throw new Error(lstrings.rewards_card_error_retrieving_cards)
             }),
             11000,
             new Error(lstrings.rewards_card_error_timeout_loading)
           )
         )
+        rewardCards = activeCards
       }
 
       redundantQuoteParams = {
