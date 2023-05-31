@@ -25,7 +25,7 @@ import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { makeUuid } from '../../../util/utils'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
-import { RewardsCardItem } from '../RewardsCardPlugin'
+import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
 // JWT 24 hour access token for Edge
 let ACCESS_TOKEN: string
@@ -101,7 +101,7 @@ const wasStoreHiddenCards = uncleaner(asStoreHiddenCards)
 
 export interface IoniaMethods {
   authenticate: (shouldCreate?: boolean) => Promise<boolean>
-  getRewardsCards: () => Promise<{ activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] }>
+  getRewardsCards: () => Promise<UserRewardsCards>
   hideCard: (cardId: number) => Promise<void>
   queryPurchaseCard: (currencyCode: string, cardAmount: number) => Promise<IoniaPurchaseCard>
 }
@@ -445,7 +445,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           })
           const { Data: cards } = giftCardsResponse
 
-          const out: { activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] } = { activeCards: [], archivedCards: [] }
+          const out: UserRewardsCards = { activeCards: [], archivedCards: [] }
           // Filter all deleted cards:
           for (const card of cards) {
             if (hiddenCardIds.includes(card.id)) out.archivedCards.push(card)
