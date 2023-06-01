@@ -1317,8 +1317,15 @@ const strings = {
 
   // #region Light Account
 
-  light_account_card_backup_title: 'Back up your account',
-  light_account_card_backup_message: 'Without a backup, you risk losing your funds!',
+  backup_title: 'Back Up Your Account',
+  backup_warning_message: 'Without a backup, you risk losing your funds!',
+  backup_delete_confirm_message:
+    'Are you sure you want to delete your local account? You will not be able to recover wallets and transactions for your local account.',
+  backup_modal_confirm_button: 'Back Up Account',
+  backup_modal_cancel_button: 'Continue Without a Backup',
+  backup_modal_delete_button: 'Delete Account',
+  backup_info_modal_message: 'Create a username and password to securely encrypt and back up your account',
+  tap_to_learn_more: 'Tap to learn more.',
 
   // #endregion Light Account
 

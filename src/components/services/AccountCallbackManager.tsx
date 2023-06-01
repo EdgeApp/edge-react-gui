@@ -1,9 +1,11 @@
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { AirshipBridge } from 'react-native-airship'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkFioObtData } from '../../actions/FioActions'
+import { logoutRequest } from '../../actions/LoginActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions'
@@ -13,6 +15,7 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { snooze } from '../../util/utils'
+import { BackupModal, BackupModalResult } from '../modals/BackupInfoModal'
 import { asWcSmartContractModalProps, WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from './AirshipInstance'
 
@@ -92,9 +95,25 @@ export function AccountCallbackManager(props: Props) {
         dispatch(refreshTransactionsRequest(wallet, transactions))
         dispatch(newTransactionsRequest(navigation, wallet, transactions))
 
-        // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
-        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs))
+
+        if (receivedTxs.length > 0) {
+          // Check for incoming FIO requests:
+          dispatch(checkFioObtData(wallet, receivedTxs))
+
+          // Check if we need to alert the user to upgrade their light account
+          // if (account.username == null) {
+          // HACK: temp
+          if (account.username != null && account.username.includes('LocalAccount')) {
+            Airship.show((bridge: AirshipBridge<BackupModalResult | undefined>) => <BackupModal bridge={bridge} />).then((userSel?: BackupModalResult) => {
+              if (userSel === 'upgrade') {
+                // TODO: Implement upgrade flow, somehow pull existing light
+                // account to change the name and password...
+                dispatch(logoutRequest(navigation, account.username)).then(() => navigation.navigate('login', { loginUiInitialRoute: 'new-account' }))
+              }
+            })
+          }
+        }
 
         // Show the dropdown for the first transaction:
         const [firstReceive] = receivedTxs
