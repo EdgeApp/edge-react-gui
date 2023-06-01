@@ -65,7 +65,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   React.useEffect(() => {
     let abort = false
     stakePlugin
-      .fetchStakePosition({ stakePolicyId, wallet })
+      .fetchStakePosition({ stakePolicyId, wallet, account })
       .then(async stakePosition => {
         if (abort) return
         const guiAllocations = getPositionAllocations(stakePosition)
@@ -81,7 +81,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return () => {
       abort = true
     }
-  }, [wallet, stakePolicyId, stakePlugin, updateCounter])
+  }, [account, stakePlugin, stakePolicyId, updateCounter, wallet])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
