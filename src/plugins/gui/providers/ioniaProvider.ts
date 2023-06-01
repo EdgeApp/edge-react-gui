@@ -23,6 +23,7 @@ import URL from 'url-parse'
 import { lstrings } from '../../../locales/strings'
 import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
+import { logActivity } from '../../../util/logger'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { makeUuid } from '../../../util/utils'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
@@ -329,7 +330,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     async function createUser(): Promise<string> {
       const uuid = makeUuid()
       const uuidEmail = `${uuid}@edge.app`
-      console.log(`Creating Ionia User: requestedUUID=${params.deviceId} Email=${uuidEmail}`)
+      logActivity(`Creating Ionia User: requestedUUID=${params.deviceId} Email=${uuidEmail}`)
       const createUserResponse = await fetchCreateUser({
         payload: {
           requestedUUID: params.deviceId,
@@ -342,14 +343,14 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         throw new Error(`Failed to create user: ${ErrorMessage}`)
       }
 
-      console.log(`Ionia user created successfully.`)
+      logActivity(`Ionia user created successfully.`)
 
       const userName = createUserResponse.Data.UserName
 
       await store.setItem(STORE_USERNAME_KEY, userName)
       await store.setItem(STORE_EMAIL_KEY, uuidEmail)
 
-      console.log(`Ionia user info saved to store.`)
+      logActivity(`Ionia user info saved to store.`)
       return userName
     }
     async function queryCardPurchaseRateAmount(currencyCode: string, cardAmount: number): Promise<number> {
@@ -413,14 +414,14 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
         const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
         const rateExchangeAmount = await quoteParams.wallet.nativeToDenomination(toBigNumberString(rateAmount), quoteParams.displayCurrencyCode)
-        console.log(`Ionia rates a $${RATE_QUOTE_CARD_AMOUNT} card at ${rateExchangeAmount} ${quoteParams.displayCurrencyCode}`)
+        logActivity(`Ionia rates a $${RATE_QUOTE_CARD_AMOUNT} card at ${rateExchangeAmount} ${quoteParams.displayCurrencyCode}`)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
         const cryptoAmount =
           quoteParams.amountType === 'crypto' ? quoteParams.exchangeAmount : div(quoteParams.exchangeAmount, toBigNumberString(price), HARD_CURRENCY_PRECISION)
         const fiatAmount = quoteParams.amountType === 'fiat' ? quoteParams.exchangeAmount : mul(quoteParams.exchangeAmount, toBigNumberString(price))
 
-        // Concurrently get the purchase card
+        // Concurrently get the latest purchase card promise
         const purchaseCardPromise = getPurchaseCard(quoteParams.displayCurrencyCode, parseFloat(fiatAmount))
 
         checkAmountMinMax(parseFloat(fiatAmount))
@@ -457,7 +458,8 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
             const approved = await showUi.addressWarnings(parsedUri, quoteParams.displayCurrencyCode)
             if (!approved) return
 
-            console.log(`Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`)
+            // Log this user activity:
+            logActivity(`Show send of ${cryptoAmount} ${quoteParams.displayCurrencyCode} to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`)
 
             return await new Promise((resolve, reject) => {
               showUi
@@ -501,7 +503,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
           const safeUserName = userAuthenticatedFetchOptions.headers.UserName.split('')
             .map((char, index, chars) => (index > 4 && index < chars.length - 4 ? 'x' : char))
             .join('')
-          console.log(`Ionia authenticated user: UserName=${safeUserName} requestedUUID=${userAuthenticatedFetchOptions.headers.requestedUUID}`)
+          logActivity(`Ionia authenticated user: UserName=${safeUserName} requestedUUID=${userAuthenticatedFetchOptions.headers.requestedUUID}`)
 
           return true
         },

@@ -6,6 +6,7 @@ import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
+import { logActivity } from '../../util/logger'
 import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
@@ -55,7 +56,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       .getRewardsCards()
       .then(async ({ activeCards, archivedCards }) => {
         if (activeCards.length === userRewardsCards.activeCards.length) {
-          console.log(`Retrying rewards card refresh`)
+          logActivity(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
@@ -200,7 +201,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           })
           .catch(error => {
             if (String(error).includes('Error: User cancelled quote')) {
-              console.error(error)
+              logActivity(String(error))
               return
             }
             throw error
