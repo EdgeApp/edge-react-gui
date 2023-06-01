@@ -64,11 +64,12 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   return (
     <ThemedModal warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       <View style={containerStyle}>
-        <View style={textStyle}>
-          {title != null ? <ModalTitle>{title}</ModalTitle> : null}
-          {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-          {children}
-        </View>
+        {children ?? (
+          <View style={textStyle}>
+            {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+            {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+          </View>
+        )}
       </View>
       <View style={buttonsStyle}>
         {Object.keys(buttons).map((key, i, arr) => {

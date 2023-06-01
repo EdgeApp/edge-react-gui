@@ -7,6 +7,7 @@ export const testConfig: AppConfig = {
   appName: 'Testy Wallet',
   appNameShort: 'Testy',
   appStore: 'https://itunes.apple.com/app/id1344400092',
+  backupAccountSite: 'https://support.testy.com/accountbackupinfo',
   configName: 'test',
   darkTheme: testDark,
   defaultWallets: ['BTC', 'FTM:TOMB', 'ETH:USDC'],

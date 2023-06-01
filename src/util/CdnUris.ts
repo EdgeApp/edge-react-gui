@@ -65,3 +65,10 @@ export function getCurrencyIconUris(pluginId: string, contractAddress: string = 
 export function getPartnerIconUri(partnerIconPath: string) {
   return `${EDGE_CONTENT_SERVER_URI}/${partnerIconPath}`
 }
+
+/**
+ * Light Account Icons
+ */
+export const getLightAccountIconUri = (theme: Theme, iconName: string) => {
+  return `${theme.iconServerBaseUri}/lightAccount/${iconName}.png`
+}

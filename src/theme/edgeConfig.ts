@@ -7,6 +7,7 @@ export const edgeConfig: AppConfig = {
   appName: 'Edge',
   appNameShort: 'Edge',
   appStore: 'https://itunes.apple.com/app/id1344400091',
+  backupAccountSite: 'https://edgeapp.zendesk.com/hc/en-us/articles/15086086559003',
   configName: 'edge',
   darkTheme: edgeDark,
   defaultWallets: ['BTC', 'ETH', 'LTC', 'BCH', 'DASH'],
