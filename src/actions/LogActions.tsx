@@ -132,7 +132,10 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
     if (context) {
       // Get local accounts
       for (const user of context.localUsers) {
-        logOutput.accounts.push({ username: user.username, userId: '' })
+        logOutput.accounts.push({
+          username: user.username ?? '<undefined>',
+          userId: ''
+        })
       }
     }
 
