@@ -315,7 +315,9 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
         expiry: Date.now() + ONE_MINUTE,
         rateQueryPromise: ratePromise
       }
-      return await ratePromise
+      const rate = await ratePromise
+      logActivity(`Ionia rates a $${cardAmount} card at ${rate} ${currencyCode}`)
+      return rate
     }
 
     function checkAmountMinMax(fiatAmount: number) {
@@ -414,7 +416,6 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
         const rateAmount = await getCardPurchaseRateAmount(quoteParams.displayCurrencyCode, RATE_QUOTE_CARD_AMOUNT)
         const rateExchangeAmount = await quoteParams.wallet.nativeToDenomination(toBigNumberString(rateAmount), quoteParams.displayCurrencyCode)
-        logActivity(`Ionia rates a $${RATE_QUOTE_CARD_AMOUNT} card at ${rateExchangeAmount} ${quoteParams.displayCurrencyCode}`)
 
         const price = RATE_QUOTE_CARD_AMOUNT / parseFloat(rateExchangeAmount)
         const cryptoAmount =
