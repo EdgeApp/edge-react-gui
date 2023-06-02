@@ -4,6 +4,7 @@ import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
+import { View } from 'react-native'
 import { AirshipToast } from 'react-native-airship'
 import { useDispatch } from 'react-redux'
 
@@ -231,7 +232,7 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 export const Main = () => {
   const theme = useTheme()
 
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+  // const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
   const reactNavigationTheme = React.useMemo(() => {
@@ -250,14 +251,16 @@ export const Main = () => {
 
   return (
     <NavigationContainer theme={reactNavigationTheme}>
-      <MainContent setIsDrawerOpen={setIsDrawerOpen} />
+      {/* <MainContent setIsDrawerOpen={setIsDrawerOpen} /> */}
+      <MainContent />
       {/* TODO: Figure out how to get navigation in here... */}
       {/* <FloatingCard visible={!isDrawerOpen} navigation={navigation} /> */}
     </NavigationContainer>
   )
 }
 
-const MainContent = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
+// const MainContent = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
+const MainContent = () => {
   return (
     <Stack.Navigator
       initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
@@ -265,7 +268,8 @@ const MainContent = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
         headerShown: false
       }}
     >
-      <Stack.Screen name="edgeApp">{() => <EdgeApp setIsDrawerOpen={setIsDrawerOpen} />}</Stack.Screen>
+      {/* <Stack.Screen name="edgeApp">{() => <EdgeApp setIsDrawerOpen={setIsDrawerOpen} />}</Stack.Screen> */}
+      <Stack.Screen name="edgeApp">{() => <EdgeApp />}</Stack.Screen>
       <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
       <Stack.Screen name="login" component={LoginScene} />
     </Stack.Navigator>
@@ -280,10 +284,11 @@ const DrawerContent = (props: DrawerContentComponentProps & LiftDrawerStateProps
   return <SideMenu {...props} />
 }
 
-const EdgeApp = ({ setIsDrawerOpen }: LiftDrawerStateProps) => {
+const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
 
   useBackEvent(() => {
     // Allow back if logged out or this is the second back press
@@ -786,6 +791,8 @@ const EdgeAppStack = () => {
 }
 
 const EdgeTabs = () => {
+  const isDrawerOpen = useDrawerStatus() === 'open'
+
   return (
     <Tab.Navigator
       initialRouteName="walletsTab"
@@ -800,6 +807,7 @@ const EdgeTabs = () => {
       <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
       <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
+      <Tab.Screen name="floatingCard">{() => <FloatingCard visible={!isDrawerOpen} />}</Tab.Screen>
     </Tab.Navigator>
   )
 }

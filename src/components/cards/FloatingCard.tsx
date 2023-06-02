@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -17,22 +18,23 @@ import { Fade } from '../themed/Fade'
 
 interface Props {
   visible?: boolean // Master toggle that trumps other visibility logic
-  navigation: NavigationBase
+  // navigation: NavigationBase
 }
 
 const DUR_FADEIN = 250
 const DUR_FADEOUT = 100
 
 const FloatingCardComponent = (props: Props) => {
-  const { visible = false, navigation } = props
+  const { visible = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const navigation = useNavigation<NavigationBase>()
   const dispatch = useDispatch()
 
   const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
   const activeUsername = useSelector(state => state.core.account.username)
 
-  const isCardShown = visible && loginStatus && activeUsername == null
+  const isCardShown = visible && loginStatus && true // activeUsername == null
 
   const onPress = useHandler(() => {
     Airship.show((bridge: AirshipBridge<BackupModalResult | undefined>) => <BackupModal bridge={bridge} />).then((userSel?: BackupModalResult) => {
@@ -65,8 +67,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     position: 'absolute',
     alignSelf: 'center',
-    bottom: theme.rem(6),
-    height: theme.rem(3.5),
+    // bottom: theme.rem(6),
+    // height: theme.rem(3.5),
     backgroundColor: theme.modal,
     borderRadius: theme.rem(0.5),
     shadowOffset: { width: 0, height: 0 },

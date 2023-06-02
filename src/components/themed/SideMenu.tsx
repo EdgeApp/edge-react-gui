@@ -16,7 +16,6 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
-import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
