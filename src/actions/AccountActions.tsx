@@ -2,7 +2,7 @@ import { OtpError } from 'edge-core-js'
 import * as React from 'react'
 
 import { TextInputModal } from '../components/modals/TextInputModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -55,12 +55,5 @@ export function validatePassword(opts: ValidatePasswordOptions = {}): ThunkActio
     ))
 
     return password != null
-  }
-}
-
-export function deleteLocalAccount(username: string): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    return await state.core.context.deleteLocalAccount(username).catch(showError)
   }
 }
