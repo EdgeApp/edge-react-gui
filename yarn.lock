@@ -1490,32 +1490,6 @@
   dependencies:
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/providers@5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.1.tgz#b0799b616d5579cd1067a8ebf1fc1ec74c1e122c"
-  integrity sha512-vZveG/DLyo+wk4Ga1yx6jSEHrLPgmTt+dFv0dv8URpVCRf0jVhalps1jq/emN/oXnMRsC7cQgAF32DcXLL7BPQ==
-  dependencies:
-    "@ethersproject/abstract-provider" "^5.7.0"
-    "@ethersproject/abstract-signer" "^5.7.0"
-    "@ethersproject/address" "^5.7.0"
-    "@ethersproject/base64" "^5.7.0"
-    "@ethersproject/basex" "^5.7.0"
-    "@ethersproject/bignumber" "^5.7.0"
-    "@ethersproject/bytes" "^5.7.0"
-    "@ethersproject/constants" "^5.7.0"
-    "@ethersproject/hash" "^5.7.0"
-    "@ethersproject/logger" "^5.7.0"
-    "@ethersproject/networks" "^5.7.0"
-    "@ethersproject/properties" "^5.7.0"
-    "@ethersproject/random" "^5.7.0"
-    "@ethersproject/rlp" "^5.7.0"
-    "@ethersproject/sha2" "^5.7.0"
-    "@ethersproject/strings" "^5.7.0"
-    "@ethersproject/transactions" "^5.7.0"
-    "@ethersproject/web" "^5.7.0"
-    bech32 "1.1.4"
-    ws "7.4.6"
-
 "@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.5.3":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
@@ -7240,10 +7214,10 @@ edge-core-js@^0.19.48:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-core-js@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.0.0.tgz#8ec013b6c59940582120b72a64290d09460718a7"
-  integrity sha512-r6UHDdzSO7vjfB+aOhDSfHjlm3aF53fhqQYASmy7vWAjcL46dJlSd7Vp+MLp/5Yn3HMPSLDP+q+dVsjY2/fIDg==
+edge-core-js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.0.1.tgz#e9316a6e9a3f0d7ffc539bd6c66d9c5acb7587bc"
+  integrity sha512-CCvMS3vg+NMtElzS/yf8vkk8rmFdWwSq9JEsY/BQmDbdVhDpgn4Q3eC9AijufcN2Xg3n+FFO41tVr7+uuW3JhQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -13421,7 +13395,7 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
