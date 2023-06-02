@@ -57,18 +57,15 @@ export const RewardsCardDashboardScene = (props: Props) => {
           withTopMargin
         />
         <DividerLine marginRem={[0, 1]} />
-        <CardListContainer bottomSpace={bottomFloatHeight}>
+        <CardList bottomSpace={bottomFloatHeight}>
           {items.map(item => {
-            return (
-              <CardListItemWrapper key={item.id}>
-                <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
-              </CardListItemWrapper>
-            )
+            return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
           })}
           {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
           {showLoading ? (
-            <CardListItem>
-              <CardListItemContainer>
+            <CardContainer>
+              <CardBackground />
+              <CardInner>
                 <LoadingContainer>
                   <ActivityIndicator color={theme.iconTappable} size="large" style={{ margin: theme.rem(1) }} />
                   <LoadingText numberOfLines={0}>{lstrings.rewards_card_loading}</LoadingText>
@@ -76,10 +73,10 @@ export const RewardsCardDashboardScene = (props: Props) => {
                     {lstrings.rewards_card_purchase_disclaimer}
                   </LoadingTextDisclaimer>
                 </LoadingContainer>
-              </CardListItemContainer>
-            </CardListItem>
+              </CardInner>
+            </CardContainer>
           ) : null}
-        </CardListContainer>
+        </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
         <Space around={1}>
@@ -90,13 +87,26 @@ export const RewardsCardDashboardScene = (props: Props) => {
   )
 }
 
-export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCardItem; onPress?: () => void; onRemovePress?: () => void }) => {
+export interface RewardsCardProps {
+  item: RewardsCardItem
+  onPress?: () => void
+  onRemovePress?: () => void
+  shouldStack?: boolean
+}
+
+export const RewardsCard = (props: RewardsCardProps) => {
+  const { item, onPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
 
   return (
-    <CardListItem>
-      <TouchableOpacity onPress={onPress}>
-        <CardListItemContainer>
+    <CardContainer>
+      <CardBackground />
+      <TouchableOpacity
+        onPress={onPress}
+        // Disable opacity effect if no onPress handler
+        activeOpacity={onPress == null ? 1 : undefined}
+      >
+        <CardInner shouldStack={shouldStack}>
           <Details>
             <VisaBrandImage source={visaBrandImage} />
             <DetailItem>
@@ -109,9 +119,9 @@ export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCard
               <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
             </TouchableOpacity>
           )}
-        </CardListItemContainer>
+        </CardInner>
       </TouchableOpacity>
-    </CardListItem>
+    </CardContainer>
   )
 }
 
@@ -121,28 +131,34 @@ const MessageText = styled(EdgeText)(props => ({
   textAlign: 'center'
 }))
 
-const CardListContainer = styled(View)<{ bottomSpace: number }>(props => ({
+const CardList = styled(View)<{ bottomSpace: number }>(props => ({
   justifyContent: 'space-around',
   marginBottom: props.bottomSpace,
   padding: props.theme.rem(1.5)
 }))
 
-const CardListItemWrapper = styled(View)(props => ({
-  height: props.theme.rem(7)
-}))
-const CardListItem = styled(View)(props => ({
+const CardContainer = View
+
+const CardBackground = styled(View)(props => ({
+  // This is the aspect ratio of a standard US credit card
+  aspectRatio: 1.5882352941,
   backgroundColor: props.theme.modal,
-  // Math for figuring out 1/8th inches border radius ((1/8)/3.375 * 314)/16:
-  borderRadius: props.theme.rem(0.7268518519),
+  // 0.75 rem is roughly proportional to a 1/8th inches border radius of a standard US credit card
+  borderRadius: props.theme.rem(0.75),
   borderWidth: 1,
   borderTopColor: 'rgba(255,255,255,.2)',
   borderColor: 'rgba(255,255,255,.1)',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  padding: props.theme.rem(1.25),
+  position: 'absolute',
   shadowOpacity: 0.5,
-  shadowRadius: props.theme.rem(0.5)
+  shadowRadius: props.theme.rem(0.5),
+  width: '100%'
 }))
 
-const CardListItemContainer = styled(View)(props => ({
-  aspectRatio: 1.5882352941,
+const CardInner = styled(View)<{ shouldStack?: boolean }>(props => ({
+  aspectRatio: props.shouldStack === false ? 1.5882352941 : undefined,
   flexDirection: 'row',
   justifyContent: 'space-between',
   padding: props.theme.rem(1.25),
@@ -158,8 +174,7 @@ const BottomFloat = styled(View)(props => ({
 const LoadingContainer = styled(View)(props => ({
   alignItems: 'center',
   flex: 1,
-  justifyContent: 'center',
-  paddingVertical: props.theme.rem(1)
+  justifyContent: 'center'
 }))
 
 const LoadingText = styled(Text)(props => ({
@@ -180,11 +195,11 @@ const LoadingTextDisclaimer = styled(Text)(props => ({
   textAlign: 'left'
 }))
 
-const Icon = styled(Ionicon)(props => ({}))
+const Icon = Ionicon
 
-const Details = styled(View)(props => ({}))
+const Details = View
 
-const DetailItem = styled(View)(prop => ({}))
+const DetailItem = View
 
 const VisaBrandImage = styled(Image)(props => ({
   resizeMode: 'contain',
