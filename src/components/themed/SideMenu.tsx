@@ -4,7 +4,8 @@ import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -33,6 +34,7 @@ import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { BackupModal, BackupModalResult } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -91,25 +93,43 @@ export function SideMenu(props: DrawerContentComponentProps) {
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
-    Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.forget_account_title}
-        message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
-        buttons={{
-          ok: {
-            label: lstrings.string_forget,
-            onPress: async () => {
-              // TODO: Add a way to make this work for accounts without usernames:
-              await context.deleteLocalAccount(userInfo.username ?? '')
-              return true
+    if (userInfo.username == null) {
+      Airship.show((bridge: AirshipBridge<BackupModalResult | undefined>) => <BackupModal bridge={bridge} delete />).then((userSel?: BackupModalResult) => {
+        if (userSel === 'upgrade') {
+          // TODO: Implement upgrade flow, somehow pull existing light
+          // account to change the name and password...
+          dispatch(logoutRequest(navigation, userInfo.username ?? lstrings.missing_username)).then(() =>
+            navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+          )
+        } else {
+          Alert.alert(lstrings.alert_dropdown_warning, lstrings.backup_modal_confirm_button, [
+            { text: lstrings.backup_modal_delete_button, onPress: async () => await context.deleteLocalAccount(userInfo.username ?? ''), style: 'cancel' }, // Red 'cancel' style to delete
+            { text: 'Cancel', onPress: () => {} }
+          ])
+        }
+      })
+      //
+    } else {
+      Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.forget_account_title}
+          message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
+          buttons={{
+            ok: {
+              label: lstrings.string_forget,
+              onPress: async () => {
+                // TODO: Add a way to make this work for accounts without usernames:
+                await context.deleteLocalAccount(userInfo.username ?? '')
+                return true
+              },
+              type: 'primary'
             },
-            type: 'primary'
-          },
-          cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
-        }}
-      />
-    ))
+            cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      ))
+    }
   }
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
