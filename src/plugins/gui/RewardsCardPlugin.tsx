@@ -23,6 +23,9 @@ export interface RewardsCardItem {
   id: number
   creationDate: Date
   expirationDate: Date
+  amount: number
+  purchaseAsset: string
+  purchaseDate: Date
   url: string
 }
 
