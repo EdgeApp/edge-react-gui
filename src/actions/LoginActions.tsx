@@ -200,7 +200,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       }
       accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
-      accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
+      for (const userInfo of context.localUsers) {
+        if (userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled) {
+          accountInitObject.pinLoginEnabled = true
+        }
+      }
 
       const defaultDenominationSettings = state.ui.settings.denominationSettings
       const syncedDenominationSettings = syncedSettings?.denominationSettings ?? {}

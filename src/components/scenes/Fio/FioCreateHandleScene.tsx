@@ -54,7 +54,6 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const accountUserName = useSelector(state => state.core.account.username)
   const fioPlugin = useSelector(state => state.core.account.currencyConfig.fio)
   if (fioPlugin.otherMethods == null) {
     showError(lstrings.fio_register_handle_error)
@@ -158,7 +157,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
         return
       }
     }
-    handleChangeFioHandle(accountUserName)
+    handleChangeFioHandle(account.username ?? '')
 
     const wallet = await dispatch(createFioWallet())
 
