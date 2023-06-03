@@ -1,3 +1,4 @@
+import { useDrawerStatus } from '@react-navigation/drawer'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
@@ -7,11 +8,13 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { FloatingCard } from '../cards/FloatingCard'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
+import { DrawerStatusContext } from '../services/DrawerStatusContext'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WalletListFooter } from '../themed/WalletListFooter'
@@ -29,6 +32,23 @@ export function WalletListScene(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
+  const account = useSelector(state => state.core.account)
+
+  const drawerStatus = useDrawerStatus()
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(drawerStatus == null ? false : drawerStatus === 'open')
+
+  React.useEffect(() => {
+    setIsDrawerOpen(drawerStatus === 'open')
+    console.debug('walletlist' + isDrawerOpen)
+  }, [drawerStatus, isDrawerOpen])
+
+  React.useEffect(() => {
+    ;(async () => {
+      console.debug('showing')
+      console.log('isDrawerOpen before Airship.show:', isDrawerOpen)
+      await Airship.show(bridge => <FloatingCard bridge={bridge} isDrawerOpen={isDrawerOpen} navigation={navigation} />)
+    })()
+  }, [account, isDrawerOpen, navigation])
 
   const [sorting, setSorting] = React.useState(false)
   const [searching, setSearching] = React.useState(false)
