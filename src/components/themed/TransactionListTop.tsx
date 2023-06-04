@@ -204,7 +204,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
-                <Fontello name="control-panel-settings" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>

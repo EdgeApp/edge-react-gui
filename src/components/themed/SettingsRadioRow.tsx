@@ -1,6 +1,7 @@
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { lstrings } from '../../locales/strings'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
@@ -34,8 +35,12 @@ const SettingsRadioRowComponent = (props: Props) => {
     fontSize: theme.rem(1.25),
     marginHorizontal: theme.rem(0.5)
   }
-
-  const rightIcon = value ? <IonIcon name="ios-radio-button-on" style={style} /> : <IonIcon name="ios-radio-button-off" style={style} />
+  const accessibilityHint = `${value ? lstrings.on_hint : lstrings.off_hint} ${label}`
+  const rightIcon = value ? (
+    <IonIcon name="ios-radio-button-on" style={style} accessibilityRole="radio" accessibilityHint={accessibilityHint} />
+  ) : (
+    <IonIcon name="ios-radio-button-off" style={style} accessibilityRole="radio" accessibilityHint={accessibilityHint} />
+  )
   return (
     <SettingsRow disabled={disabled} label={label} right={rightIcon} onPress={onPress}>
       {children}

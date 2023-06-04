@@ -157,6 +157,8 @@ exports[`CurrencySettings should render 1`] = `
             
           </Text>
           <Text
+            accessibilityHint="On undefined"
+            accessibilityRole="radio"
             allowFontScaling={false}
             style={
               Array [
@@ -241,6 +243,8 @@ exports[`CurrencySettings should render 1`] = `
             
           </Text>
           <Text
+            accessibilityHint="Off undefined"
+            accessibilityRole="radio"
             allowFontScaling={false}
             style={
               Array [
@@ -325,6 +329,8 @@ exports[`CurrencySettings should render 1`] = `
             
           </Text>
           <Text
+            accessibilityHint="Off undefined"
+            accessibilityRole="radio"
             allowFontScaling={false}
             style={
               Array [

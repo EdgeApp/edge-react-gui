@@ -6,6 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
+import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { bestOfMessages } from '../../util/ReferralHelpers'
@@ -49,7 +50,7 @@ export function PromoCard(props: Props) {
           {message.message}
         </EdgeText>
         <TouchableOpacity onPress={handleClose}>
-          <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+          <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} accessibilityHint={lstrings.close_hint} />
         </TouchableOpacity>
       </View>
     </ButtonBox>
