@@ -27,6 +27,7 @@ interface BuildConfigFile {
   appleDeveloperTeamId: string
   xcodeScheme: string
   xcodeWorkspace: string
+  bundleId: string
 
   // Upload options:
   appCenterApiToken: string
@@ -153,6 +154,30 @@ function makeCommonPost(buildObj: BuildObj) {
 
 function buildIos(buildObj: BuildObj) {
   chdir(buildObj.guiDir)
+  if (
+    process.env.BUILD_REPO_URL &&
+    process.env.FASTLANE_USER != null &&
+    process.env.FASTLANE_PASSWORD != null &&
+    // process.env.GITHUB_SSH_KEY != null &&
+    process.env.HOME != null &&
+    process.env.MATCH_KEYCHAIN_PASSWORD != null &&
+    process.env.MATCH_PASSWORD != null
+  ) {
+    const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
+
+    mylog('Using Fastlane for provisioning profiles')
+    const matchFileLoc = join(buildObj.guiDir, '.fastlane', 'Matchfile')
+    let matchFile = fs.readFileSync(matchFileLoc, { encoding: 'utf8' })
+    matchFile = matchFile.replace('BUILD_REPO_URL', process.env.BUILD_REPO_URL)
+    fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
+    const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
+    call(`rm -rf ${escapePath(profileDir)}`)
+    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
+    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
+    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
+  } else {
+    mylog('Missing or incomplete Fastlane params. Not using Fastlane')
+  }
 
   const patchDir = getPatchDir(buildObj)
   if (fs.existsSync(join(patchDir, 'GoogleService-Info.plist'))) {
@@ -182,7 +207,7 @@ function buildIos(buildObj: BuildObj) {
 
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
+  cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
@@ -221,7 +246,7 @@ function buildIos(buildObj: BuildObj) {
 
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  cmdStr = `xcodebuild -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
+  cmdStr = `xcodebuild -allowProvisioningUpdates -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
 
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
