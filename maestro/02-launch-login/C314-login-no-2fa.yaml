@@ -1,0 +1,39 @@
+# Priority: Critical
+# Test ID: C314
+# Title: Login with Username and Password
+# Expected Result:
+#  1. User is able to login to a their account without being IP2FA blocked
+
+appId: co.edgesecure.app
+tags:
+- login
+---
+
+# Launch, hopefully with the correct account already logged in
+- runFlow: ../common/launch.yaml
+- runScript: ../env.js
+
+- runFlow:
+    when:
+      visible: Security Alerts
+    file: ../common/close-modal-hack.yaml
+
+# Check we are logged into the correct account
+- assertVisible: "${output.logins.C314.USERNAME}"
+
+- runFlow:
+    when:
+      visible: Exit PIN
+    file: ../common/exit-pin-login.yaml
+
+# Login scene
+- assertVisible: Username
+
+- pressKey: Enter
+- inputText: ${output.logins.C314.PASSWORD}
+- pressKey: Enter
+
+# Wait for the wallets to appear
+- extendedWaitUntil:
+    visible: LTC C314
+    timeout: 30000

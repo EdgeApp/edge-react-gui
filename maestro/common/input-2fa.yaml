@@ -1,0 +1,9 @@
+# Inputs the
+appId: co.edgesecure.app
+env:
+  BACKUP_CODE: ${BACKUP_CODE}
+---
+- tapOn:
+    containsChild: Backup Key
+- inputText: ${BACKUP_CODE}
+- tapOn: Submit

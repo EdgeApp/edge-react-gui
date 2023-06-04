@@ -4,4 +4,4 @@
 appId: co.edgesecure.app
 ---
 - tapOn:
-    point: '0%,50%' # Left side + verticlaly middle edge of the screen
+    point: '50%,0%' # Top center of screen

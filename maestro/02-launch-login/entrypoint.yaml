@@ -4,3 +4,10 @@ appId: co.edgesecure.app
     file: C310-launch-no-crash.yaml
 - runFlow:
     file: C311-relaunch-no-crash.yaml
+- runFlow:
+    file: C753-login-2fa.yaml
+- runFlow:
+    file: C314-login-no-2fa.yaml
+- runFlow:
+    file: C431-create-account.yaml
+

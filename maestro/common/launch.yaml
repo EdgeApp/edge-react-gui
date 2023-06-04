@@ -3,6 +3,6 @@ appId: co.edgesecure.app
 ---
 - launchApp
 - extendedWaitUntil:
-    visible: 'Edge Logo'
+    visible: 'App logo'
     timeout: 30000
 - assertNotVisible: 'Oops!'

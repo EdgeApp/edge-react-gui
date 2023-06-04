@@ -1,0 +1,5 @@
+# Checks that the cancel button is visible and taps on it
+appId: co.edgesecure.app
+---
+- assertVisible: 'Cancel'
+- tapOn: 'Cancel'

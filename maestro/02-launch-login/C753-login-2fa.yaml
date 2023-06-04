@@ -1,0 +1,43 @@
+# Priority: Critical
+# Test ID: C314
+# Title: Login with Username and Password
+# Expected Result:
+#  1. User is able to login with a valid Username + Password + Backup Code
+
+appId: co.edgesecure.app
+tags:
+- login
+- 2fa
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runScript: ../env.js
+
+# Landing scene
+- tapOn: Already have an account? Sign in
+
+# Username
+- tapOn:
+    id: usernameFormField
+    optional: true
+- inputText: ${output.logins.C753.USERNAME}
+- pressKey: Enter
+
+# Password
+- tapOn:
+    id: passwordFormField
+    optional: true
+- inputText: ${output.logins.C753.PASSWORD}
+- pressKey: Enter
+
+# 2FA - Backup code option
+- tapOn: Enter Backup Code
+- inputText: ${output.logins.C753.BACKUP_CODE}
+- tapOn:
+    text: Submit
+    retryTapIfNoChange: false
+
+# Wallet list scene
+- extendedWaitUntil:
+    visible: LTC C753
+    timeout: 60000

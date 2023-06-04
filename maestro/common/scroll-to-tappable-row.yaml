@@ -1,0 +1,9 @@
+appId: co.edgesecure.app
+---
+- scrollUntilVisible:
+    element: ${ROW}
+    direction: "DOWN"
+    timeout: 1000
+    speed: 35
+    visibilityPercentage: 100
+- tapOn: ${ROW}
