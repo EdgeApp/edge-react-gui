@@ -106,7 +106,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         delete: { label: lstrings.string_delete, type: 'secondary' },
         keep: { label: lstrings.string_keep, type: 'escape' }
       },
-      title: lstrings.rewards_card_delete_modal_title,
+      title: lstrings.delete_card_confirmation_title,
       message: lstrings.rewards_card_delete_modal_message,
       children: (
         <Space around={0.5}>
@@ -216,7 +216,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         if (!approved) return
 
         if (!parsedUri.paymentProtocolUrl) {
-          return showError(lstrings.rewards_card_error_missing_payment_address)
+          return showError(lstrings.missing_provider_payment_address_message)
         }
 
         const onDone = () => {
@@ -231,7 +231,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           category: 'expense:Visa® Prepaid Card'
         }
         showUi.showToastSpinner(
-          lstrings.rewards_card_getting_invoice,
+          lstrings.getting_payment_invoice_message,
           showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, metadata, onDone } })
         )
       }
@@ -240,7 +240,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
-      headerTitle: lstrings.rewards_card_select_wallet,
+      headerTitle: lstrings.select_wallet_to_purchase_card_title,
       allowedAssets,
       showCreateWallet: false
     })

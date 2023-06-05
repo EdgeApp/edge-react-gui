@@ -70,13 +70,13 @@ export const RewardsCardDashboardScene = (props: Props) => {
           {items.map(item => {
             return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
           })}
-          {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
+          {items.length === 0 && !showLoading ? <MessageText>{lstrings.no_active_cards_message}</MessageText> : null}
           {showLoading ? <RewardsCard onQuestionPress={handleQuestionPress} /> : null}
         </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
         <Space around={1}>
-          <MainButton onPress={onNewPress} label={lstrings.rewards_card_new_card_button_label} />
+          <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
         </Space>
       </BottomFloat>
     </>
@@ -124,14 +124,14 @@ export const RewardsCard = (props: RewardsCardProps) => {
           <Space expand>
             <Space bottom={0.5} sideways expand>
               <Space>
-                <CardFieldLabel>{lstrings.rewards_card_dashboard_field_purchase_date_label}</CardFieldLabel>
+                <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
                   <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.purchaseDate)}</CardFieldValue>
                 </Space>
               </Space>
               <Space>
-                <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_price_label}</CardFieldLabel>
+                <CardFieldLabel textAlign="right">{lstrings.purchase_price_label}</CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
                   <CardFieldValue textAlign="right">{purchaseAmount ?? ' '}</CardFieldValue>
@@ -147,7 +147,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 </Space>
               </Space>
               <Space>
-                <CardFieldLabel textAlign="right">{lstrings.rewards_card_dashboard_field_purchase_asset_label}</CardFieldLabel>
+                <CardFieldLabel textAlign="right">{lstrings.purchase_asset_label}</CardFieldLabel>
                 <Space>
                   <Shimmer isShown={item == null} />
                   <CardFieldValue textAlign="right">{item?.purchaseAsset ?? ' '}</CardFieldValue>

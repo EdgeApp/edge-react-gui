@@ -303,10 +303,10 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     function checkAmountMinMax(fiatAmount: number) {
       if (fiatAmount > MAX_FIAT_CARD_PURCHASE_AMOUNT) {
-        throw new Error(sprintf(lstrings.rewards_card_error_amount_max_s, MAX_FIAT_CARD_PURCHASE_AMOUNT))
+        throw new Error(sprintf(lstrings.card_amount_max_error_message_s, MAX_FIAT_CARD_PURCHASE_AMOUNT))
       }
       if (fiatAmount < MIN_FIAT_CARD_PURCHASE_AMOUNT) {
-        throw new Error(sprintf(lstrings.rewards_card_error_amount_min_s, MIN_FIAT_CARD_PURCHASE_AMOUNT))
+        throw new Error(sprintf(lstrings.card_amount_min_error_message_s, MIN_FIAT_CARD_PURCHASE_AMOUNT))
       }
     }
 
