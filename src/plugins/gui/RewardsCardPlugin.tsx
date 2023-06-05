@@ -143,29 +143,21 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         value1: '500'
       },
       async onChangeText() {},
-      async onFieldChange(event) {
+      async convertValue(sourceFieldNum, value, stateManager) {
         const myCounter = ++counter
 
-        const { stateManager } = event
-
-        const otherFieldKey = event.value.sourceFieldNum === 1 ? 'value2' : 'value1'
-        const spinnerKey = event.value.sourceFieldNum === 1 ? 'spinner2' : 'spinner1'
-
-        stateManager.update({ [spinnerKey]: true })
-
-        if (eq(event.value.value, '0')) {
-          stateManager.update({ [otherFieldKey]: '', [spinnerKey]: false })
-          return
+        if (eq(value, '0')) {
+          return ''
         }
         let quoteParams: FiatProviderGetQuoteParams
 
-        if (event.value.sourceFieldNum === 1) {
+        if (sourceFieldNum === 1) {
           // User entered a fiat value. Convert to crypto
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
             displayCurrencyCode: currencyCode,
-            exchangeAmount: event.value.value,
+            exchangeAmount: value,
             fiatCurrencyCode,
             amountType: 'fiat',
             ...redundantQuoteParams
@@ -176,7 +168,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
             displayCurrencyCode: currencyCode,
-            exchangeAmount: event.value.value,
+            exchangeAmount: value,
             fiatCurrencyCode,
             amountType: 'crypto',
             ...redundantQuoteParams
@@ -184,7 +176,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         }
 
         const bestQuote = await provider.getQuote(quoteParams).catch(error => {
-          stateManager.update({ statusText: { content: String(error), textType: 'error' }, [spinnerKey]: false })
+          stateManager.update({ statusText: { content: String(error), textType: 'error' } })
           throw error
         })
 
@@ -193,11 +185,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
         const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
         stateManager.update({
-          statusText: { content: exchangeRateText },
-          // poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon },
-          [otherFieldKey]: event.value.sourceFieldNum === 1 ? toFixed(bestQuote.cryptoAmount, 6) : toFixed(bestQuote.fiatAmount, 2),
-          [spinnerKey]: false
+          statusText: { content: exchangeRateText }
         })
+
+        return sourceFieldNum === 1 ? toFixed(bestQuote.cryptoAmount, 6) : toFixed(bestQuote.fiatAmount, 2)
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
