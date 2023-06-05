@@ -13,7 +13,7 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
-import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { GiftCard, IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
@@ -43,9 +43,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // Helpers:
   //
 
-  async function getRewardCards(): Promise<RewardsCardItem[]> {
+  async function getRewardCards(): Promise<{ activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] }> {
     const giftCards = await provider.otherMethods.getGiftCards()
-    const rewardCards: RewardsCardItem[] = giftCards.cards.map(card => {
+    const convert = (card: GiftCard) => {
       // Expires 6 calendar months from the creation date
       const expirationDate = new Date(card.CreatedDate.valueOf())
       expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
@@ -55,15 +55,16 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         expiration: expirationDate,
         url: card.CardNumber
       }
-    })
-    // Reverse order to show latest first
-    return rewardCards
+    }
+    const activeCards: RewardsCardItem[] = giftCards.cards.map(convert)
+    const archivedCards: RewardsCardItem[] = giftCards.archivedCards.map(convert)
+    return { activeCards, archivedCards }
   }
 
   async function refreshRewardsCards(retries: number) {
     if (retries > 15) return
     await getRewardCards()
-      .then(async cards => {
+      .then(async ({ activeCards: cards }) => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
@@ -304,10 +305,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
         throw new Error(lstrings.rewards_card_error_authenticate)
       })
+      let hasCards = false
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
-        rewardCards = await showUi.showToastSpinner(
+        const { activeCards, archivedCards } = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
             getRewardCards().catch(e => {
@@ -317,6 +319,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             new Error(lstrings.rewards_card_error_timeout_loading)
           )
         )
+        rewardCards = activeCards
+        hasCards = activeCards.length + archivedCards.length > 0
       }
 
       redundantQuoteParams = {
@@ -325,7 +329,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         regionCode: startParams.regionCode
       }
 
-      if (isAuthenticated) {
+      if (isAuthenticated && hasCards) {
         await showDashboard({ showLoading: false })
       } else {
         await showWelcome()
