@@ -192,8 +192,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
-        const fiatAmount = parseFloat(toFixed(event.value.response.value1, 0, 2))
-        const exchangeAmount = event.value.response.value2
+        const fiatAmount = parseFloat(toFixed(event.data.response.value1, 0, 2))
+        const exchangeAmount = event.data.response.value2
         const nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
         const purchaseCard = await provider.otherMethods.queryPurchaseCard(currencyCode, fiatAmount)
 

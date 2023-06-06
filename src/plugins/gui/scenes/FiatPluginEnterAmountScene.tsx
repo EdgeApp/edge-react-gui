@@ -88,7 +88,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ value: { fieldNum: 1, value }, stateManager })
+    onChangeText({ data: { fieldNum: 1, value }, stateManager })
     stateManager.update({ value1: value, spinner2: true })
     convertValue(1, value, stateManager)
       .then(otherValue => {
@@ -103,7 +103,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ value: { fieldNum: 2, value }, stateManager })
+    onChangeText({ data: { fieldNum: 2, value }, stateManager })
     stateManager.update({ value2: value, spinner1: true })
     convertValue(2, value, stateManager)
       .then(otherValue => {
@@ -116,9 +116,9 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         stateManager.update({ spinner1: false })
       })
   })
-  const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ value: undefined, stateManager }))
+  const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ data: undefined, stateManager }))
   const handleSubmit = useHandler(async () => {
-    await onSubmit({ value: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
+    await onSubmit({ data: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
   })
 
   let statusTextStyle = styles.text

@@ -127,7 +127,7 @@ export interface FiatPlugin {
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>
 
-export interface StatefulSceneEvent<EventValue, State extends object> {
-  value: EventValue
+export interface StatefulSceneEvent<EventData, State extends object> {
+  data: EventData
   stateManager: StateManager<State>
 }
