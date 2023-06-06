@@ -402,7 +402,7 @@
   "staking_no_fio_address_error": "Impossibile fare stake senza un indirizzo FIO",
   "staking_no_bundled_txs_error": "Transazioni in bundle non sufficienti per l'indirizzo FIO %1$s",
   "string_i_agree": "Accetto",
-  "string_expires": "Expires",
+  "string_expires": "Scadenza",
   "string_decline": "Rifiuto",
   "string_cancel_cap": "Annulla",
   "string_cancel": "ANNULLA",
