@@ -232,8 +232,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             return toFixed(bestQuote.fiatAmount, 0, 2)
           }
         },
-        async onPoweredByClick(event) {
-          const { stateManager } = event
+        async onPoweredByClick(stateManager) {
           // 1. Show modal with all the valid quotes
           const items = goodQuotes.map(quote => {
             let text
