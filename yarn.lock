@@ -4961,12 +4961,17 @@ base-64@^0.1.0:
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
   integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
 
-base-x@3.0.4, base-x@3.0.9, base-x@^1.0.1, base-x@^1.0.4, base-x@^3.0.2, base-x@^3.0.8:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.4.tgz#94c1788736da065edb1d68808869e357c977fa77"
-  integrity sha512-UYOadoSIkEI/VrRGSG6qp93rp2WdokiAiNYDfGW5qURAY8GiAQkvMbwNNSDYiVJopqv4gCna7xqf4rrNGp+5AA==
+base-x@3.0.9, base-x@^3.0.2, base-x@^3.0.8:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.9.tgz#6349aaabb58526332de9f60995e548a53fe21320"
+  integrity sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ==
   dependencies:
     safe-buffer "^5.0.1"
+
+base-x@^1.0.1, base-x@^1.0.4:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-1.1.0.tgz#42d3d717474f9ea02207f6d1aa1f426913eeb7ac"
+  integrity sha512-c0WLeG3K5OlL4Skz2/LVdS+MjggByKhowxQpG+JpCLA48s/bGwIDyzA1naFjywtNvp/37fLK0p0FpjTNNLLUXQ==
 
 base-x@^4.0.0:
   version "4.0.0"
@@ -7332,11 +7337,12 @@ edge-exchange-plugins@^0.19.5:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.0.0.tgz#f253c4d3127ab25b754bc76c15e4a30a8cbd9729"
-  integrity sha512-P1Y+m/8QD7Rx7OW8jqB9TbC9nOvJyeHoI68Mk2/FY2CGr575SlE74ktsamDYY8LBy0YBjiFNsqcrEEJWtuHx/Q==
+edge-login-ui-rn@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.1.0.tgz#44063c8fecd710debfd97a6e6476773358bfe949"
+  integrity sha512-nY0kZU7CZQo8cGgpsWo09qTB37MZSWu8a7LMc/iZns2si5pzgpHQ4UWluYqc/qyazD/U/fufrdkILdvyUwyl/Q==
   dependencies:
+    base-x "^4.0.0"
     cleaners "^0.3.12"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
