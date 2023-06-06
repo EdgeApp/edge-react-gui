@@ -32,9 +32,9 @@ export const RewardsCardWelcomeScene = (props: Props) => {
             {lstrings.rewards_card_welcome_intro}
           </WelcomeInto>
         </WelcomeContainer>
-        <MainButton onPress={onNewCard} label={lstrings.rewards_card_new_card_button_label} />
+        <MainButton onPress={onNewCard} label={lstrings.buy_new_card_button} />
         <Space vertical={1}>
-          <MainButton type="secondary" label={lstrings.rewards_card_welcome_more_info} onPress={onMoreInfo} />
+          <MainButton type="secondary" label={lstrings.learn_more_button} onPress={onMoreInfo} />
         </Space>
       </SceneContainer>
     </SceneWrapper>

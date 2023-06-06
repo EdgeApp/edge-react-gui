@@ -13,16 +13,25 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
-import { GiftCard, IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
-import { RewardCard } from './scenes/RewardsCardDashboardScene'
+import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { RewardsCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
 export interface RewardsCardItem {
   id: number
-  expiration: Date
+  creationDate: Date
+  expirationDate: Date
+  amount: number
+  purchaseAsset: string
+  purchaseDate: Date
   url: string
+}
+
+export interface UserRewardsCards {
+  activeCards: RewardsCardItem[]
+  archivedCards: RewardsCardItem[]
 }
 
 const PROVIDER_FACTORIES = [makeIoniaProvider]
@@ -43,34 +52,17 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // Helpers:
   //
 
-  async function getRewardCards(): Promise<{ activeCards: RewardsCardItem[]; archivedCards: RewardsCardItem[] }> {
-    const giftCards = await provider.otherMethods.getGiftCards()
-    const convert = (card: GiftCard) => {
-      // Expires 6 calendar months from the creation date
-      const expirationDate = new Date(card.CreatedDate.valueOf())
-      expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
-
-      return {
-        id: card.Id,
-        expiration: expirationDate,
-        url: card.CardNumber
-      }
-    }
-    const activeCards: RewardsCardItem[] = giftCards.cards.map(convert)
-    const archivedCards: RewardsCardItem[] = giftCards.archivedCards.map(convert)
-    return { activeCards, archivedCards }
-  }
-
   async function refreshRewardsCards(retries: number) {
     if (retries > 15) return
-    await getRewardCards()
-      .then(async ({ activeCards: cards }) => {
-        if (cards.length === rewardCards.length) {
+    await await provider.otherMethods
+      .getRewardsCards()
+      .then(async ({ activeCards, archivedCards }) => {
+        if (activeCards.length === userRewardsCards.activeCards.length) {
           console.log(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
-        rewardCards = cards
+        userRewardsCards = { activeCards, archivedCards }
         showDashboard({ showLoading: false })
       })
       .catch(async error => {
@@ -84,16 +76,14 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   //
 
   let redundantQuoteParams: Pick<FiatPluginStartParams, 'direction' | 'paymentTypes' | 'regionCode'>
-  // Get the reward cards:
-  let rewardCards: RewardsCardItem[] = []
-
+  let userRewardsCards: UserRewardsCards = { activeCards: [], archivedCards: [] }
   //
   // State Machine:
   //
 
   const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
-      items: rewardCards,
+      items: userRewardsCards.activeCards,
       showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
@@ -116,11 +106,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         delete: { label: lstrings.string_delete, type: 'secondary' },
         keep: { label: lstrings.string_keep, type: 'escape' }
       },
-      title: lstrings.rewards_card_delete_modal_title,
+      title: lstrings.delete_card_confirmation_title,
       message: lstrings.rewards_card_delete_modal_message,
       children: (
-        <Space around={1}>
-          <RewardCard item={card} />
+        <Space around={0.5}>
+          <RewardsCard item={card} />
         </Space>
       )
     })
@@ -129,7 +119,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Hide the card
       provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
-      rewardCards = rewardCards.filter(c => c.id !== card.id)
+      userRewardsCards.activeCards = userRewardsCards.activeCards.filter(c => c.id !== card.id)
 
       // Reset state for dashboard
       showDashboard({ showLoading: false })
@@ -226,7 +216,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         if (!approved) return
 
         if (!parsedUri.paymentProtocolUrl) {
-          return showError(lstrings.rewards_card_error_missing_payment_address)
+          return showError(lstrings.missing_provider_payment_address_message)
         }
 
         const onDone = () => {
@@ -241,7 +231,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           category: 'expense:Visa® Prepaid Card'
         }
         showUi.showToastSpinner(
-          lstrings.rewards_card_getting_invoice,
+          lstrings.getting_payment_invoice_message,
           showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, metadata, onDone } })
         )
       }
@@ -250,7 +240,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
-      headerTitle: lstrings.rewards_card_select_wallet,
+      headerTitle: lstrings.select_wallet_to_purchase_card_title,
       allowedAssets,
       showCreateWallet: false
     })
@@ -302,26 +292,27 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+      const isAuthenticated = await provider.otherMethods.authenticate().catch(error => {
+        console.error(error)
         throw new Error(lstrings.rewards_card_error_authenticate)
       })
-      let hasCards = false
 
       if (isAuthenticated) {
         // Get/refresh rewards cards:
-        const { activeCards, archivedCards } = await showUi.showToastSpinner(
+        userRewardsCards = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
-            getRewardCards().catch(e => {
+            provider.otherMethods.getRewardsCards().catch(error => {
+              console.error(error)
               throw new Error(lstrings.rewards_card_error_retrieving_cards)
             }),
             11000,
             new Error(lstrings.rewards_card_error_timeout_loading)
           )
         )
-        rewardCards = activeCards
-        hasCards = activeCards.length + archivedCards.length > 0
       }
+
+      const hasCards = userRewardsCards.activeCards.length + userRewardsCards.activeCards.length > 0
 
       redundantQuoteParams = {
         direction: startParams.direction,
