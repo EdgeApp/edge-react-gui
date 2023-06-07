@@ -147,7 +147,7 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
 
       logOutput.loggedInUser = {
         userId: rootLoginId,
-        userName: username,
+        userName: username ?? '<undefined>',
         wallets: [],
         actions: []
       }
