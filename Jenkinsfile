@@ -116,24 +116,6 @@ pipeline {
   }
 
   post {
-    always {
-      echo 'Trying to publish the test report'
-      junit healthScaleFactor: 100.0, testResults: '**/coverage/junit.xml', allowEmptyResults: true
-      echo 'Trying to publish the code coverage report'
-      cobertura(
-        coberturaReportFile: '**/coverage/cobertura-coverage.xml',
-        failUnhealthy: false,
-        failNoReports: false,
-        failUnstable: false,
-        onlyStable: false,
-        zoomCoverageChart: false,
-        conditionalCoverageTargets: '70, 0, 0',
-        lineCoverageTargets: '70, 0, 0',
-        methodCoverageTargets: '70, 0, 0',
-        maxNumberOfBuilds: 0,
-        sourceEncoding: 'ASCII'
-      )
-    }
     success {
       echo "The force is strong with this one"
       deleteDir()
