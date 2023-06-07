@@ -14,7 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.png'
@@ -359,12 +359,16 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => {
   const theme = useTheme()
   const themeRem = theme.rem(1)
+  const insets = useSafeAreaInsets()
+
   return [
     {
       alignItems: 'stretch',
       justifyContent: 'space-between',
       backgroundColor: '#0F1D26',
-      paddingVertical: props.theme.rem(1)
+      paddingVertical: props.theme.rem(1),
+      paddingBottom: insets.bottom,
+      marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
       const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
