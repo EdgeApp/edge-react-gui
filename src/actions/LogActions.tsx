@@ -132,21 +132,26 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
     if (context) {
       // Get local accounts
       for (const user of context.localUsers) {
-        logOutput.accounts.push({ username: user.username, userId: '' })
+        logOutput.accounts.push({
+          username: user.username ?? '<undefined>',
+          userId: ''
+        })
       }
     }
 
     if (account.loggedIn) {
-      const { currencyWallets, rootLoginId, keys, username } = account
+      const { currencyWallets, rootLoginId, username } = account
       const { actionQueueMap } = actionQueue
+
+      const { syncKey } = await account.getRawPrivateKey(account.id)
 
       logOutput.loggedInUser = {
         userId: rootLoginId,
-        userName: username,
+        userName: username ?? '<undefined>',
         wallets: [],
         actions: []
       }
-      logOutput.acctRepoId = getRepoId(keys.syncKey)
+      logOutput.acctRepoId = getRepoId(syncKey)
       logOutput.data += '***Account Wallet Summary***\n'
 
       //
@@ -155,23 +160,25 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
 
       for (const walletId of Object.keys(currencyWallets)) {
         // Wallet TX summary
-        const codes = await currencyWallets[walletId].getEnabledTokens()
+        const wallet = currencyWallets[walletId]
+        const { enabledTokenIds } = wallet
+        const codes = enabledTokenIds.map(id => wallet.currencyConfig.allTokens[id].currencyCode)
         if (codes.length === 0) {
-          codes.push(currencyWallets[walletId].currencyInfo.currencyCode)
+          codes.push(wallet.currencyInfo.currencyCode)
         }
-        for (let i = 0; i < codes.length; i++) {
-          const txs = await currencyWallets[walletId].getNumTransactions({ currencyCode: codes[i] })
-          logOutput.data += `${codes[i]}: ${txs} txs\n`
+        for (const code of codes) {
+          const txs = await wallet.getNumTransactions({ currencyCode: code })
+          logOutput.data += `${code}: ${txs} txs\n`
         }
+        const { imported, syncKey } = await account.getRawPrivateKey(wallet.id)
 
         // Wallet info
-        const wallet = currencyWallets[walletId]
         if (wallet && logOutput.loggedInUser) {
           const currencyCode = wallet.currencyInfo.currencyCode ?? ''
           logOutput.loggedInUser.wallets.push({
             currencyCode,
-            imported: wallet.keys.imported,
-            repoId: getRepoId(wallet.keys.syncKey),
+            imported,
+            repoId: getRepoId(syncKey),
             pluginDump: await wallet.dumpData()
           })
         }

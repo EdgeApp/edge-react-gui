@@ -1,5 +1,5 @@
 import { add, gt, mul, round } from 'biggystring'
-import { EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -51,6 +51,7 @@ interface OwnProps {
 }
 
 interface StateProps {
+  account: EdgeAccount
   balances: EdgeBalances
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
@@ -137,7 +138,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
       if (stakePlugin == null) continue
       const amount = await stakePlugin
-        .fetchStakePosition({ stakePolicyId, wallet: this.props.wallet })
+        .fetchStakePosition({
+          stakePolicyId,
+          wallet: this.props.wallet,
+          account: this.props.account
+        })
         .then(async stakePosition => {
           const { staked, earned } = getPositionAllocations(stakePosition)
           return this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
@@ -199,7 +204,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
-                <Fontello name="control-panel-settings" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
@@ -560,6 +565,7 @@ export function TransactionListTop(props: OwnProps) {
   return (
     <TransactionListTopComponent
       {...props}
+      account={account}
       balances={balances}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}

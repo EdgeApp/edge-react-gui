@@ -142,9 +142,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               "fontFaceDefault": "Quicksand-Regular",
               "fontFaceMedium": "Quicksand-Medium",
               "fontFaceSymbols": "Quicksand-Regular",
-              "guiPluginLogoBitaccess": Object {
-                "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoBitaccessDark.png",
-              },
               "guiPluginLogoMoonpay": Object {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
               },
@@ -592,9 +589,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               "fontFaceDefault": "Quicksand-Regular",
               "fontFaceMedium": "Quicksand-Medium",
               "fontFaceSymbols": "Quicksand-Regular",
-              "guiPluginLogoBitaccess": Object {
-                "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoBitaccessDark.png",
-              },
               "guiPluginLogoMoonpay": Object {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
               },

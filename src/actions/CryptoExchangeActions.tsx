@@ -383,6 +383,7 @@ export function checkEnabledExchanges(): ThunkAction<void> {
     // make sure exchanges are enabled
     let isAnyExchangeEnabled = false
     const exchanges = account.swapConfig
+    if (exchanges == null) return
     for (const exchange of Object.keys(exchanges)) {
       if (exchanges[exchange].enabled) {
         isAnyExchangeEnabled = true

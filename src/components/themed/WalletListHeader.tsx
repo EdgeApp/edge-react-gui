@@ -76,10 +76,10 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto', {})}>
-                <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Ionicon accessibilityHint={lstrings.wallet_list_add_wallet} color={theme.iconTappable} name="md-add" size={theme.rem(1.5)} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>
-                <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Fontello accessibilityHint={lstrings.sort_wallets_hint} color={theme.iconTappable} name="sort" size={theme.rem(1.5)} />
               </TouchableOpacity>
             </View>
           </View>

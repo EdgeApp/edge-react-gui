@@ -229,7 +229,7 @@ export const banxaProvider: FiatProviderFactory = {
         try {
           banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
         } catch (e: any) {
-          throw new FiatProviderError({ errorType: 'assetUnsupported' })
+          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
 
         const { banxaChain, banxaCoin } = banxaCrypto
@@ -241,21 +241,21 @@ export const banxaProvider: FiatProviderFactory = {
         try {
           paymentType = paymentTypes.find(t => banxaPaymentsMap[fiat][banxaCoin][t] != null)
         } catch (e: any) {
-          throw new FiatProviderError({ errorType: 'assetUnsupported' })
+          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
 
         if (paymentType == null) {
-          throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
         const paymentObj = banxaPaymentsMap[fiat][banxaCoin][paymentType ?? ''] ?? {}
-        if (paymentObj == null) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (paymentObj == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         let queryParams
         if (amountType === 'fiat') {
           if (gt(exchangeAmount, paymentObj.max)) {
-            throw new FiatProviderError({ errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max) })
+            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max) })
           } else if (lt(exchangeAmount, paymentObj.min)) {
-            throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min) })
+            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min) })
           }
           queryParams = {
             account_reference: banxaUsername,

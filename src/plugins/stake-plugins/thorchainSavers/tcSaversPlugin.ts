@@ -1,6 +1,6 @@
 import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 
 import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
 import {
@@ -135,6 +135,7 @@ const policyDefault = {
   apy: 0,
   stakeProviderInfo,
   disableMaxStake: true,
+  rewardsNotClaimable: true,
   stakeWarning: null,
   unstakeWarning: null,
   claimWarning: null
@@ -255,10 +256,10 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
 }
 
 const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest): Promise<StakePosition> => {
-  const { stakePolicyId, wallet } = request
+  const { stakePolicyId, wallet, account } = request
   const policy = getPolicyFromId(stakePolicyId)
   const { currencyCode } = policy.stakeAssets[0]
-  const { primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
+  const { primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   return await getStakePositionInner(opts, request, primaryAddress)
 }
 
@@ -359,7 +360,7 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
 const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
-  const { wallet, nativeAmount, currencyCode, stakePolicyId } = request
+  const { wallet, nativeAmount, currencyCode, stakePolicyId, account } = request
   const { pluginId } = wallet.currencyInfo
 
   const walletBalance = wallet.balances[currencyCode]
@@ -373,7 +374,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   await updateInboundAddresses(opts)
 
   const mainnetCode = MAINNET_CODE_TRANSCRIPTION[wallet.currencyInfo.pluginId]
-  const { primaryAddress, addressBalance } = await getPrimaryAddress(wallet, currencyCode)
+  const { primaryAddress, addressBalance } = await getPrimaryAddress(account, wallet, currencyCode)
 
   const asset = `${mainnetCode}.${mainnetCode}`
 
@@ -530,8 +531,8 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
 const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
   const { allocations } = await getStakePosition(opts, request)
-  const { wallet, currencyCode } = request
-  const { addressBalance, primaryAddress } = await getPrimaryAddress(wallet, currencyCode)
+  const { wallet, currencyCode, account } = request
+  const { addressBalance, primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   return await unstakeRequestInner(opts, request, { addressBalance, allocations, primaryAddress })
 }
 
@@ -544,7 +545,7 @@ interface UnstakeRequestParams {
 const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, params: UnstakeRequestParams): Promise<ChangeQuote> => {
   const { allocations, primaryAddress, addressBalance } = params
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
-  const { action, wallet, nativeAmount: requestNativeAmount, currencyCode } = request
+  const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
   const { pluginId } = wallet.currencyInfo
 
   const policyCurrencyInfo = policyCurrencyInfos[pluginId]
@@ -615,7 +616,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const slippageThorAmount = sub(totalUnstakeThorAmount, expectedAmountOut)
   const slippageDisplayAmount = div(slippageThorAmount, THOR_LIMIT_UNITS, DIVIDE_PRECISION)
   const slippageNativeAmount = await wallet.denominationToNative(slippageDisplayAmount, currencyCode)
-  const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(wallet, currencyCode)
+  const { primaryAddress: utxoSourceAddress } = await getPrimaryAddress(account, wallet, currencyCode)
   const forceChangeAddress = utxoSourceAddress
 
   let needsFundingPrimary = false
@@ -738,7 +739,7 @@ const headers = {
 // total amount of the largest staked address
 // ----------------------------------------------------------------------------
 const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest, asset: string, ninerealmsClientId: string): Promise<string> => {
-  const { nativeAmount, stakePolicyId, wallet } = request
+  const { nativeAmount, stakePolicyId, wallet, account } = request
   const saversResponse = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } })
   if (!saversResponse.ok) {
     const responseText = await saversResponse.text()
@@ -751,7 +752,7 @@ const estimateUnstakeFee = async (opts: EdgeGuiPluginOptions, request: ChangeQuo
   const bigSaver = savers.reduce((prev, current) => (gt(current.units, prev.units) ? current : prev))
   const primaryAddress = bigSaver.asset_address
 
-  const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet }
+  const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet, account }
   const stakePosition = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
   const { allocations } = stakePosition
 
@@ -813,18 +814,26 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
   }
 }
 
-const getPrimaryAddress = async (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<{ primaryAddress: string; addressBalance: string }> => {
-  const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({ forceIndex: 0, currencyCode })
-  const primaryAddress = publicAddress
-  let addressBalance = '0'
+const getPrimaryAddress = async (
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet,
+  currencyCode: string
+): Promise<{
+  primaryAddress: string
+  addressBalance: string
+}> => {
+  const displayPublicKey = await account.getDisplayPublicKey(wallet.id)
+  const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({
+    forceIndex: 0,
+    currencyCode
+  })
 
-  if (wallet.displayPublicSeed?.toLowerCase() === primaryAddress.toLowerCase()) {
-    // If this is a single address chain (ie ETH, AVAX) then the address balance is always
-    // the wallet balance
-    addressBalance = await wallet.balances[currencyCode]
-  } else {
-    addressBalance = nativeBalance ?? '0'
+  // If this is a single address chain (ie ETH, AVAX)
+  // then the address balance is always the wallet balance
+  const hasSingleAddress = displayPublicKey.toLowerCase() === publicAddress.toLowerCase()
+
+  return {
+    primaryAddress: publicAddress,
+    addressBalance: hasSingleAddress ? wallet.balances[currencyCode] : nativeBalance ?? '0'
   }
-
-  return { primaryAddress, addressBalance }
 }

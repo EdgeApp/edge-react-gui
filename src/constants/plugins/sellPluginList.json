@@ -384,20 +384,6 @@
     }
   },
   {
-    "id": "bitaccess",
-    "pluginId": "bitaccess",
-    "paymentTypes": ["cash"],
-    "description": "Fee: Varies / Settlement: 10 - 20 minutes\nLimit: Varies",
-    "title": "Cash",
-    "partnerIconPath": "mktg/bitaccess.png",
-    "forCountries": ["US", "CA", "HR", "NL", "NG", "ES", "VN", "CH", "GB"],
-    "cryptoCodes": ["BTC", "ETH", "LINK", "DAI", "LTC"],
-    "paymentTypeLogoKey": "cash",
-    "deepQuery": {
-      "country": "US"
-    }
-  },
-  {
     "id": "banxa.bank",
     "pluginId": "banxa",
     "paymentTypes": ["bank"],
@@ -492,10 +478,6 @@
     "sortIndex": 5
   },
   {
-    "id": "bitaccess",
-    "sortIndex": 4.5
-  },
-  {
     "id": "banxa.bank",
     "sortIndex": 2
   },
@@ -507,61 +489,5 @@
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
     "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["CA"],
-    "deepQuery": {
-      "country": "CA"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["HR"],
-    "deepQuery": {
-      "country": "HR"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["NL"],
-    "deepQuery": {
-      "country": "NL"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["NG"],
-    "deepQuery": {
-      "country": "NG"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["ES"],
-    "deepQuery": {
-      "country": "ES"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["GB"],
-    "deepQuery": {
-      "country": "GB"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["CH"],
-    "deepQuery": {
-      "country": "CH"
-    }
-  },
-  {
-    "id": "bitaccess",
-    "forCountries": ["VN"],
-    "deepQuery": {
-      "country": "VN"
-    }
   }
 ]

@@ -2,7 +2,7 @@
 
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
-import { EdgeUserInfo } from 'edge-core-js'
+import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -15,12 +15,10 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
-import { deleteLocalAccount } from '../../actions/AccountActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { EDGE_URL } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
@@ -34,6 +32,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -46,7 +45,7 @@ import { ModalMessage, ModalTitle } from './ModalParts'
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-export function ControlPanel(props: DrawerContentComponentProps) {
+export function SideMenu(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
   const navigation: NavigationBase = props.navigation as any
   const isDrawerOpen = useDrawerStatus() === 'open'
@@ -59,7 +58,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   // ---- Redux State ----
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const activeUsername = useSelector(state => state.core.account.username)
+  const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
   const selectedWallet = useSelectedWallet()
   const selectedDenomination = useSelector(state => {
@@ -71,7 +70,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
 
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
-  const usernames = React.useMemo(() => arrangeUsers(localUsers, activeUsername), [localUsers, activeUsername])
+  const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
   const closeButtonContainerStyle = React.useMemo(() => {
     return [styles.closeButtonContainer, { paddingBottom: insets.bottom }]
@@ -79,7 +78,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = React.useState(false)
-  const isMultiUsers = usernames.length > 0
+  const isMultiUsers = sortedUsers.length > 0
   const handleToggleDropdown = () => {
     if (isMultiUsers) setIsDropped(!isDropped)
   }
@@ -91,17 +90,18 @@ export function ControlPanel(props: DrawerContentComponentProps) {
 
   /// ---- Callbacks ----
 
-  const handleDeleteAccount = (username: string) => () => {
+  const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.forget_account_title}
-        message={sprintf(lstrings.forget_account_message_common, username)}
+        message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
         buttons={{
           ok: {
             label: lstrings.string_forget,
             onPress: async () => {
-              await dispatch(deleteLocalAccount(username))
+              // TODO: Add a way to make this work for accounts without usernames:
+              await context.deleteLocalAccount(userInfo.username ?? '')
               return true
             },
             type: 'primary'
@@ -112,8 +112,8 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     ))
   }
 
-  const handleSwitchAccount = (username: string) => () => {
-    dispatch(logoutRequest(navigation, username))
+  const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
+    dispatch(logoutRequest(navigation, userInfo.username))
   }
 
   const handleBorrow = () => {
@@ -163,7 +163,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
   /// ---- Animation ----
 
   // Track the destination height of the dropdown
-  const userListDesiredHeight = styles.rowContainer.height * usernames.length + theme.rem(1)
+  const userListDesiredHeight = styles.rowContainer.height * sortedUsers.length + theme.rem(1)
   const userListHeight = Math.min(userListDesiredHeight, bottomPanelHeight)
   const isUserListHeightOverflowing = userListDesiredHeight >= bottomPanelHeight
 
@@ -321,7 +321,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
-            <TitleText style={styles.text}>{activeUsername}</TitleText>
+            <TitleText style={styles.text}>{account.username ?? lstrings.missing_username}</TitleText>
           </View>
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>
@@ -339,15 +339,15 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         {/* === Dropdown Start === */}
         <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
           <ScrollView>
-            {usernames.map((username: string) => (
-              <View key={username} style={styles.rowContainer}>
+            {sortedUsers.map(userInfo => (
+              <View key={userInfo.loginId} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(username)}>
-                  <TitleText style={styles.text}>{username}</TitleText>
+                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
+                  <TitleText style={styles.text}>{userInfo.username ?? lstrings.missing_username}</TitleText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(username)}>
-                  <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconTappable} />
+                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(userInfo)}>
+                  <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -378,7 +378,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
         {/* === Translucent X Close Button Start === */}
         <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
           <TouchableOpacity onPress={handlePressClose}>
-            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} />
+            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} accessibilityHint={lstrings.close_control_panel_hint} />
           </TouchableOpacity>
         </LinearGradient>
         {/* === Translucent X Close Button End === */}
@@ -393,24 +393,23 @@ export function ControlPanel(props: DrawerContentComponentProps) {
  * remove the given user, then organize the 3 most recent users,
  * followed by the rest in alphabetical order.
  */
-function arrangeUsers(localUsers: EdgeUserInfo[], activeUsername: string): string[] {
+function arrangeUsers(localUsers: EdgeUserInfo[], activeAccount: EdgeAccount): EdgeUserInfo[] {
   // Sort the users according to their last login date (excluding active logged in user):
   const inactiveUsers = localUsers
-    .filter(info => info.username !== activeUsername)
+    .filter(info => info.loginId !== activeAccount.rootLoginId)
     .sort((a, b) => {
       const { lastLogin: aDate = new Date(0) } = a
       const { lastLogin: bDate = new Date(0) } = b
       return bDate.valueOf() - aDate.valueOf()
     })
-    .map(info => info.username)
 
   // Get the most recent 3 users that were logged in
   const recentUsers = inactiveUsers.slice(0, 3)
 
   // Sort everything after the last 3 entries alphabetically:
-  const oldUsers = inactiveUsers.slice(3).sort((a: string, b: string) => {
-    const stringA = a.toUpperCase()
-    const stringB = b.toUpperCase()
+  const oldUsers = inactiveUsers.slice(3).sort((a, b) => {
+    const stringA = a.username?.toLowerCase() ?? ''
+    const stringB = b.username?.toLowerCase() ?? ''
     if (stringA < stringB) return -1
     if (stringA > stringB) return 1
     return 0
