@@ -310,6 +310,7 @@
   "incorrect_pin": "PIN non corretto",
   "invalid_spend_request": "Richiesta non valida",
   "invalid_custom_fee": "La commissione personalizzata minima è",
+  "missing_username": "<No username>",
   "settings_account_title_cap": "Conto",
   "settings_button_change_password": "Cambia la password",
   "settings_developer_mode": "Modalità sviluppatore",
