@@ -173,7 +173,9 @@ export const GettingStartedScene = (props: Props) => {
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
               <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle>{parseMarkedText(lstrings.getting_started_welcome_title)}</WelcomeHeroTitle>
+              <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
+                {parseMarkedText(lstrings.getting_started_welcome_title)}
+              </WelcomeHeroTitle>
               <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
               <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
             </WelcomeHero>
@@ -265,6 +267,7 @@ const WelcomeHeroTitle = styled(Text)(props => ({
   fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(2.25),
   includeFontPadding: false,
+  lineHeight: props.theme.rem(2.8),
   paddingVertical: props.theme.rem(1),
   textAlign: 'center'
 }))
