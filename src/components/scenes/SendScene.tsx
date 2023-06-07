@@ -22,6 +22,7 @@ import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurren
 import { lstrings } from '../../locales/strings'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
+import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
@@ -421,15 +422,14 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderScamWarning() {
     const { recipientAddress } = this.state
     if (recipientAddress === '') {
+      const scamMessage = sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName)
+      const scamFooter = sprintf(lstrings.warning_scam_footer_s, config.supportEmail)
+
       return (
         <WarningCard
           title={lstrings.warning_scam_title}
-          points={[
-            lstrings.warning_scam_message_financial_advice,
-            lstrings.warning_scam_message_irreversibility,
-            lstrings.warning_scam_message_unknown_recipients
-          ]}
-          footer={lstrings.warning_scam_footer}
+          points={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
+          footer={scamFooter}
           marginRem={[1.5, 1]}
         />
       )
