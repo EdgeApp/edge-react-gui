@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
@@ -15,6 +14,7 @@ import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../modules
 import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -331,7 +331,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
             error={fieldError}
           />
           {!userFioAddressesLoading ? (
-            <FlashList
+            <EdgeFlashList
               data={filteredFioAddresses}
               estimatedItemSize={theme.rem(4.25)}
               keyboardShouldPersistTaps="handled"

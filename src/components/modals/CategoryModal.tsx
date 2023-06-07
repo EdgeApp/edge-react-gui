@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -11,6 +11,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { scale } from '../../util/scaling'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { AirshipModal } from '../legacy/AirshipModal'
 import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 import { FormField, MaterialInputOnWhite } from '../legacy/FormField'
@@ -153,7 +154,7 @@ export function CategoryModal(props: Props) {
               value={subcategory}
             />
           </View>
-          <FlashList
+          <EdgeFlashList
             data={sortedCategories}
             estimatedItemSize={THEME.rem(3)}
             keyboardShouldPersistTaps="handled"

@@ -11,6 +11,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { showError } from '../services/AirshipInstance'
@@ -168,7 +169,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
-          <FlashList
+          <EdgeFlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingTop: theme.rem(0.5), paddingBottom: gap.bottom }}
             data={filteredCreateItemsForDisplay}

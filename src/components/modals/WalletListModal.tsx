@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeTokenId } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -180,7 +181,7 @@ export function WalletListModal(props: Props) {
     }
     return (
       <View style={styles.bankMargin}>
-        <FlashList
+        <EdgeFlashList
           estimatedItemSize={theme.rem(4.25)}
           data={Object.values(bankAccountsMap)}
           keyboardShouldPersistTaps="handled"
@@ -195,7 +196,7 @@ export function WalletListModal(props: Props) {
     if (!showCustomAssets) return null
     return (
       <View style={styles.customAssetMargin}>
-        <FlashList
+        <EdgeFlashList
           estimatedItemSize={theme.rem(4.25)}
           data={customAssets}
           keyboardShouldPersistTaps="handled"

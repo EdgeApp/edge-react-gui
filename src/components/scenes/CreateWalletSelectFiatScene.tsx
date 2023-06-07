@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -18,6 +18,7 @@ import { GuiFiatType } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { getSupportedFiats } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FiatListModal } from '../modals/FiatListModal'
@@ -218,7 +219,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
-        <FlashList
+        <EdgeFlashList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
           estimatedItemSize={theme.rem(4.25)}

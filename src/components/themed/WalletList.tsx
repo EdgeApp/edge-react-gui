@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { SectionList, ViewStyle } from 'react-native'
@@ -13,6 +12,7 @@ import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -231,7 +231,7 @@ export function WalletList(props: Props) {
   }, [theme])
 
   return sectionList == null ? (
-    <FlashList
+    <EdgeFlashList
       contentContainerStyle={scrollPadding}
       data={walletList}
       estimatedItemSize={theme.rem(4.25)}

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
+import { ListRenderItemInfo } from '@shopify/flash-list'
 import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
@@ -30,6 +30,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -360,7 +361,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
+          <EdgeFlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
         )}
       </SceneWrapper>
     )

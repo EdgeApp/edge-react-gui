@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -14,6 +13,7 @@ import { Theme } from '../../types/Theme'
 import { FlatListItem, GuiFiatType } from '../../types/types'
 import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
@@ -95,7 +95,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
                 searchIcon
               />
             </SceneHeader>
-            <FlashList
+            <EdgeFlashList
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ paddingBottom: gap.bottom }}
               data={filteredArray}

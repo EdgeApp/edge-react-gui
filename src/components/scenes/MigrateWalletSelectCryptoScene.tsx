@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { Switch, View } from 'react-native'
 
@@ -10,6 +10,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -157,7 +158,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
-          <FlashList
+          <EdgeFlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}
             data={migrateWalletList}
