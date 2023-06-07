@@ -310,6 +310,7 @@
   "incorrect_pin": "PIN码错误",
   "invalid_spend_request": "无效的支出请求",
   "invalid_custom_fee": "Minimum custom fee is",
+  "missing_username": "<No username>",
   "settings_account_title_cap": "账号",
   "settings_button_change_password": "更改密码",
   "settings_developer_mode": "Developer Mode",
