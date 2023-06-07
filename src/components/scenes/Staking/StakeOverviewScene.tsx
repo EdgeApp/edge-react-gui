@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -12,6 +11,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
+import { EdgeFlashList } from '../../common/EdgeFlashList'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { FillLoader } from '../../progress-indicators/FillLoader'
@@ -129,7 +129,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
-      <FlashList
+      <EdgeFlashList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}

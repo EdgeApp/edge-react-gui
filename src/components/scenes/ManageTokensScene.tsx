@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -13,6 +12,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -146,7 +146,7 @@ function ManageTokensSceneComponent(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
+      <EdgeFlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />

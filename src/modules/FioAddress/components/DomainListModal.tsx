@@ -1,10 +1,10 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../../assets/vector'
+import { EdgeFlashList } from '../../../components/common/EdgeFlashList'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableText } from '../../../components/themed/ClickableText'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -171,7 +171,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
             searchIcon
           />
         </View>
-        <FlashList
+        <EdgeFlashList
           data={items}
           estimatedItemSize={theme.rem(3.5)}
           keyboardShouldPersistTaps="handled"

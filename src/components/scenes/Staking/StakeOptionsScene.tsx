@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -12,6 +11,7 @@ import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
+import { EdgeFlashList } from '../../common/EdgeFlashList'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { CryptoIcon } from '../../icons/CryptoIcon'
@@ -74,7 +74,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>
-        <FlashList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <EdgeFlashList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
       </View>
     </SceneWrapper>
   )

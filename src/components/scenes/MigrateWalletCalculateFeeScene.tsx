@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import { add, lt } from 'biggystring'
 import { EdgeDenomination, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
@@ -13,6 +13,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { Airship } from '../services/AirshipInstance'
@@ -222,7 +223,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
           {lstrings.migrate_wallet_instructions_fragment}
         </EdgeText>
-        <FlashList
+        <EdgeFlashList
           automaticallyAdjustContentInsets={false}
           data={migrateWalletList}
           estimatedItemSize={theme.rem(4.25)}

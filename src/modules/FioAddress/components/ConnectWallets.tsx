@@ -1,8 +1,8 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Switch, View } from 'react-native'
 
+import { EdgeFlashList } from '../../../components/common/EdgeFlashList'
 import { CryptoIcon } from '../../../components/icons/CryptoIcon'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
@@ -202,7 +202,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         <View style={styles.list}>
           <ScrollView>
             {walletItems && Object.keys(walletItems).length ? (
-              <FlashList
+              <EdgeFlashList
                 data={Object.values(walletItems)}
                 extraData={flashListToggle}
                 estimatedItemSize={theme.rem(4.25)}

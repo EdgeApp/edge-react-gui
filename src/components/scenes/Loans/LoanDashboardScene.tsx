@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
@@ -24,6 +23,7 @@ import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
 import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
+import { EdgeFlashList } from '../../common/EdgeFlashList'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
 import { LoanWelcomeModal } from '../../modals/LoanWelcomeModal'
@@ -223,7 +223,7 @@ export const LoanDashboardScene = (props: Props) => {
         </>
       ) : (
         <View style={styles.listMargin}>
-          <FlashList
+          <EdgeFlashList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}

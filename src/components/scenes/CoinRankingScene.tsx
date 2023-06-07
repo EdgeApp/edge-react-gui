@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
@@ -13,6 +12,7 @@ import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
@@ -237,7 +237,7 @@ const CoinRankingComponent = (props: Props) => {
         </View>
       </View>
       <DividerLine marginRem={[0, 0, 0, 1]} />
-      <FlashList
+      <EdgeFlashList
         estimatedItemSize={theme.rem(3.75)}
         data={listdata}
         extraData={extraData}

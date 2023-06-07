@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
 
@@ -8,6 +7,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
@@ -107,7 +107,7 @@ function WalletListSwipeableComponent(props: Props) {
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
   return (
-    <FlashList
+    <EdgeFlashList
       estimatedItemSize={theme.rem(4.25)}
       contentOffset={flatListContentOffset}
       data={data}

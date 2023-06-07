@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import { add, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
@@ -13,6 +13,7 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -77,7 +78,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     }, {})
   })
 
-  const flatListRef = React.useRef<FlashList<MigrateWalletItem>>(null)
+  const flatListRef = React.useRef<EdgeFlashList<MigrateWalletItem>>(null)
 
   const handleItemStatus = (item: MigrateWalletItem, status: 'complete' | 'error') => {
     setItemStatus(currentState => ({ ...currentState, [item.key]: status }))
@@ -243,7 +244,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader title={lstrings.migrate_wallets_title} withTopMargin />
-          <FlashList
+          <EdgeFlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}
             data={sortedMigrateWalletList}

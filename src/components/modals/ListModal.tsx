@@ -1,9 +1,10 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { Keyboard, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
@@ -92,7 +93,7 @@ export function ListModal<T>({
           {...textProps}
         />
       )}
-      <FlashList
+      <EdgeFlashList
         contentContainerStyle={scrollPadding}
         data={filteredRows}
         estimatedItemSize={theme.rem(5)}

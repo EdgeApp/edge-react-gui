@@ -1,4 +1,4 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
 import { Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -262,7 +263,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onClear={() => setSearchTerm('')}
             onSubmitEditing={handleNext}
           />
-          <FlashList
+          <EdgeFlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}

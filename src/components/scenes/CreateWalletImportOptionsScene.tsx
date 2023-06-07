@@ -1,4 +1,3 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -8,6 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
+import { EdgeFlashList } from '../common/EdgeFlashList'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -193,7 +193,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     <SceneWrapper background="theme">
       <SceneHeader title={lstrings.create_wallet_import_options_title} withTopMargin />
       <View style={styles.content}>
-        <FlashList
+        <EdgeFlashList
           automaticallyAdjustContentInsets={false}
           data={[...importOpts.entries()]}
           estimatedItemSize={(importOpts.size * theme.rem(1.375) + values.size * theme.rem(4.25)) / (importOpts.size + values.size)}
