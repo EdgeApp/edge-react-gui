@@ -310,6 +310,7 @@
   "incorrect_pin": "Falscher PIN",
   "invalid_spend_request": "Ungültige Spend-Anfrage",
   "invalid_custom_fee": "Minimale benutzerdefinierte Gebühr ist",
+  "missing_username": "<No username>",
   "settings_account_title_cap": "Benutzerkonto",
   "settings_button_change_password": "Passwort ändern",
   "settings_developer_mode": "Entwickler-Modus",
