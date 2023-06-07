@@ -164,6 +164,8 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_PASSWORD != null
   ) {
     const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
+    call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`)
+    call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
     mylog('Using Fastlane for provisioning profiles')
     const matchFileLoc = join(buildObj.guiDir, '.fastlane', 'Matchfile')
@@ -202,10 +204,10 @@ function buildIos(buildObj: BuildObj) {
 
   let cmdStr
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}' "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
@@ -241,10 +243,10 @@ function buildIos(buildObj: BuildObj) {
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}'  "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)
