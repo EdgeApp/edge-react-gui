@@ -162,6 +162,8 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_PASSWORD != null
   ) {
     const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
+    call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}' "${process.env.HOME || ''}/Library/Keychains/login.keychain"`)
+    call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
     mylog('Using Fastlane for provisioning profiles')
     const matchFileLoc = join(buildObj.guiDir, '.fastlane', 'Matchfile')
