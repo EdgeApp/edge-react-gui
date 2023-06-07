@@ -8002,7 +8002,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               ]
             }
           >
-            If you have any questions or concerns regarding this send please contact support@edge.app
+            If you have any questions or concerns regarding this send, please contact support@edge.app
           </Text>
         </View>
       </View>
