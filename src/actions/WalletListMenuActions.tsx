@@ -261,9 +261,9 @@ export function walletListMenuAction(
           const state = getState()
           const { account } = state.core
 
-          const keys = account.allKeys.find(key => key.id === walletId)
-          const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={lstrings.string_raw_keys} disableCopy />)
+          const rawKeys = await account.getRawPrivateKey(walletId)
+          const keys = JSON.stringify(rawKeys, null, 2)
+          Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
         }
       }
     }
