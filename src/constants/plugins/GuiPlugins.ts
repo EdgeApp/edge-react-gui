@@ -124,8 +124,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: '',
     lockUriPath: true,
     nativePlugin: makeRewardsCardPlugin,
-    displayName: 'Edge Reward Card',
-    betaOnly: true
+    displayName: 'Edge Reward Card'
   },
   xanpool: {
     pluginId: 'xanpool',

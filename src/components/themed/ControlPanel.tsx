@@ -267,13 +267,13 @@ export function ControlPanel(props: DrawerContentComponentProps) {
     }
   ]
 
-  if (ENV.BETA_FEATURES && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
         dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
-      iconNameFontAwesome: 'cc-visa',
+      iconNameFontAwesome: 'credit-card',
       title: sprintf(lstrings.rewards_card_call_to_action, defaultFiat)
     })
   }
@@ -364,7 +364,7 @@ export function ControlPanel(props: DrawerContentComponentProps) {
                 <View style={styles.rowIconContainer}>
                   {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
                   {rowData.iconNameFontAwesome != null ? (
-                    <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
+                    <FontAwesome5Icon name={rowData.iconNameFontAwesome} style={styles.icon} size={theme.rem(1.25)} color={theme.iconTappable} />
                   ) : null}
                 </View>
                 <View style={styles.rowBodyContainer}>

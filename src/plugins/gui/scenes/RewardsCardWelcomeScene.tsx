@@ -28,7 +28,7 @@ export const RewardsCardWelcomeScene = (props: Props) => {
         <WelcomeContainer>
           <IllustrationImage source={visaCardSayAnythingIllustration} />
           <VisaBrandImage source={visaBrandImage} />
-          <WelcomeInto adjustsFontSizeToFit numberOfLines={4}>
+          <WelcomeInto adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={4}>
             {lstrings.rewards_card_welcome_intro}
           </WelcomeInto>
         </WelcomeContainer>

@@ -54,6 +54,7 @@ const CoinRankingComponent = (props: Props) => {
   const { navigation } = props
 
   const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
+  const [lastUsedFiat, setLastUsedFiat] = useState<string>(defaultIsoFiat)
 
   const mounted = React.useRef<boolean>(true)
   const textInput = React.useRef<OutlinedTextInputRef>(null)
@@ -65,7 +66,7 @@ const CoinRankingComponent = (props: Props) => {
   const [searching, setSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
-  const extraData = React.useMemo(() => ({ assetSubText, percentChangeTimeFrame }), [assetSubText, percentChangeTimeFrame])
+  const extraData = React.useMemo(() => ({ assetSubText, lastUsedFiat, percentChangeTimeFrame }), [assetSubText, lastUsedFiat, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
 
@@ -73,7 +74,7 @@ const CoinRankingComponent = (props: Props) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
-    const key = `${index}-${item}-${rank}-${currencyCode}`
+    const key = `${index}-${item}-${rank}-${currencyCode}-${lastUsedFiat}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
@@ -141,7 +142,7 @@ const CoinRankingComponent = (props: Props) => {
     const queryLoop = async () => {
       try {
         let start = 1
-        debugLog(LOG_COINRANK, `queryLoop dataSize=${dataSize} requestDataSize=${requestDataSize}`)
+        debugLog(LOG_COINRANK, `queryLoop ${defaultIsoFiat} dataSize=${dataSize} requestDataSize=${requestDataSize}`)
         while (start < requestDataSize) {
           const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
           const response = await fetchRates(url)
@@ -161,6 +162,9 @@ const CoinRankingComponent = (props: Props) => {
           start += QUERY_PAGE_SIZE
         }
         setDataSize(coinRankingDatas.length)
+        if (lastUsedFiat !== defaultIsoFiat) {
+          setLastUsedFiat(defaultIsoFiat)
+        }
       } catch (e: any) {
         console.warn(e.message)
       }
@@ -170,7 +174,7 @@ const CoinRankingComponent = (props: Props) => {
       clearTimeout(timeoutHandler.current)
     }
     queryLoop().catch(e => debugLog(LOG_COINRANK, e.message))
-  }, [requestDataSize])
+  }, [requestDataSize, defaultIsoFiat])
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)

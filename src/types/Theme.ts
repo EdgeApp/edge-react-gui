@@ -70,6 +70,7 @@ export interface Theme {
   iconTappable: string
   iconDeactivated: string
   warningIcon: string
+  dangerIcon: string
   iconLoadingOverlay: string
   transactionListIconBackground: string
   buySellCustomPluginModalIcon: string

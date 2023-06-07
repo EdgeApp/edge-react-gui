@@ -49,6 +49,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "confirmationSliderThumbWidth": 55,
       "confirmationSliderWidth": 295,
       "confirmationThumbDeactivated": "#87939E",
+      "dangerIcon": "#E85466",
       "dangerText": "#E85466",
       "dateModalBackgroundDark": "#1b2f3b",
       "dateModalBackgroundLight": "#FFFFFF",

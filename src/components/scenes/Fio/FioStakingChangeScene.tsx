@@ -88,7 +88,15 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
         currencyWallet
           .getMaxSpendable({
             currencyCode,
-            spendTargets: [{ nativeAmount: '', otherParams: {}, publicAddress: '' }]
+            spendTargets: [{ publicAddress: '' }],
+            otherParams: {
+              action: {
+                name: 'stakeFioTokens',
+                params: {
+                  fioAddress: selectedFioAddress
+                }
+              }
+            }
           })
           .then(nativeAmount => {
             onAmountChanged(nativeAmount, add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
@@ -96,10 +104,11 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
         break
       }
       case 'remove': {
-        onAmountChanged(
-          stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native,
-          stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].crypto
-        )
+        const nativeAmt = stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native
+        currencyWallet
+          .nativeToDenomination(nativeAmt, 'FIO')
+          .then(exchangeAmt => onAmountChanged(nativeAmt, exchangeAmt))
+          .catch(e => console.error(e))
         break
       }
       default:

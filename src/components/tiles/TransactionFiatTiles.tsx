@@ -84,7 +84,7 @@ export function TransactionFiatTiles(props: Props) {
         const amountFiat = parseFloat(inputText.replace(',', '.'))
 
         // Check for NaN, Infinity, and 0:
-        if (amountFiat === 0 || JSON.stringify(amountFiat) == null) return
+        if (amountFiat === 0 || JSON.stringify(amountFiat) === 'null') return
         await onMetadataEdit({ amountFiat })
       })
       .catch(showError)

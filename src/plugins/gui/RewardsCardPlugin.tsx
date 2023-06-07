@@ -4,8 +4,8 @@ import React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { addressWarnings } from '../../actions/ScanActions'
-import { ButtonsModal } from '../../components/modals/ButtonsModal'
-import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
+import { Space } from '../../components/layout/Space'
+import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
 import { runWithTimeout, snooze } from '../../util/utils'
@@ -14,12 +14,13 @@ import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletP
 import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
+import { RewardCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
-const SUPPORT_URL = 'https://edge.app/cards/'
+const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
 export interface RewardsCardItem {
-  id: string
+  id: number
   expiration: Date
   url: string
 }
@@ -30,11 +31,13 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const { showUi, account, guiPlugin } = params
   const { pluginId } = guiPlugin
 
-  const SUPPORTED_ASSETS: EdgeTokenId[] = ['bitcoin', 'bitcoincash', 'dogecoin', 'litecoin'].map(pluginId => ({ pluginId }))
-
   const providers = await initializeProviders<IoniaMethods>(PROVIDER_FACTORIES, params)
   if (providers.length === 0) throw new Error('No enabled providers for RewardsCardPlugin')
   const provider = providers[0]
+
+  // Get supported crypto assets:
+  const supportedAssetMap = await provider.getSupportedAssets([])
+  const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
 
   //
   // Helpers:
@@ -42,33 +45,32 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   async function getRewardCards(): Promise<RewardsCardItem[]> {
     const giftCards = await provider.otherMethods.getGiftCards()
-    const rewardCards: RewardsCardItem[] = giftCards.map(card => {
+    const rewardCards: RewardsCardItem[] = giftCards.cards.map(card => {
       // Expires 6 calendar months from the creation date
       const expirationDate = new Date(card.CreatedDate.valueOf())
       expirationDate.setMonth(card.CreatedDate.getMonth() + 6)
 
       return {
-        id: card.Id.toString(),
-        // Expires in 180 days (6 months) from creation date
+        id: card.Id,
         expiration: expirationDate,
         url: card.CardNumber
       }
     })
     // Reverse order to show latest first
-    return rewardCards.reverse()
+    return rewardCards
   }
 
   async function refreshRewardsCards(retries: number) {
-    if (retries > 9) return
+    if (retries > 15) return
     await getRewardCards()
       .then(async cards => {
         if (cards.length === rewardCards.length) {
           console.log(`Retrying rewards card refresh`)
-          await snooze(1000)
+          await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
         rewardCards = cards
-        showDashboard()
+        showDashboard({ showLoading: false })
       })
       .catch(async error => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
@@ -88,9 +90,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   // State Machine:
   //
 
-  const showDashboard = async () => {
+  const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
     showUi.rewardsCardDashboard({
       items: rewardCards,
+      showLoading,
       onCardPress({ url }) {
         showUi.openWebView({ url })
       },
@@ -106,19 +109,30 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     })
   }
 
-  const showDeleteItemModal = async (item: RewardsCardItem) => {
-    const answer = await Airship.show<'delete' | 'keep' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{
-          keep: { label: lstrings.string_keep, type: 'primary' },
-          delete: { label: lstrings.string_delete, type: 'escape' }
-        }}
-        title={lstrings.rewards_card_delete_modal_title}
-        message={sprintf(lstrings.rewards_card_delete_modal_message_s, item.expiration)}
-      />
-    ))
-    if (answer === 'delete') showToast('Deleted it!')
+  const showDeleteItemModal = async (card: RewardsCardItem) => {
+    const answer = await showUi.buttonModal({
+      buttons: {
+        delete: { label: lstrings.string_delete, type: 'secondary' },
+        keep: { label: lstrings.string_keep, type: 'escape' }
+      },
+      title: lstrings.rewards_card_delete_modal_title,
+      message: lstrings.rewards_card_delete_modal_message,
+      children: (
+        <Space around={1}>
+          <RewardCard item={card} />
+        </Space>
+      )
+    })
+
+    if (answer === 'delete') {
+      // Hide the card
+      provider.otherMethods.hideCard(card.id)
+      // Remove card from plugin state
+      rewardCards = rewardCards.filter(c => c.id !== card.id)
+
+      // Reset state for dashboard
+      showDashboard({ showLoading: false })
+    }
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
@@ -215,8 +229,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         }
 
         const onDone = () => {
-          showDashboard()
-          showUi.showToastSpinner(lstrings.rewards_card_purchase_successful, refreshRewardsCards(0).catch(showError))
+          showDashboard({ showLoading: true })
+          refreshRewardsCards(0)
+            .finally(async () => await showDashboard({ showLoading: false }))
+            .catch(showError)
         }
 
         const metadata: EdgeMetadata = {
@@ -234,7 +250,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const showNewCardWalletListModal = async () => {
     const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
       headerTitle: lstrings.rewards_card_select_wallet,
-      allowedAssets: SUPPORTED_ASSETS,
+      allowedAssets,
       showCreateWallet: false
     })
     showNewCardEnterAmount(walletListResult)
@@ -285,24 +301,23 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     pluginId,
     startPlugin: async (startParams: FiatPluginStartParams) => {
       // Auth User:
-      const startPluginInner = async (): Promise<RewardsCardItem[]> => {
-        const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
-          throw new Error(lstrings.rewards_card_error_authenticate)
-        })
+      const isAuthenticated = await provider.otherMethods.authenticate().catch(e => {
+        throw new Error(lstrings.rewards_card_error_authenticate)
+      })
 
+      if (isAuthenticated) {
         // Get/refresh rewards cards:
-        if (isAuthenticated) {
-          return await getRewardCards().catch(e => {
-            throw new Error(lstrings.rewards_card_error_retrieving_cards)
-          })
-        }
-        return rewardCards
+        rewardCards = await showUi.showToastSpinner(
+          lstrings.loading,
+          runWithTimeout(
+            getRewardCards().catch(e => {
+              throw new Error(lstrings.rewards_card_error_retrieving_cards)
+            }),
+            11000,
+            new Error(lstrings.rewards_card_error_timeout_loading)
+          )
+        )
       }
-
-      rewardCards = await showUi.showToastSpinner(
-        lstrings.loading,
-        runWithTimeout(startPluginInner(), 11000, new Error(lstrings.rewards_card_error_timeout_loading))
-      )
 
       redundantQuoteParams = {
         direction: startParams.direction,
@@ -310,8 +325,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         regionCode: startParams.regionCode
       }
 
-      if (rewardCards.length > 0) {
-        await showDashboard()
+      if (isAuthenticated) {
+        await showDashboard({ showLoading: false })
       } else {
         await showWelcome()
       }

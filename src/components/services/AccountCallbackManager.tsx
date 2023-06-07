@@ -3,6 +3,8 @@ import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
+import { checkFioObtData } from '../../actions/FioActions'
+import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
@@ -89,6 +91,16 @@ export function AccountCallbackManager(props: Props) {
 
         dispatch(refreshTransactionsRequest(wallet, transactions))
         dispatch(newTransactionsRequest(navigation, wallet, transactions))
+
+        // Check for incoming FIO requests:
+        const receivedTxs = transactions.filter(tx => !tx.isSend)
+        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs))
+
+        // Show the dropdown for the first transaction:
+        const [firstReceive] = receivedTxs
+        if (firstReceive != null) {
+          dispatch(showReceiveDropdown(navigation, firstReceive))
+        }
 
         // Check if password recovery is set up:
         const finalTxIndex = transactions.length - 1

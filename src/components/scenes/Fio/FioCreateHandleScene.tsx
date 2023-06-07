@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { showError } from '../../services/AirshipInstance'
+import { showError, showToast } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
@@ -126,6 +126,7 @@ export const FioCreateHandleScene = ({ navigation, route }: Props) => {
         asRegisterSuccessRes(regAddressRes)
 
         dispatch(refreshAllFioAddresses())
+        showToast(lstrings.fio_free_handle_complete)
         navigation.pop()
       } catch (e: any) {
         // Rejected somehow, see if error is readable
