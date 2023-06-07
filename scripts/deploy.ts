@@ -25,6 +25,7 @@ interface BuildConfigFile {
 
   // iOS build options:
   appleDeveloperTeamId: string
+  appleDeveloperTeamName: string
   xcodeScheme: string
   xcodeWorkspace: string
   bundleId: string
@@ -174,9 +175,15 @@ function buildIos(buildObj: BuildObj) {
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
     const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
     call(`rm -rf ${escapePath(profileDir)}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
   }
