@@ -232,6 +232,7 @@ export const asEnvConfig = asObject({
   YOLO_USERNAME: asNullable(asString),
 
   // Debug options:
+  ALLOW_DEVELOPER_MODE: asOptional(asBoolean, true),
   DEBUG_CORE: asOptional(asBoolean, false),
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),

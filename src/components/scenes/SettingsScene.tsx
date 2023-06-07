@@ -18,6 +18,7 @@ import {
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
@@ -325,12 +326,14 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           })}
 
           <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
-          <SettingsSwitchRow
-            key="developerMode"
-            label={lstrings.settings_developer_mode}
-            value={this.props.developerModeOn}
-            onPress={this.handleDeveloperToggle}
-          />
+          {ENV.ALLOW_DEVELOPER_MODE && (
+            <SettingsSwitchRow
+              key="developerMode"
+              label={lstrings.settings_developer_mode}
+              value={this.props.developerModeOn}
+              onPress={this.handleDeveloperToggle}
+            />
+          )}
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
