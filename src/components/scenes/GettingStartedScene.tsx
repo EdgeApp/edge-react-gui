@@ -33,6 +33,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
+import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 
@@ -355,30 +356,37 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 // Sections
 //
 
-const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
-  {
-    alignItems: 'stretch',
-    backgroundColor: '#0F1D26',
-    paddingVertical: props.theme.rem(1)
-  },
-  useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.5, 1.5], Extrapolation.CLAMP)
-    return {
-      backgroundColor,
-      flex
-    }
-  })
-])
+const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => {
+  const theme = useTheme()
+  const themeRem = theme.rem(1)
+  return [
+    {
+      alignItems: 'stretch',
+      justifyContent: 'space-between',
+      backgroundColor: '#0F1D26',
+      paddingVertical: props.theme.rem(1)
+    },
+    useAnimatedStyle(() => {
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
+      const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
+      const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
+      return {
+        backgroundColor,
+        paddingVertical,
+        flexGrow
+      }
+    })
+  ]
+})
 
 const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
   {
     paddingBottom: props.theme.rem(1)
   },
   useAnimatedStyle(() => {
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.00000001, 1.5])
+    const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.5])
     return {
-      flex
+      flexGrow
     }
   })
 ])
