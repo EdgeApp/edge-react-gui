@@ -33,7 +33,7 @@ interface DispatchProps {
 interface StateProps {
   accountPlugins: PluginTweak[]
   accountReferral: AccountReferral
-  exchanges: EdgePluginMap<EdgeSwapConfig>
+  swapConfigs: EdgePluginMap<EdgeSwapConfig>
   settingsPreferredSwap: string | undefined
   settingsPreferredSwapType: EdgeSwapPluginType | undefined
 }
@@ -51,19 +51,19 @@ export class SwapSettings extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    const { exchanges } = props
+    const { swapConfigs } = props
 
     this.state = { enabled: {} }
-    for (const pluginId of Object.keys(exchanges)) {
-      const exchange = exchanges[pluginId]
+    for (const pluginId of Object.keys(swapConfigs)) {
+      const exchange = swapConfigs[pluginId]
       this.state.enabled[pluginId] = exchange.enabled
     }
 
-    const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
-    const cexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex !== true)
-    const dexIds = exchangeIds.filter(id => exchanges[id].swapInfo.isDex === true)
-    this.sortedCexIds = cexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
-    this.sortedDexIds = dexIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const exchangeIds = Object.keys(swapConfigs).filter(id => id !== 'transfer')
+    const cexIds = exchangeIds.filter(id => swapConfigs[id].swapInfo.isDex !== true)
+    const dexIds = exchangeIds.filter(id => swapConfigs[id].swapInfo.isDex === true)
+    this.sortedCexIds = cexIds.sort((a, b) => swapConfigs[a].swapInfo.displayName.localeCompare(swapConfigs[b].swapInfo.displayName))
+    this.sortedDexIds = dexIds.sort((a, b) => swapConfigs[a].swapInfo.displayName.localeCompare(swapConfigs[b].swapInfo.displayName))
   }
 
   async componentWillUnmount() {
@@ -72,10 +72,10 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { exchanges } = this.props
+    const { swapConfigs } = this.props
     this.swapConfigUnsubscribeFns = []
-    for (const pluginId of Object.keys(exchanges)) {
-      const unsubscribe = exchanges[pluginId].watch('enabled', pluginEnabled => {
+    for (const pluginId of Object.keys(swapConfigs)) {
+      const unsubscribe = swapConfigs[pluginId].watch('enabled', pluginEnabled => {
         this.setState({ enabled: { ...this.state.enabled, [pluginId]: pluginEnabled } })
       })
       this.swapConfigUnsubscribeFns.push(unsubscribe)
@@ -87,7 +87,7 @@ export class SwapSettings extends React.Component<Props, State> {
       accountPlugins,
       changePreferredSwapPlugin,
       changePreferredSwapPluginType,
-      exchanges,
+      swapConfigs,
       ignoreAccountSwap,
       accountReferral,
       settingsPreferredSwap,
@@ -107,23 +107,23 @@ export class SwapSettings extends React.Component<Props, State> {
     } else if (settingsPreferredSwapType === 'CEX') {
       selected = lstrings.swap_preferred_cex
     } else {
-      selected = exchanges[selectedPluginId] != null ? exchanges[selectedPluginId].swapInfo.displayName : lstrings.swap_preferred_cheapest
+      selected = swapConfigs[selectedPluginId] != null ? swapConfigs[selectedPluginId].swapInfo.displayName : lstrings.swap_preferred_cheapest
     }
 
     // Process Items
-    const cexItems = Object.keys(exchanges)
-      .filter(pluginId => exchanges[pluginId].swapInfo.isDex !== true)
-      .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const cexItems = Object.keys(swapConfigs)
+      .filter(pluginId => swapConfigs[pluginId].swapInfo.isDex !== true)
+      .sort((a, b) => swapConfigs[a].swapInfo.displayName.localeCompare(swapConfigs[b].swapInfo.displayName))
 
-    const dexItems = Object.keys(exchanges)
-      .filter(pluginId => exchanges[pluginId].swapInfo.isDex === true)
-      .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const dexItems = Object.keys(swapConfigs)
+      .filter(pluginId => swapConfigs[pluginId].swapInfo.isDex === true)
+      .sort((a, b) => swapConfigs[a].swapInfo.displayName.localeCompare(swapConfigs[b].swapInfo.displayName))
 
     const exchangeItems = [...dexItems, ...cexItems]
       // const exchangeItems = [...cexItems, ...dexItems]
-      .filter(pluginId => exchanges[pluginId].enabled && pluginId !== 'transfer')
+      .filter(pluginId => swapConfigs[pluginId].enabled && pluginId !== 'transfer')
       .map(pluginId => ({
-        name: exchanges[pluginId].swapInfo.displayName,
+        name: swapConfigs[pluginId].swapInfo.displayName,
         icon: getSwapPluginIconUri(pluginId, theme)
       }))
 
@@ -158,7 +158,7 @@ export class SwapSettings extends React.Component<Props, State> {
       } else if (result === preferCex.name) {
         changePreferredSwapPluginType('CEX')
       } else {
-        changePreferredSwapPlugin(Object.keys(exchanges).find(pluginId => exchanges[pluginId].swapInfo.displayName === result))
+        changePreferredSwapPlugin(Object.keys(swapConfigs).find(pluginId => swapConfigs[pluginId].swapInfo.displayName === result))
       }
     })
   }
@@ -183,8 +183,8 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   renderPlugin(pluginId: string) {
-    const { exchanges } = this.props
-    const { displayName } = exchanges[pluginId].swapInfo
+    const { swapConfigs } = this.props
+    const { displayName } = swapConfigs[pluginId].swapInfo
     const pluginEnabled = this.state.enabled[pluginId]
 
     return (
@@ -193,7 +193,7 @@ export class SwapSettings extends React.Component<Props, State> {
         label={displayName}
         value={pluginEnabled}
         onPress={async () => {
-          await exchanges[pluginId].changeEnabled(!pluginEnabled)
+          await swapConfigs[pluginId].changeEnabled(!pluginEnabled)
         }}
       >
         {this.renderPluginIcon(pluginId)}
@@ -209,7 +209,7 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   renderPreferredArea() {
-    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, settingsPreferredSwapType, theme } = this.props
+    const { accountPlugins, swapConfigs, accountReferral, settingsPreferredSwap, settingsPreferredSwapType, theme } = this.props
     const styles = getStyles(theme)
     const iconSize = theme.rem(1.25)
 
@@ -220,9 +220,9 @@ export class SwapSettings extends React.Component<Props, State> {
 
     // Pick the plugin description:
     let { label, icon } =
-      pluginId != null && exchanges[pluginId] != null
+      pluginId != null && swapConfigs[pluginId] != null
         ? {
-            label: exchanges[pluginId].swapInfo.displayName,
+            label: swapConfigs[pluginId].swapInfo.displayName,
             icon: this.renderPluginIcon(pluginId)
           }
         : {
@@ -292,7 +292,7 @@ export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
   state => ({
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
-    exchanges: state.core.account.swapConfig,
+    swapConfigs: state.core.account.swapConfig,
     settingsPreferredSwap: state.ui.settings.preferredSwapPluginId,
     settingsPreferredSwapType: state.ui.settings.preferredSwapPluginType
   }),
