@@ -161,30 +161,67 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Tap to Unlock Account Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {},
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -222,32 +259,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Change Password
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "rgba(255, 255, 255, .75)",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "rgba(255, 255, 255, .75)",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -285,32 +359,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Change PIN
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "rgba(255, 255, 255, .75)",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "rgba(255, 255, 255, .75)",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -348,32 +459,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Set Up 2-Factor Security
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "rgba(255, 255, 255, .75)",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "rgba(255, 255, 255, .75)",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -411,32 +559,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Set Up Password Recovery
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "rgba(255, 255, 255, .75)",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "rgba(255, 255, 255, .75)",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -474,32 +659,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Delete Account
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "rgba(255, 255, 255, .75)",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "rgba(255, 255, 255, .75)",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <BVLinearGradient
           colors={
@@ -610,32 +832,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Exchange Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -673,32 +932,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Spending Limits
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -736,18 +1032,55 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Auto Log Off After
           </Text>
-          <Text
-            style={
-              Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
               }
-            }
-          >
-            10 Minute(s)
-          </Text>
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#00f1a2",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  }
+                }
+              >
+                10 Minute(s)
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -785,18 +1118,55 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Default Currency
           </Text>
-          <Text
-            style={
-              Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
               }
-            }
-          >
-            USD
-          </Text>
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#00f1a2",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  }
+                }
+              >
+                USD
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -834,36 +1204,73 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             PIN Re-login
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -902,36 +1309,73 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Hide spam transactions
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -970,32 +1414,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Notifications
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1033,32 +1514,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Promotion Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1096,36 +1614,73 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Developer Mode
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -1164,36 +1719,73 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Dark Theme
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -1232,32 +1824,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Restore Wallets
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1295,32 +1924,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Migrate Wallets
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1358,32 +2024,69 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Terms of Service
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1421,36 +2124,73 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             Verbose Logging
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -1844,30 +2584,67 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Tap to Lock Account Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {},
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1905,32 +2682,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Change Password
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -1968,32 +2782,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Change PIN
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2031,32 +2882,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Set Up 2-Factor Security
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2094,32 +2982,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Set Up Password Recovery
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2157,32 +3082,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Delete Account
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <BVLinearGradient
           colors={
@@ -2293,32 +3255,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Exchange Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2356,32 +3355,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Spending Limits
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2419,18 +3455,55 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Auto Log Off After
           </Text>
-          <Text
-            style={
-              Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
               }
-            }
-          >
-            10 Minute(s)
-          </Text>
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#00f1a2",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  }
+                }
+              >
+                10 Minute(s)
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2468,18 +3541,55 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Default Currency
           </Text>
-          <Text
-            style={
-              Object {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 11,
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
               }
-            }
-          >
-            USD
-          </Text>
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                style={
+                  Object {
+                    "color": "#00f1a2",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "marginHorizontal": 11,
+                  }
+                }
+              >
+                USD
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2517,36 +3627,73 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             PIN Re-login
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -2585,36 +3732,73 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Hide spam transactions
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -2653,32 +3837,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Notifications
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2716,32 +3937,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Promotion Settings
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2779,36 +4037,73 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Developer Mode
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -2847,36 +4142,73 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Dark Theme
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -2915,32 +4247,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Restore Wallets
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -2978,32 +4347,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Migrate Wallets
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -3041,32 +4447,69 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Terms of Service
           </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "FontAwesome5Free-Solid",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {
-                  "fontWeight": "900",
-                },
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -3104,36 +4547,73 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             Verbose Logging
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View

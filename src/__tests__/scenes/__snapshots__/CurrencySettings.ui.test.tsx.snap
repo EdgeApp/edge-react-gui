@@ -156,32 +156,69 @@ exports[`CurrencySettings should render 1`] = `
           >
             
           </Text>
-          <Text
-            accessibilityHint="On undefined"
-            accessibilityRole="radio"
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 28,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {},
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                accessibilityHint="On undefined"
+                accessibilityRole="radio"
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 28,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -242,32 +279,69 @@ exports[`CurrencySettings should render 1`] = `
           >
             
           </Text>
-          <Text
-            accessibilityHint="Off undefined"
-            accessibilityRole="radio"
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 28,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {},
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                accessibilityHint="Off undefined"
+                accessibilityRole="radio"
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 28,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           accessible={true}
@@ -328,32 +402,69 @@ exports[`CurrencySettings should render 1`] = `
           >
             
           </Text>
-          <Text
-            accessibilityHint="Off undefined"
-            accessibilityRole="radio"
-            allowFontScaling={false}
-            style={
-              Array [
+          <View>
+            <View
+              pending={false}
+              style={
+                Array [
+                  Object {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  Object {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#00f1a2",
-                  "fontSize": 28,
-                  "marginHorizontal": 11,
-                },
-                Object {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                Object {},
-              ]
-            }
-          >
-            
-          </Text>
+                  "opacity": 1,
+                }
+              }
+            >
+              <Text
+                accessibilityHint="Off undefined"
+                accessibilityRole="radio"
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": undefined,
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#00f1a2",
+                      "fontSize": 28,
+                      "marginHorizontal": 11,
+                    },
+                    Object {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </RCTScrollView>
