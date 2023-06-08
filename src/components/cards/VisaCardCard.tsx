@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 
 import { executePluginAction } from '../../actions/PluginActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -41,6 +42,8 @@ export const VisaCardCard = (props: Props) => {
   if (!IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     return null
   }
+
+  if (!ENV.ENABLE_VISA_PROGRAM) return null
 
   const { pluginId } = wallet.currencyInfo
   const icon = getCurrencyIconUris(pluginId, tokenId)

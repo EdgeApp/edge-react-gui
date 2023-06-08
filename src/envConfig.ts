@@ -222,6 +222,7 @@ export const asEnvConfig = asObject({
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),
   ENABLE_STAKING: asOptional(asBoolean, true),
+  ENABLE_VISA_PROGRAM: asOptional(asBoolean, true),
   BETA_FEATURES: asOptional(asBoolean, false),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
