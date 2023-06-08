@@ -19,7 +19,6 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
-import { EDGE_URL } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -149,8 +148,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
 
     const shareOptions = {
-      message: Platform.OS === 'ios' ? message : message + EDGE_URL,
-      url: Platform.OS === 'ios' ? EDGE_URL : ''
+      message: Platform.OS === 'ios' ? message : message + config.website,
+      url: Platform.OS === 'ios' ? config.website : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }
