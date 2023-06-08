@@ -10,6 +10,7 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
@@ -107,7 +108,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { currencyCode, wallet } = this.props
     const { pluginId } = wallet.currencyInfo
 
-    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true) {
+    if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING) {
       getStakePlugins().then(stakePlugins => {
         const stakePolicies: StakePolicy[] = []
         for (const stakePlugin of stakePlugins) {
