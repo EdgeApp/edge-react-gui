@@ -193,7 +193,8 @@ export class SwapSettings extends React.Component<Props, State> {
         label={displayName}
         value={pluginEnabled}
         onPress={async () => {
-          await swapConfigs[pluginId].changeEnabled(!pluginEnabled)
+          this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
+          swapConfigs[pluginId].changeEnabled(!pluginEnabled)
         }}
       >
         {this.renderPluginIcon(pluginId)}
