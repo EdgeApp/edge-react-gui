@@ -152,9 +152,11 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     showHelpModal()
   }
 
-  onComplete = () => {
-    this.props.navigation.navigate('gettingStarted', {})
-  }
+  onComplete = ENV.USE_WELCOME_SCREENS
+    ? () => {
+        this.props.navigation.navigate('gettingStarted', {})
+      }
+    : undefined
 
   onLogin = async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     const { navigation } = this.props
@@ -191,6 +193,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
         <LoginScreen
           username={username}
           appId={config.appId}
+          appConfig={config}
           accountOptions={{ pauseWallets: true }}
           context={context}
           initialRoute={loginUiInitialRoute}
