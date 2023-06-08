@@ -149,9 +149,11 @@ export function LoginSceneComponent(props: Props) {
     []
   )
 
-  const handleComplete = useHandler(() => {
-    navigation.navigate('gettingStarted', {})
-  })
+  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
+    ? () => {
+        navigation.navigate('gettingStarted', {})
+      }
+    : undefined
 
   const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     setPasswordRecoveryKey(undefined)
@@ -183,6 +185,7 @@ export function LoginSceneComponent(props: Props) {
         key={String(counter)}
         accountOptions={accountOptions}
         appId={config.appId}
+        appConfig={config}
         appName={config.appNameShort}
         backgroundImage={backgroundImage}
         context={context}
@@ -194,7 +197,7 @@ export function LoginSceneComponent(props: Props) {
         recoveryLogin={passwordRecoveryKey}
         skipSecurityAlerts
         username={nextUsername}
-        onComplete={handleComplete}
+        onComplete={maybeHandleComplete}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />
