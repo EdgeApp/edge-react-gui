@@ -134,7 +134,7 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     // Did we get a new recovery link?
     if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
       // Log out if necessary:
-      if (account.username != null) this.props.logout()
+      if (account.loggedIn != null) this.props.logout()
 
       // Pass the link to our component:
       const { passwordRecoveryKey } = pendingDeepLink
@@ -183,7 +183,9 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     const { loginUiInitialRoute = 'login' } = route.params ?? {}
     const styles = getStyles(theme)
 
-    return this.props.account.username == null ? (
+    return this.props.account.loggedIn ? (
+      <LoadingScene />
+    ) : (
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={username}
@@ -205,8 +207,6 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
           skipSecurityAlerts
         />
       </View>
-    ) : (
-      <LoadingScene />
     )
   }
 }
