@@ -54,9 +54,9 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
+  backgroundImage?: ImageProp
   counter: number
   passwordRecoveryKey?: string
-  backgroundImage: ImageProp | null
   needsUpdate: boolean
   notificationPermissionsInfo?: NotificationPermissionsInfo
 }
@@ -69,7 +69,6 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       counter: 0,
-      backgroundImage: null,
       needsUpdate: false
     }
   }
@@ -83,7 +82,6 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
     const backgroundImageServerUrl = pickRandom(theme.backgroundImageServerUrls)
     getBackgroundImage(this.props.disklet, backgroundImageServerUrl, theme.backgroundImage)
       .then(backgroundImage => this.setState({ backgroundImage }))
-      // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
     if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN)) && firstRun) {
@@ -131,7 +129,6 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
         }
         this.setState({ backgroundImage })
       })
-      // @ts-expect-error
       .catch(e => this.setState({ backgroundImage: theme.backgroundImage }))
 
     // Did we get a new recovery link?
