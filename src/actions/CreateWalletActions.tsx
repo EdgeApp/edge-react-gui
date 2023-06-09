@@ -185,11 +185,22 @@ export function createAccountTransaction(
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     if (handleAvailability.result === 'AccountAvailable') {
-      const guiMakeSpendInfo = {
-        currencyCode,
-        nativeAmount,
-        publicAddress: paymentAddress,
-        lockInputs: true,
+      navigation.push('send2', {
+        spendInfo: {
+          currencyCode,
+          spendTargets: [
+            {
+              nativeAmount,
+              publicAddress: paymentAddress
+            }
+          ]
+        },
+        lockTilesMap: {
+          address: true,
+          amount: true,
+          wallet: true
+        },
+        walletId: paymentWalletId,
         onBack: () => {
           // Hack. Keyboard pops up for some reason. Close it
           logEvent('Activate_Wallet_Cancel', {
@@ -221,11 +232,6 @@ export function createAccountTransaction(
         },
         alternateBroadcast:
           createdCurrencyWallet.otherMethods.submitActivationPayment != null ? createdCurrencyWallet.otherMethods.submitActivationPayment : undefined
-      }
-      navigation.push('send', {
-        guiMakeSpendInfo,
-        selectedWalletId: paymentWalletId,
-        selectedCurrencyCode: currencyCode
       })
     } else {
       // if handle is now unavailable
