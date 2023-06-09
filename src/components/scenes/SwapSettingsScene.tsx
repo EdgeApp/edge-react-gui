@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { CallbackRemover } from 'yaob'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions'
 import { setPreferredSwapPluginId, setPreferredSwapPluginType } from '../../actions/SettingsActions'
@@ -46,6 +47,7 @@ interface State {
 export class SwapSettings extends React.Component<Props, State> {
   sortedCexIds: string[]
   sortedDexIds: string[]
+  swapConfigUnsubscribeFns: CallbackRemover[] = []
 
   constructor(props: Props) {
     super(props)
@@ -65,12 +67,18 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   async componentWillUnmount() {
+    this.swapConfigUnsubscribeFns.forEach(unsubscribe => unsubscribe())
+    this.swapConfigUnsubscribeFns = []
+  }
+
+  componentDidMount(): void {
     const { exchanges } = this.props
+    this.swapConfigUnsubscribeFns = []
     for (const pluginId of Object.keys(exchanges)) {
-      if (exchanges[pluginId].enabled !== this.state.enabled[pluginId]) {
-        // This method updates the same file so we have to save updates one at a time
-        await exchanges[pluginId].changeEnabled(this.state.enabled[pluginId])
-      }
+      const unsubscribe = exchanges[pluginId].watch('enabled', pluginEnabled => {
+        this.setState({ enabled: { ...this.state.enabled, [pluginId]: pluginEnabled } })
+      })
+      this.swapConfigUnsubscribeFns.push(unsubscribe)
     }
   }
 
@@ -185,7 +193,7 @@ export class SwapSettings extends React.Component<Props, State> {
         label={displayName}
         value={pluginEnabled}
         onPress={async () => {
-          this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
+          await exchanges[pluginId].changeEnabled(!pluginEnabled)
         }}
       >
         {this.renderPluginIcon(pluginId)}
