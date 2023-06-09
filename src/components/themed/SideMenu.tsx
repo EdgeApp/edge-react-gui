@@ -100,8 +100,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
           ok: {
             label: lstrings.string_forget,
             onPress: async () => {
-              // TODO: Add a way to make this work for accounts without usernames:
-              await context.deleteLocalAccount(userInfo.username ?? '')
+              await context.forgetAccount(userInfo.loginId)
               return true
             },
             type: 'primary'

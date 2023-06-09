@@ -166,7 +166,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
     if (!approveDelete) return
 
-    const { username } = this.props.account
+    const { username, rootLoginId } = this.props.account
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -178,7 +178,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           if (text !== username) return lstrings.delete_account_verification_error
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest(this.props.navigation)
-          await this.props.context.deleteLocalAccount(username)
+          await this.props.context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />)
           return true
         }}
