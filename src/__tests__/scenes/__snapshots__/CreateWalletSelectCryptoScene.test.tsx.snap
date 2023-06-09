@@ -726,19 +726,19 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         </RCTScrollView>
       </View>
       <View
-        pointerEvents="none"
         style={
           Object {
-            "opacity": 0,
+            "flex": 1,
+            "justifyContent": "flex-end",
+            "paddingBottom": 22,
           }
         }
       >
         <View
+          pointerEvents="none"
           style={
             Object {
-              "alignSelf": "center",
-              "bottom": 22,
-              "position": "absolute",
+              "opacity": 0,
             }
           }
         >
