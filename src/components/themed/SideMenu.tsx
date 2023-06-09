@@ -267,7 +267,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
     }
   ]
 
-  if (IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
+  if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
         dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))

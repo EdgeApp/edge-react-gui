@@ -331,6 +331,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
     plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
+    if (!ENV.ENABLE_VISA_PROGRAM) {
+      plugins = plugins.filter(plugin => plugin.pluginId !== 'rewardscard')
+    }
+
     if (!this.state.hasWyreAccountHack) {
       plugins = plugins.filter(plugin => plugin.pluginId !== 'wyre')
     }
