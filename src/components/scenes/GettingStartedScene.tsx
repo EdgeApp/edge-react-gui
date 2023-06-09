@@ -14,7 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
 import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.png'
@@ -33,6 +33,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
+import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 
@@ -173,7 +174,9 @@ export const GettingStartedScene = (props: Props) => {
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
               <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle>{parseMarkedText(lstrings.getting_started_welcome_title)}</WelcomeHeroTitle>
+              <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
+                {parseMarkedText(lstrings.getting_started_welcome_title)}
+              </WelcomeHeroTitle>
               <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
               <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
             </WelcomeHero>
@@ -265,6 +268,7 @@ const WelcomeHeroTitle = styled(Text)(props => ({
   fontFamily: props.theme.fontFaceDefault,
   fontSize: props.theme.rem(2.25),
   includeFontPadding: false,
+  lineHeight: props.theme.rem(2.8),
   paddingVertical: props.theme.rem(1),
   textAlign: 'center'
 }))
@@ -352,30 +356,41 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 // Sections
 //
 
-const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
-  {
-    alignItems: 'stretch',
-    backgroundColor: '#0F1D26',
-    paddingVertical: props.theme.rem(1)
-  },
-  useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.5, 1.5], Extrapolation.CLAMP)
-    return {
-      backgroundColor,
-      flex
-    }
-  })
-])
+const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => {
+  const theme = useTheme()
+  const themeRem = theme.rem(1)
+  const insets = useSafeAreaInsets()
+
+  return [
+    {
+      alignItems: 'stretch',
+      justifyContent: 'space-between',
+      backgroundColor: '#0F1D26',
+      paddingVertical: props.theme.rem(1),
+      paddingBottom: insets.bottom,
+      marginBottom: -insets.bottom
+    },
+    useAnimatedStyle(() => {
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
+      const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
+      const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
+      return {
+        backgroundColor,
+        paddingVertical,
+        flexGrow
+      }
+    })
+  ]
+})
 
 const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
   {
     paddingBottom: props.theme.rem(1)
   },
   useAnimatedStyle(() => {
-    const flex = interpolate(props.swipeOffset.value, [0, 1], [0.00000001, 1.5])
+    const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.5])
     return {
-      flex
+      flexGrow
     }
   })
 ])
