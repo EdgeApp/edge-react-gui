@@ -14,6 +14,7 @@ import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleSc
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
+import { SendSceneParams } from '../components/scenes/SendScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
@@ -262,23 +263,7 @@ export interface RouteParamList {
     data?: 'sweepPrivateKey' | 'loginQR'
   } // TODO
   securityAlerts: {}
-  send: {
-    guiMakeSpendInfo?: GuiMakeSpendInfo
-    selectedWalletId?: string
-    selectedCurrencyCode?: string
-    isCameraOpen?: boolean
-    lockTilesMap?: {
-      address?: boolean
-      wallet?: boolean
-      amount?: boolean
-    }
-    hiddenFeaturesMap?: {
-      address?: boolean
-      amount?: boolean
-      fioAddressSelect?: boolean
-    }
-    infoTiles?: Array<{ label: string; value: string }>
-  }
+  send: SendSceneParams
   send2: SendScene2Params
   settingsOverview: {}
   settingsOverviewTab: {}

@@ -107,6 +107,24 @@ type State = {
   fioSender: FioSenderInfo
 } & WalletStates
 
+export interface SendSceneParams {
+  guiMakeSpendInfo?: GuiMakeSpendInfo
+  selectedWalletId?: string
+  selectedCurrencyCode?: string
+  isCameraOpen?: boolean
+  lockTilesMap?: {
+    address?: boolean
+    wallet?: boolean
+    amount?: boolean
+  }
+  hiddenFeaturesMap?: {
+    address?: boolean
+    amount?: boolean
+    fioAddressSelect?: boolean
+  }
+  infoTiles?: Array<{ label: string; value: string }>
+}
+
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTileRef | null = null
   pinInput = React.createRef<TextInput>()
