@@ -224,6 +224,7 @@ export const asEnvConfig = asObject({
   ENABLE_STAKING: asOptional(asBoolean, true),
   ENABLE_VISA_PROGRAM: asOptional(asBoolean, true),
   BETA_FEATURES: asOptional(asBoolean, false),
+  KEYS_ONLY_PLUGINS: asOptional(asObject(asBoolean), {}),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   USE_WELCOME_SCREENS: asOptional(asBoolean, true),

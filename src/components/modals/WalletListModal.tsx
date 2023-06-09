@@ -14,7 +14,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeTokenId } from '../../types/types'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, keysOnlyModePlugins } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -62,7 +62,7 @@ interface Props {
 }
 
 const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+  .filter(pluginId => keysOnlyModePlugins.includes(pluginId))
   .map(pluginId => ({
     pluginId
   }))
