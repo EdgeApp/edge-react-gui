@@ -149,11 +149,11 @@ export function LoginSceneComponent(props: Props) {
     []
   )
 
-  const onComplete = useHandler(() => {
+  const handleComplete = useHandler(() => {
     navigation.navigate('gettingStarted', {})
   })
 
-  const onLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
+  const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     setPasswordRecoveryKey(undefined)
     dispatch(initializeAccount(navigation, account, touchIdInfo ?? dummyTouchIdInfo))
 
@@ -194,8 +194,8 @@ export function LoginSceneComponent(props: Props) {
         recoveryLogin={passwordRecoveryKey}
         skipSecurityAlerts
         username={nextUsername}
-        onComplete={onComplete}
-        onLogin={onLogin}
+        onComplete={handleComplete}
+        onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />
     </View>
