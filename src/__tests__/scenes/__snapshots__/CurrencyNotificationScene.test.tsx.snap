@@ -88,36 +88,73 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
           >
             3% change within 1 hour
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <View
@@ -156,36 +193,73 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
           >
             10% change within 24 hours
           </Text>
-          <View
-            pointerEvents="none"
-            style={
-              Object {
-                "marginHorizontal": 11,
-                "padding": 0,
-              }
-            }
-          >
-            <RCTSwitch
-              accessibilityRole="switch"
-              onChange={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              onTintColor="#00f1a2"
+          <View>
+            <View
+              pending={false}
               style={
                 Array [
                   Object {
-                    "height": 31,
-                    "width": 51,
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
                   },
                   Object {
-                    "backgroundColor": "#87939E",
-                    "borderRadius": 16,
+                    "opacity": 0,
                   },
                 ]
               }
-              tintColor="#87939E"
-              value={true}
-            />
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  Object {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                Object {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  Object {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
           </View>
         </View>
       </View>
