@@ -70,8 +70,8 @@ describe('TransactionListTop', () => {
           searching={false}
           tokenId={undefined}
           wallet={fakeWallet}
-          onChangeSortingState={() => undefined}
-          onSearchTransaction={() => undefined}
+          onSearchingChange={() => undefined}
+          onSearchTextChange={() => undefined}
         />
       </FakeProviders>
     )

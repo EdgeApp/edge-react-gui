@@ -46,8 +46,8 @@ interface OwnProps {
   // Scene state:
   isEmpty: boolean
   searching: boolean
-  onChangeSortingState: (isSearching: boolean) => void
-  onSearchTransaction: (searchString: string) => void
+  onSearchingChange: (isSearching: boolean) => void
+  onSearchTextChange: (searchString: string) => void
 }
 
 interface StateProps {
@@ -293,11 +293,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleTextFieldFocus = () => {
-    this.props.onChangeSortingState(true)
+    this.props.onSearchingChange(true)
   }
 
   handleTextFieldBlur = () => {
-    this.props.onSearchTransaction(this.state.input)
+    this.props.onSearchTextChange(this.state.input)
   }
 
   handleRequest = (): void => {
@@ -317,7 +317,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleSearchDone = () => {
     triggerHaptic('impactLight')
-    this.props.onChangeSortingState(false)
+    this.props.onSearchingChange(false)
     if (this.textInput.current) {
       this.textInput.current.clear()
     }
@@ -356,7 +356,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   clearText = () => {
     triggerHaptic('impactLight')
     this.setState({ input: '' })
-    this.props.onSearchTransaction('')
+    this.props.onSearchTextChange('')
     if (this.textInput.current) {
       this.textInput.current.blur()
     }

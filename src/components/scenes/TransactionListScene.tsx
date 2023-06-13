@@ -155,7 +155,7 @@ function TransactionListComponent(props: Props) {
     }
   })
 
-  const handleSearchTransaction = useHandler((searchString: string) => {
+  const handleSearchTextChange = useHandler((searchString: string) => {
     setLoading(true)
     wallet
       .getTransactions({
@@ -176,7 +176,7 @@ function TransactionListComponent(props: Props) {
       })
   })
 
-  const handleChangeSortingState = useHandler((isSearching: boolean) => {
+  const handleSearchingChange = useHandler((isSearching: boolean) => {
     if (isSearching) return handleOnRefresh()
     setSearching(false)
   })
@@ -220,8 +220,8 @@ function TransactionListComponent(props: Props) {
         searching={searching}
         tokenId={tokenId}
         wallet={wallet}
-        onChangeSortingState={handleChangeSortingState}
-        onSearchTransaction={handleSearchTransaction}
+        onSearchingChange={handleSearchingChange}
+        onSearchTextChange={handleSearchTextChange}
       />
     )
   })
