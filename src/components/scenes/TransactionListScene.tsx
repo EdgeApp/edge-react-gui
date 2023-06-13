@@ -12,7 +12,6 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -28,6 +27,11 @@ const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
 const SHOW_FLIP_INPUT_TESTER = false
 
+export interface TransactionListParams {
+  walletId: string
+  tokenId: string | undefined
+}
+
 interface Section {
   title: string
   data: EdgeTransaction[]
@@ -39,11 +43,13 @@ interface Props extends EdgeSceneProps<'transactionList'> {
 
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
-  const { currencyCode } = route.params
+  const { tokenId } = route.params
   const { pluginId } = wallet.currencyInfo
 
   const dispatch = useDispatch()
   const theme = useTheme()
+
+  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
   const [filteredTransactions, setFilteredTransactions] = React.useState<EdgeTransaction[]>([])
@@ -52,7 +58,6 @@ function TransactionListComponent(props: Props) {
   const [searching, setSearching] = React.useState(false)
 
   // Selectors:
-  const account = useSelector(state => state.core.account)
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const numTransactions = useSelector(state => state.ui.transactionList.numTransactions)
@@ -70,7 +75,6 @@ function TransactionListComponent(props: Props) {
   }, [exchangeDenom, exchangeRate, spamFilterOn])
 
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
-  const tokenId = React.useMemo(() => getTokenId(account, pluginId, currencyCode), [account, currencyCode, pluginId])
 
   const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
@@ -211,7 +215,6 @@ function TransactionListComponent(props: Props) {
   const renderTop = useHandler(() => {
     return (
       <TransactionListTop
-        currencyCode={currencyCode}
         isEmpty={isTransactionListUnsupported || transactions.length < 1}
         navigation={navigation}
         searching={searching}

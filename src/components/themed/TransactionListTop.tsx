@@ -40,8 +40,7 @@ interface OwnProps {
   navigation: NavigationProp<'transactionList'>
 
   // Wallet identity:
-  currencyCode: string
-  tokenId?: string
+  tokenId: string | undefined
   wallet: EdgeCurrencyWallet
 
   // Scene state:
@@ -54,11 +53,11 @@ interface OwnProps {
 interface StateProps {
   account: EdgeAccount
   balances: EdgeBalances
+  currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
-  tokenId?: string
   walletName: string
 }
 
@@ -160,12 +159,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
+    const { account, navigation } = this.props
+
     triggerHaptic('impactLight')
-    const { navigation } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
+      (result: WalletListResult) => {
+        const { currencyCode, walletId } = result
         if (walletId != null && currencyCode != null) {
-          navigation.setParams({ currencyCode, walletId })
+          const wallet = account.currencyWallets[walletId]
+          if (wallet == null) return
+          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+          navigation.setParams({ tokenId, walletId })
         }
       }
     )
@@ -538,10 +542,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { wallet, currencyCode, navigation } = props
+  const { navigation, tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
+
+  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const { pluginId } = wallet.currencyInfo
   const displayDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
@@ -561,13 +567,12 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
   })
 
-  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-
   return (
     <TransactionListTopComponent
       {...props}
       account={account}
       balances={balances}
+      currencyCode={currencyCode}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
@@ -575,7 +580,6 @@ export function TransactionListTop(props: OwnProps) {
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
       onSelectWallet={handleSelectWallet}
-      tokenId={tokenId}
       theme={theme}
     />
   )

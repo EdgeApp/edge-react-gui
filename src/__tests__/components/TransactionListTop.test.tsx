@@ -65,10 +65,10 @@ describe('TransactionListTop', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
-          currencyCode="BTC"
           isEmpty={false}
           navigation={fakeNavigation}
           searching={false}
+          tokenId={undefined}
           wallet={fakeWallet}
           onChangeSortingState={() => undefined}
           onSearchTransaction={() => undefined}
