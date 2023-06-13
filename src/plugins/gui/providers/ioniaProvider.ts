@@ -55,15 +55,14 @@ export const asRewardsCard = asCodec<RewardsCardItem>(
   raw => {
     const ioniaCard = asObject({
       Id: asNumber,
-      ActualAmount: asNumber,
+      ActualAmount: asOptional(asNumber),
       CardNumber: asString,
       CreatedDate: asDate,
-      Currency: asString
+      Currency: asOptional(asString)
     })(raw)
 
     const purchaseAsset = ioniaCard.Currency
     const amount = ioniaCard.ActualAmount
-    const purchaseDate = ioniaCard.CreatedDate
     // Expires 6 calendar months from the creation date
     const expirationDate = new Date(ioniaCard.CreatedDate.valueOf())
     expirationDate.setMonth(ioniaCard.CreatedDate.getMonth() + 6)
@@ -74,7 +73,6 @@ export const asRewardsCard = asCodec<RewardsCardItem>(
       expirationDate,
       amount,
       purchaseAsset,
-      purchaseDate,
       url: ioniaCard.CardNumber
     }
   },
