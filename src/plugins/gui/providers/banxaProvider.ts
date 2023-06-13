@@ -219,6 +219,8 @@ export const banxaProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
