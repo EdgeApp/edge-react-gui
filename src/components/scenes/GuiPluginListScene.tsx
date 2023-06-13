@@ -21,7 +21,7 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
@@ -34,7 +34,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -343,7 +343,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <SceneWrapper background="theme" hasTabs>
+      <>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
@@ -364,7 +364,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         ) : (
           <FlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
         )}
-      </SceneWrapper>
+      </>
     )
   }
 }
@@ -442,25 +442,41 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, props) => {
-    const context = state.core.context
-    const deviceId = base58ToUuid(context.clientId)
-    const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
-    return {
-      account: state.core.account,
-      accountPlugins: state.account.referralCache.accountPlugins,
-      accountReferral: state.account.accountReferral,
-      coreDisklet: state.core.disklet,
-      countryCode: state.ui.settings.countryCode,
-      developerModeOn: state.ui.settings.developerModeOn,
-      deviceId,
-      disablePlugins: state.ui.exchangeInfo[direction].disablePlugins
-    }
-  },
-  dispatch => ({
-    updateCountryCode(countryCode: string) {
-      dispatch(updateOneSetting({ countryCode }))
-    }
-  })
-)(withTheme(GuiPluginList))
+export const GuiPluginListScene = React.memo((props: OwnProps) => {
+  const { navigation, route } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
+
+  const account = useSelector(state => state.core.account)
+  const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
+  const coreDisklet = useSelector(state => state.core.disklet)
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+  const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+
+  const updateCountryCode = (countryCode: string) => {
+    dispatch(updateOneSetting({ countryCode }))
+  }
+
+  return (
+    <SceneWrapper background="theme" hasTabs>
+      <GuiPluginList
+        navigation={navigation}
+        route={route}
+        deviceId={deviceId}
+        account={account}
+        accountPlugins={accountPlugins}
+        accountReferral={accountReferral}
+        coreDisklet={coreDisklet}
+        countryCode={countryCode}
+        developerModeOn={developerModeOn}
+        disablePlugins={disablePlugins}
+        updateCountryCode={updateCountryCode}
+        theme={theme}
+      />
+    </SceneWrapper>
+  )
+})
