@@ -25,6 +25,7 @@ interface BuildConfigFile {
 
   // iOS build options:
   appleDeveloperTeamId: string
+  appleDeveloperTeamName: string
   xcodeScheme: string
   xcodeWorkspace: string
   bundleId: string
@@ -164,6 +165,8 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_PASSWORD != null
   ) {
     const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
+    call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`)
+    call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
     mylog('Using Fastlane for provisioning profiles')
     const matchFileLoc = join(buildObj.guiDir, '.fastlane', 'Matchfile')
@@ -172,9 +175,15 @@ function buildIos(buildObj: BuildObj) {
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
     const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
     call(`rm -rf ${escapePath(profileDir)}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
-    call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`)
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
+    call(
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+    )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
   }
@@ -202,10 +211,10 @@ function buildIos(buildObj: BuildObj) {
 
   let cmdStr
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}' "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
@@ -241,10 +250,10 @@ function buildIos(buildObj: BuildObj) {
   plist = plist.replace('Your10CharacterTeamId', buildObj.appleDeveloperTeamId)
   fs.writeFileSync(buildObj.guiPlatformDir + '/exportOptions.plist', plist)
 
-  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD || ''}'  "${process.env.HOME || ''}/Library/Keychains/login.keychain"`
+  cmdStr = `security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}'  "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`
   call(cmdStr)
 
-  call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
+  call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -allowProvisioningUpdates -exportArchive -archivePath "${buildDir}/${archiveDir}" -exportPath ${buildObj.tmpDir}/ -exportOptionsPlist ./exportOptions.plist`
   call(cmdStr)

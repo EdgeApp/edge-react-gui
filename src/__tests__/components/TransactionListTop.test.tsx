@@ -52,7 +52,11 @@ describe('TransactionListTop', () => {
     core: {
       account: {
         currencyWallets: { '123': fakeWallet },
-        currencyConfig: { bitcoin: fakeCurrencyConfig }
+        currencyConfig: { bitcoin: fakeCurrencyConfig },
+
+        // Needed to prevent crash due to undefined `watch` method which normally exists
+        // in an EdgeAccount
+        watch() {}
       }
     }
   }

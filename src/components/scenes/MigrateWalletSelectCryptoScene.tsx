@@ -8,6 +8,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { keysOnlyModePlugins } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -49,7 +50,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
         enabledTokenIds
       } = wallet
 
-      if (SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode) return // ignore deprecated plugins
+      if (keysOnlyModePlugins.includes(pluginId)) return
       if (SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired) return // ignore activation required plugins
       if (pluginId === 'ripple') return // ignore currencies with token approval since they can't do bulk approvals
 
