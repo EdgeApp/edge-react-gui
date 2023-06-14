@@ -199,7 +199,7 @@ const CoinRankingComponent = (props: Props) => {
   return (
     <SceneWrapper background="theme" hasTabs>
       <View style={styles.searchContainer}>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
+        <View style={styles.searchTextInputContainer}>
           <OutlinedTextInput
             returnKeyType="search"
             label={lstrings.search_assets}
@@ -214,7 +214,7 @@ const CoinRankingComponent = (props: Props) => {
         </View>
         {searching && (
           <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
-            <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
+            <EdgeText style={styles.tappableHeaderText}>{lstrings.string_done_cap}</EdgeText>
           </TouchableOpacity>
         )}
       </View>
@@ -268,6 +268,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginVertical: theme.rem(0.5),
       marginHorizontal: theme.rem(1)
     },
+    searchTextInputContainer: {
+      flex: 1,
+      flexDirection: 'column'
+    },
     searchDoneButton: {
       justifyContent: 'center',
       paddingLeft: theme.rem(0.75)
@@ -306,6 +310,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     priceText: {
       ...baseTextStyle,
       textAlign: 'right'
+    },
+    tappableHeaderText: {
+      color: theme.textLink
     }
   }
 })
