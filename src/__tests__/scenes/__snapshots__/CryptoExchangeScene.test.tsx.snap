@@ -10,7 +10,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     contentContainerStyle={
       [
         {
-          "paddingBottom": undefined,
+          "paddingBottom": 0,
         },
         {
           "alignItems": "center",
