@@ -30,7 +30,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -77,6 +77,7 @@ interface StateProps {
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
+  contentContainerStyle: { paddingBottom?: number }
 }
 
 interface DispatchProps {
@@ -316,7 +317,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, contentContainerStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
@@ -362,7 +363,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
+          <FlashList
+            data={plugins}
+            renderItem={this.renderPlugin}
+            keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+            contentContainerStyle={contentContainerStyle}
+          />
         )}
       </>
     )
@@ -462,21 +468,24 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs>
-      <GuiPluginList
-        navigation={navigation}
-        route={route}
-        deviceId={deviceId}
-        account={account}
-        accountPlugins={accountPlugins}
-        accountReferral={accountReferral}
-        coreDisklet={coreDisklet}
-        countryCode={countryCode}
-        developerModeOn={developerModeOn}
-        disablePlugins={disablePlugins}
-        updateCountryCode={updateCountryCode}
-        theme={theme}
-      />
-    </SceneWrapper>
+    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
+      {(gap, notificationHeight) => (
+        <GuiPluginList
+          navigation={navigation}
+          route={route}
+          deviceId={deviceId}
+          account={account}
+          accountPlugins={accountPlugins}
+          accountReferral={accountReferral}
+          coreDisklet={coreDisklet}
+          countryCode={countryCode}
+          developerModeOn={developerModeOn}
+          disablePlugins={disablePlugins}
+          updateCountryCode={updateCountryCode}
+          theme={theme}
+          contentContainerStyle={{ paddingBottom: notificationHeight }}
+        />
+      )}
+    </NotificationSceneWrapper>
   )
 })
