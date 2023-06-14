@@ -373,7 +373,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         <View style={styles.container}>
-          {!isEmpty && (
+          {isEmpty ? null : (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <OutlinedTextInput
@@ -388,7 +388,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   searchIcon
                 />
               </View>
-              {searching && (
+              {!searching ? null : (
                 <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
                   <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
                 </TouchableOpacity>
@@ -396,7 +396,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </View>
           )}
 
-          {!searching && (
+          {searching ? null : (
             <>
               {this.renderBalanceBox()}
               {isStakingAvailable && this.renderStakedBalance()}
@@ -423,9 +423,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching ? <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} /> : null}
+          {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
-        {!isEmpty && !searching && (
+        {isEmpty || searching ? null : (
           <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
           </SceneHeader>
