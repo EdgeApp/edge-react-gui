@@ -131,7 +131,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
-    let providerQuote: FiatProviderQuote
+    let providerQuote: FiatProviderQuote | undefined
     let counter = 0
     const fiatCurrencyCode = wallet.fiatCurrencyCode
     const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
@@ -175,10 +175,15 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           }
         }
 
-        providerQuote = await provider.getQuote(quoteParams).catch(error => {
+        try {
+          providerQuote = await provider.getQuote(quoteParams)
+        } catch (error) {
           stateManager.update({ statusText: { content: String(error), textType: 'error' } })
-          throw error
-        })
+          console.error(error)
+          return ''
+        }
+
+        if (providerQuote == null) return
 
         // Abort to avoid race conditions
         if (myCounter !== counter) return
@@ -192,6 +197,8 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
+        if (providerQuote == null) return
+
         await providerQuote
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
