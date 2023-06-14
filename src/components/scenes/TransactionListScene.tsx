@@ -190,29 +190,7 @@ function TransactionListComponent(props: Props) {
     return <RefreshControl refreshing={false} tintColor={theme.searchListRefreshControlIndicator} onRefresh={handleOnRefresh} />
   }, [finalTransactions.length, handleOnRefresh, theme])
 
-  const renderEmptyComponent = useHandler(() => {
-    if (isTransactionListUnsupported) {
-      return <ExplorerCard wallet={wallet} tokenId={tokenId} />
-    } else if (numTransactions > 0) {
-      return <EmptyLoader />
-    } else {
-      return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
-    }
-  })
-
-  const renderSectionHeader = useHandler((section: { section: Section }) => {
-    const checkFilteredTransactions = searching && filteredTransactions.length === 0
-    if (checkFilteredTransactions || loading) {
-      return <SectionHeaderCentered title={section.section.title} loading={loading} />
-    }
-    return <SectionHeader title={section.section.title} />
-  })
-
-  const renderTransaction = useHandler((transaction: FlatListItem<EdgeTransaction>) => {
-    return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
-  })
-
-  const renderTop = useHandler(() => {
+  const topArea = React.useMemo(() => {
     return (
       <TransactionListTop
         isEmpty={isTransactionListUnsupported || transactions.length < 1}
@@ -224,6 +202,28 @@ function TransactionListComponent(props: Props) {
         onSearchTextChange={handleSearchTextChange}
       />
     )
+  }, [handleSearchTextChange, handleSearchingChange, isTransactionListUnsupported, navigation, searching, tokenId, transactions.length, wallet])
+
+  const emptyComponent = React.useMemo(() => {
+    if (isTransactionListUnsupported) {
+      return <ExplorerCard wallet={wallet} tokenId={tokenId} />
+    } else if (numTransactions > 0) {
+      return <EmptyLoader />
+    } else {
+      return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
+    }
+  }, [isTransactionListUnsupported, navigation, numTransactions, tokenId, wallet])
+
+  const renderSectionHeader = useHandler((section: { section: Section }) => {
+    const checkFilteredTransactions = searching && filteredTransactions.length === 0
+    if (checkFilteredTransactions || loading) {
+      return <SectionHeaderCentered title={section.section.title} loading={loading} />
+    }
+    return <SectionHeader title={section.section.title} />
+  })
+
+  const renderTransaction = useHandler((transaction: FlatListItem<EdgeTransaction>) => {
+    return <TransactionListRow navigation={navigation} wallet={wallet} currencyCode={currencyCode} transaction={transaction.item} />
   })
 
   const keyExtractor = useHandler((item: EdgeTransaction) => item.txid)
@@ -245,8 +245,8 @@ function TransactionListComponent(props: Props) {
           initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
-          ListEmptyComponent={renderEmptyComponent}
-          ListHeaderComponent={renderTop}
+          ListEmptyComponent={emptyComponent}
+          ListHeaderComponent={topArea}
           onEndReachedThreshold={SCROLL_THRESHOLD}
           refreshControl={refreshControl}
           renderItem={renderTransaction}
