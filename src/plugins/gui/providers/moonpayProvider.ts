@@ -170,6 +170,8 @@ export const moonpayProvider: FiatProviderFactory = {
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { regionCode, paymentTypes, displayCurrencyCode } = params
         if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         let foundPaymentType = false
         let useIAch = false
         for (const type of paymentTypes) {
