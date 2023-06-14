@@ -34,6 +34,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
+import { LoadingScene } from '../scenes/LoadingScene'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -44,7 +45,7 @@ import { ModalMessage, ModalTitle } from './ModalParts'
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenu(props: DrawerContentComponentProps) {
+export function SideMenuComponent(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
   const navigation: NavigationBase = props.navigation as any
   const isDrawerOpen = useDrawerStatus() === 'open'
@@ -508,3 +509,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
+
+export function SideMenu(props: DrawerContentComponentProps) {
+  const { navigation } = props
+
+  const { loggedIn } = useSelector(state => state.core.account)
+  React.useEffect(() => {
+    if (!loggedIn) navigation.navigate('login')
+  }, [loggedIn, navigation])
+
+  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingScene />
+}
