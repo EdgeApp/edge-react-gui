@@ -18,7 +18,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -64,6 +64,8 @@ interface StateProps {
   // Errors
   insufficient: boolean
   genericError: string | null
+
+  overscroll: number
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
@@ -247,7 +249,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 0]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
+    return <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 1.5]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -301,7 +303,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromFiatCurrencyCode, fromIsoFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toIsoFiatCurrencyCode, toWalletName, theme } = this.props
+    const { fromFiatCurrencyCode, fromIsoFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toIsoFiatCurrencyCode, toWalletName, theme, overscroll } =
+      this.props
     const styles = getStyles(theme)
     let fromSecondaryInfo: GuiCurrencyInfo
     if (fromFiatCurrencyCode !== '') {
@@ -335,12 +338,11 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
     return (
       <>
-        <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
+        <SceneHeader title={lstrings.title_exchange} underline />
         <KeyboardAwareScrollView
           style={styles.mainScrollView}
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={styles.scrollViewContentContainer}
-          extraScrollHeight={theme.rem(5)}
+          contentContainerStyle={[{ paddingBottom: overscroll }, styles.scrollViewContentContainer]}
         >
           <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -384,14 +386,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   mainScrollView: {
-    flex: 1
+    flex: 1,
+    marginBottom: theme.rem(1)
   },
   scrollViewContentContainer: {
     alignItems: 'center',
     paddingTop: theme.rem(0.5)
-  },
-  spinner: {
-    marginVertical: theme.rem(1.5)
   }
 }))
 
@@ -476,19 +476,22 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper>
-      <CryptoExchangeComponent
-        route={route}
-        onSelectWallet={handleSelectWallet}
-        getQuoteForTransaction={handleGetQuoteForTransaction}
-        theme={theme}
-        navigation={navigation}
-        account={account}
-        {...result}
-        exchangeInfo={exchangeInfo}
-        insufficient={insufficient}
-        genericError={genericError}
-      />
-    </SceneWrapper>
+    <NotificationSceneWrapper navigation={navigation} hasTabs>
+      {(gap, notificationHeight) => (
+        <CryptoExchangeComponent
+          route={route}
+          onSelectWallet={handleSelectWallet}
+          getQuoteForTransaction={handleGetQuoteForTransaction}
+          theme={theme}
+          navigation={navigation}
+          account={account}
+          {...result}
+          exchangeInfo={exchangeInfo}
+          insufficient={insufficient}
+          genericError={genericError}
+          overscroll={notificationHeight}
+        />
+      )}
+    </NotificationSceneWrapper>
   )
 }

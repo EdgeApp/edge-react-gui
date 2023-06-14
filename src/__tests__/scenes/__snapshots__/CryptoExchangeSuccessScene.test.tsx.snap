@@ -1,8 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
-<SceneWrapper
+<NotificationSceneWrapper
   background="theme"
+  navigation={
+    {
+      "addListener": [Function],
+      "canGoBack": [Function],
+      "dispatch": [Function],
+      "getId": [Function],
+      "getParent": [Function],
+      "getState": [Function],
+      "goBack": [Function],
+      "isFocused": [Function],
+      "navigate": [Function],
+      "pop": [Function],
+      "popToTop": [Function],
+      "push": [Function],
+      "removeListener": [Function],
+      "replace": [Function],
+      "reset": [Function],
+      "setOptions": [Function],
+      "setParams": [Function],
+    }
+  }
 >
   <View
     style={
@@ -69,5 +90,5 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       />
     </Fade>
   </View>
-</SceneWrapper>
+</NotificationSceneWrapper>
 `;
