@@ -9,7 +9,6 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
-import { StateManager } from './hooks/useStateManager'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
@@ -126,8 +125,3 @@ export interface FiatPlugin {
 }
 
 export type FiatPluginFactory = (params: FiatPluginFactoryArgs) => Promise<FiatPlugin>
-
-export interface StatefulSceneEvent<EventValue, State extends object> {
-  value: EventValue
-  stateManager: StateManager<State>
-}

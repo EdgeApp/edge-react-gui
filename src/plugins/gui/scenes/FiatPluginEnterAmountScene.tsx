@@ -15,18 +15,18 @@ import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { RouteProp } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
-import { FiatPluginEnterAmountResponse, StatefulSceneEvent } from '../fiatPluginTypes'
-import { useStateManager } from '../hooks/useStateManager'
+import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
+import { StateManager, useStateManager } from '../hooks/useStateManager'
 
 export interface FiatPluginEnterAmountParams {
   initState?: Partial<any>
   headerTitle: string
   label1: string
   label2: string
-  onChangeText?: (event: StatefulSceneEvent<{ fieldNum: number; value: string }, EnterAmountState>) => Promise<void>
-  onFieldChange: (event: StatefulSceneEvent<{ sourceFieldNum: number; value: string }, EnterAmountState>) => Promise<void>
-  onPoweredByClick: (event: StatefulSceneEvent<void, EnterAmountState>) => Promise<void>
-  onSubmit: (event: StatefulSceneEvent<{ response: FiatPluginEnterAmountResponse }, EnterAmountState>) => Promise<void>
+  onChangeText?: (event: { fieldNum: number; value: string }, stateManager: StateManager<EnterAmountState>) => Promise<void>
+  convertValue: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<string | undefined>
+  onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
+  onSubmit: (event: { response: FiatPluginEnterAmountResponse }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   headerIconUri?: string
 }
 
@@ -64,7 +64,7 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { initState, headerIconUri, headerTitle, onSubmit, onFieldChange, onPoweredByClick, onChangeText = () => {}, label1, label2 } = props.route.params
+  const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = props.route.params
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
@@ -73,9 +73,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   useEffect(() => {
     if (initState?.value1 != null) {
       stateManager.update({ value2: ' ', spinner2: true })
-      onFieldChange({ value: { sourceFieldNum: 1, value: initState?.value1 }, stateManager })
+      convertValue(1, initState?.value1, stateManager).then(otherValue => {
+        if (typeof otherValue === 'string') {
+          stateManager.update({ value2: otherValue, spinner2: false })
+        }
+      })
     }
-  }, [initState?.value1, onFieldChange, stateManager])
+  }, [initState?.value1, convertValue, stateManager])
 
   let headerIcon = null
   if (headerIconUri != null) {
@@ -84,19 +88,37 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const handleChangeText1 = useHandler((value: string) => {
     lastUsed.current = 1
-    onChangeText({ value: { fieldNum: 1, value }, stateManager })
-    stateManager.update({ value1: value })
-    onFieldChange({ value: { sourceFieldNum: 1, value: value }, stateManager })
+    onChangeText({ fieldNum: 1, value }, stateManager)
+    stateManager.update({ value1: value, spinner2: true })
+    convertValue(1, value, stateManager)
+      .then(otherValue => {
+        if (typeof otherValue === 'string') {
+          stateManager.update({ value2: otherValue })
+        }
+      })
+      .catch(showError)
+      .finally(() => {
+        stateManager.update({ spinner2: false })
+      })
   })
   const handleChangeText2 = useHandler((value: string) => {
     lastUsed.current = 2
-    onChangeText({ value: { fieldNum: 2, value }, stateManager })
-    stateManager.update({ value2: value })
-    onFieldChange({ value: { sourceFieldNum: 2, value }, stateManager })
+    onChangeText({ fieldNum: 2, value }, stateManager)
+    stateManager.update({ value2: value, spinner1: true })
+    convertValue(2, value, stateManager)
+      .then(otherValue => {
+        if (typeof otherValue === 'string') {
+          stateManager.update({ value1: otherValue, spinner1: false })
+        }
+      })
+      .catch(showError)
+      .finally(() => {
+        stateManager.update({ spinner1: false })
+      })
   })
-  const handlePoweredByPress = useHandler(async () => await onPoweredByClick({ value: undefined, stateManager }))
+  const handlePoweredByPress = useHandler(async () => await onPoweredByClick(stateManager))
   const handleSubmit = useHandler(async () => {
-    await onSubmit({ value: { response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager }).catch(showError)
+    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(showError)
   })
 
   let statusTextStyle = styles.text
