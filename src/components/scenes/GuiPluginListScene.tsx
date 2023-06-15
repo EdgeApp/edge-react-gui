@@ -280,6 +280,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
+    if (plugin == null) return null
 
     if (plugin.betaOnly === true && !ENV.BETA_FEATURES) return null
 
