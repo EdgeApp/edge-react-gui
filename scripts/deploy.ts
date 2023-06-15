@@ -232,8 +232,12 @@ function buildIos(buildObj: BuildObj) {
 
   buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
-  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
+  buildObj.dSymZip = escapePath(
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.dSYM.zip`
+  )
+  buildObj.ipaFile = escapePath(
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.ipa`
+  )
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
