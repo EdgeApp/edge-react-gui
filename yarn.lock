@@ -7219,10 +7219,10 @@ edge-core-js@^0.19.48:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-core-js@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.1.0.tgz#b0c100a1a7ea7a6a43184ca0b72a134b39d382d9"
-  integrity sha512-UKN/8pINkt8od4mfL8bAOPPr6ilZ1hSev89tR6brJYRuK2YzyR7vISgq6OnLdbtdstDuRrxSO5pd0G+grQncwQ==
+edge-core-js@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.2.0.tgz#5f6fc13feec0287c40534403da13cbb3208a31ef"
+  integrity sha512-2WeX5XrOrooM6uL/cKFJTm4p3SNtHVcDC1n7iOJOBoKlGdEA/PTCSzn8UCaDA73nvsaJCIb/VSalaKFDpX4n9w==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -13401,7 +13401,7 @@ react-native-mail@^6.1.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git+https://github.com/EdgeApp/react-native-material-textfield.git":
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@https://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
   integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
