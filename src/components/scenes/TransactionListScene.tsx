@@ -44,6 +44,7 @@ function TransactionListComponent(props: Props) {
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
+  const flashList = React.useRef<FlashList<ListItem>>(null)
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
@@ -119,6 +120,22 @@ function TransactionListComponent(props: Props) {
     }
   }, [enabledTokenIds, navigation, tokenId])
 
+  // Hide the search box when not in use,
+  // and we have received our first batch of core transactions:
+  const hideSearch = !searching && listItems.length > 1
+  React.useEffect(() => {
+    if (hideSearch) {
+      // There is a lag between updating the items and re-rendering the list,
+      // so we need to let that settle:
+      requestAnimationFrame(() => {
+        flashList.current?.scrollToOffset({
+          animated: true,
+          offset: theme.rem(4.5)
+        })
+      })
+    }
+  }, [hideSearch, theme])
+
   // ---------------------------------------------------------------------------
   // Renderers
   // ---------------------------------------------------------------------------
@@ -186,6 +203,7 @@ function TransactionListComponent(props: Props) {
         <ExchangedFlipInputTester />
       ) : (
         <FlashList
+          ref={flashList}
           data={listItems}
           estimatedItemSize={theme.rem(4.25)}
           getItemType={getItemType}
