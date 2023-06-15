@@ -7,6 +7,7 @@ const argv = process.argv
 const mylog = console.log
 
 const _rootProjectDir = join(__dirname, '../')
+const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
 
 let _currentPath = __dirname
 
@@ -41,6 +42,7 @@ interface BuildConfigFile {
   hockeyAppToken: string
   productName: string
   projectName: string
+  rsyncLocation?: string
 }
 
 /**
@@ -164,7 +166,6 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
     process.env.MATCH_PASSWORD != null
   ) {
-    const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
     call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`)
     call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
@@ -324,6 +325,7 @@ function buildAndroid(buildObj: BuildObj) {
 }
 
 function buildCommonPost(buildObj: BuildObj) {
+  const { buildNum, guiHash, platformType, productNameClean, repoBranch } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -373,6 +375,20 @@ function buildCommonPost(buildObj: BuildObj) {
       } -g ${buildObj.appCenterDistroGroup} -r ${JSON.stringify(notes)}`
     )
     mylog('\n*** Upload to App Center Complete ***')
+  }
+
+  if (buildObj.rsyncLocation != null) {
+    mylog(`\n\nUploading to rsyncLocation ${buildObj.rsyncLocation}`)
+    mylog('***********************\n')
+
+    // const rsyncDir = join(buildObj.rsyncLocation, repoBranch, platformType, String(buildNum))
+
+    const datePrefix = new Date().toISOString().slice(2, 19).replace(/:/gi, '').replace(/-/gi, '')
+    const rsyncFile = escapePath(`${datePrefix}--${productNameClean}--${platformType}--${repoBranch}--${buildNum}--${guiHash.slice(0, 8)}.ipa`)
+
+    // call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncDir}/`)
+    call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${(join(buildObj.rsyncLocation), rsyncFile)}`)
+    mylog('\n*** Upload to rsyncLocation Complete ***')
   }
 }
 
