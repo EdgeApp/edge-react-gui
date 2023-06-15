@@ -13,7 +13,7 @@ import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -23,10 +23,8 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Tile } from '../../tiles/Tile'
 
-interface OwnProps {
-  navigation: NavigationProp<'fioStakingOverview'>
-  route: RouteProp<'fioStakingOverview'>
-}
+interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
+
 interface StateProps {
   currencyWallet: EdgeCurrencyWallet
   stakingCryptoAmountFormat: string

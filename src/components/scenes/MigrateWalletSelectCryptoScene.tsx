@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { keysOnlyModePlugins } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
@@ -20,10 +20,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
-interface Props {
-  navigation: NavigationProp<'migrateWalletSelectCrypto'>
-  route: RouteProp<'migrateWalletSelectCrypto'>
-}
+interface Props extends EdgeSceneProps<'migrateWalletSelectCrypto'> {}
 
 export interface MigrateWalletItem extends WalletCreateItem {
   createWalletIds: [string]

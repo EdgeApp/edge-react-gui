@@ -17,7 +17,7 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { makeAaveCloseAction } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { filterNull } from '../../../util/safeFilters'
@@ -35,9 +35,7 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { Tile } from '../../tiles/Tile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 
-export interface Props {
-  route: RouteProp<'loanClose'>
-  navigation: NavigationProp<'loanClose'>
+export interface Props extends EdgeSceneProps<'loanClose'> {
   loanAccount: LoanAccount
 }
 

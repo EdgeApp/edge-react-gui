@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { GuiFiatType } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
@@ -35,10 +35,7 @@ export interface CreateWalletSelectFiatParams {
   createWalletList: WalletCreateItem[]
 }
 
-interface Props {
-  navigation: NavigationProp<'createWalletSelectFiat'>
-  route: RouteProp<'createWalletSelectFiat'>
-}
+interface Props extends EdgeSceneProps<'createWalletSelectFiat'> {}
 
 const CreateWalletSelectFiatComponent = (props: Props) => {
   const { navigation, route } = props

@@ -10,7 +10,7 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
@@ -29,9 +29,7 @@ interface File {
   fileName: string // wallet-btc-2020.csv
 }
 
-interface OwnProps {
-  route: RouteProp<'transactionsExport'>
-}
+interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   multiplier: string

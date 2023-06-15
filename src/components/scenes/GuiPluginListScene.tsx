@@ -23,7 +23,7 @@ import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
@@ -66,10 +66,7 @@ const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
   moonpay: 'guiPluginLogoMoonpay'
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'pluginListBuy'> | NavigationProp<'pluginListSell'>
-  route: RouteProp<'pluginListBuy'> | RouteProp<'pluginListSell'>
-}
+interface OwnProps extends EdgeSceneProps<'pluginListBuy' | 'pluginListSell'> {}
 
 interface StateProps {
   account: EdgeAccount

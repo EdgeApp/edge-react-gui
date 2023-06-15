@@ -12,7 +12,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -32,10 +32,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioDomainRegisterSelectWallet'>
-  route: RouteProp<'fioDomainRegisterSelectWallet'>
-}
+interface OwnProps extends EdgeSceneProps<'fioDomainRegisterSelectWallet'> {}
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void

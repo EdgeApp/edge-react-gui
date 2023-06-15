@@ -6,7 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { createFioWallet } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
@@ -30,9 +30,8 @@ interface LocalState {
   errorMessage: string
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioDomainRegister'>
-}
+interface OwnProps extends EdgeSceneProps<'fioDomainRegister'> {}
+
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
   fioPlugin: EdgeCurrencyConfig

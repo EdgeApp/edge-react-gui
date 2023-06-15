@@ -2,11 +2,12 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-interface Props {}
+interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
 
 export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const theme = useTheme()

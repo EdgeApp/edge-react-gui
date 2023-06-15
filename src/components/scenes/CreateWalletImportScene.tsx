@@ -10,7 +10,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
@@ -27,10 +27,7 @@ export interface CreateWalletImportParams {
   fiatCode: string
 }
 
-interface Props {
-  navigation: NavigationProp<'createWalletImport'>
-  route: RouteProp<'createWalletImport'>
-}
+interface Props extends EdgeSceneProps<'createWalletImport'> {}
 
 const CreateWalletImportComponent = (props: Props) => {
   const { navigation, route } = props

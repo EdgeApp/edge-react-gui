@@ -7,7 +7,7 @@ import { lstrings } from '../../../locales/strings'
 import { ConnectWalletsConnector as ConnectWallets } from '../../../modules/FioAddress/components/ConnectWallets'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -19,10 +19,7 @@ interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioAddressDetails'>
-  route: RouteProp<'fioAddressDetails'>
-}
+interface OwnProps extends EdgeSceneProps<'fioAddressDetails'> {}
 
 interface LocalState {
   fioWalletLoading: boolean

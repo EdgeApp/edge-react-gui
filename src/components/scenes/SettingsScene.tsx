@@ -23,7 +23,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
@@ -40,9 +40,8 @@ import { SettingsLabelRow } from '../themed/SettingsLabelRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-interface OwnProps {
-  navigation: NavigationProp<'settingsOverview'>
-}
+interface OwnProps extends EdgeSceneProps<'settingsOverview'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext

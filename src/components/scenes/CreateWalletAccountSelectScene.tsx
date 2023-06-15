@@ -16,7 +16,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -36,10 +36,7 @@ export interface AccountPaymentParams {
   requestedAccountCurrencyCode: string
 }
 
-interface OwnProps {
-  route: RouteProp<'createWalletAccountSelect'>
-  navigation: NavigationBase
-}
+interface OwnProps extends EdgeSceneProps<'createWalletAccountSelect'> {}
 
 interface StateProps {
   account: EdgeAccount

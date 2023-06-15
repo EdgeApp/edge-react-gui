@@ -26,7 +26,7 @@ import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { BorrowCollateral, BorrowDebt } from '../../../plugins/borrow-plugins/types'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -103,10 +103,8 @@ const MANAGE_ACTION_DATA_MAP: {
   }
 }
 
-interface Props {
+interface Props extends EdgeSceneProps<'loanManage'> {
   loanAccount: LoanAccount
-  navigation: NavigationProp<'loanManage'>
-  route: RouteProp<'loanManage'>
 }
 
 export const LoanManageSceneComponent = (props: Props) => {

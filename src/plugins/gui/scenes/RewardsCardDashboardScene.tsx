@@ -18,7 +18,7 @@ import { useHandler } from '../../../hooks/useHandler'
 import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
-import { RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
@@ -30,9 +30,7 @@ export interface RewardsCardDashboardParams {
   showLoading?: boolean
 }
 
-interface Props {
-  route: RouteProp<'rewardsCardDashboard'>
-}
+interface Props extends EdgeSceneProps<'rewardsCardDashboard'> {}
 
 export const RewardsCardDashboardScene = (props: Props) => {
   const { route } = props

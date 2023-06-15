@@ -9,7 +9,7 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
@@ -29,10 +29,7 @@ const LISTINGS_REFRESH_INTERVAL = 30000
 // Masking enable bit with 0 disables logging
 enableDebugLogType(LOG_COINRANK & 0)
 
-interface Props {
-  navigation: NavigationProp<'coinRanking'>
-  // route: RouteProp<'coinRanking'>
-}
+interface Props extends EdgeSceneProps<'coinRanking'> {}
 
 const percentChangeOrder: PercentChangeTimeFrame[] = ['hours1', 'hours24', 'days7', 'days30', 'year1']
 const percentChangeStrings: { [pc: string]: string } = {

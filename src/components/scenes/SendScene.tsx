@@ -24,7 +24,7 @@ import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAd
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -47,6 +47,8 @@ import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
 const PIN_MAX_LENGTH = 4
+
+interface OwnProps extends EdgeSceneProps<'send'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -89,10 +91,6 @@ interface DispatchProps {
   checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'send'>
-  route: RouteProp<'send'>
-}
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface WalletStates {

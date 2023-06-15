@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { WarningCard } from '../cards/WarningCard'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -19,10 +19,7 @@ import { TitleText } from '../text/TitleText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
-interface Props {
-  navigation: NavigationBase
-  route: RouteProp<'edgeLogin'>
-}
+interface Props extends EdgeSceneProps<'edgeLogin'> {}
 
 export const EdgeLoginScene = (props: Props) => {
   const { navigation, route } = props

@@ -12,7 +12,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { lstrings } from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -29,9 +29,7 @@ import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface OwnProps {
-  navigation: NavigationProp<'exchange'>
-}
+interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
 interface StateProps {
   account: EdgeAccount

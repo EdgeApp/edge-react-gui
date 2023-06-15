@@ -6,12 +6,10 @@ import { StatusBar, StyleSheet, View } from 'react-native'
 import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 
-interface OwnProps {
-  navigation: NavigationProp<'otpRepair'>
-  route: RouteProp<'otpRepair'>
-}
+interface OwnProps extends EdgeSceneProps<'otpRepair'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext

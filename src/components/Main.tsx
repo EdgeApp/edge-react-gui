@@ -422,7 +422,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="exchangeSettings"
-        // @ts-expect-error-error
         component={SwapSettingsScene}
         options={{
           title: lstrings.settings_exchange_settings,
@@ -606,7 +605,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="loanDetails"
-        // @ts-expect-error
         component={LoanDetailsScene}
         options={{
           headerTitle: () => <EdgeLogoHeader />
@@ -622,7 +620,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="loanStatus" component={LoanStatusScene} />
       <Stack.Screen
         name="manageTokens"
-        // @ts-expect-error
         component={ManageTokensScene}
         options={{
           headerRight: () => null

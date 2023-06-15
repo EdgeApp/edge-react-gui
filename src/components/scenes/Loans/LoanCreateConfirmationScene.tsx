@@ -14,7 +14,7 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { lstrings } from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveCreateActionProgram } from '../../../util/ActionProgramUtils'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { translateError } from '../../../util/translateError'
@@ -38,10 +38,7 @@ const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
   polygon: '1.5'
 }
 
-interface Props {
-  navigation: NavigationProp<'loanCreateConfirmation'>
-  route: RouteProp<'loanCreateConfirmation'>
-}
+interface Props extends EdgeSceneProps<'loanCreateConfirmation'> {}
 
 export const LoanCreateConfirmationScene = (props: Props) => {
   const dispatch = useDispatch()

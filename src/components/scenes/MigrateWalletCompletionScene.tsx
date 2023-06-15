@@ -11,7 +11,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -22,10 +22,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
-interface Props {
-  navigation: NavigationProp<'migrateWalletCompletion'>
-  route: RouteProp<'migrateWalletCompletion'>
-}
+interface Props extends EdgeSceneProps<'migrateWalletCompletion'> {}
 
 interface MigrateWalletTokenItem extends MigrateWalletItem {
   tokenId: string
