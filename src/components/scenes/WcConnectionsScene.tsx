@@ -106,7 +106,6 @@ export const WcConnectionsScene = (props: Props) => {
       />
     ))
       .then((result: string | undefined) => {
-        console.log(result)
         if (result) {
           onScanSuccess(result)
         } else {
