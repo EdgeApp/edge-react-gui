@@ -92,7 +92,8 @@ export interface RewardsCardProps {
 export const RewardsCard = (props: RewardsCardProps) => {
   const { item, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
-  const purchaseAmount = item?.amount == null ? undefined : `$${item.amount.toString()}`
+  const purchaseAmount = item?.amount == null ? 'Unknown' : `$${item.amount.toString()}`
+  const purchaseAsset = item?.purchaseAsset ?? 'Unknown'
 
   return (
     <CardContainer>
@@ -128,15 +129,13 @@ export const RewardsCard = (props: RewardsCardProps) => {
                   <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.creationDate)}</CardFieldValue>
                 </Space>
               </Space>
-              {purchaseAmount == null ? null : (
+              <Space>
+                <CardFieldLabel textAlign="right">{lstrings.purchase_price_label}</CardFieldLabel>
                 <Space>
-                  <CardFieldLabel textAlign="right">{lstrings.purchase_price_label}</CardFieldLabel>
-                  <Space>
-                    <Shimmer isShown={item == null} />
-                    <CardFieldValue textAlign="right">{purchaseAmount}</CardFieldValue>
-                  </Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue textAlign="right">{item == null ? ' ' : purchaseAmount}</CardFieldValue>
                 </Space>
-              )}
+              </Space>
             </Space>
             <Space sideways expand>
               <Space>
@@ -146,15 +145,13 @@ export const RewardsCard = (props: RewardsCardProps) => {
                   <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.expirationDate)}</CardFieldValue>
                 </Space>
               </Space>
-              {item?.purchaseAsset == null ? null : (
+              <Space>
+                <CardFieldLabel textAlign="right">{lstrings.purchase_asset_label}</CardFieldLabel>
                 <Space>
-                  <CardFieldLabel textAlign="right">{lstrings.purchase_asset_label}</CardFieldLabel>
-                  <Space>
-                    <Shimmer isShown={item == null} />
-                    <CardFieldValue textAlign="right">{item.purchaseAsset}</CardFieldValue>
-                  </Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue textAlign="right">{item == null ? ' ' : purchaseAsset}</CardFieldValue>
                 </Space>
-              )}
+              </Space>
             </Space>
           </Space>
         </CardInner>
