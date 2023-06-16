@@ -22,7 +22,7 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
   })
     .then((userSel?: BackupModalResult) => {
       if (userSel === 'upgrade') {
-        navigation.goBack() // TODO: navigation.navigate('upgradeUsername', {})
+        navigation.navigate('upgradeUsername', {})
       }
     })
     .finally(() => {

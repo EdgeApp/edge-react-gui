@@ -109,6 +109,7 @@ import { TermsOfServiceComponent as TermsOfServiceComponentComponent } from './s
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
+import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
@@ -123,6 +124,7 @@ const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
+const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
@@ -651,6 +653,13 @@ const EdgeAppStack = () => {
         options={{
           title: lstrings.title_password_recovery,
           headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="upgradeUsername"
+        component={UpgradeUsernameScene}
+        options={{
+          headerShown: false
         }}
       />
       <Stack.Screen
