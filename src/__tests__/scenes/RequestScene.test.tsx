@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('Request', () => {
   it('should render with loading props', () => {

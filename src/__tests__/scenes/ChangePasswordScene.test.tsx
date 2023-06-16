@@ -3,7 +3,7 @@ import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { ChangePasswordComponent } from '../../components/scenes/ChangePasswordScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('ChangePasswordComponent', () => {
   it('should render with loading props', () => {

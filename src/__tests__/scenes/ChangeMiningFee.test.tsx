@@ -5,8 +5,8 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { ChangeMiningFeeComponent } from '../../components/scenes/ChangeMiningFeeScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { RouteProp } from '../../types/routerTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('Change Mining Fees', () => {
   const nonce = fakeNonce(0)

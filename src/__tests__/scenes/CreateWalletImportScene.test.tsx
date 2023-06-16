@@ -4,9 +4,9 @@ import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
 import { RouteProp } from '../../types/routerTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 jest.mock('react-native-keyboard-aware-scroll-view', () => {
   const KeyboardAwareScrollView = (blob: { children: React.ReactNode }) => blob.children

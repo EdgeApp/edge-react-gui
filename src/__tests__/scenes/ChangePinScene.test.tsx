@@ -3,7 +3,7 @@ import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { ChangePinComponent } from '../../components/scenes/ChangePinScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('ChangePinComponent', () => {
   it('should render with loading props', () => {

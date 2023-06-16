@@ -5,7 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { initialState } from '../../reducers/ExchangeInfoReducer'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('CryptoExchangeComponent', () => {
   it('should render with loading props', () => {

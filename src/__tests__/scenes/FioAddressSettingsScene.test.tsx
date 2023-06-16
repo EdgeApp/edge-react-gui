@@ -4,8 +4,8 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressSettingsComponent } from '../../components/scenes/Fio/FioAddressSettingsScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressSettingsComponent', () => {
   const nonce = fakeNonce(0)

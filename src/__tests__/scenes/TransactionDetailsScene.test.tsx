@@ -4,9 +4,9 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',

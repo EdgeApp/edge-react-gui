@@ -5,8 +5,8 @@ import TestRenderer from 'react-test-renderer'
 
 import { SettingsSceneComponent } from '../../components/scenes/SettingsScene'
 import { config } from '../../theme/appConfig'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 const typeHack: any = {
   currencyConfig: {},

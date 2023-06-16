@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { DefaultFiatSettingComponent } from '../../components/scenes/DefaultFiatSettingScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('DefaultFiatSettingComponent', () => {
   it('should render with loading props', () => {

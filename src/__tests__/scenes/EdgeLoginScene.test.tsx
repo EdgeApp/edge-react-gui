@@ -5,10 +5,10 @@ import TestRenderer from 'react-test-renderer'
 
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
 import { RouteProp } from '../../types/routerTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 let account: EdgeAccount | undefined
 

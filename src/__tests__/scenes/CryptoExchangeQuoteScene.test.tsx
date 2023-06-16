@@ -6,8 +6,8 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { GuiSwapInfo } from '../../types/types'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 const dummySwapInfo: EdgeSwapInfo = {
   pluginId: '',

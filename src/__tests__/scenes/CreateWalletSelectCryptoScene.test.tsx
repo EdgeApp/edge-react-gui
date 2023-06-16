@@ -4,9 +4,9 @@ import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
 import { RouteProp } from '../../types/routerTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletSelectCrypto', () => {
   const nonce = fakeNonce(0)

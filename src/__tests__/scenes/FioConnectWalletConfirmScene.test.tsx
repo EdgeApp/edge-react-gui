@@ -4,8 +4,8 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioConnectWalletConfirm } from '../../components/scenes/Fio/FioConnectWalletConfirmScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('FioConnectWalletConfirm', () => {
   const nonce = fakeNonce(0)

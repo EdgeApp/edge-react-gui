@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeSuccessComponent } from '../../components/scenes/CryptoExchangeSuccessScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('CryptoExchangeSuccessComponent', () => {
   it('should render with loading props', () => {

@@ -3,8 +3,8 @@ import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CreateWalletAccountSetup } from '../../components/scenes/CreateWalletAccountSetupScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletAccountSelect', () => {
   const nonce = fakeNonce(0)

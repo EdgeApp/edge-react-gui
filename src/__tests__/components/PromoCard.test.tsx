@@ -4,8 +4,8 @@ import renderer from 'react-test-renderer'
 
 import { PromoCard } from '../../components/cards/PromoCard'
 import { MessageTweak } from '../../types/TweakTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('PromoCard', () => {
   const fakeMessage: MessageTweak = {
