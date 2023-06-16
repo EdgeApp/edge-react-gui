@@ -25,61 +25,18 @@ describe('Change Mining Fees', () => {
     currencyCode: 'BCH',
     metadata: {}
   }
-  const route: RouteProp<'changeMiningFee'> = {
-    key: `changeMiningFee-${nonce()}`,
-    name: 'changeMiningFee',
-    params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
-  }
 
   it('should render with standard props', () => {
     const renderer = createRenderer()
-    const element = (
-      <ChangeMiningFeeComponent
-        navigation={fakeNavigation}
-        route={route}
-        theme={getTheme()}
-        // networkFeeOption="standard"
-      />
-    )
-    expect(renderer.render(element)).toMatchSnapshot()
-  })
 
-  it('should render with high props', () => {
-    const renderer = createRenderer()
-    const element = (
-      <ChangeMiningFeeComponent
-        navigation={fakeNavigation}
-        route={route}
-        theme={getTheme()}
-        // networkFeeOption="high"
-      />
-    )
-    expect(renderer.render(element)).toMatchSnapshot()
-  })
+    const route: RouteProp<'changeMiningFee'> = {
+      key: `changeMiningFee-${nonce()}`,
+      name: 'changeMiningFee',
+      params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
+    }
 
-  it('should render with low props', () => {
-    const renderer = createRenderer()
-    const element = (
-      <ChangeMiningFeeComponent
-        navigation={fakeNavigation}
-        route={route}
-        theme={getTheme()}
-        // networkFeeOption="low"
-      />
-    )
-    expect(renderer.render(element)).toMatchSnapshot()
-  })
+    const actual = renderer.render(<ChangeMiningFeeComponent navigation={fakeNavigation} route={route} theme={getTheme()} />)
 
-  it('should render with custom props', () => {
-    const renderer = createRenderer()
-    const element = (
-      <ChangeMiningFeeComponent
-        navigation={fakeNavigation}
-        route={route}
-        theme={getTheme()}
-        // networkFeeOption="custom"
-      />
-    )
-    expect(renderer.render(element)).toMatchSnapshot()
+    expect(actual).toMatchSnapshot()
   })
 })
