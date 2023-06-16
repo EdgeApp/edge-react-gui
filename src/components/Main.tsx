@@ -50,7 +50,7 @@ import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneCompone
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
-import { CryptoExchangeQuoteProcessingScreen as CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
+import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
 import { CryptoExchangeQuote as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
@@ -136,7 +136,7 @@ const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsScene
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
-const CryptoExchangeQuoteProcessingScreen = ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)
+const CryptoExchangeQuoteProcessingScene = ifLoggedIn(CryptoExchangeQuoteProcessingSceneComponent)
 const CryptoExchangeScene = ifLoggedIn(CryptoExchangeSceneComponent)
 const CryptoExchangeSuccessScene = ifLoggedIn(CryptoExchangeSuccessSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
@@ -864,7 +864,7 @@ const EdgeExchangeTabScreen = () => {
       <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
       <Stack.Screen
         name="exchangeQuoteProcessing"
-        component={CryptoExchangeQuoteProcessingScreen}
+        component={CryptoExchangeQuoteProcessingScene}
         options={{
           headerLeft: () => null,
           headerRight: () => null
