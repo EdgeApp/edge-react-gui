@@ -18,6 +18,8 @@ import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
 
+const HARD_CODED_FIAT_CURRENCY_CODE = 'iso:USD'
+
 export interface RewardsCardItem {
   id: number
   creationDate: Date
@@ -133,7 +135,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
     let providerQuote: FiatProviderQuote | undefined
     let counter = 0
-    const fiatCurrencyCode = wallet.fiatCurrencyCode
+    const fiatCurrencyCode = HARD_CODED_FIAT_CURRENCY_CODE // wallet.fiatCurrencyCode
     const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
     showUi.enterAmount({
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
