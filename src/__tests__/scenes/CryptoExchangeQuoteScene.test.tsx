@@ -6,8 +6,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { getTheme } from '../../components/services/ThemeContext'
 import { GuiSwapInfo } from '../../types/types'
-import { fakeNonce } from '../../util/fake/fakeNonce'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 const dummySwapInfo: EdgeSwapInfo = {
   pluginId: '',
@@ -16,7 +15,6 @@ const dummySwapInfo: EdgeSwapInfo = {
 }
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
-  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -92,12 +90,10 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeQuoteScreenComponent
-        navigation={fakeNavigation}
-        route={{
-          key: `exchangeQuote-${nonce()}`,
-          name: 'exchangeQuote',
-          params: { swapInfo, onApprove: () => undefined }
-        }}
+        {...fakeSceneProps('exchangeQuote', {
+          swapInfo,
+          onApprove: () => undefined
+        })}
         account={fakeAccount}
         fromDenomination="BTC"
         fromWalletCurrencyName={{ fromDenomination: '' } as any}

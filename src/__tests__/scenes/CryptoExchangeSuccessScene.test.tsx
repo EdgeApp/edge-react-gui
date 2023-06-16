@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeSuccessComponent } from '../../components/scenes/CryptoExchangeSuccessScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CryptoExchangeSuccessComponent', () => {
   it('should render with loading props', () => {
@@ -12,7 +12,9 @@ describe('CryptoExchangeSuccessComponent', () => {
 
     const fakeDisklet: any = {}
 
-    const actual = renderer.render(<CryptoExchangeSuccessComponent navigation={fakeNavigation} userId="" disklet={fakeDisklet} theme={getTheme()} />)
+    const actual = renderer.render(
+      <CryptoExchangeSuccessComponent {...fakeSceneProps('exchangeSuccess', {})} userId="" disklet={fakeDisklet} theme={getTheme()} />
+    )
 
     expect(actual).toMatchSnapshot()
   })

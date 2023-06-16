@@ -6,7 +6,7 @@ import TestRenderer from 'react-test-renderer'
 import { SettingsSceneComponent } from '../../components/scenes/SettingsScene'
 import { config } from '../../theme/appConfig'
 import { FakeProviders } from '../../util/fake/FakeProviders'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 const typeHack: any = {
   currencyConfig: {},
@@ -22,8 +22,8 @@ describe('MyComponent', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <SettingsSceneComponent
+          {...fakeSceneProps('settingsOverview', {})}
           theme={config.darkTheme}
-          navigation={fakeNavigation}
           // StateProps:
           account={account}
           context={context}
@@ -58,8 +58,8 @@ describe('MyComponent', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <SettingsSceneComponent
+          {...fakeSceneProps('settingsOverview', {})}
           theme={config.darkTheme}
-          navigation={fakeNavigation}
           // StateProps:
           account={account}
           context={context}

@@ -4,12 +4,9 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { ChangeMiningFeeComponent } from '../../components/scenes/ChangeMiningFeeScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { RouteProp } from '../../types/routerTypes'
-import { fakeNonce } from '../../util/fake/fakeNonce'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('Change Mining Fees', () => {
-  const nonce = fakeNonce(0)
   const onSubmit = jest.fn()
   const wallet: any = {
     currencyInfo: {
@@ -29,13 +26,17 @@ describe('Change Mining Fees', () => {
   it('should render with standard props', () => {
     const renderer = createRenderer()
 
-    const route: RouteProp<'changeMiningFee'> = {
-      key: `changeMiningFee-${nonce()}`,
-      name: 'changeMiningFee',
-      params: { wallet, guiMakeSpendInfo, maxSpendSet: false, onSubmit }
-    }
-
-    const actual = renderer.render(<ChangeMiningFeeComponent navigation={fakeNavigation} route={route} theme={getTheme()} />)
+    const actual = renderer.render(
+      <ChangeMiningFeeComponent
+        {...fakeSceneProps('changeMiningFee', {
+          wallet,
+          guiMakeSpendInfo,
+          maxSpendSet: false,
+          onSubmit
+        })}
+        theme={getTheme()}
+      />
+    )
 
     expect(actual).toMatchSnapshot()
   })

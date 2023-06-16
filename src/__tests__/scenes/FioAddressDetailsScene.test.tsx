@@ -4,11 +4,9 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressDetails } from '../../components/scenes/Fio/FioAddressDetailsScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNonce } from '../../util/fake/fakeNonce'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressDetails', () => {
-  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -25,16 +23,11 @@ describe('FioAddressDetails', () => {
 
     const actual = renderer.render(
       <FioAddressDetails
-        navigation={fakeNavigation}
+        {...fakeSceneProps('fioAddressDetails', {
+          fioAddressName: 'Fio@edge',
+          bundledTxs: 100
+        })}
         fioWallets={[fakeWallet]}
-        route={{
-          key: `fioAddressDetails-${nonce()}`,
-          name: 'fioAddressDetails',
-          params: {
-            fioAddressName: 'Fio@edge',
-            bundledTxs: 100
-          }
-        }}
         theme={getTheme()}
       />
     )

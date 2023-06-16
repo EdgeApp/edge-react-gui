@@ -4,11 +4,9 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioAddressSettingsComponent } from '../../components/scenes/Fio/FioAddressSettingsScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNonce } from '../../util/fake/fakeNonce'
-import { fakeNavigation } from '../../util/fake/fakeSceneProps'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioAddressSettingsComponent', () => {
-  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -25,17 +23,12 @@ describe('FioAddressSettingsComponent', () => {
 
     const actual = renderer.render(
       <FioAddressSettingsComponent
-        navigation={fakeNavigation}
+        {...fakeSceneProps('fioAddressSettings', {
+          fioWallet: fakeWallet,
+          fioAddressName: 'MyFioAddress'
+        })}
         isConnected
         refreshAllFioAddresses={() => undefined}
-        route={{
-          key: `fioAddressSettings-${nonce()}`,
-          name: 'fioAddressSettings',
-          params: {
-            fioWallet: fakeWallet,
-            fioAddressName: 'MyFioAddress'
-          }
-        }}
         theme={getTheme()}
       />
     )
