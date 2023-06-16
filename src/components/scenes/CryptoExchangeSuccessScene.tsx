@@ -14,7 +14,7 @@ import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
 interface OwnProps {
-  navigation: NavigationProp<'createWalletSelectFiat'>
+  navigation: NavigationProp<'exchangeSuccess'>
 }
 interface StateProps {
   userId: string
