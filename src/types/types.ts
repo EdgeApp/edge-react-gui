@@ -269,6 +269,10 @@ export interface WcConnectionInfo {
   uri: string
   icon: string
 }
+export interface WalletConnectChainId {
+  namespace: 'algorand' | 'eip155'
+  reference: string
+}
 export interface wcGetConnection {
   chainId: number
   language?: string
