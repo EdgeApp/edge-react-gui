@@ -13,7 +13,7 @@ import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress } from '../../../types/types'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -27,10 +27,7 @@ import { Slider } from '../../themed/Slider'
 import { ThemedModal } from '../../themed/ThemedModal'
 import { Tile } from '../../tiles/Tile'
 
-interface OwnProps {
-  route: RouteProp<'fioStakingChange'>
-  navigation: NavigationProp<'fioStakingChange'>
-}
+interface OwnProps extends EdgeSceneProps<'fioStakingChange'> {}
 
 interface StateProps {
   stakingBalances: {

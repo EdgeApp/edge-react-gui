@@ -10,7 +10,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { Card } from '../cards/Card'
@@ -25,10 +25,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
-interface Props {
-  navigation: NavigationProp<'wcConnect'>
-  route: RouteProp<'wcConnect'>
-}
+interface Props extends EdgeSceneProps<'wcConnect'> {}
 
 interface DappDetails {
   subTitleText: string

@@ -19,7 +19,7 @@ import {
 } from '../../../modules/FioAddress/util'
 import { getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { tokenIdsToCurrencyCodes } from '../../../util/utils'
@@ -63,9 +63,7 @@ interface DispatchProps {
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioRequestList'>
-}
+interface OwnProps extends EdgeSceneProps<'fioRequestList'> {}
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 

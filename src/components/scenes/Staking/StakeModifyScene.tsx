@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
 import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
@@ -33,9 +33,7 @@ import { ErrorTile } from '../../tiles/ErrorTile'
 import { IconTile } from '../../tiles/IconTile'
 import { Tile } from '../../tiles/Tile'
 
-interface Props {
-  navigation: NavigationProp<'stakeModify'>
-  route: RouteProp<'stakeModify'>
+interface Props extends EdgeSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
 

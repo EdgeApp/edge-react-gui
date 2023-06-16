@@ -3,11 +3,9 @@ import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CreateWalletAccountSetup } from '../../components/scenes/CreateWalletAccountSetupScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
-import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletAccountSelect', () => {
-  const nonce = fakeNonce(0)
   const fakeAccount: any = {
     currencyConfig: {
       bitcoin: {
@@ -22,25 +20,20 @@ describe('CreateWalletAccountSelect', () => {
 
     const actual = renderer.render(
       <CreateWalletAccountSetup
-        navigation={fakeNavigation}
-        route={{
-          key: `createWalletAccountSetup-${nonce()}`,
-          name: 'createWalletAccountSetup',
-          params: {
-            accountHandle: '',
-            selectedWalletType: {
-              currencyName: 'bitcoin',
-              walletType: 'wallet:bitcoin',
-              currencyCode: 'BTC'
-            } as any,
-            selectedFiat: {
-              label: 'USD',
-              value: 'USD'
-            },
-            isReactivation: true,
-            existingWalletId: 'myWallet'
-          }
-        }}
+        {...fakeSceneProps('createWalletAccountSetup', {
+          accountHandle: '',
+          selectedWalletType: {
+            currencyName: 'bitcoin',
+            walletType: 'wallet:bitcoin',
+            currencyCode: 'BTC'
+          } as any,
+          selectedFiat: {
+            label: 'USD',
+            value: 'USD'
+          },
+          isReactivation: true,
+          existingWalletId: 'myWallet'
+        })}
         handleAvailableStatus="AVAILABLE"
         isCheckingHandleAvailability
         account={fakeAccount}

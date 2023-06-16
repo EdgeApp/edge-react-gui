@@ -5,7 +5,7 @@ import ConfettiCannon from 'react-native-confetti-cannon'
 
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -13,9 +13,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps {
-  navigation: NavigationProp<'createWalletSelectFiat'>
-}
+interface OwnProps extends EdgeSceneProps<'exchangeSuccess'> {}
+
 interface StateProps {
   userId: string
   disklet: Disklet

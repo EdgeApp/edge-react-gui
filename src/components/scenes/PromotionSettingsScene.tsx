@@ -6,12 +6,15 @@ import { activatePromotion, removePromotion } from '../../actions/AccountReferra
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+
+interface OwnProps extends EdgeSceneProps<'promotionSettings'> {}
 
 interface StateProps {
   accountReferral: AccountReferral
@@ -21,7 +24,7 @@ interface DispatchProps {
   activatePromotion: (installerId: string) => Promise<void>
   removePromotion: (installerId: string) => Promise<void>
 }
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class PromotionSettingsComponent extends React.Component<Props> {
   render() {
@@ -90,7 +93,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const PromotionSettingsScene = connect<StateProps, DispatchProps, {}>(
+export const PromotionSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     accountReferral: state.account.accountReferral,
     deviceReferral: state.deviceReferral

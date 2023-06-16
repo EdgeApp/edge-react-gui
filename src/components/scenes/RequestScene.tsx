@@ -17,7 +17,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
 import { getTokenId, keysOnlyModePlugins } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -42,9 +42,8 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
 
-interface OwnProps {
-  navigation: NavigationProp<'request'>
-}
+interface OwnProps extends EdgeSceneProps<'request'> {}
+
 interface StateProps {
   account: EdgeAccount
   currencyCode?: string

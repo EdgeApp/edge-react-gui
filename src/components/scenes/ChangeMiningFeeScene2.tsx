@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -16,10 +16,7 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
-interface OwnProps {
-  navigation: NavigationProp<'changeMiningFee2'>
-  route: RouteProp<'changeMiningFee2'>
-}
+interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
 
 type Props = OwnProps & ThemeProps
 

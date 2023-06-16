@@ -8,16 +8,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
-interface OwnProps {
-  route: RouteProp<'currencyNotificationSettings'>
-}
-
-type Props = OwnProps
+interface Props extends EdgeSceneProps<'currencyNotificationSettings'> {}
 
 export const CurrencyNotificationScene = (props: Props) => {
   const { route } = props

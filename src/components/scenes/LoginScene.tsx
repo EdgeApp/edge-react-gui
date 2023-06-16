@@ -16,7 +16,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
 import { trackError } from '../../util/tracking'
@@ -32,10 +32,7 @@ import { LoadingScene } from './LoadingScene'
 // @ts-expect-error
 global.ReactNativeBlurView = BlurView
 
-interface Props {
-  navigation: NavigationProp<'login'>
-  route: RouteProp<'login'>
-}
+interface Props extends EdgeSceneProps<'login'> {}
 
 let firstRun = true
 

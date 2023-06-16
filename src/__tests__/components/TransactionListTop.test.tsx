@@ -4,8 +4,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListTop', () => {
   const currencyInfo: EdgeCurrencyInfo = {

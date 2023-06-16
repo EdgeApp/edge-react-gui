@@ -3,8 +3,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { WalletListFooter } from '../../components/themed/WalletListFooter'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('WalletListFooter', () => {
   it('should render with loading props', () => {

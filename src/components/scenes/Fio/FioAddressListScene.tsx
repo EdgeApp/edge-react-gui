@@ -9,7 +9,7 @@ import { Fontello } from '../../../assets/vector'
 import { lstrings } from '../../../locales/strings'
 import { FioNameRow } from '../../../modules/FioAddress/components/FioName'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
@@ -37,9 +37,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioAddressList'>
-}
+interface OwnProps extends EdgeSceneProps<'fioAddressList'> {}
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 

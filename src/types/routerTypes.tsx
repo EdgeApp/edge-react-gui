@@ -1,5 +1,5 @@
 import * as NavigationCore from '@react-navigation/core'
-import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
+import { StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
@@ -325,7 +325,7 @@ export type RouteProp<Name extends keyof AppParamList> = NavigationCore.RoutePro
 /**
  * All the props passed to each scene.
  */
-export interface SceneProps<RouteName extends keyof ParamList, ParamList extends ParamListBase = AppParamList> {
-  route: NavigationCore.RouteProp<ParamList, RouteName>
-  navigation: NavigationCore.NavigationProp<ParamList, RouteName> & StackActionHelpers<ParamList>
+export interface EdgeSceneProps<Name extends keyof AppParamList> {
+  navigation: NavigationProp<Name>
+  route: RouteProp<Name>
 }

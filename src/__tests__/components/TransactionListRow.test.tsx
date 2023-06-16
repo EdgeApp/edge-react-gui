@@ -3,8 +3,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {

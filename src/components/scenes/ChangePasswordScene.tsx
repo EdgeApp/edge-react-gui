@@ -3,13 +3,11 @@ import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface OwnProps {
-  navigation: NavigationProp<'changePassword'>
-}
+interface OwnProps extends EdgeSceneProps<'changePassword'> {}
 
 interface StateProps {
   account: EdgeAccount

@@ -5,7 +5,7 @@ import { lstrings } from '../../../locales/strings'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../modules/FioAddress/util'
 import { CcWalletMap } from '../../../reducers/FioReducer'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -27,10 +27,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioConnectToWalletsConfirm'>
-  route: RouteProp<'fioConnectToWalletsConfirm'>
-}
+interface OwnProps extends EdgeSceneProps<'fioConnectToWalletsConfirm'> {}
 
 interface DispatchProps {
   updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void

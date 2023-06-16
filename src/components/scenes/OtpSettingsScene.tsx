@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { B } from '../../styles/common/textStyles'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -17,10 +18,12 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 
+interface OwnProps extends EdgeSceneProps<'otpSetup'> {}
+
 interface StateProps {
   account: EdgeAccount
 }
-type Props = StateProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps
 
 interface State {
   otpKey?: string
@@ -195,7 +198,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const OtpSettingsScene = connect<StateProps, {}, {}>(
+export const OtpSettingsScene = connect<StateProps, {}, OwnProps>(
   state => ({
     account: state.core.account
   }),

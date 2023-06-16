@@ -13,7 +13,7 @@ import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getPartnerIconUri } from '../../../util/CdnUris'
 import { FiatPluginEnterAmountResponse } from '../fiatPluginTypes'
 import { StateManager, useStateManager } from '../hooks/useStateManager'
@@ -47,9 +47,7 @@ export interface EnterAmountPoweredBy {
   poweredByText: string
 }
 
-interface Props {
-  route: RouteProp<'guiPluginEnterAmount'>
-}
+interface Props extends EdgeSceneProps<'guiPluginEnterAmount'> {}
 
 const defaultEnterAmountState: EnterAmountState = {
   spinner1: false,

@@ -17,7 +17,7 @@ import { useUrlHandler } from '../../../hooks/useUrlHandler'
 import { lstrings } from '../../../locales/strings'
 import { config } from '../../../theme/appConfig'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
@@ -30,9 +30,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-interface Props {
-  navigation: NavigationProp<'loanStatus'>
-  route: RouteProp<'loanStatus'>
+interface Props extends EdgeSceneProps<'loanStatus'> {
   loanAccount: LoanAccount
 }
 

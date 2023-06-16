@@ -12,6 +12,7 @@ import { setPreferredSwapPluginId, setPreferredSwapPluginType } from '../../acti
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -22,6 +23,8 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+
+interface OwnProps extends EdgeSceneProps<'exchangeSettings'> {}
 
 interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void
@@ -38,7 +41,7 @@ interface StateProps {
   settingsPreferredSwapType: EdgeSwapPluginType | undefined
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
   enabled: { [pluginId: string]: boolean }
@@ -289,7 +292,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
+export const SwapSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,

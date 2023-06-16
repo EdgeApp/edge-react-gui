@@ -6,13 +6,15 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+
+interface Props {}
 
 /**
  * This component will be displayed when an error boundary catches an error
  */
-function CrashSceneComponent(props: ThemeProps): React.ReactNode {
-  const { theme } = props
+export function CrashScene(props: Props): React.ReactElement {
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
@@ -46,6 +48,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'left'
   }
 }))
-
-// @ts-expect-error
-export const CrashScene = withTheme(CrashSceneComponent)

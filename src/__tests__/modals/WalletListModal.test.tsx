@@ -5,8 +5,8 @@ import TestRenderer from 'react-test-renderer'
 import { WalletListModal } from '../../components/modals/WalletListModal'
 import { EdgeTokenId } from '../../types/types'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 import { upgradeCurrencyCodes } from '../../util/tokenIdTools'
 
 describe('WalletListModal', () => {

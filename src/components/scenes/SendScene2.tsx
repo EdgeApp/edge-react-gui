@@ -30,7 +30,7 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, reco
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -56,10 +56,7 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
-interface Props {
-  navigation: NavigationProp<'send2'>
-  route: RouteProp<'send2'>
-}
+interface Props extends EdgeSceneProps<'send2'> {}
 
 export interface SendScene2Params {
   walletId: string

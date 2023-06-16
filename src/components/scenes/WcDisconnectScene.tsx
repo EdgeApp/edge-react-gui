@@ -5,7 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -15,12 +15,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
-interface OwnProps {
-  route: RouteProp<'wcDisconnect'>
-  navigation: NavigationProp<'wcConnections'>
-}
-
-type Props = OwnProps
+interface Props extends EdgeSceneProps<'wcDisconnect'> {}
 
 export const WcDisconnectScene = (props: Props) => {
   const { navigation, route } = props

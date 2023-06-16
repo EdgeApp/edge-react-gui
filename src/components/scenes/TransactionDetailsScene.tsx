@@ -11,7 +11,7 @@ import { refreshTransactionsRequest } from '../../actions/TransactionListActions
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
 import { useDispatch } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -29,11 +29,10 @@ import { Tile } from '../tiles/Tile'
 import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 import { TransactionFiatTiles } from '../tiles/TransactionFiatTiles'
 
-interface OwnProps {
-  navigation: NavigationProp<'transactionDetails'>
-  route: RouteProp<'transactionDetails'>
+interface OwnProps extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
 }
+
 interface StateProps {
   thumbnailPath?: string
 }

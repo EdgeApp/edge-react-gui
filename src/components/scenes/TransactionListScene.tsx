@@ -10,7 +10,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem, TransactionListTx } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { calculateSpamThreshold, zeroString } from '../../util/utils'
@@ -33,9 +33,7 @@ interface Section {
   data: TransactionListTx[]
 }
 
-interface Props {
-  navigation: NavigationProp<'transactionList'>
-  route: RouteProp<'transactionList'>
+interface Props extends EdgeSceneProps<'transactionList'> {
   wallet: EdgeCurrencyWallet
 }
 

@@ -50,7 +50,7 @@ import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneCompone
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
-import { CryptoExchangeQuoteProcessingScreen as CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
+import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
 import { CryptoExchangeQuote as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
@@ -136,7 +136,7 @@ const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsScene
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
-const CryptoExchangeQuoteProcessingScreen = ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)
+const CryptoExchangeQuoteProcessingScene = ifLoggedIn(CryptoExchangeQuoteProcessingSceneComponent)
 const CryptoExchangeScene = ifLoggedIn(CryptoExchangeSceneComponent)
 const CryptoExchangeSuccessScene = ifLoggedIn(CryptoExchangeSuccessSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
@@ -422,7 +422,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="exchangeSettings"
-        // @ts-expect-error-error
         component={SwapSettingsScene}
         options={{
           title: lstrings.settings_exchange_settings,
@@ -606,7 +605,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="loanDetails"
-        // @ts-expect-error
         component={LoanDetailsScene}
         options={{
           headerTitle: () => <EdgeLogoHeader />
@@ -622,7 +620,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="loanStatus" component={LoanStatusScene} />
       <Stack.Screen
         name="manageTokens"
-        // @ts-expect-error
         component={ManageTokensScene}
         options={{
           headerRight: () => null
@@ -864,7 +861,7 @@ const EdgeExchangeTabScreen = () => {
       <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
       <Stack.Screen
         name="exchangeQuoteProcessing"
-        component={CryptoExchangeQuoteProcessingScreen}
+        component={CryptoExchangeQuoteProcessingScene}
         options={{
           headerLeft: () => null,
           headerRight: () => null

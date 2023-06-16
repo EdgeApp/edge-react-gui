@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { WcConnectionInfo, wcGetConnection } from '../../types/types'
 import { unixToLocaleDateTime } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -17,9 +17,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props {
-  navigation: NavigationProp<'wcConnections'>
-}
+interface Props extends EdgeSceneProps<'wcConnections'> {}
 
 export const WcConnectionsScene = (props: Props) => {
   const { navigation } = props

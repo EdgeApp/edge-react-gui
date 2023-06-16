@@ -8,15 +8,14 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { lstrings } from '../../locales/strings'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { SpendingLimits } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
 import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 
-interface OwnProps {
-  navigation: NavigationBase
-}
+interface OwnProps extends EdgeSceneProps<'spendingLimits'> {}
+
 interface StateProps {
   transactionSpendingLimit: {
     amount: number

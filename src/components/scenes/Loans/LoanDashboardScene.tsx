@@ -17,7 +17,7 @@ import { useWatch } from '../../../hooks/useWatch'
 import { lstrings } from '../../../locales/strings'
 import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
@@ -34,9 +34,7 @@ import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-interface Props {
-  navigation: NavigationProp<'loanDashboard'>
-}
+interface Props extends EdgeSceneProps<'loanDashboard'> {}
 
 // First-element is the default wallet plugin used to create new wallet
 const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']

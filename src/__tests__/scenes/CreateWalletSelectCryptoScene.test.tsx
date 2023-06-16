@@ -3,13 +3,10 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletSelectCryptoScene } from '../../components/scenes/CreateWalletSelectCryptoScene'
-import { RouteProp } from '../../types/routerTypes'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
-import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletSelectCrypto', () => {
-  const nonce = fakeNonce(0)
   const mockState: FakeState = {
     core: {
       account: {
@@ -62,16 +59,9 @@ describe('CreateWalletSelectCrypto', () => {
   }
 
   it('should render with loading props', () => {
-    const navigation = fakeNavigation
-    const route: RouteProp<'createWalletSelectCrypto'> = {
-      key: `createWalletSelectCrypto-${nonce()}`,
-      name: 'createWalletSelectCrypto',
-      params: {}
-    }
-
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <CreateWalletSelectCryptoScene navigation={navigation} route={route} />
+        <CreateWalletSelectCryptoScene {...fakeSceneProps('createWalletSelectCrypto', {})} />
       </FakeProviders>
     )
 

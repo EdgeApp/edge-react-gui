@@ -11,7 +11,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationBase, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { UriQueryMap } from '../../types/WebTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
@@ -30,10 +30,7 @@ export interface PluginViewParams {
   deepQuery?: UriQueryMap
 }
 
-interface Props {
-  navigation: NavigationBase
-  route: RouteProp<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'>
-}
+interface Props extends EdgeSceneProps<'pluginView' | 'pluginViewBuy' | 'pluginViewSell'> {}
 
 interface WebViewEvent {
   canGoBack: boolean
