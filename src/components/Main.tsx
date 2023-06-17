@@ -117,7 +117,7 @@ import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisc
 import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
-import { SideMenu as SideMenuComponent } from './themed/SideMenu'
+import { SideMenu } from './themed/SideMenu'
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
@@ -127,7 +127,6 @@ const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
-const SideMenu = ifLoggedIn(SideMenuComponent)
 const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectSceneComponent)
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
