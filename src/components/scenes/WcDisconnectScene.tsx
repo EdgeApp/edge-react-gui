@@ -2,9 +2,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { useWatch } from '../../hooks/useWatch'
+import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { WcConnectionInfo } from '../../types/types'
 import { Card } from '../cards/Card'
@@ -28,13 +27,11 @@ export const WcDisconnectScene = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const wallet = currencyWallets[wcConnectionInfo.walletId]
+  const walletConnect = useWalletConnect()
 
   const handleDisconnect = async () => {
     try {
-      await wallet.otherMethods.wcDisconnect(wcConnectionInfo.uri)
+      await walletConnect.disconnectSession(wcConnectionInfo.uri)
     } catch (e: any) {
       showError(e)
     }

@@ -1154,6 +1154,7 @@ const strings = {
   wc_walletconnect_active_connections: 'Active Connections',
   wc_details_disconnect_button: 'Disconnect',
   wc_details_connected_wallet: 'Connected Wallet',
+  wc_dapp_disconnected: '%s disconnected',
   wc_confirm_connect_button: 'Connect',
   wc_confirm_title: 'Confirm Connection',
   wc_confirm_subtitle: '%s wants to connect your wallet.',

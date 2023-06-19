@@ -4,10 +4,13 @@ import { SessionTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
-import { showError } from '../components/services/AirshipInstance'
+import { FlashNotification } from '../components/navigation/FlashNotification'
+import { Airship, showError } from '../components/services/AirshipInstance'
 import { walletConnectPromise } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
 import { WalletConnectChainId, WcConnectionInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
@@ -20,6 +23,7 @@ interface WalletConnect {
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
   approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
+  disconnectSession: (topic: string) => Promise<void>
 }
 
 /**
@@ -142,14 +146,30 @@ export function useWalletConnect(): WalletConnect {
     })
   })
 
+  const disconnectSession = useHandler(async (topic: string): Promise<void> => {
+    const client = await walletConnectPromise
+    const sessions = client.getActiveSessions()
+    const session = sessions[topic]
+    const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
+    await client
+      .disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') })
+      .then(() => {
+        Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />)
+      })
+      .catch(e => {
+        console.log('walletConnect disconnectSession error', String(e))
+      })
+  })
+
   return React.useMemo(
     () => ({
       getActiveSessions,
       initSession,
       approveSession,
-      rejectSession
+      rejectSession,
+      disconnectSession
     }),
-    [getActiveSessions, initSession, approveSession, rejectSession]
+    [getActiveSessions, initSession, approveSession, rejectSession, disconnectSession]
   )
 }
 
