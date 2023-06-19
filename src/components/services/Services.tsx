@@ -131,7 +131,7 @@ export function Services(props: Props) {
       {account == null ? null : <LoanManagerService account={account} />}
       <NetworkActivity />
       <PasswordReminderService />
-      <WalletConnectService />
+      {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
     </>

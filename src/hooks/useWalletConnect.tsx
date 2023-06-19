@@ -3,6 +3,7 @@ import '@walletconnect/react-native-compat'
 import { SessionTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
+import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -24,6 +25,8 @@ interface WalletConnect {
   approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
   disconnectSession: (topic: string) => Promise<void>
+  approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
+  rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
 
 /**
@@ -161,15 +164,40 @@ export function useWalletConnect(): WalletConnect {
       })
   })
 
+  const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
+    const client = await walletConnectPromise
+    await client.respondSessionRequest({ topic, response: { id, jsonrpc: '2.0', result } }).catch(e => {
+      console.log('walletConnect approveRequest error', String(e))
+    })
+  })
+
+  const rejectRequest = useHandler(async (topic: string, id: number) => {
+    const client = await walletConnectPromise
+    await client
+      .respondSessionRequest({
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          error: getSdkError('USER_REJECTED_METHODS')
+        }
+      })
+      .catch(e => {
+        console.log('walletConnect rejectRequest error', String(e))
+      })
+  })
+
   return React.useMemo(
     () => ({
       getActiveSessions,
       initSession,
       approveSession,
       rejectSession,
-      disconnectSession
+      disconnectSession,
+      approveRequest,
+      rejectRequest
     }),
-    [getActiveSessions, initSession, approveSession, rejectSession, disconnectSession]
+    [getActiveSessions, initSession, approveSession, rejectSession, disconnectSession, approveRequest, rejectRequest]
   )
 }
 
