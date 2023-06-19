@@ -3,12 +3,13 @@ import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { WcConnectionInfo, wcGetConnection } from '../../types/types'
-import { unixToLocaleDateTime } from '../../util/utils'
+import { WcConnectionInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -28,6 +29,7 @@ export const WcConnectionsScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const walletConnect = useWalletConnect()
 
   // Look for all existing WalletConnect-enabled wallets
   const wcEnabledWalletIds = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
@@ -41,40 +43,11 @@ export const WcConnectionsScene = (props: Props) => {
       ? currencyWallets[wcEnabledWalletIds[0]]
       : undefined
 
-  React.useEffect(() => {
-    getdAppconnections().then(connections => setConnections(connections))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props])
-
-  const createWcConnectionInfo = (connectedWalletId: string, dApp: wcGetConnection): WcConnectionInfo => {
-    const { date, time } = unixToLocaleDateTime(dApp.timeConnected)
-    const timeConnected = `${date} at ${time}`
-    return {
-      dAppName: dApp.peerMeta.name,
-      dAppUrl: dApp.peerMeta.url,
-      timeConnected,
-      walletName: currencyWallets[connectedWalletId].name ?? 'NA',
-      walletId: connectedWalletId,
-      uri: dApp.uri,
-      icon: dApp.peerMeta.icons[0]
-    }
-  }
-
-  // Populate the list of dAppConnections
-  const getdAppconnections = async (): Promise<WcConnectionInfo[]> => {
-    const dAppConnections: WcConnectionInfo[] = []
-    if (wcEnabledWalletIds.length > 0) {
-      for (const enabledWalletId of wcEnabledWalletIds) {
-        const connections = await currencyWallets[enabledWalletId].otherMethods.wcGetConnections()
-        if (connections.length > 0) {
-          for (const dApp of connections) {
-            dAppConnections.push(createWcConnectionInfo(enabledWalletId, dApp))
-          }
-        }
-      }
-    }
-    return dAppConnections
-  }
+  useAsyncEffect(async () => {
+    const connections = await walletConnect.getActiveSessions()
+    setConnections(connections)
+    // We want to trigger another lookup whenever the props change ie. navigating from the connect or disconnect scenes
+  }, [walletConnect, props])
 
   const onScanSuccess = async (qrResult: string) => {
     if (tempWallet === undefined) showError(new Error('onScanSuccess called without a defined wallet'))
@@ -131,7 +104,7 @@ export const WcConnectionsScene = (props: Props) => {
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
-              <FastImage style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
+              <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
                 <EdgeText style={styles.infoMidTitle}>{dAppConnection.dAppUrl}</EdgeText>

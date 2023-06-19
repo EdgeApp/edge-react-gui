@@ -263,7 +263,7 @@ export interface GuiMakeSpendInfo {
 export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
-  timeConnected: string
+  expiration: string
   walletName: string
   walletId: string
   uri: string

@@ -50,7 +50,7 @@ export const WcDisconnectScene = (props: Props) => {
           </View>
         </Card>
       </View>
-      <Tile type="static" title={lstrings.wc_details_time_connected} body={wcConnectionInfo.timeConnected} contentPadding={false} />
+      <Tile type="static" title={lstrings.string_expiration} body={wcConnectionInfo.expiration} contentPadding={false} />
       <Tile type="static" title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} contentPadding={false} />
       <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
     </SceneWrapper>
