@@ -28,6 +28,7 @@ import { NetworkActivity } from './NetworkActivity'
 import { PasswordReminderService } from './PasswordReminderService'
 import { PermissionsManager } from './PermissionsManager'
 import { SortedWalletList } from './SortedWalletList'
+import { WalletConnectService } from './WalletConnectService'
 import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
 
@@ -130,6 +131,7 @@ export function Services(props: Props) {
       {account == null ? null : <LoanManagerService account={account} />}
       <NetworkActivity />
       <PasswordReminderService />
+      <WalletConnectService />
       <WalletLifecycle />
       <WipeLogsService />
     </>
