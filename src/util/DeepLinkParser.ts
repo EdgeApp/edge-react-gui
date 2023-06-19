@@ -56,9 +56,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 
   // Handle the wallet connect:
   if (url.protocol === 'wc:') {
-    const { key } = parseQuery(url.query)
-    const isSigning = key == null
-    return { type: 'walletConnect', isSigning, uri }
+    return { type: 'walletConnect', uri }
   }
 
   // Handle Azte.co URLs
@@ -158,9 +156,7 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
     case 'wc': {
       const uriEncoded = url.query.replace(/.*uri=/, '')
       const uri = decodeURIComponent(uriEncoded)
-      const { key } = parseQuery(new URL(uri).query)
-      const isSigning = key == null
-      return { type: 'walletConnect', isSigning, uri }
+      return { type: 'walletConnect', uri }
     }
 
     case 'reqaddr': {

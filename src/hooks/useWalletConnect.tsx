@@ -1,19 +1,25 @@
 import '@walletconnect/react-native-compat'
 
 import { SessionTypes } from '@walletconnect/types'
+import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
+import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import * as React from 'react'
 
+import { showError } from '../components/services/AirshipInstance'
 import { walletConnectPromise } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { useSelector } from '../types/reactRedux'
-import { WcConnectionInfo } from '../types/types'
+import { WalletConnectChainId, WcConnectionInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
-import { unixToLocaleDateTime } from '../util/utils'
+import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
 
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
+  initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
+  approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
+  rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
 }
 
 /**
@@ -86,10 +92,95 @@ export function useWalletConnect(): WalletConnect {
     return connections
   })
 
+  const initSession = useHandler(async (uri: string): Promise<any> => {
+    const client = await walletConnectPromise
+
+    return await runWithTimeout(
+      new Promise((resolve, reject) => {
+        client.once('session_proposal', async proposal => {
+          const topic = proposal.params.pairingTopic
+          if (topic == null) {
+            console.log('walletConnect initSession no topic returned')
+            reject(Error('initSession no topic returned'))
+            return
+          }
+
+          resolve(proposal)
+        })
+        client.core.pairing.pair({ uri, activatePairing: true }).catch(e => {
+          showError(e)
+          reject(e)
+        })
+      }),
+      10000
+    )
+  })
+
+  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
+    const client = await walletConnectPromise
+
+    const wallet = currencyWallets[walletId]
+    if (wallet == null) return
+
+    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+    if (chainId == null) return
+
+    // need to verify that wallet can support proposal namespace
+    await client.approveSession({
+      id: proposal.id,
+      namespaces: buildApprovedNamespaces({
+        proposal: proposal.params,
+        supportedNamespaces: supportedNamespaces(chainId, address)
+      })
+    })
+  })
+
+  const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
+    const client = await walletConnectPromise
+    await client.rejectSession({ id: proposal.id, reason: getSdkError('USER_REJECTED') }).catch(e => {
+      console.log('walletConnect rejectSession error', String(e))
+    })
+  })
+
   return React.useMemo(
     () => ({
-      getActiveSessions
+      getActiveSessions,
+      initSession,
+      approveSession,
+      rejectSession
     }),
-    [getActiveSessions]
+    [getActiveSessions, initSession, approveSession, rejectSession]
   )
+}
+
+// Utilities
+const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
+  const { namespace, reference } = chainId
+
+  let methods: string[]
+  switch (namespace) {
+    case 'eip155':
+      methods = [
+        'personal_sign',
+        'eth_sign',
+        'eth_signTypedData',
+        'eth_signTypedData_v4',
+        'eth_sendTransaction',
+        'eth_signTransaction',
+        'eth_sendRawTransaction'
+      ]
+      break
+
+    case 'algorand':
+      methods = ['algo_signTxn']
+  }
+
+  return {
+    eip155: {
+      chains: [`${namespace}:${reference}`],
+      methods,
+      events: ['chainChanged', 'accountsChanged'],
+      accounts: [`${namespace}:${reference}:${addr}`]
+    }
+  }
 }

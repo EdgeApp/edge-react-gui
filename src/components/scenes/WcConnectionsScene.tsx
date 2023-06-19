@@ -1,15 +1,20 @@
+import { ProposalTypes } from '@walletconnect/types'
+import { Web3WalletTypes } from '@walletconnect/web3wallet'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useMount } from '../../hooks/useMount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { WcConnectionInfo } from '../../types/types'
+import { EdgeTokenId, WcConnectionInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -20,30 +25,25 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props extends EdgeSceneProps<'wcConnections'> {}
 
-export interface WcConnectionsParams {}
+export interface WcConnectionsParams {
+  uri?: string
+}
 
 export const WcConnectionsScene = (props: Props) => {
   const { navigation } = props
+  const { uri } = props.route.params
   const theme = useTheme()
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
+  const [connecting, setConnecting] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
   const walletConnect = useWalletConnect()
 
-  // Look for all existing WalletConnect-enabled wallets
-  const wcEnabledWalletIds = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
-
-  // Check if the user was already recently using a WalletConnect-enabled wallet.
-  // If not, select another WalletConnect-enabled wallet, if it exists.
-  const tempWallet =
-    currencyWallets[selectedWalletId]?.otherMethods?.wcConnect != null
-      ? currencyWallets[selectedWalletId]
-      : wcEnabledWalletIds.length > 0
-      ? currencyWallets[wcEnabledWalletIds[0]]
-      : undefined
+  useMount(async () => {
+    if (uri != null) await onScanSuccess(uri)
+  })
 
   useAsyncEffect(async () => {
     const connections = await walletConnect.getActiveSessions()
@@ -52,17 +52,15 @@ export const WcConnectionsScene = (props: Props) => {
   }, [walletConnect, props])
 
   const onScanSuccess = async (qrResult: string) => {
-    if (tempWallet === undefined) showError(new Error('onScanSuccess called without a defined wallet'))
-    else {
-      try {
-        const parsedScan = await tempWallet.parseUri(qrResult, tempWallet.currencyInfo.currencyCode)
-        const uriStr = parsedScan.walletConnect?.uri
-        if (uriStr === undefined) throw new Error('Undefined uri in parsed scan')
-        navigation.navigate('wcConnect', { uri: uriStr })
-      } catch (error: any) {
-        showError(error)
-      }
+    setConnecting(true)
+    try {
+      const proposal = await walletConnect.initSession(qrResult)
+      const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, currencyWallets)
+      navigation.navigate('wcConnect', { proposal, edgeTokenIds })
+    } catch (error: any) {
+      showError(error)
     }
+    setConnecting(false)
   }
 
   const handleActiveConnectionPress = (wcConnectionInfo: WcConnectionInfo) => {
@@ -79,7 +77,7 @@ export const WcConnectionsScene = (props: Props) => {
       />
     ))
       .then((result: string | undefined) => {
-        if (result) {
+        if (result != null) {
           onScanSuccess(result)
         } else {
           showError('No scan result')
@@ -101,6 +99,7 @@ export const WcConnectionsScene = (props: Props) => {
           marginRem={[1, 0.5]}
           onPress={() => handleNewConnectionPress()}
           alignSelf="center"
+          spinner={connecting}
         />
         <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>
         <View style={styles.list}>
@@ -176,3 +175,57 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   }
 }))
+
+const getProposalNamespaceCompatibleEdgeTokenIds = (
+  proposal: Web3WalletTypes.SessionProposal,
+  currencyWallets: {
+    [walletId: string]: EdgeCurrencyWallet
+  }
+): EdgeTokenId[] => {
+  const { requiredNamespaces, optionalNamespaces } = proposal.params
+
+  const getChainIdsFromNamespaces = (namespaces: { [key: string]: ProposalTypes.BaseRequiredNamespace }): Set<string> => {
+    const chainIds = new Set<string>()
+    for (const key of Object.keys(namespaces)) {
+      if (key.split(':').length === 2) {
+        chainIds.add(key) // The key itself could CAIP-2 compliant
+      }
+      const namespace = namespaces[key]
+      if (namespace.chains != null) {
+        namespace.chains.forEach(chainId => chainIds.add(chainId))
+      }
+    }
+    return chainIds
+  }
+
+  const requiredChainIds: Set<string> = getChainIdsFromNamespaces(requiredNamespaces)
+  const optionalChainIds: Set<string> = getChainIdsFromNamespaces(optionalNamespaces)
+
+  let hasWalletForRequiredNamesapce = false
+  const edgeTokenIdMap = new Map<string, EdgeTokenId>()
+  for (const walletId of Object.keys(currencyWallets)) {
+    const wallet = currencyWallets[walletId]
+    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+    if (chainId == null) continue
+
+    const { pluginId } = wallet.currencyInfo
+    const chainIdString = `${chainId.namespace}:${chainId.reference}`
+    if (requiredChainIds.has(chainIdString)) {
+      hasWalletForRequiredNamesapce = true
+      if (!edgeTokenIdMap.has(pluginId)) {
+        edgeTokenIdMap.set(pluginId, { pluginId })
+      }
+    }
+    if (optionalChainIds.has(chainIdString)) {
+      if (!edgeTokenIdMap.has(pluginId)) {
+        edgeTokenIdMap.set(pluginId, { pluginId })
+      }
+    }
+  }
+
+  if (!hasWalletForRequiredNamesapce) {
+    throw new Error('No wallets meet dapp requirements')
+  }
+
+  return [...edgeTokenIdMap.values()]
+}
