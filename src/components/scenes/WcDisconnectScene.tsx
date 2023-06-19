@@ -6,6 +6,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { WcConnectionInfo } from '../../types/types'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -16,6 +17,10 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../tiles/Tile'
 
 interface Props extends EdgeSceneProps<'wcDisconnect'> {}
+
+export interface WcDisconnectParams {
+  wcConnectionInfo: WcConnectionInfo
+}
 
 export const WcDisconnectScene = (props: Props) => {
   const { navigation, route } = props

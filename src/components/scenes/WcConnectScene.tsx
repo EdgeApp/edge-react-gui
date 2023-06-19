@@ -27,6 +27,10 @@ import { SelectableRow } from '../themed/SelectableRow'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
 
+export interface WcConnectParams {
+  uri: string
+}
+
 interface DappDetails {
   subTitleText: string
   bodyTitleText: string

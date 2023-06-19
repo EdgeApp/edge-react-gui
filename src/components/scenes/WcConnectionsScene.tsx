@@ -20,6 +20,8 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props extends EdgeSceneProps<'wcConnections'> {}
 
+export interface WcConnectionsParams {}
+
 export const WcConnectionsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
