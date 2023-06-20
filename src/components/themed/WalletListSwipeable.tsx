@@ -59,7 +59,7 @@ function WalletListSwipeableComponent(props: Props) {
     const wallet = account.currencyWallets[walletId]
     const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      .then(() => navigation.navigate('transactionList', { walletId, currencyCode }))
+      .then(() => navigation.navigate('transactionList', { walletId, tokenId }))
       .finally(onReset)
   })
 

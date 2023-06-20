@@ -1,5 +1,5 @@
 import { abs, div, gt, log10 } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -15,7 +15,6 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { TransactionListTx } from '../../types/types'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -32,7 +31,7 @@ interface Props {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
   currencyCode: string
-  transaction: TransactionListTx
+  transaction: EdgeTransaction
 }
 
 export function TransactionListRow(props: Props) {

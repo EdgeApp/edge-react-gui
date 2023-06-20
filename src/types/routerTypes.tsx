@@ -16,6 +16,7 @@ import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendSceneParams } from '../components/scenes/SendScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
+import { TransactionListParams } from '../components/scenes/TransactionListScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
@@ -33,7 +34,6 @@ import {
   GuiFiatType,
   GuiMakeSpendInfo,
   GuiSwapInfo,
-  TransactionListTx,
   WcConnectionInfo
 } from './types'
 
@@ -280,13 +280,10 @@ export interface RouteParamList {
   termsOfService: {}
   testScene: {}
   transactionDetails: {
-    edgeTransaction: EdgeTransaction | TransactionListTx
+    edgeTransaction: EdgeTransaction
     walletId: string
   }
-  transactionList: {
-    walletId: string
-    currencyCode: string
-  }
+  transactionList: TransactionListParams
   transactionsExport: {
     sourceWallet: EdgeCurrencyWallet
     currencyCode: string

@@ -40,25 +40,24 @@ interface OwnProps {
   navigation: NavigationProp<'transactionList'>
 
   // Wallet identity:
-  currencyCode: string
-  tokenId?: string
+  tokenId: string | undefined
   wallet: EdgeCurrencyWallet
 
   // Scene state:
   isEmpty: boolean
   searching: boolean
-  onChangeSortingState: (isSearching: boolean) => void
-  onSearchTransaction: (searchString: string) => void
+  onSearchingChange: (isSearching: boolean) => void
+  onSearchTextChange: (searchString: string) => void
 }
 
 interface StateProps {
   account: EdgeAccount
   balances: EdgeBalances
+  currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
-  tokenId?: string
   walletName: string
 }
 
@@ -160,12 +159,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
+    const { account, navigation } = this.props
+
     triggerHaptic('impactLight')
-    const { navigation } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
+      (result: WalletListResult) => {
+        const { currencyCode, walletId } = result
         if (walletId != null && currencyCode != null) {
-          navigation.setParams({ currencyCode, walletId })
+          const wallet = account.currencyWallets[walletId]
+          if (wallet == null) return
+          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+          navigation.setParams({ tokenId, walletId })
         }
       }
     )
@@ -289,11 +293,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleTextFieldFocus = () => {
-    this.props.onChangeSortingState(true)
+    this.props.onSearchingChange(true)
   }
 
   handleTextFieldBlur = () => {
-    this.props.onSearchTransaction(this.state.input)
+    this.props.onSearchTextChange(this.state.input)
   }
 
   handleRequest = (): void => {
@@ -313,7 +317,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleSearchDone = () => {
     triggerHaptic('impactLight')
-    this.props.onChangeSortingState(false)
+    this.props.onSearchingChange(false)
     if (this.textInput.current) {
       this.textInput.current.clear()
     }
@@ -352,7 +356,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   clearText = () => {
     triggerHaptic('impactLight')
     this.setState({ input: '' })
-    this.props.onSearchTransaction('')
+    this.props.onSearchTextChange('')
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
@@ -369,7 +373,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         <View style={styles.container}>
-          {!isEmpty && (
+          {!searching && isEmpty ? null : (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
                 <OutlinedTextInput
@@ -384,7 +388,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                   searchIcon
                 />
               </View>
-              {searching && (
+              {!searching ? null : (
                 <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
                   <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
                 </TouchableOpacity>
@@ -392,7 +396,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </View>
           )}
 
-          {!searching && (
+          {searching ? null : (
             <>
               {this.renderBalanceBox()}
               {isStakingAvailable && this.renderStakedBalance()}
@@ -419,9 +423,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               </View>
             </>
           )}
-          {!isEmpty && !searching ? <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} /> : null}
+          {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         </View>
-        {!isEmpty && !searching && (
+        {isEmpty || searching ? null : (
           <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
           </SceneHeader>
@@ -538,10 +542,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { wallet, currencyCode, navigation } = props
+  const { navigation, tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
+
+  const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const { pluginId } = wallet.currencyInfo
   const displayDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
@@ -561,13 +567,12 @@ export function TransactionListTop(props: OwnProps) {
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
   })
 
-  const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-
   return (
     <TransactionListTopComponent
       {...props}
       account={account}
       balances={balances}
+      currencyCode={currencyCode}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
@@ -575,7 +580,6 @@ export function TransactionListTop(props: OwnProps) {
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
       onSelectWallet={handleSelectWallet}
-      tokenId={tokenId}
       theme={theme}
     />
   )
