@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
@@ -29,13 +30,13 @@ function CustomServersSettingComponent(props: Props) {
   const titleText = extraInfo == null ? lstrings.settings_custom_nodes_title : sprintf(lstrings.settings_custom_servers_title, extraInfo)
   const customServerSet = new Set(customServers)
 
-  async function handleToggleEnabled(): Promise<void> {
+  const handleToggleEnabled = useHandler(async (): Promise<void> => {
     await onUpdate({
       enableCustomServers: !enableCustomServers,
       customServers: customServerSet.size > 0 ? Array.from(customServerSet) : defaultSetting.customServers
     })
     logActivity(`Enable Custom Nodes: enable=${(!enableCustomServers).toString()} numservers=${customServerSet.size}`)
-  }
+  })
 
   async function handleDeleteNode(server: string): Promise<void> {
     customServerSet.delete(server)
@@ -43,20 +44,7 @@ function CustomServersSettingComponent(props: Props) {
     logActivity(`Delete Custom Node: ${server}`)
   }
 
-  function handleEditNode(server?: string): void {
-    async function handleSubmit(text: string) {
-      let before = 'no_node'
-      if (server != null) {
-        customServerSet.delete(server)
-        before = server
-        server = text
-      }
-      customServerSet.add(text)
-      await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
-      logActivity(`Edit Custom Node: ${before} -> ${text}`)
-      return true
-    }
-
+  const handleEditNode = useHandler((server?: string): void => {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         autoCorrect={false}
@@ -64,10 +52,21 @@ function CustomServersSettingComponent(props: Props) {
         initialValue={server ?? ''}
         inputLabel={lstrings.settings_custom_node_url}
         title={lstrings.settings_edit_custom_node}
-        onSubmit={handleSubmit}
+        onSubmit={async (text: string) => {
+          let before = 'no_node'
+          if (server != null) {
+            customServerSet.delete(server)
+            before = server
+            server = text
+          }
+          customServerSet.add(text)
+          await onUpdate({ enableCustomServers, customServers: Array.from(customServerSet) })
+          logActivity(`Edit Custom Node: ${before} -> ${text}`)
+          return true
+        }}
       />
     ))
-  }
+  })
 
   return (
     <>
