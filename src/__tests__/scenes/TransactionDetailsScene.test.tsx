@@ -4,9 +4,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
-import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 const currencyInfo: EdgeCurrencyInfo = {
   pluginId: 'bitcoin',
@@ -49,7 +48,6 @@ const fakeCoreWallet: any = {
 }
 
 describe('TransactionDetailsScene', () => {
-  const nonce = fakeNonce(0)
   const fakeState: FakeState = {
     core: {
       account: {
@@ -74,28 +72,23 @@ describe('TransactionDetailsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
-          navigation={fakeNavigation}
-          route={{
-            key: `transactionDetails-${nonce()}`,
-            name: 'transactionDetails',
-            params: {
-              edgeTransaction: {
-                blockHeight: 0,
-                currencyCode: 'BTC',
-                date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-                isSend: false,
-                metadata: { name: 'timmy' },
-                nativeAmount: '12300000',
-                networkFee: '1',
-                otherParams: {},
-                ourReceiveAddresses: ['this is an address'],
-                signedTx: 'this is a signed tx',
-                txid: 'this is the txid',
-                walletId: fakeCoreWallet.id
-              },
+          {...fakeSceneProps('transactionDetails', {
+            edgeTransaction: {
+              blockHeight: 0,
+              currencyCode: 'BTC',
+              date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+              isSend: false,
+              metadata: { name: 'timmy' },
+              nativeAmount: '12300000',
+              networkFee: '1',
+              otherParams: {},
+              ourReceiveAddresses: ['this is an address'],
+              signedTx: 'this is a signed tx',
+              txid: 'this is the txid',
               walletId: fakeCoreWallet.id
-            }
-          }}
+            },
+            walletId: fakeCoreWallet.id
+          })}
         />
       </FakeProviders>
     )
@@ -107,31 +100,26 @@ describe('TransactionDetailsScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionDetailsScene
-          navigation={fakeNavigation}
-          route={{
-            key: `transactionDetails-${nonce()}`,
-            name: 'transactionDetails',
-            params: {
-              edgeTransaction: {
-                blockHeight: 0,
-                currencyCode: 'BTC',
-                date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-                isSend: true,
-                metadata: {
-                  amountFiat: -6392.93,
-                  name: 'timmy'
-                },
-                nativeAmount: '-12300000',
-                networkFee: '1',
-                otherParams: {},
-                ourReceiveAddresses: ['this is an address'],
-                signedTx: 'this is a signed tx',
-                txid: 'this is the txid',
-                walletId: fakeCoreWallet.id
+          {...fakeSceneProps('transactionDetails', {
+            edgeTransaction: {
+              blockHeight: 0,
+              currencyCode: 'BTC',
+              date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+              isSend: true,
+              metadata: {
+                amountFiat: -6392.93,
+                name: 'timmy'
               },
+              nativeAmount: '-12300000',
+              networkFee: '1',
+              otherParams: {},
+              ourReceiveAddresses: ['this is an address'],
+              signedTx: 'this is a signed tx',
+              txid: 'this is the txid',
               walletId: fakeCoreWallet.id
-            }
-          }}
+            },
+            walletId: fakeCoreWallet.id
+          })}
         />
       </FakeProviders>
     )

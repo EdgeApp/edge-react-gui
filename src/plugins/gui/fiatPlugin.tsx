@@ -7,6 +7,7 @@ import SafariView from 'react-native-safari-view'
 
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
+import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
@@ -42,6 +43,7 @@ export const executePlugin = async (params: {
   const { pluginId } = guiPlugin
 
   const showUi: FiatPluginUi = {
+    addressWarnings,
     buttonModal: async params => {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },

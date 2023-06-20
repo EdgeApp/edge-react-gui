@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext'
 import { WalletListHeaderComponent } from '../../components/themed/WalletListHeader'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('WalletListHeader', () => {
   it('should render with loading props', () => {

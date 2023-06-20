@@ -1,5 +1,5 @@
 import { abs, add, div, gt, mul } from 'biggystring'
-import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue } from 'cleaners'
+import { asArray, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
+import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -31,9 +32,10 @@ interface Props extends WcSmartContractModalProps {
 }
 
 export const WcSmartContractModal = (props: Props) => {
-  const { bridge, dApp, nativeAmount, networkFee, payload, tokenId, uri, wallet } = props
+  const { bridge, dApp, nativeAmount, networkFee, payload: rawPayload, tokenId, topic, requestId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const walletConnect = useWalletConnect()
   const dAppName = dApp.peerMeta.name
   const icon = dApp.peerMeta.icons[0]
 
@@ -57,7 +59,7 @@ export const WcSmartContractModal = (props: Props) => {
   const isInsufficientBal = amountCurrencyCode === feeCurrencyCode ? gt(abs(totalNativeCrypto), feeCurrencyBalance) : gt(networkFee, feeCurrencyBalance)
 
   const handleSubmit = () => {
-    wcRequestResponse(wallet, uri, true, payload)
+    wcRequestResponse(true)
       .then(() => {
         Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />).catch(() => {})
       })
@@ -66,7 +68,7 @@ export const WcSmartContractModal = (props: Props) => {
   }
 
   const handleClose = () => {
-    wcRequestResponse(wallet, uri, false, payload).catch(showError).finally(props.bridge.resolve)
+    wcRequestResponse(false).catch(showError).finally(props.bridge.resolve)
   }
 
   const renderWarning = () => {
@@ -75,6 +77,61 @@ export const WcSmartContractModal = (props: Props) => {
     ) : (
       <Alert numberOfLines={0} title={lstrings.wc_smartcontract_warning_title} message={lstrings.wc_smartcontract_warning_text} type="warning" />
     )
+  }
+
+  const wcRequestResponse = async (approve: boolean): Promise<void> => {
+    if (!approve) {
+      await walletConnect.rejectRequest(topic, requestId)
+      return
+    }
+
+    const payload = asPayload(rawPayload)
+    try {
+      switch (payload.method) {
+        case 'personal_sign': {
+          const cleanPayload = asEvmSignPayload(payload)
+          const result = await wallet.signMessage(cleanPayload.params[0])
+          await walletConnect.approveRequest(topic, requestId, result)
+          break
+        }
+        case 'eth_sign':
+        case 'eth_signTypedData':
+        case 'eth_signTypedData_v4': {
+          const cleanPayload = asEvmSignPayload(payload)
+          const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
+          const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
+          await walletConnect.approveRequest(topic, requestId, result)
+          break
+        }
+        case 'eth_signTransaction': {
+          const cleanPayload = asEvmTransactionPayload(payload)
+          const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
+          const tx = await wallet.makeSpend(spendInfo)
+          const signTx = await wallet.signTx(tx)
+          await walletConnect.approveRequest(topic, requestId, signTx.signedTx)
+          break
+        }
+        case 'eth_sendTransaction':
+        case 'eth_sendRawTransaction': {
+          const cleanPayload = asEvmTransactionPayload(payload)
+          const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
+          const tx = await wallet.makeSpend(spendInfo)
+          const signedTx = await wallet.signTx(tx)
+          const sentTx = await wallet.broadcastTx(signedTx)
+          await walletConnect.approveRequest(topic, requestId, sentTx.txid)
+          break
+        }
+        case 'algo_signTxn': {
+          const cleanPayload = asAlgoWcRpcPayload(payload)
+          const signedTxs = await Promise.all(cleanPayload.params[0].map(async txnObj => await wallet.signMessage(txnObj.txn)))
+          await walletConnect.approveRequest(topic, requestId, signedTxs)
+          break
+        }
+      }
+    } catch (e: any) {
+      await walletConnect.rejectRequest(topic, requestId)
+      throw e
+    }
   }
 
   const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
@@ -136,73 +193,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-async function wcRequestResponse(wallet: EdgeCurrencyWallet, uri: string, approve: boolean, payload: Payload): Promise<void> {
-  if (!approve) {
-    await wallet.otherMethods.wcRejectRequest(uri, payload)
-    return
-  }
-
-  try {
-    switch (payload.method) {
-      case 'personal_sign': {
-        const cleanPayload = asEvmSignPayload(payload)
-        const result = await wallet.signMessage(cleanPayload.params[0])
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
-        break
-      }
-      case 'eth_sign':
-      case 'eth_signTypedData':
-      case 'eth_signTypedData_v4': {
-        const cleanPayload = asEvmSignPayload(payload)
-        const typedData = cleanPayload.method === 'eth_signTypedData' || cleanPayload.method === 'eth_signTypedData_v4'
-        const result = await wallet.signMessage(cleanPayload.params[1], { otherParams: { typedData } })
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, result)
-        break
-      }
-      case 'eth_signTransaction': {
-        const cleanPayload = asEvmTransactionPayload(payload)
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
-        const tx = await wallet.makeSpend(spendInfo)
-        const signTx = await wallet.signTx(tx)
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signTx.signedTx)
-        break
-      }
-      case 'eth_sendTransaction':
-      case 'eth_sendRawTransaction': {
-        const cleanPayload = asEvmTransactionPayload(payload)
-        const spendInfo: EdgeSpendInfo = await wallet.otherMethods.txRpcParamsToSpendInfo(cleanPayload.params[0])
-        const tx = await wallet.makeSpend(spendInfo)
-        const signedTx = await wallet.signTx(tx)
-        const sentTx = await wallet.broadcastTx(signedTx)
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, sentTx.txid)
-        break
-      }
-      case 'algo_signTxn': {
-        const cleanPayload = asAlgoWcRpcPayload(payload)
-        const signedTxs = await Promise.all(cleanPayload.params[0].map(async txnObj => await wallet.signMessage(txnObj.txn)))
-        await wallet.otherMethods.wcApproveRequest(uri, cleanPayload, signedTxs)
-        break
-      }
-    }
-  } catch (e: any) {
-    await wallet.otherMethods.wcRejectRequest(uri, payload)
-    throw e
-  }
-}
-
 // [message, account, password]: personal_sign (password not supported yet)
 // [address, message]: eth_sign, eth_signTypedData, eth_signTypedData_v4
 
 const asEvmSignMethod = asValue('personal_sign', 'eth_sign', 'eth_signTypedData', 'eth_signTypedData_v4')
 const asEvmSignPayload = asObject({
-  id: asEither(asString, asNumber),
   method: asEvmSignMethod,
   params: asTuple(asString, asString)
 })
 
 const asEvmTransactionMethod = asValue('eth_sendTransaction', 'eth_signTransaction', 'eth_sendRawTransaction')
 const asEvmTransactionPayload = asObject({
-  id: asEither(asString, asNumber),
   method: asEvmTransactionMethod,
   params: asTuple(
     asObject({
@@ -219,7 +220,6 @@ const asEvmTransactionPayload = asObject({
 })
 const asAlgoPayloadMethod = asValue('algo_signTxn')
 const asAlgoWcRpcPayload = asObject({
-  id: asEither(asString, asNumber),
   method: asAlgoPayloadMethod,
   params: asTuple(
     asArray(
@@ -232,7 +232,6 @@ const asAlgoWcRpcPayload = asObject({
 })
 
 const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod) }).withRest
-type Payload = ReturnType<typeof asPayload>
 
 export const asWcSmartContractModalProps = asObject({
   dApp: asObject({
@@ -244,7 +243,8 @@ export const asWcSmartContractModalProps = asObject({
   nativeAmount: asString,
   networkFee: asString,
   tokenId: asOptional(asString),
-  uri: asString,
-  payload: asPayload
+  topic: asString,
+  requestId: asNumber,
+  payload: asUnknown
 })
 type WcSmartContractModalProps = ReturnType<typeof asWcSmartContractModalProps>

@@ -5,16 +5,14 @@ import { setDenominationKeyRequest } from '../../actions/SettingsActions'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting } from '../themed/MaybeCustomServersSetting'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
-interface Props {
-  route: RouteProp<'currencySettings'>
-}
+interface Props extends EdgeSceneProps<'currencySettings'> {}
 
 export function CurrencySettingsScene(props: Props) {
   const { route } = props

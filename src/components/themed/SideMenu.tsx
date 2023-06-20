@@ -19,7 +19,6 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
-import { EDGE_URL } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
@@ -35,6 +34,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
+import { LoadingScene } from '../scenes/LoadingScene'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -45,7 +45,7 @@ import { ModalMessage, ModalTitle } from './ModalParts'
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
 
-export function SideMenu(props: DrawerContentComponentProps) {
+export function SideMenuComponent(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
   const navigation: NavigationBase = props.navigation as any
   const isDrawerOpen = useDrawerStatus() === 'open'
@@ -100,8 +100,7 @@ export function SideMenu(props: DrawerContentComponentProps) {
           ok: {
             label: lstrings.string_forget,
             onPress: async () => {
-              // TODO: Add a way to make this work for accounts without usernames:
-              await context.deleteLocalAccount(userInfo.username ?? '')
+              await context.forgetAccount(userInfo.loginId)
               return true
             },
             type: 'primary'
@@ -150,8 +149,8 @@ export function SideMenu(props: DrawerContentComponentProps) {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
 
     const shareOptions = {
-      message: Platform.OS === 'ios' ? message : message + EDGE_URL,
-      url: Platform.OS === 'ios' ? EDGE_URL : ''
+      message: Platform.OS === 'ios' ? message : message + config.website,
+      url: Platform.OS === 'ios' ? config.website : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }
@@ -510,3 +509,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 1
   }
 }))
+
+export function SideMenu(props: DrawerContentComponentProps) {
+  const { navigation } = props
+
+  const { loggedIn } = useSelector(state => state.core.account)
+  React.useEffect(() => {
+    if (!loggedIn) navigation.navigate('login')
+  }, [loggedIn, navigation])
+
+  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingScene />
+}

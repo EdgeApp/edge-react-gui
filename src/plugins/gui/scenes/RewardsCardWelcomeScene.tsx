@@ -8,16 +8,14 @@ import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
 import { MainButton } from '../../../components/themed/MainButton'
 import { lstrings } from '../../../locales/strings'
-import { RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 
 export interface RewardsCardWelcomeParams {
   onMoreInfo: () => void
   onNewCard: () => void
 }
 
-interface Props {
-  route: RouteProp<'rewardsCardWelcome'>
-}
+interface Props extends EdgeSceneProps<'rewardsCardWelcome'> {}
 
 export const RewardsCardWelcomeScene = (props: Props) => {
   const { onMoreInfo, onNewCard } = props.route.params

@@ -91,7 +91,6 @@ export interface SwapLink {
 
 export interface WalletConnectLink {
   type: 'walletConnect'
-  isSigning: boolean
   uri: string
 }
 

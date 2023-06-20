@@ -2,12 +2,17 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
-  const styles = getStyles(props.theme)
+interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
+
+export function CryptoExchangeQuoteProcessingScene(props: Props) {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <View style={styles.container}>
@@ -15,7 +20,7 @@ function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
         <EdgeText style={styles.findingText} numberOfLines={2}>
           {lstrings.trying_to_find}
         </EdgeText>
-        <ActivityIndicator style={styles.spinner} color={props.theme.iconTappable} />
+        <ActivityIndicator style={styles.spinner} color={theme.iconTappable} />
       </View>
     </SceneWrapper>
   )
@@ -44,5 +49,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75)
   }
 }))
-
-export const CryptoExchangeQuoteProcessingScreen = withTheme(CryptoExchangeQuoteProcessingScreenComponent)

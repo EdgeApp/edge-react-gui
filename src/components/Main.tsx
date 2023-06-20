@@ -50,7 +50,7 @@ import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneCompone
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
-import { CryptoExchangeQuoteProcessingScreen as CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
+import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
 import { CryptoExchangeQuote as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
@@ -117,7 +117,7 @@ import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisc
 import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
-import { SideMenu as SideMenuComponent } from './themed/SideMenu'
+import { SideMenu } from './themed/SideMenu'
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
@@ -127,7 +127,6 @@ const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
-const SideMenu = ifLoggedIn(SideMenuComponent)
 const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectSceneComponent)
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
@@ -136,7 +135,7 @@ const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsScene
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
 const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
-const CryptoExchangeQuoteProcessingScreen = ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)
+const CryptoExchangeQuoteProcessingScene = ifLoggedIn(CryptoExchangeQuoteProcessingSceneComponent)
 const CryptoExchangeScene = ifLoggedIn(CryptoExchangeSceneComponent)
 const CryptoExchangeSuccessScene = ifLoggedIn(CryptoExchangeSuccessSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
@@ -422,7 +421,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="exchangeSettings"
-        // @ts-expect-error-error
         component={SwapSettingsScene}
         options={{
           title: lstrings.settings_exchange_settings,
@@ -606,7 +604,6 @@ const EdgeAppStack = () => {
       />
       <Stack.Screen
         name="loanDetails"
-        // @ts-expect-error
         component={LoanDetailsScene}
         options={{
           headerTitle: () => <EdgeLogoHeader />
@@ -622,7 +619,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="loanStatus" component={LoanStatusScene} />
       <Stack.Screen
         name="manageTokens"
-        // @ts-expect-error
         component={ManageTokensScene}
         options={{
           headerRight: () => null
@@ -864,7 +860,7 @@ const EdgeExchangeTabScreen = () => {
       <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
       <Stack.Screen
         name="exchangeQuoteProcessing"
-        component={CryptoExchangeQuoteProcessingScreen}
+        component={CryptoExchangeQuoteProcessingScene}
         options={{
           headerLeft: () => null,
           headerRight: () => null

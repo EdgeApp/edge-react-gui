@@ -23,7 +23,7 @@ import { lstrings } from '../../../locales/strings'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
@@ -44,10 +44,7 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
 
-interface Props {
-  route: RouteProp<'loanCreate'>
-  navigation: NavigationProp<'loanCreate'>
-}
+interface Props extends EdgeSceneProps<'loanCreate'> {}
 
 export const LoanCreateScene = (props: Props) => {
   const { navigation, route } = props

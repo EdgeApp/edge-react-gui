@@ -12,6 +12,7 @@ import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
+import { logActivity } from '../../util/logger'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -110,7 +111,7 @@ export const ScanModal = (props: Props) => {
             return
           }
 
-          console.log(`QR code read from photo libary:`, response.values[0])
+          logActivity(`QR code read from photo library.`)
           bridge.resolve(response.values[0])
         } catch (error: any) {
           showError(error)

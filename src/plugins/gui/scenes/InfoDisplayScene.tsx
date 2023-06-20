@@ -10,16 +10,14 @@ import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
-import { RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 
 interface InfoDisplayGroup {
   groupTitle: string
   items: Array<{ label: string; value?: string }>
 }
 
-interface Props {
-  route: RouteProp<'guiPluginInfoDisplay'>
-}
+interface Props extends EdgeSceneProps<'guiPluginInfoDisplay'> {}
 
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()

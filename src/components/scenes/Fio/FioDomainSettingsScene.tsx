@@ -8,7 +8,7 @@ import { lstrings } from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -31,10 +31,7 @@ interface StateProps {
 interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
-interface OwnProps {
-  navigation: NavigationProp<'fioDomainSettings'>
-  route: RouteProp<'fioDomainSettings'>
-}
+interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {}
 
 type Props = StateProps & ThemeProps & DispatchProps & OwnProps
 

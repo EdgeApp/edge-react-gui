@@ -17,7 +17,7 @@ import { CcWalletMap } from '../../../reducers/FioReducer'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
 import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo, GuiDenomination } from '../../../types/types'
 import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -46,10 +46,7 @@ interface StateProps {
   }
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioRequestConfirmation'>
-  route: RouteProp<'fioRequestConfirmation'>
-}
+interface OwnProps extends EdgeSceneProps<'fioRequestConfirmation'> {}
 
 type Props = StateProps & ThemeProps & OwnProps
 

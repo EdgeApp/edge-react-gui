@@ -276,24 +276,20 @@ describe('parseDeepLink', function () {
     makeLinkTests({
       [fullExample]: {
         type: 'walletConnect',
-        isSigning: false,
         uri: fullExample
       },
       [shortExample]: {
         type: 'walletConnect',
-        isSigning: true,
         uri: shortExample
       },
       'edge://wc/wc?uri=wc%3A57827c96-ba26-437a-8e7e-2c11112c9663%401%3Fbridge%3Dhttps%253A%252F%252Fx.bridge.walletconnect.org%26key%3D252a4350e8381e6a935df363bc4132454f573528aed9b0270659752e0f977f2c':
         {
           type: 'walletConnect',
-          isSigning: false,
           uri: fullExample
         },
       'https://deep.edge.app/wc/wc?uri=wc%3A57827c96-ba26-437a-8e7e-2c11112c9663%401%3Fbridge%3Dhttps%253A%252F%252Fx.bridge.walletconnect.org%26key%3D252a4350e8381e6a935df363bc4132454f573528aed9b0270659752e0f977f2c':
         {
           type: 'walletConnect',
-          isSigning: false,
           uri: fullExample
         }
     })

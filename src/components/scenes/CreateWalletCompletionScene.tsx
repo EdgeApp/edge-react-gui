@@ -10,7 +10,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { showError } from '../services/AirshipInstance'
@@ -30,10 +30,7 @@ export interface CreateWalletCompletionParams {
   keyOptions?: Map<string, { [opt: string]: string | undefined }>
 }
 
-interface Props {
-  navigation: NavigationProp<'createWalletCompletion'>
-  route: RouteProp<'createWalletCompletion'>
-}
+interface Props extends EdgeSceneProps<'createWalletCompletion'> {}
 
 const CreateWalletCompletionComponent = (props: Props) => {
   const { navigation, route } = props

@@ -10,7 +10,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -27,8 +27,7 @@ import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 
-interface Props {
-  navigation: NavigationProp<'manageTokens'>
+interface Props extends EdgeSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
 }
 

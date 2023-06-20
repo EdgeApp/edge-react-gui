@@ -5,11 +5,10 @@ import { StatusBar, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 
-interface OwnProps {
-  navigation: NavigationProp<'securityAlerts'>
-}
+interface OwnProps extends EdgeSceneProps<'securityAlerts'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext

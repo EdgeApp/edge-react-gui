@@ -5,7 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { PasswordReminderModalComponent } from '../../components/modals/PasswordReminderModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('PasswordReminderModal', () => {
   it('should render with loading props', () => {

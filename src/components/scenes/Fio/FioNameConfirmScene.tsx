@@ -7,7 +7,7 @@ import { lstrings } from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -20,10 +20,7 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioDomainConfirm' | 'fioNameConfirm'>
-  route: RouteProp<'fioDomainConfirm' | 'fioNameConfirm'>
-}
+interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {}
 
 type Props = StateProps & OwnProps & ThemeProps
 

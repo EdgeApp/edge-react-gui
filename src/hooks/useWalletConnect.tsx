@@ -1,0 +1,239 @@
+import '@walletconnect/react-native-compat'
+
+import { SessionTypes } from '@walletconnect/types'
+import { buildApprovedNamespaces, getSdkError, parseUri } from '@walletconnect/utils'
+import { Web3WalletTypes } from '@walletconnect/web3wallet'
+import { JsonObject } from 'edge-core-js'
+import * as React from 'react'
+import { sprintf } from 'sprintf-js'
+
+import { FlashNotification } from '../components/navigation/FlashNotification'
+import { Airship, showError } from '../components/services/AirshipInstance'
+import { walletConnectPromise } from '../components/services/WalletConnectService'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { lstrings } from '../locales/strings'
+import { useSelector } from '../types/reactRedux'
+import { WalletConnectChainId, WcConnectionInfo } from '../types/types'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
+import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
+import { useHandler } from './useHandler'
+import { useWatch } from './useWatch'
+
+interface WalletConnect {
+  getActiveSessions: () => Promise<WcConnectionInfo[]>
+  initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
+  approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
+  rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
+  disconnectSession: (topic: string) => Promise<void>
+  approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
+  rejectRequest: (topic: string, requestId: number) => Promise<void>
+}
+
+/**
+ * Access Wallet Connect
+ */
+export function useWalletConnect(): WalletConnect {
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
+  // Utils
+  const getPublicAddresses = async () => {
+    const map = new Map<string, string>()
+    for (const walletId of Object.keys(currencyWallets)) {
+      const address = await currencyWallets[walletId].getReceiveAddress()
+      map.set(address.publicAddress, walletId)
+    }
+    return map
+  }
+
+  const getWalletIdFromSessionNamespace = async (namespaces: SessionTypes.Namespaces): Promise<string | undefined> => {
+    const publicAddresses = await getPublicAddresses()
+    for (const networkName of Object.keys(namespaces)) {
+      const [namespace, reference, address] = namespaces[networkName].accounts[0].split(':')
+
+      const walletId = publicAddresses.get(address)
+      if (walletId == null) continue
+
+      const wallet = currencyWallets[walletId]
+      if (wallet == null) continue
+
+      const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+      if (chainId == null) continue
+
+      if (chainId.namespace === namespace && chainId.reference === reference) {
+        return walletId
+      }
+    }
+  }
+
+  const parseConnection = (session: SessionTypes.Struct, walletId: string): WcConnectionInfo => {
+    const icon = session.peer.metadata.icons[0] ?? '.svg'
+    const iconUri = icon.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : icon
+    const { date, time } = unixToLocaleDateTime(session.expiry)
+    const expiration = `${date} at ${time}`
+    const connection = {
+      dAppName: session.peer.metadata.name,
+      dAppUrl: session.peer.metadata.url,
+      expiration,
+      walletName: getWalletName(currencyWallets[walletId]),
+      walletId: walletId,
+      uri: session.topic,
+      icon: iconUri
+    }
+    return connection
+  }
+
+  // API
+  const getActiveSessions = useHandler(async () => {
+    const client = await walletConnectPromise
+    const connections: WcConnectionInfo[] = []
+    const sessions = client.getActiveSessions()
+    for (const sessionName of Object.keys(sessions)) {
+      const session = sessions[sessionName]
+      const walletId = await getWalletIdFromSessionNamespace(session.namespaces)
+      if (walletId == null) continue
+
+      const connection = parseConnection(session, walletId)
+      connections.push(connection)
+    }
+    return connections
+  })
+
+  const initSession = useHandler(async (uri: string): Promise<any> => {
+    const client = await walletConnectPromise
+
+    const parsedUri = parseUri(uri)
+    if (parsedUri.version !== 2) {
+      throw new Error('Unsupported WalletConnect version')
+    }
+
+    return await runWithTimeout(
+      new Promise((resolve, reject) => {
+        client.once('session_proposal', async proposal => {
+          const topic = proposal.params.pairingTopic
+          if (topic == null) {
+            console.log('walletConnect initSession no topic returned')
+            reject(Error('initSession no topic returned'))
+            return
+          }
+
+          resolve(proposal)
+        })
+        client.core.pairing.pair({ uri, activatePairing: true }).catch(e => {
+          showError(e)
+          reject(e)
+        })
+      }),
+      10000
+    )
+  })
+
+  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
+    const client = await walletConnectPromise
+
+    const wallet = currencyWallets[walletId]
+    if (wallet == null) return
+
+    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+    if (chainId == null) return
+
+    // need to verify that wallet can support proposal namespace
+    await client.approveSession({
+      id: proposal.id,
+      namespaces: buildApprovedNamespaces({
+        proposal: proposal.params,
+        supportedNamespaces: supportedNamespaces(chainId, address)
+      })
+    })
+  })
+
+  const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
+    const client = await walletConnectPromise
+    await client.rejectSession({ id: proposal.id, reason: getSdkError('USER_REJECTED') }).catch(e => {
+      console.log('walletConnect rejectSession error', String(e))
+    })
+  })
+
+  const disconnectSession = useHandler(async (topic: string): Promise<void> => {
+    const client = await walletConnectPromise
+    const sessions = client.getActiveSessions()
+    const session = sessions[topic]
+    const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
+    await client
+      .disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') })
+      .then(() => {
+        Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />)
+      })
+      .catch(e => {
+        console.log('walletConnect disconnectSession error', String(e))
+      })
+  })
+
+  const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
+    const client = await walletConnectPromise
+    await client.respondSessionRequest({ topic, response: { id, jsonrpc: '2.0', result } }).catch(e => {
+      console.log('walletConnect approveRequest error', String(e))
+    })
+  })
+
+  const rejectRequest = useHandler(async (topic: string, id: number) => {
+    const client = await walletConnectPromise
+    await client
+      .respondSessionRequest({
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          error: getSdkError('USER_REJECTED_METHODS')
+        }
+      })
+      .catch(e => {
+        console.log('walletConnect rejectRequest error', String(e))
+      })
+  })
+
+  return React.useMemo(
+    () => ({
+      getActiveSessions,
+      initSession,
+      approveSession,
+      rejectSession,
+      disconnectSession,
+      approveRequest,
+      rejectRequest
+    }),
+    [getActiveSessions, initSession, approveSession, rejectSession, disconnectSession, approveRequest, rejectRequest]
+  )
+}
+
+// Utilities
+const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
+  const { namespace, reference } = chainId
+
+  let methods: string[]
+  switch (namespace) {
+    case 'eip155':
+      methods = [
+        'personal_sign',
+        'eth_sign',
+        'eth_signTypedData',
+        'eth_signTypedData_v4',
+        'eth_sendTransaction',
+        'eth_signTransaction',
+        'eth_sendRawTransaction'
+      ]
+      break
+
+    case 'algorand':
+      methods = ['algo_signTxn']
+  }
+
+  return {
+    eip155: {
+      chains: [`${namespace}:${reference}`],
+      methods,
+      events: ['chainChanged', 'accountsChanged'],
+      accounts: [`${namespace}:${reference}:${addr}`]
+    }
+  }
+}

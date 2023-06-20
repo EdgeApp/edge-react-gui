@@ -7,11 +7,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { playSendSound } from '../../actions/SoundActions'
-import { refreshTransactionsRequest } from '../../actions/TransactionListActions'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
-import { useDispatch } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -29,18 +27,14 @@ import { Tile } from '../tiles/Tile'
 import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 import { TransactionFiatTiles } from '../tiles/TransactionFiatTiles'
 
-interface OwnProps {
-  navigation: NavigationProp<'transactionDetails'>
-  route: RouteProp<'transactionDetails'>
+interface OwnProps extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
 }
+
 interface StateProps {
   thumbnailPath?: string
 }
-interface DispatchProps {
-  refreshTransaction: (transaction: EdgeTransaction) => void
-}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps
 
 interface State {
   acceleratedTx: EdgeTransaction | null
@@ -187,10 +181,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
       bizId
     }
 
-    wallet
-      .saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata)
-      .then(() => this.props.refreshTransaction(transaction))
-      .catch(showError)
+    wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata).catch(error => showError(error))
 
     this.setState({ ...this.state, ...newDetails })
   }
@@ -291,20 +282,10 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction } = route.params
   const theme = useTheme()
-  const dispatch = useDispatch()
 
   const { metadata } = edgeTransaction
 
   const thumbnailPath = useContactThumbnail(metadata?.name)
 
-  return (
-    <TransactionDetailsComponent
-      navigation={navigation}
-      route={route}
-      refreshTransaction={(transaction: EdgeTransaction) => dispatch(refreshTransactionsRequest(wallet, [transaction]))}
-      theme={theme}
-      thumbnailPath={thumbnailPath}
-      wallet={wallet}
-    />
-  )
+  return <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
 })

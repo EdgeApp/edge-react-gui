@@ -1,23 +1,24 @@
 import { eq, toFixed } from 'biggystring'
-import { EdgeMetadata, EdgeParsedUri } from 'edge-core-js'
 import React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { addressWarnings } from '../../actions/ScanActions'
 import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { EdgeTokenId } from '../../types/types'
+import { logActivity } from '../../util/logger'
 import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginStartParams, FiatPluginWalletPickerResult } from './fiatPluginTypes'
-import { FiatProviderGetQuoteParams } from './fiatProviderTypes'
+import { FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { getRateFromQuote } from './pluginUtils'
 import { IoniaMethods, makeIoniaProvider } from './providers/ioniaProvider'
 import { RewardsCard } from './scenes/RewardsCardDashboardScene'
 import { initializeProviders } from './util/initializeProviders'
 
 const SUPPORT_URL = 'https://edge.app/visa-card-how-to'
+
+const HARD_CODED_FIAT_CURRENCY_CODE = 'iso:USD'
 
 export interface RewardsCardItem {
   id: number
@@ -57,7 +58,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       .getRewardsCards()
       .then(async ({ activeCards, archivedCards }) => {
         if (activeCards.length === userRewardsCards.activeCards.length) {
-          console.log(`Retrying rewards card refresh`)
+          logActivity(`Retrying rewards card refresh`)
           await snooze(retries * 1000)
           return await refreshRewardsCards(retries + 1)
         }
@@ -132,8 +133,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
+    let providerQuote: FiatProviderQuote | undefined
     let counter = 0
-    const fiatCurrencyCode = wallet.fiatCurrencyCode
+    const fiatCurrencyCode = HARD_CODED_FIAT_CURRENCY_CODE // wallet.fiatCurrencyCode
     const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
     showUi.enterAmount({
       headerTitle: lstrings.rewards_card_add_new_input_amount_title,
@@ -143,29 +145,21 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         value1: '500'
       },
       async onChangeText() {},
-      async onFieldChange(event) {
+      async convertValue(sourceFieldNum, value, stateManager) {
         const myCounter = ++counter
 
-        const { stateManager } = event
-
-        const otherFieldKey = event.value.sourceFieldNum === 1 ? 'value2' : 'value1'
-        const spinnerKey = event.value.sourceFieldNum === 1 ? 'spinner2' : 'spinner1'
-
-        stateManager.update({ [spinnerKey]: true })
-
-        if (eq(event.value.value, '0')) {
-          stateManager.update({ [otherFieldKey]: '', [spinnerKey]: false })
-          return
+        if (eq(value, '0')) {
+          return ''
         }
         let quoteParams: FiatProviderGetQuoteParams
 
-        if (event.value.sourceFieldNum === 1) {
+        if (sourceFieldNum === 1) {
           // User entered a fiat value. Convert to crypto
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
             displayCurrencyCode: currencyCode,
-            exchangeAmount: event.value.value,
+            exchangeAmount: value,
             fiatCurrencyCode,
             amountType: 'fiat',
             ...redundantQuoteParams
@@ -176,63 +170,51 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
             displayCurrencyCode: currencyCode,
-            exchangeAmount: event.value.value,
+            exchangeAmount: value,
             fiatCurrencyCode,
             amountType: 'crypto',
             ...redundantQuoteParams
           }
         }
 
-        const bestQuote = await provider.getQuote(quoteParams).catch(error => {
-          stateManager.update({ statusText: { content: String(error), textType: 'error' }, [spinnerKey]: false })
-          throw error
-        })
+        try {
+          providerQuote = await provider.getQuote(quoteParams)
+        } catch (error) {
+          stateManager.update({ statusText: { content: String(error), textType: 'error' } })
+          console.error(error)
+          return ''
+        }
+
+        if (providerQuote == null) return
 
         // Abort to avoid race conditions
         if (myCounter !== counter) return
 
-        const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
+        const exchangeRateText = getRateFromQuote(providerQuote, displayFiatCurrencyCode)
         stateManager.update({
-          statusText: { content: exchangeRateText },
-          // poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon },
-          [otherFieldKey]: event.value.sourceFieldNum === 1 ? toFixed(bestQuote.cryptoAmount, 6) : toFixed(bestQuote.fiatAmount, 2),
-          [spinnerKey]: false
+          statusText: { content: exchangeRateText }
         })
+
+        return sourceFieldNum === 1 ? toFixed(providerQuote.cryptoAmount, 6) : toFixed(providerQuote.fiatAmount, 2)
       },
       async onPoweredByClick() {},
       async onSubmit(event) {
-        const fiatAmount = parseFloat(toFixed(event.value.response.value1, 0, 2))
-        const exchangeAmount = event.value.response.value2
-        const nativeAmount = await wallet.denominationToNative(exchangeAmount, currencyCode)
-        const purchaseCard = await provider.otherMethods.queryPurchaseCard(currencyCode, fiatAmount)
+        if (providerQuote == null) return
 
-        console.log(`Show send of ${exchangeAmount} ${currencyCode} (${nativeAmount} native) to '${purchaseCard.uri}' to purchase ${fiatAmount} USD card.`)
-
-        const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await wallet.parseUri(purchaseCard.uri, currencyCode)
-
-        // Check if the URI requires a warning to the user
-        const approved = await addressWarnings(parsedUri, currencyCode)
-        if (!approved) return
-
-        if (!parsedUri.paymentProtocolUrl) {
-          return showError(lstrings.missing_provider_payment_address_message)
-        }
-
-        const onDone = () => {
-          showDashboard({ showLoading: true })
-          refreshRewardsCards(0)
-            .finally(async () => await showDashboard({ showLoading: false }))
-            .catch(showError)
-        }
-
-        const metadata: EdgeMetadata = {
-          name: 'Visa® Prepaid Card',
-          category: 'expense:Visa® Prepaid Card'
-        }
-        showUi.showToastSpinner(
-          lstrings.getting_payment_invoice_message,
-          showUi.sendPaymentProto({ uri: parsedUri.paymentProtocolUrl, params: { wallet, currencyCode, metadata, onDone } })
-        )
+        await providerQuote
+          .approveQuote({ showUi, coreWallet: wallet })
+          .then(async () => {
+            await showDashboard({ showLoading: true })
+            await refreshRewardsCards(0).catch(showError)
+            await showDashboard({ showLoading: false })
+          })
+          .catch(error => {
+            if (String(error).includes('Error: User cancelled quote')) {
+              logActivity(String(error))
+              return
+            }
+            throw error
+          })
       }
     })
   }

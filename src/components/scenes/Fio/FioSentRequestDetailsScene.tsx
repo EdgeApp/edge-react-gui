@@ -8,16 +8,15 @@ import { lstrings } from '../../../locales/strings'
 import { isRejectedFioRequest, isSentFioRequest } from '../../../modules/FioRequest/util'
 import { getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
-import { RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Tile } from '../../tiles/Tile'
-interface OwnProps {
-  route: RouteProp<'fioSentRequestDetails'>
-}
+
+interface OwnProps extends EdgeSceneProps<'fioSentRequestDetails'> {}
 
 interface StateProps {
   fiatSymbol: string

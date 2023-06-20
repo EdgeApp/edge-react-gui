@@ -4,8 +4,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListTop', () => {
   const currencyInfo: EdgeCurrencyInfo = {
@@ -52,7 +52,11 @@ describe('TransactionListTop', () => {
     core: {
       account: {
         currencyWallets: { '123': fakeWallet },
-        currencyConfig: { bitcoin: fakeCurrencyConfig }
+        currencyConfig: { bitcoin: fakeCurrencyConfig },
+
+        // Needed to prevent crash due to undefined `watch` method which normally exists
+        // in an EdgeAccount
+        watch() {}
       }
     }
   }
@@ -61,13 +65,13 @@ describe('TransactionListTop', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
-          currencyCode="BTC"
           isEmpty={false}
           navigation={fakeNavigation}
           searching={false}
+          tokenId={undefined}
           wallet={fakeWallet}
-          onChangeSortingState={() => undefined}
-          onSearchTransaction={() => undefined}
+          onSearchingChange={() => undefined}
+          onSearchTextChange={() => undefined}
         />
       </FakeProviders>
     )

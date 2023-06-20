@@ -18,11 +18,12 @@ import {
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
+import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
@@ -39,9 +40,8 @@ import { SettingsLabelRow } from '../themed/SettingsLabelRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-interface OwnProps {
-  navigation: NavigationProp<'settingsOverview'>
-}
+interface OwnProps extends EdgeSceneProps<'settingsOverview'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext
@@ -166,7 +166,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
     if (!approveDelete) return
 
-    const { username } = this.props.account
+    const { username, rootLoginId } = this.props.account
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -178,7 +178,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           if (text !== username) return lstrings.delete_account_verification_error
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest(this.props.navigation)
-          await this.props.context.deleteLocalAccount(username)
+          await this.props.context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />)
           return true
         }}
@@ -325,12 +325,14 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           })}
 
           <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
-          <SettingsSwitchRow
-            key="developerMode"
-            label={lstrings.settings_developer_mode}
-            value={this.props.developerModeOn}
-            onPress={this.handleDeveloperToggle}
-          />
+          {ENV.ALLOW_DEVELOPER_MODE && (
+            <SettingsSwitchRow
+              key="developerMode"
+              label={lstrings.settings_developer_mode}
+              value={this.props.developerModeOn}
+              onPress={this.handleDeveloperToggle}
+            />
+          )}
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}

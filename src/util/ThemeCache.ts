@@ -61,8 +61,7 @@ const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): 
   await setThemeCache(disklet, cache)
 }
 
-export async function getBackgroundImage(disklet: Disklet, imageServer?: string | null, fallback?: ImageProp): Promise<ImageProp | null> {
-  // @ts-expect-error
+export async function getBackgroundImage(disklet: Disklet, imageServer?: string | null, fallback?: ImageProp): Promise<ImageProp | undefined> {
   if (imageServer == null) return fallback
   const backgroundImageUrl = `${imageServer}/${BACKGROUND_IMAGE_FILE_NAME}`
   const now = Date.now()
@@ -78,6 +77,5 @@ export async function getBackgroundImage(disklet: Disklet, imageServer?: string 
   downloadFile(disklet, backgroundImageUrl, BACKGROUND_IMAGE_LOCAL_URI).catch(() => {
     console.warn(`Error downloading from background image server ${backgroundImageUrl} to ${BACKGROUND_IMAGE_LOCAL_URI}`)
   })
-  // @ts-expect-error
   return image
 }

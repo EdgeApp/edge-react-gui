@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
@@ -19,9 +19,7 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 
-interface Props {
-  route: RouteProp<'stakeOptions'>
-  navigation: NavigationProp<'stakeOptions'>
+interface Props extends EdgeSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
 }
 
