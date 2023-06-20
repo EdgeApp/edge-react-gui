@@ -6,7 +6,6 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
-import SplashScreen from 'react-native-smart-splash-screen'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -62,7 +61,6 @@ export function EdgeCoreManager(props: Props) {
 
   // Scratchpad values that should not trigger re-renders:
   const counter = React.useRef<number>(0)
-  const splashHidden = React.useRef<boolean>(false)
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()
@@ -73,17 +71,6 @@ export function EdgeCoreManager(props: Props) {
     await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
   }, [context, isAppForeground])
 
-  function hideSplash() {
-    if (!splashHidden.current) {
-      SplashScreen.close({
-        animationType: SplashScreen.animationType.fade,
-        duration: 850,
-        delay: 500
-      })
-      splashHidden.current = true
-    }
-  }
-
   function handleContext(context: EdgeContext) {
     console.log('EdgeContext opened')
     context.on('close', () => {
@@ -92,12 +79,10 @@ export function EdgeCoreManager(props: Props) {
     })
     ++counter.current
     setContext(context)
-    hideSplash()
   }
 
   function handleError(error: Error) {
     console.log('EdgeContext failed', error)
-    hideSplash()
     Alert.alert('Edge core failed to load', String(error))
   }
 
