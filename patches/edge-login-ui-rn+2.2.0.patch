@@ -1,0 +1,31 @@
+diff --git a/node_modules/edge-login-ui-rn/android/build.gradle b/node_modules/edge-login-ui-rn/android/build.gradle
+index 2319567..ef69da0 100644
+--- a/node_modules/edge-login-ui-rn/android/build.gradle
++++ b/node_modules/edge-login-ui-rn/android/build.gradle
+@@ -55,6 +55,6 @@ dependencies {
+     implementation 'com.squareup.whorlwind:whorlwind:2.0.0'
+     implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+-    implementation 'com.android.support:appcompat-v7:${safeExtGet("supportLibVersion", "27.0.1"}'
++    implementation 'androidx.appcompat:appcompat:1.4.1'
+     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+ }
+diff --git a/node_modules/edge-login-ui-rn/android/src/main/java/co/airbitz/AbcCoreJsUi/AbcCoreJsUiModule.java b/node_modules/edge-login-ui-rn/android/src/main/java/co/airbitz/AbcCoreJsUi/AbcCoreJsUiModule.java
+index d34140e..9d63523 100644
+--- a/node_modules/edge-login-ui-rn/android/src/main/java/co/airbitz/AbcCoreJsUi/AbcCoreJsUiModule.java
++++ b/node_modules/edge-login-ui-rn/android/src/main/java/co/airbitz/AbcCoreJsUi/AbcCoreJsUiModule.java
+@@ -7,10 +7,10 @@ import android.content.pm.PackageManager;
+ import android.hardware.fingerprint.FingerprintManager;
+ import android.os.Build;
+ import android.os.Handler;
+-import android.support.annotation.NonNull;
+-import android.support.v4.app.ActivityCompat;
+-import android.support.v4.content.ContextCompat;
+-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
++import androidx.annotation.NonNull;
++import androidx.core.app.ActivityCompat;
++import androidx.core.content.ContextCompat;
++import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+ import android.util.Log;
+ import android.view.View;
+ import android.widget.ImageView;
