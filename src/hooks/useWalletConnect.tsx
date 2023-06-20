@@ -1,7 +1,7 @@
 import '@walletconnect/react-native-compat'
 
 import { SessionTypes } from '@walletconnect/types'
-import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
+import { buildApprovedNamespaces, getSdkError, parseUri } from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
@@ -101,6 +101,11 @@ export function useWalletConnect(): WalletConnect {
 
   const initSession = useHandler(async (uri: string): Promise<any> => {
     const client = await walletConnectPromise
+
+    const parsedUri = parseUri(uri)
+    if (parsedUri.version !== 2) {
+      throw new Error('Unsupported WalletConnect version')
+    }
 
     return await runWithTimeout(
       new Promise((resolve, reject) => {
