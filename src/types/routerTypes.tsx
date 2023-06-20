@@ -17,6 +17,9 @@ import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCrypt
 import { SendSceneParams } from '../components/scenes/SendScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { TransactionListParams } from '../components/scenes/TransactionListScene'
+import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
+import { WcConnectParams } from '../components/scenes/WcConnectScene'
+import { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
@@ -25,17 +28,7 @@ import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnt
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import {
-  CreateWalletType,
-  FeeOption,
-  FioConnectionWalletItem,
-  FioDomain,
-  FioRequest,
-  GuiFiatType,
-  GuiMakeSpendInfo,
-  GuiSwapInfo,
-  WcConnectionInfo
-} from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiFiatType, GuiMakeSpendInfo, GuiSwapInfo } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -289,11 +282,9 @@ export interface RouteParamList {
     currencyCode: string
   }
   walletList: {}
-  wcConnections: {}
-  wcDisconnect: { wcConnectionInfo: WcConnectionInfo }
-  wcConnect: {
-    uri: string
-  }
+  wcConnections: WcConnectionsParams
+  wcDisconnect: WcDisconnectParams
+  wcConnect: WcConnectParams
 }
 
 export type RouteSceneKey = keyof RouteParamList

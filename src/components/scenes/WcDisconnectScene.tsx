@@ -2,10 +2,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { useWatch } from '../../hooks/useWatch'
+import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { WcConnectionInfo } from '../../types/types'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -17,19 +17,21 @@ import { Tile } from '../tiles/Tile'
 
 interface Props extends EdgeSceneProps<'wcDisconnect'> {}
 
+export interface WcDisconnectParams {
+  wcConnectionInfo: WcConnectionInfo
+}
+
 export const WcDisconnectScene = (props: Props) => {
   const { navigation, route } = props
   const { wcConnectionInfo } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const wallet = currencyWallets[wcConnectionInfo.walletId]
+  const walletConnect = useWalletConnect()
 
   const handleDisconnect = async () => {
     try {
-      await wallet.otherMethods.wcDisconnect(wcConnectionInfo.uri)
+      await walletConnect.disconnectSession(wcConnectionInfo.uri)
     } catch (e: any) {
       showError(e)
     }
@@ -50,7 +52,7 @@ export const WcDisconnectScene = (props: Props) => {
           </View>
         </Card>
       </View>
-      <Tile type="static" title={lstrings.wc_details_time_connected} body={wcConnectionInfo.timeConnected} contentPadding={false} />
+      <Tile type="static" title={lstrings.string_expiration} body={wcConnectionInfo.expiration} contentPadding={false} />
       <Tile type="static" title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} contentPadding={false} />
       <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
     </SceneWrapper>

@@ -263,11 +263,15 @@ export interface GuiMakeSpendInfo {
 export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
-  timeConnected: string
+  expiration: string
   walletName: string
   walletId: string
   uri: string
   icon: string
+}
+export interface WalletConnectChainId {
+  namespace: 'algorand' | 'eip155'
+  reference: string
 }
 export interface wcGetConnection {
   chainId: number

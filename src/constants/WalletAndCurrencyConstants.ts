@@ -2,7 +2,7 @@ import { gte } from 'biggystring'
 
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
-import { StringMap } from '../types/types'
+import { StringMap, WalletConnectChainId } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -153,6 +153,7 @@ interface SpecialCurrencyInfo {
   stakeLockPeriod?: number
   stakeMaxApy?: number
   maxSpendTargets?: number
+  walletConnectV2ChainId?: WalletConnectChainId
 }
 
 /*
@@ -243,7 +244,11 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '30'
+    }
   },
   stellar: {
     initWalletName: lstrings.string_first_stellar_wallet_name,
@@ -342,7 +347,11 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isStakingSupported: true,
     isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '1'
+    }
   },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
@@ -368,13 +377,21 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '42'
+    }
   },
   ethereumclassic: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '61'
+    }
   },
   ethereumpow: {
     initWalletName: lstrings.string_first_ethereum_pow_wallet_name,
@@ -384,7 +401,11 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
-    isTransactionListUnsupported: true
+    isTransactionListUnsupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '10001'
+    }
   },
   optimism: {
     initWalletName: lstrings.string_first_optimism_wallet_name,
@@ -393,7 +414,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isCustomTokensSupported: true,
-    isPaymentProtocolSupported: false
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '10'
+    }
   },
   zksync: {
     initWalletName: lstrings.string_first_zksync_wallet_name,
@@ -403,7 +428,11 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
-    isTransactionListUnsupported: true
+    isTransactionListUnsupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '324'
+    }
   },
   tezos: {
     initWalletName: lstrings.string_first_tezos_wallet_name,
@@ -432,7 +461,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '56'
+    }
   },
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
@@ -452,7 +485,11 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '42220'
+    }
   },
   fio: {
     initWalletName: lstrings.string_first_fio_wallet_name,
@@ -652,7 +689,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '137'
+    }
   },
   avalanche: {
     initWalletName: lstrings.string_first_avalanche_wallet_name,
@@ -661,7 +702,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '43114'
+    }
   },
   algorand: {
     initWalletName: lstrings.string_first_algorand_wallet_name,
@@ -670,7 +715,11 @@ export const SPECIAL_CURRENCY_INFO: {
     isCustomTokensSupported: true,
     noChangeMiningFee: true,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'algorand',
+      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8='
+    }
   }
 }
 

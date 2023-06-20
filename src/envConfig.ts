@@ -218,6 +218,11 @@ export const asEnvConfig = asObject({
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  WALLET_CONNECT_INIT: asCorePluginInit(
+    asObject({
+      projectId: asOptional(asString, '')
+    }).withRest
+  ),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),

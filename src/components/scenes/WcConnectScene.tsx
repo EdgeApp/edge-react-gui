@@ -1,3 +1,4 @@
+import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -6,11 +7,15 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
+import { useUnmount } from '../../hooks/useUnmount'
+import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeTokenId } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { Card } from '../cards/Card'
@@ -18,7 +23,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
@@ -27,10 +32,9 @@ import { SelectableRow } from '../themed/SelectableRow'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
 
-interface DappDetails {
-  subTitleText: string
-  bodyTitleText: string
-  dAppImage?: JSX.Element
+export interface WcConnectParams {
+  proposal: Web3WalletTypes.SessionProposal
+  edgeTokenIds: EdgeTokenId[]
 }
 
 export const WcConnectScene = (props: Props) => {
@@ -39,8 +43,7 @@ export const WcConnectScene = (props: Props) => {
   const connected = React.useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { uri } = props.route.params
-  const [dappDetails, setDappDetails] = React.useState<DappDetails>({ subTitleText: '', bodyTitleText: '' })
+  const { proposal, edgeTokenIds } = props.route.params
   const [walletAddress, setWalletAddress] = React.useState('')
 
   const account = useSelector(state => state.core.account)
@@ -48,6 +51,15 @@ export const WcConnectScene = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = currencyWallets[selectedWalletId]
   const walletName = useWalletName(wallet)
+  const walletConnect = useWalletConnect()
+
+  const { subTitleText, bodyTitleText, dAppImage } = React.useMemo(() => {
+    const subTitleText = sprintf(lstrings.wc_confirm_subtitle, proposal.params.proposer.metadata.name)
+    const bodyTitleText = sprintf(lstrings.wc_confirm_body_title, proposal.params.proposer.metadata.name)
+    const imageUri = proposal.params.proposer.metadata.icons[0] ?? '.svg'
+    const dAppImage = imageUri.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : imageUri
+    return { subTitleText, bodyTitleText, dAppImage }
+  }, [proposal])
 
   React.useEffect(() => {
     wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
@@ -57,7 +69,7 @@ export const WcConnectScene = (props: Props) => {
 
   const handleConnect = async () => {
     try {
-      await wallet.otherMethods.wcConnect(uri, walletAddress, wallet.id)
+      await walletConnect.approveSession(proposal, walletAddress, wallet.id)
       connected.current = true
       Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections', {})
@@ -66,53 +78,26 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  const handleRequestDapp = async (walletId: string) => {
-    try {
-      const dApp = await currencyWallets[walletId].otherMethods.wcInit({ uri })
-      const dAppName = String(dApp.peerMeta.name).split(' ')[0]
-      setDappDetails({
-        subTitleText: sprintf(lstrings.wc_confirm_subtitle, dAppName),
-        bodyTitleText: sprintf(lstrings.wc_confirm_body_title, dAppName),
-        dAppImage: <FastImage style={styles.currencyLogo} source={{ uri: dApp.peerMeta.icons[0] }} />
-      })
-    } catch (e: any) {
-      showError('Failed to connect, try again.')
-      console.error('wcInit error:', e)
-      navigation.navigate('wcConnections', {})
-    }
-  }
-
   const handleWalletListModal = useHandler(() => {
-    const allowedCurrencyWallets = Object.keys(currencyWallets).filter(walletId => currencyWallets[walletId]?.otherMethods?.wcConnect != null)
-
-    const allowedAssets = allowedCurrencyWallets.map(walletID => ({ pluginId: currencyWallets[walletID].currencyInfo.pluginId }))
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={allowedAssets} navigation={navigation} />
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} navigation={navigation} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         const wallet = account.currencyWallets[walletId]
         const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
         dispatch(selectWalletToken({ navigation, walletId, tokenId }))
         setSelectedWallet({ walletId, currencyCode })
-        if (dappDetails.subTitleText === '') {
-          handleRequestDapp(walletId)
-        }
       }
     })
   })
 
-  React.useEffect(() => {
-    if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      handleWalletListModal()
-    }
-  }, [selectedWallet.walletId, selectedWallet.currencyCode, handleWalletListModal])
+  useMount(() => {
+    handleWalletListModal()
+  })
 
-  React.useEffect(() => {
-    return () => {
-      if (!connected.current && wallet?.otherMethods?.wcDisconnect != null) wallet.otherMethods.wcDisconnect(uri)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useUnmount(() => {
+    if (!connected.current) wallet.otherMethods.rejectSession(proposal)
+  })
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
@@ -129,14 +114,12 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  const { subTitleText, bodyTitleText, dAppImage } = dappDetails
-
   return (
     <SceneWrapper background="theme" hasTabs={false}>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>
-          {dAppImage == null ? null : dAppImage}
+          <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>
