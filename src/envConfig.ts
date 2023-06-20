@@ -184,6 +184,12 @@ export const asEnvConfig = asObject({
       evmScanApiKey: asOptional(asArray(asString), () => [])
     }).withRest
   ),
+  PULSECHAIN_INIT: asCorePluginInit(
+    asObject({
+      evmScanApiKey: asOptional(asArray(asString), () => [])
+    }).withRest
+  ),
+
   POLYGON_INIT: asCorePluginInit(
     asObject({
       evmScanApiKey: asOptional(asArray(asString), () => []),
