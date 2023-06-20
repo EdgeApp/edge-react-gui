@@ -36,15 +36,11 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 // errorAmount must be in units of the provided FiatProviderGetQuoteParams.exchangeAmount as determined by
 // amountType
 export type FiatProviderQuoteError =
-  | {
-      errorType: FiatProviderQuoteErrorTypesOther
-    }
-  | { errorType: FiatProviderQuoteErrorTypesLimit; errorAmount: number }
-  | { errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 
 export class FiatProviderError extends Error {
-  // @ts-expect-error
-  name: string
   readonly quoteError: FiatProviderQuoteError
 
   constructor(info: FiatProviderQuoteError) {

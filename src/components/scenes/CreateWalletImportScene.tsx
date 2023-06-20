@@ -148,7 +148,7 @@ const CreateWalletImportComponent = (props: Props) => {
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
       >
         <View style={styles.icon}>
-          <ImportKeySvg color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+          <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
         </View>
         <EdgeText style={styles.instructionalText} numberOfLines={2}>
           {lstrings.create_wallet_import_all_instructions}

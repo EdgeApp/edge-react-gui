@@ -187,7 +187,13 @@ export function togglePinLoginEnabled(pinLoginEnabled: boolean): ThunkAction<Pro
     return await account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
       showError(error)
 
-      const pinLoginEnabled = await context.pinLoginEnabled(account.username)
+      let pinLoginEnabled = false
+      for (const userInfo of context.localUsers) {
+        if (userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled) {
+          pinLoginEnabled = true
+        }
+      }
+
       dispatch({
         type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
         data: { pinLoginEnabled }

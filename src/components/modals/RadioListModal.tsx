@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ListModal } from './ListModal'
@@ -22,8 +23,10 @@ export function RadioListModal(props: Props) {
   // @ts-expect-error
   function renderRow({ name, icon, text }): React.ReactNode {
     const imageIcon = typeof icon === 'string' ? { uri: icon } : icon
-    const radio = selected === name ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
-
+    const isSelected = selected === name
+    const radio = isSelected ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
+    const accessibilityState = isSelected ? { checked: true } : { checked: false }
+    const accessibilityHint = `${isSelected ? lstrings.on_hint : lstrings.off_hint} ${name}`
     return (
       <TouchableOpacity onPress={() => bridge.resolve(name)}>
         <View style={styles.row}>
@@ -32,7 +35,15 @@ export function RadioListModal(props: Props) {
           </View>
           <EdgeText style={styles.rowText}>{name}</EdgeText>
           {text != null ? <Text style={styles.text}>{text}</Text> : null}
-          <IonIcon name={radio.icon} color={radio.color} size={theme.rem(1.25)} />
+          <IonIcon
+            accessibilityActions={[{ name: 'activate', label: name }]}
+            accessibilityHint={accessibilityHint}
+            accessibilityRole="radio"
+            accessibilityState={accessibilityState}
+            color={radio.color}
+            name={radio.icon}
+            size={theme.rem(1.25)}
+          />
         </View>
       </TouchableOpacity>
     )

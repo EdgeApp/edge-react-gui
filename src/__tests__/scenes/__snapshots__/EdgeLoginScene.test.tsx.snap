@@ -83,6 +83,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           }
         >
           <ActivityIndicator
+            accessibilityHint="Loading"
             color="#00f1a2"
             size="large"
           />

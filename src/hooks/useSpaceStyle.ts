@@ -84,7 +84,7 @@ export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const horizontalAlignment = leftFill && rightFill ? 'center' : rightFill ? 'flex-start' : leftFill ? 'flex-end' : undefined
   const verticalAlignment = topFill && bottomFill ? 'center' : bottomFill ? 'flex-start' : topFill ? 'flex-end' : undefined
   const alignItems = sideways ? verticalAlignment : horizontalAlignment
-  const justifyContent = sideways ? horizontalAlignment : verticalAlignment
+  const justifyContent = sideways ? horizontalAlignment ?? (fill ? 'space-between' : undefined) : verticalAlignment
 
   // Flex:
   const flex = fill ? 1 : undefined

@@ -11,6 +11,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logout } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
+import { ENV } from '../env'
 import { useMount } from '../hooks/useMount'
 import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
@@ -115,8 +116,8 @@ import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectSce
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
 import { Airship } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
-import { ControlPanel as ControlPanelComponent } from './themed/ControlPanel'
 import { MenuTabs } from './themed/MenuTabs'
+import { SideMenu as SideMenuComponent } from './themed/SideMenu'
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
@@ -126,7 +127,7 @@ const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
-const ControlPanel = ifLoggedIn(ControlPanelComponent)
+const SideMenu = ifLoggedIn(SideMenuComponent)
 const CreateWalletAccountSelectScene = ifLoggedIn(CreateWalletAccountSelectSceneComponent)
 const CreateWalletAccountSetupScene = ifLoggedIn(CreateWalletAccountSetupSceneComponent)
 const CreateWalletCompletionScene = ifLoggedIn(CreateWalletCompletionSceneComponent)
@@ -239,7 +240,7 @@ export const Main = () => {
   return (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
-        initialRouteName="gettingStarted"
+        initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
         screenOptions={{
           headerShown: false
         }}
@@ -283,7 +284,7 @@ const EdgeApp = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={props => ControlPanel(props)}
+      drawerContent={props => SideMenu(props)}
       initialRouteName="edgeAppStack"
       screenOptions={{
         drawerPosition: 'right',

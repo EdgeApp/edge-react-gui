@@ -76,27 +76,35 @@ export function Services(props: Props) {
   })
 
   // Methods to call immediately after login:
-  useAsyncEffect(async () => {
-    if (account != null) {
-      maybeShowFioHandleModal(account)
-    }
-  }, [account, maybeShowFioHandleModal])
+  useAsyncEffect(
+    async () => {
+      if (account != null) {
+        maybeShowFioHandleModal(account)
+      }
+    },
+    [account, maybeShowFioHandleModal],
+    'Services 1'
+  )
 
   // Methods to call once all of the currency wallets have been loaded
-  useAsyncEffect(async () => {
-    if (account?.waitForAllWallets == null) return
-    await account.waitForAllWallets()
+  useAsyncEffect(
+    async () => {
+      if (account?.waitForAllWallets == null) return
+      await account.waitForAllWallets()
 
-    dispatch(registerNotificationsV2()).catch(e => {
-      console.warn('registerNotificationsV2 error:', e)
-    })
+      dispatch(registerNotificationsV2()).catch(e => {
+        console.warn('registerNotificationsV2 error:', e)
+      })
 
-    // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
-    await snooze(5000)
-    dispatch(checkCompromisedKeys(navigation)).catch(e => {
-      console.warn('checkCompromisedKeys error:', e)
-    })
-  }, [account])
+      // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
+      await snooze(5000)
+      dispatch(checkCompromisedKeys(navigation)).catch(e => {
+        console.warn('checkCompromisedKeys error:', e)
+      })
+    },
+    [account],
+    'Services 2'
+  )
 
   // Methods to call periodically
   useRefresher(

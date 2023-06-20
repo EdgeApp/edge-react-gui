@@ -353,7 +353,6 @@ Array [
     <View>
       <View>
         <View
-          accessibilityHint="Close Modal"
           accessible={true}
           collapsable={false}
           focusable={true}
@@ -373,6 +372,7 @@ Array [
           }
         >
           <Text
+            accessibilityHint="Close modal"
             allowFontScaling={false}
             style={
               Array [

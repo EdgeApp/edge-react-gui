@@ -65,16 +65,20 @@ export const ActionQueueService = () => {
   // Initialization
   //
 
-  useAsyncEffect(async () => {
-    if (account?.dataStore != null) {
-      const store = makeActionQueueStore(account, clientId)
-      const queue = await store.getActionQueueMap()
-      dispatch({
-        type: 'ACTION_QUEUE/LOAD_QUEUE',
-        data: queue
-      })
-    }
-  }, [account, dispatch])
+  useAsyncEffect(
+    async () => {
+      if (account?.dataStore != null) {
+        const store = makeActionQueueStore(account, clientId)
+        const queue = await store.getActionQueueMap()
+        dispatch({
+          type: 'ACTION_QUEUE/LOAD_QUEUE',
+          data: queue
+        })
+      }
+    },
+    [account, dispatch],
+    'ActionQueueService'
+  )
 
   //
   // Runtime Loop

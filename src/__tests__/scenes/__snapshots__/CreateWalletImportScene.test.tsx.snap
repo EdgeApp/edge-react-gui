@@ -108,6 +108,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       }
     >
       <ImportKeySvg
+        accessibilityHint="Import Key"
         color="#00f1a2"
         height={36}
         width={83}

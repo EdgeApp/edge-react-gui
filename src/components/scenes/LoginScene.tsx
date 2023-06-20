@@ -215,14 +215,13 @@ class LoginSceneComponent extends React.PureComponent<Props, State> {
 }
 
 const dummyTouchIdInfo: GuiTouchIdInfo = {
-  isTouchEnabled: false,
-  isTouchSupported: false
+  isTouchEnabled: true,
+  isTouchSupported: true
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    position: 'relative',
     paddingTop: StatusBar.currentHeight,
     backgroundColor: theme.backgroundGradientColors[0]
   }

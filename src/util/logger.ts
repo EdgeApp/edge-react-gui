@@ -28,8 +28,10 @@ const logMap = {
 const getTime = () => new Date().toISOString()
 
 const isObject = (item: any) => typeof item === 'object' && item !== null
+const isError = (item: any): item is Error => item instanceof Error
 
-const normalize = (...info: any[]) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
+const normalize = (...info: any[]) =>
+  `${getTime()} | ${info.map(item => (isError(item) ? item.stack ?? item.message : isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
 
 const lock = new AsyncLock({ maxPending: 100000 })
 

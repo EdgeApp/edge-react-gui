@@ -62,9 +62,8 @@ const paymentTypeLogosById = {
   upi: 'paymentTypeLogoUpi',
   visa: 'paymentTypeVisa'
 }
-const pluginPartnerLogos: { [key: string]: 'guiPluginLogoBitaccess' | 'guiPluginLogoMoonpay' } = {
-  moonpay: 'guiPluginLogoMoonpay',
-  bitaccess: 'guiPluginLogoBitaccess'
+const pluginPartnerLogos: { [key: string]: 'guiPluginLogoMoonpay' } = {
+  moonpay: 'guiPluginLogoMoonpay'
 }
 
 interface OwnProps {

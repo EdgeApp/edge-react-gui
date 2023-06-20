@@ -223,17 +223,16 @@ export const refreshConnectedWalletsForFioAddress = async (
   const connectedWallets: StringMap = {}
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
   for (const wallet of wallets) {
-    const enabledTokens = await wallet.getEnabledTokens()
-    if (!enabledTokens.find((enabledToken: string) => enabledToken === wallet.currencyInfo.currencyCode)) {
-      enabledTokens.push(wallet.currencyInfo.currencyCode)
-    }
+    const { currencyConfig, enabledTokenIds } = wallet
+    const enabledCodes = enabledTokenIds.map(tokenId => currencyConfig.allTokens[tokenId].currencyCode)
+    enabledCodes.push(wallet.currencyInfo.currencyCode)
     const { public_addresses: connectedAddresses }: FioConnectedPublicAddresses = await fioWallet.otherMethods.fioAction('getPublicAddresses', {
       fioAddress
     })
-    for (const enabledToken of enabledTokens) {
-      const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${enabledToken}`
-      if (connectedWallets[fullCurrencyCode]) continue
-      if (await isWalletConnected(fioWallet, connectedAddresses, wallet, enabledToken, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
+    for (const currencyCode of enabledCodes) {
+      const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${currencyCode}`
+      if (connectedWallets[fullCurrencyCode] != null) continue
+      if (await isWalletConnected(fioWallet, connectedAddresses, wallet, currencyCode, wallet.currencyInfo.currencyCode, connectedWalletsFromDisklet)) {
         connectedWallets[fullCurrencyCode] = wallet.id
       }
     }

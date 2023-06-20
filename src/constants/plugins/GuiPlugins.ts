@@ -107,16 +107,10 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   bitrefill: {
     pluginId: 'bitrefill',
     storeId: 'co.edgesecure.bitrefill',
-    baseUri: 'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,dogecoin,litecoin,dash',
+    baseUri:
+      'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,usdt_trc20,usdt_erc20,usdt_polygon,usdc_erc20,usdc_polygon,litecoin,dogecoin,dash',
     lockUriPath: true,
     displayName: 'Bitrefill'
-  },
-  bitaccess: {
-    pluginId: 'bitaccess',
-    storeId: 'bitaccess',
-    baseUri: 'https://edge.bitaccessbtm.com',
-    displayName: 'Bitaccess',
-    permissions: ['location', 'camera']
   },
   rewardscard: {
     pluginId: 'rewardscard',

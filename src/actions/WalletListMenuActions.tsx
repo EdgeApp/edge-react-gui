@@ -142,11 +142,13 @@ export function walletListMenuAction(
     }
     case 'viewPrivateViewKey':
     case 'viewXPub': {
-      return (dispatch, getState) => {
+      return async (dispatch, getState) => {
         const state = getState()
-        const { currencyWallets } = state.core.account
-        const { displayPublicSeed, currencyInfo } = currencyWallets[walletId]
-        const { xpubExplorer } = currencyInfo
+        const { account } = state.core
+        const wallet = account.currencyWallets[walletId]
+        const { xpubExplorer } = wallet.currencyInfo
+
+        const displayPublicSeed = await account.getDisplayPublicKey(wallet.id)
 
         const copy: ButtonInfo = {
           label: lstrings.fragment_request_copy_title,
@@ -161,7 +163,7 @@ export function walletListMenuAction(
         const title = switchString === 'viewPrivateViewKey' ? lstrings.fragment_wallets_view_private_view_key : lstrings.fragment_wallets_view_xpub
 
         Airship.show<'copy' | 'link' | undefined>(bridge => (
-          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} closeArrow message={displayPublicSeed ?? ''} title={title}>
+          <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} closeArrow message={displayPublicSeed} title={title}>
             {switchString === 'viewXPub' ? null : (
               <Alert
                 type="warning"
@@ -175,7 +177,7 @@ export function walletListMenuAction(
         )).then(result => {
           switch (result) {
             case 'copy':
-              Clipboard.setString(displayPublicSeed ?? '')
+              Clipboard.setString(displayPublicSeed)
               showToast(lstrings.fragment_wallets_pubkey_copied_title)
               break
             case 'link':
@@ -225,11 +227,13 @@ export function walletListMenuAction(
           // @ts-expect-error
           if (global.__DEV__) devButtons = { copy: { label: lstrings.fragment_wallets_copy_seed } }
 
+          const privateKey = await account.getDisplayPrivateKey(wallet.id)
+
           await Airship.show<'copy' | 'ok' | undefined>(bridge => (
             <ButtonsModal
               title={lstrings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={wallet.displayPrivateSeed ?? ''}
+              message={privateKey}
               buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
@@ -257,9 +261,9 @@ export function walletListMenuAction(
           const state = getState()
           const { account } = state.core
 
-          const keys = account.allKeys.find(key => key.id === walletId)
-          const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={lstrings.string_raw_keys} disableCopy />)
+          const rawKeys = await account.getRawPrivateKey(walletId)
+          const keys = JSON.stringify(rawKeys, null, 2)
+          Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
         }
       }
     }

@@ -49,7 +49,13 @@ export const FiatListModal = (props: Props) => {
 
     return (
       <SelectableRow
-        icon={fiatCountry?.logoUrl != null ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.image} /> : <View style={styles.image} />}
+        icon={
+          fiatCountry?.logoUrl != null ? (
+            <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.image} accessibilityHint={item.value} />
+          ) : (
+            <View style={styles.image} />
+          )
+        }
         paddingRem={[0, 1]}
         subTitle={subTitle}
         title={item.value}

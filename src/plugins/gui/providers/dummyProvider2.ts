@@ -173,10 +173,10 @@ export const dummyProvider2: FiatProviderFactory = {
           minLimit = parseFloat(toFixed(mul(MIN_USD, div(cryptoAmount, fiatAmount, 16)), 0, 6))
         }
         if (gt(fiatAmount, MAX_USD)) {
-          throw new FiatProviderError({ errorType: 'overLimit', errorAmount: maxLimit })
+          throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxLimit })
         }
         if (lt(fiatAmount, MIN_USD)) {
-          throw new FiatProviderError({ errorType: 'underLimit', errorAmount: minLimit })
+          throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minLimit })
         }
 
         const paymentQuote: FiatProviderQuote = {

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -187,13 +187,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       .trim()
       .replace(/[-\s]+/g, '-') // Collapse spaces & dashes
 
-    const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: multiplier,
+    const txs = await sourceWallet.getTransactions({
       currencyCode,
       startDate,
       endDate
-    }
-    const txs = await sourceWallet.getTransactions(transactionOptions)
+    })
 
     const files: File[] = []
     const formats: string[] = []
@@ -203,7 +201,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await exportTransactionsToCSV(sourceWallet, txs, transactionOptions)
+    const csvFile = await exportTransactionsToCSV(sourceWallet, txs, currencyCode, multiplier)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(lstrings.export_transaction_export_error)
       return
@@ -219,7 +217,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await exportTransactionsToQBO(sourceWallet, txs, transactionOptions)
+      const qboFile = await exportTransactionsToQBO(sourceWallet, txs, currencyCode, multiplier)
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',

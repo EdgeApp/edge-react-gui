@@ -54,6 +54,7 @@ interface BuildObj extends BuildConfigFile {
   tmpDir: string
   buildArchivesDir: string
   bundleToolPath: string
+  productNameClean: string
 
   // Set in makeCommonPost:
   buildNum: string
@@ -99,8 +100,8 @@ function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.projectName = argv[2]
-  buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
-  buildObj.tmpDir = `${buildObj.guiDir}/temp`
+  buildObj.guiPlatformDir = buildObj.guiDir + buildObj.platformType
+  buildObj.tmpDir = `${buildObj.guiDir}temp`
   buildObj.buildArchivesDir = '/Users/jenkins/buildArchives'
 }
 
@@ -144,6 +145,7 @@ function makeCommonPost(buildObj: BuildObj) {
     buildObj.bundleUrl = 'main.jsbundle'
     buildObj.bundleMapFile = '../ios-release.bundle.map'
   }
+  buildObj.productNameClean = buildObj.productName.replace(' ', '')
 }
 
 // function buildCommonPre() {
@@ -220,8 +222,8 @@ function buildIos(buildObj: BuildObj) {
 
   buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.dSYM.zip`)
-  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productName}.ipa`)
+  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
+  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
@@ -250,6 +252,10 @@ function buildIos(buildObj: BuildObj) {
   mylog('Zipping dSYM for ' + buildObj.xcodeScheme)
   cmdStr = `/usr/bin/zip -r ${buildObj.dSymZip} ${buildObj.dSymFile}`
   call(cmdStr)
+
+  mylog(`Renaming IPA file to ${buildObj.ipaFile}`)
+  const buildOutputIpaFile = `${buildObj.tmpDir}/${buildObj.productName}.ipa`
+  fs.renameSync(buildOutputIpaFile, buildObj.ipaFile)
 
   cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
   call(cmdStr)
@@ -290,11 +296,12 @@ function buildAndroid(buildObj: BuildObj) {
   call(sprintf('./gradlew %s', buildObj.androidTask))
 
   // Process the AAB files created into APK format and place in archive directory
+  const outfile = `${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}`
   const archiveDir = join(buildArchivesDir, repoBranch, platformType, String(buildNum))
   fs.mkdirSync(archiveDir, { recursive: true })
-  const aabPath = join(archiveDir, 'app-release.aab')
-  const apksPath = join(archiveDir, 'app-release.apks')
-  const apkPathDir = join(archiveDir, 'apk_container')
+  const aabPath = join(archiveDir, `${outfile}.aab`)
+  const apksPath = join(archiveDir, `${outfile}.apks`)
+  const apkPathDir = join(archiveDir, `${outfile}_apk_container`)
   fs.copyFileSync(join(guiPlatformDir, '/app/build/outputs/bundle/release/app-release.aab'), aabPath)
 
   call(
@@ -302,7 +309,9 @@ function buildAndroid(buildObj: BuildObj) {
   )
   call(`unzip ${apksPath} -d ${apkPathDir}`)
 
-  buildObj.ipaFile = join(apkPathDir, 'universal.apk')
+  const universalApk = join(apkPathDir, 'universal.apk')
+  buildObj.ipaFile = join(apkPathDir, `${outfile}.apk`)
+  fs.renameSync(universalApk, buildObj.ipaFile)
 }
 
 function buildCommonPost(buildObj: BuildObj) {

@@ -380,6 +380,5 @@ export interface Theme {
   fioAddressLogo: ImageProp
   walletListSlideTutorialImage: ImageProp
 
-  guiPluginLogoBitaccess: ImageProp
   guiPluginLogoMoonpay: ImageProp
 }

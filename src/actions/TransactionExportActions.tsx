@@ -1,6 +1,6 @@
 import { abs, add, div, gt, lt, mul } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
-import { EdgeCurrencyWallet, EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
@@ -9,14 +9,21 @@ import { DECIMAL_PRECISION } from '../util/utils'
 
 const UPDATE_TXS_MAX_PROMISES = 10
 
-export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions): Promise<string> {
-  const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
+export async function exportTransactionsToQBO(
+  wallet: EdgeCurrencyWallet,
+  txs: EdgeTransaction[],
+  currencyCode: string,
+  denomination?: string
+): Promise<string> {
   return exportTransactionsToQBOInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, Date.now())
 }
 
-export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions = {}): Promise<string> {
-  const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
-
+export async function exportTransactionsToCSV(
+  wallet: EdgeCurrencyWallet,
+  txs: EdgeTransaction[],
+  currencyCode: string,
+  denomination?: string
+): Promise<string> {
   let denomName = ''
   if (denomination != null) {
     const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)

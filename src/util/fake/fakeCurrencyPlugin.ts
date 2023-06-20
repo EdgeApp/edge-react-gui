@@ -1,7 +1,6 @@
 import { add, lt, mul } from 'biggystring'
 import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import {
-  EdgeCreatePrivateKeyOptions,
   EdgeCurrencyCodeOptions,
   EdgeCurrencyEngine,
   EdgeCurrencyEngineCallbacks,
@@ -319,7 +318,7 @@ class FakeCurrencyTools {
     this.currencyInfo = currencyInfo
   }
 
-  async createPrivateKey(walletType: string, opts?: EdgeCreatePrivateKeyOptions): Promise<JsonObject> {
+  async createPrivateKey(walletType: string, opts?: JsonObject): Promise<JsonObject> {
     if (walletType !== this.currencyInfo.walletType) {
       throw new Error('Unsupported key type')
     }

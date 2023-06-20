@@ -217,7 +217,10 @@ export const simplexProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
-        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ errorType: 'regionRestricted', displayCurrencyCode })
+        if (!allowedCountryCodes[regionCode.countryCode]) throw new FiatProviderError({ providerId, errorType: 'regionRestricted', displayCurrencyCode })
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+
         let foundPaymentType = false
         for (const type of paymentTypes) {
           const t = asFiatPaymentType(type)
@@ -226,7 +229,7 @@ export const simplexProvider: FiatProviderFactory = {
             break
           }
         }
-        if (!foundPaymentType) throw new FiatProviderError({ errorType: 'paymentUnsupported' })
+        if (!foundPaymentType) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const ts = Math.floor(Date.now() / 1000)
         const simplexCryptoCode = SIMPLEX_ID_MAP[params.pluginId][params.displayCurrencyCode]
@@ -276,10 +279,10 @@ export const simplexProvider: FiatProviderFactory = {
             const [minLimit, maxLimit] = result3.slice(2, 4)
 
             if (gt(params.exchangeAmount, maxLimit)) {
-              throw new FiatProviderError({ errorType: 'overLimit', errorAmount: parseFloat(maxLimit) })
+              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(maxLimit) })
             }
             if (lt(params.exchangeAmount, minLimit)) {
-              throw new FiatProviderError({ errorType: 'underLimit', errorAmount: parseFloat(minLimit) })
+              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit) })
             }
           }
           throw new Error('Simplex unknown error')

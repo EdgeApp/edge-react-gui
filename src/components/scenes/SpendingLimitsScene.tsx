@@ -65,7 +65,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
               <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</FormattedText>
               <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</FormattedText>
             </View>
-            <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} />
+            <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} accessibilityHint={lstrings.toggle_button_hint} />
           </View>
 
           <TextField

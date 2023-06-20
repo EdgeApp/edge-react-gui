@@ -15,21 +15,12 @@ export const createStore = (storeId: string, store: EdgeDataStore): FiatProvider
   }
 }
 
-// @ts-expect-error
-const ERROR_PRIORITIES: { [errorType: FiatProviderQuoteErrorTypes]: number } = {
+const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } = {
   underLimit: 1,
   overLimit: 2,
   paymentUnsupported: 3,
   regionRestricted: 4,
   assetUnsupported: 5
-}
-
-const ERROR_TEXT = {
-  underLimit: lstrings.fiat_plugin_buy_amount_under_limit,
-  overLimit: lstrings.fiat_plugin_buy_amount_over_limit,
-  paymentUnsupported: lstrings.fiat_plugin_payment_unsupported,
-  regionRestricted: lstrings.fiat_plugin_buy_region_restricted,
-  assetUnsupported: lstrings.fiat_plugin_asset_unsupported
 }
 
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
@@ -48,32 +39,55 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
       bestError = errorQuote
       continue
     }
-    // @ts-expect-error
     if (ERROR_PRIORITIES[errorQuote.errorType] < ERROR_PRIORITIES[bestError.errorType]) {
       bestError = errorQuote
       continue
     }
-    // @ts-expect-error
     if (ERROR_PRIORITIES[errorQuote.errorType] === ERROR_PRIORITIES[bestError.errorType]) {
       if (errorQuote.errorType === 'overLimit' && bestError.errorType === 'overLimit') {
-        if (errorQuote.errorAmount > bestError.errorAmount) {
+        if ((errorQuote.errorAmount ?? 0) > (bestError.errorAmount ?? 0)) {
           bestError = errorQuote
         }
       } else if (errorQuote.errorType === 'underLimit' && bestError.errorType === 'underLimit') {
-        if (errorQuote.errorAmount < bestError.errorAmount) {
+        if ((errorQuote.errorAmount ?? Infinity) < (bestError.errorAmount ?? Infinity)) {
           bestError = errorQuote
         }
       }
     }
   }
   if (bestError == null) return
-  let errorText = ERROR_TEXT[bestError.errorType]
-  if (bestError.errorType === 'underLimit' || bestError.errorType === 'overLimit') {
-    const localeAmount = formatNumber(bestError.errorAmount.toString())
-    errorText = sprintf(errorText, localeAmount + ' ' + currencyCode)
-  } else if (bestError.errorType === 'regionRestricted') {
-    errorText = sprintf(errorText, bestError.displayCurrencyCode)
+  return getErrorText(bestError, currencyCode)
+}
+
+const getErrorText = (error: FiatProviderQuoteError, currencyCode: string): string => {
+  let errorText = ''
+
+  switch (error.errorType) {
+    case 'underLimit':
+      errorText =
+        error.errorAmount == null
+          ? lstrings.fiat_plugin_buy_amount_under_undef_limit
+          : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+      break
+    case 'overLimit':
+      errorText =
+        error.errorAmount == null
+          ? lstrings.fiat_plugin_buy_amount_over_undef_limit
+          : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+      break
+    case 'paymentUnsupported':
+      errorText = lstrings.fiat_plugin_payment_unsupported
+      break
+    case 'regionRestricted':
+      errorText = sprintf(lstrings.fiat_plugin_buy_region_restricted, error.displayCurrencyCode)
+      break
+    case 'assetUnsupported':
+      errorText = lstrings.fiat_plugin_asset_unsupported
+      break
+    default:
+      errorText = 'Unknown error type'
   }
+
   return errorText
 }
 

@@ -262,28 +262,6 @@ Limit: $1,000 per card, $10,000 per day
   Object {
     "cryptoCodes": Array [
       "BTC",
-      "ETH",
-      "LINK",
-      "DAI",
-      "LTC",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {
-      "country": "US",
-    },
-    "description": "Fee: Varies / Settlement: 10 - 20 minutes
-Limit: Varies",
-    "partnerIconPath": "mktg/bitaccess.png",
-    "paymentTypeLogoKey": "cash",
-    "paymentTypes": Array [
-      "cash",
-    ],
-    "pluginId": "bitaccess",
-    "title": "Cash",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
       "DASH",
       "DOGE",
       "ETH",

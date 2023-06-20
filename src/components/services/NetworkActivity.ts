@@ -17,7 +17,7 @@ class NetworkActivityComponent extends React.Component<Props> {
     console.log('NetworkActivity - isConnected changed: ', info.isConnected)
     this.props.changeConnectivity(info.isConnected ?? false)
     if (!info.isConnected) {
-      showError(`${lstrings.network_alert_title}`)
+      showError(`${lstrings.network_alert_title}`, { trackError: false })
     }
   }
 

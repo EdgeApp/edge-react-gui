@@ -225,6 +225,8 @@ export const asEnvConfig = asObject({
   BETA_FEATURES: asOptional(asBoolean, false),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
+  USE_WELCOME_SCREENS: asOptional(asBoolean, true),
+
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
   YOLO_PIN: asNullable(asString),

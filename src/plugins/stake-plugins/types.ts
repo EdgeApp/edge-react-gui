@@ -2,7 +2,7 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -106,6 +106,7 @@ export interface ChangeQuoteRequest {
   currencyCode: string
   nativeAmount: string
   wallet: EdgeCurrencyWallet
+  account: EdgeAccount
 }
 
 export interface QuoteAllocation {
@@ -132,6 +133,7 @@ export interface ChangeQuote {
 export interface StakePositionRequest {
   stakePolicyId: string
   wallet: EdgeCurrencyWallet
+  account: EdgeAccount
 }
 
 export interface PositionAllocation {

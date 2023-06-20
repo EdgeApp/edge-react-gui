@@ -2,7 +2,6 @@ import { Dimensions, Platform } from 'react-native'
 
 import backgroundImage from '../../assets/images/backgrounds/login_bg.jpg'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
-import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
@@ -394,6 +393,5 @@ export const testDark: Theme = {
   primaryLogo: paymentTypeLogoPayid,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoBitaccess: guiPluginLogoBitaccess,
   guiPluginLogoMoonpay: guiPluginLogoMoonpay
 }

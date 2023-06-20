@@ -1,17 +1,21 @@
 import * as React from 'react'
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import visaBrandImage from '../../../assets/images/guiPlugins/visaBrand.png'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { styled } from '../../../components/hoc/styled'
 import { Space } from '../../../components/layout/Space'
+import { ButtonsModal } from '../../../components/modals/ButtonsModal'
+import { Shimmer } from '../../../components/progress-indicators/Shimmer'
+import { Airship, showError } from '../../../components/services/AirshipInstance'
 import { useTheme } from '../../../components/services/ThemeContext'
 import { DividerLine } from '../../../components/themed/DividerLine'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
+import { toLocaleDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { useState } from '../../../types/reactHooks'
 import { RouteProp } from '../../../types/routerTypes'
@@ -42,6 +46,11 @@ export const RewardsCardDashboardScene = (props: Props) => {
   const handleRemovePress = useHandler((item: RewardsCardItem) => {
     onRemovePress(item)
   })
+  const handleQuestionPress = useHandler(() => {
+    Airship.show<string | number | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} title={lstrings.rewards_card_loading} message={lstrings.rewards_card_purchase_disclaimer} closeArrow buttons={{}} />
+    )).catch(showError)
+  })
 
   return (
     <>
@@ -57,61 +66,102 @@ export const RewardsCardDashboardScene = (props: Props) => {
           withTopMargin
         />
         <DividerLine marginRem={[0, 1]} />
-        <CardListContainer bottomSpace={bottomFloatHeight}>
+        <CardList bottomSpace={bottomFloatHeight}>
           {items.map(item => {
-            return (
-              <CardListItemWrapper key={item.id}>
-                <RewardCard item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} />
-              </CardListItemWrapper>
-            )
+            return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
           })}
-          {items.length === 0 && !showLoading ? <MessageText>{lstrings.rewards_card_no_cards}</MessageText> : null}
-          {showLoading ? (
-            <CardListItem>
-              <CardListItemContainer>
-                <LoadingContainer>
-                  <ActivityIndicator color={theme.iconTappable} size="large" style={{ margin: theme.rem(1) }} />
-                  <LoadingText numberOfLines={0}>{lstrings.rewards_card_loading}</LoadingText>
-                  <LoadingTextDisclaimer numberOfLines={0} minimumFontScale={0.75} adjustsFontSizeToFit>
-                    {lstrings.rewards_card_purchase_disclaimer}
-                  </LoadingTextDisclaimer>
-                </LoadingContainer>
-              </CardListItemContainer>
-            </CardListItem>
-          ) : null}
-        </CardListContainer>
+          {items.length === 0 && !showLoading ? <MessageText>{lstrings.no_active_cards_message}</MessageText> : null}
+          {showLoading ? <RewardsCard onQuestionPress={handleQuestionPress} /> : null}
+        </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
         <Space around={1}>
-          <MainButton onPress={onNewPress} label={lstrings.rewards_card_new_card_button_label} />
+          <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
         </Space>
       </BottomFloat>
     </>
   )
 }
 
-export const RewardCard = ({ item, onPress, onRemovePress }: { item: RewardsCardItem; onPress?: () => void; onRemovePress?: () => void }) => {
+export interface RewardsCardProps {
+  item?: RewardsCardItem
+  onPress?: () => void
+  onQuestionPress?: () => void
+  onRemovePress?: () => void
+  shouldStack?: boolean
+}
+
+export const RewardsCard = (props: RewardsCardProps) => {
+  const { item, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
+  const purchaseAmount = item?.amount == null ? undefined : `$${item.amount.toString()}`
 
   return (
-    <CardListItem>
-      <TouchableOpacity onPress={onPress}>
-        <CardListItemContainer>
-          <Details>
-            <VisaBrandImage source={visaBrandImage} />
-            <DetailItem>
-              <ExpiryLabel>{lstrings.rewards_card_dashboard_expires_label}</ExpiryLabel>
-              <DateLabel>{item.expiration.toLocaleString()}</DateLabel>
-            </DetailItem>
-          </Details>
-          {onRemovePress == null ? null : (
-            <TouchableOpacity onPress={onRemovePress}>
-              <Icon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
-            </TouchableOpacity>
-          )}
-        </CardListItemContainer>
+    <CardContainer>
+      <CardBackground />
+      <TouchableOpacity
+        onPress={onPress}
+        // Disable opacity effect if no onPress handler
+        activeOpacity={onPress == null ? 1 : undefined}
+      >
+        <CardInner shouldStack={shouldStack}>
+          <CardHeader>
+            <Space sideways>
+              <VisaBrandImage source={visaBrandImage} />
+              {onPress == null ? null : <Ionicon name="chevron-forward-outline" size={theme.rem(1.5)} color={theme.iconTappable} />}
+            </Space>
+            {onRemovePress == null ? null : (
+              <TouchableOpacity onPress={onRemovePress}>
+                <Ionicon name="remove-circle-outline" size={theme.rem(1.5)} color={theme.dangerIcon} />
+              </TouchableOpacity>
+            )}
+            {onQuestionPress == null ? null : (
+              <TouchableOpacity onPress={onQuestionPress}>
+                <Ionicon name="help-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
+            )}
+          </CardHeader>
+          <Space expand>
+            <Space bottom={0.5} sideways expand>
+              <Space>
+                <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.creationDate)}</CardFieldValue>
+                </Space>
+              </Space>
+              {purchaseAmount == null ? null : (
+                <Space>
+                  <CardFieldLabel textAlign="right">{lstrings.purchase_price_label}</CardFieldLabel>
+                  <Space>
+                    <Shimmer isShown={item == null} />
+                    <CardFieldValue textAlign="right">{purchaseAmount}</CardFieldValue>
+                  </Space>
+                </Space>
+              )}
+            </Space>
+            <Space sideways expand>
+              <Space>
+                <CardFieldLabel>{lstrings.string_expires}</CardFieldLabel>
+                <Space>
+                  <Shimmer isShown={item == null} />
+                  <CardFieldValue>{item == null ? ' ' : toLocaleDate(item.expirationDate)}</CardFieldValue>
+                </Space>
+              </Space>
+              {item?.purchaseAsset == null ? null : (
+                <Space>
+                  <CardFieldLabel textAlign="right">{lstrings.purchase_asset_label}</CardFieldLabel>
+                  <Space>
+                    <Shimmer isShown={item == null} />
+                    <CardFieldValue textAlign="right">{item.purchaseAsset}</CardFieldValue>
+                  </Space>
+                </Space>
+              )}
+            </Space>
+          </Space>
+        </CardInner>
       </TouchableOpacity>
-    </CardListItem>
+    </CardContainer>
   )
 }
 
@@ -121,32 +171,35 @@ const MessageText = styled(EdgeText)(props => ({
   textAlign: 'center'
 }))
 
-const CardListContainer = styled(View)<{ bottomSpace: number }>(props => ({
-  justifyContent: 'space-around',
+const CardList = styled(View)<{ bottomSpace: number }>(props => ({
   marginBottom: props.bottomSpace,
   padding: props.theme.rem(1.5)
 }))
 
-const CardListItemWrapper = styled(View)(props => ({
-  height: props.theme.rem(7)
+const CardContainer = styled(View)(props => ({
+  maxWidth: props.theme.rem(20),
+  width: '100%',
+  alignSelf: 'center'
 }))
-const CardListItem = styled(View)(props => ({
+
+const CardBackground = styled(View)(props => ({
+  // This is the aspect ratio of a standard US credit card
+  aspectRatio: 1.5882352941,
   backgroundColor: props.theme.modal,
-  // Math for figuring out 1/8th inches border radius ((1/8)/3.375 * 314)/16:
-  borderRadius: props.theme.rem(0.7268518519),
+  // 0.75 rem is roughly proportional to a 1/8th inches border radius of a standard US credit card
+  borderRadius: props.theme.rem(0.75),
   borderWidth: 1,
   borderTopColor: 'rgba(255,255,255,.2)',
   borderColor: 'rgba(255,255,255,.1)',
+  position: 'absolute',
   shadowOpacity: 0.5,
-  shadowRadius: props.theme.rem(0.5)
+  shadowRadius: props.theme.rem(0.5),
+  width: '100%'
 }))
 
-const CardListItemContainer = styled(View)(props => ({
-  aspectRatio: 1.5882352941,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  padding: props.theme.rem(1.25),
-  width: '100%'
+const CardInner = styled(View)<{ shouldStack?: boolean }>(props => ({
+  aspectRatio: props.shouldStack === false ? 1.5882352941 : undefined,
+  padding: props.theme.rem(1.25)
 }))
 
 const BottomFloat = styled(View)(props => ({
@@ -155,54 +208,31 @@ const BottomFloat = styled(View)(props => ({
   position: 'absolute'
 }))
 
-const LoadingContainer = styled(View)(props => ({
-  alignItems: 'center',
-  flex: 1,
-  justifyContent: 'center',
-  paddingVertical: props.theme.rem(1)
+const CardHeader = styled(View)(_props => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between'
 }))
-
-const LoadingText = styled(Text)(props => ({
-  alignSelf: 'stretch',
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(1),
-  includeFontPadding: false,
-  marginBottom: props.theme.rem(0.5),
-  textAlign: 'left'
-}))
-
-const LoadingTextDisclaimer = styled(Text)(props => ({
-  alignSelf: 'stretch',
-  color: props.theme.secondaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  includeFontPadding: false,
-  textAlign: 'left'
-}))
-
-const Icon = styled(Ionicon)(props => ({}))
-
-const Details = styled(View)(props => ({}))
-
-const DetailItem = styled(View)(prop => ({}))
 
 const VisaBrandImage = styled(Image)(props => ({
   resizeMode: 'contain',
   height: props.theme.rem(1.75),
   width: props.theme.rem(4),
-  marginBottom: props.theme.rem(1.25)
+  marginBottom: props.theme.rem(1.25),
+  marginRight: props.theme.rem(0.5)
 }))
 
-const ExpiryLabel = styled(Text)(props => ({
+const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
   color: props.theme.secondaryText,
   fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.75),
-  includeFontPadding: false
+  fontSize: props.theme.rem(0.7),
+  includeFontPadding: false,
+  textAlign: props.textAlign ?? 'left'
 }))
 
-const DateLabel = styled(Text)(props => ({
+const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
   color: props.theme.primaryText,
   fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.75),
-  includeFontPadding: false
+  fontSize: props.theme.rem(0.8),
+  includeFontPadding: false,
+  textAlign: props.textAlign ?? 'left'
 }))

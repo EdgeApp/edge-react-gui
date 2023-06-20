@@ -55,12 +55,14 @@ const StakeModifySceneComponent = (props: Props) => {
   const { quoteInfo } = changeQuote ?? {}
 
   // Request that the user will modify, triggering a ChangeQuote recalculation
+  const account = useSelector(state => state.core.account)
   const [changeQuoteRequest, setChangeQuoteRequest] = React.useState<ChangeQuoteRequest>({
     action: modification,
     stakePolicyId: stakePolicy.stakePolicyId,
     currencyCode: '',
     nativeAmount: '0',
-    wallet
+    wallet,
+    account
   })
 
   // Slider state

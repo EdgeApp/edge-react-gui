@@ -108,6 +108,7 @@ exports[`PromoCard should render 1`] = `
       }
     >
       <Text
+        accessibilityHint="Close"
         allowFontScaling={false}
         style={
           Array [

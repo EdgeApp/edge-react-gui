@@ -84,6 +84,7 @@ export function ListModal<T>({
           autoCapitalize="words"
           returnKeyType="done"
           marginRem={[1, 0.5]}
+          testID={title}
           onChangeText={handleChangeText}
           onSubmitEditing={handleSubmitEditing}
           value={text}

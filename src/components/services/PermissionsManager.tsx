@@ -20,10 +20,14 @@ export const PermissionsManager = () => {
   const statePermissions = useSelector(state => state.permissions)
   const isAppForeground = useIsAppForeground()
 
-  useAsyncEffect(async () => {
-    if (!isAppForeground) return
-    await dispatch(setNewPermissions(statePermissions))
-  }, [isAppForeground, statePermissions])
+  useAsyncEffect(
+    async () => {
+      if (!isAppForeground) return
+      await dispatch(setNewPermissions(statePermissions))
+    },
+    [isAppForeground, statePermissions],
+    'PermissionsManager'
+  )
 
   return null
 }
