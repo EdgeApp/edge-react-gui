@@ -695,6 +695,21 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '137'
     }
   },
+  pulsechain: {
+    initWalletName: lstrings.string_first_pulsechain_wallet_name,
+    chainCode: 'PLS',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '369'
+    }
+  },
   avalanche: {
     initWalletName: lstrings.string_first_avalanche_wallet_name,
     chainCode: 'AVAX',
