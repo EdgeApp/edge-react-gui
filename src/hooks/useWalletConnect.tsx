@@ -228,7 +228,7 @@ const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
   }
 
   return {
-    eip155: {
+    [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
       events: ['chainChanged', 'accountsChanged'],
