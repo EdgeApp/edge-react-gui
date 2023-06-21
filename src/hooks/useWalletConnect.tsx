@@ -8,7 +8,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { FlashNotification } from '../components/navigation/FlashNotification'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { walletConnectPromise } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
@@ -120,7 +120,6 @@ export function useWalletConnect(): WalletConnect {
           resolve(proposal)
         })
         client.core.pairing.pair({ uri, activatePairing: true }).catch(e => {
-          showError(e)
           reject(e)
         })
       }),
