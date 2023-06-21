@@ -341,7 +341,6 @@ function buildAndroid(buildObj: BuildObj) {
 }
 
 function buildCommonPost(buildObj: BuildObj) {
-  const { buildNum, guiHash, platformType, productNameClean, repoBranch, testRepoUrl, version } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -394,16 +393,15 @@ function buildCommonPost(buildObj: BuildObj) {
   }
 
   if (buildObj.rsyncLocation != null) {
+    const { buildNum, guiHash, platformType, productNameClean, repoBranch, testRepoUrl, version } = buildObj
+
     mylog(`\n\nUploading to rsyncLocation ${buildObj.rsyncLocation}`)
     mylog('***********************************************************************\n')
-
-    // const rsyncDir = join(buildObj.rsyncLocation, repoBranch, platformType, String(buildNum))
 
     const datePrefix = new Date().toISOString().slice(2, 19).replace(/:/gi, '').replace(/-/gi, '')
     const [fileExtension] = buildObj.ipaFile.split('.').reverse()
     const rsyncFile = escapePath(`${datePrefix}--${productNameClean}--${platformType}--${repoBranch}--${buildNum}--${guiHash.slice(0, 8)}.${fileExtension}`)
 
-    // call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncDir}/`)
     const rsyncFilePath = join(buildObj.rsyncLocation, rsyncFile)
     call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncFilePath}`)
     mylog('\n*** Upload to rsyncLocation Complete ***')
