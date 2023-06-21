@@ -136,12 +136,21 @@ export function useWalletConnect(): WalletConnect {
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) return
 
-    // need to verify that wallet can support proposal namespace
+    const supportedNamespaces = getSupportedNamespaces(chainId, address)
+
+    // Check that we support all required methods
+    const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
+      return !supportedNamespaces[chainId.namespace].methods.includes(method)
+    })
+    if (unsupportedMethods.length > 0) {
+      throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+    }
+
     await client.approveSession({
       id: proposal.id,
       namespaces: buildApprovedNamespaces({
         proposal: proposal.params,
-        supportedNamespaces: supportedNamespaces(chainId, address)
+        supportedNamespaces
       })
     })
   })
@@ -206,7 +215,7 @@ export function useWalletConnect(): WalletConnect {
 }
 
 // Utilities
-const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
+const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
   const { namespace, reference } = chainId
 
   let methods: string[]

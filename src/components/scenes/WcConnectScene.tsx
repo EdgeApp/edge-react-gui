@@ -23,7 +23,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
@@ -74,7 +74,8 @@ export const WcConnectScene = (props: Props) => {
       Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
-      console.error(`WalletConnect connection error: ${error.message}`)
+      console.error('WalletConnect connection error:', String(error))
+      showError(error)
     }
   }
 
