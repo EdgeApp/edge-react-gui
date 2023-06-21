@@ -32,7 +32,7 @@ export const walletConnectPromise: Promise<Web3Wallet> = new Promise((resolve, r
     projectId: ENV.WALLET_CONNECT_INIT.projectId
   })
 
-  return Web3Wallet.init({
+  Web3Wallet.init({
     core,
     metadata: {
       name: 'Edge Wallet',

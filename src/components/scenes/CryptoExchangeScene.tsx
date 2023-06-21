@@ -285,12 +285,14 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
         allowKeysOnlyMode={whichWallet === 'from'}
         filterActivation
       />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId != null && currencyCode != null) {
-        return this.props.onSelectWallet(walletId, currencyCode, whichWallet)
-      }
-    })
-    return null
+    ))
+      .then(async result => {
+        const { walletId, currencyCode } = result
+        if (walletId != null && currencyCode != null) {
+          await this.props.onSelectWallet(walletId, currencyCode, whichWallet)
+        }
+      })
+      .catch(error => showError(error))
   }
 
   render() {

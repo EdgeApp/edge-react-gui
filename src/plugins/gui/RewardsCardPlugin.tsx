@@ -236,10 +236,10 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       onNewCard() {
         provider.otherMethods
           .authenticate()
-          .then(isAuthenticated => {
+          .then(async isAuthenticated => {
             if (isAuthenticated) return 'yes'
             // First time user are shown TOS and authenticate with account creation)
-            return showUi.buttonModal({
+            const answer = await showUi.buttonModal({
               title: lstrings.rewards_card_dashboard_title,
               message: lstrings.rewards_card_terms_of_use_message,
               buttons: {
@@ -253,8 +253,6 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
                 }
               }
             })
-          })
-          .then(async answer => {
             if (answer !== 'yes') return
 
             await provider.otherMethods.authenticate(true)
