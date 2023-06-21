@@ -265,10 +265,5 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.6.0",
     "yarn-deduplicate": "^5.0.0"
-  },
-  "rnpm": {
-    "assets": [
-      "./src/assets/fonts"
-    ]
   }
 }
