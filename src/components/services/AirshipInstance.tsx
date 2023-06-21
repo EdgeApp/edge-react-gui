@@ -24,7 +24,7 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
     Bugsnag.notify(`showError: ${translatedError}`)
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} />)
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} />).catch(err => console.error(err))
 }
 
 /**
@@ -38,7 +38,7 @@ export function showWarning(error: unknown, options: ShowErrorWarningOptions = {
     Bugsnag.notify(`showWarning: ${translatedError}`)
   }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />)
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />).catch(err => console.error(err))
 }
 
 /**
@@ -46,7 +46,7 @@ export function showWarning(error: unknown, options: ShowErrorWarningOptions = {
  * Used when some user-requested operation succeeds.
  */
 export function showToast(message: string, autoHideMs?: number): void {
-  Airship.show(bridge => <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />)
+  Airship.show(bridge => <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />).catch(err => console.error(err))
 }
 
 /**
@@ -64,7 +64,7 @@ export async function showToastSpinner<T>(message: string, activity: Promise<T>)
         <ActivityIndicator />
       </AirshipToast>
     )
-  })
+  }).catch(err => console.error(err))
   return await activity
 }
 
