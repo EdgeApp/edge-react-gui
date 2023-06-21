@@ -10,9 +10,6 @@ editFile('package.json', text =>
   text //
     .replace(/"edge-currency-accountbased".*/, '')
     .replace(/"edge-currency-plugins".*/, '')
-    .replace(/"edge-plugin-bity".*/, '')
-    .replace(/"edge-plugin-simplex".*/, '')
-    .replace(/"edge-plugin-wyre".*/, '')
     .replace(/"eosjs-api".*/, '')
 )
 

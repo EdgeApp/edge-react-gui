@@ -7,7 +7,6 @@ import { getLocales } from 'react-native-localize'
 
 import { ENV } from '../env'
 import { pickLanguage } from '../locales/intl'
-import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
@@ -207,7 +206,6 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
 
 export interface ValidateFuncs {
   getCountryCodeByIp: () => Promise<string>
-  checkWyreHasLinkedBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
   getBuildNumber: () => string
   getLanguageTag: () => string
   getOs: () => string
@@ -232,12 +230,11 @@ const getLanguageTag = (): string => {
 const getOs = (): string => Platform.OS
 
 async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
-  const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs }
+  const funcs: ValidateFuncs = { getCountryCodeByIp, getBuildNumber, getLanguageTag, getOs }
   return await validatePromoCardsInner(account.dataStore, cards, funcs)
 }
 export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
   const out: MessageTweak[] = []
-  let wyreHasLinkedBank
 
   for (const card of cards) {
     // Validate OS type
@@ -267,23 +264,19 @@ export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: M
 
     // Validate Bank Linkage
     if (card.hasLinkedBankMap != null) {
-      let useCard = true
-      for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
-        if (pluginId === 'co.edgesecure.wyre') {
-          if (wyreHasLinkedBank == null) {
-            wyreHasLinkedBank = await funcs.checkWyreHasLinkedBank(dataStore)
-          }
-          if (wyreHasLinkedBank !== hasLinkedBank) {
-            useCard = false
-            break
-          }
-        } else {
-          // We can't track any other types of bank linkage so punt on this promo card.
-          useCard = false
-          break
-        }
-      }
-      if (!useCard) continue
+      continue
+      // let useCard = false
+      // for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
+      //   if (pluginId === 'co.edgesecure.wyre') {
+      //     useCard = false
+      //     break
+      //   } else {
+      //     // We can't track any other types of bank linkage so punt on this promo card.
+      //     useCard = false
+      //     break
+      //   }
+      // }
+      // if (!useCard) continue
     }
 
     // Pick proper language
