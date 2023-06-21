@@ -1017,7 +1017,7 @@
   "wc_walletconnect_active_connections": "Connessioni Attive",
   "wc_details_disconnect_button": "Disconnetti",
   "wc_details_connected_wallet": "Portafoglio connesso",
-  "wc_dapp_disconnected": "%s disconnected",
+  "wc_dapp_disconnected": "%s disconnesso",
   "wc_confirm_connect_button": "Connetti",
   "wc_confirm_title": "Conferma connessione",
   "wc_confirm_subtitle": "%s vuole connettersi al tuo portafoglio.",
