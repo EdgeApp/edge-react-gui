@@ -19,7 +19,7 @@ const requestReview = async () => {
   } else if (Platform.OS === 'android') {
     if (InAppReview.isAvailable()) {
       // In-app review with comment support
-      InAppReview.RequestInAppReview()
+      await InAppReview.RequestInAppReview()
     } else {
       const title = sprintf(lstrings.request_review_question_title, config.appNameShort)
       const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
@@ -34,7 +34,7 @@ const requestReview = async () => {
         />
       ))
       if (result === 'ok') {
-        Linking.openURL(lstrings.request_review_android_page_link)
+        await Linking.openURL(lstrings.request_review_android_page_link)
       }
     }
   } else {
