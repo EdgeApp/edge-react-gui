@@ -38,15 +38,20 @@ export function launchDeepLink(navigation: NavigationBase, link: DeepLink): Thun
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
+export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
     const { pendingDeepLink } = state
     if (pendingDeepLink == null) return
+    // Clear the link as we try to handle
     dispatch({ type: 'DEEP_LINK_HANDLED' })
 
-    const handled = await handleLink(navigation, dispatch, state, pendingDeepLink)
-    // If we handled the link, clear it:
+    const handled = handleLink(navigation, dispatch, state, pendingDeepLink).catch(err => {
+      console.warn(err)
+      return false
+    })
+
+    // If we didn't handled the link, put it back
     if (!handled) {
       dispatch({ type: 'DEEP_LINK_RECEIVED', data: pendingDeepLink })
     }
@@ -137,7 +142,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'requestAddress': {
       if (!allWalletsLoaded) return false
-      doRequestAddress(navigation, state.core.account, dispatch, link)
+      await doRequestAddress(navigation, state.core.account, dispatch, link)
       return true
     }
 
@@ -160,7 +165,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       // User backed out of choosing a wallet
       if (walletId == null) return true
       const edgeWallet = currencyWallets[walletId]
-      launchAzteco(navigation, edgeWallet, link.uri).catch(showError)
+      await launchAzteco(navigation, edgeWallet, link.uri)
       return true
     }
 
@@ -173,12 +178,12 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'paymentProto': {
       if (!allWalletsLoaded) return false
-      launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false }).catch(showError)
+      await launchPaymentProto(navigation, account, link.uri, { hideScamWarning: false })
       return true
     }
 
     case 'price-change': {
-      dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
+      await dispatch(launchPriceChangeBuySellSwapModal(navigation, link))
       return true
     }
 
@@ -210,7 +215,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       if (matchingWalletIdsAndUris.length === 1) {
         const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
-        dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
+        await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
         return true
       }
 
@@ -238,7 +243,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         return true
       }
       const { parsedUri, walletId } = widUri
-      dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
+      await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
       return true
     }
 
