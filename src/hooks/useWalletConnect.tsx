@@ -3,12 +3,12 @@ import '@walletconnect/react-native-compat'
 import { SessionTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError, parseUri } from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { JsonObject } from 'edge-core-js'
+import { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { FlashNotification } from '../components/navigation/FlashNotification'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { walletConnectPromise } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
@@ -37,35 +37,6 @@ export function useWalletConnect(): WalletConnect {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   // Utils
-  const getPublicAddresses = async () => {
-    const map = new Map<string, string>()
-    for (const walletId of Object.keys(currencyWallets)) {
-      const address = await currencyWallets[walletId].getReceiveAddress()
-      map.set(address.publicAddress, walletId)
-    }
-    return map
-  }
-
-  const getWalletIdFromSessionNamespace = async (namespaces: SessionTypes.Namespaces): Promise<string | undefined> => {
-    const publicAddresses = await getPublicAddresses()
-    for (const networkName of Object.keys(namespaces)) {
-      const [namespace, reference, address] = namespaces[networkName].accounts[0].split(':')
-
-      const walletId = publicAddresses.get(address)
-      if (walletId == null) continue
-
-      const wallet = currencyWallets[walletId]
-      if (wallet == null) continue
-
-      const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
-      if (chainId == null) continue
-
-      if (chainId.namespace === namespace && chainId.reference === reference) {
-        return walletId
-      }
-    }
-  }
-
   const parseConnection = (session: SessionTypes.Struct, walletId: string): WcConnectionInfo => {
     const icon = session.peer.metadata.icons[0] ?? '.svg'
     const iconUri = icon.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : icon
@@ -88,9 +59,10 @@ export function useWalletConnect(): WalletConnect {
     const client = await walletConnectPromise
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
+    const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = await getWalletIdFromSessionNamespace(session.namespaces)
+      const walletId = await getWalletIdFromSessionNamespace(session.namespaces, accounts)
       if (walletId == null) continue
 
       const connection = parseConnection(session, walletId)
@@ -120,7 +92,6 @@ export function useWalletConnect(): WalletConnect {
           resolve(proposal)
         })
         client.core.pairing.pair({ uri, activatePairing: true }).catch(e => {
-          showError(e)
           reject(e)
         })
       }),
@@ -137,12 +108,21 @@ export function useWalletConnect(): WalletConnect {
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) return
 
-    // need to verify that wallet can support proposal namespace
+    const supportedNamespaces = getSupportedNamespaces(chainId, address)
+
+    // Check that we support all required methods
+    const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
+      return !supportedNamespaces[chainId.namespace].methods.includes(method)
+    })
+    if (unsupportedMethods.length > 0) {
+      throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+    }
+
     await client.approveSession({
       id: proposal.id,
       namespaces: buildApprovedNamespaces({
         proposal: proposal.params,
-        supportedNamespaces: supportedNamespaces(chainId, address)
+        supportedNamespaces
       })
     })
   })
@@ -207,7 +187,7 @@ export function useWalletConnect(): WalletConnect {
 }
 
 // Utilities
-const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
+const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
   const { namespace, reference } = chainId
 
   let methods: string[]
@@ -229,11 +209,35 @@ const supportedNamespaces = (chainId: WalletConnectChainId, addr: string) => {
   }
 
   return {
-    eip155: {
+    [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
       events: ['chainChanged', 'accountsChanged'],
       accounts: [`${namespace}:${reference}:${addr}`]
     }
+  }
+}
+
+export const getAccounts = async (currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+  const map = new Map<string, string>()
+  for (const walletId of Object.keys(currencyWallets)) {
+    const wallet = currencyWallets[walletId]
+    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+    if (chainId == null) continue
+
+    const address = await currencyWallets[walletId].getReceiveAddress()
+    const account = `${chainId.namespace}:${chainId.reference}:${address.publicAddress}`
+    map.set(account, walletId)
+  }
+  return map
+}
+
+export const getWalletIdFromSessionNamespace = (namespaces: SessionTypes.Namespaces, accounts: Map<string, string>): string | undefined => {
+  for (const networkName of Object.keys(namespaces)) {
+    const [namespace, reference, address] = namespaces[networkName].accounts[0].split(':')
+    const account = `${namespace}:${reference}:${address}`
+
+    const walletId = accounts.get(account)
+    if (walletId != null) return walletId
   }
 }
