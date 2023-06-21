@@ -2,6 +2,71 @@
 
 ## 3.12.0
 
+- Core refactor removes private key properties from EdgeCurrencyWallet
+- Add USDC (ETH/MATIC) support for Bitrefill
+- Fix Google Pay support with Banxa
+- Fix large amount (beyond daily limit) handling for Bity
+- Fix FIO transaction history display
+- Rewards card design updates (beta)
+- Thorchain: Fix unstake amount selection
+- Improve error logging
+- Show/hide welcome screens via environment variable
+- Disable Bitaccess
+- Update translations
+- Various visual fixes
+- Upgrade edge-core-js to v1.0.1
+  - changed: Convert createAccount to named parameters
+  - changed: Return an array from fetchLoginMessages
+  - changed: Fix the listRecoveryQuestionChoices return type
+  - changed: Allow usernames to be undefined
+  - removed: Ethereum hacks
+    - Ethereum address derivation.
+    - EdgeAccount.signEthereumTransaction
+  - removed: Deprecated client-side token methods
+    - EdgeCurrencyEngine.getEnabledTokens (no longer used)
+    - EdgeCurrencyEngine.getTokenStatus (no longer used)
+    - EdgeCurrencyWallet.addCustomToken
+    - EdgeCurrencyWallet.changeEnabledTokens
+    - EdgeCurrencyWallet.disableTokens
+    - EdgeCurrencyWallet.enableTokens
+    - EdgeCurrencyWallet.getEnabledTokens
+  - removed: Deprecated display-key properties
+    - EdgeCurrencyWallet.displayPrivateSeed
+    - EdgeCurrencyWallet.displayPublicSeed
+  - removed: Deprecated EdgeAccount.loginKey property
+  - removed: Deprecated keys properties on EdgeAccount and EdgeCurrencyWallet
+  - removed: Deprecated EdgeTransaction.amountSatoshi
+  - removed: Deprecated options prop from the MakeEdgeContext component.
+  - removed: Unused EdgeTransaction.wallet
+  - removed: Unused getTransactions parameters
+  - removed: Unused type definitions
+    - EdgeBitcoinPrivateKeyOptions
+    - EdgeCreatePrivateKeyOptions
+  - removed: No longer allow the OTP key to be passed as EdgeAccountOptions.otp. This parameter only accepts 6-digit OTP codes now. Pass the key as EdgeAccountOptions.otpKey instead.
+  - fixed: Do not crash when accessing EdgeAccount.username on an account that has none.
+  - deprecated: EdgeContext.pinLoginEnabled. Use EdgeContext.localUsers instead.
+  - fixed: Correctly handle startEntries in getTransactions, by always returning the requested number of transactions.
+- Upgrade edge-login-ui-rn to v2.1.0
+  - added: Validate that the recovery key is valid base58 before submitting the modal.
+  - changed: Simplify internal redux and routing logic.
+  - fixed: Disable keyboard "next" button if the new-account username has not yet been checked for availability.
+  - changed: Upgrade to edge-core-js v1.0.0. Earlier versions will not work.
+  - changed: Adjust isTouchEnabled to take an EdgeAccount instead of a username.
+  - added: Ability to pass AppConfig to LoginScreen with termsOfServiceSite
+  - added: Allow onComplete prop to LoginScreen to be optional
+  - added: EdgeAccount.changeUsername.
+  - added: EdgeAccount.getLoginKey.
+  - deprecated: EdgeAccount.loginKey. Use EdgeAccount.getLoginKey instead.
+  - deprecated: EdgeContext.listUsernames. Use EdgeContext.localUsers instead.
+  - fixed: Background brand image handling and display.
+- Upgrade edge-currency-accountbased to v1.2.13
+  - FIO: Fix unstake method insufficient funds checking
+  - Update ZEC/ARRR checkpoints
+  - EVM: Re-enable token transaction acceleration
+  - FIO: Add getMaxSpendable
+  - TRX: Fix memo handling
+  - Fixed: Added transaction processing for FIO name registration actions
+
 ## 3.11.0
 
 - Add in-app A/B testing
