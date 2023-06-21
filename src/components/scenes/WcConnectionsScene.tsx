@@ -182,7 +182,8 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
     [walletId: string]: EdgeCurrencyWallet
   }
 ): EdgeTokenId[] => {
-  const { requiredNamespaces, optionalNamespaces } = proposal.params
+  // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
+  const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
 
   const getChainIdsFromNamespaces = (namespaces: { [key: string]: ProposalTypes.BaseRequiredNamespace }): Set<string> => {
     const chainIds = new Set<string>()
