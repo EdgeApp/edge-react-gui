@@ -478,7 +478,7 @@ PODS:
     - React-Core
   - react-native-webview (11.18.2):
     - React-Core
-  - react-native-zcash (0.3.2):
+  - react-native-zcash (0.3.3):
     - React
     - ZcashLightClientKit (= 0.14.0-beta)
   - React-perflogger (0.67.5)
@@ -1186,7 +1186,7 @@ SPEC CHECKSUMS:
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
-  react-native-zcash: 868ba9e415aa94b8227f2a090a0f25fc134ef96f
+  react-native-zcash: 173a2c8148aed6d7a5ec0867b19279dff938942e
   React-perflogger: d32ee13196f4ae2e4098fb7f8e7ed4f864c6fb0f
   React-RCTActionSheet: 81779c09e34a6a3d6b15783407ba9016a774f535
   React-RCTAnimation: b778eaaa42a884abcc5719035a7a0b2f54672658
