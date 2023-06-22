@@ -86,7 +86,7 @@
     "uuid": "3.3.2"
   },
   "dependencies": {
-    "@bugsnag/react-native": "^7.16.4",
+    "@bugsnag/react-native": "^7.20.2",
     "@connectedcars/react-native-slide-charts": "^1.0.5",
     "@ethersproject/shims": "^5.6.0",
     "@react-native-async-storage/async-storage": "^1.18.2",
