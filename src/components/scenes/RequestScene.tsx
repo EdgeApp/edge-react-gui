@@ -234,10 +234,13 @@ export class RequestSceneComponent extends React.Component<Props, State> {
         }}
       />
     ))
-      .then((result?: string) => {
-        return result === 'confirm' && addressExplorer != null ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
+      .then(async (result?: string) => {
+        if (result === 'confirm' && addressExplorer != null) {
+          const url = sprintf(addressExplorer, requestAddress)
+          await Linking.openURL(url).catch(error => showError(error))
+        }
       })
-      .catch(error => console.log(error))
+      .catch(error => showError(error))
   }
 
   handleOpenWalletListModal = () => {

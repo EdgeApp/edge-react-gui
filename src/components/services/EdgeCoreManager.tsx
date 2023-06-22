@@ -10,6 +10,7 @@ import SplashScreen from 'react-native-smart-splash-screen'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
@@ -84,7 +85,7 @@ export function EdgeCoreManager(props: Props) {
     }
   }
 
-  function handleContext(context: EdgeContext) {
+  const handleContext = useHandler((context: EdgeContext) => {
     console.log('EdgeContext opened')
     context.on('close', () => {
       console.log('EdgeContext closed')
@@ -93,17 +94,17 @@ export function EdgeCoreManager(props: Props) {
     ++counter.current
     setContext(context)
     hideSplash()
-  }
+  })
 
-  function handleError(error: Error) {
+  const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
     Alert.alert('Edge core failed to load', String(error))
-  }
+  })
 
-  function handleFakeEdgeWorld(world: EdgeFakeWorld) {
+  const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
     world.makeEdgeContext({ ...contextOptions }).then(handleContext, handleError)
-  }
+  })
 
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,

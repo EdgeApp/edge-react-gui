@@ -6,7 +6,6 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletToken } from '../../actions/WalletActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
 import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
@@ -62,7 +61,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string) => void
   toggleBalanceVisibility: () => void
 }
 
@@ -542,7 +540,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { navigation, tokenId, wallet } = props
+  const { tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const theme = useTheme()
@@ -561,11 +559,6 @@ export function TransactionListTop(props: OwnProps) {
   const handleBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
-  const handleSelectWallet = useHandler((walletId: string, currencyCode: string) => {
-    const wallet = account.currencyWallets[walletId]
-    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-    dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-  })
 
   return (
     <TransactionListTopComponent
@@ -579,7 +572,6 @@ export function TransactionListTop(props: OwnProps) {
       walletName={walletName}
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
-      onSelectWallet={handleSelectWallet}
       theme={theme}
     />
   )
