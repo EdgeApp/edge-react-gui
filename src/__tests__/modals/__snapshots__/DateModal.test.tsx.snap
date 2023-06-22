@@ -5,7 +5,7 @@ exports[`DateModalIos should render with loading props 1`] = `
   backgroundColor="#FFFFFF"
   borderRadius={0}
   bridge={
-    Object {
+    {
       "on": [Function],
       "onResult": [Function],
       "reject": [Function],
@@ -20,7 +20,7 @@ exports[`DateModalIos should render with loading props 1`] = `
   >
     <Text
       style={
-        Object {
+        {
           "color": "#0073D9",
           "fontSize": 22,
           "paddingHorizontal": 22,

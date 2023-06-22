@@ -12,7 +12,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
   />
   <KeyboardAwareScrollView
     contentContainerStyle={
-      Object {
+      {
         "alignItems": "center",
         "paddingTop": 11,
       }
@@ -25,7 +25,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     keyboardOpeningTime={250}
     keyboardShouldPersistTaps="always"
     style={
-      Object {
+      {
         "flex": 1,
       }
     }
@@ -46,21 +46,21 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       onNext={[Function]}
       overridePrimaryExchangeAmount=""
       primaryCurrencyInfo={
-        Object {
+        {
           "displayCurrencyCode": "BTC",
           "exchangeCurrencyCode": "BTC",
         }
       }
       secondaryCurrencyInfo={
-        Object {
+        {
           "displayCurrencyCode": "USD",
-          "displayDenomination": Object {
+          "displayDenomination": {
             "multiplier": "100",
             "name": "USD",
             "symbol": "$",
           },
           "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": Object {
+          "exchangeDenomination": {
             "multiplier": "100",
             "name": "USD",
             "symbol": "$",
@@ -74,7 +74,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         alignSelf="center"
         label="MAX"
         marginRem={
-          Array [
+          [
             1.2,
             0,
             0,
@@ -98,29 +98,29 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       onNext={[Function]}
       overridePrimaryExchangeAmount="1000"
       primaryCurrencyInfo={
-        Object {
+        {
           "displayCurrencyCode": "ETH",
-          "displayDenomination": Object {
+          "displayDenomination": {
             "multiplier": "100000000",
             "name": "Ethereum",
           },
           "exchangeCurrencyCode": "ETH",
-          "exchangeDenomination": Object {
+          "exchangeDenomination": {
             "multiplier": "10000000",
             "name": "Gwei",
           },
         }
       }
       secondaryCurrencyInfo={
-        Object {
+        {
           "displayCurrencyCode": "USD",
-          "displayDenomination": Object {
+          "displayDenomination": {
             "multiplier": "100",
             "name": "USD",
             "symbol": "$",
           },
           "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": Object {
+          "exchangeDenomination": {
             "multiplier": "100",
             "name": "USD",
             "symbol": "$",
@@ -132,7 +132,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     />
     <View
       style={
-        Object {
+        {
           "height": 337,
         }
       }

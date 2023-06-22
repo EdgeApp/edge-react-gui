@@ -6,7 +6,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
 >
   <Memo(SceneHeaderComponent)
     style={
-      Object {
+      {
         "flexDirection": "row-reverse",
         "justifyContent": "flex-end",
         "marginRight": 22,
@@ -18,12 +18,12 @@ exports[`FioAddressRegister should render with loading props 1`] = `
     <Image
       resizeMode="cover"
       source={
-        Object {
+        {
           "testUri": "../../../src/assets/images/details_fioAddress.png",
         }
       }
       style={
-        Object {
+        {
           "height": 34,
           "marginRight": 11,
           "width": 37,
@@ -33,26 +33,26 @@ exports[`FioAddressRegister should render with loading props 1`] = `
   </Memo(SceneHeaderComponent)>
   <ScrollView
     contentContainerStyle={
-      Object {
+      {
         "paddingTop": 11,
       }
     }
   >
     <View
       style={
-        Object {
+        {
           "position": "relative",
         }
       }
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "paddingBottom": 22,
               "paddingHorizontal": 22,
             },
-            Object {
+            {
               "paddingTop": 34,
             },
           ]
@@ -61,7 +61,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         <WithTheme(EdgeTextComponent)
           numberOfLines={2}
           style={
-            Object {
+            {
               "color": "#FFFFFF",
               "fontSize": 22,
             }
@@ -72,7 +72,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "paddingBottom": 22,
             "paddingHorizontal": 22,
           }
@@ -81,7 +81,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         <WithTheme(EdgeTextComponent)
           numberOfLines={3}
           style={
-            Object {
+            {
               "color": "#A4C7DF",
               "fontSize": 22,
               "textAlign": "left",
@@ -95,7 +95,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "paddingBottom": 22,
             "paddingHorizontal": 22,
           }
@@ -104,7 +104,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         <WithTheme(EdgeTextComponent)
           numberOfLines={5}
           style={
-            Object {
+            {
               "color": "#A4C7DF",
               "fontSize": 22,
               "textAlign": "left",
@@ -124,14 +124,14 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "flexDirection": "row",
               }
             }
           >
             <WithTheme(EdgeTextComponent)
               style={
-                Object {
+                {
                   "color": "#87939E",
                 }
               }
@@ -150,7 +150,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       <WithTheme(FormErrorComponent)
         isVisible={false}
         style={
-          Object {
+          {
             "flex": 1,
             "margin": 22,
           }
@@ -160,7 +160,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       </WithTheme(FormErrorComponent)>
       <View
         style={
-          Object {
+          {
             "paddingBottom": 674,
           }
         }

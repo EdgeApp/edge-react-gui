@@ -3,7 +3,7 @@
 exports[`CryptoIcon should render with loading props 1`] = `
 <View
   style={
-    Object {
+    {
       "height": 45,
       "marginBottom": 22,
       "marginLeft": 22,
@@ -23,22 +23,22 @@ exports[`CryptoIcon should render with loading props 1`] = `
     minX={-8}
     minY={-8}
     style={
-      Array [
-        Object {
+      [
+        {
           "backgroundColor": "transparent",
           "borderWidth": 0,
         },
-        Object {
+        {
           "left": -8,
           "position": "absolute",
           "top": -8,
-          "transform": Array [
-            Object {
+          "transform": [
+            {
               "rotateZ": "-90deg",
             },
           ],
         },
-        Object {
+        {
           "flex": 0,
           "height": 61,
           "width": 61,
@@ -51,7 +51,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
   >
     <RNSVGGroup
       fill={
-        Object {
+        {
           "payload": 4278190080,
           "type": 0,
         }
@@ -61,14 +61,14 @@ exports[`CryptoIcon should render with loading props 1`] = `
         cx="22.5"
         cy="22.5"
         fill={
-          Object {
+          {
             "payload": 4278190080,
             "type": 0,
           }
         }
         opacity={0}
         propList={
-          Array [
+          [
             "strokeWidth",
             "strokeDasharray",
             "strokeLinecap",
@@ -76,7 +76,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
         }
         r="24"
         strokeDasharray={
-          Array [
+          [
             "150.79644737231007",
             "150.79644737231007",
           ]
@@ -88,11 +88,11 @@ exports[`CryptoIcon should render with loading props 1`] = `
   </RNSVGSvgView>
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "overflow": "hidden",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -105,12 +105,12 @@ exports[`CryptoIcon should render with loading props 1`] = `
     <FastImageView
       resizeMode="cover"
       source={
-        Object {
+        {
           "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
         }
       }
       style={
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "position": "absolute",

@@ -7,7 +7,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
 >
   <Memo(SceneHeaderComponent)
     style={
-      Object {
+      {
         "flexDirection": "row-reverse",
         "justifyContent": "flex-end",
         "marginRight": 22,
@@ -22,7 +22,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       name="ios-at"
       size={34}
       style={
-        Object {
+        {
           "marginRight": 11,
         }
       }
@@ -30,7 +30,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
   </Memo(SceneHeaderComponent)>
   <ScrollView
     contentContainerStyle={
-      Object {
+      {
         "paddingTop": 11,
       }
     }
@@ -38,16 +38,16 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       numberOfLines={3}
       style={
-        Array [
-          Object {
+        [
+          {
             "paddingBottom": 22,
             "paddingHorizontal": 28,
           },
-          Object {
+          {
             "color": "#A4C7DF",
             "fontSize": 22,
           },
-          Object {
+          {
             "paddingTop": 34,
           },
         ]
@@ -58,12 +58,12 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       numberOfLines={8}
       style={
-        Array [
-          Object {
+        [
+          {
             "paddingBottom": 22,
             "paddingHorizontal": 28,
           },
-          Object {
+          {
             "color": "#A4C7DF",
             "fontSize": 22,
           },
@@ -82,14 +82,14 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "flexDirection": "row",
             }
           }
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "marginRight": 11,
               }
@@ -99,7 +99,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
           </WithTheme(EdgeTextComponent)>
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#87939E",
               }
             }
@@ -112,7 +112,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     <WithTheme(FormErrorComponent)
       isVisible={false}
       style={
-        Object {
+        {
           "flex": 1,
           "margin": 22,
         }
@@ -122,7 +122,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     </WithTheme(FormErrorComponent)>
     <View
       style={
-        Object {
+        {
           "paddingBottom": 674,
         }
       }

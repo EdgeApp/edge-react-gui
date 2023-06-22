@@ -1,8 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WalletListModal should render with loading props 1`] = `
-Array [
+[
   <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -14,7 +23,7 @@ Array [
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "backgroundColor": "transparent",
         "bottom": 0,
         "left": 0,
@@ -29,7 +38,7 @@ Array [
       blurAmount={10}
       blurType="light"
       style={
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -42,7 +51,7 @@ Array [
   <View
     collapsable={false}
     style={
-      Object {
+      {
         "alignSelf": "flex-end",
         "backgroundColor": "#121d25",
         "borderColor": "rgba(255, 255, 255, 0)",
@@ -62,14 +71,14 @@ Array [
         "paddingLeft": 22,
         "paddingRight": 22,
         "paddingTop": 22,
-        "shadowOffset": Object {
+        "shadowOffset": {
           "height": 0,
           "width": 0,
         },
         "shadowOpacity": 1,
         "shadowRadius": 10,
-        "transform": Array [
-          Object {
+        "transform": [
+          {
             "translateY": 1334,
           },
         ],
@@ -79,7 +88,7 @@ Array [
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "margin": 11,
@@ -88,17 +97,17 @@ Array [
     >
       <Text
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
               "marginVertical": 11,
             },
-            Object {
+            {
               "textAlign": "center",
             },
-            Object {
+            {
               "paddingBottom": 0,
               "paddingLeft": 0,
               "paddingRight": 0,
@@ -111,6 +120,15 @@ Array [
       </Text>
     </View>
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
       accessible={true}
       focusable={true}
       onClick={[Function]}
@@ -121,15 +139,15 @@ Array [
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
+        [
+          {
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderRadius": 11,
             "justifyContent": "center",
             "minHeight": 67,
             "paddingHorizontal": 22,
           },
-          Object {
+          {
             "flexGrow": 0,
             "marginBottom": 28,
             "marginLeft": 0,
@@ -144,15 +162,15 @@ Array [
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderTopWidth": 1,
               "bottom": 0,
               "left": 22,
               "position": "absolute",
               "right": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
               "right": 11,
             },
@@ -161,8 +179,8 @@ Array [
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderBottomLeftRadius": 11,
               "borderBottomWidth": 1,
               "borderLeftWidth": 1,
@@ -175,7 +193,7 @@ Array [
               "top": 0,
               "width": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
             },
           ]
@@ -183,8 +201,8 @@ Array [
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderBottomRightRadius": 11,
               "borderBottomWidth": 1,
               "borderLeftWidth": 0,
@@ -197,7 +215,7 @@ Array [
               "top": 0,
               "width": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
             },
           ]
@@ -205,15 +223,15 @@ Array [
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderTopWidth": 1,
               "left": 22,
               "position": "absolute",
               "right": 22,
               "top": 0,
             },
-            Object {
+            {
               "borderColor": undefined,
               "left": 22,
             },
@@ -222,8 +240,8 @@ Array [
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "height": 67,
               "justifyContent": "center",
               "left": 0,
@@ -232,7 +250,7 @@ Array [
               "right": 0,
               "top": 0,
             },
-            Object {
+            {
               "paddingLeft": 65,
               "paddingRight": 65,
             },
@@ -243,23 +261,23 @@ Array [
           numberOfLines={1}
           onLayout={[Function]}
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignSelf": "flex-start",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
-              Object {
+              {
                 "color": undefined,
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateX": -0,
                   },
-                  Object {
+                  {
                     "translateY": -0,
                   },
-                  Object {
+                  {
                     "scale": 1,
                   },
                 ],
@@ -273,8 +291,8 @@ Array [
       <Text
         numberOfLines={1}
         style={
-          Array [
-            Object {
+          [
+            {
               "bottom": -28,
               "color": "#E85466",
               "fontFamily": "Quicksand-Regular",
@@ -282,7 +300,7 @@ Array [
               "left": 28,
               "position": "absolute",
             },
-            Object {
+            {
               "opacity": 0,
             },
           ]
@@ -292,40 +310,38 @@ Array [
         numberOfLines={1}
         onLayout={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "bottom": -10,
               "fontFamily": "Quicksand-Regular",
               "fontSize": 17,
               "position": "absolute",
               "right": 28,
             },
-            Object {
+            {
               "color": undefined,
               "opacity": 0,
-              "transform": Array [
-                Object {
+              "transform": [
+                {
                   "translateX": 6,
                 },
-                Object {
+                {
                   "scale": 0,
                 },
               ],
             },
           ]
         }
-      >
-        
-      </Text>
+      />
       <Text
         allowFontScaling={false}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": undefined,
               "fontSize": 12,
             },
-            Object {
+            {
               "color": "rgba(255, 255, 255, .75)",
               "fontSize": 22,
               "left": 0,
@@ -333,12 +349,12 @@ Array [
               "position": "absolute",
               "top": 0,
             },
-            Object {
+            {
               "fontFamily": "anticon",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            Object {},
+            {},
           ]
         }
       >
@@ -355,15 +371,15 @@ Array [
         secureTextEntry={false}
         selectionColor="#FFFFFF"
         style={
-          Array [
-            Object {
+          [
+            {
               "alignSelf": "stretch",
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "padding": 0,
             },
-            Object {
+            {
               "flexGrow": 0,
             },
           ]
@@ -374,7 +390,7 @@ Array [
     </View>
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "marginHorizontal": -22,
         }
@@ -382,7 +398,7 @@ Array [
     >
       <View
         style={
-          Object {
+          {
             "flex": 1,
             "overflow": "hidden",
           }
@@ -392,7 +408,7 @@ Array [
           applyWindowCorrection={[Function]}
           canChangeSize={true}
           contentContainerStyle={
-            Object {
+            {
               "backgroundColor": undefined,
               "minHeight": 1,
               "minWidth": 1,
@@ -402,10 +418,10 @@ Array [
           }
           contentHeight={0}
           contentWidth={0}
-          data={Array []}
+          data={[]}
           dataProvider={
             DataProvider {
-              "_data": Array [],
+              "_data": [],
               "_firstIndexToProcess": 0,
               "_hasStableIds": false,
               "_requiresDataChangeHandling": false,
@@ -416,7 +432,7 @@ Array [
           }
           disableRecycling={false}
           estimatedItemSize={96}
-          extendedState={Object {}}
+          extendedState={{}}
           externalScrollView={[Function]}
           finalRenderAheadOffset={250}
           forceNonDeterministicRendering={true}
@@ -434,34 +450,34 @@ Array [
               "_hasExpired": false,
               "_maxSpan": 1,
               "_setLayoutForType": [Function],
-              "_tempDim": Object {
+              "_tempDim": {
                 "height": 0,
                 "width": 0,
               },
               "averageWindow": AverageWindow {
                 "currentAverage": 96,
                 "currentCount": 1,
-                "inputValues": Array [
+                "inputValues": [
                   96,
                 ],
                 "nextIndex": 1,
               },
               "defaultEstimatedItemSize": 100,
-              "layoutObject": Object {
+              "layoutObject": {
                 "size": undefined,
                 "span": undefined,
               },
-              "props": Object {
-                "contentContainerStyle": Object {
+              "props": {
+                "contentContainerStyle": {
                   "paddingBottom": 56,
                 },
-                "data": Array [],
+                "data": [],
                 "estimatedItemSize": 96,
                 "keyboardShouldPersistTaps": "handled",
                 "numColumns": 1,
                 "renderItem": [Function],
               },
-              "renderWindowInsets": Object {
+              "renderWindowInsets": {
                 "height": 0,
                 "width": 0,
               },
@@ -489,8 +505,8 @@ Array [
           scrollEventThrottle={16}
           scrollThrottle={16}
           scrollViewProps={
-            Object {
-              "contentContainerStyle": Object {
+            {
+              "contentContainerStyle": {
                 "backgroundColor": undefined,
                 "minHeight": 1,
                 "minWidth": 1,
@@ -500,24 +516,24 @@ Array [
               "onLayout": [Function],
               "onScrollBeginDrag": [Function],
               "refreshControl": undefined,
-              "style": Object {
+              "style": {
                 "minHeight": 1,
                 "minWidth": 1,
               },
             }
           }
           style={
-            Object {
+            {
               "minHeight": 1,
               "minWidth": 1,
             }
           }
           suppressBoundedSizeException={true}
           windowCorrectionConfig={
-            Object {
+            {
               "applyToInitialOffset": true,
               "applyToItemScroll": true,
-              "value": Object {
+              "value": {
                 "endCorrection": 0,
                 "startCorrection": 0,
                 "windowShift": -0,
@@ -528,14 +544,14 @@ Array [
           <View>
             <View
               style={
-                Object {
+                {
                   "flexDirection": "column",
                 }
               }
             >
               <View
                 style={
-                  Object {
+                  {
                     "paddingLeft": 0,
                     "paddingTop": 0,
                   }
@@ -543,7 +559,7 @@ Array [
               />
               <View
                 style={
-                  Array [
+                  [
                     undefined,
                     undefined,
                   ]
@@ -557,7 +573,7 @@ Array [
                 renderAheadOffset={0}
                 scrollOffset={0}
                 style={
-                  Object {
+                  {
                     "height": 0,
                     "width": 0,
                   }
@@ -567,7 +583,7 @@ Array [
               <CellContainer
                 index={-1}
                 style={
-                  Array [
+                  [
                     undefined,
                     undefined,
                   ]
@@ -575,7 +591,7 @@ Array [
               />
               <View
                 style={
-                  Object {
+                  {
                     "paddingBottom": 56,
                     "paddingRight": 0,
                   }
@@ -588,14 +604,14 @@ Array [
     </View>
     <View
       style={
-        Object {
+        {
           "marginBottom": -22,
         }
       }
     >
       <View
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -605,6 +621,23 @@ Array [
         }
       >
         <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           accessible={true}
           collapsable={false}
           focusable={true}
@@ -616,7 +649,7 @@ Array [
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
+            {
               "alignItems": "center",
               "opacity": 1,
               "padding": 22,
@@ -627,18 +660,18 @@ Array [
             accessibilityHint="Close modal"
             allowFontScaling={false}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#00f1a2",
                   "fontSize": 28,
                 },
                 undefined,
-                Object {
+                {
                   "fontFamily": "anticon",
                   "fontStyle": "normal",
                   "fontWeight": "normal",
                 },
-                Object {},
+                {},
               ]
             }
           >
@@ -648,7 +681,7 @@ Array [
       </View>
       <BVLinearGradient
         colors={
-          Array [
+          [
             1187109,
             856825125,
             3205635365,
@@ -656,13 +689,13 @@ Array [
           ]
         }
         endPoint={
-          Object {
+          {
             "x": 0,
             "y": 1,
           }
         }
         locations={
-          Array [
+          [
             0,
             0.2,
             0.75,
@@ -671,13 +704,13 @@ Array [
         }
         pointerEvents="none"
         startPoint={
-          Object {
+          {
             "x": 0,
             "y": 0,
           }
         }
         style={
-          Object {
+          {
             "bottom": 0,
             "height": 67,
             "position": "absolute",

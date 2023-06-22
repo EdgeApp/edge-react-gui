@@ -3,26 +3,26 @@
 exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
 <BVLinearGradient
   colors={
-    Array [
+    [
       4278585612,
       4279971643,
     ]
   }
   endPoint={
-    Object {
+    {
       "x": 1,
       "y": 0,
     }
   }
   locations={null}
   startPoint={
-    Object {
+    {
       "x": 0,
       "y": 0,
     }
   }
   style={
-    Object {
+    {
       "bottom": 0,
       "left": 0,
       "position": "absolute",
@@ -33,14 +33,14 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
           "position": "absolute",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "padding": 0,
@@ -52,11 +52,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "flex": 1,
           },
-          Object {
+          {
             "marginBottom": -0,
           },
         ]
@@ -64,13 +64,13 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "justifyContent": "center",
               "marginHorizontal": 22,
               "paddingBottom": 22,
             },
-            Object {
+            {
               "marginTop": 22,
             },
             undefined,
@@ -79,7 +79,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "space-between",
@@ -91,14 +91,14 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                Object {
+                {
                   "fontFamily": "Quicksand-Medium",
                   "fontSize": 27,
                 },
@@ -111,6 +111,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         </View>
       </View>
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
         accessible={true}
         focusable={true}
         onClick={[Function]}
@@ -121,15 +130,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "borderRadius": 11,
               "justifyContent": "center",
               "minHeight": 67,
               "paddingHorizontal": 22,
             },
-            Object {
+            {
               "flexGrow": 0,
               "marginBottom": 11,
               "marginLeft": 22,
@@ -144,15 +153,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "borderTopWidth": 1,
                 "bottom": 0,
                 "left": 22,
                 "position": "absolute",
                 "right": 22,
               },
-              Object {
+              {
                 "borderColor": undefined,
                 "right": 11,
               },
@@ -161,8 +170,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         />
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "borderBottomLeftRadius": 11,
                 "borderBottomWidth": 1,
                 "borderLeftWidth": 1,
@@ -175,7 +184,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "top": 0,
                 "width": 22,
               },
-              Object {
+              {
                 "borderColor": undefined,
               },
             ]
@@ -183,8 +192,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         />
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "borderBottomRightRadius": 11,
                 "borderBottomWidth": 1,
                 "borderLeftWidth": 0,
@@ -197,7 +206,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "top": 0,
                 "width": 22,
               },
-              Object {
+              {
                 "borderColor": undefined,
               },
             ]
@@ -205,15 +214,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         />
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "borderTopWidth": 1,
                 "left": 22,
                 "position": "absolute",
                 "right": 22,
                 "top": 0,
               },
-              Object {
+              {
                 "borderColor": undefined,
                 "left": 22,
               },
@@ -222,8 +231,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         />
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "height": 67,
                 "justifyContent": "center",
                 "left": 0,
@@ -232,7 +241,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "right": 0,
                 "top": 0,
               },
-              Object {
+              {
                 "paddingLeft": 65,
                 "paddingRight": 65,
               },
@@ -243,23 +252,23 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             numberOfLines={1}
             onLayout={[Function]}
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignSelf": "flex-start",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "padding": 0,
                 },
-                Object {
+                {
                   "color": undefined,
-                  "transform": Array [
-                    Object {
+                  "transform": [
+                    {
                       "translateX": -0,
                     },
-                    Object {
+                    {
                       "translateY": -0,
                     },
-                    Object {
+                    {
                       "scale": 1,
                     },
                   ],
@@ -273,8 +282,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         <Text
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "bottom": -28,
                 "color": "#E85466",
                 "fontFamily": "Quicksand-Regular",
@@ -282,7 +291,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "left": 28,
                 "position": "absolute",
               },
-              Object {
+              {
                 "opacity": 0,
               },
             ]
@@ -292,40 +301,38 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           numberOfLines={1}
           onLayout={[Function]}
           style={
-            Array [
-              Object {
+            [
+              {
                 "bottom": -10,
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 17,
                 "position": "absolute",
                 "right": 28,
               },
-              Object {
+              {
                 "color": undefined,
                 "opacity": 0,
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateX": 6,
                   },
-                  Object {
+                  {
                     "scale": 0,
                   },
                 ],
               },
             ]
           }
-        >
-          
-        </Text>
+        />
         <Text
           allowFontScaling={false}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": undefined,
                 "fontSize": 12,
               },
-              Object {
+              {
                 "color": "rgba(255, 255, 255, .75)",
                 "fontSize": 22,
                 "left": 0,
@@ -333,12 +340,12 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "position": "absolute",
                 "top": 0,
               },
-              Object {
+              {
                 "fontFamily": "anticon",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },
-              Object {},
+              {},
             ]
           }
         >
@@ -358,15 +365,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           secureTextEntry={false}
           selectionColor="#FFFFFF"
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignSelf": "stretch",
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
-              Object {
+              {
                 "flexGrow": 0,
               },
             ]
@@ -377,7 +384,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "flex": 1,
             "overflow": "hidden",
           }
@@ -388,7 +395,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           automaticallyAdjustContentInsets={false}
           canChangeSize={true}
           contentContainerStyle={
-            Object {
+            {
               "backgroundColor": undefined,
               "minHeight": 1,
               "minWidth": 1,
@@ -399,16 +406,16 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           contentHeight={0}
           contentWidth={0}
           data={
-            Array [
-              Object {
+            [
+              {
                 "currencyCode": "ETH",
                 "displayName": "Ethereum",
                 "key": "create-undefined-ethereum",
                 "pluginId": "ethereum",
                 "walletType": undefined,
               },
-              Object {
-                "createWalletIds": Array [
+              {
+                "createWalletIds": [
                   "123SomeWalletId",
                 ],
                 "currencyCode": "REP",
@@ -417,8 +424,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "pluginId": "ethereum",
                 "tokenId": "1985365e9f78359a9b6ad760e32412f4a445e862",
               },
-              Object {
-                "createWalletIds": Array [
+              {
+                "createWalletIds": [
                   "123SomeWalletId",
                 ],
                 "currencyCode": "REPV2",
@@ -427,8 +434,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "pluginId": "ethereum",
                 "tokenId": "221657776846890989a759ba2973e427dff5c9bb",
               },
-              Object {
-                "createWalletIds": Array [
+              {
+                "createWalletIds": [
                   "123SomeWalletId",
                 ],
                 "currencyCode": "HERC",
@@ -437,8 +444,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "pluginId": "ethereum",
                 "tokenId": "2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
               },
-              Object {
-                "createWalletIds": Array [
+              {
+                "createWalletIds": [
                   "123SomeWalletId",
                 ],
                 "currencyCode": "DAI",
@@ -451,16 +458,16 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
           dataProvider={
             DataProvider {
-              "_data": Array [
-                Object {
+              "_data": [
+                {
                   "currencyCode": "ETH",
                   "displayName": "Ethereum",
                   "key": "create-undefined-ethereum",
                   "pluginId": "ethereum",
                   "walletType": undefined,
                 },
-                Object {
-                  "createWalletIds": Array [
+                {
+                  "createWalletIds": [
                     "123SomeWalletId",
                   ],
                   "currencyCode": "REP",
@@ -469,8 +476,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "pluginId": "ethereum",
                   "tokenId": "1985365e9f78359a9b6ad760e32412f4a445e862",
                 },
-                Object {
-                  "createWalletIds": Array [
+                {
+                  "createWalletIds": [
                     "123SomeWalletId",
                   ],
                   "currencyCode": "REPV2",
@@ -479,8 +486,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "pluginId": "ethereum",
                   "tokenId": "221657776846890989a759ba2973e427dff5c9bb",
                 },
-                Object {
-                  "createWalletIds": Array [
+                {
+                  "createWalletIds": [
                     "123SomeWalletId",
                   ],
                   "currencyCode": "HERC",
@@ -489,8 +496,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "pluginId": "ethereum",
                   "tokenId": "2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
                 },
-                Object {
-                  "createWalletIds": Array [
+                {
+                  "createWalletIds": [
                     "123SomeWalletId",
                   ],
                   "currencyCode": "DAI",
@@ -511,8 +518,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           disableRecycling={false}
           estimatedItemSize={96}
           extendedState={
-            Object {
-              "value": Object {
+            {
+              "value": {
                 "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862": false,
                 "create-ethereum-221657776846890989a759ba2973e427dff5c9bb": false,
                 "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1": false,
@@ -523,7 +530,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
           externalScrollView={[Function]}
           extraData={
-            Object {
+            {
               "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862": false,
               "create-ethereum-221657776846890989a759ba2973e427dff5c9bb": false,
               "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1": false,
@@ -549,38 +556,38 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "_hasExpired": false,
               "_maxSpan": 1,
               "_setLayoutForType": [Function],
-              "_tempDim": Object {
+              "_tempDim": {
                 "height": 0,
                 "width": 0,
               },
               "averageWindow": AverageWindow {
                 "currentAverage": 96,
                 "currentCount": 1,
-                "inputValues": Array [
+                "inputValues": [
                   96,
                 ],
                 "nextIndex": 1,
               },
               "defaultEstimatedItemSize": 100,
-              "layoutObject": Object {
+              "layoutObject": {
                 "size": undefined,
                 "span": undefined,
               },
-              "props": Object {
+              "props": {
                 "automaticallyAdjustContentInsets": false,
-                "contentContainerStyle": Object {
+                "contentContainerStyle": {
                   "paddingBottom": 96,
                 },
-                "data": Array [
-                  Object {
+                "data": [
+                  {
                     "currencyCode": "ETH",
                     "displayName": "Ethereum",
                     "key": "create-undefined-ethereum",
                     "pluginId": "ethereum",
                     "walletType": undefined,
                   },
-                  Object {
-                    "createWalletIds": Array [
+                  {
+                    "createWalletIds": [
                       "123SomeWalletId",
                     ],
                     "currencyCode": "REP",
@@ -589,8 +596,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "pluginId": "ethereum",
                     "tokenId": "1985365e9f78359a9b6ad760e32412f4a445e862",
                   },
-                  Object {
-                    "createWalletIds": Array [
+                  {
+                    "createWalletIds": [
                       "123SomeWalletId",
                     ],
                     "currencyCode": "REPV2",
@@ -599,8 +606,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "pluginId": "ethereum",
                     "tokenId": "221657776846890989a759ba2973e427dff5c9bb",
                   },
-                  Object {
-                    "createWalletIds": Array [
+                  {
+                    "createWalletIds": [
                       "123SomeWalletId",
                     ],
                     "currencyCode": "HERC",
@@ -609,8 +616,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "pluginId": "ethereum",
                     "tokenId": "2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
                   },
-                  Object {
-                    "createWalletIds": Array [
+                  {
+                    "createWalletIds": [
                       "123SomeWalletId",
                     ],
                     "currencyCode": "DAI",
@@ -621,7 +628,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   },
                 ],
                 "estimatedItemSize": 96,
-                "extraData": Object {
+                "extraData": {
                   "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862": false,
                   "create-ethereum-221657776846890989a759ba2973e427dff5c9bb": false,
                   "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1": false,
@@ -634,7 +641,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "numColumns": 1,
                 "renderItem": [Function],
               },
-              "renderWindowInsets": Object {
+              "renderWindowInsets": {
                 "height": 0,
                 "width": 0,
               },
@@ -662,8 +669,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           scrollEventThrottle={16}
           scrollThrottle={16}
           scrollViewProps={
-            Object {
-              "contentContainerStyle": Object {
+            {
+              "contentContainerStyle": {
                 "backgroundColor": undefined,
                 "minHeight": 1,
                 "minWidth": 1,
@@ -673,24 +680,24 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "onLayout": [Function],
               "onScrollBeginDrag": [Function],
               "refreshControl": undefined,
-              "style": Object {
+              "style": {
                 "minHeight": 1,
                 "minWidth": 1,
               },
             }
           }
           style={
-            Object {
+            {
               "minHeight": 1,
               "minWidth": 1,
             }
           }
           suppressBoundedSizeException={true}
           windowCorrectionConfig={
-            Object {
+            {
               "applyToInitialOffset": true,
               "applyToItemScroll": true,
-              "value": Object {
+              "value": {
                 "endCorrection": 0,
                 "startCorrection": 0,
                 "windowShift": -0,
@@ -701,7 +708,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           <View>
             <View
               style={
-                Object {
+                {
                   "flexDirection": "column",
                 }
               }
@@ -714,7 +721,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 renderAheadOffset={0}
                 scrollOffset={0}
                 style={
-                  Object {
+                  {
                     "height": 0,
                     "width": 0,
                   }
@@ -728,14 +735,14 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       <View
         pointerEvents="none"
         style={
-          Object {
+          {
             "opacity": 0,
           }
         }
       >
         <View
           style={
-            Object {
+            {
               "alignSelf": "center",
               "bottom": 22,
               "position": "absolute",
@@ -744,8 +751,20 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         >
           <View
             accessibilityState={
-              Object {
+              {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
             accessible={true}
@@ -759,11 +778,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
             style={
-              Object {
+              {
                 "elevation": 2,
                 "opacity": 1,
                 "shadowColor": "#FFFFFF",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -774,27 +793,27 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           >
             <BVLinearGradient
               colors={
-                Array [
+                [
                   4278754931,
                   4278251938,
                 ]
               }
               endPoint={
-                Object {
+                {
                   "x": 1,
                   "y": 0,
                 }
               }
               locations={null}
               startPoint={
-                Object {
+                {
                   "x": 0,
                   "y": 0,
                 }
               }
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "alignItems": "center",
                     "borderColor": "rgba(255, 255, 255, 0)",
                     "borderRadius": 6,
@@ -804,7 +823,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "minHeight": 67,
                     "minWidth": 202,
                   },
-                  Object {
+                  {
                     "alignSelf": "center",
                     "marginBottom": 0,
                     "marginLeft": -11,
@@ -816,7 +835,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "paddingRight": 0,
                     "paddingTop": 0,
                   },
-                  Object {
+                  {
                     "borderRadius": 6,
                     "paddingLeft": 0,
                     "paddingRight": 0,
@@ -829,7 +848,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 minimumFontScale={0.75}
                 numberOfLines={1}
                 style={
-                  Object {
+                  {
                     "color": "#1b2f3b",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 22,
@@ -839,7 +858,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "paddingRight": 17,
                     "paddingTop": 11,
                     "textShadowColor": "#000000",
-                    "textShadowOffset": Object {
+                    "textShadowOffset": {
                       "height": 0,
                       "width": 0,
                     },

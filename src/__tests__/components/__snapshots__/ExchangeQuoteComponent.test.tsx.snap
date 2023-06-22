@@ -3,7 +3,7 @@
 exports[`ExchangeQuote should render with loading props 1`] = `
 <WithTheme(CardComponent)
   marginRem={
-    Array [
+    [
       0,
       1,
     ]
@@ -11,7 +11,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "flex": 1,
         "flexDirection": "row",
       }
@@ -19,7 +19,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "justifyContent": "center",
           "marginRight": 22,
@@ -34,7 +34,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "flexDirection": "column",
         }
@@ -42,18 +42,18 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "flexDirection": "row",
             },
-            Object {},
+            {},
           ]
         }
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 1,
               "flexDirection": "row",
@@ -62,7 +62,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontFamily": "Quicksand-Medium",
               }
             }
@@ -72,7 +72,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "marginLeft": 6,
               "textAlign": "right",
             }
@@ -80,7 +80,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontFamily": "Quicksand-Medium",
                 "textAlign": "right",
               }
@@ -92,18 +92,18 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "flexDirection": "row",
             },
-            Object {},
+            {},
           ]
         }
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 1,
               "flexDirection": "row",
@@ -112,7 +112,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#A4C7DF",
                 "flex": 1,
                 "fontSize": 17,
@@ -125,7 +125,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "marginLeft": 6,
               "textAlign": "right",
             }
@@ -133,7 +133,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#A4C7DF",
                 "fontSize": 17,
                 "marginTop": 6,
@@ -150,12 +150,12 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     <View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "flexDirection": "row",
             },
-            Object {
+            {
               "marginBottom": 0,
               "marginLeft": 0,
               "marginRight": 0,
@@ -166,7 +166,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 1,
               "flexDirection": "row",
@@ -175,7 +175,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontSize": 17,
                 "marginTop": 6,
               }
@@ -186,7 +186,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "marginLeft": 6,
               "textAlign": "right",
             }
@@ -194,7 +194,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontSize": 17,
                 "marginTop": 6,
               }
@@ -206,18 +206,18 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "flexDirection": "row",
             },
-            Object {},
+            {},
           ]
         }
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flex": 1,
               "flexDirection": "row",
@@ -226,7 +226,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontSize": 17,
                 "marginTop": 6,
               }
@@ -237,7 +237,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         </View>
         <View
           style={
-            Object {
+            {
               "marginLeft": 6,
               "textAlign": "right",
             }
@@ -245,7 +245,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "fontSize": 17,
                 "marginTop": 6,
               }

@@ -7,7 +7,7 @@ exports[`EdgeTextField should render with loading props 1`] = `
   autoCapitalize="sentences"
   baseColor="#FFFFFF"
   containerStyle={
-    Object {
+    {
       "marginBottom": 247,
       "marginLeft": 247,
       "marginRight": 247,

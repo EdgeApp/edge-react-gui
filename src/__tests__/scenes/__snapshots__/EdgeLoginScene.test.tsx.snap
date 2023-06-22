@@ -3,26 +3,26 @@
 exports[`EdgeLoginScene should render with loading props 1`] = `
 <BVLinearGradient
   colors={
-    Array [
+    [
       4278585612,
       4279971643,
     ]
   }
   endPoint={
-    Object {
+    {
       "x": 1,
       "y": 0,
     }
   }
   locations={null}
   startPoint={
-    Object {
+    {
       "x": 0,
       "y": 0,
     }
   }
   style={
-    Object {
+    {
       "bottom": 0,
       "left": 0,
       "position": "absolute",
@@ -33,14 +33,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
           "position": "absolute",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "padding": 0,
@@ -52,22 +52,22 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "flex": 1,
         }
       }
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "bottom": 0,
               "left": 0,
               "position": "absolute",
               "right": 0,
               "top": 0,
             },
-            Object {
+            {
               "opacity": 1,
             },
           ]
@@ -75,7 +75,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flexGrow": 1,
               "justifyContent": "center",
@@ -93,28 +93,28 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     <View
       pointerEvents="none"
       style={
-        Object {
+        {
           "opacity": 0,
         }
       }
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "alignSelf": "stretch",
               "borderColor": "#F1AA19",
               "borderRadius": 4,
               "borderWidth": 1,
               "margin": 22,
             },
-            Object {
+            {
               "marginBottom": 22,
               "marginLeft": 22,
               "marginRight": 22,
               "marginTop": 22,
             },
-            Object {
+            {
               "paddingBottom": 22,
               "paddingLeft": 22,
               "paddingRight": 22,
@@ -125,7 +125,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "display": "flex",
               "flexDirection": "row",
@@ -135,20 +135,20 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           <Text
             allowFontScaling={false}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#F1AA19",
                   "fontSize": 18,
                 },
-                Object {
+                {
                   "marginRight": 11,
                 },
-                Object {
+                {
                   "fontFamily": "Ionicons",
                   "fontStyle": "normal",
                   "fontWeight": "normal",
                 },
-                Object {},
+                {},
               ]
             }
           >
@@ -159,14 +159,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                Object {
+                {
                   "color": "#F1AA19",
                   "fontFamily": "Quicksand-Bold",
                   "fontSize": 17,
@@ -184,14 +184,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           minimumFontScale={0.65}
           numberOfLines={0}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "color": "#F1AA19",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 17,
@@ -210,15 +210,27 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     <View
       pointerEvents="none"
       style={
-        Object {
+        {
           "opacity": 0,
         }
       }
     >
       <View
         accessibilityState={
-          Object {
+          {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
         accessible={true}
@@ -232,11 +244,11 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "elevation": 2,
             "opacity": 1,
             "shadowColor": "#FFFFFF",
-            "shadowOffset": Object {
+            "shadowOffset": {
               "height": 0,
               "width": 0,
             },
@@ -247,27 +259,27 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       >
         <BVLinearGradient
           colors={
-            Array [
+            [
               4278754931,
               4278251938,
             ]
           }
           endPoint={
-            Object {
+            {
               "x": 1,
               "y": 0,
             }
           }
           locations={null}
           startPoint={
-            Object {
+            {
               "x": 0,
               "y": 0,
             }
           }
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "borderColor": "rgba(255, 255, 255, 0)",
                 "borderRadius": 6,
@@ -277,7 +289,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "minHeight": 67,
                 "minWidth": 202,
               },
-              Object {
+              {
                 "alignSelf": "auto",
                 "marginBottom": 22,
                 "marginLeft": 22,
@@ -289,7 +301,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "paddingRight": 0,
                 "paddingTop": 0,
               },
-              Object {
+              {
                 "borderRadius": 6,
                 "paddingLeft": 0,
                 "paddingRight": 0,
@@ -302,7 +314,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             minimumFontScale={0.75}
             numberOfLines={1}
             style={
-              Object {
+              {
                 "color": "#1b2f3b",
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
@@ -312,7 +324,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "paddingRight": 17,
                 "paddingTop": 11,
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -327,8 +339,20 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     </View>
     <View
       accessibilityState={
-        Object {
+        {
+          "busy": undefined,
+          "checked": undefined,
           "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
         }
       }
       accessible={true}
@@ -342,11 +366,11 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
+        {
           "elevation": 0,
           "opacity": 1,
           "shadowColor": "#000000",
-          "shadowOffset": Object {
+          "shadowOffset": {
             "height": 0,
             "width": 0,
           },
@@ -357,27 +381,27 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
     >
       <BVLinearGradient
         colors={
-          Array [
+          [
             16777215,
             16777215,
           ]
         }
         endPoint={
-          Object {
+          {
             "x": 1,
             "y": 1,
           }
         }
         locations={null}
         startPoint={
-          Object {
+          {
             "x": 0,
             "y": 0,
           }
         }
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "borderColor": "rgba(255, 255, 255, 0)",
               "borderRadius": 6,
@@ -387,7 +411,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               "minHeight": 67,
               "minWidth": 202,
             },
-            Object {
+            {
               "alignSelf": "auto",
               "marginBottom": 22,
               "marginLeft": 22,
@@ -399,7 +423,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               "paddingRight": 0,
               "paddingTop": 0,
             },
-            Object {
+            {
               "borderRadius": 6,
               "paddingLeft": 0,
               "paddingRight": 0,
@@ -412,7 +436,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           minimumFontScale={0.75}
           numberOfLines={1}
           style={
-            Object {
+            {
               "color": "#00f1a2",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
