@@ -129,9 +129,6 @@
     "edge-currency-plugins": "^2.0.3",
     "edge-exchange-plugins": "^0.19.5",
     "edge-login-ui-rn": "^2.2.0",
-    "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2a52e6cb86512b98f69f8f5dd3105cdf6d0c2d8a",
-    "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#b11def82d84f2735b91f4b8104a9e0d3e8c3600d",
-    "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#28c143cd5828d3444bff62adc224839e33eb0bf9",
     "ethers": "^5.6.0",
     "paraswap": "^5.2.0",
     "prompts": "^2.4.2",
@@ -268,15 +265,5 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.6.0",
     "yarn-deduplicate": "^5.0.0"
-  },
-  "plugins": [
-    "edge-plugin-simplex",
-    "edge-plugin-wyre",
-    "edge-plugin-bity"
-  ],
-  "rnpm": {
-    "assets": [
-      "./src/assets/fonts"
-    ]
   }
 }
