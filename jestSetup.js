@@ -8,6 +8,12 @@ global.nonce = () => _nonce++
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 
+jest.mock('react-native-webview', () => ({
+  WebView: () => {
+    return null
+  }
+}))
+
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'ios',
   isPad: false,
