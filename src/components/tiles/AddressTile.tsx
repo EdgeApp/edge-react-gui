@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { AppState, TouchableOpacity, View } from 'react-native'
+import { AppState, NativeEventSubscription, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { sprintf } from 'sprintf-js'
@@ -52,6 +52,8 @@ export interface AddressTileRef {
 }
 
 export class AddressTileComponent extends React.PureComponent<Props, State> {
+  listener: NativeEventSubscription | undefined
+
   constructor(props: Props) {
     super(props)
 
@@ -62,7 +64,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    AppState.addEventListener('change', this.handleAppStateChange)
+    this.listener = AppState.addEventListener('change', this.handleAppStateChange)
 
     this._setClipboard(this.props)
     this.props.addressTileRef(this)
@@ -72,7 +74,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount(): void {
-    AppState.removeEventListener('change', this.handleAppStateChange)
+    if (this.listener != null) this.listener.remove()
 
     this.props.addressTileRef(undefined)
   }
