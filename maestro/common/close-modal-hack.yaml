@@ -1,7 +1,7 @@
 # Hacky close modal utility flow
 # Replace with clicking on the "X" button when it's targetable.
 
-appId: co.edgesecure.app
+appId: ${MAESTRO_APP_ID}
 ---
 - tapOn:
     point: '0%,50%' # Left side + verticlaly middle edge of the screen
