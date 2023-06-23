@@ -242,8 +242,25 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         }
       />
     </TouchableOpacity>
-    <React.Fragment>
+    <View
+      style={
+        [
+          {
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+          {
+            "paddingRight": 65,
+          },
+        ]
+      }
+    >
       <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         autoCapitalize="none"
         autoCorrect={true}
         autoFocus={true}
@@ -278,7 +295,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         textAlignVertical="top"
         value="string"
       />
-    </React.Fragment>
+    </View>
   </View>
 </TouchableWithoutFeedback>
 `;

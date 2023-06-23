@@ -355,36 +355,55 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           ]
         }
       />
-      <TextInput
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoFocus={true}
-        editable={true}
-        multiline={false}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        returnKeyType="next"
-        secureTextEntry={false}
-        selectionColor="#FFFFFF"
+      <View
         style={
           [
             {
-              "alignSelf": "stretch",
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "padding": 0,
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
             },
             {
-              "flexGrow": 0,
+              "paddingRight": 65,
             },
           ]
         }
-        textAlignVertical="top"
-        value=""
-      />
+      >
+        <TextInput
+          accessibilityState={
+            {
+              "disabled": false,
+            }
+          }
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={true}
+          editable={true}
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="next"
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+              },
+              {
+                "flexGrow": 0,
+              },
+            ]
+          }
+          textAlignVertical="top"
+          value=""
+        />
+      </View>
     </View>
     <View
       accessibilityState={

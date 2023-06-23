@@ -27,6 +27,7 @@ export interface OutlinedTextInputProps {
   searchIcon?: boolean // Defaults to 'false'
   showSpinner?: boolean // Defaults to 'false'
   suffix?: string // Text input is right-right justified with a persistent suffix
+  prefix?: string // Text input is left-left justified with a persistent prefix
 
   // Callbacks:
   onBlur?: () => void
@@ -83,6 +84,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     clearIcon = true,
     marginRem,
     multiline = false,
+    prefix,
     searchIcon = false,
     showSpinner = false,
     suffix,
@@ -198,6 +200,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     // Compensate for the scaling origin being in the center:
     0.5 * counterWidth
 
+  // Prefix dimensions
+  const prefixTranslateY = theme.rem(1)
+
   // Pad right side of the bottom line when no counter is present,
   // to account for rounded corner.
   const cornerPadding = theme.rem(0.5)
@@ -292,6 +297,15 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const errorStyle = useAnimatedStyle(() => ({
     opacity: errorAnimation.value
   }))
+
+  const prefixStyle = useAnimatedStyle(() => {
+    const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
+    return {
+      opacity: labelProgressAlt,
+      transform: [{ translateY: (1 - labelProgressAlt) * prefixTranslateY }, { scale: labelProgressAlt }]
+    }
+  })
+
   const showPasswordLineStyle = useAnimatedStyle(() => ({
     backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
     transform: [
@@ -307,7 +321,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   // @ts-expect-error
   const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
   const textStyle = numpad ? styles.numberInput : styles.textInput
-  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixTextAndroidAdjust : null], [styles])
+  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixAndroidAdjust : null], [styles])
 
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
@@ -347,95 +361,52 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             </View>
           </TouchableWithoutFeedback>
         ) : null}
-        {suffix != null ? (
-          <View style={[styles.suffixContainer, suffixPadding]}>
-            {numeric ? (
-              <NumericInput
-                ref={inputRef}
-                {...inputProps}
-                accessibilityState={{ disabled }}
-                minDecimals={minDecimals}
-                maxDecimals={maxDecimals}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            ) : (
-              <TextInput
-                ref={inputRef}
-                {...inputProps}
-                accessibilityState={{ disabled }}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            )}
-            <EdgeText style={suffixStyle}>{suffix}</EdgeText>
-          </View>
-        ) : (
-          // TODO: Remove this duplication
-          <>
-            {numeric ? (
-              <NumericInput
-                ref={inputRef}
-                {...inputProps}
-                minDecimals={minDecimals}
-                maxDecimals={maxDecimals}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            ) : (
-              <TextInput
-                ref={inputRef}
-                {...inputProps}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            )}
-          </>
-        )}
+
+        <View style={[styles.suffixContainer, suffixPadding]}>
+          {prefix != null ? <Animated.Text style={[textStyle, prefixStyle]}>{`${prefix} `}</Animated.Text> : null}
+          {numeric ? (
+            <NumericInput
+              ref={inputRef}
+              {...inputProps}
+              accessibilityState={{ disabled }}
+              minDecimals={minDecimals}
+              maxDecimals={maxDecimals}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          ) : (
+            <TextInput
+              ref={inputRef}
+              {...inputProps}
+              accessibilityState={{ disabled }}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          )}
+          {suffix != null ? <EdgeText style={suffixStyle}>{suffix}</EdgeText> : null}
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -505,7 +476,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     suffixText: {
       color: theme.secondaryText
     },
-    suffixTextAndroidAdjust: {
+    suffixAndroidAdjust: {
       marginTop: 3.5
     },
     textInput: {

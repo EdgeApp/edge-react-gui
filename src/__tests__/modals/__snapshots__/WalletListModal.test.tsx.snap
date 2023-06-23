@@ -360,33 +360,52 @@ exports[`WalletListModal should render with loading props 1`] = `
       >
         
       </Text>
-      <TextInput
-        autoFocus={false}
-        editable={true}
-        multiline={false}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        returnKeyType="search"
-        secureTextEntry={false}
-        selectionColor="#FFFFFF"
+      <View
         style={
           [
             {
-              "alignSelf": "stretch",
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "padding": 0,
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
             },
             {
-              "flexGrow": 0,
+              "paddingRight": 65,
             },
           ]
         }
-        textAlignVertical="top"
-        value=""
-      />
+      >
+        <TextInput
+          accessibilityState={
+            {
+              "disabled": false,
+            }
+          }
+          autoFocus={false}
+          editable={true}
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          returnKeyType="search"
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "padding": 0,
+              },
+              {
+                "flexGrow": 0,
+              },
+            ]
+          }
+          textAlignVertical="top"
+          value=""
+        />
+      </View>
     </View>
     <View
       style={
