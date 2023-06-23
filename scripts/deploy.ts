@@ -374,6 +374,78 @@ function buildCommonPost(buildObj: BuildObj) {
     )
     mylog('\n*** Upload to App Center Complete ***')
   }
+
+  if (buildObj.rsyncLocation != null) {
+    const { buildNum, guiHash, platformType, productNameClean, repoBranch, testRepoUrl, version } = buildObj
+
+    mylog(`\n\nUploading to rsyncLocation ${buildObj.rsyncLocation}`)
+    mylog('***********************************************************************\n')
+
+    const datePrefix = new Date().toISOString().slice(2, 19).replace(/:/gi, '').replace(/-/gi, '')
+    const [fileExtension] = buildObj.ipaFile.split('.').reverse()
+    const rsyncFile = escapePath(`${datePrefix}--${productNameClean}--${platformType}--${repoBranch}--${buildNum}--${guiHash.slice(0, 8)}.${fileExtension}`)
+
+    const rsyncFilePath = join(buildObj.rsyncLocation, rsyncFile)
+    call(`rsync -avz -e "ssh -i ${githubSshKey}" ${buildObj.ipaFile} ${rsyncFilePath}`)
+    mylog('\n*** Upload to rsyncLocation Complete ***')
+
+    if (testRepoUrl != null) {
+      mylog(`\n\nUpdating test repo ${buildObj.testRepoUrl}`)
+      mylog('***********************************************************\n')
+
+      const pathTemp = testRepoUrl.split('/')
+      const repo = pathTemp[pathTemp.length - 1].replace('.git', '')
+      const repoPath = join(baseDir, repo)
+      const testFilePath = join(repoPath, LATEST_TEST_FILE)
+
+      let retries = 10
+      let success = false
+      while (--retries > 0) {
+        if (fs.existsSync(repoPath)) {
+          call(`rm -rf ${repoPath}`)
+        }
+
+        chdir(baseDir)
+        call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git clone ${testRepoUrl}`)
+
+        const latestTestFileObj: LatestTestFile = {
+          platformType,
+          branch: repoBranch,
+          buildNum,
+          version,
+          filePath: rsyncFilePath,
+          gitHash: guiHash
+        }
+
+        const platformBranch = `${repoBranch}/${platformType}`
+        chdir(repoPath)
+        try {
+          call(`git checkout -b ${platformBranch} origin/${platformBranch}`)
+        } catch (e) {
+          call(`git checkout -b ${platformBranch}`)
+        }
+
+        const latestTestFileString = JSON.stringify(latestTestFileObj, null, 2)
+        fs.writeFileSync(testFilePath, latestTestFileString, { encoding: 'utf8' })
+
+        call(`git add ${LATEST_TEST_FILE}`)
+        call(`git commit -m "latestTestFile. ${buildNum} ${version} ${guiHash} ${platformBranch}"`)
+        try {
+          call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push -u origin ${platformBranch}`)
+          success = true
+          break
+        } catch (e: any) {
+          console.log('Error pushing version file...')
+        }
+      }
+      if (success) {
+        mylog('\n*** Updating test repo Complete ***')
+      } else {
+        mylog('\n*** Updating test repo FAILED ***')
+        throw new Error('Updating test repo FAILED')
+      }
+    }
+  }
 }
 
 function builddate() {

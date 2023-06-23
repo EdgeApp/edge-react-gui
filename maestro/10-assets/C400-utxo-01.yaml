@@ -1,0 +1,139 @@
+# Priority: Critical
+# Test ID: C310
+# Title: Launch Edge without crashing
+# Expected Result:
+#   1. User is able to open Edge without crashing
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- tapOn: "FIRO"
+- assertVisible: "0.369074 FIRO"
+- tapOn: "Wallets"
+- assertVisible: "ƒ 0.369"
+
+- scrollUntilVisible:
+    element: "DGB"
+    direction: "DOWN"
+- assertVisible: "Ɗ 18.7"
+- tapOn: "DGB"
+- assertVisible: "18.79649375 DGB"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "DOGE"
+    direction: "DOWN"
+- assertVisible: "Ð 25.81"
+- tapOn: "DOGE"
+- assertVisible: "25.81052584 DOGE"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "RVN"
+    direction: "DOWN"
+- assertVisible: "R 22.85"
+- tapOn: "RVN"
+- assertVisible: "22.85548 RVN"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "BSV"
+    direction: "DOWN"
+- assertVisible: "₿ 0.011"
+- tapOn: "BSV"
+- assertVisible: "0.011 BSV"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "BCH"
+    direction: "DOWN"
+- assertVisible: "₿ 0.005888"
+- tapOn: "BCH"
+- assertVisible: "0.00588867 BCH"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "DASH"
+    direction: "DOWN"
+- assertVisible: "Ð 0.03081"
+- tapOn: "DASH"
+- assertVisible: "0.03081175 DASH"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "QTUM"
+    direction: "DOWN"
+- assertVisible: "Q 0.1776"
+- tapOn: "QTUM"
+- assertVisible: "0.17765112 QTUM"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "BTG"
+    direction: "DOWN"
+- assertVisible: "₿ 0.0537"
+- tapOn: "BTG"
+- assertVisible: "0.05370395 BTG"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "LTC"
+    direction: "DOWN"
+- assertVisible: "Ł 0.00921"
+- tapOn: "LTC"
+- assertVisible: "0.00921812 LTC"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "BTC"
+    direction: "DOWN"
+- assertVisible: "₿ 0.00013643"
+- tapOn: "BTC"
+- assertVisible: "0.00013643 BTC"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "VTC"
+    direction: "DOWN"
+- assertVisible: "V 0.14"
+- tapOn: "VTC"
+- assertVisible: "0.1430639 VTC"
+- tapOn: "Wallets"
+
+- scrollUntilVisible:
+    element: "GRS"
+    direction: "DOWN"
+- assertVisible: "G 1.431"
+- tapOn: "GRS"
+- assertVisible: "1.43161025 GRS"
+- tapOn: "Wallets"
+- "scroll"
+
+- scrollUntilVisible:
+    element: "UFO"
+    direction: "DOWN"
+- assertVisible: "Ʉ 1,337"
+- tapOn: "UFO"
+- assertVisible: "1,337 UFO"
+- tapOn: "Wallets"
+
+
+
+
+
+
+
+
+
+
+
+
