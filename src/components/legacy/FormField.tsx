@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions, ViewStyle } from 'react-native'
+import { Dimensions } from 'react-native'
 import { TextField, TextFieldProps } from 'react-native-material-textfield'
 
 import { THEME } from '../../theme/variables/airbitz'
@@ -30,11 +30,11 @@ export class FormField extends React.Component<Props> {
   }
 }
 
-const containerStyle: ViewStyle = {
+const containerStyle = {
   position: 'relative',
   width: Dimensions.get('window').width / 1.52,
   height: 60
-}
+} as const
 
 export const MaterialInputOnWhite = {
   containerStyle,

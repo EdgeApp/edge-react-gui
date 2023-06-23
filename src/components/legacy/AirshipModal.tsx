@@ -34,7 +34,7 @@ export function AirshipModal<T>(props: Props<T>) {
       onCancel={onCancel}
       underlay={<BlurView blurType="dark" style={StyleSheet.absoluteFill} />}
     >
-      {typeof children === 'function' ? children({ bottom: 50, left: 0, right: 0, top: 0 }) : children}
+      {children}
     </RealAirshipModal>
   )
 }

@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
 
 interface Props {
-  // @ts-expect-error
-  indicatorStyles?: ViewPropTypes.style
+  indicatorStyles?: ViewStyle
   size?: 'large' | 'small'
 }
 
