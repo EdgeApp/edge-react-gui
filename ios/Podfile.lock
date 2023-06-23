@@ -1,7 +1,7 @@
 PODS:
   - _NIODataStructures (2.32.3)
   - boost (1.76.0)
-  - BugsnagReactNative (7.16.4):
+  - BugsnagReactNative (7.20.2):
     - React-Core
   - BVLinearGradient (2.5.6):
     - React
@@ -476,7 +476,7 @@ PODS:
   - react-native-tcp-socket (5.6.1):
     - CocoaAsyncSocket
     - React-Core
-  - react-native-webview (11.18.2):
+  - react-native-webview (13.2.2):
     - React-Core
   - react-native-zcash (0.3.3):
     - React
@@ -556,7 +556,7 @@ PODS:
     - React
   - RNCPicker (2.4.0):
     - React-Core
-  - RNDateTimePicker (6.1.3):
+  - RNDateTimePicker (7.2.0):
     - React-Core
   - RNDeviceInfo (8.7.1):
     - React-Core
@@ -593,7 +593,7 @@ PODS:
     - React
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (2.8.0):
+  - RNReanimated (2.17.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1101,7 +1101,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  BugsnagReactNative: b9f5f474d0a942cefc5d4811938a8a233666cb5e
+  BugsnagReactNative: bf6f4ebababa8536726b3014c7d3e4af8c53d488
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CGRPCZlib: b0c9d704a12fa667f1824ffff20688f191945989
   CNIOAtomics: 4dde57e1838a29a9b23ef91617505f34751cdbe5
@@ -1185,7 +1185,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
-  react-native-webview: 8ec7ddf9eb4ddcd92b32cee7907efec19a9ec7cb
+  react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   react-native-zcash: 173a2c8148aed6d7a5ec0867b19279dff938942e
   React-perflogger: d32ee13196f4ae2e4098fb7f8e7ed4f864c6fb0f
   React-RCTActionSheet: 81779c09e34a6a3d6b15783407ba9016a774f535
@@ -1204,7 +1204,7 @@ SPEC CHECKSUMS:
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
-  RNDateTimePicker: 04b805a3cb4d386e5e6aff54b47ace7bad706fda
+  RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFBAnalytics: fae7572493095e19d22498650c97507f988e627d
@@ -1218,7 +1218,7 @@ SPEC CHECKSUMS:
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751
+  RNReanimated: 953281675307b83d2c12ac4c39e6c3415d0ce248
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
