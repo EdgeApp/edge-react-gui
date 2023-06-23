@@ -1,5 +1,5 @@
 # Launches the app with a cleared cache, and waits for the Edge logo to appear.
-appId: co.edgesecure.app
+appId: ${MAESTRO_APP_ID}
 ---
 - launchApp
 - extendedWaitUntil:
