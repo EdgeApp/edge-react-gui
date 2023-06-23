@@ -16,6 +16,9 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
+- extendedWaitUntil:
+    visible: "FIRO"
+    timeout: 30000
 - tapOn: "FIRO"
 - assertVisible: "0.369074 FIRO"
 - tapOn: "Wallets"
