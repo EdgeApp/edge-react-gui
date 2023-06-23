@@ -13677,10 +13677,10 @@ react-native-piratechain@^0.3.2:
   dependencies:
     rfc4648 "^1.3.0"
 
-react-native-popup-menu@0.13.3:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
-  integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
+react-native-popup-menu@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.16.1.tgz#b1bb56be5c0838bbc2f532af7b1f554b7ceef566"
+  integrity sha512-xRS7mRh0exwu7Iw8PPVHdM11d13A/KzYjy0/fZx3zVtxISxPkNaDGayau6oa7HqO3Nj0oS9ulFCYjcQfG6vahA==
 
 react-native-reanimated@^2.8.0:
   version "2.8.0"
