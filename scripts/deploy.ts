@@ -3,12 +3,15 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
+const LATEST_TEST_FILE = 'latestTestFile.json'
 const argv = process.argv
 const mylog = console.log
 
 const _rootProjectDir = join(__dirname, '../')
+const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
 
 let _currentPath = __dirname
+const baseDir = join(_currentPath, '..')
 
 /**
  * Things we expect to be set in the config file:
@@ -41,6 +44,8 @@ interface BuildConfigFile {
   hockeyAppToken: string
   productName: string
   projectName: string
+  rsyncLocation?: string
+  testRepoUrl?: string
 }
 
 /**
@@ -69,6 +74,15 @@ interface BuildObj extends BuildConfigFile {
   dSymFile: string
   dSymZip: string
   ipaFile: string // Also APK
+}
+
+interface LatestTestFile {
+  platformType: string
+  branch: string
+  buildNum: string
+  version: string
+  filePath: string
+  gitHash: string
 }
 
 main()
@@ -164,7 +178,6 @@ function buildIos(buildObj: BuildObj) {
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
     process.env.MATCH_PASSWORD != null
   ) {
-    const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(_rootProjectDir, 'id_github')
     call(`security unlock-keychain -p '${process.env.KEYCHAIN_PASSWORD ?? ''}' "${process.env.HOME ?? ''}/Library/Keychains/login.keychain"`)
     call(`security set-keychain-settings -l ${process.env.HOME ?? ''}/Library/Keychains/login.keychain`)
 
@@ -231,8 +244,12 @@ function buildIos(buildObj: BuildObj) {
 
   buildObj.dSymFile = escapePath(`${buildDir}/${archiveDir}/dSYMs/${buildObj.productName}.app.dSYM`)
   // const appFile = sprintf('%s/%s/Products/Applications/%s.app', buildDir, archiveDir, buildObj.xcodeScheme)
-  buildObj.dSymZip = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.dSYM.zip`)
-  buildObj.ipaFile = escapePath(`${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}.ipa`)
+  buildObj.dSymZip = escapePath(
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.dSYM.zip`
+  )
+  buildObj.ipaFile = escapePath(
+    `${buildObj.tmpDir}/${buildObj.productNameClean}-${buildObj.repoBranch}-${buildObj.buildNum}-${buildObj.guiHash.slice(0, 8)}.ipa`
+  )
 
   if (fs.existsSync(buildObj.ipaFile)) {
     call('rm ' + buildObj.ipaFile)
