@@ -43,9 +43,13 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: string |
     // Sends the mutable state to React,
     // merging the two transaction lists together:
     function requestRender() {
+      const mergedTxs = txs.filter(tx => !changedTxs.has(tx.txid))
+      mergedTxs.push(...changedTxs.values())
+      mergedTxs.sort((a, b) => b.date - a.date)
+
       setOutput({
         atEnd,
-        transactions: txs.map(tx => changedTxs.get(tx.txid) ?? tx)
+        transactions: mergedTxs
       })
     }
     requestRender()
