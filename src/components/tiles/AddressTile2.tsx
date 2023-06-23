@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
 import { AppState, TouchableOpacity, View } from 'react-native'
@@ -10,10 +10,12 @@ import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
+import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
@@ -21,7 +23,7 @@ import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile'
 
@@ -30,7 +32,11 @@ export interface ChangeAddressResult {
   parsedUri?: EdgeParsedUri
 }
 
-interface OwnProps {
+export interface AddressTileRef {
+  onChangeAddress: (address: string) => Promise<void>
+}
+
+interface Props {
   coreWallet: EdgeCurrencyWallet
   currencyCode: string
   title: string
@@ -42,58 +48,50 @@ interface OwnProps {
   fioToAddress?: string
   navigation: NavigationBase
 }
-interface StateProps {
-  account: EdgeAccount
-  fioPlugin?: EdgeCurrencyConfig
-}
-interface State {
-  clipboard: string
-  loading: boolean
-}
-type Props = OwnProps & StateProps & ThemeProps
 
-export interface AddressTileRef {
-  onChangeAddress: (address: string) => Promise<void>
-}
+export const AddressTile2 = React.forwardRef((props: Props, ref: React.ForwardedRef<AddressTileRef>) => {
+  const {
+    coreWallet,
+    currencyCode, // Token currency code
+    fioToAddress,
+    isCameraOpen,
+    lockInputs,
+    navigation,
+    onChangeAddress,
+    recipientAddress,
+    resetSendTransaction,
+    title
+  } = props
 
-export class AddressTileComponent extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props)
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-    this.state = {
-      clipboard: '',
-      loading: false
-    }
-  }
+  // State:
+  const [clipboard, setClipboard] = React.useState('')
+  const [loading, setLoading] = React.useState(false)
 
-  componentDidMount(): void {
-    AppState.addEventListener('change', this.handleAppStateChange)
+  // Selectors:
+  const account = useSelector(state => state.core.account)
+  const fioPlugin = account.currencyConfig.fio
 
-    this._setClipboard()
-    if (this.props.isCameraOpen) {
-      this.handleScan()
-    }
-  }
+  const tokenId = getTokenId(account, coreWallet.currencyInfo.pluginId, currencyCode)
 
-  componentWillUnmount(): void {
-    AppState.removeEventListener('change', this.handleAppStateChange)
-  }
+  const { currencyWallets } = account
+  const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
+    if (walletId === coreWallet.id) return false
+    if (currencyWallets[walletId].type !== coreWallet.type) return false
+    if (tokenId == null) return true
+    return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
+  })
 
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.isCameraOpen && !prevProps.isCameraOpen) {
-      this.handleScan()
-    }
-  }
+  // ---------------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------------
 
-  handleAppStateChange = (appState: string) => {
-    if (appState === 'active') this._setClipboard()
-  }
-
-  onChangeAddress = async (address: string) => {
+  const changeAddress = useHandler(async (address: string) => {
     if (address == null || address === '') return
-    const { onChangeAddress, coreWallet, currencyCode, fioPlugin, navigation } = this.props
 
-    this.setState({ loading: true })
+    setLoading(true)
     let fioAddress
     if (fioPlugin) {
       try {
@@ -102,7 +100,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         address = publicAddress
       } catch (e: any) {
         if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-          this.setState({ loading: false })
+          setLoading(false)
           return showError(e)
         }
       }
@@ -123,7 +121,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
     try {
       const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } = await coreWallet.parseUri(address, currencyCode)
-      this.setState({ loading: false })
+      setLoading(false)
 
       // Check if the URI requires a warning to the user
       const approved = await addressWarnings(parsedUri, currencyCode)
@@ -132,7 +130,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
       // Check is PaymentProtocolUri
       if (!!parsedUri.paymentProtocolUrl && !parsedUri.publicAddress) {
-        await launchPaymentProto(navigation, this.props.account, parsedUri.paymentProtocolUrl, {
+        await launchPaymentProto(navigation, account, parsedUri.paymentProtocolUrl, {
           currencyCode,
           navigateReplace: true,
           wallet: coreWallet
@@ -155,42 +153,37 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
         if (ercTokenStandard === 'ERC20') {
           showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchPaymentProto(navigation, this.props.account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
+          await launchPaymentProto(navigation, account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
         }
       } else {
         showError(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
       }
 
-      this.setState({ loading: false })
+      setLoading(false)
     }
-  }
+  })
 
-  _setClipboard = async () => {
-    const { coreWallet, currencyCode } = this.props
-
+  const checkClipboard = useHandler(async () => {
     try {
-      this.setState({ loading: true })
+      setLoading(true)
       const uri = await Clipboard.getString()
 
       // Will throw in case uri is invalid
       await coreWallet.parseUri(uri, currencyCode)
-      this.setState({
-        clipboard: uri,
-        loading: false
-      })
+      setClipboard(uri)
+      setLoading(false)
     } catch (e: any) {
-      this.setState({ loading: false, clipboard: '' })
       // Failure is acceptable
+      setClipboard('')
+      setLoading(false)
     }
-  }
+  })
 
-  handlePasteFromClipboard = () => {
-    const { clipboard } = this.state
-    this.onChangeAddress(clipboard)
-  }
+  const handlePasteFromClipboard = useHandler(() => {
+    changeAddress(clipboard)
+  })
 
-  handleScan = () => {
-    const { currencyCode } = this.props
+  const handleScan = useHandler(() => {
     const title = sprintf(lstrings.send_scan_modal_text_modal_title_s, currencyCode)
     const message = sprintf(lstrings.send_scan_modal_text_modal_message_s, currencyCode)
     Airship.show<string | undefined>(bridge => (
@@ -204,31 +197,29 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     ))
       .then((result: string | undefined) => {
         if (result) {
-          this.onChangeAddress(result)
+          changeAddress(result)
         }
       })
       .catch(error => {
         showError(error)
       })
-  }
+  })
 
-  handleChangeAddress = async () => {
-    const { coreWallet, currencyCode } = this.props
+  const handleChangeAddress = useHandler(async () => {
     Airship.show<string | undefined>(bridge => (
       <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={lstrings.scan_address_modal_title} />
     ))
       .then(result => {
         if (result) {
-          this.onChangeAddress(result)
+          changeAddress(result)
         }
       })
       .catch(error => {
         showError(error)
       })
-  }
+  })
 
-  handleSelfTransfer = async () => {
-    const { account, coreWallet, navigation, currencyCode } = this.props
+  const handleSelfTransfer = useHandler(async () => {
     const { currencyWallets } = account
     const { pluginId } = coreWallet.currencyInfo
     const walletList = await Airship.show<WalletListResult>(bridge => (
@@ -247,72 +238,85 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     // Prefer segwit address if the selected wallet has one
     const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
     const address = segwitAddress != null ? segwitAddress : publicAddress
-    this.onChangeAddress(address)
-  }
+    changeAddress(address)
+  })
 
-  handleTilePress = () => {
-    const { lockInputs, recipientAddress } = this.props
+  const handleTilePress = useHandler(() => {
     if (!lockInputs && !!recipientAddress) {
-      this._setClipboard()
-      this.props.resetSendTransaction()
+      checkClipboard()
+      resetSendTransaction()
     }
-  }
+  })
 
-  render() {
-    const { fioToAddress, recipientAddress, lockInputs, theme, title, coreWallet, account } = this.props
-    const { pluginId, currencyCode } = coreWallet.currencyInfo
-    const { currencyWallets } = account
-    const { loading } = this.state
-    const styles = getStyles(theme)
-    const copyMessage = this.state.clipboard ? `${lstrings.string_paste}: ${this.state.clipboard}` : null
-    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
-    const tokenId: string | undefined = getTokenId(this.props.account, pluginId, currencyCode)
-    const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
-      if (walletId === coreWallet.id) return false
-      if (currencyWallets[walletId].type !== coreWallet.type) return false
-      if (tokenId == null) return true
-      return currencyWallets[walletId].enabledTokenIds.includes(tokenId)
+  // ---------------------------------------------------------------------------
+  // Side-Effects
+  // ---------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    const cleanup = AppState.addEventListener('change', appState => {
+      if (appState === 'active') checkClipboard()
     })
-    return (
-      <View>
-        <Tile type={tileType} title={title} onPress={this.handleTilePress}>
-          {!recipientAddress && (
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
-                <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+    checkClipboard()
+
+    return () => cleanup.remove()
+  }, [checkClipboard])
+
+  useMount(() => {
+    if (isCameraOpen) handleScan()
+  })
+
+  React.useImperativeHandle(ref, () => ({
+    async onChangeAddress(address: string) {
+      changeAddress(address)
+    }
+  }))
+
+  // ---------------------------------------------------------------------------
+  // Rendering
+  // ---------------------------------------------------------------------------
+
+  const copyMessage = clipboard !== '' ? `${lstrings.string_paste}: ${clipboard}` : null
+  const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
+
+  return (
+    <View>
+      <Tile type={tileType} title={title} onPress={handleTilePress}>
+        {!recipientAddress && (
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
+              <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
+              <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+            </TouchableOpacity>
+            {canSelfTransfer ? (
+              <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
+                <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
               </TouchableOpacity>
-              {canSelfTransfer ? (
-                <TouchableOpacity style={styles.buttonContainer} onPress={this.handleSelfTransfer}>
-                  <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
-                </TouchableOpacity>
-              ) : null}
-              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan}>
-                <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
+            ) : null}
+            <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
+              <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
+              <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
+            </TouchableOpacity>
+            {copyMessage ? (
+              <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+                <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
               </TouchableOpacity>
-              {copyMessage ? (
-                <TouchableOpacity style={styles.buttonContainer} onPress={this.handlePasteFromClipboard}>
-                  <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-                </TouchableOpacity>
-              ) : null}
-            </View>
-          )}
-          {recipientAddress == null || recipientAddress === '' ? null : (
-            <>
-              {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-              <EdgeText numberOfLines={3} disableFontScaling>
-                {recipientAddress}
-              </EdgeText>
-            </>
-          )}
-        </Tile>
-      </View>
-    )
-  }
-}
+            ) : null}
+          </View>
+        )}
+        {recipientAddress == null || recipientAddress === '' ? null : (
+          <>
+            {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+            <EdgeText numberOfLines={3} disableFontScaling>
+              {recipientAddress}
+            </EdgeText>
+          </>
+        )}
+      </Tile>
+    </View>
+  )
+})
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: {
@@ -331,11 +335,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.textLink
   }
 }))
-
-export const AddressTile2 = connect<StateProps, {}, OwnProps>(
-  state => ({
-    account: state.core.account,
-    fioPlugin: state.core.account.currencyConfig.fio
-  }),
-  dispatch => ({})
-)(withTheme(AddressTileComponent))
