@@ -4,6 +4,6 @@ appId: co.edgesecure.app
 - launchApp:
     clearState: true
 - extendedWaitUntil:
-    visible: 'Edge Logo'
+    visible: 'Welcome to\nFinancial Freedom'
     timeout: 30000
 - assertNotVisible: 'Oops!'
