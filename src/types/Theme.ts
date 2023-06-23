@@ -348,8 +348,10 @@ export interface Theme {
   outlineTextInputTextColor: string
   outlineTextInputBorderWidth: number
   outlineTextInputBorderColor: string
+  outlineTextInputBorderColorDisabled: string
   outlineTextInputBorderColorFocused: string
   outlineTextInputLabelColor: string
+  outlineTextInputLabelColorDisabled: string
   outlineTextInputLabelColorFocused: string
 
   // Animation

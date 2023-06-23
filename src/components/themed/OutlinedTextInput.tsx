@@ -51,6 +51,9 @@ export interface OutlinedTextInputProps {
 
   // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
   blurOnClear?: boolean // Defaults to 'false'
+
+  // Whether the text input is disabled. If 'true', the component will be grayed out.
+  disabled?: boolean // Defaults to 'false'
 }
 
 /**
@@ -93,6 +96,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     // TextInput:
     autoFocus = !searchIcon,
     blurOnClear = searchIcon,
+    disabled = false,
     maxLength,
     secureTextEntry,
     ...inputProps
@@ -120,7 +124,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     if (onClear != null) onClear()
   }
   function focus(): void {
-    if (inputRef.current != null) inputRef.current.focus()
+    if (inputRef.current != null && !disabled) inputRef.current.focus()
   }
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
@@ -140,6 +144,12 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const [counterWidth, setCounterWidth] = React.useState(0)
   // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
+
+  // Animates between 0 and 1 based our disabled state:
+  const disabledAnimation = useSharedValue(0)
+  React.useEffect(() => {
+    disabledAnimation.value = withTiming(disabled ? 1 : 0)
+  }, [disabledAnimation, disabled])
 
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
@@ -219,39 +229,51 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
 
   // Animated styles:
   const getBorderColor = React.useMemo(
-    () => getIterpolatedColor(theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused, theme.dangerText),
+    () =>
+      getIterpolatedColor(
+        theme.outlineTextInputBorderColor,
+        theme.outlineTextInputBorderColorFocused,
+        theme.dangerText,
+        theme.outlineTextInputBorderColorDisabled
+      ),
     [theme]
   )
 
   const getLabelColor = React.useMemo(
-    () => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText),
+    () =>
+      getIterpolatedColor(
+        theme.outlineTextInputLabelColor,
+        theme.outlineTextInputLabelColorFocused,
+        theme.dangerText,
+        theme.outlineTextInputLabelColorDisabled
+      ),
     [theme]
   )
 
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       right: maxLength !== undefined ? counterRight + counterProgress * (2 * counterPadding + counterWidth) : cornerPadding
     }
   })
   const leftStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const rightStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const topStyle = useAnimatedStyle(() => {
     const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getLabelColor(errorAnimation.value, focusAnimation.value),
+      color: getLabelColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
@@ -271,7 +293,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     opacity: errorAnimation.value
   }))
   const showPasswordLineStyle = useAnimatedStyle(() => ({
-    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
     transform: [
       { rotateZ: '45deg' },
       {
@@ -331,6 +353,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
               <NumericInput
                 ref={inputRef}
                 {...inputProps}
+                accessibilityState={{ disabled }}
                 minDecimals={minDecimals}
                 maxDecimals={maxDecimals}
                 autoFocus={autoFocus}
@@ -351,6 +374,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
               <TextInput
                 ref={inputRef}
                 {...inputProps}
+                accessibilityState={{ disabled }}
                 autoFocus={autoFocus}
                 multiline={multiline}
                 editable={!showSpinner}
@@ -584,12 +608,13 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-type ColorInterpolator = (errorValue: number, focusValue: number) => string
+type ColorInterpolator = (errorValue: number, focusValue: number, disabledValue: number) => string
 
-function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string): ColorInterpolator {
-  return (errorValue, focusValue) => {
+function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string, disabledColor: string): ColorInterpolator {
+  return (errorValue, focusValue, disabledValue) => {
     'worklet'
     const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
-    return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+    const interErrorColor = interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+    return interpolateColor(disabledValue, [0, 1], [interErrorColor, disabledColor])
   }
 }
