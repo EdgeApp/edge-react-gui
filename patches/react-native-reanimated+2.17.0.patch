@@ -1,0 +1,21 @@
+diff --git a/node_modules/react-native-reanimated/react-native-reanimated.d.ts b/node_modules/react-native-reanimated/react-native-reanimated.d.ts
+index c33d830..75f094f 100644
+--- a/node_modules/react-native-reanimated/react-native-reanimated.d.ts
++++ b/node_modules/react-native-reanimated/react-native-reanimated.d.ts
+@@ -129,6 +129,7 @@ declare module 'react-native-reanimated' {
+     export type TransformStyleTypes = TransformsStyle['transform'] extends
+       | readonly (infer T)[]
+       | undefined
++      | string
+       ? T
+       : never;
+     export type AdaptTransforms<T> = {
+@@ -138,7 +139,7 @@ declare module 'react-native-reanimated' {
+ 
+     export type AnimateStyle<S> = {
+       [K in keyof S]: K extends 'transform'
+-        ? AnimatedTransform
++        ? AnimatedTransform | string
+         : S[K] extends ReadonlyArray<any>
+         ? ReadonlyArray<AnimateStyle<S[K][0]>>
+         : S[K] extends object
