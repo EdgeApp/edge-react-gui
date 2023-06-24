@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, Switch, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { TextField } from 'react-native-material-textfield'
 
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
@@ -10,10 +9,12 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { SpendingLimits } from '../../types/types'
+import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
 import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface OwnProps extends EdgeSceneProps<'spendingLimits'> {}
 
@@ -31,7 +32,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   password: string
-  transactionAmount: number
+  transactionAmount: string
   transactionIsEnabled: boolean
 }
 
@@ -40,25 +41,19 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
     super(props)
     this.state = {
       password: '',
-      transactionAmount: props.transactionSpendingLimit.amount,
+      transactionAmount: !zeroString(props.transactionSpendingLimit.amount.toString()) ? props.transactionSpendingLimit.amount.toString() : '',
       transactionIsEnabled: props.transactionSpendingLimit.isEnabled
     }
   }
 
   render() {
     const { currencySymbol } = this.props
-    const { transactionAmount, transactionIsEnabled } = this.state
+    const { transactionAmount, transactionIsEnabled, password } = this.state
 
     return (
       <SceneWrapper background="legacy" hasHeader>
         <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
-          <TextField
-            baseColor={THEME.COLORS.GRAY_2}
-            tintColor={THEME.COLORS.GRAY_2}
-            secureTextEntry
-            label={lstrings.enter_your_password}
-            onChangeText={this.onPasswordChanged}
-          />
+          <OutlinedTextInput secureTextEntry autoFocus label={lstrings.enter_your_password} value={password} onChangeText={this.onPasswordChanged} />
 
           <View style={styles.switchRow}>
             <View style={styles.textBlock}>
@@ -68,17 +63,15 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} accessibilityHint={lstrings.toggle_button_hint} />
           </View>
 
-          <TextField
-            tintColor={THEME.COLORS.SECONDARY}
-            baseColor={THEME.COLORS.SECONDARY}
+          <OutlinedTextInput
             disabled={!transactionIsEnabled}
-            value={transactionAmount.toString()}
+            value={transactionAmount}
             onChangeText={this.onTransactionAmountChanged}
-            containerStyle={[{ flex: 1 }]}
             label={lstrings.spending_limits_tx_title}
-            suffix={currencySymbol}
             autoCorrect={false}
+            autoFocus={false}
             keyboardType="numeric"
+            prefix={currencySymbol}
           />
 
           <View style={styles.spacer} />
@@ -96,7 +89,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
   }
 
   onTransactionAmountChanged = (transactionAmount: string) => {
-    this.setState({ transactionAmount: parseFloat(transactionAmount) || 0 })
+    this.setState({ transactionAmount })
   }
 
   onPasswordChanged = (password: string) => {
@@ -112,7 +105,6 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
       {
         transaction: {
           isEnabled: transactionIsEnabled,
-          // @ts-expect-error
           amount: parseFloat(transactionAmount)
         }
       },

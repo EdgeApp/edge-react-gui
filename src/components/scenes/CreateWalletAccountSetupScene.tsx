@@ -1,6 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions'
@@ -19,9 +19,7 @@ import { debounce } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
-import { FormField, MaterialInputOnWhite } from '../legacy/FormField'
-
-const deviceWidth = Dimensions.get('window').width
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface OwnProps extends EdgeSceneProps<'createWalletAccountSetup'> {}
 
@@ -129,14 +127,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <FormField
-                {...MaterialInputOnWhite}
-                containerStyle={{
-                  ...MaterialInputOnWhite.containerStyle,
-                  marginTop: scale(16),
-                  marginBottom: scale(24),
-                  width: deviceWidth - scale(25) - scale(40) // substract padding and validation icon
-                }}
+              <OutlinedTextInput
                 autoFocus
                 autoCorrect={false}
                 onChangeText={this.handleChangeHandle}

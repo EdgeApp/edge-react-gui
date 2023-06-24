@@ -8,9 +8,9 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { EdgeTextField } from '../themed/EdgeTextField'
 import { MainButton } from '../themed/MainButton'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface OwnProps {
@@ -90,7 +90,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
           <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
         </ScrollView>
-        <EdgeTextField
+        <OutlinedTextInput
           secureTextEntry
           error={errorMessage}
           label={lstrings.password}

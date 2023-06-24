@@ -13,7 +13,7 @@ import { Category, displayCategories, formatCategory, joinCategory, splitCategor
 import { scale } from '../../util/scaling'
 import { AirshipModal } from '../legacy/AirshipModal'
 import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
-import { FormField, MaterialInputOnWhite } from '../legacy/FormField'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -135,19 +135,11 @@ export function CategoryModal(props: Props) {
             </View>
           </View>
           <View style={styles.inputSubCategoryContainter}>
-            <FormField
-              {...MaterialInputOnWhite}
-              containerStyle={{
-                ...MaterialInputOnWhite.containerStyle,
-                height: THEME.rem(3.44),
-                width: '100%'
-              }}
+            <OutlinedTextInput
               autoFocus
               returnKeyType="done"
               autoCapitalize="none"
               label={lstrings.transaction_details_choose_a_sub_category}
-              fontSize={THEME.rem(0.9)}
-              labelFontSize={THEME.rem(0.65)}
               onChangeText={setSubcategory}
               onSubmitEditing={handleSubmit}
               value={subcategory}

@@ -3899,14 +3899,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-native-custom-tabs/-/react-native-custom-tabs-0.1.2.tgz#725e2f01721f304890c54cd1814e8d8f4ccaf129"
   integrity sha512-GWPd/r6voEIZb7va+3rsLxeT8j9GpUUM8FPBcBJ5RXM+kmJneFz05GANQiD+si+E4MztWmeUemCUxMeEsaYktQ==
 
-"@types/react-native-material-textfield@^0.16.5":
-  version "0.16.5"
-  resolved "https://registry.yarnpkg.com/@types/react-native-material-textfield/-/react-native-material-textfield-0.16.5.tgz#fe91ef6339c282668f6eae24ca09a69f0a974974"
-  integrity sha512-QS3QzYiIE8DcaMp0ZALI3CQYsSn2mC8jjJAcbDleDfMeQ3+CD49kRpvKRKrgBkq7n4eRTZ2/KvaEKvb12sJ7Iw==
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
-
 "@types/react-native-safari-view@^2.0.5":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@types/react-native-safari-view/-/react-native-safari-view-2.0.5.tgz#447cf6b48dc9431d71f6b758479ca87df3fa2ab7"
@@ -13320,7 +13312,7 @@ prompts@^2.0.1, prompts@^2.4.0, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@15.8.1, prop-types@^15.5.9, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@15.8.1, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -13754,13 +13746,6 @@ react-native-mail@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
-
-react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
-  integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
-  dependencies:
-    prop-types "^15.5.9"
 
 react-native-mymonero-core@^0.3.1:
   version "0.3.1"
