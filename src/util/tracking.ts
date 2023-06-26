@@ -57,7 +57,9 @@ export interface TrackingValues {
 // Set up the global Firebase instance at boot:
 if (ENV.USE_FIREBASE) {
   const inner = analytics()
-  inner.setUserId(getUniqueId())
+  // We require a conditional accessor operator because Jest tests will fail
+  // with an error at runtime.
+  inner.setUserId(getUniqueId())?.catch(err => console.error(err))
   // @ts-expect-error
   global.firebase = {
     analytics() {
@@ -145,7 +147,7 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
-  fetchReferral(`api/v1/event`, {
+  await fetchReferral(`api/v1/event`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
