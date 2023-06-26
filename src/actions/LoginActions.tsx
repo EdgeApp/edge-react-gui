@@ -196,7 +196,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const localSettings = { ...loadedLocalSettings }
       const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
       if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
-        setLocalSettings(account, syncedSettings)
+        await setLocalSettings(account, syncedSettings)
       }
       accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
 
@@ -230,8 +230,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         data: { ...accountInitObject }
       })
 
-      dispatch(refreshAccountReferral())
-      dispatch(expiredFioNamesCheckDates(navigation))
+      await dispatch(refreshAccountReferral())
+      await dispatch(expiredFioNamesCheckDates(navigation))
       await updateWalletsRequest()(dispatch, getState)
     } catch (error: any) {
       showError(error)
