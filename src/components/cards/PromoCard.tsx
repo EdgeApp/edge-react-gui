@@ -36,7 +36,7 @@ export function PromoCard(props: Props) {
 
   const handleClose = useHandler(() => {
     if (messageSummary != null) {
-      dispatch(hideMessageTweak(messageSummary.messageId, messageSummary.messageSource))
+      dispatch(hideMessageTweak(messageSummary.messageId, messageSummary.messageSource)).catch(err => showError(err))
     }
   })
 

@@ -131,7 +131,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     case 'promotion': {
       if (!state.account.accountReferralLoaded) return false
       const { installerId = '' } = link
-      dispatch(activatePromotion(installerId))
+      await dispatch(activatePromotion(installerId))
       return true
     }
 
