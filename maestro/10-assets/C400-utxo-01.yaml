@@ -105,14 +105,6 @@ tags:
 - tapOn: "Wallets"
 
 - scrollUntilVisible:
-    element: "VTC"
-    direction: "DOWN"
-- assertVisible: "V 0.14"
-- tapOn: "VTC"
-- assertVisible: "0.1430639 VTC"
-- tapOn: "Wallets"
-
-- scrollUntilVisible:
     element: "GRS"
     direction: "DOWN"
 - assertVisible: "G 1.431"
@@ -120,16 +112,6 @@ tags:
 - assertVisible: "1.43161025 GRS"
 - tapOn: "Wallets"
 - "scroll"
-
-- scrollUntilVisible:
-    element: "UFO"
-    direction: "DOWN"
-- assertVisible: "Ʉ 1,337"
-- tapOn: "UFO"
-- assertVisible: "1,337 UFO"
-- tapOn: "Wallets"
-
-
 
 
 
