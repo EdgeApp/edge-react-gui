@@ -89,7 +89,7 @@ export function AccountCallbackManager(props: Props) {
 
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
-        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs))
+        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => console.warn(err))
 
         // Show the dropdown for the first transaction:
         const [firstReceive] = receivedTxs

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
@@ -18,11 +18,11 @@ import {
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { FioDomain, FioObtRecord } from '../types/types'
+import { snooze } from '../util/utils'
 
 const EXPIRE_CHECK_TIMEOUT = 30000
 const INIT_EXPIRE_CHECK_TIMEOUT = 5000
 const MAX_OBT_DATA_CHECKS = 15
-let checkFioObtDataCounter = 0
 
 export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
   const wallets: EdgeCurrencyWallet[] = []
@@ -55,16 +55,20 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
 
 export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTransaction[]): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
-    if (checkFioObtDataCounter > MAX_OBT_DATA_CHECKS) return // to prevent loop if account does not have fio wallets
     const state = getState()
-    const { account } = state.core
-    const fioWallets = state.ui.wallets.fioWallets
-    if (account == null || account.currencyConfig == null || fioWallets.length === 0) {
-      checkFioObtDataCounter++
-      return setTimeout(() => {
-        dispatch(checkFioObtData(wallet, transactions))
-      }, 400)
+    let account: EdgeAccount
+    let fioWallets: EdgeCurrencyWallet[]
+
+    // Loop until the account and wallets appear (the app may not have loaded them yet):
+    let loopCount = 0
+    while (true) {
+      account = state.core.account
+      fioWallets = state.ui.wallets.fioWallets
+      if (account != null && account.currencyConfig != null && fioWallets.length > 0) break
+      if (loopCount++ > MAX_OBT_DATA_CHECKS) return
+      await snooze(400)
     }
+
     try {
       const fioPlugin = account.currencyConfig.fio
 
@@ -75,10 +79,10 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         try {
           const { name } = edgeMetadata
           if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
-            addToFioAddressCache(state.core.account, [name])
+            await addToFioAddressCache(state.core.account, [name])
           }
-        } catch (e: any) {
-          //
+        } catch (err: any) {
+          console.warn(err)
         }
         const obtForTx: FioObtRecord | undefined = obtDataRecords.find(obtRecord => obtRecord.content.obt_id === transaction.txid)
         if (obtForTx == null) return
@@ -89,16 +93,16 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
         edgeMetadata.name = obtForTx.payer_fio_address
 
-        addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
+        await addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
 
         try {
           await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
-        } catch (e: any) {
-          console.log(e.message)
+        } catch (err: any) {
+          console.warn(err)
         }
       }
-    } catch (e: any) {
-      console.log(e)
+    } catch (err: any) {
+      console.warn(err)
     }
   }
 }
@@ -144,7 +148,7 @@ function refreshNamesToCheckExpired(navigation: NavigationBase): ThunkAction<Pro
 
     if (namesToCheck.length !== 0) {
       dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-      dispatch(checkExpiredFioDomains(navigation, namesToCheck, fioWalletsById))
+      await dispatch(checkExpiredFioDomains(navigation, namesToCheck, fioWalletsById))
     }
 
     return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
@@ -172,7 +176,7 @@ export function checkExpiredFioDomains(
       dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: expiredLastChecks })
       // @ts-expect-error
       dispatch({ type: 'FIO/EXPIRED_REMINDER_SHOWN', data: true })
-      setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
+      await setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
     }
 
     const walletsCheckedForExpired = { ...state.ui.fio.walletsCheckedForExpired }
