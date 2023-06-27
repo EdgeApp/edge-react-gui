@@ -14,13 +14,13 @@ export function trackConversion(
     pluginId: string
     orderId?: string
   }
-): ThunkAction<Promise<unknown>> {
-  return async (dispatch, getState) => {
+): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
     const { currencyCode, exchangeAmount, pluginId, orderId } = opts
 
     // Look up the dollar value:
-    const dollarValue: number = parseFloat(await convertCurrency(state, currencyCode, 'iso:USD', String(exchangeAmount)))
+    const dollarValue: number = parseFloat(convertCurrency(state, currencyCode, 'iso:USD', String(exchangeAmount)))
 
     // Record the event:
     const { accountReferral } = state.account

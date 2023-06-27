@@ -84,7 +84,7 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
             wallet={currencyWallets[fromWalletId]}
             onSwap={() => {
               dispatch({ type: 'SHIFT_COMPLETE' })
-              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to'))
+              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to')).catch(err => showError(err))
             }}
           />
         ))
@@ -321,7 +321,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwa
       dispatch({ type: 'SHIFT_COMPLETE' })
       onApprove()
 
-      updateSwapCount(state)
+      await updateSwapCount(state)
 
       const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
       dispatch(
