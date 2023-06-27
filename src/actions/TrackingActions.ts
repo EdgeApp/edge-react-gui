@@ -24,7 +24,7 @@ export function trackConversion(
 
     // Record the event:
     const { accountReferral } = state.account
-    return await logEvent(event, {
+    return logEvent(event, {
       dollarValue,
       pluginId,
       orderId,
@@ -37,13 +37,13 @@ export function trackConversion(
  * Tracks an event tied to a particular account's affiliate information,
  * such as creating the initial wallets.
  */
-export function trackAccountEvent(event: TrackingEventName, trackingValues: TrackingValues = {}): ThunkAction<Promise<unknown>> {
-  return async (dispatch, getState) => {
+export function trackAccountEvent(event: TrackingEventName, trackingValues: TrackingValues = {}): ThunkAction<void> {
+  return (dispatch, getState) => {
     const state = getState()
 
     // Record the event:
     const { accountReferral } = state.account
-    return await logEvent(event, {
+    logEvent(event, {
       ...trackingValues,
       ...makeTrackingValues(accountReferral)
     })
