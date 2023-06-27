@@ -66,7 +66,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     this.listener = AppState.addEventListener('change', this.handleAppStateChange)
 
-    this._setClipboard(this.props)
+    this._setClipboard().catch(err => showError(err))
     this.props.addressTileRef(this)
     if (this.props.isCameraOpen) {
       this.handleScan()
@@ -86,7 +86,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleAppStateChange = (appState: string) => {
-    if (appState === 'active') this._setClipboard(this.props)
+    if (appState === 'active') this._setClipboard().catch(err => showError(err))
   }
 
   onChangeAddress = async (address: string) => {
@@ -146,8 +146,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
-    } catch (e: any) {
+      await onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
+    } catch (err: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
       const parsedLink = { ...parseDeepLink(address) }
@@ -165,9 +165,8 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  // @ts-expect-error
-  _setClipboard = async props => {
-    const { coreWallet, currencyCode } = props
+  _setClipboard = async () => {
+    const { coreWallet, currencyCode } = this.props
 
     try {
       this.setState({ loading: true })
@@ -188,7 +187,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handlePasteFromClipboard = () => {
     const { clipboard } = this.state
-    this.onChangeAddress(clipboard)
+    this.onChangeAddress(clipboard).catch(err => showError(err))
   }
 
   handleScan = () => {
@@ -206,7 +205,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     ))
       .then((result: string | undefined) => {
         if (result) {
-          this.onChangeAddress(result)
+          return this.onChangeAddress(result)
         }
       })
       .catch(error => {
@@ -221,7 +220,7 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
     ))
       .then(result => {
         if (result) {
-          this.onChangeAddress(result)
+          return this.onChangeAddress(result)
         }
       })
       .catch(error => {
@@ -232,8 +231,11 @@ export class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this._setClipboard(this.props)
-      this.props.resetSendTransaction()
+      this._setClipboard()
+        .then(() => {
+          this.props.resetSendTransaction()
+        })
+        .catch(err => showError(err))
     }
   }
 
