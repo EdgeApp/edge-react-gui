@@ -113,7 +113,7 @@ import { WalletListScene as WalletListSceneComponent } from './scenes/WalletList
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
-import { Airship } from './services/AirshipInstance'
+import { Airship, showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
@@ -262,9 +262,11 @@ const EdgeApp = () => {
       return true
     }
     backPressedOnce.current = true
-    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
-      backPressedOnce.current = false
-    })
+    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
+      .then(() => {
+        backPressedOnce.current = false
+      })
+      .catch(err => showError(err))
     // Timeout the back press after 3 seconds so the state isn't "sticky"
     setTimeout(() => {
       backPressedOnce.current = false
@@ -277,7 +279,7 @@ const EdgeApp = () => {
     dispatch({ type: 'IS_LOGGED_IN' })
   })
   useUnmount(() => {
-    dispatch(logout())
+    dispatch(logout()).catch(err => showError(err))
   })
 
   return (
@@ -685,7 +687,9 @@ const EdgeAppStack = () => {
           title: lstrings.title_settings
         }}
         listeners={{
-          focus: async () => await dispatch(showReEnableOtpModal())
+          focus: () => {
+            dispatch(showReEnableOtpModal()).catch(err => showError(err))
+          }
         }}
       />
       <Stack.Screen
