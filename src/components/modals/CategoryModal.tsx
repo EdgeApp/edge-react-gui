@@ -1,19 +1,22 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { THEME } from '../../theme/variables/airbitz'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { scale } from '../../util/scaling'
-import { AirshipModal } from '../legacy/AirshipModal'
-import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
+import { MinimalButton } from '../buttons/MinimalButton'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { DividerLine } from '../themed/DividerLine'
+import { EdgeText } from '../themed/EdgeText'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -34,6 +37,8 @@ interface CategoryRow {
 export function CategoryModal(props: Props) {
   const { bridge, initialCategory } = props
   const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyle(theme)
 
   // We split the state into category and subcategory internally:
   const split = splitCategory(initialCategory)
@@ -103,126 +108,74 @@ export function CategoryModal(props: Props) {
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => bridge.resolve(item.raw)}>
-      <View style={styles.rowContent}>
-        <View style={styles.rowCategoryTextWrap}>
-          <FormattedText style={styles.rowCategoryText}>{item.display}</FormattedText>
-        </View>
-        {item.new ? (
-          <View style={styles.rowPlusWrap}>
-            <FormattedText style={styles.rowPlus}>+</FormattedText>
+    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={() => bridge.resolve(item.raw)}>
+      <>
+        <View style={styles.rowContent}>
+          <View style={styles.rowCategoryTextWrap}>
+            <EdgeText style={styles.rowCategoryText}>{item.display}</EdgeText>
           </View>
-        ) : null}
-      </View>
+          {item.new ? (
+            <View style={styles.rowPlusWrap}>
+              <EdgeText style={styles.rowPlus}>+</EdgeText>
+            </View>
+          ) : null}
+        </View>
+        <DividerLine marginRem={[0, 0]} />
+      </>
     </TouchableHighlight>
   ))
 
   return (
-    <AirshipModal bridge={bridge} onCancel={handleCancel}>
-      <TouchableWithoutFeedback onPress={handleCancel}>
-        <View style={styles.airshipContainer}>
-          <FormattedText style={styles.airshipHeader}>{lstrings.transaction_details_category_title}</FormattedText>
-          <View style={styles.inputCategoryMainContainter}>
-            <FormattedText style={styles.inputCategoryListHeader}>{lstrings.tx_detail_picker_title}</FormattedText>
-            <View style={styles.inputCategoryRow}>
-              {categoryOrder.map(item => (
-                <TouchableWithoutFeedback onPress={() => setCategory(item)} key={item}>
-                  <View style={category === item ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter}>
-                    <FormattedText style={styles.inputCategoryText}>{displayCategories[item]}</FormattedText>
-                  </View>
-                </TouchableWithoutFeedback>
-              ))}
-            </View>
-          </View>
-          <View style={styles.inputSubCategoryContainter}>
-            <OutlinedTextInput
-              autoFocus
-              returnKeyType="done"
-              autoCapitalize="none"
-              label={lstrings.transaction_details_choose_a_sub_category}
-              onChangeText={setSubcategory}
-              onSubmitEditing={handleSubmit}
-              value={subcategory}
-            />
-          </View>
-          <FlashList
-            data={sortedCategories}
-            estimatedItemSize={THEME.rem(3)}
-            keyboardShouldPersistTaps="handled"
-            keyExtractor={keyExtractor}
-            renderItem={renderRow}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    </AirshipModal>
+    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+      <ModalTitle center>{lstrings.category_modal_title}</ModalTitle>
+      <View style={styles.inputCategoryRow}>
+        {categoryOrder.map(item => (
+          <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
+        ))}
+      </View>
+      <OutlinedTextInput
+        autoFocus
+        returnKeyType="done"
+        autoCapitalize="none"
+        label={lstrings.sub_category_label}
+        onChangeText={setSubcategory}
+        onSubmitEditing={handleSubmit}
+        value={subcategory}
+      />
+      <FlashList
+        contentContainerStyle={styles.scrollPadding}
+        data={sortedCategories}
+        estimatedItemSize={theme.rem(3)}
+        keyboardShouldPersistTaps="handled"
+        keyExtractor={keyExtractor}
+        renderItem={renderRow}
+      />
+      <ModalFooter onPress={handleCancel} fadeOut />
+    </ThemedModal>
   )
 }
 
 // This is the order we display the categories in:
 const categoryOrder: Category[] = ['income', 'expense', 'transfer', 'exchange']
 
-const styles = StyleSheet.create({
-  airshipContainer: {
-    flex: 1,
-    padding: THEME.rem(0.8)
-  },
-  airshipHeader: {
-    fontSize: THEME.rem(1.2),
-    marginBottom: THEME.rem(1),
-    alignSelf: 'center'
-  },
-  inputCategoryListHeader: {
-    fontSize: THEME.rem(0.7),
-    marginBottom: THEME.rem(0.3),
-    color: THEME.COLORS.SECONDARY
-  },
+const getStyle = cacheStyles((theme: Theme) => ({
   inputCategoryRow: {
     flexDirection: 'row',
-    alignItems: 'center'
-  },
-  inputCategoryContainter: {
-    paddingHorizontal: THEME.rem(0.5),
-    paddingVertical: THEME.rem(0.2),
-    marginRight: THEME.rem(0.6),
-    borderWidth: 1,
-    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
-    borderRadius: 3
-  },
-  inputCategoryContainterSelected: {
-    paddingHorizontal: THEME.rem(0.5),
-    paddingVertical: THEME.rem(0.2),
-    marginRight: THEME.rem(0.6),
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
-    backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY
-  },
-  inputCategoryText: {
-    color: THEME.COLORS.SECONDARY,
-    fontSize: THEME.rem(0.9)
-  },
-  inputCategoryMainContainter: {
-    marginBottom: THEME.rem(0.8)
-  },
-  inputSubCategoryContainter: {
-    marginTop: THEME.rem(0.8),
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    borderBottomWidth: 1
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: theme.rem(1),
+    marginBottom: theme.rem(1)
   },
   rowContainer: {
     flex: 1,
-    height: THEME.rem(3.1),
-    paddingLeft: THEME.rem(0.6),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: THEME.COLORS.WHITE,
-    borderBottomWidth: 1,
-    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_4
+    height: theme.rem(3.1),
+    paddingLeft: theme.rem(0.6)
   },
   rowContent: {
     flex: 1,
     flexDirection: 'row',
-    paddingRight: scale(20)
+    paddingRight: scale(20),
+    justifyContent: 'space-between'
   },
   rowCategoryTextWrap: {
     flex: 1,
@@ -230,14 +183,15 @@ const styles = StyleSheet.create({
     marginRight: scale(5)
   },
   rowCategoryText: {
-    color: THEME.COLORS.SECONDARY,
-    fontSize: THEME.rem(0.95)
+    fontSize: theme.rem(0.95)
   },
   rowPlusWrap: {
     justifyContent: 'center'
   },
   rowPlus: {
-    color: THEME.COLORS.SECONDARY,
-    fontSize: THEME.rem(0.95)
+    fontSize: theme.rem(0.95)
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   }
-})
+}))
