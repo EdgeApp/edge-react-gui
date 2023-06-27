@@ -25,10 +25,10 @@ const runMaestro = async (options: CLIOptions, env?: { [key: string]: string }):
   const group = test ?? maestroDir
 
   const dev = device == null ? '' : `--device ${device} `
-  const inc = includeTags == null ? '' : `--include-tags ${includeTags} `
-  const exc = excludeTags == null ? '' : `--exclude-tags ${includeTags} `
+  const inc = includeTags == null ? '' : `--include-tags=${includeTags} `
+  const exc = excludeTags == null ? '' : `--exclude-tags=${excludeTags} `
 
-  const cmd = `maestro --no-ansi ${dev}${inc}${exc}test ${group}`
+  const cmd = `maestro --no-ansi ${dev}test ${inc}${exc}${group}`
   if (!dryRun) {
     info(cmd)
     const execSyncOpts: ExecSyncOptions = { cwd, stdio: 'inherit', env: { ...process.env, ...env } }
