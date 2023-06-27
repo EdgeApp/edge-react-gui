@@ -1,12 +1,13 @@
 # Priority: Critical
-# Test ID: C310
-# Title: Launch Edge without crashing
+# Test ID: C184035
+# Title: UTXO Assets balances load and show correctly
 # Expected Result:
-#   1. User is able to open Edge without crashing
+#   1. User is able to login and see correct balances for UTXO related assets
 
 appId: ${MAESTRO_APP_ID}
 tags:
 - android
+- C184035
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
