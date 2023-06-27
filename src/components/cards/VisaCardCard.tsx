@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Card } from './Card'
@@ -35,7 +36,7 @@ export const VisaCardCard = (props: Props) => {
 
   const handlePress = useHandler(() => {
     logEvent('Visa_Card_Launch')
-    dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
+    dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
   })
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
