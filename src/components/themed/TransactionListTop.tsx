@@ -29,7 +29,7 @@ import { VisaCardCard } from '../cards/VisaCardCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showWarning } from '../services/AirshipInstance'
+import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
@@ -93,33 +93,32 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
-      this.updatePluginsAndPolicies()
+      this.updatePluginsAndPolicies().catch(err => showError(err))
     }
   }
 
   componentDidMount() {
-    this.updatePluginsAndPolicies()
+    this.updatePluginsAndPolicies().catch(err => showError(err))
   }
 
-  updatePluginsAndPolicies() {
+  updatePluginsAndPolicies = async () => {
     const { currencyCode, wallet } = this.props
     const { pluginId } = wallet.currencyInfo
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING) {
-      getStakePlugins().then(stakePlugins => {
-        const stakePolicies: StakePolicy[] = []
-        for (const stakePlugin of stakePlugins) {
-          const policies = stakePlugin.getPolicies({ wallet, currencyCode })
-          stakePolicies.push(...policies)
-        }
-        const newState = { stakePolicies, stakePlugins }
-        this.setState(newState)
-        this.updatePositions(newState)
-      })
+      const stakePlugins = await getStakePlugins()
+      const stakePolicies: StakePolicy[] = []
+      for (const stakePlugin of stakePlugins) {
+        const policies = stakePlugin.getPolicies({ wallet, currencyCode })
+        stakePolicies.push(...policies)
+      }
+      const newState = { stakePolicies, stakePlugins }
+      this.setState(newState)
+      await this.updatePositions(newState)
     } else {
       const newState = { stakePolicies: [], stakePlugins: [] }
       this.setState(newState)
-      this.updatePositions(newState)
+      await this.updatePositions(newState)
     }
   }
 
@@ -160,8 +159,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { account, navigation } = this.props
 
     triggerHaptic('impactLight')
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />).then(
-      (result: WalletListResult) => {
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />)
+      .then((result: WalletListResult) => {
         const { currencyCode, walletId } = result
         if (walletId != null && currencyCode != null) {
           const wallet = account.currencyWallets[walletId]
@@ -169,14 +168,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
           navigation.setParams({ tokenId, walletId })
         }
-      }
-    )
+      })
+      .catch(err => showError(err))
   }
 
   handleMenu = () => {
     const { wallet, tokenId, navigation } = this.props
     triggerHaptic('impactLight')
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />)
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />).catch(err => showError(err))
   }
 
   renderBalanceBox = () => {
