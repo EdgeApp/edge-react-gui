@@ -1,0 +1,17 @@
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C4567
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_IP2FA_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_IP2FA_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Username and password are correct. This device cannot log in due\
+    \ to an unrecognized IP address."
+    timeout: 120000
