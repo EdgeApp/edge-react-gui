@@ -31,12 +31,12 @@ export function PromoCard(props: Props) {
 
   const handlePress = useHandler(() => {
     const uri = messageSummary?.message.uri
-    if (uri != null) dispatch(linkReferralWithCurrencies(navigation, uri)).catch(showError)
+    if (uri != null) dispatch(linkReferralWithCurrencies(navigation, uri)).catch(err => showError(err))
   })
 
   const handleClose = useHandler(() => {
     if (messageSummary != null) {
-      dispatch(hideMessageTweak(messageSummary.messageId, messageSummary.messageSource))
+      dispatch(hideMessageTweak(messageSummary.messageId, messageSummary.messageSource)).catch(err => showError(err))
     }
   })
 

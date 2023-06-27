@@ -9,7 +9,7 @@ import { AccountReferral, DeviceReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
@@ -76,7 +76,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
           return true
         }}
       />
-    ))
+    )).catch(err => showError(err))
   }
 }
 

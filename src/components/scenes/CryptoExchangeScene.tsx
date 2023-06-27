@@ -462,7 +462,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, OwnProps>(
   },
   dispatch => ({
     getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove) {
-      dispatch(getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove))
+      dispatch(getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove)).catch(err => showError(err))
     },
     async onSelectWallet(walletId, currencyCode, direction) {
       await dispatch(selectWalletForExchange(walletId, currencyCode, direction))

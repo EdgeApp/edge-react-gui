@@ -126,7 +126,7 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
       plugins: lockStartDates(clean.plugins, now)
     }
     dispatch({ type: 'PROMOTION_ADDED', data: promotion })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -136,7 +136,7 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
 export function removePromotion(installerId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'PROMOTION_REMOVED', data: installerId })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -146,7 +146,7 @@ export function removePromotion(installerId: string): ThunkAction<Promise<void>>
 export function hideMessageTweak(messageId: string, source: TweakSource): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId, source } })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -156,7 +156,7 @@ export function hideMessageTweak(messageId: string, source: TweakSource): ThunkA
 export function ignoreAccountSwap(ignore: boolean = true): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -201,7 +201,7 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
 
     if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
     dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
-    saveReferralCache(getState())
+    await saveReferralCache(getState())
   }
 }
 

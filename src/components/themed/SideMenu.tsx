@@ -139,10 +139,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       .then((result: string | undefined) => {
         if (result) {
           const deepLink = parseDeepLink(result)
-          dispatch(launchDeepLink(navigation, deepLink))
+          return dispatch(launchDeepLink(navigation, deepLink))
         }
       })
-      .catch(showError)
+      .catch(err => showError(err))
   }
 
   const handleShareApp = () => {

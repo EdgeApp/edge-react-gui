@@ -97,9 +97,9 @@ export async function trackError(
 /**
  * Send a raw event to all backends.
  */
-export async function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
+export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
   consify({ logEvent: { event, values } })
-  return await Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+  Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
 /**
