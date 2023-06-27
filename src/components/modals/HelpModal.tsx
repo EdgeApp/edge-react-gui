@@ -24,7 +24,7 @@ const HELP_URIS = {
   site: config.website
 }
 
-export async function showHelpModal(): Promise<unknown> {
+export async function showHelpModal(): Promise<void> {
   return await Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
