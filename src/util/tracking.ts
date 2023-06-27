@@ -72,13 +72,13 @@ if (ENV.USE_FIREBASE) {
  * Track error to external reporting service (ie. Bugsnag)
  */
 
-export async function trackError(
+export function trackError(
   error: unknown,
   tag?: string,
   metadata?: {
     [key: string]: any
   }
-): Promise<void> {
+): void {
   let err: Error | string
   if (error instanceof Error || typeof error === 'string') {
     err = error
