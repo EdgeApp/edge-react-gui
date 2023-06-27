@@ -258,31 +258,51 @@ export async function snooze(ms: number): Promise<void> {
   return await new Promise(resolve => setTimeout(resolve, ms))
 }
 
+let prevTotal = '0'
 export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
-  let total = 0
+  const log: string[] = ['', '']
+  let total = '0'
   const { exchangeRates } = state
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
+    log.push(`LogTot: pluginId:${wallet.currencyInfo.pluginId} wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`)
     for (const currencyCode of Object.keys(wallet.balances)) {
       const nativeBalance = wallet.balances[currencyCode] ?? '0'
       const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
+      log.push(`\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`)
 
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
       if (currencyCode !== wallet.currencyInfo.currencyCode) {
         const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
-        if (tokenId == null) continue
+        if (tokenId == null) {
+          log.push(`LogTot: No tokenId for ${currencyCode}`)
+          continue
+        }
         info = wallet.currencyConfig.allTokens[tokenId]
       }
       const {
         denominations: [denomination]
       } = info
+      log.push(`LogTot: mult=${denomination.multiplier} name=${denomination.name}`)
 
       // Do the conversion:
-      total += parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))
+      const exchangeBalance = div(nativeBalance, denomination.multiplier, DECIMAL_PRECISION)
+      const fiatBalance = mul(rate, exchangeBalance)
+      const newTotal = add(total, fiatBalance)
+      log.push(`LogTot: nativeBalance=${nativeBalance} / multiplier=${denomination.multiplier} => exchangeBalance=${exchangeBalance}`)
+      log.push(`LogTot: rate=${rate} * exchangeBalance=${exchangeBalance} => fiatBalance=${fiatBalance}`)
+      log.push(`LogTot: total=${total} + fiatBalance=${fiatBalance} => newTotal=${newTotal}`)
+      total = newTotal
     }
   }
-  return total
+
+  if (total !== prevTotal) {
+    // Use for troubleshooting incorrect balance issues. Disable for now as it's pretty noisy
+    // console.log(log.join('\n'))
+  }
+  prevTotal = total
+  return Number(total)
 }
 
 export const getYesterdayDateRoundDownHour = () => {
