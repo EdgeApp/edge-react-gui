@@ -177,7 +177,7 @@ async function request(data: string) {
   })
 }
 
-export async function logToServer(...info: any[]) {
+export function logToServer(...info: any[]) {
   const args = info[0]
   let logs = ''
   for (const item of args) {
@@ -187,7 +187,8 @@ export async function logToServer(...info: any[]) {
       logs = logs + (' ' + item)
     }
   }
-  request(logs).catch(e => {
+  request(logs).catch(err => {
+    console.error(err)
     console.log('Failed logToServer')
   })
 }
