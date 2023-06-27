@@ -38,12 +38,12 @@ export function walletListMenuAction(
   walletId: string,
   option: WalletListMenuKey,
   tokenId?: string
-): ThunkAction<void | Promise<void>> {
+): ThunkAction<Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
     case 'manageTokens': {
-      return (dispatch, getState) => {
+      return async (dispatch, getState) => {
         navigation.navigate('manageTokens', {
           walletId
         })
@@ -293,6 +293,6 @@ export function walletListMenuAction(
     }
 
     default:
-      return () => undefined
+      return async () => {}
   }
 }
