@@ -8,6 +8,7 @@ import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg
 import { sprintf } from 'sprintf-js'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
@@ -158,7 +159,7 @@ const SwipeChartComponent = (params: Props) => {
   const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
 
   // Fetch/cache chart data, set shared animation transition values
-  React.useEffect(() => {
+  useAsyncEffect(async () => {
     if (!isLoading) {
       setIsLoading(true)
       setChartData([])
@@ -189,7 +190,7 @@ const SwipeChartComponent = (params: Props) => {
           const unixNow = Math.trunc(new Date().getTime() / 1000)
           const fromParam = unixNow - queryFromTimeOffset
           const fetchUrl = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
-          fetch(fetchUrl)
+          await fetch(fetchUrl)
             .then(async res => await res.json())
             .then((data: any) => {
               const marketChartRange = asCoinGeckoMarketChartRange(data)
