@@ -39,13 +39,13 @@ describe('MyComponent', () => {
           touchIdEnabled
           // DispatchProps:
           dispatchUpdateEnableTouchIdEnable={async () => undefined}
-          handleClearLogs={() => undefined}
+          handleClearLogs={async () => {}}
           handleSendLogs={() => undefined}
           lockSettings={() => undefined}
           onTogglePinLoginEnabled={async () => undefined}
-          setAutoLogoutTimeInSeconds={() => undefined}
-          showRestoreWalletsModal={() => undefined}
-          showUnlockSettingsModal={() => undefined}
+          setAutoLogoutTimeInSeconds={async () => {}}
+          showRestoreWalletsModal={async () => {}}
+          showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
@@ -77,12 +77,12 @@ describe('MyComponent', () => {
           // DispatchProps:
           dispatchUpdateEnableTouchIdEnable={async () => undefined}
           lockSettings={() => undefined}
-          handleClearLogs={() => undefined}
+          handleClearLogs={async () => {}}
           handleSendLogs={() => undefined}
           onTogglePinLoginEnabled={async () => undefined}
-          setAutoLogoutTimeInSeconds={() => undefined}
-          showRestoreWalletsModal={() => undefined}
-          showUnlockSettingsModal={() => undefined}
+          setAutoLogoutTimeInSeconds={async () => {}}
+          showRestoreWalletsModal={async () => {}}
+          showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
