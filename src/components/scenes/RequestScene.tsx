@@ -262,7 +262,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
-  handleKeysOnlyModePress = () => showWebViewModal(config.supportSite, lstrings.help_support)
+  handleKeysOnlyModePress = async () => await showWebViewModal(config.supportSite, lstrings.help_support)
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (

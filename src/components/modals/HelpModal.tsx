@@ -28,8 +28,8 @@ export async function showHelpModal(): Promise<void> {
   return await Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
-export function showWebViewModal(uri: string, title: string): void {
-  Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
+export async function showWebViewModal(uri: string, title: string): Promise<void> {
+  await Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
 }
 
 interface Props {
@@ -58,9 +58,9 @@ class HelpWebViewModal extends React.Component<Props & { uri: string; title: str
 export class HelpModalComponent extends React.Component<Props & ThemeProps> {
   handleClose = () => this.props.bridge.resolve()
 
-  handleEdgeSitePress = (helpSiteMoreInfoText: string) => {
+  handleEdgeSitePress = async (helpSiteMoreInfoText: string) => {
     if (Platform.OS === 'android') {
-      Linking.canOpenURL(HELP_URIS.site).then(supported => {
+      await Linking.canOpenURL(HELP_URIS.site).then(supported => {
         if (supported) {
           Linking.openURL(HELP_URIS.site).catch(err => {
             console.log(err)
@@ -70,7 +70,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
         }
       })
     } else {
-      showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)
+      await showWebViewModal(HELP_URIS.site, helpSiteMoreInfoText)
     }
   }
 
@@ -105,7 +105,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={lstrings.help_knowledge_base_text}
           title={lstrings.help_knowledge_base}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, lstrings.help_knowledge_base)}
+          onPress={async () => await showWebViewModal(HELP_URIS.knowledgeBase, lstrings.help_knowledge_base)}
         />
 
         <SelectableRow
@@ -116,7 +116,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={lstrings.help_support_text}
           title={lstrings.help_support}
           underline
-          onPress={() => showWebViewModal(HELP_URIS.support, lstrings.help_support)}
+          onPress={async () => await showWebViewModal(HELP_URIS.support, lstrings.help_support)}
         />
 
         <SelectableRow
@@ -137,7 +137,7 @@ export class HelpModalComponent extends React.Component<Props & ThemeProps> {
           paddingRem={optionPaddingRem}
           subTitle={helpSiteMoreInfoText}
           title={sprintf(lstrings.help_visit_site, config.appName)}
-          onPress={() => this.handleEdgeSitePress(helpSiteMoreInfoText)}
+          onPress={async () => await this.handleEdgeSitePress(helpSiteMoreInfoText)}
         />
         <View style={styles.footer}>
           <EdgeText style={styles.version}>{versionText}</EdgeText>
