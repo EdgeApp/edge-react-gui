@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Switch, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
@@ -10,11 +10,12 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
-import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
+import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
 interface Props extends EdgeSceneProps<'spendingLimits'> {}
 
@@ -60,16 +61,16 @@ export const SpendingLimitsScene = (props: Props) => {
   })
 
   return (
-    <SceneWrapper background="legacy" hasHeader>
+    <SceneWrapper hasHeader>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
         <OutlinedTextInput secureTextEntry autoFocus label={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
         <View style={styles.switchRow}>
           <View style={styles.textBlock}>
-            <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</FormattedText>
-            <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</FormattedText>
+            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</EdgeText>
+            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</EdgeText>
           </View>
-          <Switch onValueChange={handleTransactionIsEnabledChanged} value={transactionIsEnabled} accessibilityHint={lstrings.toggle_button_hint} />
+          <SettingsSwitchRow value={transactionIsEnabled} onPress={handleTransactionIsEnabledChanged} />
         </View>
 
         <OutlinedTextInput
@@ -85,9 +86,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
         <View style={styles.spacer} />
 
-        <PrimaryButton onPress={handleSubmit}>
-          <PrimaryButton.Text>{lstrings.save}</PrimaryButton.Text>
-        </PrimaryButton>
+        <MainButton label={lstrings.save} disabled={password.length === 0} onPress={handleSubmit} />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
