@@ -315,6 +315,14 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
       }
     ]
   }))
+
+  const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
+  const eyeIconStyle = useAnimatedStyle(() => {
+    return {
+      color: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
+    }
+  })
+
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
@@ -357,7 +365,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
           <TouchableWithoutFeedback onPress={handleHidePassword}>
             <View style={styles.clearTapArea}>
               <Animated.View style={[styles.eyeIconHideLine, showPasswordLineStyle]} />
-              <IonIcon name="eye-outline" style={styles.eyeIcon} />
+              <AnimatedIonIcon name="eye-outline" style={[styles.eyeIcon, eyeIconStyle]} />
             </View>
           </TouchableWithoutFeedback>
         ) : null}
@@ -545,7 +553,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     eyeIcon: {
       zIndex: 0,
-      color: theme.iconTappable,
       fontSize: theme.rem(1),
       padding: theme.rem(1)
     },
