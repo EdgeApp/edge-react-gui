@@ -460,7 +460,7 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
-  - react-native-piratechain (0.3.2):
+  - react-native-piratechain (0.3.3):
     - PirateLightClientKit (= 0.14.3-beta)
     - React
   - react-native-safari-view (1.0.0):
@@ -1180,7 +1180,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: fb1a96736998594ed33935a55b9a39d5394b7a80
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
-  react-native-piratechain: 21ee59f2a925cab4b84a4d08b833356d7432fe51
+  react-native-piratechain: 3976b76abdc9822d1b23568e4bda8db480df6499
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
