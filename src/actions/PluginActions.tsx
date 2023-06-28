@@ -10,13 +10,6 @@ export function executePluginAction(navigation: NavigationBase, pluginId: string
     const { account, context } = state.core
     const deviceId = base58ToUuid(context.clientId)
 
-    navigation.navigate(
-      direction === 'buy' ? 'buyTab' : 'sellTab',
-      {} /* {
-      screen: 'pluginListSell'
-    } */
-    )
-
     await executePlugin({
       account,
       deviceId,
