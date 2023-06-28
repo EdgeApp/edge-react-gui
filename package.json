@@ -31,7 +31,6 @@
     "android": "react-native run-android",
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
-    "cover": "jest --config jest.config.js --coverage",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift",
@@ -48,7 +47,7 @@
     "server": "node ./loggingServer.js",
     "start.plugins": "webpack serve",
     "start": "react-native start",
-    "test": "jest --config jest.config.js",
+    "test": "jest",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "update-version": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
@@ -56,6 +55,22 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "./jestSetup.js"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@react-native|react-native|react-navigation))"
+    ]
   },
   "resolutions": {
     "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
@@ -239,7 +254,6 @@
     "https-browserify": "^1.0.0",
     "husky": "^7.0.0",
     "jest": "^27.4.7",
-    "jest-junit": "^12.1.0",
     "jetifier": "^1.6.5",
     "lint-staged": "^10.5.3",
     "metro-config": "0.66.2",
