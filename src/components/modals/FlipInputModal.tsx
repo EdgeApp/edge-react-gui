@@ -41,7 +41,7 @@ interface OwnProps {
   walletId: string
   currencyCode: string
   onFeesChange?: () => void
-  onMaxSet?: () => void
+  onMaxSet?: () => Promise<void> | void
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void
   overrideExchangeAmount?: string
   headerText?: string
@@ -136,7 +136,7 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   handleSendMaxAmount = () => {
     const { navigation } = this.props
     if (this.props.onMaxSet != null) {
-      this.props.onMaxSet()
+      this.props.onMaxSet()?.catch(err => showError(err))
       return this.handleCloseModal()
     }
     this.props.updateMaxSpend(navigation, this.props.walletId, this.props.currencyCode).catch(err => showError(err))
