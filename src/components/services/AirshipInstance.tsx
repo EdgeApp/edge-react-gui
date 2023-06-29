@@ -19,12 +19,20 @@ export interface ShowErrorWarningOptions {
  */
 export function showError(error: unknown, options: ShowErrorWarningOptions = {}): void {
   const { trackError = true, tag } = options
-  const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
+  const tagMessage = tag == null ? '' : `Tag: ${tag}. `
+  const translatedMessage = tagMessage + translateError(error)
   if (trackError) {
-    Bugsnag.notify(`showError: ${translatedError}`)
+    if (error instanceof Error) {
+      // Log error with stack trace and a translated message to Bugsnag:
+      error.message = translatedMessage
+      Bugsnag.notify(error)
+    } else {
+      // Any other types we just send the translated message to Bugsnag:
+      Bugsnag.notify(translatedMessage)
+    }
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} />).catch(err => console.error(err))
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedMessage} />).catch(err => console.error(err))
 }
 
 /**
