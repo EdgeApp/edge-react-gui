@@ -7,13 +7,14 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 const COMPLETE_POINT: number = 3
 
 interface Props {
-  onSlidingComplete: (reset: () => void) => unknown
+  onSlidingComplete: (reset: () => void) => Promise<void> | void
   parentStyle?: any
   completePoint?: number
   width?: number
@@ -48,7 +49,7 @@ export const SafeSlider = (props: Props) => {
   })
   const complete = () => {
     triggerHaptic('impactMedium')
-    onSlidingComplete(() => resetSlider())
+    onSlidingComplete(() => resetSlider())?.catch(err => showError(err))
     setCompleted(true)
   }
 
