@@ -1549,7 +1549,9 @@ const strings = {
   purchase_asset_label: `Purchase Asset`,
   purchase_date_label: `Purchase Date`,
   purchase_price_label: `Purchase Price`,
-  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`
+  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`,
+
+  unknown_error_occurred_fragment: 'Unknown error occurred'
 }
 
 // eslint-disable-next-line import/no-default-export
