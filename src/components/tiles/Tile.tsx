@@ -6,7 +6,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
-import { showToast } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -22,7 +22,7 @@ interface OwnProps {
   body?: string
   children?: React.ReactNode
   error?: boolean
-  onPress?: () => void
+  onPress?: () => Promise<void> | void
   title: string
   type: TileType
   contentPadding?: boolean
@@ -42,7 +42,7 @@ export class TileComponent extends React.PureComponent<Props> {
     if (this.props.type === 'copy') {
       this.copy()
     } else {
-      if (this.props.onPress != null) this.props.onPress()
+      if (this.props.onPress != null) this.props.onPress()?.catch(err => showError(err))
     }
   }
 
