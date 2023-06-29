@@ -2,6 +2,7 @@ package co.edgesecure.app;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import androidx.core.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -15,6 +16,8 @@ public class MainActivity extends ReactActivity {
   }
 
   protected void onCreate(Bundle savedInstanceState) {
+    SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
     super.onCreate(null);
     if (getResources().getBoolean(R.bool.portrait_only)) {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
