@@ -30,7 +30,7 @@ interface OwnProps {
   title?: string
   successMessage?: string
   onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>
-  onSuccess?: (attrs: ActionResult) => void
+  onSuccess?: (attrs: ActionResult) => Promise<void> | void
   cancelOperation?: () => void
   goTo?: (params: any) => void
   getOperationFee: (wallet: EdgeCurrencyWallet) => Promise<number>
@@ -107,7 +107,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       }
 
       this.setState({ loading: false })
-      if (onSuccess) onSuccess(result)
+      if (onSuccess) await onSuccess(result)
       if (successMessage) showToast(successMessage)
     } catch (e: any) {
       this.setState({ loading: false })

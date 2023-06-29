@@ -42,7 +42,7 @@ describe('FioAddressList', () => {
         fioWallets={[fakeWallet]}
         loading
         isConnected
-        refreshAllFioAddresses={() => undefined}
+        refreshAllFioAddresses={async () => {}}
         theme={getTheme()}
       />
     )

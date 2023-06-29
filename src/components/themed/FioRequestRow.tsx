@@ -15,6 +15,7 @@ import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { FioRequest } from '../../types/types'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
@@ -25,7 +26,7 @@ interface OwnProps {
   fioRequest: FioRequest
   isSent: boolean
 
-  onPress: (request: FioRequest) => void
+  onPress: (request: FioRequest) => Promise<void> | void
   onSwipe: (request: FioRequest) => Promise<void>
 }
 
@@ -46,13 +47,15 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
 
   onPress = () => {
     const { onPress, fioRequest } = this.props
-    onPress(fioRequest)
+    onPress(fioRequest)?.catch(err => showError(err))
     this.closeRow()
   }
 
   onSwipe = () => {
     const { onSwipe, fioRequest } = this.props
-    onSwipe(fioRequest).finally(this.closeRow)
+    onSwipe(fioRequest)
+      .catch(err => showError(err))
+      .finally(this.closeRow)
   }
 
   requestedField = () => {

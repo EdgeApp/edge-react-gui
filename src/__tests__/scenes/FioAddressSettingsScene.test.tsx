@@ -28,7 +28,7 @@ describe('FioAddressSettingsComponent', () => {
           fioAddressName: 'MyFioAddress'
         })}
         isConnected
-        refreshAllFioAddresses={() => undefined}
+        refreshAllFioAddresses={async () => {}}
         theme={getTheme()}
       />
     )

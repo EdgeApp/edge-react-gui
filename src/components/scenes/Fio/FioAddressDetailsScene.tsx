@@ -42,7 +42,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
         { text: lstrings.fio_address_details_screen_alert_button }
       ])
     }
-    this.findFioWallet()
+    this.findFioWallet().catch(err => showError(err))
   }
 
   findFioWallet = async () => {
