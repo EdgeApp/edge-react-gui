@@ -113,11 +113,11 @@ export const moonpayProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
-    const out = {
+    const out: FiatProvider = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
 

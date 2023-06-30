@@ -289,11 +289,11 @@ export const bityProvider: FiatProviderFactory = {
     const { apiKeys } = params
     const clientId = asBityApiKeys(apiKeys).clientId
 
-    const out = {
+    const out: FiatProvider = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if 'sepa' is not included in the props
         if (!paymentTypes.includes(supportedPaymentType)) return { crypto: {}, fiat: {} }
 
