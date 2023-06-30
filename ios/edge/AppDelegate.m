@@ -6,6 +6,7 @@
 
 // Edge additions:
 #import "Edge-Swift.h"
+#import "RNBootSplash.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
@@ -98,10 +99,7 @@ static void InitializeFlipper(UIApplication *application) {
   [self.window makeKeyAndVisible];
 
   // Keep the splash screen around until our JS is ready:
-  // From https://reactnative.dev/docs/0.68/publishing-to-app-store#pro-tips
-  UIStoryboard *sb = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
-  UIViewController *vc = [sb instantiateInitialViewController];
-  rootView.loadingView = vc.view;
+  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
 
   return YES;
 }
