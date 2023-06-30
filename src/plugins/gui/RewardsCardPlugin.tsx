@@ -45,7 +45,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const provider = providers[0]
 
   // Get supported crypto assets:
-  const supportedAssetMap = await provider.getSupportedAssets([])
+  const supportedAssetMap = await provider.getSupportedAssets({ paymentTypes: [], regionCode: { countryCode: 'US' } })
   const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
 
   //
