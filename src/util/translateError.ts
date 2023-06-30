@@ -25,7 +25,7 @@ export function makeErrorLog(error: unknown): string {
 }
 
 /**
- * Something got thrown, so turn that into a human-friendly string.
+ * Something got thrown, so turn that into a human-friendly message string.
  * @param {*} error Some value we got from `catch`
  * @returns A translated, human-friendly string (in many cases).
  */
