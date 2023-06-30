@@ -63,7 +63,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           return await refreshRewardsCards(retries + 1)
         }
         userRewardsCards = { activeCards, archivedCards }
-        showDashboard({ showLoading: false })
+        await showDashboard({ showLoading: false })
       })
       .catch(async error => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
@@ -82,11 +82,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   //
 
   const showDashboard = async ({ showLoading }: { showLoading: boolean }) => {
-    showUi.rewardsCardDashboard({
+    await showUi.rewardsCardDashboard({
       items: userRewardsCards.activeCards,
       showLoading,
       onCardPress({ url }) {
-        showUi.openWebView({ url })
+        showUi.openWebView({ url }).catch(err => showError(err))
       },
       onHelpPress() {
         openBrowserUri(SUPPORT_URL)
@@ -117,12 +117,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
     if (answer === 'delete') {
       // Hide the card
-      provider.otherMethods.hideCard(card.id)
+      await provider.otherMethods.hideCard(card.id)
       // Remove card from plugin state
       userRewardsCards.activeCards = userRewardsCards.activeCards.filter(c => c.id !== card.id)
 
       // Reset state for dashboard
-      showDashboard({ showLoading: false })
+      await showDashboard({ showLoading: false })
     }
   }
 
@@ -225,11 +225,11 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       allowedAssets,
       showCreateWallet: false
     })
-    showNewCardEnterAmount(walletListResult)
+    await showNewCardEnterAmount(walletListResult)
   }
 
   const showWelcome = async () => {
-    showUi.rewardsCardWelcome({
+    await showUi.rewardsCardWelcome({
       onMoreInfo() {
         openBrowserUri(SUPPORT_URL)
       },

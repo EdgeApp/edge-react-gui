@@ -4,6 +4,7 @@ import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
+import { showError } from '../../../../components/services/AirshipInstance'
 import { MAX_AMOUNT } from '../../../../constants/valueConstants'
 import { DECIMAL_PRECISION, snooze, zeroString } from '../../../../util/utils'
 import { withWatchableProps } from '../../../../util/withWatchableProps'
@@ -200,7 +201,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       async startEngine() {
         if (instance.isRunning) return
         instance.isRunning = true
-        startNetworkSyncLoop()
+        startNetworkSyncLoop().catch(err => showError(err)) // Shouldn't ever happen
       },
       async stopEngine() {
         instance.isRunning = false

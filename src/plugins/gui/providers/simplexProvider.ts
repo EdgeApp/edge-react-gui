@@ -330,7 +330,7 @@ export const simplexProvider: FiatProviderFactory = {
             const url = `https://partners.simplex.com/?partner=${partner}&t=${token}`
 
             console.log('Approving simplex quote url=' + url)
-            showUi.openWebView({ url })
+            await showUi.openWebView({ url })
           },
           closeQuote: async (): Promise<void> => {}
         }
