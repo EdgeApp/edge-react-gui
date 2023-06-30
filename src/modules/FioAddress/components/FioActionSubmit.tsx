@@ -76,7 +76,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
   componentDidMount(): void {
     this.setBalance()
-    this.setFee()
+    this.setFee().catch(err => showError(err))
   }
 
   resetSlider = () => {
@@ -124,7 +124,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
           this.props.currencyWallets[walletId] &&
             this.setState({ paymentWallet: this.props.currencyWallets[walletId] }, () => {
               this.setBalance()
-              this.setFee()
+              this.setFee().catch(err => showError(err))
             })
         }
       })

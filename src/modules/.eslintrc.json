@@ -1,0 +1,6 @@
+{
+  "ignorePatterns": "corePluginBundle.js",
+  "rules": {
+    "@typescript-eslint/no-floating-promises": "error"
+  }
+}
