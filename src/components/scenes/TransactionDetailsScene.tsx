@@ -93,25 +93,23 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     return await wallet.accelerate(transaction)
   }
 
-  openPersonInput = () => {
+  openPersonInput = async () => {
     const personLabel = this.state.direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
-    Airship.show<ContactModalResult | undefined>(bridge => <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />).then(
-      person => {
-        if (person != null) this.onSaveTxDetails({ name: person.contactName })
-      }
-    )
+    const person = await Airship.show<ContactModalResult | undefined>(bridge => (
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />
+    ))
+    if (person != null) this.onSaveTxDetails({ name: person.contactName })
   }
 
-  openCategoryInput = () => {
-    const { category } = this.state
-    Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />).then(async category => {
-      if (category == null) return
-      this.onSaveTxDetails({ category })
-    })
+  openCategoryInput = async () => {
+    const { category: initialCategory } = this.state
+    const category = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={initialCategory} />)
+    if (category == null) return
+    this.onSaveTxDetails({ category })
   }
 
-  openNotesInput = () => {
-    Airship.show<string | undefined>(bridge => (
+  openNotesInput = async () => {
+    const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.notes}
@@ -121,7 +119,8 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
       />
-    )).then(notes => (notes != null ? this.onSaveTxDetails({ notes }) : null))
+    ))
+    if (notes != null) this.onSaveTxDetails({ notes })
   }
 
   openAccelerateModel = async () => {
@@ -159,13 +158,13 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  openAdvancedDetails = async () => {
+  openAdvancedDetails = () => {
     const { wallet, route } = this.props
     const { edgeTransaction } = route.params
 
     Airship.show(bridge => (
       <AdvancedDetailsModal bridge={bridge} transaction={edgeTransaction} url={sprintf(wallet.currencyInfo.transactionExplorer, edgeTransaction.txid)} />
-    ))
+    )).catch(err => showError(err))
   }
 
   onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {

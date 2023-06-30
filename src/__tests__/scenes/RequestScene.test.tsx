@@ -21,9 +21,9 @@ describe('Request', () => {
         primaryCurrencyInfo={null as any}
         secondaryCurrencyInfo={null as any}
         theme={getTheme()}
-        refreshAllFioAddresses={() => undefined}
-        onSelectWallet={(walletId, currencyCode) => undefined}
-        toggleAccountBalanceVisibility={() => undefined}
+        refreshAllFioAddresses={async () => {}}
+        onSelectWallet={async (walletId, currencyCode) => {}}
+        toggleAccountBalanceVisibility={() => {}}
         showBalance
       />
     )
@@ -50,9 +50,9 @@ describe('Request', () => {
         primaryCurrencyInfo={{ displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
         secondaryCurrencyInfo={{} as any}
         theme={getTheme()}
-        refreshAllFioAddresses={() => undefined}
-        onSelectWallet={(walletId, currencyCode) => undefined}
-        toggleAccountBalanceVisibility={() => undefined}
+        refreshAllFioAddresses={async () => {}}
+        onSelectWallet={async (walletId, currencyCode) => {}}
+        toggleAccountBalanceVisibility={() => {}}
         showBalance
       />
     )

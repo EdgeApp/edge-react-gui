@@ -40,7 +40,7 @@ export const EdgeLoginScene = (props: Props) => {
       setLobby(await account.fetchLobby(lobbyId))
     } catch (error: any) {
       if (error.message.includes('Account does not')) {
-        showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
+        await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
       } else {
         showError(error)
       }
@@ -54,11 +54,11 @@ export const EdgeLoginScene = (props: Props) => {
     try {
       await loginRequest.approve()
       navigation.pop()
-      showOkModal(lstrings.send_scan_edge_login_success_title, lstrings.send_scan_edge_login_success_message)
+      await showOkModal(lstrings.send_scan_edge_login_success_title, lstrings.send_scan_edge_login_success_message)
     } catch (error: any) {
       navigation.pop()
       if (error.message.includes('Could not reach')) {
-        showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_message)
+        await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_message)
       } else {
         showError(error)
       }

@@ -1551,7 +1551,8 @@ const strings = {
   purchase_price_label: `Purchase Price`,
   select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`,
 
-  unknown_error_occurred_fragment: 'Unknown error occurred'
+  unknown_error_occurred_fragment: 'Unknown error occurred',
+  no_scan_results_message: 'No scan results'
 }
 
 // eslint-disable-next-line import/no-default-export

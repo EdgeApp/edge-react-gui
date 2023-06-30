@@ -26,7 +26,7 @@ import { fixFiatCurrencyCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 
 export interface AccountPaymentParams {
   requestedAccountName: string
@@ -51,8 +51,8 @@ interface StateProps {
 
 interface DispatchProps {
   createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
-  fetchAccountActivationInfo: (walletType: string) => void
-  createAccountTransaction: (navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) => void
+  fetchAccountActivationInfo: (walletType: string) => Promise<void>
+  createAccountTransaction: (navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) => Promise<void>
   fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => void
   setWalletAccountActivationQuoteError: (message: string) => void
 }
@@ -86,7 +86,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       walletId: '',
       createdWallet
     }
-    props.fetchAccountActivationInfo(selectedWalletType.walletType)
+    props.fetchAccountActivationInfo(selectedWalletType.walletType).catch(err => showError(err))
   }
 
   renameAndReturnWallet = async (wallet: EdgeCurrencyWallet) => {
@@ -106,21 +106,26 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
 
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        this.onSelectWallet(walletId, currencyCode)
-      }
-    })
+    ))
+      .then(async ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          await this.onSelectWallet(walletId, currencyCode)
+        }
+      })
+      .catch(err => showError(err))
   }
 
   onPressSubmit = async () => {
     const { createAccountTransaction, route, navigation } = this.props
     const { accountName } = route.params
     const { walletId } = this.state
-    const createdWallet = await this.state.createdWallet
-    const createdWalletId = createdWallet.id
-    // will grab data from state in actions
-    createAccountTransaction(navigation, createdWalletId, accountName, walletId)
+    this.state.createdWallet
+      .then(async createdWallet => {
+        const createdWalletId = createdWallet.id
+        // will grab data from state in actions
+        await createAccountTransaction(navigation, createdWalletId, accountName, walletId)
+      })
+      .catch(err => showError(err))
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
@@ -387,11 +392,11 @@ export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps,
     }
   },
   dispatch => ({
-    createAccountTransaction(navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) {
-      dispatch(createAccountTransaction(navigation, createdWalletId, accountName, paymentWalletId))
+    async createAccountTransaction(navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) {
+      await dispatch(createAccountTransaction(navigation, createdWalletId, accountName, paymentWalletId))
     },
-    fetchAccountActivationInfo(walletType: string) {
-      dispatch(fetchAccountActivationInfo(walletType))
+    async fetchAccountActivationInfo(walletType: string) {
+      await dispatch(fetchAccountActivationInfo(walletType))
     },
     fetchWalletAccountActivationPaymentInfo(paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) {
       dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))

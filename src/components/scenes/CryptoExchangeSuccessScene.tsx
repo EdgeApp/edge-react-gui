@@ -8,6 +8,7 @@ import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
@@ -41,7 +42,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
   }
 
   componentDidMount(): void {
-    this.showConfetti()
+    this.showConfetti().catch(err => showError(err))
   }
 
   done = () => {

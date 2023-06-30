@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
@@ -61,8 +62,9 @@ export const WcConnectScene = (props: Props) => {
     return { subTitleText, bodyTitleText, dAppImage }
   }, [proposal])
 
-  React.useEffect(() => {
-    wallet.getReceiveAddress().then(r => setWalletAddress(r.publicAddress))
+  useAsyncEffect(async () => {
+    const r = await wallet.getReceiveAddress()
+    setWalletAddress(r.publicAddress)
   }, [wallet])
 
   const dispatch = useDispatch()
@@ -71,7 +73,7 @@ export const WcConnectScene = (props: Props) => {
     try {
       await walletConnect.approveSession(proposal, walletAddress, wallet.id)
       connected.current = true
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
+      await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error('WalletConnect connection error:', String(error))
@@ -79,21 +81,20 @@ export const WcConnectScene = (props: Props) => {
     }
   }
 
-  const handleWalletListModal = useHandler(() => {
-    Airship.show<WalletListResult>(bridge => (
+  const handleWalletListModal = useHandler(async () => {
+    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} navigation={navigation} />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
-        const wallet = account.currencyWallets[walletId]
-        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-        setSelectedWallet({ walletId, currencyCode })
-      }
-    })
+    ))
+    if (walletId && currencyCode) {
+      const wallet = account.currencyWallets[walletId]
+      const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+      setSelectedWallet({ walletId, currencyCode })
+    }
   })
 
   useMount(() => {
-    handleWalletListModal()
+    handleWalletListModal().catch(err => showError(err))
   })
 
   useUnmount(() => {
