@@ -80,9 +80,9 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
     if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
-      this.setFioAddress(fioRequest.payer_fio_address)
+      this.setFioAddress(fioRequest.payer_fio_address).catch(err => showError(err))
     } else if (isSendUsingFioAddress) {
-      this.setDefaultFioAddress()
+      this.setDefaultFioAddress().catch(err => showError(err))
     }
   }
 
@@ -92,10 +92,10 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     if (bundledTxsUpdated) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ bundledTxsUpdated: false })
-      this.setFioAddress(this.props.selected)
+      this.setFioAddress(this.props.selected).catch(err => showError(err))
     }
     if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
-      this.setDefaultFioAddress()
+      this.setDefaultFioAddress().catch(err => showError(err))
     }
   }
 
@@ -106,26 +106,25 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
       const fioNames = await fioWallet.otherMethods.getFioAddressNames()
       if (fioNames.length) {
         this.setState({ loading: false }, () => {
-          this.setFioAddress(fioNames[0], fioWallet)
+          this.setFioAddress(fioNames[0], fioWallet).catch(err => showError(err))
         })
         break
       }
     }
   }
 
-  selectAddress = () => {
+  selectAddress = async () => {
     const { currencyCode, coreWallet } = this.props
-    Airship.show<string | undefined>(bridge => (
+    const response = await Airship.show<string | undefined>(bridge => (
       <AddressModal bridge={bridge} title={lstrings.fio_select_address} currencyCode={currencyCode} walletId={coreWallet.id} useUserFioAddressesOnly />
-    )).then(response => {
-      if (response) {
-        this.setFioAddress(response)
-      }
-    })
+    ))
+    if (response) {
+      await this.setFioAddress(response)
+    }
   }
 
-  openMessageInput = () => {
-    Airship.show<string | undefined>(bridge => (
+  openMessageInput = async () => {
+    const memo = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.props.memo}
@@ -135,9 +134,8 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
         submitLabel={lstrings.string_save}
         title={lstrings.fio_sender_memo_label}
       />
-    )).then(memo => {
-      if (memo != null) this.handleMemoChange(memo)
-    })
+    ))
+    if (memo != null) this.handleMemoChange(memo)
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
@@ -270,8 +268,8 @@ export const SelectFioAddress2 = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(SelectFioAddressComponent))

@@ -10,7 +10,7 @@ import { useDispatch } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
@@ -45,41 +45,47 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleMenu = useHandler(() => {
     closeRow()
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />)
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />).catch(err => showError(err))
   })
 
   const handleRequest = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(activated => {
-      if (activated) {
-        navigation.navigate('request', {})
-      }
-    })
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+      .then(activated => {
+        if (activated) {
+          navigation.navigate('request', {})
+        }
+      })
+      .catch(err => showError(err))
   })
 
   const handleSelect = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(async activated => {
-      if (activated) {
-        navigation.navigate('transactionList', { tokenId, walletId: wallet.id })
-      }
-    })
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+      .then(async activated => {
+        if (activated) {
+          navigation.navigate('transactionList', { tokenId, walletId: wallet.id })
+        }
+      })
+      .catch(err => showError(err))
   })
 
   const handleSend = useHandler(() => {
     closeRow()
-    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(activated => {
-      if (activated) {
-        navigation.navigate('send2', {
-          walletId: wallet.id,
-          tokenId,
-          openCamera: true,
-          hiddenFeaturesMap: {
-            scamWarning: false
-          }
-        })
-      }
-    })
+    dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
+      .then(activated => {
+        if (activated) {
+          navigation.navigate('send2', {
+            walletId: wallet.id,
+            tokenId,
+            openCamera: true,
+            hiddenFeaturesMap: {
+              scamWarning: false
+            }
+          })
+        }
+      })
+      .catch(err => showError(err))
   })
 
   // rendering -----------------------------------------------------------

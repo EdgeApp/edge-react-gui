@@ -324,15 +324,17 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  async openClipboardMenu() {
+  openClipboardMenu() {
     this.clipboardMenu.close()
-    try {
-      if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && (await Clipboard.getString())) {
-        this.clipboardMenu.open()
-      }
-    } catch (error: any) {
-      showError(error)
-    }
+    Clipboard.getString()
+      .then(clipboardString => {
+        if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && clipboardString) {
+          this.clipboardMenu.open()
+        }
+      })
+      .catch(err => {
+        showError(err)
+      })
   }
 
   handlePasteClipboard = async () => {
@@ -367,7 +369,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     if (this.props.onBlur) this.props.onBlur()
   }
 
-  textInputFrontFocus = async () => {
+  textInputFrontFocus = () => {
     this.openClipboardMenu()
     const { textInputFront } = this
     if (textInputFront != null) {

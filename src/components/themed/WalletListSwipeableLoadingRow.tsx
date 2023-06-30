@@ -8,7 +8,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SwipableRowRef, SwipeableRow } from '../themed/SwipeableRow'
 import { WalletListErrorRow } from './WalletListErrorRow'
@@ -38,7 +38,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
     setTimeout(() => {
       if (rowRef.current != null) rowRef.current.close()
     }, 150)
-    Airship.show(bridge => <WalletListMenuModal bridge={bridge} navigation={navigation} walletId={walletId} />)
+    Airship.show(bridge => <WalletListMenuModal bridge={bridge} navigation={navigation} walletId={walletId} />).catch(err => showError(err))
   })
 
   // rendering -----------------------------------------------------------
