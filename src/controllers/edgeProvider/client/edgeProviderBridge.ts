@@ -96,13 +96,17 @@ if (window.edgeProviderBridge == null) {
 
   // Make an initial call to both connect with the other side and
   // load the promo data:
-  edgeProvider.getDeepLink().then(deepLink => {
-    edgeProvider.deepPath = deepLink.deepPath
-    edgeProvider.deepQuery = deepLink.deepQuery
-    edgeProvider.promoCode = deepLink.promoCode
+  edgeProvider
+    .getDeepLink()
+    .then(deepLink => {
+      edgeProvider.deepPath = deepLink.deepPath
+      edgeProvider.deepQuery = deepLink.deepQuery
+      edgeProvider.promoCode = deepLink.promoCode
 
-    // Tell the world:
-    window.edgeProvider = edgeProvider
-    document.dispatchEvent(new Event('edgeProviderReady'))
-  })
+      // Tell the world:
+      window.edgeProvider = edgeProvider
+      document.dispatchEvent(new Event('edgeProviderReady'))
+    })
+    // Use console logging because this exists in a web-view without access to RN
+    .catch(err => console.error(err))
 }
