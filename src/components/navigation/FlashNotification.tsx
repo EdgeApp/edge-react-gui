@@ -3,9 +3,11 @@ import { Text } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { useHandler } from '../../hooks/useHandler'
 import { nightText } from '../../styles/common/textStyles'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { ModalFooter } from '../themed/ModalParts'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -14,13 +16,17 @@ interface Props {
 }
 
 export function FlashNotification(props: Props) {
-  const { bridge, message, onPress } = props
+  const { bridge, message, onPress = () => {} } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const handleClose = useHandler(() => bridge.resolve())
+
   return (
     <AirshipDropdown bridge={bridge} backgroundColor={theme.modal} onPress={onPress}>
       <AntDesignIcon name="checkcircle" size={theme.rem(2)} style={styles.icon} />
       <Text style={styles.text}>{message}</Text>
+      <ModalFooter onPress={handleClose} />
     </AirshipDropdown>
   )
 }
