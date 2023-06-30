@@ -41,8 +41,8 @@ export function SwapDetailsTiles(props: Props) {
   const { isEstimate, orderId, orderUri, payoutAddress, payoutWalletId, plugin, refundAddress } = swapData
   const payoutCurrencyCode = swapData.payoutCurrencyCode
 
-  const handleExchangeDetails = useHandler(() => {
-    Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={lstrings.transaction_details_exchange_details} />)
+  const handleExchangeDetails = useHandler(async () => {
+    await Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={lstrings.transaction_details_exchange_details} />)
   })
 
   const handleEmail = useHandler(() => {
@@ -63,21 +63,21 @@ export function SwapDetailsTiles(props: Props) {
     )
   })
 
-  const handleLink = () => {
+  const handleLink = async () => {
     if (orderUri == null) return
 
     if (Platform.OS === 'ios') {
       SafariView.isAvailable()
         .then(async available => {
           if (available) await SafariView.show({ url: orderUri })
-          else Linking.openURL(orderUri)
+          else await Linking.openURL(orderUri)
         })
         .catch(error => {
           showError(error)
-          Linking.openURL(orderUri)
+          Linking.openURL(orderUri).catch(err => showError(err))
         })
     } else {
-      Linking.openURL(orderUri)
+      await Linking.openURL(orderUri)
     }
   }
 

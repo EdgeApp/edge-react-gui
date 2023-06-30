@@ -144,7 +144,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       }
 
       // set address
-      onChangeAddress({ fioAddress, parsedUri })
+      await onChangeAddress({ fioAddress, parsedUri })
     } catch (e: any) {
       const currencyInfo = coreWallet.currencyInfo
       const ercTokenStandard = currencyInfo.defaultSettings?.otherSettings?.ercTokenStandard ?? ''
@@ -180,7 +180,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   })
 
   const handlePasteFromClipboard = useHandler(() => {
-    changeAddress(clipboard)
+    changeAddress(clipboard).catch(err => showError(err))
   })
 
   const handleScan = useHandler(() => {
@@ -195,9 +195,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         textModalTitle={title}
       />
     ))
-      .then((result: string | undefined) => {
+      .then(async (result: string | undefined) => {
         if (result) {
-          changeAddress(result)
+          await changeAddress(result)
         }
       })
       .catch(error => {
@@ -209,9 +209,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     Airship.show<string | undefined>(bridge => (
       <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={lstrings.scan_address_modal_title} />
     ))
-      .then(result => {
+      .then(async result => {
         if (result) {
-          changeAddress(result)
+          await changeAddress(result)
         }
       })
       .catch(error => {
@@ -219,10 +219,10 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       })
   })
 
-  const handleSelfTransfer = useHandler(async () => {
+  const handleSelfTransfer = useHandler(() => {
     const { currencyWallets } = account
     const { pluginId } = coreWallet.currencyInfo
-    const walletList = await Airship.show<WalletListResult>(bridge => (
+    Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
@@ -231,19 +231,22 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         excludeWalletIds={[coreWallet.id]}
       />
     ))
-    const { walletId } = walletList
-    if (walletId == null) return
-    const wallet = currencyWallets[walletId]
+      .then(async walletList => {
+        const { walletId } = walletList
+        if (walletId == null) return
+        const wallet = currencyWallets[walletId]
 
-    // Prefer segwit address if the selected wallet has one
-    const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
-    const address = segwitAddress != null ? segwitAddress : publicAddress
-    changeAddress(address)
+        // Prefer segwit address if the selected wallet has one
+        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
+        const address = segwitAddress != null ? segwitAddress : publicAddress
+        await changeAddress(address)
+      })
+      .catch(err => showError(err))
   })
 
-  const handleTilePress = useHandler(() => {
+  const handleTilePress = useHandler(async () => {
     if (!lockInputs && !!recipientAddress) {
-      checkClipboard()
+      await checkClipboard()
       resetSendTransaction()
     }
   })
@@ -254,9 +257,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
 
   React.useEffect(() => {
     const cleanup = AppState.addEventListener('change', appState => {
-      if (appState === 'active') checkClipboard()
+      if (appState === 'active') checkClipboard().catch(err => showError(err))
     })
-    checkClipboard()
+    checkClipboard().catch(err => showError(err))
 
     return () => cleanup.remove()
   }, [checkClipboard])
@@ -267,7 +270,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
 
   React.useImperativeHandle(ref, () => ({
     async onChangeAddress(address: string) {
-      changeAddress(address)
+      await changeAddress(address)
     }
   }))
 
