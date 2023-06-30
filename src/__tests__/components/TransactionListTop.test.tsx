@@ -4,6 +4,7 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionListTop } from '../../components/themed/TransactionListTop'
+import { ENV } from '../../env'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
@@ -62,6 +63,26 @@ describe('TransactionListTop', () => {
   }
 
   it('should render', () => {
+    ENV.ENABLE_VISA_PROGRAM = false
+    const renderer = TestRenderer.create(
+      <FakeProviders initialState={fakeState}>
+        <TransactionListTop
+          isEmpty={false}
+          navigation={fakeNavigation}
+          searching={false}
+          tokenId={undefined}
+          wallet={fakeWallet}
+          onSearchingChange={() => undefined}
+          onSearchTextChange={() => undefined}
+        />
+      </FakeProviders>
+    )
+
+    expect(renderer.toJSON()).toMatchSnapshot()
+  })
+
+  it('should render (with ENABLE_VISA_PROGRAM)', () => {
+    ENV.ENABLE_VISA_PROGRAM = true
     const renderer = TestRenderer.create(
       <FakeProviders initialState={fakeState}>
         <TransactionListTop
