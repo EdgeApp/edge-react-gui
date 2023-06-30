@@ -14,7 +14,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { FioAddress } from '../../../types/types'
+import { FioAddress, MapObject } from '../../../types/types'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
@@ -29,14 +29,14 @@ import { Tile } from '../../tiles/Tile'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingChange'> {}
 
+type StakingBalances = MapObject<{
+  native: string
+  crypto: string
+  fiat: string
+}>
+
 interface StateProps {
-  stakingBalances: {
-    [cCode: string]: {
-      native: string
-      crypto: string
-      fiat: string
-    }
-  }
+  stakingBalances: StakingBalances
   currencyWallet: EdgeCurrencyWallet
   currencyPlugin: EdgeCurrencyConfig
   currencyDenomination: EdgeDenomination
@@ -370,7 +370,7 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
     const currencyPlugin = state.core.account.currencyConfig[currencyWallet.currencyInfo.pluginId]
-    const stakingBalances = {}
+    const stakingBalances: StakingBalances = {}
 
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
     const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
@@ -387,7 +387,6 @@ export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps
         const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
         const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
-        // @ts-expect-error
         stakingBalances[stakingCurrencyCode] = {
           native: stakingNativeAmount,
           crypto: stakingCryptoAmountFormat,
