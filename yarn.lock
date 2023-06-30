@@ -13712,11 +13712,6 @@ react-native-share@^7.1.2:
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.1.2.tgz#b6ef5a57ce39312ebeaec342253a43a4ab79c140"
   integrity sha512-kmwp11XYL1TBvKQ1s3Y4HTxu5QNZM6W1SopItAovoC+UD+9g4lVFIPL64bww16Oz15xQTTDtvDHCG8zDWKOVPA==
 
-react-native-smart-splash-screen@^2.3.5:
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/react-native-smart-splash-screen/-/react-native-smart-splash-screen-2.3.5.tgz#68a1e45bfd708678aa12e65f2ba997ac5c1292a0"
-  integrity sha512-6Sl9UKzYIQu1Yl5SgsQdV4E8hUr1xz3UN1fmuqxHs82KRS9VkXaxkFJG1AIcFQGkKc4W1jQnU/RlP5PO8vezVg==
-
 react-native-sound@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.0.tgz#ad60b55ba8c6dc89917f381ad3713f2738de530f"

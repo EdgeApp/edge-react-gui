@@ -6,7 +6,6 @@
 
 // Edge additions:
 #import "Edge-Swift.h"
-#import "RCTSplashScreen.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
@@ -83,9 +82,6 @@ static void InitializeFlipper(UIApplication *application) {
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"edge"
                                             initialProperties:nil];
-
-  // Native splash screen integration:
-  [RCTSplashScreen open:rootView withImageNamed:@"splash"];
 
   // React template code:
   if (@available(iOS 13.0, *)) {
