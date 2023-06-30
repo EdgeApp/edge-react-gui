@@ -547,13 +547,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="fioStakingChange" component={FioStakingChangeScene} />
       <Stack.Screen name="fioStakingOverview" component={FioStakingOverviewScene} />
       <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
         options={{
@@ -664,24 +657,6 @@ const EdgeAppStack = () => {
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginView'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="pluginViewBuy"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="pluginViewSell"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}

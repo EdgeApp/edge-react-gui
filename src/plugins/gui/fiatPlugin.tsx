@@ -16,6 +16,7 @@ import { Airship, showError, showToastSpinner } from '../../components/services/
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
+import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -42,6 +43,17 @@ export const executePlugin = async (params: {
   const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { pluginId } = guiPlugin
 
+  const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
+  const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
+
+  function maybeNavigateToCorrectTabScene() {
+    const navPath = getNavigationAbsolutePath(navigation)
+    if (!navPath.includes(`/edgeTabs/${tabSceneKey}`)) {
+      navigation.navigate(tabSceneKey, {})
+      navigation.navigate(listSceneKey, {})
+    }
+  }
+
   const showUi: FiatPluginUi = {
     addressWarnings,
     buttonModal: async params => {
@@ -67,11 +79,13 @@ export const executePlugin = async (params: {
       return result
     },
     enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+      maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
     },
     addressForm: async (params: FiatPluginAddressFormParams) => {
       const { countryCode, headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
+        maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginAddressForm', {
           countryCode,
           headerTitle,
@@ -84,14 +98,17 @@ export const executePlugin = async (params: {
       })
     },
     async rewardsCardDashboard(params) {
+      maybeNavigateToCorrectTabScene()
       navigation.navigate('rewardsCardDashboard', params)
     },
     async rewardsCardWelcome(params) {
+      maybeNavigateToCorrectTabScene()
       navigation.navigate('rewardsCardWelcome', params)
     },
     sepaForm: async (params: FiatPluginSepaFormParams) => {
       const { headerTitle, headerIconUri, onSubmit } = params
       return await new Promise((resolve, reject) => {
+        maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginSepaForm', {
           headerTitle,
           headerIconUri,
@@ -105,6 +122,7 @@ export const executePlugin = async (params: {
     sepaTransferInfo: async (params: FiatPluginSepaTransferParams) => {
       return await new Promise((resolve, reject) => {
         const { headerTitle, headerIconUri, promptMessage, transferInfo, onDone } = params
+        maybeNavigateToCorrectTabScene()
         navigation.navigate('guiPluginInfoDisplay', {
           headerTitle,
           promptMessage,
@@ -124,6 +142,7 @@ export const executePlugin = async (params: {
         scamWarning: true
       }
       return await new Promise<void>((resolve, reject) => {
+        maybeNavigateToCorrectTabScene()
         navigation.navigate('send2', {
           ...params,
           onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
