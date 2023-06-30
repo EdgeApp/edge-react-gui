@@ -117,7 +117,7 @@ export const moonpayProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
 
@@ -135,6 +135,9 @@ export const moonpayProvider: FiatProviderFactory = {
         }
         for (const currency of moonpayCurrencies) {
           if (currency.type === 'crypto') {
+            if (regionCode.countryCode === 'US' && currency.isSupportedInUS !== true) {
+              continue
+            }
             if (currency.name.includes('(ERC-20)')) {
               addToAllowedCurrencies('ethereum', currency, currency.code)
             } else {
