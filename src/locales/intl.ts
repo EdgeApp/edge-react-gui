@@ -272,6 +272,12 @@ export const trimEnd = (val: string): string => {
 // Return a formatted percent string based on a number or string that is < 1.0
 // and greater than -1.0
 export const toPercentString = (percentVal: string | number, options?: IntlNumberFormatOptionsType): string => {
+  if (typeof percentVal === 'string') {
+    // Check that this is a regular decimal (not hex) number
+    if (!/^\d*\.?\d+$/.test(percentVal)) {
+      return ''
+    }
+  }
   const percentString = mul('100', String(percentVal))
   return `${formatNumber(toFixed(percentString, 0, 1), options)}%`
 }
