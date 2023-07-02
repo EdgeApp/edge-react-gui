@@ -222,13 +222,13 @@ export const refreshConnectedWalletsForFioAddress = async (
 ): Promise<CcWalletMap> => {
   const connectedWallets: StringMap = {}
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
+  const { public_addresses: connectedAddresses }: FioConnectedPublicAddresses = await fioWallet.otherMethods.fioAction('getPublicAddresses', {
+    fioAddress
+  })
   for (const wallet of wallets) {
     const { currencyConfig, enabledTokenIds } = wallet
     const enabledCodes = enabledTokenIds.map(tokenId => currencyConfig.allTokens[tokenId].currencyCode)
     enabledCodes.push(wallet.currencyInfo.currencyCode)
-    const { public_addresses: connectedAddresses }: FioConnectedPublicAddresses = await fioWallet.otherMethods.fioAction('getPublicAddresses', {
-      fioAddress
-    })
     for (const currencyCode of enabledCodes) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${currencyCode}`
       if (connectedWallets[fullCurrencyCode] != null) continue
