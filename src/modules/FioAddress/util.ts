@@ -191,9 +191,6 @@ const isWalletConnected = async (
     if (connectedAddressObj == null) return false
     const { public_address: connectedAddress } = connectedAddressObj
 
-    const receiveAddress = await wallet.getReceiveAddress()
-    if (connectedAddress === receiveAddress.publicAddress) return true
-
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
     if (connectedWalletsFromDisklet[fullCurrencyCode]) {
       const { walletId, publicAddress: pubAddressFromDisklet } = connectedWalletsFromDisklet[fullCurrencyCode]
@@ -201,6 +198,8 @@ const isWalletConnected = async (
         return true
       }
     }
+    const receiveAddress = await wallet.getReceiveAddress()
+    if (connectedAddress === receiveAddress.publicAddress) return true
   } catch (e: any) {
     //
   }
