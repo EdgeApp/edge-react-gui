@@ -62,7 +62,7 @@ export function useWalletConnect(): WalletConnect {
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = await getWalletIdFromSessionNamespace(session.namespaces, accounts)
+      const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
       if (walletId == null) continue
 
       const connection = parseConnection(session, walletId)

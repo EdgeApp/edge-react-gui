@@ -66,7 +66,7 @@ export const WalletConnectService = (props: Props) => {
     const session = sessions[request.topic]
     if (session == null) return
     const accounts = await getAccounts(currencyWallets)
-    const walletId = await getWalletIdFromSessionNamespace(session.namespaces, accounts)
+    const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
     if (walletId == null) {
       console.log('walletConnect unrecognized session request')
       return
