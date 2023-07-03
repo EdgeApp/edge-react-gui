@@ -200,7 +200,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
   }
 
   const requiredChainIds: Set<string> = getChainIdsFromNamespaces(requiredNamespaces)
-  const optionalChainIds: Set<string> = getChainIdsFromNamespaces(optionalNamespaces)
+  const optionalChainIds: Set<string> = requiredChainIds.size === 0 ? getChainIdsFromNamespaces(optionalNamespaces) : new Set()
 
   let hasWalletForRequiredNamespace = false
   const edgeTokenIdMap = new Map<string, EdgeTokenId>()
