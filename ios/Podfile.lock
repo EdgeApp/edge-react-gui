@@ -204,17 +204,17 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.180)
-  - Permission-Camera (3.3.1):
+  - Permission-Camera (3.8.3):
     - RNPermissions
-  - Permission-Contacts (3.3.1):
+  - Permission-Contacts (3.8.3):
     - RNPermissions
-  - Permission-LocationAccuracy (3.3.1):
+  - Permission-LocationAccuracy (3.8.3):
     - RNPermissions
-  - Permission-LocationAlways (3.3.1):
+  - Permission-LocationAlways (3.8.3):
     - RNPermissions
-  - Permission-LocationWhenInUse (3.3.1):
+  - Permission-LocationWhenInUse (3.8.3):
     - RNPermissions
-  - Permission-Notifications (3.3.1):
+  - Permission-Notifications (3.8.3):
     - RNPermissions
   - PirateLightClientKit (0.14.3-beta):
     - gRPC-Swift (~> 1.0)
@@ -587,7 +587,7 @@ PODS:
     - React-Core
   - RNLocalize (3.0.2):
     - React-Core
-  - RNPermissions (3.3.1):
+  - RNPermissions (3.8.3):
     - React-Core
   - RNQrGenerator (1.1.7):
     - React
@@ -1150,12 +1150,12 @@ SPEC CHECKSUMS:
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
-  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
-  Permission-Contacts: 795936e988352bbf628334378eec5c3728db7140
-  Permission-LocationAccuracy: 43d7a6b3d736a90168e9fc7117a721ca44722f83
-  Permission-LocationAlways: fbf36cbdcabc3101f1168ad1ec45cfc5a6448cc4
-  Permission-LocationWhenInUse: 006c85c8de0c05b5d8be8e8029e4f6b813270293
-  Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
+  Permission-Camera: 9c8b1a826770a6feea747cc8a4a89d2b39df4273
+  Permission-Contacts: 974dc1ee648bbf36590b5079e749fd3939fa5f55
+  Permission-LocationAccuracy: 618c22002e96dd8d3759d6c2380fa950951292e1
+  Permission-LocationAlways: 6b001084436e802fb1a3ec725ad81e935ee3a6aa
+  Permission-LocationWhenInUse: a7243a69be958b5422bc0deea8bae0c937ca79f6
+  Permission-Notifications: 05a9c72e2ae989d28eb1eecf3d6a12daba73d375
   PirateLightClientKit: b5e76b77affabfc6eb6b1a01dad738d9c58c5ade
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
@@ -1215,7 +1215,7 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
-  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNPermissions: d9db16f082ce2e09908e58c925189e2637d2786b
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: 953281675307b83d2c12ac4c39e6c3415d0ce248
