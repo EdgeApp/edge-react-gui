@@ -633,7 +633,7 @@ PODS:
     - React
   - RNStoreReview (0.1.5):
     - React
-  - RNSVG (12.3.0):
+  - RNSVG (13.9.0):
     - React-Core
   - RNVectorIcons (7.1.0):
     - React
@@ -1228,7 +1228,7 @@ SPEC CHECKSUMS:
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
-  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815

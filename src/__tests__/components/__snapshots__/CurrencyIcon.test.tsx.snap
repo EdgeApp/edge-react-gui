@@ -15,8 +15,8 @@ exports[`CryptoIcon should render with loading props 1`] = `
 >
   <RNSVGSvgView
     align="xMidYMid"
-    bbHeight={61}
-    bbWidth={61}
+    bbHeight="61"
+    bbWidth="61"
     focusable={false}
     height={61}
     meetOrSlice={0}
@@ -50,20 +50,22 @@ exports[`CryptoIcon should render with loading props 1`] = `
     width={61}
   >
     <RNSVGGroup
-      matrix={
-        Array [
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-        ]
+      fill={
+        Object {
+          "payload": 4278190080,
+          "type": 0,
+        }
       }
     >
       <RNSVGCircle
-        cx={22.5}
-        cy={22.5}
+        cx="22.5"
+        cy="22.5"
+        fill={
+          Object {
+            "payload": 4278190080,
+            "type": 0,
+          }
+        }
         opacity={0}
         propList={
           Array [
@@ -72,15 +74,15 @@ exports[`CryptoIcon should render with loading props 1`] = `
             "strokeLinecap",
           ]
         }
-        r={24}
+        r="24"
         strokeDasharray={
           Array [
-            150.79644737231007,
-            150.79644737231007,
+            "150.79644737231007",
+            "150.79644737231007",
           ]
         }
         strokeLinecap={1}
-        strokeWidth={4}
+        strokeWidth="4"
       />
     </RNSVGGroup>
   </RNSVGSvgView>

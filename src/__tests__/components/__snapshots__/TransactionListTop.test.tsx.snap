@@ -356,8 +356,8 @@ Array [
               >
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight={50}
-                  bbWidth={50}
+                  bbHeight="50"
+                  bbWidth="50"
                   focusable={false}
                   height={50}
                   meetOrSlice={0}
@@ -391,20 +391,22 @@ Array [
                   width={50}
                 >
                   <RNSVGGroup
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                      ]
+                    fill={
+                      Object {
+                        "payload": 4278190080,
+                        "type": 0,
+                      }
                     }
                   >
                     <RNSVGCircle
-                      cx={17}
-                      cy={17}
+                      cx="17"
+                      cy="17"
+                      fill={
+                        Object {
+                          "payload": 4278190080,
+                          "type": 0,
+                        }
+                      }
                       opacity={0}
                       propList={
                         Array [
@@ -413,15 +415,15 @@ Array [
                           "strokeLinecap",
                         ]
                       }
-                      r={19}
+                      r="19"
                       strokeDasharray={
                         Array [
-                          119.38052083641213,
-                          119.38052083641213,
+                          "119.38052083641213",
+                          "119.38052083641213",
                         ]
                       }
                       strokeLinecap={1}
-                      strokeWidth={4}
+                      strokeWidth="4"
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
@@ -1310,8 +1312,8 @@ Array [
               >
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight={50}
-                  bbWidth={50}
+                  bbHeight="50"
+                  bbWidth="50"
                   focusable={false}
                   height={50}
                   meetOrSlice={0}
@@ -1345,20 +1347,22 @@ Array [
                   width={50}
                 >
                   <RNSVGGroup
-                    matrix={
-                      Array [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                      ]
+                    fill={
+                      Object {
+                        "payload": 4278190080,
+                        "type": 0,
+                      }
                     }
                   >
                     <RNSVGCircle
-                      cx={17}
-                      cy={17}
+                      cx="17"
+                      cy="17"
+                      fill={
+                        Object {
+                          "payload": 4278190080,
+                          "type": 0,
+                        }
+                      }
                       opacity={0}
                       propList={
                         Array [
@@ -1367,15 +1371,15 @@ Array [
                           "strokeLinecap",
                         ]
                       }
-                      r={19}
+                      r="19"
                       strokeDasharray={
                         Array [
-                          119.38052083641213,
-                          119.38052083641213,
+                          "119.38052083641213",
+                          "119.38052083641213",
                         ]
                       }
                       strokeLinecap={1}
-                      strokeWidth={4}
+                      strokeWidth="4"
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
