@@ -13582,10 +13582,10 @@ react-native-airship@^0.2.11, react-native-airship@^0.2.9:
   dependencies:
     yavent "^0.1.1"
 
-react-native-bootsplash@^4.7.3:
-  version "4.7.3"
-  resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-4.7.3.tgz#ececae84d542c172246d98d08e9835494c8a6a14"
-  integrity sha512-FFsbKAFU4TvCi/BwBOwJ/aYXJpgZaEcRg1UmCF7SrIeMwP3joX+qEZhCHmpwvCtln/rgzG02deUZ287r700qrA==
+react-native-bootsplash@^4.7.4:
+  version "4.7.4"
+  resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-4.7.4.tgz#5ff2b53751dcb2a380915ef6b853f3352b978a9f"
+  integrity sha512-t1g2KM+sNYj/6pjBz5b6tBzCjRWhfAUD2hhVCcrv9bDVdyM+C0QvASOt8W50VpiN+KW/zzf7HO24+fCx0G5qtA==
   dependencies:
     fs-extra "^11.1.1"
     picocolors "^1.0.0"

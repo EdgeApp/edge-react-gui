@@ -136,7 +136,7 @@
     "react": "17.0.2",
     "react-native": "^0.67.5",
     "react-native-airship": "^0.2.11",
-    "react-native-bootsplash": "^4.7.3",
+    "react-native-bootsplash": "^4.7.4",
     "react-native-camera": "^1.13.1",
     "react-native-check-version": "^1.0.5",
     "react-native-confetti-cannon": "^1.5.2",
