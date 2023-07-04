@@ -583,7 +583,7 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.5.0):
+  - RNGestureHandler (2.12.0):
     - React-Core
   - RNLocalize (2.2.1):
     - React-Core
@@ -1213,7 +1213,7 @@ SPEC CHECKSUMS:
   RNFBRemoteConfig: 92fbb75ceb69fec44ae727b70d23c5d1798f7648
   RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
+  RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNLocalize: cbcb55d0e19c78086ea4eea20e03fe8000bbbced
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
