@@ -121,13 +121,16 @@ export function useWalletConnect(): WalletConnect {
       throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
     }
 
-    await client.approveSession({
-      id: proposal.id,
-      namespaces: buildApprovedNamespaces({
-        proposal: proposal.params,
-        supportedNamespaces
-      })
-    })
+    await runWithTimeout(
+      client.approveSession({
+        id: proposal.id,
+        namespaces: buildApprovedNamespaces({
+          proposal: proposal.params,
+          supportedNamespaces
+        })
+      }),
+      10000
+    )
   })
 
   const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
