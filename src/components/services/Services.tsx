@@ -13,6 +13,7 @@ import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
 import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
@@ -75,6 +76,11 @@ export function Services(props: Props) {
       }
     }
   })
+
+  React.useEffect(() => {
+    console.log(`Dimensions: get(window) width=${width} height=${height}`)
+    console.log(`Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`)
+  }, [])
 
   // Methods to call immediately after login:
   useAsyncEffect(
