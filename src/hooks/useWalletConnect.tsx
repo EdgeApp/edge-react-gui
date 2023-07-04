@@ -29,6 +29,8 @@ interface WalletConnect {
   rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
 
+const userDeletedSessions = new Set<string>()
+
 /**
  * Access Wallet Connect
  */
@@ -62,6 +64,7 @@ export function useWalletConnect(): WalletConnect {
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
+      if (userDeletedSessions.has(session.topic)) continue
       const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
       if (walletId == null) continue
 
@@ -139,14 +142,18 @@ export function useWalletConnect(): WalletConnect {
     const sessions = client.getActiveSessions()
     const session = sessions[topic]
     const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
-    await client
-      .disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') })
-      .then(() => {
-        Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />)
-      })
-      .catch(e => {
-        console.log('walletConnect disconnectSession error', String(e))
-      })
+
+    try {
+      await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
+        console.log(e)
+      )
+    } catch (e) {
+      // In testing, this method is pretty unreliable so we can at least remove it locally.
+      console.log('walletConnect disconnectSession error', String(e))
+      client.core.relayer.subscriber.topicMap.delete(topic)
+      userDeletedSessions.add(topic)
+    }
   })
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
