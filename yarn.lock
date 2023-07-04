@@ -13729,10 +13729,10 @@ react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1,
   dependencies:
     prop-types "^15.5.9"
 
-react-native-mymonero-core@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.0.tgz#3cb2ed0ab9ee79a34b8727117e62b74c925059dd"
-  integrity sha512-MiwhxEeISqfq6o9xQYhsERWd6C/3Np/yQdRnLhsIjcwBVbn2HkZ748QAY0+F5DlJ03xi+LKfS+Q95WvibG6yxg==
+react-native-mymonero-core@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.3.1.tgz#5ef77034d2eec9f494e3a4cba78b7f91bf115901"
+  integrity sha512-FD0ePHvF3udSYvGMktQ8SruQ882+cOhlxp6plSCaqtI/Q/D+LTLFLYZ9bukA7iFA4AJ24Y3mkN8Aj5WZjSOOnw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
