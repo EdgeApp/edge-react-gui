@@ -471,7 +471,7 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-tcp-socket (5.6.1):
+  - react-native-tcp-socket (6.0.6):
     - CocoaAsyncSocket
     - React-Core
   - react-native-webview (13.2.2):
@@ -1188,7 +1188,7 @@ SPEC CHECKSUMS:
   react-native-piratechain: 3976b76abdc9822d1b23568e4bda8db480df6499
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
-  react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
+  react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   react-native-zcash: 173a2c8148aed6d7a5ec0867b19279dff938942e
   React-perflogger: d32ee13196f4ae2e4098fb7f8e7ed4f864c6fb0f
