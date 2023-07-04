@@ -94,7 +94,7 @@ export const WcConnectionsScene = (props: Props) => {
       <ScrollView contentContainerStyle={styles.container}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
-          label={lstrings.wc_walletconnect_new_connection_button}
+          label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
           type="secondary"
           marginRem={[1, 0.5]}
           onPress={() => handleNewConnectionPress()}
