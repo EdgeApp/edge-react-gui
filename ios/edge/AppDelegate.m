@@ -1,15 +1,17 @@
 #import "AppDelegate.h"
-#import "Edge-Swift.h"
 
-#import "RCTSplashScreen.h"
+#import <React/RCTBridge.h>
+#import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
+
+// Edge additions:
+#import "Edge-Swift.h"
+#import "RNBootSplash.h"
 #import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
-#import <React/RCTBridge.h>
-#import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
-#import <React/RCTRootView.h>
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
 
@@ -33,6 +35,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+// From https://reactnative.dev/docs/0.71/linking#enabling-deep-links
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
@@ -40,6 +43,7 @@ static void InitializeFlipper(UIApplication *application) {
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
+// From https://reactnative.dev/docs/0.71/linking#enabling-deep-links
 - (BOOL)application:(UIApplication *)application
   continueUserActivity:(nonnull NSUserActivity *)userActivity
     restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
@@ -52,6 +56,7 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application
   didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // Native Bugsnag integration:
   BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
   config.enabledBreadcrumbTypes =
     BSGEnabledBreadcrumbTypeError &
@@ -60,34 +65,42 @@ static void InitializeFlipper(UIApplication *application) {
     BSGEnabledBreadcrumbTypeUser;
   [Bugsnag startWithConfiguration:config];
 
+  // Native Firebase integration:
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
 
+  // Client-side background fetch interval:
+  [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];
+
+  // React template code:
 #if DEBUG
   InitializeFlipper(application);
 #endif
 
+  // React template code:
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"edge"
                                             initialProperties:nil];
 
-  [RCTSplashScreen open:rootView withImageNamed:@"splash"];
+  // React template code:
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
       rootView.backgroundColor = [UIColor whiteColor];
   }
 
-  // Client-side background fetch interval:
-  [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];
-
+  // React template code:
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  // Keep the splash screen around until our JS is ready:
+  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
+
   return YES;
 }
 
@@ -100,6 +113,7 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 }
 
+// Edge background-fetch logic:
 - (void)application:(UIApplication *)application
   performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {

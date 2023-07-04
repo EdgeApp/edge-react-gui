@@ -3,7 +3,7 @@ package co.edgesecure.app;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
-import com.reactnativecomponent.splashscreen.RCTSplashScreen;
+import com.zoontek.rnbootsplash.RNBootSplash;
 
 public class MainActivity extends ReactActivity {
   /**
@@ -16,7 +16,8 @@ public class MainActivity extends ReactActivity {
   }
 
   protected void onCreate(Bundle savedInstanceState) {
-    RCTSplashScreen.openSplashScreen(this);
+    // Keep the splash screen around until we are ready to hide it:
+    RNBootSplash.init(this);
 
     super.onCreate(null);
     if (getResources().getBoolean(R.bool.portrait_only)) {

@@ -471,8 +471,6 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-smart-splash-screen (2.3.5):
-    - React
   - react-native-tcp-socket (5.6.1):
     - CocoaAsyncSocket
     - React-Core
@@ -548,6 +546,8 @@ PODS:
     - React-perflogger (= 0.67.5)
   - rn-id-blurview (1.2.1):
     - React
+  - RNBootSplash (4.7.3):
+    - React-Core
   - RNCAsyncStorage (1.18.2):
     - React-Core
   - RNCClipboard (1.10.0):
@@ -805,7 +805,6 @@ DEPENDENCIES:
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
@@ -822,6 +821,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - rn-id-blurview (from `../node_modules/rn-id-blurview`)
+  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
@@ -1000,8 +1000,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-smart-splash-screen:
-    :path: "../node_modules/react-native-smart-splash-screen"
   react-native-tcp-socket:
     :path: "../node_modules/react-native-tcp-socket"
   react-native-webview:
@@ -1034,6 +1032,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   rn-id-blurview:
     :path: "../node_modules/rn-id-blurview"
+  RNBootSplash:
+    :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -1183,7 +1183,6 @@ SPEC CHECKSUMS:
   react-native-piratechain: 3976b76abdc9822d1b23568e4bda8db480df6499
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
-  react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
   react-native-tcp-socket: e511a697bc850f504e65b454b5fc4422235407b1
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   react-native-zcash: 173a2c8148aed6d7a5ec0867b19279dff938942e
@@ -1200,6 +1199,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 434efc9e5b6d0f14f49867f130b39376c971c1aa
   ReactCommon: a30c2448e5a88bae6fcb0e3da124c14ae493dac1
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
+  RNBootSplash: eef59f5de1e0d5a6e149d24a1476e42481f9c1e1
   RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489

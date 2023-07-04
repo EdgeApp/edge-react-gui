@@ -5,8 +5,8 @@ import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, p
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
+import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
-import SplashScreen from 'react-native-smart-splash-screen'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -76,11 +76,9 @@ export function EdgeCoreManager(props: Props) {
 
   function hideSplash() {
     if (!splashHidden.current) {
-      SplashScreen.close({
-        animationType: SplashScreen.animationType.fade,
-        duration: 850,
-        delay: 500
-      })
+      setTimeout(() => {
+        RNBootSplash.hide({ fade: true })
+      }, 200)
       splashHidden.current = true
     }
   }
