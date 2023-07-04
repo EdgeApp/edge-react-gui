@@ -330,6 +330,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
     if (pending > 1) {
       promises.push(
         new Promise(resolve => {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           snooze(timeoutMs).then(() => {
             resolve('async_waterfall_timed_out')
           })
@@ -339,6 +340,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
     try {
       const result = await Promise.race(promises)
       if (result === 'async_waterfall_timed_out') {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         promises.pop()
         --pending
       } else {
@@ -347,6 +349,7 @@ export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: num
     } catch (e: any) {
       const i = e.index
       promises.splice(i, 1)
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       promises.pop()
       --pending
       if (!pending) {
@@ -360,7 +363,7 @@ export async function openLink(url: string): Promise<void> {
   if (Platform.OS === 'ios') {
     try {
       await SafariView.isAvailable()
-      SafariView.show({ url })
+      await SafariView.show({ url })
       return
     } catch (e: any) {
       console.log(e)
@@ -368,7 +371,7 @@ export async function openLink(url: string): Promise<void> {
   }
   const supported = await Linking.canOpenURL(url)
   if (supported) {
-    Linking.openURL(url)
+    await Linking.openURL(url)
   } else {
     throw new Error(`Don't know how to open URI: ${url}`)
   }
