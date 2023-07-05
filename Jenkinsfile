@@ -40,6 +40,17 @@ def buildProduction(String stageName) {
   deleteDir()
 }
 
+def buildSim(String stageName) {
+  stage("Build Sim ${stageName}") {
+    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'testMaestro']) {
+      if (stageName == 'ios' && params.IOS_BUILD_SIM) {
+        sh 'npm run prepare.ios'
+        sh "node -r sucrase/register ./scripts/deploy.ts edge ios-sim ${BRANCH_NAME}"
+      }
+    }
+  }
+}
+
 pipeline {
   agent none
   tools {
@@ -58,6 +69,7 @@ pipeline {
   parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
     booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
+    booleanParam(name: 'IOS_BUILD_SIM', defaultValue: true, description: 'Build an iOS simulator version')
     booleanParam(name: 'VERBOSE', defaultValue: false, description: 'Complete build log output')
   }
   environment {
@@ -74,6 +86,15 @@ pipeline {
             script {
               preBuildStages('IOS')
               buildProduction('ios')
+            }
+          }
+        }
+        stage('IOS Simulator Build') {
+          agent { label 'ios-build-sim' }
+          steps {
+            script {
+              preBuildStages('IOS Simulator')
+              buildSim('ios')
             }
           }
         }
