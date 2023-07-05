@@ -41,7 +41,7 @@ def buildProduction(String stageName) {
 }
 
 pipeline {
-  agent any
+  agent none
   tools {
     nodejs 'stable'
   }
@@ -68,11 +68,20 @@ pipeline {
   stages {
     stage('Parallel Stage') {
       parallel {
-        stage('IOS/Android Build') {
+        stage('IOS Build') {
+          agent { label 'ios-build' }
           steps {
             script {
-              preBuildStages('IOS/Android')
+              preBuildStages('IOS')
               buildProduction('ios')
+            }
+          }
+        }
+        stage('Android Build') {
+          agent { label 'android-build' }
+          steps {
+            script {
+              preBuildStages('Android')
               buildProduction('android')
             }
           }
