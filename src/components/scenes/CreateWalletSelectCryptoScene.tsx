@@ -237,12 +237,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
-        </View>
+        <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
       </Fade>
     ),
-    [defaultSelection, handleNextPress, numSelected, styles.bottomButton]
+    [defaultSelection, handleNextPress, numSelected]
   )
 
   return (
@@ -275,7 +273,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
           />
-          {renderNextButton}
+          <View style={styles.bottomButton}>{renderNextButton}</View>
         </View>
       )}
     </SceneWrapper>
