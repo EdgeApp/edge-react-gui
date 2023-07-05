@@ -1,16 +1,13 @@
 import { Dimensions } from 'react-native'
-const { width, height } = Dimensions.get('window')
-
-console.log(`scaling.ts: Dimensions.get(window) width=${width} height=${height}`)
+export const { width, height } = Dimensions.get('window')
 
 // Guideline sizes are based on standard ~5" screen mobile device
 const guidelineBaseWidth = 320
 const guidelineBaseHeight = 568
 
 // Differences between current sizes and guideline sizes:
-const ratioHorizontal = (width - guidelineBaseWidth) / guidelineBaseWidth
-const ratioVertical = (height - guidelineBaseHeight) / guidelineBaseHeight
-console.log(`scaling.ts: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`)
+export const ratioHorizontal = (width - guidelineBaseWidth) / guidelineBaseWidth
+export const ratioVertical = (height - guidelineBaseHeight) / guidelineBaseHeight
 
 export const scaleH = (size: number, factor: number = 0.3) => {
   return size + size * factor * ratioHorizontal
