@@ -11,7 +11,7 @@ pipeline {
     disableConcurrentBuilds()
   }
   triggers {
-    pollSCM("H/5 * * * *")
+    pollSCM("H/2 * * * *")
   }
   parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
