@@ -224,6 +224,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       <CreateWalletSelectCryptoRow
         pluginId={pluginId}
         tokenId={tokenId}
+        key={`${pluginId}${tokenId}`}
         walletName={displayName}
         onPress={() => handleCreateWalletToggle(key)}
         rightSide={toggle}
