@@ -7,47 +7,20 @@ import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { ENV } from '../../env'
-import { useMount } from '../../hooks/useMount'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { getAccounts, getWalletIdFromSessionNamespace } from '../../hooks/useWalletConnect'
 import { useWatch } from '../../hooks/useWatch'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship } from '../services/AirshipInstance'
 
-let walletConnectRef: Web3Wallet | undefined
+export let walletConnectClient: Web3Wallet | undefined
 
-export const walletConnectPromise: Promise<Web3Wallet> = new Promise((resolve, reject) => {
-  if (walletConnectRef != null) {
-    resolve(walletConnectRef)
-    return
-  }
+export const getClient = async (): Promise<Web3Wallet> => {
+  if (walletConnectClient != null) return walletConnectClient
+  return await new Promise(resolve => waitingClients.push(resolve))
+}
 
-  if (typeof ENV.WALLET_CONNECT_INIT !== 'object' || ENV.WALLET_CONNECT_INIT.projectId == null) {
-    const message = 'Cannot initialize WalletConnect without projectId'
-    console.warn(message)
-    reject(message)
-    return
-  }
-
-  const core = new Core({
-    projectId: ENV.WALLET_CONNECT_INIT.projectId
-  })
-
-  Web3Wallet.init({
-    core,
-    metadata: {
-      name: 'Edge Wallet',
-      description: 'Edge Wallet',
-      url: 'https://www.edge.app',
-      icons: ['https://content.edge.app/Edge_logo_Icon.png']
-    }
-  })
-    .then(res => {
-      walletConnectRef = res
-      console.log('WalletConnect initialized')
-      resolve(walletConnectRef)
-    })
-    .catch(error => reject(error))
-})
+const waitingClients: Array<(client: Web3Wallet) => void> = []
 
 interface Props {
   account: EdgeAccount
@@ -58,11 +31,10 @@ export const WalletConnectService = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const handleSessionRequest = async (event: any) => {
-    if (walletConnectRef == null) return
-    const client = walletConnectRef
+    if (walletConnectClient == null) return
     const request = asSessionRequest(event)
 
-    const sessions = client.getActiveSessions()
+    const sessions = walletConnectClient.getActiveSessions()
     const session = sessions[request.topic]
     if (session == null) return
     const accounts = await getAccounts(currencyWallets)
@@ -98,12 +70,36 @@ export const WalletConnectService = (props: Props) => {
     }
   }
 
-  useMount(async () => {
-    const client = await walletConnectPromise
-    if (client.events.listenerCount('session_request') === 0) {
-      client.on('session_request', handleSessionRequest)
+  useAsyncEffect(async () => {
+    if (walletConnectClient == null) {
+      let projectId: string | undefined
+      if (typeof ENV.WALLET_CONNECT_INIT === 'object' && ENV.WALLET_CONNECT_INIT.projectId != null) {
+        projectId = ENV.WALLET_CONNECT_INIT.projectId
+      }
+
+      walletConnectClient = await Web3Wallet.init({
+        core: new Core({
+          projectId
+        }),
+        metadata: {
+          name: 'Edge Wallet',
+          description: 'Edge Wallet',
+          url: 'https://www.edge.app',
+          icons: ['https://content.edge.app/Edge_logo_Icon.png']
+        }
+      })
     }
-  })
+
+    if (walletConnectClient.events.listenerCount('session_request') === 0) {
+      walletConnectClient.on('session_request', handleSessionRequest)
+    }
+    console.log('WalletConnect initialized')
+    waitingClients.forEach(f => f(walletConnectClient as Web3Wallet))
+
+    return () => {
+      walletConnectClient?.events.removeListener('session_request', handleSessionRequest)
+    }
+  }, [])
 
   return null
 }

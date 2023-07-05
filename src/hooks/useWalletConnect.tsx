@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship } from '../components/services/AirshipInstance'
-import { walletConnectPromise } from '../components/services/WalletConnectService'
+import { getClient } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
@@ -56,7 +56,7 @@ export function useWalletConnect(): WalletConnect {
 
   // API
   const getActiveSessions = useHandler(async () => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
     const accounts = await getAccounts(currencyWallets)
@@ -72,7 +72,7 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const initSession = useHandler(async (uri: string): Promise<any> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
 
     const parsedUri = parseUri(uri)
     if (parsedUri.version !== 2) {
@@ -100,7 +100,7 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
 
     const wallet = currencyWallets[walletId]
     if (wallet == null) return
@@ -128,14 +128,14 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client.rejectSession({ id: proposal.id, reason: getSdkError('USER_REJECTED') }).catch(e => {
       console.log('walletConnect rejectSession error', String(e))
     })
   })
 
   const disconnectSession = useHandler(async (topic: string): Promise<void> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     const sessions = client.getActiveSessions()
     const session = sessions[topic]
     const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
@@ -150,14 +150,14 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client.respondSessionRequest({ topic, response: { id, jsonrpc: '2.0', result } }).catch(e => {
       console.log('walletConnect approveRequest error', String(e))
     })
   })
 
   const rejectRequest = useHandler(async (topic: string, id: number) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client
       .respondSessionRequest({
         topic,
