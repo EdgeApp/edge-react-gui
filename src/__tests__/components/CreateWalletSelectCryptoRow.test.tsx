@@ -17,7 +17,8 @@ describe('WalletListRow', () => {
               pluginId: 'bitcoin'
             }
           }
-        }
+        },
+        watch: () => () => {}
       }
     }
   }
@@ -35,5 +36,6 @@ describe('WalletListRow', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

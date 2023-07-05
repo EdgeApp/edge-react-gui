@@ -18,6 +18,7 @@ describe('WalletListModal', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it("Should upgrade currency codes to token ID's", () => {

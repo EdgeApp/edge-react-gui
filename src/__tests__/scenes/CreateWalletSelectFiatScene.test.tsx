@@ -39,7 +39,8 @@ describe('CreateWalletSelectFiatComponent', () => {
               pluginId: 'ethereum'
             }
           }
-        }
+        },
+        watch: () => () => {}
       }
     }
   }
@@ -73,5 +74,6 @@ describe('CreateWalletSelectFiatComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

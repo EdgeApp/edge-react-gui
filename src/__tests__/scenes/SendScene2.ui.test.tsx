@@ -95,6 +95,7 @@ describe('SendScene2', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
   it('1 spendTarget', () => {
     if (btcWallet == null) return
@@ -116,6 +117,7 @@ describe('SendScene2', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
   it('1 spendTarget with info tiles', () => {
     if (btcWallet == null) return
@@ -141,6 +143,7 @@ describe('SendScene2', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
   it('2 spendTargets', () => {
     if (btcWallet == null) return
@@ -165,6 +168,7 @@ describe('SendScene2', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('2 spendTargets hide tiles', () => {

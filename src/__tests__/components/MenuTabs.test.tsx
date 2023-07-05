@@ -19,5 +19,6 @@ describe('MenuTabs', () => {
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

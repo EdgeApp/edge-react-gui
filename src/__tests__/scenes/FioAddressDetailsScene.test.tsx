@@ -11,14 +11,15 @@ describe('FioAddressDetails', () => {
     const renderer = createRenderer()
 
     const fakeWallet: any = {
+      blockHeight: 34,
       currencyCode: 'FIO',
+      date: 220322,
       nativeAmount: '100',
       networkFee: '1',
-      blockHeight: 34,
-      date: 220322,
-      txid: '0x34346463',
+      ourReceiveAddresses: ['FioAddress'],
       signedTx: '0xdgs3442',
-      ourReceiveAddresses: ['FioAddress']
+      stakingStatus: { stakedAmounts: [] },
+      txid: '0x34346463'
     }
 
     const actual = renderer.render(

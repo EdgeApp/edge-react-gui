@@ -12,7 +12,9 @@ const typeHack: any = {
   currencyConfig: {},
   username: 'some user',
   logSettings: { defaultLogLevel: 'info' },
-  watch() {}
+  watch() {
+    return () => {}
+  }
 }
 const account: EdgeAccount = typeHack
 const context: EdgeContext = typeHack
@@ -52,6 +54,7 @@ describe('MyComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render Locked SettingsOverview', () => {
@@ -88,5 +91,6 @@ describe('MyComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })
