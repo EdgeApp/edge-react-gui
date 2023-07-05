@@ -39,6 +39,10 @@ coverage/
 /android/app/src/main/assets/saplingtree/
 /android/app/src/main/assets/piratesaplingtree/
 
+# Maestro
+/maestro/env.js
+testerConfig.json
+
 # ----------------------------------------------------------------------
 # Everything below comes from React Native.
 # Do not edit this section except during React Native version upgrades.
@@ -104,8 +108,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-
-# Maestro
-/maestro/env.js
-testerConfig.json
-
