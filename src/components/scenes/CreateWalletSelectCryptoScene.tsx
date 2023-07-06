@@ -199,19 +199,20 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
     const { key, displayName, pluginId, tokenId } = item.item
-
+    const value = selectedItems[key]
     const accessibilityHint = sprintf(lstrings.create_wallet_hint, displayName)
+    const accessibilityState = { checked: value, selected: value }
     const toggle = (
       <Switch
+        accessibilityState={accessibilityState}
         accessibilityRole="switch"
-        accessibilityState={{ selected: selectedItems[key] }}
         accessibilityHint={accessibilityHint}
         ios_backgroundColor={theme.toggleButtonOff}
         trackColor={{
           false: theme.toggleButtonOff,
           true: theme.toggleButton
         }}
-        value={selectedItems[key]}
+        value={value}
         onValueChange={() => handleCreateWalletToggle(key)}
       />
     )
@@ -220,6 +221,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       <CreateWalletSelectCryptoRow
         pluginId={pluginId}
         tokenId={tokenId}
+        key={displayName}
         walletName={displayName}
         onPress={() => handleCreateWalletToggle(key)}
         rightSide={toggle}
@@ -232,12 +234,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
-        </View>
+        <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
       </Fade>
     ),
-    [defaultSelection, handleNext, numSelected, styles.bottomButton]
+    [defaultSelection, handleNext, numSelected]
   )
 
   return (
@@ -270,7 +270,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
           />
-          {renderNextButton}
+          <View style={styles.bottomArea}>{renderNextButton}</View>
         </View>
       )}
     </SceneWrapper>
@@ -278,10 +278,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  bottomButton: {
-    alignSelf: 'center',
-    bottom: theme.rem(1),
-    position: 'absolute'
+  bottomArea: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: theme.rem(1)
   },
   content: {
     flex: 1
