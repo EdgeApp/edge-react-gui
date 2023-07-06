@@ -117,7 +117,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="legacy">
         <ScrollView>
           <View style={styles.scrollableView}>
             <CryptoIcon marginRem={[1.5, 0, 0, 0]} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
