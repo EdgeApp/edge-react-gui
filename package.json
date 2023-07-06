@@ -166,7 +166,7 @@
     "react-native-gesture-handler": "^2.12.0",
     "react-native-get-random-values": "^1.9.0",
     "react-native-haptic-feedback": "^1.14.0",
-    "react-native-image-picker": "^4.0.6",
+    "react-native-image-picker": "^5.6.0",
     "react-native-in-app-review": "^4.3.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.5.6",
