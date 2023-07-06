@@ -9,7 +9,6 @@ import * as React from 'react'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { getAccounts, getWalletIdFromSessionNamespace } from '../../hooks/useWalletConnect'
-import { useWatch } from '../../hooks/useWatch'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
 
@@ -28,7 +27,6 @@ interface Props {
 
 export const WalletConnectService = (props: Props) => {
   const { account } = props
-  const currencyWallets = useWatch(account, 'currencyWallets')
 
   const handleSessionRequest = async (event: any) => {
     const client = await getClient()
@@ -37,6 +35,7 @@ export const WalletConnectService = (props: Props) => {
     const sessions = client.getActiveSessions()
     const session = sessions[request.topic]
     if (session == null) return
+    const { currencyWallets } = account
     const accounts = await getAccounts(currencyWallets)
     const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
     if (walletId == null) {
