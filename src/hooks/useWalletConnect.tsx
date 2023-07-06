@@ -98,7 +98,7 @@ export function useWalletConnect(): WalletConnect {
           reject(e)
         })
       }),
-      10000
+      20000
     )
   })
 
@@ -130,7 +130,7 @@ export function useWalletConnect(): WalletConnect {
           supportedNamespaces
         })
       }),
-      10000
+      20000
     )
   })
 
