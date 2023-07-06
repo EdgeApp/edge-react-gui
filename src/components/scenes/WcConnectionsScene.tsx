@@ -94,7 +94,7 @@ export const WcConnectionsScene = (props: Props) => {
       <ScrollView contentContainerStyle={styles.container}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
-          label={lstrings.wc_walletconnect_new_connection_button}
+          label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
           type="secondary"
           marginRem={[1, 0.5]}
           onPress={() => handleNewConnectionPress()}
@@ -200,9 +200,9 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
   }
 
   const requiredChainIds: Set<string> = getChainIdsFromNamespaces(requiredNamespaces)
-  const optionalChainIds: Set<string> = getChainIdsFromNamespaces(optionalNamespaces)
+  const optionalChainIds: Set<string> = requiredChainIds.size === 0 ? getChainIdsFromNamespaces(optionalNamespaces) : new Set()
 
-  let hasWalletForRequiredNamesapce = false
+  let hasWalletForRequiredNamespace = false
   const edgeTokenIdMap = new Map<string, EdgeTokenId>()
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
@@ -212,7 +212,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
     const { pluginId } = wallet.currencyInfo
     const chainIdString = `${chainId.namespace}:${chainId.reference}`
     if (requiredChainIds.has(chainIdString)) {
-      hasWalletForRequiredNamesapce = true
+      hasWalletForRequiredNamespace = true
       if (!edgeTokenIdMap.has(pluginId)) {
         edgeTokenIdMap.set(pluginId, { pluginId })
       }
@@ -224,7 +224,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
     }
   }
 
-  if (!hasWalletForRequiredNamesapce) {
+  if (!hasWalletForRequiredNamespace) {
     throw new Error('No wallets meet dapp requirements')
   }
 

@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship } from '../components/services/AirshipInstance'
-import { walletConnectPromise } from '../components/services/WalletConnectService'
+import { getClient } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
@@ -28,6 +28,8 @@ interface WalletConnect {
   approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
   rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
+
+const userDeletedSessions = new Set<string>()
 
 /**
  * Access Wallet Connect
@@ -56,13 +58,14 @@ export function useWalletConnect(): WalletConnect {
 
   // API
   const getActiveSessions = useHandler(async () => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = await getWalletIdFromSessionNamespace(session.namespaces, accounts)
+      if (userDeletedSessions.has(session.topic)) continue
+      const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
       if (walletId == null) continue
 
       const connection = parseConnection(session, walletId)
@@ -72,7 +75,7 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const initSession = useHandler(async (uri: string): Promise<any> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
 
     const parsedUri = parseUri(uri)
     if (parsedUri.version !== 2) {
@@ -100,7 +103,7 @@ export function useWalletConnect(): WalletConnect {
   })
 
   const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
 
     const wallet = currencyWallets[walletId]
     if (wallet == null) return
@@ -118,46 +121,53 @@ export function useWalletConnect(): WalletConnect {
       throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
     }
 
-    await client.approveSession({
-      id: proposal.id,
-      namespaces: buildApprovedNamespaces({
-        proposal: proposal.params,
-        supportedNamespaces
-      })
-    })
+    await runWithTimeout(
+      client.approveSession({
+        id: proposal.id,
+        namespaces: buildApprovedNamespaces({
+          proposal: proposal.params,
+          supportedNamespaces
+        })
+      }),
+      10000
+    )
   })
 
   const rejectSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal): Promise<void> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client.rejectSession({ id: proposal.id, reason: getSdkError('USER_REJECTED') }).catch(e => {
       console.log('walletConnect rejectSession error', String(e))
     })
   })
 
   const disconnectSession = useHandler(async (topic: string): Promise<void> => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     const sessions = client.getActiveSessions()
     const session = sessions[topic]
     const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
-    await client
-      .disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') })
-      .then(() => {
-        Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />)
-      })
-      .catch(e => {
-        console.log('walletConnect disconnectSession error', String(e))
-      })
+
+    try {
+      await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
+        console.log(e)
+      )
+    } catch (e) {
+      // In testing, this method is pretty unreliable so we can at least remove it locally.
+      console.log('walletConnect disconnectSession error', String(e))
+      client.core.relayer.subscriber.topicMap.delete(topic)
+      userDeletedSessions.add(topic)
+    }
   })
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client.respondSessionRequest({ topic, response: { id, jsonrpc: '2.0', result } }).catch(e => {
       console.log('walletConnect approveRequest error', String(e))
     })
   })
 
   const rejectRequest = useHandler(async (topic: string, id: number) => {
-    const client = await walletConnectPromise
+    const client = await getClient()
     await client
       .respondSessionRequest({
         topic,
