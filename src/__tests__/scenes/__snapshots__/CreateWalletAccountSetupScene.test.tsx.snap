@@ -5,7 +5,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
   <ScrollView>
     <View
       style={
-        Object {
+        {
           "paddingHorizontal": 20,
           "position": "relative",
         }
@@ -13,7 +13,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
     >
       <Memo(CryptoIconComponent)
         marginRem={
-          Array [
+          [
             1.5,
             0,
             0,
@@ -25,12 +25,12 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "paddingBottom": 11.236619718309859,
               "paddingTop": 22.473239436619718,
             },
-            Object {
+            {
               "paddingBottom": 8,
               "paddingTop": 24,
             },
@@ -39,7 +39,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       >
         <FormattedText
           style={
-            Object {
+            {
               "color": "#4A5157",
               "fontSize": 22.473239436619718,
               "textAlign": "center",
@@ -51,12 +51,12 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       </View>
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "paddingBottom": 11.236619718309859,
               "paddingTop": 22.473239436619718,
             },
-            Object {
+            {
               "paddingBottom": 8,
               "paddingTop": 8,
             },
@@ -65,7 +65,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       >
         <FormattedText
           style={
-            Object {
+            {
               "color": "#4A5157",
               "fontSize": 22.473239436619718,
               "textAlign": "left",
@@ -79,7 +79,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "flexDirection": "row",
             "justifyContent": "space-between",
           }
@@ -91,7 +91,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
           autoFocus={true}
           baseColor="#0D2145"
           containerStyle={
-            Object {
+            {
               "height": 60,
               "marginBottom": 33.709859154929575,
               "marginTop": 22.473239436619718,
@@ -108,12 +108,12 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
           returnKeyType="next"
           textColor="#25292C"
           tintColor="#0E4B75"
-          titleTextStyle={Object {}}
+          titleTextStyle={{}}
           value=""
         />
         <View
           style={
-            Object {
+            {
               "height": 35.11443661971831,
               "width": 35.11443661971831,
             }
@@ -122,7 +122,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
           <ActivityIndicator
             color="#66EDA8"
             style={
-              Object {
+              {
                 "alignSelf": "flex-end",
                 "height": 35.11443661971831,
                 "marginTop": 60.3968309859155,
@@ -134,7 +134,7 @@ exports[`CreateWalletAccountSelect should render with loading props 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "paddingBottom": 400,
           }
         }

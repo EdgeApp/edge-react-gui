@@ -3,8 +3,8 @@
 exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
 <ForwardRef(AnimatedComponentWrapper)
   style={
-    Array [
-      Object {
+    [
+      {
         "alignItems": "center",
         "bottom": 0,
         "flexDirection": "column",
@@ -15,7 +15,7 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
         "right": 0,
         "top": 0,
       },
-      Object {
+      {
         "opacity": 0,
       },
     ]
@@ -23,7 +23,7 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "backgroundColor": "#000000",
         "bottom": 0,
         "left": 0,
@@ -36,7 +36,7 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
   />
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "backgroundColor": "#D9E3ED",
         "borderRadius": 27.389260563380283,
@@ -49,7 +49,7 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
   >
     <Text
       style={
-        Object {
+        {
           "color": "#25292C",
           "flexShrink": 1,
           "fontFamily": "SourceSansPro-Black",

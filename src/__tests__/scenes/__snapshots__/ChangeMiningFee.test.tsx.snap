@@ -13,7 +13,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
   />
   <ScrollView
     contentContainerStyle={
-      Object {
+      {
         "paddingTop": 11,
       }
     }
@@ -28,7 +28,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         name="speedometer"
         size={12}
         style={
-          Object {
+          {
             "color": "#00f1a2",
             "fontSize": 28,
             "paddingHorizontal": 11,
@@ -46,7 +46,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         name="speedometer-medium"
         size={12}
         style={
-          Object {
+          {
             "color": "#00f1a2",
             "fontSize": 28,
             "paddingHorizontal": 11,
@@ -64,7 +64,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         name="speedometer-slow"
         size={12}
         style={
-          Object {
+          {
             "color": "#00f1a2",
             "fontSize": 28,
             "paddingHorizontal": 11,
@@ -82,7 +82,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         name="gear"
         size={12}
         style={
-          Object {
+          {
             "color": "#00f1a2",
             "fontSize": 28,
             "paddingHorizontal": 11,

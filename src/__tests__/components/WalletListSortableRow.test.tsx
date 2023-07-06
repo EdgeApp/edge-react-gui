@@ -14,6 +14,7 @@ describe('WalletListSortableRow', () => {
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render with fake wallet', () => {
@@ -30,7 +31,8 @@ describe('WalletListSortableRow', () => {
               allTokens: {},
               currencyInfo: fakeCurrencyInfo
             }
-          }
+          },
+          watch: () => () => {}
         }
       }
     }
@@ -46,5 +48,6 @@ describe('WalletListSortableRow', () => {
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

@@ -49,5 +49,6 @@ describe('CreateWalletImportScene', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

@@ -77,7 +77,7 @@ Otherwise, to get an APK, do:
 
 ### Build release version of app
 
-First, run `./scripts/updateVersion.js` to copy the `package.json` version into the native project files, and to assign a unique build number.
+First, run `yarn update-version` to copy the `package.json` version into the native project files, and to assign a unique build number.
 
 #### iOS
 

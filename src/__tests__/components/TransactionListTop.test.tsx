@@ -45,6 +45,7 @@ describe('TransactionListTop', () => {
     fiatCurrencyCode: 'USD',
     id: '123',
     name: 'wallet name',
+    stakingStatus: { stakedAmounts: [] },
     type: 'wallet:bitcoin',
     watch() {}
   }
@@ -54,10 +55,7 @@ describe('TransactionListTop', () => {
       account: {
         currencyWallets: { '123': fakeWallet },
         currencyConfig: { bitcoin: fakeCurrencyConfig },
-
-        // Needed to prevent crash due to undefined `watch` method which normally exists
-        // in an EdgeAccount
-        watch() {}
+        watch: () => () => {}
       }
     }
   }
@@ -79,6 +77,7 @@ describe('TransactionListTop', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render (with ENABLE_VISA_PROGRAM)', () => {
@@ -98,5 +97,6 @@ describe('TransactionListTop', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

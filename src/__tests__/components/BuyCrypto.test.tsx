@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import renderer from 'react-test-renderer'
+import TestRenderer from 'react-test-renderer'
 
 import { BuyCrypto } from '../../components/themed/BuyCrypto'
 import { initialState } from '../../reducers/scenes/SettingsReducer'
@@ -23,12 +23,13 @@ describe('BuyCrypto', () => {
       currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' }
     }
 
-    const actual = renderer.create(
+    const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
         <BuyCrypto wallet={fakeWallet} tokenId={undefined} navigation={fakeNavigation} />
       </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

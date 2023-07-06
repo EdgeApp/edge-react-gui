@@ -8,7 +8,11 @@ import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('CategoryModal', () => {
+  const fakeAccount: any = { disklet: { getText: async () => '' } }
   const fakeState: FakeState = {
+    core: {
+      account: fakeAccount
+    },
     ui: {
       subcategories: defaultCategories.slice(0, 4)
     }
@@ -22,6 +26,7 @@ describe('CategoryModal', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render with a subcategory', () => {
@@ -32,5 +37,6 @@ describe('CategoryModal', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

@@ -3,7 +3,7 @@
 exports[`AccelerateTxModalComponent should render with loading props 1`] = `
 <ThemedModal
   bridge={
-    Object {
+    {
       "on": [Function],
       "onResult": [Function],
       "reject": [Function],
@@ -21,7 +21,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
   </ModalMessage>
   <View
     style={
-      Object {
+      {
         "marginVertical": 11,
         "maxHeight": 449,
       }
@@ -40,7 +40,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
   </View>
   <View
     style={
-      Object {
+      {
         "marginVertical": 11,
         "maxHeight": 449,
       }

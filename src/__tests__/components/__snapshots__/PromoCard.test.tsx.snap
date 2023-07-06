@@ -2,6 +2,23 @@
 
 exports[`PromoCard should render 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
   accessible={true}
   collapsable={false}
   focusable={true}
@@ -13,7 +30,7 @@ exports[`PromoCard should render 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "marginBottom": 22,
       "marginLeft": 22,
       "marginRight": 22,
@@ -28,7 +45,7 @@ exports[`PromoCard should render 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
@@ -38,11 +55,11 @@ exports[`PromoCard should render 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "overflow": "hidden",
           },
-          Object {
+          {
             "height": 45,
             "margin": 11,
             "width": 45,
@@ -53,12 +70,12 @@ exports[`PromoCard should render 1`] = `
       <FastImageView
         resizeMode="contain"
         source={
-          Object {
+          {
             "uri": "https://edge.app/favicon.ico",
           }
         }
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -73,14 +90,14 @@ exports[`PromoCard should render 1`] = `
       minimumFontScale={0.65}
       numberOfLines={0}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
-          Object {
+          {
             "flex": 1,
             "margin": 11,
           },
@@ -91,6 +108,23 @@ exports[`PromoCard should render 1`] = `
       Show me
     </Text>
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
       accessible={true}
       collapsable={false}
       focusable={true}
@@ -102,7 +136,7 @@ exports[`PromoCard should render 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
+        {
           "opacity": 1,
         }
       }
@@ -111,20 +145,20 @@ exports[`PromoCard should render 1`] = `
         accessibilityHint="Close"
         allowFontScaling={false}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#00f1a2",
               "fontSize": 22,
             },
-            Object {
+            {
               "padding": 11,
             },
-            Object {
+            {
               "fontFamily": "anticon",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            Object {},
+            {},
           ]
         }
       >

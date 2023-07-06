@@ -1,8 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BuyCrypto should render with some props 1`] = `
-Array [
+[
   <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -14,7 +31,7 @@ Array [
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "marginBottom": 0,
         "marginLeft": 0,
         "marginRight": 0,
@@ -29,7 +46,7 @@ Array [
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flex": 1,
@@ -40,7 +57,7 @@ Array [
     >
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "justifyContent": "center",
           }
@@ -48,7 +65,7 @@ Array [
       >
         <View
           style={
-            Object {
+            {
               "height": 51,
               "marginBottom": 6,
               "marginLeft": 0,
@@ -63,14 +80,14 @@ Array [
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "fontFamily": "Quicksand-Medium",
                 "marginVertical": 6,
               },
@@ -85,7 +102,7 @@ Array [
   </View>,
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flex": 1,
         "justifyContent": "center",
@@ -98,14 +115,14 @@ Array [
       minimumFontScale={0.65}
       numberOfLines={1}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
-          Object {
+          {
             "fontSize": 28,
           },
           null,

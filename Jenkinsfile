@@ -77,7 +77,7 @@ pipeline {
 
     stage ("Test") {
       steps {
-        sh "JEST_JENKINS=1 yarn cover --ci"
+        sh "yarn test --ci"
       }
     }
 

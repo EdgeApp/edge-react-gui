@@ -7,7 +7,7 @@ exports[`FioAddressList should render with loading props 1`] = `
   >
     <ScrollView
       style={
-        Object {
+        {
           "flex": 1,
         }
       }
@@ -18,7 +18,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       />
       <View
         style={
-          Object {
+          {
             "display": "flex",
             "flexDirection": "column",
             "paddingTop": 11,
@@ -30,12 +30,12 @@ exports[`FioAddressList should render with loading props 1`] = `
           icon={
             <Image
               source={
-                Object {
+                {
                   "testUri": "../../../src/assets/images/fio/fio_logo.png",
                 }
               }
               style={
-                Object {
+                {
                   "height": 51,
                   "marginRight": 34,
                 }
@@ -45,22 +45,22 @@ exports[`FioAddressList should render with loading props 1`] = `
           name="fio@edge"
           onPress={[Function]}
           theme={
-            Object {
+            {
               "addButtonFont": "Quicksand-Medium",
-              "backgroundGradientColors": Array [
+              "backgroundGradientColors": [
                 "#06090c",
                 "#1b2f3b",
               ],
-              "backgroundGradientEnd": Object {
+              "backgroundGradientEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "backgroundGradientStart": Object {
+              "backgroundGradientStart": {
                 "x": 0,
                 "y": 0,
               },
               "backgroundImage": undefined,
-              "backgroundImageServerUrls": Array [
+              "backgroundImageServerUrls": [
                 "https://content.edge.app",
               ],
               "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
@@ -89,7 +89,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
-              "dividerLineColors": Array [
+              "dividerLineColors": [
                 "rgba(255, 255, 255, .1)",
                 "rgba(255, 255, 255, .1)",
               ],
@@ -98,15 +98,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dropdownText": "#FFFFFF",
               "dropdownWarning": "#F1AA19",
               "emphasizedText": "#00f1a2",
-              "escapeButton": Array [
+              "escapeButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
-              "escapeButtonColorEnd": Object {
+              "escapeButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "escapeButtonColorStart": Object {
+              "escapeButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -114,10 +114,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "escapeButtonFontSizeRem": 1,
               "escapeButtonOutline": "rgba(255, 255, 255, 0)",
               "escapeButtonOutlineWidth": 0,
-              "escapeButtonShadow": Object {
+              "escapeButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -125,16 +125,16 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "escapeButtonText": "#00f1a2",
-              "escapeButtonTextShadow": Object {
+              "escapeButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
               "fadeDisable": "#87939E",
-              "fioAddressLogo": Object {
+              "fioAddressLogo": {
                 "testUri": "../../../src/assets/images/details_fioAddress.png",
               },
               "flipInputBorder": "#A4C7DF",
@@ -142,10 +142,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "fontFaceDefault": "Quicksand-Regular",
               "fontFaceMedium": "Quicksand-Medium",
               "fontFaceSymbols": "Quicksand-Regular",
-              "guiPluginLogoMoonpay": Object {
+              "guiPluginLogoMoonpay": {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
               },
-              "headerIcon": Object {
+              "headerIcon": {
                 "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
               },
               "icon": "#FFFFFF",
@@ -156,16 +156,16 @@ exports[`FioAddressList should render with loading props 1`] = `
               "inputAccessoryBackground": "#FFFFFF",
               "inputAccessoryText": "#0073D9",
               "isDark": true,
-              "keypadButton": Array [
+              "keypadButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
               "keypadButtonBorderRadiusRem": 0.25,
-              "keypadButtonColorEnd": Object {
+              "keypadButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "keypadButtonColorStart": Object {
+              "keypadButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -173,10 +173,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "keypadButtonFontSizeRem": 1.5,
               "keypadButtonOutline": "rgba(255, 255, 255, 0)",
               "keypadButtonOutlineWidth": 1,
-              "keypadButtonShadow": Object {
+              "keypadButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -184,24 +184,24 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "keypadButtonText": "#00f1a2",
-              "keypadButtonTextShadow": Object {
+              "keypadButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
               "lineDivider": "rgba(255, 255, 255, .1)",
-              "listSectionHeaderBackgroundGradientColors": Array [
+              "listSectionHeaderBackgroundGradientColors": [
                 "#06090c",
                 "#1b2f3b",
               ],
-              "listSectionHeaderBackgroundGradientEnd": Object {
+              "listSectionHeaderBackgroundGradientEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "listSectionHeaderBackgroundGradientStart": Object {
+              "listSectionHeaderBackgroundGradientStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -219,69 +219,69 @@ exports[`FioAddressList should render with loading props 1`] = `
               "outlineTextInputLabelColor": "#A4C7DF",
               "outlineTextInputLabelColorFocused": "#00f1a2",
               "outlineTextInputTextColor": "#FFFFFF",
-              "paymentTypeLogoApplePay": Object {
+              "paymentTypeLogoApplePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },
-              "paymentTypeLogoAuspost": Object {
+              "paymentTypeLogoAuspost": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoAuspost.png",
               },
-              "paymentTypeLogoBankTransfer": Object {
+              "paymentTypeLogoBankTransfer": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
               },
-              "paymentTypeLogoCash": Object {
+              "paymentTypeLogoCash": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
               },
-              "paymentTypeLogoCreditCard": Object {
+              "paymentTypeLogoCreditCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCreditCard.png",
               },
-              "paymentTypeLogoDebitCard": Object {
+              "paymentTypeLogoDebitCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoDebitCard.png",
               },
-              "paymentTypeLogoFasterPayments": Object {
+              "paymentTypeLogoFasterPayments": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoFasterPayments.png",
               },
-              "paymentTypeLogoGiftCard": Object {
+              "paymentTypeLogoGiftCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGiftCard.png",
               },
-              "paymentTypeLogoGooglePay": Object {
+              "paymentTypeLogoGooglePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGooglePay.png",
               },
-              "paymentTypeLogoIdeal": Object {
+              "paymentTypeLogoIdeal": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoIdeal.png",
               },
-              "paymentTypeLogoInterac": Object {
+              "paymentTypeLogoInterac": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
               },
-              "paymentTypeLogoPayid": Object {
+              "paymentTypeLogoPayid": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPayid.png",
               },
-              "paymentTypeLogoPaynow": Object {
+              "paymentTypeLogoPaynow": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
               },
-              "paymentTypeLogoPoli": Object {
+              "paymentTypeLogoPoli": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
               },
-              "paymentTypeLogoSofort": Object {
+              "paymentTypeLogoSofort": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
               },
-              "paymentTypeLogoUpi": Object {
+              "paymentTypeLogoUpi": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
               },
-              "paymentTypeVisa": Object {
+              "paymentTypeVisa": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
               },
               "pickerTextDark": "#FFFFFF",
               "pickerTextLight": "#000000",
-              "pinUsernameButton": Array [
+              "pinUsernameButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
               "pinUsernameButtonBorderRadiusRem": 1,
-              "pinUsernameButtonColorEnd": Object {
+              "pinUsernameButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "pinUsernameButtonColorStart": Object {
+              "pinUsernameButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -289,10 +289,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "pinUsernameButtonFontSizeRem": 1.5,
               "pinUsernameButtonOutline": "rgba(255, 255, 255, 0)",
               "pinUsernameButtonOutlineWidth": 0,
-              "pinUsernameButtonShadow": Object {
+              "pinUsernameButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -300,9 +300,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "pinUsernameButtonText": "#FFFFFF",
-              "pinUsernameButtonTextShadow": Object {
+              "pinUsernameButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -310,15 +310,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "positiveText": "#77C513",
               "preferPrimaryButton": true,
-              "primaryButton": Array [
+              "primaryButton": [
                 "#089e73",
                 "#00f1a2",
               ],
-              "primaryButtonColorEnd": Object {
+              "primaryButtonColorEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "primaryButtonColorStart": Object {
+              "primaryButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -326,10 +326,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "primaryButtonFontSizeRem": 1,
               "primaryButtonOutline": "rgba(255, 255, 255, 0)",
               "primaryButtonOutlineWidth": 0,
-              "primaryButtonShadow": Object {
+              "primaryButtonShadow": {
                 "elevation": 2,
                 "shadowColor": "#FFFFFF",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -337,15 +337,15 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 8,
               },
               "primaryButtonText": "#1b2f3b",
-              "primaryButtonTextShadow": Object {
+              "primaryButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
-              "primaryLogo": Object {
+              "primaryLogo": {
                 "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
               },
               "primaryText": "#FFFFFF",
@@ -353,15 +353,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               "qrForegroundColor": "#000000",
               "rem": [Function],
               "searchListRefreshControlIndicator": "rgba(255, 255, 255, 0)",
-              "secondaryButton": Array [
+              "secondaryButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
-              "secondaryButtonColorEnd": Object {
+              "secondaryButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "secondaryButtonColorStart": Object {
+              "secondaryButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -369,10 +369,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "secondaryButtonFontSizeRem": 1,
               "secondaryButtonOutline": "#00f1a2",
               "secondaryButtonOutlineWidth": 1.5,
-              "secondaryButtonShadow": Object {
+              "secondaryButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -380,9 +380,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "secondaryButtonText": "#00f1a2",
-              "secondaryButtonTextShadow": Object {
+              "secondaryButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -390,15 +390,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "secondaryText": "#A4C7DF",
               "settingsRowBackground": "rgba(255, 255, 255, 0)",
-              "settingsRowHeaderBackground": Array [
+              "settingsRowHeaderBackground": [
                 "#121d25",
                 "#121d25",
               ],
-              "settingsRowHeaderBackgroundEnd": Object {
+              "settingsRowHeaderBackgroundEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "settingsRowHeaderBackgroundStart": Object {
+              "settingsRowHeaderBackgroundStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -415,21 +415,21 @@ exports[`FioAddressList should render with loading props 1`] = `
               "sliderTabMore": "#0073D9",
               "sliderTabRequest": "#77C513",
               "sliderTabSend": "#E85466",
-              "tabBarBackground": Array [
+              "tabBarBackground": [
                 "#121d25",
                 "#121d25",
               ],
-              "tabBarBackgroundEnd": Object {
+              "tabBarBackgroundEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "tabBarBackgroundStart": Object {
+              "tabBarBackgroundStart": {
                 "x": 0,
                 "y": 0,
               },
               "tabBarIcon": "#FFFFFF",
               "tabBarIconHighlighted": "#00f1a2",
-              "tabBarTopOutlineColors": Array [
+              "tabBarTopOutlineColors": [
                 "#121d25",
                 "#121d25",
               ],
@@ -447,7 +447,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "underlayOpacity": 0.95,
               "walletListBackground": "#121d25",
               "walletListMutedBackground": "#121d25",
-              "walletListSlideTutorialImage": Object {
+              "walletListSlideTutorialImage": {
                 "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
               },
               "walletProgressIconDone": "#FFFFFF",
@@ -465,7 +465,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       />
       <View
         style={
-          Object {
+          {
             "display": "flex",
             "flexDirection": "column",
             "paddingTop": 11,
@@ -481,7 +481,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               name="ios-at"
               size={34}
               style={
-                Object {
+                {
                   "marginRight": 22,
                   "textAlign": "center",
                   "width": 34,
@@ -492,22 +492,22 @@ exports[`FioAddressList should render with loading props 1`] = `
           name="myFio@fio"
           onPress={[Function]}
           theme={
-            Object {
+            {
               "addButtonFont": "Quicksand-Medium",
-              "backgroundGradientColors": Array [
+              "backgroundGradientColors": [
                 "#06090c",
                 "#1b2f3b",
               ],
-              "backgroundGradientEnd": Object {
+              "backgroundGradientEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "backgroundGradientStart": Object {
+              "backgroundGradientStart": {
                 "x": 0,
                 "y": 0,
               },
               "backgroundImage": undefined,
-              "backgroundImageServerUrls": Array [
+              "backgroundImageServerUrls": [
                 "https://content.edge.app",
               ],
               "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
@@ -536,7 +536,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dateModalTextLight": "#0073D9",
               "deactivatedText": "#87939E",
               "defaultBorderColor": "#FFFFFF",
-              "dividerLineColors": Array [
+              "dividerLineColors": [
                 "rgba(255, 255, 255, .1)",
                 "rgba(255, 255, 255, .1)",
               ],
@@ -545,15 +545,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               "dropdownText": "#FFFFFF",
               "dropdownWarning": "#F1AA19",
               "emphasizedText": "#00f1a2",
-              "escapeButton": Array [
+              "escapeButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
-              "escapeButtonColorEnd": Object {
+              "escapeButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "escapeButtonColorStart": Object {
+              "escapeButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -561,10 +561,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "escapeButtonFontSizeRem": 1,
               "escapeButtonOutline": "rgba(255, 255, 255, 0)",
               "escapeButtonOutlineWidth": 0,
-              "escapeButtonShadow": Object {
+              "escapeButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -572,16 +572,16 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "escapeButtonText": "#00f1a2",
-              "escapeButtonTextShadow": Object {
+              "escapeButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
               "fadeDisable": "#87939E",
-              "fioAddressLogo": Object {
+              "fioAddressLogo": {
                 "testUri": "../../../src/assets/images/details_fioAddress.png",
               },
               "flipInputBorder": "#A4C7DF",
@@ -589,10 +589,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "fontFaceDefault": "Quicksand-Regular",
               "fontFaceMedium": "Quicksand-Medium",
               "fontFaceSymbols": "Quicksand-Regular",
-              "guiPluginLogoMoonpay": Object {
+              "guiPluginLogoMoonpay": {
                 "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
               },
-              "headerIcon": Object {
+              "headerIcon": {
                 "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
               },
               "icon": "#FFFFFF",
@@ -603,16 +603,16 @@ exports[`FioAddressList should render with loading props 1`] = `
               "inputAccessoryBackground": "#FFFFFF",
               "inputAccessoryText": "#0073D9",
               "isDark": true,
-              "keypadButton": Array [
+              "keypadButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
               "keypadButtonBorderRadiusRem": 0.25,
-              "keypadButtonColorEnd": Object {
+              "keypadButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "keypadButtonColorStart": Object {
+              "keypadButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -620,10 +620,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "keypadButtonFontSizeRem": 1.5,
               "keypadButtonOutline": "rgba(255, 255, 255, 0)",
               "keypadButtonOutlineWidth": 1,
-              "keypadButtonShadow": Object {
+              "keypadButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -631,24 +631,24 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "keypadButtonText": "#00f1a2",
-              "keypadButtonTextShadow": Object {
+              "keypadButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
               "lineDivider": "rgba(255, 255, 255, .1)",
-              "listSectionHeaderBackgroundGradientColors": Array [
+              "listSectionHeaderBackgroundGradientColors": [
                 "#06090c",
                 "#1b2f3b",
               ],
-              "listSectionHeaderBackgroundGradientEnd": Object {
+              "listSectionHeaderBackgroundGradientEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "listSectionHeaderBackgroundGradientStart": Object {
+              "listSectionHeaderBackgroundGradientStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -666,69 +666,69 @@ exports[`FioAddressList should render with loading props 1`] = `
               "outlineTextInputLabelColor": "#A4C7DF",
               "outlineTextInputLabelColorFocused": "#00f1a2",
               "outlineTextInputTextColor": "#FFFFFF",
-              "paymentTypeLogoApplePay": Object {
+              "paymentTypeLogoApplePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },
-              "paymentTypeLogoAuspost": Object {
+              "paymentTypeLogoAuspost": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoAuspost.png",
               },
-              "paymentTypeLogoBankTransfer": Object {
+              "paymentTypeLogoBankTransfer": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
               },
-              "paymentTypeLogoCash": Object {
+              "paymentTypeLogoCash": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
               },
-              "paymentTypeLogoCreditCard": Object {
+              "paymentTypeLogoCreditCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCreditCard.png",
               },
-              "paymentTypeLogoDebitCard": Object {
+              "paymentTypeLogoDebitCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoDebitCard.png",
               },
-              "paymentTypeLogoFasterPayments": Object {
+              "paymentTypeLogoFasterPayments": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoFasterPayments.png",
               },
-              "paymentTypeLogoGiftCard": Object {
+              "paymentTypeLogoGiftCard": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGiftCard.png",
               },
-              "paymentTypeLogoGooglePay": Object {
+              "paymentTypeLogoGooglePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGooglePay.png",
               },
-              "paymentTypeLogoIdeal": Object {
+              "paymentTypeLogoIdeal": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoIdeal.png",
               },
-              "paymentTypeLogoInterac": Object {
+              "paymentTypeLogoInterac": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
               },
-              "paymentTypeLogoPayid": Object {
+              "paymentTypeLogoPayid": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPayid.png",
               },
-              "paymentTypeLogoPaynow": Object {
+              "paymentTypeLogoPaynow": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
               },
-              "paymentTypeLogoPoli": Object {
+              "paymentTypeLogoPoli": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
               },
-              "paymentTypeLogoSofort": Object {
+              "paymentTypeLogoSofort": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
               },
-              "paymentTypeLogoUpi": Object {
+              "paymentTypeLogoUpi": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
               },
-              "paymentTypeVisa": Object {
+              "paymentTypeVisa": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
               },
               "pickerTextDark": "#FFFFFF",
               "pickerTextLight": "#000000",
-              "pinUsernameButton": Array [
+              "pinUsernameButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
               "pinUsernameButtonBorderRadiusRem": 1,
-              "pinUsernameButtonColorEnd": Object {
+              "pinUsernameButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "pinUsernameButtonColorStart": Object {
+              "pinUsernameButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -736,10 +736,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "pinUsernameButtonFontSizeRem": 1.5,
               "pinUsernameButtonOutline": "rgba(255, 255, 255, 0)",
               "pinUsernameButtonOutlineWidth": 0,
-              "pinUsernameButtonShadow": Object {
+              "pinUsernameButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -747,9 +747,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "pinUsernameButtonText": "#FFFFFF",
-              "pinUsernameButtonTextShadow": Object {
+              "pinUsernameButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -757,15 +757,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "positiveText": "#77C513",
               "preferPrimaryButton": true,
-              "primaryButton": Array [
+              "primaryButton": [
                 "#089e73",
                 "#00f1a2",
               ],
-              "primaryButtonColorEnd": Object {
+              "primaryButtonColorEnd": {
                 "x": 1,
                 "y": 0,
               },
-              "primaryButtonColorStart": Object {
+              "primaryButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -773,10 +773,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "primaryButtonFontSizeRem": 1,
               "primaryButtonOutline": "rgba(255, 255, 255, 0)",
               "primaryButtonOutlineWidth": 0,
-              "primaryButtonShadow": Object {
+              "primaryButtonShadow": {
                 "elevation": 2,
                 "shadowColor": "#FFFFFF",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -784,15 +784,15 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 8,
               },
               "primaryButtonText": "#1b2f3b",
-              "primaryButtonTextShadow": Object {
+              "primaryButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
                 "textShadowRadius": 0,
               },
-              "primaryLogo": Object {
+              "primaryLogo": {
                 "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
               },
               "primaryText": "#FFFFFF",
@@ -800,15 +800,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               "qrForegroundColor": "#000000",
               "rem": [Function],
               "searchListRefreshControlIndicator": "rgba(255, 255, 255, 0)",
-              "secondaryButton": Array [
+              "secondaryButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
               ],
-              "secondaryButtonColorEnd": Object {
+              "secondaryButtonColorEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "secondaryButtonColorStart": Object {
+              "secondaryButtonColorStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -816,10 +816,10 @@ exports[`FioAddressList should render with loading props 1`] = `
               "secondaryButtonFontSizeRem": 1,
               "secondaryButtonOutline": "#00f1a2",
               "secondaryButtonOutlineWidth": 1.5,
-              "secondaryButtonShadow": Object {
+              "secondaryButtonShadow": {
                 "elevation": 0,
                 "shadowColor": "#000000",
-                "shadowOffset": Object {
+                "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -827,9 +827,9 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "shadowRadius": 0,
               },
               "secondaryButtonText": "#00f1a2",
-              "secondaryButtonTextShadow": Object {
+              "secondaryButtonTextShadow": {
                 "textShadowColor": "#000000",
-                "textShadowOffset": Object {
+                "textShadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
@@ -837,15 +837,15 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "secondaryText": "#A4C7DF",
               "settingsRowBackground": "rgba(255, 255, 255, 0)",
-              "settingsRowHeaderBackground": Array [
+              "settingsRowHeaderBackground": [
                 "#121d25",
                 "#121d25",
               ],
-              "settingsRowHeaderBackgroundEnd": Object {
+              "settingsRowHeaderBackgroundEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "settingsRowHeaderBackgroundStart": Object {
+              "settingsRowHeaderBackgroundStart": {
                 "x": 0,
                 "y": 0,
               },
@@ -862,21 +862,21 @@ exports[`FioAddressList should render with loading props 1`] = `
               "sliderTabMore": "#0073D9",
               "sliderTabRequest": "#77C513",
               "sliderTabSend": "#E85466",
-              "tabBarBackground": Array [
+              "tabBarBackground": [
                 "#121d25",
                 "#121d25",
               ],
-              "tabBarBackgroundEnd": Object {
+              "tabBarBackgroundEnd": {
                 "x": 1,
                 "y": 1,
               },
-              "tabBarBackgroundStart": Object {
+              "tabBarBackgroundStart": {
                 "x": 0,
                 "y": 0,
               },
               "tabBarIcon": "#FFFFFF",
               "tabBarIconHighlighted": "#00f1a2",
-              "tabBarTopOutlineColors": Array [
+              "tabBarTopOutlineColors": [
                 "#121d25",
                 "#121d25",
               ],
@@ -894,7 +894,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "underlayOpacity": 0.95,
               "walletListBackground": "#121d25",
               "walletListMutedBackground": "#121d25",
-              "walletListSlideTutorialImage": Object {
+              "walletListSlideTutorialImage": {
                 "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
               },
               "walletProgressIconDone": "#FFFFFF",
@@ -912,7 +912,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           color="#00f1a2"
           size="large"
           style={
-            Object {
+            {
               "alignSelf": "center",
               "flex": 1,
               "marginTop": 56,
@@ -924,7 +924,7 @@ exports[`FioAddressList should render with loading props 1`] = `
     <View>
       <ClickableText
         marginRem={
-          Array [
+          [
             1,
             1,
             0,
@@ -934,7 +934,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "center",
@@ -947,14 +947,14 @@ exports[`FioAddressList should render with loading props 1`] = `
             name="register-new-fio-icon"
             size={22}
             style={
-              Object {
+              {
                 "marginTop": 6,
               }
             }
           />
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#00f1a2",
                 "marginLeft": 11,
                 "textAlign": "center",
@@ -967,7 +967,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       </ClickableText>
       <ClickableText
         marginRem={
-          Array [
+          [
             0,
             1,
             2,
@@ -978,7 +978,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       >
         <View
           style={
-            Object {
+            {
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "center",
@@ -991,14 +991,14 @@ exports[`FioAddressList should render with loading props 1`] = `
             name="register-custom-fio"
             size={22}
             style={
-              Object {
+              {
                 "marginTop": 6,
               }
             }
           />
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#00f1a2",
                 "marginLeft": 11,
                 "textAlign": "center",
@@ -1013,7 +1013,7 @@ exports[`FioAddressList should render with loading props 1`] = `
   </SceneWrapper>
   <FullScreenLoader
     indicatorStyles={
-      Object {
+      {
         "alignSelf": "center",
         "flex": 1,
         "marginTop": 56,

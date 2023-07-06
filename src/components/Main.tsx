@@ -5,7 +5,6 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
-import { useDispatch } from 'react-redux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logout } from '../actions/LoginActions'
@@ -22,7 +21,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
-import { useSelector } from '../types/reactRedux'
+import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -686,7 +685,7 @@ const EdgeAppStack = () => {
           title: lstrings.title_settings
         }}
         listeners={{
-          focus: () => dispatch(showReEnableOtpModal())
+          focus: async () => await dispatch(showReEnableOtpModal())
         }}
       />
       <Stack.Screen

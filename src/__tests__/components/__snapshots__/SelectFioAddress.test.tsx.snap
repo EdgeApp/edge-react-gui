@@ -14,7 +14,7 @@ exports[`SelectFioAddress should render with loading props 1`] = `
   >
     <WithTheme(EdgeTextComponent)
       style={
-        Object {
+        {
           "color": "#E85466",
         }
       }

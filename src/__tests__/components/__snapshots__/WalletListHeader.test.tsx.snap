@@ -4,7 +4,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
 <React.Fragment>
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
         "marginHorizontal": 22,
@@ -14,7 +14,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "flexDirection": "column",
         }
@@ -23,7 +23,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
       <ForwardRef
         label="Search Wallets"
         marginRem={
-          Array [
+          [
             0,
             0,
             1,
@@ -39,7 +39,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
     <TouchableOpacity
       onPress={[Function]}
       style={
-        Object {
+        {
           "justifyContent": "center",
           "paddingBottom": 22,
           "paddingLeft": 17,
@@ -48,7 +48,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
     >
       <WithTheme(EdgeTextComponent)
         style={
-          Object {
+          {
             "color": "#00f1a2",
           }
         }
