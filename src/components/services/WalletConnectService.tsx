@@ -31,10 +31,10 @@ export const WalletConnectService = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const handleSessionRequest = async (event: any) => {
-    if (walletConnectClient == null) return
+    const client = await getClient()
     const request = asSessionRequest(event)
 
-    const sessions = walletConnectClient.getActiveSessions()
+    const sessions = client.getActiveSessions()
     const session = sessions[request.topic]
     if (session == null) return
     const accounts = await getAccounts(currencyWallets)
