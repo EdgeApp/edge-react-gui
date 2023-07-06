@@ -102,6 +102,10 @@ export const getPluginId = (walletType: string): string => walletType.replace('w
 export interface ImportKeyOption {
   optionName: string
   displayName: string
+  displayDescription?: {
+    message: string
+    knowledgeBaseUri?: string
+  }
   required: boolean
   inputType: OutlinedTextInputProps['keyboardType']
   inputValidation: (input: string) => boolean
@@ -650,6 +654,10 @@ export const SPECIAL_CURRENCY_INFO: {
       {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+        },
         required: true,
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
@@ -671,6 +679,10 @@ export const SPECIAL_CURRENCY_INFO: {
       {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+        },
         required: true,
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height

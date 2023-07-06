@@ -1,6 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Linking, TouchableOpacity, View } from 'react-native'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -15,6 +16,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
+import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 import { Tile } from '../tiles/Tile'
@@ -98,12 +100,32 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
         })
     }
 
+    let description: React.ReactNode | undefined
+    if (opt.displayDescription != null) {
+      const { message, knowledgeBaseUri } = opt.displayDescription
+
+      if (knowledgeBaseUri != null) {
+        const onPress = async () => await Linking.openURL(knowledgeBaseUri)
+        description = (
+          <ModalMessage>
+            {message}
+            <TouchableOpacity onPress={onPress}>
+              <Ionicon name="help-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
+            </TouchableOpacity>
+          </ModalMessage>
+        )
+      } else {
+        description = message
+      }
+    }
+
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={initialValue}
         inputLabel={opt.displayName}
         title={opt.displayName}
+        message={description}
         keyboardType={opt.inputType}
         onSubmit={onSubmit}
       />
