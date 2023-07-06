@@ -1,8 +1,8 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index 72be6686e..2cfbe0084 100644
+index 779b6ddb2..3be9bc045 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
-@@ -494,8 +494,8 @@
+@@ -429,8 +429,8 @@
  					"-ObjC",
  					"-lc++",
  				);
@@ -10,10 +10,10 @@ index 72be6686e..2cfbe0084 100644
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
 +				PRODUCT_NAME = "Edge Develop";
- 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
-@@ -536,8 +536,8 @@
+ 				VERSIONING_SYSTEM = "apple-generic";
+@@ -456,8 +456,8 @@
  					"-ObjC",
  					"-lc++",
  				);
@@ -21,6 +21,6 @@ index 72be6686e..2cfbe0084 100644
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
 +				PRODUCT_NAME = "Edge Develop";
- 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
  				SWIFT_VERSION = 5.0;
- 				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
