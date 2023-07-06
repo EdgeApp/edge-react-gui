@@ -431,6 +431,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -458,6 +459,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
