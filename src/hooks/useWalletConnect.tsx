@@ -22,7 +22,7 @@ import { useWatch } from './useWatch'
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
-  approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
+  approveSession: (proposal: Web3WalletTypes.SessionProposal, walletId: string) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
   disconnectSession: (topic: string) => Promise<void>
   approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
@@ -102,7 +102,7 @@ export function useWalletConnect(): WalletConnect {
     )
   })
 
-  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
+  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, walletId: string) => {
     const client = await getClient()
 
     const wallet = currencyWallets[walletId]
@@ -111,7 +111,8 @@ export function useWalletConnect(): WalletConnect {
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) return
 
-    const supportedNamespaces = getSupportedNamespaces(chainId, address)
+    const address = await wallet.getReceiveAddress()
+    const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
 
     // Check that we support all required methods
     const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
