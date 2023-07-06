@@ -187,6 +187,7 @@
   "create_wallet_import_title": "월렛 가져오기",
   "create_wallet_import_options_title": "Import Options",
   "create_wallet_import_options_birthday_height": "Wallet Birthday Height",
+  "create_wallet_import_options_birthday_height_description": "The birthday height is the network block height that your wallet will start synchronizing from.",
   "create_wallet_imports_title": "Import Wallets",
   "create_wallet_import_all_instructions": "Enter your private seed, private key, or active key to verify and restore the associated wallet",
   "create_wallet_import_instructions": "Enter your private seed to verify and restore the associated wallet",
