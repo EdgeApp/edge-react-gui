@@ -1,13 +1,10 @@
 diff --git a/android/app/build.gradle b/android/app/build.gradle
-index 83029d7e7..e565d89cf 100644
+index 83029d7e7..c9c7db439 100644
 --- a/android/app/build.gradle
 +++ b/android/app/build.gradle
-@@ -98,9 +98,9 @@ android {
+@@ -100,7 +100,7 @@ android {
  
-     compileSdkVersion rootProject.ext.compileSdkVersion
- 
--    namespace "co.edgesecure.app"
-+    namespace "app.edge.beta"
+     namespace "co.edgesecure.app"
      defaultConfig {
 -        applicationId "co.edgesecure.app"
 +        applicationId "app.edge.beta"
