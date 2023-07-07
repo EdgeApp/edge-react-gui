@@ -150,7 +150,7 @@
     "qrcode-generator": "^1.4.4",
     "react": "18.2.0",
     "react-native": "0.71.11",
-    "react-native-airship": "^0.2.11",
+    "react-native-airship": "^0.2.12",
     "react-native-bootsplash": "^4.7.4",
     "react-native-camera": "^1.13.1",
     "react-native-check-version": "^1.0.5",
