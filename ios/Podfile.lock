@@ -652,11 +652,12 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (2.17.0):
+  - RNReanimated (3.3.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
     - glog
+    - hermes-engine
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -666,6 +667,7 @@ PODS:
     - React-Core/RCTWebSocket
     - React-CoreModules
     - React-cxxreact
+    - React-hermes
     - React-jsi
     - React-jsiexecutor
     - React-jsinspector
@@ -1292,7 +1294,7 @@ SPEC CHECKSUMS:
   RNPermissions: d9db16f082ce2e09908e58c925189e2637d2786b
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: f186e85d9f28c9383d05ca39e11dd194f59093ec
+  RNReanimated: 9976fbaaeb8a188c36026154c844bf374b3b7eeb
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
