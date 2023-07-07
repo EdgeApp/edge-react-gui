@@ -154,9 +154,13 @@ export class SwapSettings extends React.Component<Props, State> {
         selected={selected}
       />
     ))
-      .then(result => {
+      .then(async result => {
         if (result == null) return
-        if (activePlugins.swapSource.type === 'account') return ignoreAccountSwap()
+
+        // Cancel any active promotions:
+        if (activePlugins.swapSource.type === 'account') await ignoreAccountSwap()
+
+        // Apply the user's choice:
         if (result === preferDex.name) {
           changePreferredSwapPluginType('DEX')
         } else if (result === preferCex.name) {
