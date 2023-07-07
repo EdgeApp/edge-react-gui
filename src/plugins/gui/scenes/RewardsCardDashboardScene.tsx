@@ -23,6 +23,7 @@ import { RewardsCardItem } from '../RewardsCardPlugin'
 
 export interface RewardsCardDashboardParams {
   items: RewardsCardItem[]
+  onCardLongPress: (card: RewardsCardItem) => void
   onCardPress: (card: RewardsCardItem) => void
   onHelpPress: () => void
   onNewPress: () => void
@@ -34,7 +35,7 @@ interface Props extends EdgeSceneProps<'rewardsCardDashboard'> {}
 
 export const RewardsCardDashboardScene = (props: Props) => {
   const { route } = props
-  const { items, onCardPress, onHelpPress, onNewPress, onRemovePress, showLoading = false } = route.params
+  const { items, onCardLongPress, onCardPress, onHelpPress, onNewPress, onRemovePress, showLoading = false } = route.params
   const theme = useTheme()
   const [bottomFloatHeight, setBottomFloatHeight] = useState(0)
 
@@ -66,7 +67,16 @@ export const RewardsCardDashboardScene = (props: Props) => {
         <DividerLine marginRem={[0, 1]} />
         <CardList bottomSpace={bottomFloatHeight}>
           {items.map(item => {
-            return <RewardsCard key={item.id} item={item} onPress={() => onCardPress(item)} onRemovePress={() => handleRemovePress(item)} shouldStack />
+            return (
+              <RewardsCard
+                key={item.id}
+                item={item}
+                onLongPress={() => onCardLongPress(item)}
+                onPress={() => onCardPress(item)}
+                onRemovePress={() => handleRemovePress(item)}
+                shouldStack
+              />
+            )
           })}
           {items.length === 0 && !showLoading ? <MessageText>{lstrings.no_active_cards_message}</MessageText> : null}
           {showLoading ? <RewardsCard onQuestionPress={handleQuestionPress} /> : null}
@@ -83,6 +93,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
 
 export interface RewardsCardProps {
   item?: RewardsCardItem
+  onLongPress?: () => void
   onPress?: () => void
   onQuestionPress?: () => void
   onRemovePress?: () => void
@@ -90,7 +101,7 @@ export interface RewardsCardProps {
 }
 
 export const RewardsCard = (props: RewardsCardProps) => {
-  const { item, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
+  const { item, onLongPress, onPress, onQuestionPress, onRemovePress, shouldStack = false } = props
   const theme = useTheme()
   const purchaseAmount = item?.amount == null ? 'Unknown' : `$${item.amount.toString()}`
   const purchaseAsset = item?.purchaseAsset ?? 'Unknown'
@@ -100,6 +111,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
       <CardBackground />
       <TouchableOpacity
         onPress={onPress}
+        onLongPress={onLongPress}
         // Disable opacity effect if no onPress handler
         activeOpacity={onPress == null ? 1 : undefined}
       >

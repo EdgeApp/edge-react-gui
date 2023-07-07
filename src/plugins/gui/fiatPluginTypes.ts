@@ -94,6 +94,8 @@ export interface FiatPluginUi {
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
+  setClipboard: (value: string) => Promise<void>
+  showToast: (message: string) => Promise<void>
   exitScene: () => {}
   // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }

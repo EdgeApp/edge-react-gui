@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-clipboard/clipboard'
 import { asArray, asNumber, asObject, asString } from 'cleaners'
 import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
@@ -12,7 +13,7 @@ import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
-import { Airship, showError, showToastSpinner } from '../../components/services/AirshipInstance'
+import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
@@ -154,6 +155,12 @@ export const executePlugin = async (params: {
     sendPaymentProto: async (params: { uri: string; params: LaunchPaymentProtoParams }) => {
       // Always avoid the scam warning with plugins since we trust our plugins
       await launchPaymentProto(navigation, account, params.uri, { ...params.params, hideScamWarning: true })
+    },
+    setClipboard: async (value: string) => {
+      Clipboard.setString(value)
+    },
+    showToast: async (message: string) => {
+      showToast(message)
     },
     exitScene: async () => {
       navigation.pop()
