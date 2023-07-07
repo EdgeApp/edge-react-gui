@@ -22,12 +22,12 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 
-interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
-
-export interface FioCreateHandleProps {
+export interface FioCreateHandleParams {
   freeRegApiToken: string
   freeRegRefCode: string
 }
+
+interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,
