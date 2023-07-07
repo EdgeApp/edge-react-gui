@@ -1,5 +1,6 @@
 import { useRoute } from '@react-navigation/native'
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { RouteProp } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -13,14 +14,22 @@ export function CurrencySettingsTitle() {
 
   const styles = getStyles(useTheme())
   return (
-    <>
-      <CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.25} />
+    <View style={styles.container}>
+      <CryptoIcon marginRem={iconPadding} pluginId={pluginId} sizeRem={1.25} />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
-    </>
+    </View>
   )
 }
 
+const iconPadding = [0, 0.5, 0, 0]
+
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexGrow: 1,
+    justifyContent: 'center'
+  },
   text: {
     fontFamily: theme.fontFaceMedium
   }
