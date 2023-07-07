@@ -434,12 +434,19 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                       opacity={0}
                       propList={
                         [
+                          "stroke",
                           "strokeWidth",
                           "strokeDasharray",
                           "strokeLinecap",
                         ]
                       }
                       r="19"
+                      stroke={
+                        {
+                          "payload": 4278251938,
+                          "type": 0,
+                        }
+                      }
                       strokeDasharray={
                         [
                           "119.38052083641213",
@@ -1499,12 +1506,19 @@ exports[`TransactionListTop should render 1`] = `
                       opacity={0}
                       propList={
                         [
+                          "stroke",
                           "strokeWidth",
                           "strokeDasharray",
                           "strokeLinecap",
                         ]
                       }
                       r="19"
+                      stroke={
+                        {
+                          "payload": 4278251938,
+                          "type": 0,
+                        }
+                      }
                       strokeDasharray={
                         [
                           "119.38052083641213",
