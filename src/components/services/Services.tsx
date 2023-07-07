@@ -71,7 +71,7 @@ export function Services(props: Props) {
         if (shouldCreateHandle) {
           navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
         } else {
-          account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
+          await account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
         }
       }
     }
@@ -86,7 +86,7 @@ export function Services(props: Props) {
   useAsyncEffect(
     async () => {
       if (account != null) {
-        maybeShowFioHandleModal(account)
+        await maybeShowFioHandleModal(account)
       }
     },
     [account, maybeShowFioHandleModal],
@@ -116,9 +116,9 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      makeStakePlugins().catch(() => {})
-      updateAssetOverrides()
-      dispatch(updateExchangeInfo())
+      makeStakePlugins().catch(err => console.warn(err))
+      updateAssetOverrides().catch(err => console.warn(err))
+      dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
     REFRESH_INFO_SERVER_MS

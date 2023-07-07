@@ -110,6 +110,8 @@ export const ActionQueueService = () => {
               executing: false
             })
           )
+            // Use console.warn to not spam user
+            .catch(err => console.warn(err))
           return false
         }
         // Don't execute programs which have not reached their scheduled time

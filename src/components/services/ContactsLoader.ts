@@ -1,8 +1,10 @@
 import * as React from 'react'
 import Contacts from 'react-native-contacts'
 import { PermissionStatus } from 'react-native-permissions'
+import { sprintf } from 'sprintf-js'
 
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
+import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { showError } from '../services/AirshipInstance'
@@ -286,7 +288,10 @@ class ContactsLoaderComponent extends React.Component<Props> {
     const { contactsPermission } = nextProps
 
     if (this.props.contactsPermission !== 'granted' && contactsPermission === 'granted') {
-      this.loadContacts()
+      this.loadContacts().catch(err => {
+        console.warn(err)
+        showError(sprintf(lstrings.contacts_load_failed_message_s))
+      })
     }
   }
 
