@@ -69,12 +69,19 @@ exports[`CryptoIcon should render with loading props 1`] = `
         opacity={0}
         propList={
           [
+            "stroke",
             "strokeWidth",
             "strokeDasharray",
             "strokeLinecap",
           ]
         }
         r="24"
+        stroke={
+          {
+            "payload": 4278251938,
+            "type": 0,
+          }
+        }
         strokeDasharray={
           [
             "150.79644737231007",
