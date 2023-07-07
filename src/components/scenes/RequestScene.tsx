@@ -57,8 +57,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
-  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
+  refreshAllFioAddresses: () => Promise<void>
+  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => Promise<void>
   toggleAccountBalanceVisibility: () => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
@@ -108,13 +108,13 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       if (wallet == null) return
       this.state.minimumPopupModalState[wallet.currencyInfo.pluginId] = 'VISIBLE'
       console.log('stop, in constructor')
-      this.enqueueMinimumAmountModal()
+      this.enqueueMinimumAmountModal().catch(err => showError(err))
     }
   }
 
   componentDidMount() {
-    this.getAddressItems()
-    this.props.refreshAllFioAddresses()
+    this.getAddressItems().catch(err => showError(err))
+    this.props.refreshAllFioAddresses().catch(err => showError(err))
     if (this.props.wallet != null) {
       this.unsubscribeAddressChanged = this.props.wallet.on('addressChanged', async () => await this.getAddressItems())
     }
@@ -164,7 +164,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     return await wallet.encodeUri({ currencyCode, publicAddress: selectedAddress.addressString, nativeAmount: amounts?.nativeAmount })
   }
 
-  async componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const { currencyCode, wallet } = this.props
     if (wallet == null || currencyCode == null) return
 
@@ -174,7 +174,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const didWalletChange = prevProps.wallet && wallet.id !== prevProps.wallet.id
 
     if (didWalletChange) {
-      this.getAddressItems()
+      this.getAddressItems().catch(err => showError(err))
     }
 
     // old blank address to new
@@ -183,7 +183,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       if (this.shouldShowMinimumModal(this.props)) {
         const minimumPopupModalState: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModalState)
         if (minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
-          this.enqueueMinimumAmountModal()
+          this.enqueueMinimumAmountModal().catch(err => showError(err))
         }
         minimumPopupModalState[pluginId] = 'VISIBLE'
         // eslint-disable-next-line react/no-did-update-set-state
@@ -245,24 +245,24 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   handleOpenWalletListModal = () => {
     const { account } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />).then(
-      async ({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />)
+      .then(async ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           const wallet = account.currencyWallets[walletId]
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-          this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
+          await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
 
           if (this.flipInputRef.current != null) {
             this.flipInputRef.current.setAmount('fiat', this.state.amounts?.fiatAmount ?? '0')
           }
         }
-      }
-    )
+      })
+      .catch(err => showError(err))
   }
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
-  handleKeysOnlyModePress = () => showWebViewModal(config.supportSite, lstrings.help_support)
+  handleKeysOnlyModePress = async () => await showWebViewModal(config.supportSite, lstrings.help_support)
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
@@ -281,7 +281,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handlePressAddressItem = async (encodedUri?: string) => {
-    Airship.show(bridge => <QrModal bridge={bridge} data={encodedUri} />)
+    Airship.show(bridge => <QrModal bridge={bridge} data={encodedUri} />).catch(err => showError(err))
   }
 
   toggleBalanceVisibility = () => {
@@ -591,11 +591,11 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     },
-    onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
-      dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+    async onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
+      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     },
     toggleAccountBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())

@@ -59,7 +59,7 @@ interface StateProps {
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
@@ -74,7 +74,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
-    this.props.refreshAllFioAddresses()
+    this.props.refreshAllFioAddresses().catch(err => showError(err))
     this.state = {
       loadingPending: true,
       loadingSent: true,
@@ -91,9 +91,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   componentDidMount = () => {
     this.willFocusSubscription = this.props.navigation.addListener('focus', () => {
-      this.getFioRequestsPending()
-      this.getFioRequestsSent()
-      this.props.refreshAllFioAddresses()
+      this.getFioRequestsPending().catch(err => showError(err))
+      this.getFioRequestsSent().catch(err => showError(err))
+      this.props.refreshAllFioAddresses().catch(err => showError(err))
     })
   }
 
@@ -115,7 +115,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       addressArray.push(request.payer_fio_address)
     }
 
-    addToFioAddressCache(this.props.account, addressArray)
+    addToFioAddressCache(this.props.account, addressArray).catch(err => showError(err))
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState({ addressCachedUpdated: true })
   }
@@ -230,7 +230,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         let edgeTx = await fioMakeSpend(fioWallet, 'rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
         if (edgeTx.networkFee !== '0') {
           this.setState({ fullScreenLoader: false })
-          this.showNoBundledTxsAlert(fioWallet, payerFioAddress)
+          await this.showNoBundledTxsAlert(fioWallet, payerFioAddress)
         } else {
           edgeTx = await fioSignAndBroadcast(fioWallet, edgeTx)
           await fioWallet.saveTx(edgeTx)
@@ -264,7 +264,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       } catch (e: any) {
         this.setState({ fullScreenLoader: false })
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
-          this.showNoBundledTxsAlert(fioWallet, payeeFioAddress)
+          await this.showNoBundledTxsAlert(fioWallet, payeeFioAddress)
         } else {
           showError(e)
         }
@@ -314,7 +314,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return <SectionHeader title={sectionObj.section.title} />
   }
 
-  selectPendingRequest = (fioRequest: FioRequest) => {
+  selectPendingRequest = async (fioRequest: FioRequest) => {
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
       return
@@ -332,7 +332,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       if (walletCurrencyCode === tokenCode) {
         availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
-          this.renderDropUp(fioRequest)
+          await this.renderDropUp(fioRequest)
           return
         }
       }
@@ -340,17 +340,17 @@ class FioRequestList extends React.Component<Props, LocalState> {
       if (walletCurrencyCode === chainCode && enabledTokens.includes(tokenCode)) {
         availableWallets.push({ id: walletId, currencyCode: tokenCode })
         if (availableWallets.length > 1) {
-          this.renderDropUp(fioRequest)
+          await this.renderDropUp(fioRequest)
           return
         }
       }
     }
     if (availableWallets.length) {
       onSelectWallet(availableWallets[0].id, availableWallets[0].currencyCode)
-      this.sendCrypto(fioRequest, availableWallets[0].id, availableWallets[0].currencyCode)
+      await this.sendCrypto(fioRequest, availableWallets[0].id, availableWallets[0].currencyCode)
       return
     }
-    Airship.show<'ok' | undefined>(bridge => (
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={sprintf(lstrings.err_token_not_in_wallet_title, fioRequest.content.token_code.toUpperCase())}
@@ -380,7 +380,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     ))
     if (walletId && currencyCode) {
       onSelectWallet(walletId, currencyCode)
-      this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
+      await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }
   }
 
@@ -494,14 +494,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
   pendingLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
     const { loadingPending, fioRequestsPending, prevPendingAmount } = this.state
     if (!loadingPending && (prevPendingAmount < fioRequestsPending.length || (distanceFromEnd < 0 && fioRequestsPending.length > 0))) {
-      this.getFioRequestsPending()
+      this.getFioRequestsPending().catch(err => showError(err))
     }
   }
 
   sentLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
     const { loadingSent, fioRequestsSent, prevSentAmount } = this.state
     if (!loadingSent && (prevSentAmount < fioRequestsSent.length || (distanceFromEnd < 0 && fioRequestsSent.length > 0))) {
-      this.getFioRequestsSent()
+      this.getFioRequestsSent().catch(err => showError(err))
     }
   }
 
@@ -616,8 +616,8 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
         data: { currencyCode, walletId }
       })
     },
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     },
     getExchangeDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))

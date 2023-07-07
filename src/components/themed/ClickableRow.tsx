@@ -3,6 +3,7 @@ import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -36,19 +37,24 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
     return <View style={containerStyles}>{children}</View>
   }
 
+  handlePress = async () => {
+    const { onPress } = this.props
+    await onPress()?.catch(err => showError(err))
+  }
+
   render() {
-    const { onPress, onLongPress, highlight, theme } = this.props
+    const { onLongPress, highlight, theme } = this.props
 
     if (highlight) {
       return (
-        <TouchableHighlight onPress={onPress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <TouchableHighlight onPress={this.handlePress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
           {this.renderContent()}
         </TouchableHighlight>
       )
     }
 
     return (
-      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+      <TouchableOpacity onPress={this.handlePress} onLongPress={onLongPress}>
         {this.renderContent()}
       </TouchableOpacity>
     )

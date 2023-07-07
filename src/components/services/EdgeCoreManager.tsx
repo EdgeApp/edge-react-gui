@@ -15,6 +15,7 @@ import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
+import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
 interface Props {}
@@ -77,7 +78,7 @@ export function EdgeCoreManager(props: Props) {
   function hideSplash() {
     if (!splashHidden.current) {
       setTimeout(() => {
-        RNBootSplash.hide({ fade: true })
+        RNBootSplash.hide({ fade: true }).catch(err => showError(err))
       }, 200)
       splashHidden.current = true
     }

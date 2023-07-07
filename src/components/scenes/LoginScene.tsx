@@ -101,7 +101,7 @@ export function LoginSceneComponent(props: Props) {
     if (pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
       // Log out if necessary:
       if (account.loggedIn) {
-        dispatch(logoutRequest(navigation))
+        dispatch(logoutRequest(navigation)).catch(err => showError(err))
       }
 
       // Pass the link to our component:
@@ -116,12 +116,14 @@ export function LoginSceneComponent(props: Props) {
     const response = await checkVersion()
     const skipUpdate = (await disklet.getText('ignoreUpdate.json').catch(() => '')) === response.version
     if (response.needsUpdate && !skipUpdate) {
-      Airship.show(bridge => (
+      await Airship.show(bridge => (
         <UpdateModal
           bridge={bridge}
           onSkip={() => {
-            disklet.setText('ignoreUpdate.json', response.version)
-            bridge.resolve()
+            disklet
+              .setText('ignoreUpdate.json', response.version)
+              .then(() => bridge.resolve())
+              .catch(err => bridge.reject(err))
           }}
         />
       ))
@@ -139,7 +141,7 @@ export function LoginSceneComponent(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal()
+        showHelpModal().catch(err => showError(err))
       },
       text: lstrings.string_help
     }),
@@ -154,7 +156,7 @@ export function LoginSceneComponent(props: Props) {
 
   const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     setPasswordRecoveryKey(undefined)
-    dispatch(initializeAccount(navigation, account, touchIdInfo ?? dummyTouchIdInfo))
+    await dispatch(initializeAccount(navigation, account, touchIdInfo ?? dummyTouchIdInfo))
 
     if (notificationPermissionsInfo) {
       try {
@@ -171,7 +173,7 @@ export function LoginSceneComponent(props: Props) {
   })
 
   const handleSendLogs = useHandler(() => {
-    dispatch(showSendLogsModal())
+    dispatch(showSendLogsModal()).catch(err => showError(err))
   })
 
   return account.loggedIn ? (

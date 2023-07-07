@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
 import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from './SettingsHeaderRow'
 import { SettingsSwitchRow } from './SettingsSwitchRow'
@@ -65,7 +65,7 @@ function CustomServersSettingComponent(props: Props) {
           return true
         }}
       />
-    ))
+    )).catch(err => showError(err))
   })
 
   return (

@@ -108,11 +108,11 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
           cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
         }}
       />
-    ))
+    )).catch(err => showError(err))
   }
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
-    dispatch(logoutRequest(navigation, userInfo.username))
+    dispatch(logoutRequest(navigation, userInfo.username)).catch(err => showError(err))
   }
 
   const handleBorrow = () => {
@@ -269,7 +269,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
+        dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'credit-card',

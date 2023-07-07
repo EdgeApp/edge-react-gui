@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
@@ -96,10 +97,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     setNativeAmount(nativeAmount)
   }
 
-  const onMaxSet = () => {
+  const onMaxSet = async () => {
     switch (change) {
       case 'add': {
-        currencyWallet
+        await currencyWallet
           .getMaxSpendable({
             currencyCode,
             spendTargets: [{ publicAddress: '' }],
@@ -166,8 +167,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     )).catch(error => setError(error))
   }
 
-  const handleUnlockDate = () => {
-    Airship.show(bridge => {
+  const handleUnlockDate = async () => {
+    await Airship.show(bridge => {
       return (
         <ThemedModal bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
           <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
@@ -181,9 +182,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     })
   }
 
-  React.useEffect(() => {
-    dispatch(refreshAllFioAddresses())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useAsyncEffect(async () => {
+    await dispatch(refreshAllFioAddresses())
   }, [])
 
   React.useEffect(() => {

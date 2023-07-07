@@ -3,6 +3,7 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
+import { useHandler } from '../../hooks/useHandler'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -52,20 +53,19 @@ const FiatAmountInputCardComponent = ({ wallet, iconUri, inputModalMessage, titl
     if (!zeroString(calculatedNativeCryptoAmount) && !zeroString(sanitizedFiatAmount)) onAmountChanged(sanitizedFiatAmount, calculatedNativeCryptoAmount)
   }, [allTokens, destToFiatRate, sanitizedFiatAmount, onAmountChanged, tokenId, wallet.currencyInfo])
 
-  const handleEditActionfiatAmount = React.useCallback(() => {
-    Airship.show<string | undefined>(bridge => <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />).then(
-      inputAmount => {
-        if (inputAmount != null) {
-          const sanitizedInputAmount = sanitizeDecimalAmount(inputAmount, 2)
-          if (!zeroString(sanitizedInputAmount)) {
-            setSanitizedFiatAmount(sanitizedInputAmount)
-            onAmountChanged(sanitizedInputAmount, nativeCryptoAmount)
-          }
+  const handleEditActionfiatAmount = useHandler(async () => {
+    await Airship.show<string | undefined>(bridge => (
+      <TextInputModal title={title} message={inputModalMessage} bridge={bridge} keyboardType="decimal-pad" />
+    )).then(inputAmount => {
+      if (inputAmount != null) {
+        const sanitizedInputAmount = sanitizeDecimalAmount(inputAmount, 2)
+        if (!zeroString(sanitizedInputAmount)) {
+          setSanitizedFiatAmount(sanitizedInputAmount)
+          onAmountChanged(sanitizedInputAmount, nativeCryptoAmount)
         }
       }
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sanitizedFiatAmount, inputModalMessage, onAmountChanged, title])
+    })
+  })
 
   const formattedFiatAmount = React.useMemo(
     () => formatFiatString({ fiatAmount: sanitizedFiatAmount ?? '0', autoPrecision: true, maxPrecision: 2 }),

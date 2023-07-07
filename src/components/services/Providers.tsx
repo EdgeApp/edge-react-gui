@@ -58,7 +58,7 @@ export function Providers(props: Props) {
 
   // Actions to perform at startup:
   React.useEffect(() => {
-    store.dispatch(loadDeviceReferral())
+    store.dispatch(loadDeviceReferral()).catch(err => console.warn(err))
   }, [store])
 
   return (

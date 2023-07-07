@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { showToast } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeTextField } from '../themed/EdgeTextField'
 import { MainButton } from '../themed/MainButton'
@@ -62,16 +62,19 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { password } = this.state
 
     this.setState({ spinning: true })
-    account.checkPassword(password).then(isValidPassword => {
-      if (isValidPassword) {
-        this.props.onSuccess()
-        this.setState({ spinning: false })
-        showToast(lstrings.password_reminder_great_job)
-        setTimeout(() => bridge.resolve(), 10)
-      } else {
-        this.setState({ errorMessage: lstrings.password_reminder_invalid, spinning: false })
-      }
-    })
+    account
+      .checkPassword(password)
+      .then(isValidPassword => {
+        if (isValidPassword) {
+          this.props.onSuccess()
+          this.setState({ spinning: false })
+          showToast(lstrings.password_reminder_great_job)
+          setTimeout(() => bridge.resolve(), 10)
+        } else {
+          this.setState({ errorMessage: lstrings.password_reminder_invalid, spinning: false })
+        }
+      })
+      .catch(err => showError(err))
   }
 
   handleChangeText = (password: string) => this.setState({ password })

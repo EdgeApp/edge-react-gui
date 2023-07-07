@@ -110,7 +110,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    this.updatePlugins()
+    this.updatePlugins().catch(err => showError(err))
     this.checkCountry()
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
@@ -152,7 +152,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     } catch (e: any) {
       console.log(e.message, `Error opening ${PLUGIN_LIST_FILE}. Trying network instead`)
     }
-    this.updatePluginsNetwork(diskPlugins)
+    await this.updatePluginsNetwork(diskPlugins)
   }
 
   async updatePluginsNetwork(diskPlugins: BuySellPlugins | undefined) {

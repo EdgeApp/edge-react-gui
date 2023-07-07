@@ -13,6 +13,7 @@ import { SpendingLimits } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
 import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
+import { showError } from '../services/AirshipInstance'
 
 interface OwnProps extends EdgeSceneProps<'spendingLimits'> {}
 
@@ -24,7 +25,7 @@ interface StateProps {
   currencySymbol: string
 }
 interface DispatchProps {
-  onSubmit: (navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) => unknown
+  onSubmit: (navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) => Promise<void>
 }
 type Props = OwnProps & StateProps & DispatchProps
 
@@ -116,7 +117,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
         }
       },
       password
-    )
+    ).catch(err => showError(err))
   }
 }
 
@@ -148,8 +149,8 @@ export const SpendingLimitsScene = connect<StateProps, DispatchProps, OwnProps>(
     transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
   }),
   dispatch => ({
-    onSubmit(navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) {
-      dispatch(setSpendingLimits(navigation, spendingLimits, password))
+    async onSubmit(navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) {
+      await dispatch(setSpendingLimits(navigation, spendingLimits, password))
     }
   })
 )(SpendingLimitsComponent)

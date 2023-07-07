@@ -34,7 +34,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 interface OwnProps extends EdgeSceneProps<'fioAddressList'> {}
@@ -67,17 +67,17 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return null
   }
 
-  fetchData() {
+  async fetchData() {
     const { refreshAllFioAddresses, isConnected } = this.props
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
     }
-    refreshAllFioAddresses()
+    await refreshAllFioAddresses()
   }
 
   componentDidMount(): void {
     this.willFocusSubscription = this.props.navigation.addListener('focus', () => {
-      this.fetchData()
+      this.fetchData().catch(err => showError(err))
     })
   }
 
@@ -228,8 +228,8 @@ export const FioAddressListScene = connect<StateProps, DispatchProps, OwnProps>(
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(FioAddressList))

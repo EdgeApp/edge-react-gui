@@ -73,8 +73,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
             tokenId={tokenId}
             walletName={walletName}
             rightSide={rightSide}
-            onPress={() => {
-              handleInsufficientFunds(wallet, fee)
+            onPress={async () => {
+              await handleInsufficientFunds(wallet, fee)
             }}
           />
         )

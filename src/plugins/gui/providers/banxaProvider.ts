@@ -322,7 +322,7 @@ export const banxaProvider: FiatProviderFactory = {
             const response = await banxaFetch({ method: 'POST', url, path: 'api/orders', apiKey, bodyParams })
             const banxaQuote = asBanxaQuoteResponse(response)
 
-            showUi.openWebView({ url: banxaQuote.data.order.checkout_url })
+            await showUi.openWebView({ url: banxaQuote.data.order.checkout_url })
           },
           closeQuote: async (): Promise<void> => {}
         }

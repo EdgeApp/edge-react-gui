@@ -122,7 +122,7 @@ export const FioCreateHandleScene = (props: Props) => {
       try {
         asRegisterSuccessRes(regAddressRes)
 
-        dispatch(refreshAllFioAddresses())
+        await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
         navigation.pop()
       } catch (e: any) {

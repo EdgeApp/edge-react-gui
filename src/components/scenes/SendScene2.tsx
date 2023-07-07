@@ -180,7 +180,7 @@ const SendComponent = (props: Props) => {
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
-      triggerScamWarningModal(account.disklet)
+      triggerScamWarningModal(account.disklet).catch(err => showError(err))
     }
     initialMount.current = false
   }
@@ -329,7 +329,7 @@ const SendComponent = (props: Props) => {
           await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => showError(error))
   }
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -557,8 +557,8 @@ const SendComponent = (props: Props) => {
     if (uniqueIdentifierInfo != null && spendTarget.publicAddress != null) {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
 
-      const handleUniqueIdentifier = () => {
-        Airship.show<string | undefined>(bridge => (
+      const handleUniqueIdentifier = async () => {
+        await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
             inputLabel={identifierName}
@@ -678,20 +678,16 @@ const SendComponent = (props: Props) => {
           const amount = nativeAmount ?? '0'
           const chainCode = coreWallet.currencyInfo.currencyCode
 
-          try {
-            recordSend(fioWallet, payerFioAddress, {
-              payeeFioAddress,
-              payerPublicAddress,
-              payeePublicAddress,
-              amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
-              currencyCode: currencyCode,
-              chainCode,
-              txid,
-              memo
-            })
-          } catch (e: any) {
-            showError(e)
-          }
+          await recordSend(fioWallet, payerFioAddress, {
+            payeeFioAddress,
+            payerPublicAddress,
+            payeePublicAddress,
+            amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
+            currencyCode: currencyCode,
+            chainCode,
+            txid,
+            memo
+          })
         }
       }
     }
@@ -749,7 +745,7 @@ const SendComponent = (props: Props) => {
           }
         }
       }
-      addToFioAddressCache(account, payeeFioAddresses)
+      await addToFioAddressCache(account, payeeFioAddresses)
 
       if (broadcastedTx.metadata == null) {
         broadcastedTx.metadata = {}
@@ -864,7 +860,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode))
+      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode)).catch(err => showError(err))
     }
   })
   useUnmount(() => {

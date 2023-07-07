@@ -61,7 +61,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   componentDidMount(): void {
-    this.getRegInfo()
+    this.getRegInfo().catch(err => showError(err))
   }
 
   getRegInfo = async () => {
@@ -88,7 +88,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     this.setState({ loading: false })
   }
 
-  onNextPress = (): void => {
+  onNextPress = async (): Promise<void> => {
     const { route } = this.props
     const { selectedDomain } = route.params
     const { activationCost } = this.state
@@ -96,19 +96,19 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     if (!activationCost || activationCost === 0) return
 
     if (selectedDomain.walletId) {
-      this.proceed(selectedDomain.walletId, FIO_STR)
+      await this.proceed(selectedDomain.walletId, FIO_STR)
     } else {
       const { paymentWallet } = this.state
       if (!paymentWallet || !paymentWallet.id) return
-      this.proceed(paymentWallet.id, paymentWallet.currencyCode)
+      await this.proceed(paymentWallet.id, paymentWallet.currencyCode)
     }
   }
 
-  onWalletPress = () => {
+  onWalletPress = async () => {
     const { activationCost } = this.state
     if (!activationCost || activationCost === 0) return
 
-    this.selectWallet()
+    await this.selectWallet()
   }
 
   selectWallet = async () => {

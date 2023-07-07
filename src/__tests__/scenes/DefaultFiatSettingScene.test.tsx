@@ -19,7 +19,7 @@ describe('DefaultFiatSettingComponent', () => {
             value: 'USD'
           }
         ]}
-        onSelectFiat={selectedDefaultFiat => undefined}
+        onSelectFiat={async selectedDefaultFiat => {}}
         theme={getTheme()}
       />
     )

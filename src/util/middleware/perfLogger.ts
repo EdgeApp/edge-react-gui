@@ -14,6 +14,8 @@ export const perfLogger: Middleware<{}, RootState, Dispatch> = store => next => 
   const end = Date.now()
 
   RNFS.appendFile(perfLoggerCSV, `${action.type},${start},${end}\n`)
+    // Log to the console instead of showError to not spam the user
+    .catch(err => console.error(err))
 
   return result
 }

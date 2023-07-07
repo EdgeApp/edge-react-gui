@@ -1549,7 +1549,13 @@ const strings = {
   purchase_asset_label: `Purchase Asset`,
   purchase_date_label: `Purchase Date`,
   purchase_price_label: `Purchase Price`,
-  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`
+  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`,
+
+  unknown_error_occurred_fragment: 'Unknown error occurred',
+  no_scan_results_message: 'No scan results',
+
+  auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
+  contacts_load_failed_message_s: 'Failed to load contacts: %s'
 }
 
 // eslint-disable-next-line import/no-default-export

@@ -3,6 +3,7 @@ import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -52,7 +53,7 @@ export function ClickableText(props: Props) {
     if (out != null && typeof out.then === 'function') {
       setPending(true)
       const onDone = () => setPending(false)
-      out.then(onDone, onDone)
+      out.then(onDone, onDone).catch(err => showError(err))
     }
   }
 

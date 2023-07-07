@@ -56,7 +56,7 @@ export const LoanManagerService = (props: Props) => {
   useAsyncEffect(
     async () => {
       if (account.disklet != null) {
-        dispatch(loadLoanAccounts(account))
+        await dispatch(loadLoanAccounts(account))
       }
     },
     [account, dispatch],
@@ -71,7 +71,7 @@ export const LoanManagerService = (props: Props) => {
     const routine = () => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
-          dispatch(deleteLoanAccount(loanAccount))
+          dispatch(deleteLoanAccount(loanAccount)).catch(err => console.warn(err))
 
           cachedLoanAssetsMap[loanAccount.id] = ''
           setCachedLoanAssetsMap({ ...cachedLoanAssetsMap })
@@ -172,7 +172,7 @@ export const LoanManagerService = (props: Props) => {
 
       // TODO: Implement a true way to clear the push event
       if (cachedLoanAssetsMap[loanAccountId] === '') {
-        uploadLiquidationEvent('WBTC', 0)
+        uploadLiquidationEvent('WBTC', 0).catch(err => console.warn(err))
         return
       }
 

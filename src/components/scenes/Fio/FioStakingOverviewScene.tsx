@@ -7,6 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { getSymbolFromCurrency, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
@@ -34,7 +35,7 @@ interface StateProps {
   fiatSymbol: string
 }
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
 }
 interface Lock {
   id: string
@@ -62,8 +63,8 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const [locks, setLocks] = React.useState<Lock[]>([])
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
 
-  React.useEffect(() => {
-    refreshAllFioAddresses()
+  useAsyncEffect(async () => {
+    await refreshAllFioAddresses()
   }, [refreshAllFioAddresses])
 
   React.useEffect(() => {
@@ -184,8 +185,8 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
     }
   },
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(FioStakingOverviewSceneComponent))

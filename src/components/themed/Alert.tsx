@@ -2,7 +2,9 @@ import * as React from 'react'
 import { Platform, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -16,7 +18,7 @@ interface Props {
   paddingRem?: number[] | number
   title: string
   type: AlertType
-  onPress?: () => void
+  onPress?: () => Promise<void> | void
 }
 
 export function Alert(props: Props) {
@@ -28,6 +30,10 @@ export function Alert(props: Props) {
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 1), theme.rem))
 
   const typeColor = type === 'warning' ? theme.warningText : type === 'error' ? theme.dangerText : theme.primaryText
+
+  const handlePress = useHandler(() => {
+    if (onPress != null) onPress()?.catch(err => showError(err))
+  })
 
   const result = (
     <View style={[styles.alert, margin, padding, { borderColor: typeColor }]}>
@@ -51,7 +57,7 @@ export function Alert(props: Props) {
     </View>
   )
 
-  return onPress ? <TouchableOpacity onPress={onPress}>{result}</TouchableOpacity> : result
+  return onPress ? <TouchableOpacity onPress={handlePress}>{result}</TouchableOpacity> : result
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

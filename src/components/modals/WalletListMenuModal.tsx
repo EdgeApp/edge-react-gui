@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -135,10 +136,13 @@ export function WalletListMenuModal(props: Props) {
 
   const handleCancel = () => props.bridge.resolve()
 
-  const optionAction = (option: WalletListMenuKey) => {
+  const optionAction = useHandler((option: WalletListMenuKey) => {
     dispatch(walletListMenuAction(navigation, walletId, option, tokenId))
-    bridge.resolve()
-  }
+      .then(() => bridge.resolve())
+      .catch((error: any) => {
+        bridge.reject(error)
+      })
+  })
 
   useAsyncEffect(async () => {
     if (wallet == null) {

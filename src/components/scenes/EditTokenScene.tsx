@@ -169,7 +169,7 @@ function EditTokenSceneComponent(props: Props) {
 const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
 
 async function showMessage(message: string): Promise<void> {
-  Airship.show<'ok' | undefined>(bridge => (
+  await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
       message={message}

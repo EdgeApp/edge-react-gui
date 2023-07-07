@@ -2,14 +2,13 @@ import { showError } from '../components/services/AirshipInstance'
 import { getSyncedSubcategories, setSubcategoriesRequest } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 
-export function getSubcategories(): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function getSubcategories(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const { account } = getState().core
-    getSyncedSubcategories(account).then(s => {
-      return dispatch({
-        type: 'SET_TRANSACTION_SUBCATEGORIES',
-        data: { subcategories: s }
-      })
+    const subcategories = await getSyncedSubcategories(account)
+    dispatch({
+      type: 'SET_TRANSACTION_SUBCATEGORIES',
+      data: { subcategories }
     })
   }
 }

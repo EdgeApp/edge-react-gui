@@ -23,7 +23,9 @@ class NetworkActivityComponent extends React.Component<Props> {
 
   componentDidMount() {
     this.netInfoUnsubscribe = NetInfo.addEventListener(this.handleNetworkState)
-    NetInfo.fetch().then(this.handleNetworkState)
+    NetInfo.fetch()
+      .then(this.handleNetworkState)
+      .catch(err => showError(err))
   }
 
   componentWillUnmount() {

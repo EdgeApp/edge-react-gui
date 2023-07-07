@@ -59,7 +59,9 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const handlePress = useHandler(() => {
     const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, currencyCode) : null)
     if (walletType != null) {
-      dispatch(createAndSelectWallet({ walletType })).then(handleRes)
+      dispatch(createAndSelectWallet({ walletType }))
+        .then(handleRes)
+        .catch(err => showError(err))
     } else if (pluginId != null && tokenId != null) {
       if (createWalletIds.length < 2) {
         dispatch(
@@ -70,7 +72,9 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
             trackingEventFailed: trackingEventFailed,
             trackingEventSuccess: trackingEventSuccess
           })
-        ).then(handleRes)
+        )
+          .then(handleRes)
+          .catch(err => showError(err))
       } else {
         Airship.show(bridge => {
           const renderRow = (wallet: EdgeCurrencyWallet) => (
@@ -102,7 +106,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
               rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
             />
           )
-        })
+        }).catch(err => showError(err))
       }
     }
   })

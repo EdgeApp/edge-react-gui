@@ -61,8 +61,8 @@ export const executePlugin = async (params: {
     },
     showToastSpinner,
     openWebView: async (params): Promise<void> => {
-      if (Platform.OS === 'ios') SafariView.show({ url: params.url })
-      else CustomTabs.openURL(params.url)
+      if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
+      else await CustomTabs.openURL(params.url)
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params

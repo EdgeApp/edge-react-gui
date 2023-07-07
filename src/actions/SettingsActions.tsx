@@ -39,23 +39,20 @@ export function updateOneSetting(setting: object): ThunkAction<void> {
   }
 }
 
-export function setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds: number): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds: number): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    setAutoLogoutTimeInSecondsRequestAccountSettings(account, autoLogoutTimeInSeconds)
-      .then(() =>
-        dispatch({
-          type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
-          data: { autoLogoutTimeInSeconds }
-        })
-      )
-      .catch(showError)
+    await setAutoLogoutTimeInSecondsRequestAccountSettings(account, autoLogoutTimeInSeconds)
+    dispatch({
+      type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
+      data: { autoLogoutTimeInSeconds }
+    })
   }
 }
 
-export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
@@ -65,42 +62,35 @@ export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<void> {
     const { transaction } = spendingLimits
     const previousDefaultIsoFiat = state.ui.settings.defaultIsoFiat
 
-    Promise.resolve()
-      .then(() => {
-        // update default fiat in account settings
-        setDefaultFiatRequestAccountSettings(account, defaultFiat)
-      })
-      .then(() => {
-        // update default fiat in settings
-        dispatch({
-          type: 'UI/SETTINGS/SET_DEFAULT_FIAT',
-          data: { defaultFiat }
-        })
-        const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
-        // convert from previous fiat to next fiat
-        const fiatString = convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount.toFixed(DECIMAL_PRECISION))
-        return parseFloat(fiatString)
-      })
-      .then(transactionAmount => {
-        const nextSpendingLimits = {
-          transaction: {
-            ...transaction,
-            amount: parseFloat(transactionAmount.toFixed(2))
-          }
-        }
+    // update default fiat in account settings
+    await setDefaultFiatRequestAccountSettings(account, defaultFiat)
 
-        // update spending limits in account settings
-        setSpendingLimitsAccountSettings(account, nextSpendingLimits)
-        // update spending limits in settings
-        dispatch({
-          type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
-          data: { spendingLimits: nextSpendingLimits }
-        })
-        dispatch(updateExchangeRates())
-        // Update push notifications
-        dispatch(registerNotificationsV2(true))
-      })
-      .catch(showError)
+    // update default fiat in settings
+    dispatch({
+      type: 'UI/SETTINGS/SET_DEFAULT_FIAT',
+      data: { defaultFiat }
+    })
+    const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
+    // convert from previous fiat to next fiat
+    const fiatString = convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount.toFixed(DECIMAL_PRECISION))
+    const transactionAmount = parseFloat(fiatString)
+    const nextSpendingLimits = {
+      transaction: {
+        ...transaction,
+        amount: parseFloat(transactionAmount.toFixed(2))
+      }
+    }
+
+    // update spending limits in account settings
+    await setSpendingLimitsAccountSettings(account, nextSpendingLimits)
+    // update spending limits in settings
+    dispatch({
+      type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+      data: { spendingLimits: nextSpendingLimits }
+    })
+    await dispatch(updateExchangeRates())
+    // Update push notifications
+    await dispatch(registerNotificationsV2(true))
   }
 }
 
@@ -224,9 +214,9 @@ export function showReEnableOtpModal(): ThunkAction<Promise<void>> {
     if (resolveValue === 'confirm') {
       // true on positive, false on negative
       // let 2FA expire
-      account.cancelOtpReset()
+      await account.cancelOtpReset()
     } else {
-      account.disableOtp()
+      await account.disableOtp()
     } // if default of null (press backdrop) do not change anything and keep reminding
   }
 }

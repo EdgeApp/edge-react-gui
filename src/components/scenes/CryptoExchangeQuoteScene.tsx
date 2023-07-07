@@ -37,8 +37,8 @@ interface StateProps {
   toWalletCurrencyName: string
 }
 interface DispatchProps {
-  shift: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => void
-  timeExpired: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => void
+  shift: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => Promise<void>
+  timeExpired: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -55,9 +55,11 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const swapConfig = account.swapConfig[pluginId]
 
     logEvent('Exchange_Shift_Quote')
-    swapVerifyTerms(swapConfig).then(result => {
-      if (!result) timeExpired(navigation, swapInfo, onApprove)
-    }, showError)
+    swapVerifyTerms(swapConfig)
+      .then(async result => {
+        if (!result) await timeExpired(navigation, swapInfo, onApprove)
+      })
+      .catch(err => showError(err))
   }
 
   componentWillUnmount() {
@@ -65,14 +67,14 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { swapInfo } = route.params
     const { quote } = swapInfo
 
-    if (!this.calledApprove) quote.close()
+    if (!this.calledApprove) quote.close().catch(err => showError(err))
   }
 
-  doShift = () => {
+  doShift = async () => {
     const { shift, route, navigation } = this.props
     const { swapInfo, onApprove } = route.params
     this.calledApprove = true
-    shift(navigation, swapInfo, onApprove)
+    await shift(navigation, swapInfo, onApprove)
   }
 
   renderTimer = () => {
@@ -81,11 +83,11 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={() => timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={async () => await timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
   }
 
-  showExplanationForEstimate = () => {
-    Airship.show<'ok' | undefined>(bridge => (
+  showExplanationForEstimate = async () => {
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.estimated_exchange_rate}
@@ -203,11 +205,11 @@ export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
       state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   }),
   dispatch => ({
-    shift(navigation, swapInfo, onApprove) {
-      dispatch(shiftCryptoCurrency(navigation, swapInfo, onApprove))
+    async shift(navigation, swapInfo, onApprove) {
+      await dispatch(shiftCryptoCurrency(navigation, swapInfo, onApprove))
     },
-    timeExpired(navigation, swapInfo, onApprove) {
-      dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))
+    async timeExpired(navigation, swapInfo, onApprove) {
+      await dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))
     }
   })
 )(withTheme(CryptoExchangeQuoteScreenComponent))
