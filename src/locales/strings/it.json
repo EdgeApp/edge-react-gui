@@ -187,7 +187,7 @@
   "create_wallet_import_title": "Importa portafoglio",
   "create_wallet_import_options_title": "Opzioni di Importazione",
   "create_wallet_import_options_birthday_height": "Wallet Birthday Height",
-  "create_wallet_import_options_birthday_height_description": "The birthday height is the network block height that your wallet will start synchronizing from.",
+  "create_wallet_import_options_birthday_height_description": "Il birthday height è il numero del blocco da cui il tuo portafoglio inizierà a sincronizzarsi.",
   "create_wallet_imports_title": "Importa Portafoglio",
   "create_wallet_import_all_instructions": "Inserisci i tuoi seed o la chiave privata per verificare e ripristinare il portafoglio associato",
   "create_wallet_import_instructions": "Inserisci i tuoi seed privati per verificare e ripristinare il portafoglio associato",
