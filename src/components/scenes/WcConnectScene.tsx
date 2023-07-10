@@ -71,7 +71,7 @@ export const WcConnectScene = (props: Props) => {
 
   const handleConnect = async () => {
     try {
-      await walletConnect.approveSession(proposal, walletAddress, wallet.id)
+      await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
       await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
       navigation.navigate('wcConnections', {})

@@ -22,14 +22,12 @@ import { useWatch } from './useWatch'
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
-  approveSession: (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => Promise<void>
+  approveSession: (proposal: Web3WalletTypes.SessionProposal, walletId: string) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
   disconnectSession: (topic: string) => Promise<void>
   approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
   rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
-
-const userDeletedSessions = new Set<string>()
 
 /**
  * Access Wallet Connect
@@ -64,7 +62,6 @@ export function useWalletConnect(): WalletConnect {
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      if (userDeletedSessions.has(session.topic)) continue
       const walletId = getWalletIdFromSessionNamespace(session.namespaces, accounts)
       if (walletId == null) continue
 
@@ -98,11 +95,11 @@ export function useWalletConnect(): WalletConnect {
           reject(e)
         })
       }),
-      10000
+      20000
     )
   })
 
-  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, address: string, walletId: string) => {
+  const approveSession = useHandler(async (proposal: Web3WalletTypes.SessionProposal, walletId: string) => {
     const client = await getClient()
 
     const wallet = currencyWallets[walletId]
@@ -111,7 +108,8 @@ export function useWalletConnect(): WalletConnect {
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) return
 
-    const supportedNamespaces = getSupportedNamespaces(chainId, address)
+    const address = await wallet.getReceiveAddress()
+    const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
 
     // Check that we support all required methods
     const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
@@ -129,7 +127,7 @@ export function useWalletConnect(): WalletConnect {
           supportedNamespaces
         })
       }),
-      10000
+      20000
     )
   })
 
@@ -146,15 +144,11 @@ export function useWalletConnect(): WalletConnect {
     const session = sessions[topic]
     const dAppName = session?.peer.metadata.name ?? lstrings.wc_smartcontract_dapp
 
-    try {
-      await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
-      await Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />)
-    } catch (e) {
-      // In testing, this method is pretty unreliable so we can at least remove it locally.
-      console.log('walletConnect disconnectSession error', String(e))
-      client.core.relayer.subscriber.topicMap.delete(topic)
-      userDeletedSessions.add(topic)
-    }
+    // In testing, this method is pretty unreliable. May be worth replacing with something more manual.
+    await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
+    Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
+      console.log(e)
+    )
   })
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
