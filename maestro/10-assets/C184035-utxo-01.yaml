@@ -55,15 +55,6 @@ tags:
 - tapOn: Wallets
 
 - scrollUntilVisible:
-    element: BSV
-    direction: DOWN
-- tapOn: BSV
-- extendedWaitUntil:
-    visible: 0.011 BSV
-    timeout: 120000
-- tapOn: Wallets
-
-- scrollUntilVisible:
     element: BCH
     direction: DOWN
 - tapOn: BCH
