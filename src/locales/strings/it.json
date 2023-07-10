@@ -1368,8 +1368,8 @@
   "purchase_date_label": "Data di acquisto",
   "purchase_price_label": "Prezzo di acquisto",
   "select_wallet_to_purchase_card_title": "Seleziona il portafoglio da usare per acquistare la carta",
-  "unknown_error_occurred_fragment": "Unknown error occurred",
-  "no_scan_results_message": "No scan results",
-  "auto_log_off_failed_message_s": "Failed to auto-logoff: %s",
-  "contacts_load_failed_message_s": "Failed to load contacts: %s"
+  "unknown_error_occurred_fragment": "Si è verificato un errore sconosciuto",
+  "no_scan_results_message": "Nessun risultato di scansione",
+  "auto_log_off_failed_message_s": "Auto-logoff non riuscito: %s",
+  "contacts_load_failed_message_s": "Caricamento dei contatti non riuscito: %s"
 }
