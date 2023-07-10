@@ -85,6 +85,14 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     await showUi.rewardsCardDashboard({
       items: userRewardsCards.activeCards,
       showLoading,
+      onCardLongPress({ url }) {
+        showUi
+          .setClipboard(url)
+          .then(async () => {
+            await showUi.showToast(lstrings.fragment_copied)
+          })
+          .catch(e => showError(e))
+      },
       onCardPress({ url }) {
         showUi.openWebView({ url }).catch(err => showError(err))
       },
