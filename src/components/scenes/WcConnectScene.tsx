@@ -73,7 +73,7 @@ export const WcConnectScene = (props: Props) => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
-      await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />).catch(e => showError(e))
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error('WalletConnect connection error:', String(error))
