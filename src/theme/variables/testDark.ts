@@ -361,8 +361,10 @@ export const testDark: Theme = {
   outlineTextInputTextColor: palette.lightPurple,
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.darkPurple1,
+  outlineTextInputBorderColorDisabled: palette.gray,
   outlineTextInputBorderColorFocused: palette.glowPurple,
   outlineTextInputLabelColor: palette.white,
+  outlineTextInputLabelColorDisabled: palette.gray,
   outlineTextInputLabelColorFocused: palette.black,
 
   // Animation

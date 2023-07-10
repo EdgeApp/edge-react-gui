@@ -1,156 +1,113 @@
 import * as React from 'react'
-import { StyleSheet, Switch, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { TextField } from 'react-native-material-textfield'
 
-import { setSpendingLimits } from '../../actions/SpendingLimitsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { THEME } from '../../theme/variables/airbitz'
-import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { SpendingLimits } from '../../types/types'
+import { setSpendingLimits } from '../../modules/Core/Account/settings'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { EdgeSceneProps } from '../../types/routerTypes'
+import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
-import { FormattedText } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
+import { MainButton } from '../themed/MainButton'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
-interface OwnProps extends EdgeSceneProps<'spendingLimits'> {}
+interface Props extends EdgeSceneProps<'spendingLimits'> {}
 
-interface StateProps {
-  transactionSpendingLimit: {
-    amount: number
-    isEnabled: boolean
-  }
-  currencySymbol: string
-}
-interface DispatchProps {
-  onSubmit: (navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) => Promise<void>
-}
-type Props = OwnProps & StateProps & DispatchProps
+export const SpendingLimitsScene = (props: Props) => {
+  const { navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
-interface State {
-  password: string
-  transactionAmount: number
-  transactionIsEnabled: boolean
-}
+  const account = useSelector(state => state.core.account)
+  const currencySymbol = useSelector(state => getSymbolFromCurrency(state.ui.settings.defaultFiat))
+  const transactionSpendingLimit = useSelector(state => state.ui.settings.spendingLimits.transaction)
 
-class SpendingLimitsComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      password: '',
-      transactionAmount: props.transactionSpendingLimit.amount,
-      transactionIsEnabled: props.transactionSpendingLimit.isEnabled
+  const [password, setPassword] = React.useState('')
+  const [transactionAmount, setTransactionAmount] = React.useState(
+    !zeroString(transactionSpendingLimit.amount.toString()) ? transactionSpendingLimit.amount.toString() : ''
+  )
+  const [transactionIsEnabled, setTransactionIsEnabled] = React.useState(transactionSpendingLimit.isEnabled)
+
+  const handleTransactionIsEnabledChanged = useHandler(() => setTransactionIsEnabled(!transactionIsEnabled))
+
+  const handleSubmitAsync = async () => {
+    const isAuthorized = await account.checkPassword(password)
+    if (!isAuthorized) return Alert.alert(lstrings.password_check_incorrect_password_title)
+
+    const spendingLimits = {
+      transaction: {
+        isEnabled: transactionIsEnabled,
+        amount: parseFloat(transactionAmount)
+      }
     }
+    await setSpendingLimits(account, spendingLimits)
+    dispatch({
+      type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+      data: { spendingLimits }
+    })
+    navigation.pop()
   }
 
-  render() {
-    const { currencySymbol } = this.props
-    const { transactionAmount, transactionIsEnabled } = this.state
+  // Satsify "misused promise"
+  const handleSubmit = useHandler(() => {
+    handleSubmitAsync().catch(err => showError(err))
+  })
 
-    return (
-      <SceneWrapper background="legacy" hasHeader>
-        <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
-          <TextField
-            baseColor={THEME.COLORS.GRAY_2}
-            tintColor={THEME.COLORS.GRAY_2}
-            secureTextEntry
-            label={lstrings.enter_your_password}
-            onChangeText={this.onPasswordChanged}
-          />
+  return (
+    <SceneWrapper hasHeader>
+      <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
+        <OutlinedTextInput secureTextEntry autoFocus label={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
-          <View style={styles.switchRow}>
-            <View style={styles.textBlock}>
-              <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</FormattedText>
-              <FormattedText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</FormattedText>
-            </View>
-            <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} accessibilityHint={lstrings.toggle_button_hint} />
+        <View style={styles.switchRow}>
+          <View style={styles.textBlock}>
+            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_title}</EdgeText>
+            <EdgeText style={styles.bodyText}>{lstrings.spending_limits_tx_description}</EdgeText>
           </View>
+          <SettingsSwitchRow value={transactionIsEnabled} onPress={handleTransactionIsEnabledChanged} />
+        </View>
 
-          <TextField
-            tintColor={THEME.COLORS.SECONDARY}
-            baseColor={THEME.COLORS.SECONDARY}
-            disabled={!transactionIsEnabled}
-            value={transactionAmount.toString()}
-            onChangeText={this.onTransactionAmountChanged}
-            containerStyle={[{ flex: 1 }]}
-            label={lstrings.spending_limits_tx_title}
-            suffix={currencySymbol}
-            autoCorrect={false}
-            keyboardType="numeric"
-          />
+        <OutlinedTextInput
+          disabled={!transactionIsEnabled}
+          value={transactionAmount}
+          onChangeText={setTransactionAmount}
+          label={lstrings.spending_limits_tx_title}
+          autoCorrect={false}
+          autoFocus={false}
+          keyboardType="numeric"
+          prefix={currencySymbol}
+        />
 
-          <View style={styles.spacer} />
+        <View style={styles.spacer} />
 
-          <PrimaryButton onPress={this.onSubmit}>
-            <PrimaryButton.Text>{lstrings.save}</PrimaryButton.Text>
-          </PrimaryButton>
-        </KeyboardAwareScrollView>
-      </SceneWrapper>
-    )
-  }
-
-  onTransactionIsEnabledChanged = (transactionIsEnabled: boolean) => {
-    this.setState({ transactionIsEnabled })
-  }
-
-  onTransactionAmountChanged = (transactionAmount: string) => {
-    this.setState({ transactionAmount: parseFloat(transactionAmount) || 0 })
-  }
-
-  onPasswordChanged = (password: string) => {
-    this.setState({ password })
-  }
-
-  onSubmit = () => {
-    const { password, transactionIsEnabled, transactionAmount } = this.state
-    const { navigation, onSubmit } = this.props
-
-    onSubmit(
-      navigation,
-      {
-        transaction: {
-          isEnabled: transactionIsEnabled,
-          // @ts-expect-error
-          amount: parseFloat(transactionAmount)
-        }
-      },
-      password
-    ).catch(err => showError(err))
-  }
+        <MainButton label={lstrings.save} disabled={password.length === 0} onPress={handleSubmit} />
+      </KeyboardAwareScrollView>
+    </SceneWrapper>
+  )
 }
 
-const styles = StyleSheet.create({
+const getStyles = cacheStyles((theme: Theme) => ({
   scene: {
     alignItems: 'stretch',
-    padding: 24
+    padding: theme.rem(1.5)
   },
   spacer: {
-    height: 28
+    height: theme.rem(1.75)
   },
   switchRow: {
     flexDirection: 'row',
-    paddingVertical: 28
+    paddingVertical: theme.rem(1.75)
   },
   textBlock: {
     flex: 1
   },
   bodyText: {
-    color: THEME.COLORS.PRIMARY,
-    fontFamily: THEME.FONTS.DEFAULT,
-    fontSize: 14
+    fontSize: theme.rem(0.875)
   }
-})
-
-export const SpendingLimitsScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    currencySymbol: getSymbolFromCurrency(state.ui.settings.defaultFiat),
-    transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
-  }),
-  dispatch => ({
-    async onSubmit(navigation: NavigationBase, spendingLimits: SpendingLimits, password: string) {
-      await dispatch(setSpendingLimits(navigation, spendingLimits, password))
-    }
-  })
-)(SpendingLimitsComponent)
+}))

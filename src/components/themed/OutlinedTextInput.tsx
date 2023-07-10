@@ -27,6 +27,7 @@ export interface OutlinedTextInputProps {
   searchIcon?: boolean // Defaults to 'false'
   showSpinner?: boolean // Defaults to 'false'
   suffix?: string // Text input is right-right justified with a persistent suffix
+  prefix?: string // Text input is left-left justified with a persistent prefix
 
   // Callbacks:
   onBlur?: () => void
@@ -51,6 +52,9 @@ export interface OutlinedTextInputProps {
 
   // Unless 'blurOnClear' is passed explicitly in the props, Search Bars calls 'blur' when cleared and text inputs don't call 'blur' when cleared.
   blurOnClear?: boolean // Defaults to 'false'
+
+  // Whether the text input is disabled. If 'true', the component will be grayed out.
+  disabled?: boolean // Defaults to 'false'
 }
 
 /**
@@ -80,6 +84,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     clearIcon = true,
     marginRem,
     multiline = false,
+    prefix,
     searchIcon = false,
     showSpinner = false,
     suffix,
@@ -93,6 +98,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     // TextInput:
     autoFocus = !searchIcon,
     blurOnClear = searchIcon,
+    disabled = false,
     maxLength,
     secureTextEntry,
     ...inputProps
@@ -120,7 +126,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     if (onClear != null) onClear()
   }
   function focus(): void {
-    if (inputRef.current != null) inputRef.current.focus()
+    if (inputRef.current != null && !disabled) inputRef.current.focus()
   }
   function isFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
@@ -140,6 +146,12 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const [counterWidth, setCounterWidth] = React.useState(0)
   // @ts-expect-error
   const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
+
+  // Animates between 0 and 1 based our disabled state:
+  const disabledAnimation = useSharedValue(0)
+  React.useEffect(() => {
+    disabledAnimation.value = withTiming(disabled ? 1 : 0)
+  }, [disabledAnimation, disabled])
 
   // Animates between 0 and 1 based our error state:
   const errorAnimation = useSharedValue(0)
@@ -188,6 +200,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     // Compensate for the scaling origin being in the center:
     0.5 * counterWidth
 
+  // Prefix dimensions
+  const prefixTranslateY = theme.rem(1)
+
   // Pad right side of the bottom line when no counter is present,
   // to account for rounded corner.
   const cornerPadding = theme.rem(0.5)
@@ -219,39 +234,51 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
 
   // Animated styles:
   const getBorderColor = React.useMemo(
-    () => getIterpolatedColor(theme.outlineTextInputBorderColor, theme.outlineTextInputBorderColorFocused, theme.dangerText),
+    () =>
+      getIterpolatedColor(
+        theme.outlineTextInputBorderColor,
+        theme.outlineTextInputBorderColorFocused,
+        theme.dangerText,
+        theme.outlineTextInputBorderColorDisabled
+      ),
     [theme]
   )
 
   const getLabelColor = React.useMemo(
-    () => getIterpolatedColor(theme.outlineTextInputLabelColor, theme.outlineTextInputLabelColorFocused, theme.dangerText),
+    () =>
+      getIterpolatedColor(
+        theme.outlineTextInputLabelColor,
+        theme.outlineTextInputLabelColorFocused,
+        theme.dangerText,
+        theme.outlineTextInputLabelColorDisabled
+      ),
     [theme]
   )
 
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       right: maxLength !== undefined ? counterRight + counterProgress * (2 * counterPadding + counterWidth) : cornerPadding
     }
   })
   const leftStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const rightStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value)
+    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const topStyle = useAnimatedStyle(() => {
     const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getLabelColor(errorAnimation.value, focusAnimation.value),
+      color: getLabelColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
@@ -270,8 +297,17 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const errorStyle = useAnimatedStyle(() => ({
     opacity: errorAnimation.value
   }))
+
+  const prefixStyle = useAnimatedStyle(() => {
+    const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
+    return {
+      opacity: labelProgressAlt,
+      transform: [{ translateY: (1 - labelProgressAlt) * prefixTranslateY }, { scale: labelProgressAlt }]
+    }
+  })
+
   const showPasswordLineStyle = useAnimatedStyle(() => ({
-    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value),
+    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
     transform: [
       { rotateZ: '45deg' },
       {
@@ -279,13 +315,21 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
       }
     ]
   }))
+
+  const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
+  const eyeIconStyle = useAnimatedStyle(() => {
+    return {
+      color: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
+    }
+  })
+
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
   // @ts-expect-error
   const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
   const textStyle = numpad ? styles.numberInput : styles.textInput
-  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixTextAndroidAdjust : null], [styles])
+  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixAndroidAdjust : null], [styles])
 
   return (
     <TouchableWithoutFeedback onPress={() => focus()}>
@@ -321,97 +365,56 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
           <TouchableWithoutFeedback onPress={handleHidePassword}>
             <View style={styles.clearTapArea}>
               <Animated.View style={[styles.eyeIconHideLine, showPasswordLineStyle]} />
-              <IonIcon name="eye-outline" style={styles.eyeIcon} />
+              <AnimatedIonIcon name="eye-outline" style={[styles.eyeIcon, eyeIconStyle]} />
             </View>
           </TouchableWithoutFeedback>
         ) : null}
-        {suffix != null ? (
-          <View style={[styles.suffixContainer, suffixPadding]}>
-            {numeric ? (
-              <NumericInput
-                ref={inputRef}
-                {...inputProps}
-                minDecimals={minDecimals}
-                maxDecimals={maxDecimals}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            ) : (
-              <TextInput
-                ref={inputRef}
-                {...inputProps}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            )}
-            <EdgeText style={suffixStyle}>{suffix}</EdgeText>
-          </View>
-        ) : (
-          // TODO: Remove this duplication
-          <>
-            {numeric ? (
-              <NumericInput
-                ref={inputRef}
-                {...inputProps}
-                minDecimals={minDecimals}
-                maxDecimals={maxDecimals}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            ) : (
-              <TextInput
-                ref={inputRef}
-                {...inputProps}
-                autoFocus={autoFocus}
-                multiline={multiline}
-                editable={!showSpinner}
-                selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-                style={[textStyle, textInputStyle]}
-                textAlignVertical="top"
-                value={value}
-                secureTextEntry={hidePassword}
-                // Callbacks:
-                onBlur={handleBlur}
-                onChangeText={onChangeText}
-                onFocus={handleFocus}
-                maxLength={maxLength}
-              />
-            )}
-          </>
-        )}
+
+        <View style={[styles.suffixContainer, suffixPadding]}>
+          {prefix != null ? <Animated.Text style={[textStyle, prefixStyle]}>{`${prefix} `}</Animated.Text> : null}
+          {numeric ? (
+            <NumericInput
+              ref={inputRef}
+              {...inputProps}
+              accessibilityState={{ disabled }}
+              minDecimals={minDecimals}
+              maxDecimals={maxDecimals}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          ) : (
+            <TextInput
+              ref={inputRef}
+              {...inputProps}
+              accessibilityState={{ disabled }}
+              autoFocus={autoFocus}
+              multiline={multiline}
+              editable={!showSpinner}
+              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+              style={[textStyle, textInputStyle]}
+              textAlignVertical="top"
+              value={value}
+              secureTextEntry={hidePassword}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              maxLength={maxLength}
+            />
+          )}
+          {suffix != null ? <EdgeText style={suffixStyle}>{suffix}</EdgeText> : null}
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -481,7 +484,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     suffixText: {
       color: theme.secondaryText
     },
-    suffixTextAndroidAdjust: {
+    suffixAndroidAdjust: {
       marginTop: 3.5
     },
     textInput: {
@@ -550,7 +553,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     eyeIcon: {
       zIndex: 0,
-      color: theme.iconTappable,
       fontSize: theme.rem(1),
       padding: theme.rem(1)
     },
@@ -584,12 +586,13 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-type ColorInterpolator = (errorValue: number, focusValue: number) => string
+type ColorInterpolator = (errorValue: number, focusValue: number, disabledValue: number) => string
 
-function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string): ColorInterpolator {
-  return (errorValue, focusValue) => {
+function getIterpolatedColor(fromColor: string, toColor: string, errorColor: string, disabledColor: string): ColorInterpolator {
+  return (errorValue, focusValue, disabledValue) => {
     'worklet'
     const interFocusColor = interpolateColor(focusValue, [0, 1], [fromColor, toColor])
-    return interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+    const interErrorColor = interpolateColor(errorValue, [0, 1], [interFocusColor, errorColor])
+    return interpolateColor(disabledValue, [0, 1], [interErrorColor, disabledColor])
   }
 }
