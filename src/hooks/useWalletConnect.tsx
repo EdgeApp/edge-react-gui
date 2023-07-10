@@ -149,15 +149,15 @@ export function useWalletConnect(): WalletConnect {
 
     try {
       await runWithTimeout(client.disconnectSession({ topic, reason: getSdkError('USER_DISCONNECTED') }), 10000)
-      Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
-        console.log(e)
-      )
     } catch (e) {
       // In testing, this method is pretty unreliable so we can at least remove it locally.
       console.log('walletConnect disconnectSession error', String(e))
       client.core.relayer.subscriber.topicMap.delete(topic)
-      userDeletedSessions.add(topic)
     }
+    userDeletedSessions.add(topic)
+    Airship.show(bridge => <FlashNotification bridge={bridge} message={sprintf(lstrings.wc_dapp_disconnected, dAppName)} onPress={() => {}} />).catch(e =>
+      console.log(e)
+    )
   })
 
   const approveRequest = useHandler(async (topic: string, id: number, result: JsonObject | string) => {
