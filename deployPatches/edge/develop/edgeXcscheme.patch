@@ -1,0 +1,18 @@
+diff --git a/ios/edge.xcodeproj/xcshareddata/xcschemes/edge.xcscheme b/ios/edge.xcodeproj/xcshareddata/xcschemes/edge.xcscheme
+index 029990137..9bee5519f 100644
+--- a/ios/edge.xcodeproj/xcshareddata/xcschemes/edge.xcscheme
++++ b/ios/edge.xcodeproj/xcshareddata/xcschemes/edge.xcscheme
+@@ -53,11 +53,11 @@
+       <CommandLineArguments>
+          <CommandLineArgument
+             argument = "-FIRDebugEnabled"
+-            isEnabled = "YES">
++            isEnabled = "NO">
+          </CommandLineArgument>
+          <CommandLineArgument
+             argument = "-FIRDebugDisabled"
+-            isEnabled = "NO">
++            isEnabled = "YES">
+          </CommandLineArgument>
+       </CommandLineArguments>
+    </LaunchAction>
