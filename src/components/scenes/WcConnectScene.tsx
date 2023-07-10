@@ -109,7 +109,7 @@ export const WcConnectScene = (props: Props) => {
       const walletImage = (
         <CryptoIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
       )
-      const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
+      const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
       return (
         <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
       )
