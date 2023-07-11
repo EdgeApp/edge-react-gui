@@ -914,6 +914,7 @@
   "migrate_wallet_new_fragment": " (nuovo)",
   "migrate_unknown_error_fragment": "Errore sconosciuto",
   "migrate_wallets_modal_message": "I seguenti portafogli sono stati trovati potenzialmente colpiti da un recente incidente di sicurezza:\n%1$s\nSi consiglia vivamente di interrompere l'utilizzo di questi portafogli e di migrare gli asset in un nuovo portafoglio nel tuo account. Vuoi utilizzare la funzione Migra Portafogli automatizzata per farlo?",
+  "migrate_wallet_tx_notes": "Migrate funds to %1$s",
   "wallet_list_sort_title": "Ordina Portafogli",
   "wallet_list_sort_manual": "Ordinamento manuale",
   "wallet_list_sort_name": "Ordina per nome",
