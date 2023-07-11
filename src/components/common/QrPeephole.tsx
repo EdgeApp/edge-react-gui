@@ -50,6 +50,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -63,6 +64,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -76,6 +78,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -89,6 +92,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
