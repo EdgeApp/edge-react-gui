@@ -291,6 +291,9 @@ function buildIos(buildObj: BuildObj) {
 
   cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
   call(cmdStr)
+
+  // Do not update the testRepo for production iOS builds. Only simulator builds are usable for testing
+  buildObj.testRepoUrl = undefined
 }
 
 function buildIosSim(buildObj: BuildObj) {
