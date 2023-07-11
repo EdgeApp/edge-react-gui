@@ -1,7 +1,14 @@
-def preBuildStages(String stageName) {
+def global = [:]
+
+def preBuildStages(String stageName, versionFile) {
   stage("${stageName}: preBuildStages") {
     deleteDir()
     checkout scm
+
+    def versionString = "${versionFile.branch} ${versionFile.version} (${versionFile.build})"
+    echo "versionString: ${versionString}"
+    writeJSON file: './release-version.json', json: versionFile
+    currentBuild.description = versionString
 
     sh 'yarn'
 
@@ -14,11 +21,7 @@ def preBuildStages(String stageName) {
     sh "node -r sucrase/register ./scripts/patchFiles.ts edge ${BRANCH_NAME}"
 
     // Pick the new build number and version from git:
-    sh "node -r sucrase/register ./scripts/gitVersionFile.ts ${BRANCH_NAME}"
-
-    // Update our description:
-    def versionFile = readJSON file: './release-version.json'
-    currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
+    sh 'node -r sucrase/register ./scripts/updateVersion.ts'
 
     sh 'yarn prepare'
     sh 'yarn test --ci'
@@ -27,7 +30,7 @@ def preBuildStages(String stageName) {
 
 def buildProduction(String stageName) {
   stage("Build ${stageName}") {
-    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'yolo']) {
+    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'testMaestro', 'yolo']) {
       if (stageName == 'ios' && params.IOS_BUILD) {
         sh 'npm run prepare.ios'
         sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME}"
@@ -53,6 +56,7 @@ def buildSim(String stageName) {
 
 pipeline {
   agent none
+
   tools {
     nodejs 'stable'
   }
@@ -78,13 +82,36 @@ pipeline {
   }
 
   stages {
+    stage('Preparation') {
+      agent { label 'ios-build || android-build' }
+      steps {
+        script {
+          deleteDir()
+          checkout scm
+
+          // Import the settings files
+          withCredentials([file(credentialsId: 'githubSshKey', variable: 'id_github')]) {
+            sh "cp ${id_github} ./id_github"
+          }
+
+          // Use npm to install Sucrase globally
+          sh 'yarn add --dev sucrase'
+          sh "node -r sucrase/register ./scripts/gitVersionFile.ts ${BRANCH_NAME}"
+
+          def versionFile = readJSON file: './release-version.json'
+          global.versionFile = versionFile
+          echo "Created version file: ${global.versionFile.branch} ${global.versionFile.version} (${global.versionFile.build})"
+        }
+      }
+    }
+
     stage('Parallel Stage') {
       parallel {
         stage('IOS Build') {
           agent { label 'ios-build' }
           steps {
             script {
-              preBuildStages('IOS')
+              preBuildStages('IOS', global.versionFile)
               buildProduction('ios')
             }
           }
@@ -93,7 +120,7 @@ pipeline {
           agent { label 'ios-build-sim' }
           steps {
             script {
-              preBuildStages('IOS Simulator')
+              preBuildStages('IOS Simulator', global.versionFile)
               buildSim('ios')
             }
           }
@@ -102,7 +129,7 @@ pipeline {
           agent { label 'android-build' }
           steps {
             script {
-              preBuildStages('Android')
+              preBuildStages('Android', global.versionFile)
               buildProduction('android')
             }
           }
