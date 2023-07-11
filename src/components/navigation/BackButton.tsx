@@ -30,14 +30,14 @@ export const BackButton = (props: Props) => {
   if (isIos) {
     return (
       <NavigationButton paddingRem={[0, 0.5]} onPress={handlePress}>
-        <IonIcon color={theme.icon} name="chevron-back-outline" size={theme.rem(1.5)} />
+        <IonIcon testID="chevronBack" color={theme.icon} name="chevron-back-outline" size={theme.rem(1.5)} />
       </NavigationButton>
     )
   }
 
   return (
     <NavigationButton paddingRem={[0, 0.75]} onPress={handlePress}>
-      <IonIcon color={theme.icon} name="md-arrow-back" size={theme.rem(1.25)} />
+      <IonIcon testID="chevronBack" color={theme.icon} name="md-arrow-back" size={theme.rem(1.25)} />
     </NavigationButton>
   )
 }

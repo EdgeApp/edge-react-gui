@@ -33,7 +33,7 @@ export const NavigationButton = (props: Props) => {
   )
 
   return (
-    <TouchableOpacity style={touchableStyle} onPress={onPress}>
+    <TouchableOpacity accessible={false} style={touchableStyle} onPress={onPress}>
       {children}
     </TouchableOpacity>
   )
