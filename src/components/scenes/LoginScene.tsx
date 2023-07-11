@@ -13,6 +13,7 @@ import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeCon
 import { ENV } from '../../env'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -52,6 +53,7 @@ export function LoginSceneComponent(props: Props) {
   const disklet = useSelector(state => state.core.disklet)
   const pendingDeepLink = useSelector(state => state.pendingDeepLink)
   const nextUsername = useSelector(state => state.nextUsername ?? undefined)
+  const loggedIn = useWatch(account, 'loggedIn')
 
   const [counter, setCounter] = React.useState<number>(0)
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
@@ -176,7 +178,7 @@ export function LoginSceneComponent(props: Props) {
     dispatch(showSendLogsModal()).catch(err => showError(err))
   })
 
-  return account.loggedIn ? (
+  return loggedIn ? (
     <LoadingScene />
   ) : (
     <View style={styles.container} testID="edge: login-scene">
