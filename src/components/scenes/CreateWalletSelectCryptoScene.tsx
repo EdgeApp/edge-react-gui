@@ -204,18 +204,19 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
     const { key, displayName, pluginId, tokenId } = item.item
 
+    const value = selectedItems[key]
     const accessibilityHint = sprintf(lstrings.create_wallet_hint, displayName)
     const toggle = (
       <Switch
         accessibilityRole="switch"
-        accessibilityState={{ selected: selectedItems[key] }}
+        accessibilityState={{ checked: value }}
         accessibilityHint={accessibilityHint}
         ios_backgroundColor={theme.toggleButtonOff}
         trackColor={{
           false: theme.toggleButtonOff,
           true: theme.toggleButton
         }}
-        value={selectedItems[key]}
+        value={value}
         onValueChange={() => handleCreateWalletToggle(key)}
       />
     )
