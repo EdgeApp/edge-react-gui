@@ -2,7 +2,9 @@
 
 exports[`OutlinedTextInput should render with some props 1`] = `
 <TouchableWithoutFeedback
+  accessible={false}
   onPress={[Function]}
+  testID="string"
 >
   <View
     style={
@@ -125,6 +127,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       }
     >
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -151,11 +154,13 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             },
           ]
         }
+        testID="string.labelText"
       >
         string
       </Text>
     </View>
     <Text
+      accessible={true}
       numberOfLines={1}
       style={
         [
@@ -172,10 +177,12 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           },
         ]
       }
+      testID="string.subText"
     >
       string
     </Text>
     <Text
+      accessible={true}
       numberOfLines={1}
       onLayout={[Function]}
       style={
@@ -201,6 +208,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           },
         ]
       }
+      testID="string.charLimit"
     >
       5
     </Text>
@@ -220,6 +228,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       }
     />
     <TouchableOpacity
+      accessible={true}
       onPress={[Function]}
       style={
         {
@@ -228,6 +237,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           "top": 0,
         }
       }
+      testID="string.clearIcon"
     >
       <Icon
         allowFontScaling={false}
@@ -261,6 +271,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "disabled": false,
           }
         }
+        accessible={true}
         autoCapitalize="none"
         autoCorrect={true}
         autoFocus={true}
@@ -291,7 +302,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             },
           ]
         }
-        testID="string"
+        testID="string.textInput"
         textAlignVertical="top"
         value="string"
       />

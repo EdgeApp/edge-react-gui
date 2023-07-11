@@ -38,7 +38,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -167,6 +167,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             }
           >
             <Text
+              accessible={true}
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -193,11 +194,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   },
                 ]
               }
+              testID="undefined.labelText"
             >
               Search Transactions
             </Text>
           </View>
           <Text
+            accessible={true}
             numberOfLines={1}
             style={
               [
@@ -214,8 +217,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
               ]
             }
+            testID="undefined.subText"
           />
           <Text
+            accessible={true}
             numberOfLines={1}
             onLayout={[Function]}
             style={
@@ -241,6 +246,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 },
               ]
             }
+            testID="undefined.charLimit"
           />
           <Text
             allowFontScaling={false}
@@ -288,6 +294,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   "disabled": false,
                 }
               }
+              accessible={true}
               autoFocus={false}
               editable={true}
               multiline={false}
@@ -311,6 +318,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   },
                 ]
               }
+              testID="undefined.textInput"
               textAlignVertical="top"
               value=""
             />
@@ -633,7 +641,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 "text": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             collapsable={false}
             focusable={true}
             onClick={[Function]}
@@ -650,6 +658,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             }
           >
             <Text
+              accessible={true}
               adjustsFontSizeToFit={true}
               minimumFontScale={0.3}
               numberOfLines={1}
@@ -672,6 +681,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               0.00123123 BTC
             </Text>
             <Text
+              accessible={true}
               adjustsFontSizeToFit={true}
               minimumFontScale={0.65}
               numberOfLines={1}
@@ -1129,7 +1139,7 @@ exports[`TransactionListTop should render 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1258,6 +1268,7 @@ exports[`TransactionListTop should render 1`] = `
             }
           >
             <Text
+              accessible={true}
               numberOfLines={1}
               onLayout={[Function]}
               style={
@@ -1284,11 +1295,13 @@ exports[`TransactionListTop should render 1`] = `
                   },
                 ]
               }
+              testID="undefined.labelText"
             >
               Search Transactions
             </Text>
           </View>
           <Text
+            accessible={true}
             numberOfLines={1}
             style={
               [
@@ -1305,8 +1318,10 @@ exports[`TransactionListTop should render 1`] = `
                 },
               ]
             }
+            testID="undefined.subText"
           />
           <Text
+            accessible={true}
             numberOfLines={1}
             onLayout={[Function]}
             style={
@@ -1332,6 +1347,7 @@ exports[`TransactionListTop should render 1`] = `
                 },
               ]
             }
+            testID="undefined.charLimit"
           />
           <Text
             allowFontScaling={false}
@@ -1379,6 +1395,7 @@ exports[`TransactionListTop should render 1`] = `
                   "disabled": false,
                 }
               }
+              accessible={true}
               autoFocus={false}
               editable={true}
               multiline={false}
@@ -1402,6 +1419,7 @@ exports[`TransactionListTop should render 1`] = `
                   },
                 ]
               }
+              testID="undefined.textInput"
               textAlignVertical="top"
               value=""
             />
@@ -1724,7 +1742,7 @@ exports[`TransactionListTop should render 1`] = `
                 "text": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             collapsable={false}
             focusable={true}
             onClick={[Function]}
@@ -1741,6 +1759,7 @@ exports[`TransactionListTop should render 1`] = `
             }
           >
             <Text
+              accessible={true}
               adjustsFontSizeToFit={true}
               minimumFontScale={0.3}
               numberOfLines={1}
@@ -1763,6 +1782,7 @@ exports[`TransactionListTop should render 1`] = `
               0.00123123 BTC
             </Text>
             <Text
+              accessible={true}
               adjustsFontSizeToFit={true}
               minimumFontScale={0.65}
               numberOfLines={1}

@@ -120,7 +120,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "selected": undefined,
           }
         }
-        accessible={true}
+        accessible={false}
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -249,6 +249,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
         >
           <Text
+            accessible={true}
             numberOfLines={1}
             onLayout={[Function]}
             style={
@@ -275,11 +276,13 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 },
               ]
             }
+            testID="undefined.labelText"
           >
             Search Wallets
           </Text>
         </View>
         <Text
+          accessible={true}
           numberOfLines={1}
           style={
             [
@@ -296,8 +299,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.subText"
         />
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
@@ -323,6 +328,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.charLimit"
         />
         <Text
           allowFontScaling={false}
@@ -370,6 +376,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "disabled": false,
               }
             }
+            accessible={true}
             autoCapitalize="words"
             autoCorrect={false}
             autoFocus={false}
@@ -396,6 +403,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 },
               ]
             }
+            testID="undefined.textInput"
             textAlignVertical="top"
             value=""
           />
