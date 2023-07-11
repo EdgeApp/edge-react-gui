@@ -209,6 +209,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
+  headerMode: 'float',
   headerTitleAlign: 'center',
   headerTransparent: true
 }

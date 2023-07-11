@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Platform, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useTheme } from '../../components/services/ThemeContext'
@@ -26,18 +26,19 @@ export const BackButton = (props: Props) => {
       navigation.goBack()
     }
   }
-
-  if (isIos) {
-    return (
-      <NavigationButton paddingRem={[0, 0.5]} onPress={handlePress}>
-        <IonIcon color={theme.icon} name="chevron-back-outline" size={theme.rem(1.5)} />
-      </NavigationButton>
-    )
-  }
-
-  return (
+  const backButton = isIos ? (
+    <NavigationButton paddingRem={[0, 0.5]} onPress={handlePress}>
+      <IonIcon color={theme.icon} name="chevron-back-outline" size={theme.rem(1.5)} />
+    </NavigationButton>
+  ) : (
     <NavigationButton paddingRem={[0, 0.75]} onPress={handlePress}>
       <IonIcon color={theme.icon} name="md-arrow-back" size={theme.rem(1.25)} />
     </NavigationButton>
+  )
+
+  return (
+    <View testID="BackButton" accessible>
+      {backButton}
+    </View>
   )
 }
