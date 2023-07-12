@@ -24,6 +24,11 @@ def preBuildStages(String stageName, versionFile) {
     sh 'node -r sucrase/register ./scripts/updateVersion.ts'
 
     sh 'yarn prepare'
+  }
+}
+
+def preTest(String stageName) {
+  stage("${stageName}: preTest") {
     sh 'yarn test --ci'
   }
 }
@@ -112,6 +117,7 @@ pipeline {
           steps {
             script {
               preBuildStages('IOS', global.versionFile)
+              preTest('IOS')
               buildProduction('ios')
             }
           }
@@ -121,6 +127,7 @@ pipeline {
           steps {
             script {
               preBuildStages('IOS Simulator', global.versionFile)
+              preTest('IOS Simulator')
               buildSim('ios')
             }
           }
@@ -130,6 +137,7 @@ pipeline {
           steps {
             script {
               preBuildStages('Android', global.versionFile)
+              preTest('Android')
               buildProduction('android')
             }
           }
