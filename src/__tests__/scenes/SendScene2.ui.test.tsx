@@ -4,16 +4,14 @@ import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeCurrencyWallet, lockE
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { SendScene2 } from '../../components/scenes/SendScene2'
-import { RouteProp } from '../../types/routerTypes'
+import { SendScene2, SendScene2Params } from '../../components/scenes/SendScene2'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
-import { fakeNonce } from '../../util/fake/fakeNonce'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 
 jest.useRealTimers()
@@ -80,24 +78,19 @@ beforeAll(async () => {
 })
 
 describe('SendScene2', () => {
-  const nonce = fakeNonce(0)
   it('Render SendScene', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        walletId: btcWallet.id,
-        doCheckAndShowGetCryptoModal: false
-      }
-    }
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2
+          {...fakeSceneProps('send2', {
+            walletId: btcWallet.id,
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
       </FakeProviders>
     )
 
@@ -107,22 +100,18 @@ describe('SendScene2', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        walletId: btcWallet.id,
-        spendInfo: {
-          spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        },
-        doCheckAndShowGetCryptoModal: false
-      }
-    }
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2
+          {...fakeSceneProps('send2', {
+            walletId: btcWallet.id,
+            spendInfo: {
+              spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
+            },
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
       </FakeProviders>
     )
 
@@ -132,26 +121,22 @@ describe('SendScene2', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        infoTiles: [
-          { label: 'info tile label 1', value: 'info tile value 1' },
-          { label: 'info tile label 2', value: 'info tile value 2' }
-        ],
-        walletId: btcWallet.id,
-        spendInfo: {
-          spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
-        },
-        doCheckAndShowGetCryptoModal: false
-      }
-    }
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2
+          {...fakeSceneProps('send2', {
+            infoTiles: [
+              { label: 'info tile label 1', value: 'info tile value 1' },
+              { label: 'info tile label 2', value: 'info tile value 2' }
+            ],
+            walletId: btcWallet.id,
+            spendInfo: {
+              spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
+            },
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
       </FakeProviders>
     )
 
@@ -161,25 +146,21 @@ describe('SendScene2', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        walletId: btcWallet.id,
-        spendInfo: {
-          spendTargets: [
-            { publicAddress: 'some pub address', nativeAmount: '1234' },
-            { publicAddress: 'some pub address 2', nativeAmount: '12345' }
-          ]
-        },
-        doCheckAndShowGetCryptoModal: false
-      }
-    }
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2
+          {...fakeSceneProps('send2', {
+            walletId: btcWallet.id,
+            spendInfo: {
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' },
+                { publicAddress: 'some pub address 2', nativeAmount: '12345' }
+              ]
+            },
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
       </FakeProviders>
     )
 
@@ -190,47 +171,41 @@ describe('SendScene2', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        hiddenFeaturesMap: { address: true },
-        walletId: btcWallet.id,
-        spendInfo: {
-          spendTargets: [
-            { publicAddress: 'some pub address', nativeAmount: '1234' },
-            { publicAddress: 'some pub address 2', nativeAmount: '12345' }
-          ]
-        },
-        doCheckAndShowGetCryptoModal: false
-      }
+
+    const params: SendScene2Params = {
+      hiddenFeaturesMap: { address: true },
+      walletId: btcWallet.id,
+      spendInfo: {
+        spendTargets: [
+          { publicAddress: 'some pub address', nativeAmount: '1234' },
+          { publicAddress: 'some pub address 2', nativeAmount: '12345' }
+        ]
+      },
+      doCheckAndShowGetCryptoModal: false
     }
 
     // Hide Address
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Hide Amount
-    // @ts-expect-error
-    route.params.hiddenFeaturesMap = { amount: true }
+    params.hiddenFeaturesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Hide Both
-    // @ts-expect-error
-    route.params.hiddenFeaturesMap = { amount: true, address: true }
+    params.hiddenFeaturesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()
@@ -240,47 +215,40 @@ describe('SendScene2', () => {
     if (btcWallet == null) return
 
     const rootState: FakeState = { ...fakeRootState, core: { account } }
-    const navigation = fakeNavigation
-    const route: RouteProp<'send2'> = {
-      key: `send2-${nonce()}`,
-      name: 'send2',
-      params: {
-        lockTilesMap: { address: true },
-        walletId: btcWallet.id,
-        spendInfo: {
-          spendTargets: [
-            { publicAddress: 'some pub address', nativeAmount: '1234' },
-            { publicAddress: 'some pub address 2', nativeAmount: '12345' }
-          ]
-        },
-        doCheckAndShowGetCryptoModal: false
-      }
+    const params: SendScene2Params = {
+      lockTilesMap: { address: true },
+      walletId: btcWallet.id,
+      spendInfo: {
+        spendTargets: [
+          { publicAddress: 'some pub address', nativeAmount: '1234' },
+          { publicAddress: 'some pub address 2', nativeAmount: '12345' }
+        ]
+      },
+      doCheckAndShowGetCryptoModal: false
     }
 
     // Lock Address
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
 
     // Lock Amount
-    // @ts-expect-error
-    route.params.lockTilesMap = { amount: true }
+    params.lockTilesMap = { amount: true }
     const renderer2 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer2.toJSON()).toMatchSnapshot()
 
     // Lock Both
-    // @ts-expect-error
-    route.params.lockTilesMap = { amount: true, address: true }
+    params.lockTilesMap = { amount: true, address: true }
     const renderer3 = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SendScene2 route={route} navigation={navigation} />
+        <SendScene2 {...fakeSceneProps('send2', params)} />
       </FakeProviders>
     )
     expect(renderer3.toJSON()).toMatchSnapshot()

@@ -8,7 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
-import { NavigationBase, NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -26,10 +26,8 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 
-interface OwnProps {
-  navigation: NavigationProp<'exchangeQuote'>
-  route: RouteProp<'exchangeQuote'>
-}
+interface OwnProps extends EdgeSceneProps<'exchangeQuote'> {}
+
 interface StateProps {
   account: EdgeAccount
   fromDenomination: string

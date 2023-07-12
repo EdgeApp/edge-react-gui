@@ -6,17 +6,13 @@ import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
-interface OwnProps {
-  navigation: NavigationProp<'notificationSettings'>
-}
-
-type Props = OwnProps
+interface Props extends EdgeSceneProps<'notificationSettings'> {}
 
 type NotificationSettingToggleSetting = keyof NotificationSettings
 

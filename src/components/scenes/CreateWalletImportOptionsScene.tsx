@@ -6,7 +6,7 @@ import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAn
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -26,10 +26,7 @@ export interface CreateWalletImportOptionsParams {
   importText: string
 }
 
-interface Props {
-  navigation: NavigationProp<'createWalletImportOptions'>
-  route: RouteProp<'createWalletImportOptions'>
-}
+interface Props extends EdgeSceneProps<'createWalletImportOptions'> {}
 
 const CreateWalletImportOptionsComponent = (props: Props) => {
   const { navigation, route } = props

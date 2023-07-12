@@ -6,7 +6,7 @@ import { lstrings } from '../../../locales/strings'
 import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActionSubmit'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
@@ -28,10 +28,7 @@ interface DispatchProps {
   refreshAllFioAddresses: () => void
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioAddressSettings'>
-  route: RouteProp<'fioAddressSettings'>
-}
+interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {}
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 

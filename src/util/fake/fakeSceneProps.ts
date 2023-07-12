@@ -1,4 +1,4 @@
-import { NavigationProp } from '../../types/routerTypes'
+import { AppParamList, EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 
 export const fakeNavigation: NavigationProp<any> = {
   addListener() {
@@ -40,4 +40,15 @@ export const fakeNavigation: NavigationProp<any> = {
     throw new Error('not implemented')
   },
   setOptions() {}
+}
+
+export function fakeSceneProps<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): EdgeSceneProps<Name> {
+  return {
+    navigation: fakeNavigation,
+    route: {
+      name: name,
+      key: name + '-0',
+      params
+    } as any
+  }
 }

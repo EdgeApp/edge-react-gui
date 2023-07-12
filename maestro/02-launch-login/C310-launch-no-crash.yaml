@@ -4,7 +4,9 @@
 # Expected Result:
 #   1. User is able to open Edge without crashing
 
-appId: co.edgesecure.app
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
 ---
 - runFlow:
-    file: ../common/launch.yaml
+    file: ../common/launch-cleared.yaml

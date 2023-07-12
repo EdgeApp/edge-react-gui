@@ -8,15 +8,13 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface OwnProps {
+interface Props {
   headerText: string
   headerTertiary?: React.ReactNode
   children?: React.ReactNode
   onSliderComplete: (reset: () => void) => Promise<void>
   sliderDisabled: boolean
 }
-
-type Props = OwnProps
 
 export const FormScene = (props: Props) => {
   const { headerText, headerTertiary, children, onSliderComplete, sliderDisabled } = props

@@ -1,5 +1,5 @@
 import * as NavigationCore from '@react-navigation/core'
-import { ParamListBase, StackActionHelpers } from '@react-navigation/native'
+import { StackActionHelpers } from '@react-navigation/native'
 import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
@@ -14,7 +14,12 @@ import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleSc
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
+import { SendSceneParams } from '../components/scenes/SendScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
+import { TransactionListParams } from '../components/scenes/TransactionListScene'
+import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
+import { WcConnectParams } from '../components/scenes/WcConnectScene'
+import { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
@@ -23,18 +28,7 @@ import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnt
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import {
-  CreateWalletType,
-  FeeOption,
-  FioConnectionWalletItem,
-  FioDomain,
-  FioRequest,
-  GuiFiatType,
-  GuiMakeSpendInfo,
-  GuiSwapInfo,
-  TransactionListTx,
-  WcConnectionInfo
-} from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiFiatType, GuiMakeSpendInfo, GuiSwapInfo } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -262,23 +256,7 @@ export interface RouteParamList {
     data?: 'sweepPrivateKey' | 'loginQR'
   } // TODO
   securityAlerts: {}
-  send: {
-    guiMakeSpendInfo?: GuiMakeSpendInfo
-    selectedWalletId?: string
-    selectedCurrencyCode?: string
-    isCameraOpen?: boolean
-    lockTilesMap?: {
-      address?: boolean
-      wallet?: boolean
-      amount?: boolean
-    }
-    hiddenFeaturesMap?: {
-      address?: boolean
-      amount?: boolean
-      fioAddressSelect?: boolean
-    }
-    infoTiles?: Array<{ label: string; value: string }>
-  }
+  send: SendSceneParams
   send2: SendScene2Params
   settingsOverview: {}
   settingsOverviewTab: {}
@@ -295,23 +273,18 @@ export interface RouteParamList {
   termsOfService: {}
   testScene: {}
   transactionDetails: {
-    edgeTransaction: EdgeTransaction | TransactionListTx
+    edgeTransaction: EdgeTransaction
     walletId: string
   }
-  transactionList: {
-    walletId: string
-    currencyCode: string
-  }
+  transactionList: TransactionListParams
   transactionsExport: {
     sourceWallet: EdgeCurrencyWallet
     currencyCode: string
   }
   walletList: {}
-  wcConnections: {}
-  wcDisconnect: { wcConnectionInfo: WcConnectionInfo }
-  wcConnect: {
-    uri: string
-  }
+  wcConnections: WcConnectionsParams
+  wcDisconnect: WcDisconnectParams
+  wcConnect: WcConnectParams
 }
 
 export type RouteSceneKey = keyof RouteParamList
@@ -340,7 +313,7 @@ export type RouteProp<Name extends keyof AppParamList> = NavigationCore.RoutePro
 /**
  * All the props passed to each scene.
  */
-export interface SceneProps<RouteName extends keyof ParamList, ParamList extends ParamListBase = AppParamList> {
-  route: NavigationCore.RouteProp<ParamList, RouteName>
-  navigation: NavigationCore.NavigationProp<ParamList, RouteName> & StackActionHelpers<ParamList>
+export interface EdgeSceneProps<Name extends keyof AppParamList> {
+  navigation: NavigationProp<Name>
+  route: RouteProp<Name>
 }

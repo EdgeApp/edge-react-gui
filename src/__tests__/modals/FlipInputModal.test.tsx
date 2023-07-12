@@ -5,7 +5,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 import { FlipInputModalComponent } from '../../components/modals/FlipInputModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('FlipInputModalComponent', () => {
   it('should render with loading props', () => {

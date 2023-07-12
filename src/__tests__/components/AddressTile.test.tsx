@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { getTheme } from '../../components/services/ThemeContext'
 import { AddressTileComponent } from '../../components/tiles/AddressTile'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('AddressTileComponent', () => {
   it('should render with loading props', () => {

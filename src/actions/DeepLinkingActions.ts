@@ -166,10 +166,8 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'walletConnect': {
       if (!allWalletsLoaded) return false
-      const { uri, isSigning } = link
-      navigation.push('wcConnections', {})
-      // Hack around our router's horrible bugs:
-      if (!isSigning) setTimeout(() => navigation.push('wcConnect', { uri }), 100)
+      const { uri } = link
+      navigation.push('wcConnections', { uri })
       return true
     }
 

@@ -24,6 +24,7 @@ Object {
       "activeWalletIds": Array [],
       "currencyConfig": Object {},
       "currencyWallets": Object {},
+      "watch": [Function],
     },
     "context": Object {},
     "disklet": Object {},
@@ -233,14 +234,6 @@ Object {
       "walletsSort": "manual",
     },
     "subcategories": Array [],
-    "transactionList": Object {
-      "currentCurrencyCode": "",
-      "currentEndIndex": 0,
-      "currentWalletId": "",
-      "numTransactions": 0,
-      "transactionIdMap": Object {},
-      "transactions": Array [],
-    },
     "wallets": Object {
       "fioWallets": Array [],
       "selectedCurrencyCode": "",

@@ -10,7 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertTransactionFeeToDisplayFee, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -23,10 +23,7 @@ import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
-interface Props {
-  navigation: NavigationProp<'migrateWalletCalculateFee'>
-  route: RouteProp<'migrateWalletCalculateFee'>
-}
+interface Props extends EdgeSceneProps<'migrateWalletCalculateFee'> {}
 
 type AssetRowState = string | Error
 

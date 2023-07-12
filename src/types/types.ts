@@ -92,12 +92,6 @@ export interface GuiFiatType {
   value: string
 }
 
-export type TransactionListTx = EdgeTransaction & {
-  dateString: string
-  time: string
-  unfilteredIndex: number
-}
-
 export interface FlatListItem<T> {
   index: number
   item: T
@@ -269,11 +263,15 @@ export interface GuiMakeSpendInfo {
 export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
-  timeConnected: string
+  expiration: string
   walletName: string
   walletId: string
   uri: string
   icon: string
+}
+export interface WalletConnectChainId {
+  namespace: 'algorand' | 'eip155'
+  reference: string
 }
 export interface wcGetConnection {
   chainId: number

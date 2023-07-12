@@ -13,7 +13,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError, showToast } from '../../services/AirshipInstance'
@@ -22,10 +22,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 
-interface Props {
-  navigation: NavigationProp<'fioCreateHandle'>
-  route: RouteProp<'fioCreateHandle'>
-}
+interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
 
 export interface FioCreateHandleProps {
   freeRegApiToken: string
@@ -47,7 +44,8 @@ const asFreeFioDomain = asObject({
   free: asValue(true)
 })
 
-export const FioCreateHandleScene = ({ navigation, route }: Props) => {
+export const FioCreateHandleScene = (props: Props) => {
+  const { navigation, route } = props
   const { freeRegApiToken, freeRegRefCode } = route.params
 
   const theme = useTheme()

@@ -2,12 +2,20 @@ import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken } from 'ed
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
+import { ENV } from '../env'
 import { CreateWalletType } from '../types/types'
 
 const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
   .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
-const keysOnlyModePlugins = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].keysOnlyMode ?? false)
+const possibleKeysOnlyPlugins = [...new Set([...Object.keys(SPECIAL_CURRENCY_INFO), ...Object.keys(ENV.KEYS_ONLY_PLUGINS)])]
+export const keysOnlyModePlugins = possibleKeysOnlyPlugins.filter(pluginId => {
+  if (ENV.KEYS_ONLY_PLUGINS[pluginId]) {
+    return true
+  } else {
+    return SPECIAL_CURRENCY_INFO[pluginId]?.keysOnlyMode ?? false
+  }
+})
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.

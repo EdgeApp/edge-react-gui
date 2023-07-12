@@ -27,9 +27,10 @@ import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../modules/FioAddress/util'
+import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -55,10 +56,7 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
 
-interface Props {
-  navigation: NavigationProp<'send2'>
-  route: RouteProp<'send2'>
-}
+interface Props extends EdgeSceneProps<'send2'> {}
 
 export interface SendScene2Params {
   walletId: string
@@ -635,15 +633,14 @@ const SendComponent = (props: Props) => {
     const { publicAddress } = spendInfo.spendTargets[0]
 
     if (publicAddress === '' || publicAddress == null) {
+      const scamMessage = sprintf(lstrings.warning_scam_message_financial_advice_s, config.appName)
+      const scamFooter = sprintf(lstrings.warning_scam_footer_s, config.supportEmail)
+
       return (
         <WarningCard
           title={lstrings.warning_scam_title}
-          points={[
-            lstrings.warning_scam_message_financial_advice,
-            lstrings.warning_scam_message_irreversibility,
-            lstrings.warning_scam_message_unknown_recipients
-          ]}
-          footer={lstrings.warning_scam_footer}
+          points={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
+          footer={scamFooter}
           marginRem={[1.5, 1]}
         />
       )

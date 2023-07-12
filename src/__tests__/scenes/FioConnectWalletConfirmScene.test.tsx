@@ -4,11 +4,9 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { FioConnectWalletConfirm } from '../../components/scenes/Fio/FioConnectWalletConfirmScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
-import { fakeNonce } from '../../util/fake/fakeNonce'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('FioConnectWalletConfirm', () => {
-  const nonce = fakeNonce(0)
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
@@ -25,19 +23,14 @@ describe('FioConnectWalletConfirm', () => {
 
     const actual = renderer.render(
       <FioConnectWalletConfirm
-        navigation={fakeNavigation}
+        {...fakeSceneProps('fioConnectToWalletsConfirm', {
+          fioWallet: fakeWallet,
+          fioAddressName: 'MyFioAddress',
+          walletsToConnect: [],
+          walletsToDisconnect: []
+        })}
         ccWalletMap={['FIO'] as any}
         isConnected
-        route={{
-          key: `fioConnectToWalletsConfirm-${nonce()}`,
-          name: 'fioConnectToWalletsConfirm',
-          params: {
-            fioWallet: fakeWallet,
-            fioAddressName: 'MyFioAddress',
-            walletsToConnect: [],
-            walletsToDisconnect: []
-          }
-        }}
         updateConnectedWallets={(fioAddress, ccWalletMap) => undefined}
         theme={getTheme()}
       />

@@ -109,10 +109,10 @@ const strings = {
   warning_please_wait_title: 'Please Wait',
 
   warning_scam_title: 'Scam Warning',
-  warning_scam_message_financial_advice: 'Edge will not give financial advice.',
+  warning_scam_message_financial_advice_s: '%s will not give financial advice.',
   warning_scam_message_irreversibility: 'Cryptocurrency transactions are irreversible.',
   warning_scam_message_unknown_recipients: 'Do not send money to people or organizations you do not know.',
-  warning_scam_footer: 'If you have any questions or concerns regarding this send please contact support@edge.app',
+  warning_scam_footer_s: 'If you have any questions or concerns regarding this send, please contact %s',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -1153,8 +1153,8 @@ const strings = {
   wc_walletconnect_new_connection_button: 'New Connection',
   wc_walletconnect_active_connections: 'Active Connections',
   wc_details_disconnect_button: 'Disconnect',
-  wc_details_time_connected: 'Time Connected',
   wc_details_connected_wallet: 'Connected Wallet',
+  wc_dapp_disconnected: '%s disconnected',
   wc_confirm_connect_button: 'Connect',
   wc_confirm_title: 'Confirm Connection',
   wc_confirm_subtitle: '%s wants to connect your wallet.',

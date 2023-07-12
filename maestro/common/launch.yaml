@@ -1,8 +1,8 @@
-# Launches the app and waits for the Edge logo to appear.
-appId: co.edgesecure.app
+# Launches the app with a cleared cache, and waits for the Edge logo to appear.
+appId: ${MAESTRO_APP_ID}
 ---
 - launchApp
 - extendedWaitUntil:
-    visible: 'Edge Logo'
+    visible: 'Welcome to\nFinancial Freedom'
     timeout: 30000
 - assertNotVisible: 'Oops!'

@@ -37,9 +37,6 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   // callbacks -----------------------------------------------------------
 
-  // Legacy gunk:
-  const currencyCode = token == null ? wallet.currencyInfo.currencyCode : token.currencyCode
-
   // Helper methods:
   const closeRow = () =>
     setTimeout(() => {
@@ -64,7 +61,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
     closeRow()
     dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true })).then(async activated => {
       if (activated) {
-        navigation.navigate('transactionList', { walletId: wallet.id, currencyCode })
+        navigation.navigate('transactionList', { tokenId, walletId: wallet.id })
       }
     })
   })

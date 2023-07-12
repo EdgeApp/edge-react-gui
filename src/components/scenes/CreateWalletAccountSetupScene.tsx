@@ -11,7 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
@@ -23,10 +23,7 @@ import { FormField, MaterialInputOnWhite } from '../legacy/FormField'
 
 const deviceWidth = Dimensions.get('window').width
 
-interface OwnProps {
-  navigation: NavigationProp<'createWalletAccountSetup'>
-  route: RouteProp<'createWalletAccountSetup'>
-}
+interface OwnProps extends EdgeSceneProps<'createWalletAccountSetup'> {}
 
 interface StateProps {
   account: EdgeAccount
@@ -120,7 +117,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="legacy">
         <ScrollView>
           <View style={styles.scrollableView}>
             <CryptoIcon marginRem={[1.5, 0, 0, 0]} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />

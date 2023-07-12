@@ -3,6 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { RouteProp } from '../../types/routerTypes'
+import { unixToLocaleDateTime } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -13,7 +14,7 @@ export function TransactionDetailsTitle() {
 
   if (edgeTransaction == null) return null // Should never happen!?
   if (!('dateString' in edgeTransaction)) return null
-  const { dateString, time } = edgeTransaction
+  const { date: dateString, time } = unixToLocaleDateTime(edgeTransaction.date)
 
   return (
     <View style={styles.container}>

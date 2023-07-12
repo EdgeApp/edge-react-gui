@@ -4,7 +4,7 @@ import { createRenderer } from 'react-test-renderer/shallow'
 
 import { RequestSceneComponent } from '../../components/scenes/RequestScene'
 import { getTheme } from '../../components/services/ThemeContext'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
+import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('Request', () => {
   it('should render with loading props', () => {
@@ -12,8 +12,8 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
+        {...fakeSceneProps('request', {})}
         account={null as any}
-        navigation={fakeNavigation}
         isConnected={false}
         currencyCode={null as any}
         wallet={null as any}
@@ -41,8 +41,8 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
+        {...fakeSceneProps('request', {})}
         account={null as any}
-        navigation={fakeNavigation}
         isConnected={false}
         currencyCode="BTC"
         wallet={fakeWallet}

@@ -3,13 +3,12 @@ import { ChangePinScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface OwnProps {
-  navigation: NavigationProp<'changePin'>
-}
+interface OwnProps extends EdgeSceneProps<'changePin'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext

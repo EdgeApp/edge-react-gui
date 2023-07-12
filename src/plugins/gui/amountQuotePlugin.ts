@@ -142,9 +142,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         async onChangeText() {},
-        async onFieldChange(event) {
-          const { stateManager } = event
-          const { sourceFieldNum, value } = event.value
+        async convertValue(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
             stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })
             return
@@ -153,15 +151,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           goodQuotes = []
           lastSourceFieldNum = sourceFieldNum
 
-          const otherFieldKey = sourceFieldNum === 1 ? 'value2' : 'value1'
-          const spinnerKey = sourceFieldNum === 1 ? 'spinner2' : 'spinner1'
-
-          stateManager.update({ [spinnerKey]: true })
-
           if (eq(value, '0')) {
-            stateManager.update({ [otherFieldKey]: '', [spinnerKey]: false })
-            return
+            return ''
           }
+
           const myCounter = ++counter
           let quoteParams: FiatProviderGetQuoteParams
           let sourceFieldCurrencyCode
@@ -216,27 +209,30 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           if (goodQuotes.length === 0) {
             // Find the best error to surface
             const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
-            stateManager.update({ statusText: { content: bestErrorText, textType: 'error' }, [spinnerKey]: false })
+            stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
             return
           }
 
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            stateManager.update({ statusText: { content: lstrings.fiat_plugin_buy_no_quote, textType: 'error' }, [spinnerKey]: false })
+            stateManager.update({ statusText: { content: lstrings.fiat_plugin_buy_no_quote, textType: 'error' } })
             return
           }
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
           stateManager.update({
             statusText: { content: exchangeRateText },
-            poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon },
-            [otherFieldKey]: sourceFieldNum === 1 ? toFixed(bestQuote.cryptoAmount, 0, 6) : toFixed(bestQuote.fiatAmount, 0, 2),
-            [spinnerKey]: false
+            poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
           })
+
+          if (sourceFieldNum === 1) {
+            return toFixed(bestQuote.cryptoAmount, 0, 6)
+          } else {
+            return toFixed(bestQuote.fiatAmount, 0, 2)
+          }
         },
-        async onPoweredByClick(event) {
-          const { stateManager } = event
+        async onPoweredByClick(stateManager) {
           // 1. Show modal with all the valid quotes
           const items = goodQuotes.map(quote => {
             let text

@@ -9,12 +9,13 @@ export function useWatch<
   },
   Name extends keyof T
 >(object: T, name: Name): T[Name] {
-  const [out, setOut] = React.useState<any>(object[name])
+  // We need to re-render the component when the value changes.
+  // Since [] !== [], we can use an empty array to force an update:
+  const [, rerender] = React.useState([])
 
   React.useEffect(() => {
-    setOut(object[name])
-    return object.watch(name, setOut)
+    return object.watch(name, () => rerender([]))
   }, [object, name])
 
-  return out
+  return object[name]
 }

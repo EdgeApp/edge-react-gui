@@ -39,12 +39,12 @@ export const SectionHeader = (props: { title?: string }) => {
   )
 }
 
-export const SectionHeaderCentered = (props: { title?: string; loading: boolean }) => {
+export const SectionHeaderCentered = (props: { title: string }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
     <View style={styles.headerLoaderContainer}>
-      {props.loading ? <ActivityIndicator color={theme.icon} size="large" /> : <EdgeText style={styles.headerLoaderText}>{props.title || ''}</EdgeText>}
+      <EdgeText style={styles.headerLoaderText}>{props.title}</EdgeText>
     </View>
   )
 }

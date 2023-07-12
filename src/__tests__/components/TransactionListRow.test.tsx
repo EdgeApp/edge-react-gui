@@ -3,8 +3,8 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { TransactionListRow } from '../../components/themed/TransactionListRow'
-import { fakeNavigation } from '../../util/fake/fakeNavigation'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('TransactionListRow', () => {
   it('should render with loading props', () => {
@@ -51,15 +51,12 @@ describe('TransactionListRow', () => {
             blockHeight: 10,
             currencyCode: 'BTC',
             date: 123456789,
-            dateString: 'Sat Sep 17 2022 22:53:08 GMT-0700 (Pacific Daylight Time)',
             nativeAmount: '-100001',
             isSend: true,
             networkFee: '100000',
             ourReceiveAddresses: [],
             signedTx: '0x12897491827459823745',
-            time: '22:53:08',
             txid: '0x182748768724897ef897234',
-            unfilteredIndex: 0,
             walletId: 'lmnop'
           }}
         />

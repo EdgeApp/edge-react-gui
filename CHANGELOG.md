@@ -4,6 +4,36 @@
 
 ## 3.11.0
 
+- Add in-app A/B testing
+- Refresh market scene on default fiat code change
+- Hide send scene scam warning if first send is initiated from partner plugin
+- (beta) Visa card functionality changes:
+  - Support card deletion (Visa card beta)
+  - Add DOGE support (Visa card beta)
+- Refactor Fiat Plugin `enterAmount` API
+- Set default self transfer address to bech32
+- Fix token transaction acceleration
+- Fix PIX transactions
+- Fix FIO max stake and unstake amount calculation
+- Fix a broken NaN check for fiat metadata
+- Fix transaction metadata for Bitrefill purchases
+- Add Maestro bootstrap shell script
+- Various text, visual, and usability fixes
+- Upgrade edge-core-js to v0.21.4
+  - added: EdgeAccount.changeUsername.
+  - added: EdgeAccount.getLoginKey.
+  - deprecated: EdgeAccount.loginKey. Use EdgeAccount.getLoginKey instead.
+  - deprecated: EdgeContext.listUsernames. Use EdgeContext.localUsers instead.
+- Upgrade edge-currency-accountbased v1.2.13
+  - EVM: Re-enable token transaction acceleration
+  - FIO: Add getMaxSpendable
+  - FIO: Fix unstake method insufficient funds checking
+  - TRX: Fix memo handling
+  - Fixed: Added transaction processing for FIO name registration actions
+  - Update ZEC/ARRR checkpoints
+- Upgrade edge-login-ui-rn to v1.4.7
+  - added: Accessibility hints to logo and button
+
 ## 3.10.0 (2023-05-25)
 
 - Add Pepe (PEPE)

@@ -113,3 +113,5 @@ buck-out/
 
 # Maestro
 /maestro/env.js
+testerConfig.json
+

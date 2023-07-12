@@ -8,7 +8,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
@@ -28,10 +28,7 @@ export interface CreateWalletSelectCryptoParams {
   defaultSelection?: EdgeTokenId[]
 }
 
-interface Props {
-  navigation: NavigationProp<'createWalletSelectCrypto'>
-  route: RouteProp<'createWalletSelectCrypto'>
-}
+interface Props extends EdgeSceneProps<'createWalletSelectCrypto'> {}
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props

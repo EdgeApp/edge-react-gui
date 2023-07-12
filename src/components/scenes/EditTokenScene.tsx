@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { NavigationProp, RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -18,9 +18,7 @@ import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
-interface Props {
-  navigation: NavigationProp<'editToken'>
-  route: RouteProp<'editToken'>
+interface Props extends EdgeSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
 }
 

@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { CoinRankingData, CoinRankingDataPercentChange } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
-import { RouteProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -21,9 +21,7 @@ export interface CoinRankingDetailsParams {
   coinRankingData: CoinRankingData
 }
 
-interface Props {
-  route: RouteProp<'coinRankingDetails'>
-}
+interface Props extends EdgeSceneProps<'coinRankingDetails'> {}
 
 const COINRANKINGDATA_TITLE_MAP: { [key: string]: string } = {
   currencyCode: '',

@@ -4,11 +4,11 @@ import * as React from 'react'
 
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
-import { NavigationProp } from '../../types/routerTypes'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-interface OwnProps {
-  navigation: NavigationProp<'passwordRecovery'>
-}
+
+interface OwnProps extends EdgeSceneProps<'passwordRecovery'> {}
+
 interface StateProps {
   account: EdgeAccount
   context: EdgeContext

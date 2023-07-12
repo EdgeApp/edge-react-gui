@@ -10,7 +10,7 @@ import { lstrings } from '../../../locales/strings'
 import { DomainListModal } from '../../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
-import { NavigationProp } from '../../../types/routerTypes'
+import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { openLink } from '../../../util/utils'
@@ -42,9 +42,8 @@ interface State {
   errorMessage: string
 }
 
-interface OwnProps {
-  navigation: NavigationProp<'fioAddressRegister'>
-}
+interface OwnProps extends EdgeSceneProps<'fioAddressRegister'> {}
+
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
   fioPlugin: EdgeCurrencyConfig
