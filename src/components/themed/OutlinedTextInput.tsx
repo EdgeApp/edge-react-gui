@@ -101,6 +101,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     disabled = false,
     maxLength,
     secureTextEntry,
+    testID,
     ...inputProps
   } = props
   const theme = useTheme()
@@ -332,26 +333,26 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixAndroidAdjust : null], [styles])
 
   return (
-    <TouchableWithoutFeedback onPress={() => focus()}>
+    <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
       <View style={[styles.container, containerStyle]}>
         <Animated.View style={[styles.bottomLine, bottomStyle]} />
         <Animated.View style={[styles.leftCap, leftStyle]} />
         <Animated.View style={[styles.rightCap, rightStyle]} />
         <Animated.View style={[styles.topLine, topStyle]} />
         <View style={[styles.labelContainer, containerPadding]}>
-          <Animated.Text numberOfLines={1} style={[styles.labelText, labelStyle]} onLayout={handleLabelLayout}>
+          <Animated.Text accessible numberOfLines={1} style={[styles.labelText, labelStyle]} onLayout={handleLabelLayout} testID={`${testID}.labelText`}>
             {label}
           </Animated.Text>
         </View>
-        <Animated.Text numberOfLines={1} style={[styles.errorText, errorStyle]}>
+        <Animated.Text accessible numberOfLines={1} style={[styles.errorText, errorStyle]} testID={`${testID}.subText`}>
           {error}
         </Animated.Text>
-        <Animated.Text numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout}>
+        <Animated.Text accessible numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout} testID={`${testID}.charLimit`}>
           {charLimitLabel}
         </Animated.Text>
         {searchIcon ? <AntDesignIcon name="search1" style={styles.searchIcon} /> : null}
         {clearIcon && hasValue && !showSpinner && !secureTextEntry ? (
-          <TouchableOpacity style={styles.clearTapArea} onPress={() => clear()}>
+          <TouchableOpacity accessible style={styles.clearTapArea} onPress={() => clear()} testID={`${testID}.clearIcon`}>
             <AntDesignIcon name="close" style={styles.clearIcon} />
           </TouchableOpacity>
         ) : null}
@@ -362,10 +363,10 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
         ) : null}
 
         {secureTextEntry ? (
-          <TouchableWithoutFeedback onPress={handleHidePassword}>
+          <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
             <View style={styles.clearTapArea}>
               <Animated.View style={[styles.eyeIconHideLine, showPasswordLineStyle]} />
-              <AnimatedIonIcon name="eye-outline" style={[styles.eyeIcon, eyeIconStyle]} />
+              <AnimatedIonIcon accessible name="eye-outline" style={[styles.eyeIcon, eyeIconStyle]} />
             </View>
           </TouchableWithoutFeedback>
         ) : null}
@@ -374,6 +375,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
           {prefix != null ? <Animated.Text style={[textStyle, prefixStyle]}>{`${prefix} `}</Animated.Text> : null}
           {numeric ? (
             <NumericInput
+              accessible
               ref={inputRef}
               {...inputProps}
               accessibilityState={{ disabled }}
@@ -385,6 +387,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
               selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
               style={[textStyle, textInputStyle]}
               textAlignVertical="top"
+              testID={`${testID}.textInput`}
               value={value}
               secureTextEntry={hidePassword}
               // Callbacks:
@@ -395,6 +398,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             />
           ) : (
             <TextInput
+              accessible
               ref={inputRef}
               {...inputProps}
               accessibilityState={{ disabled }}
@@ -404,6 +408,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
               selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
               style={[textStyle, textInputStyle]}
               textAlignVertical="top"
+              testID={`${testID}.textInput`}
               value={value}
               secureTextEntry={hidePassword}
               // Callbacks:

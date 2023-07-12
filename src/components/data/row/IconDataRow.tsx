@@ -30,14 +30,18 @@ const IconDataRowComponent = (props: Props) => {
       {icon}
       <View style={styles.leftColumn}>
         <View style={styles.row}>
-          <EdgeText style={styles.leftText}>{leftText}</EdgeText>
+          <EdgeText accessible style={styles.leftText}>
+            {leftText}
+          </EdgeText>
           {leftTextExtended != null ? leftTextExtended : null}
         </View>
-        <EdgeText style={styles.leftSubtext}>{leftSubtext}</EdgeText>
+        <EdgeText accessible style={styles.leftSubtext}>
+          {leftSubtext}
+        </EdgeText>
       </View>
       <View style={styles.rightColumn}>
         {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
-        <View style={styles.row}>
+        <View accessible style={styles.row}>
           {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
           {rightSubTextExtended}
         </View>

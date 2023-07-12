@@ -129,7 +129,7 @@ exports[`WalletListModal should render with loading props 1`] = `
           "selected": undefined,
         }
       }
-      accessible={true}
+      accessible={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -258,6 +258,7 @@ exports[`WalletListModal should render with loading props 1`] = `
         }
       >
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
@@ -284,11 +285,13 @@ exports[`WalletListModal should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.labelText"
         >
           Search Wallets
         </Text>
       </View>
       <Text
+        accessible={true}
         numberOfLines={1}
         style={
           [
@@ -305,8 +308,10 @@ exports[`WalletListModal should render with loading props 1`] = `
             },
           ]
         }
+        testID="undefined.subText"
       />
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -332,6 +337,7 @@ exports[`WalletListModal should render with loading props 1`] = `
             },
           ]
         }
+        testID="undefined.charLimit"
       />
       <Text
         allowFontScaling={false}
@@ -379,6 +385,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               "disabled": false,
             }
           }
+          accessible={true}
           autoFocus={false}
           editable={true}
           multiline={false}
@@ -402,6 +409,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.textInput"
           textAlignVertical="top"
           value=""
         />

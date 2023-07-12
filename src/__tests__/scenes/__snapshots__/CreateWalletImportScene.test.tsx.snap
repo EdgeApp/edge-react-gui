@@ -151,7 +151,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           "selected": undefined,
         }
       }
-      accessible={true}
+      accessible={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -280,6 +280,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         }
       >
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
@@ -306,11 +307,13 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.labelText"
         >
           Private Key or Private Seed
         </Text>
       </View>
       <Text
+        accessible={true}
         numberOfLines={1}
         style={
           [
@@ -327,8 +330,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             },
           ]
         }
+        testID="undefined.subText"
       />
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -354,6 +359,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             },
           ]
         }
+        testID="undefined.charLimit"
       />
       <View
         style={
@@ -374,6 +380,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "disabled": false,
             }
           }
+          accessible={true}
           autoCapitalize="none"
           autoCorrect={false}
           autoFocus={true}
@@ -400,6 +407,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               },
             ]
           }
+          testID="undefined.textInput"
           textAlignVertical="top"
           value=""
         />

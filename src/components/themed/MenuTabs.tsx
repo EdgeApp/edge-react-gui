@@ -80,9 +80,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
             extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={contentStyle} key={route.key} onPress={() => handleOnPress(route.name)}>
+            <TouchableOpacity accessible={false} style={contentStyle} key={route.key} onPress={() => handleOnPress(route.name)}>
               {icon[route.name]}
-              <EdgeText style={{ ...styles.text, color: color }}>{title[route.name]}</EdgeText>
+              <EdgeText accessible style={{ ...styles.text, color: color }}>
+                {title[route.name]}
+              </EdgeText>
             </TouchableOpacity>
           )
         })}

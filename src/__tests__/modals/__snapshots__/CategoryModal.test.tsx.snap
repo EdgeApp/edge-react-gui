@@ -389,7 +389,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "selected": undefined,
         }
       }
-      accessible={true}
+      accessible={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -518,6 +518,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         }
       >
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
@@ -544,11 +545,13 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
+          testID="undefined.labelText"
         >
           Sub-category
         </Text>
       </View>
       <Text
+        accessible={true}
         numberOfLines={1}
         style={
           [
@@ -565,8 +568,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             },
           ]
         }
+        testID="undefined.subText"
       />
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -592,6 +597,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             },
           ]
         }
+        testID="undefined.charLimit"
       />
       <View
         accessibilityState={
@@ -629,6 +635,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "top": 0,
           }
         }
+        testID="undefined.clearIcon"
       >
         <Text
           allowFontScaling={false}
@@ -674,6 +681,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "disabled": false,
             }
           }
+          accessible={true}
           autoCapitalize="none"
           autoFocus={true}
           editable={true}
@@ -699,6 +707,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
+          testID="undefined.textInput"
           textAlignVertical="top"
           value="Paycheck"
         />
@@ -1465,7 +1474,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "selected": undefined,
         }
       }
-      accessible={true}
+      accessible={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -1594,6 +1603,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         }
       >
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
@@ -1620,11 +1630,13 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
+          testID="undefined.labelText"
         >
           Sub-category
         </Text>
       </View>
       <Text
+        accessible={true}
         numberOfLines={1}
         style={
           [
@@ -1641,8 +1653,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             },
           ]
         }
+        testID="undefined.subText"
       />
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
@@ -1668,6 +1682,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             },
           ]
         }
+        testID="undefined.charLimit"
       />
       <View
         style={
@@ -1688,6 +1703,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "disabled": false,
             }
           }
+          accessible={true}
           autoCapitalize="none"
           autoFocus={true}
           editable={true}
@@ -1713,6 +1729,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
+          testID="undefined.textInput"
           textAlignVertical="top"
           value=""
         />

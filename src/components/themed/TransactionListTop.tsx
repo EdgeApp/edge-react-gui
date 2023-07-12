@@ -209,16 +209,20 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
                 <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
+            <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
-                  <EdgeText style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+                  <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
                     {cryptoAmountFormat + ' ' + displayDenomination.name}
                   </EdgeText>
-                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}</EdgeText>
+                  <EdgeText accessible style={styles.balanceFiatBalance}>
+                    {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
+                  </EdgeText>
                 </>
               ) : (
-                <EdgeText style={styles.balanceFiatShow}>{lstrings.string_show_balance}</EdgeText>
+                <EdgeText accessible style={styles.balanceFiatShow}>
+                  {lstrings.string_show_balance}
+                </EdgeText>
               )}
             </TouchableOpacity>
           </View>
