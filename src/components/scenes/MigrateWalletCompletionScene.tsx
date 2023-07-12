@@ -256,7 +256,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             ref={flatListRef}
             renderItem={renderRow}
-            scrollEnabled={false}
+            scrollEnabled={done}
           />
           {renderNextButton}
         </View>

@@ -174,7 +174,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
             extraData={itemStatus}
             ref={flatListRef}
             renderItem={renderRow}
-            scrollEnabled={false}
+            scrollEnabled={done}
           />
           {renderNextButton}
         </View>
