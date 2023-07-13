@@ -100,14 +100,13 @@ export const WALLET_LIST_MENU: Array<{
       'telos',
       'ufo',
       'vertcoin',
-      'wax',
-      'zcash'
+      'wax'
     ],
     label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
   },
   {
-    pluginIds: ['monero', 'piratechain'],
+    pluginIds: ['monero', 'piratechain', 'zcash'],
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
