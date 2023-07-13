@@ -47,14 +47,14 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
 
     if (highlight) {
       return (
-        <TouchableHighlight onPress={this.handlePress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
+        <TouchableHighlight accessible={false} onPress={this.handlePress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
           {this.renderContent()}
         </TouchableHighlight>
       )
     }
 
     return (
-      <TouchableOpacity onPress={this.handlePress} onLongPress={onLongPress}>
+      <TouchableOpacity accessible={false} onPress={this.handlePress} onLongPress={onLongPress}>
         {this.renderContent()}
       </TouchableOpacity>
     )

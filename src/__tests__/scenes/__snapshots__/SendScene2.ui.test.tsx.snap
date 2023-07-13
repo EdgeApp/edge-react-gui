@@ -95,7 +95,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -228,7 +228,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -357,7 +357,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -509,7 +509,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -878,7 +878,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1011,7 +1011,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1140,7 +1140,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1292,7 +1292,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1428,7 +1428,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1533,7 +1533,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -1871,7 +1871,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -2003,7 +2003,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -2136,7 +2136,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -2265,7 +2265,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -2417,7 +2417,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -2786,7 +2786,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -2918,7 +2918,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -3050,7 +3050,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -3202,7 +3202,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -3571,7 +3571,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -3703,7 +3703,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -3836,7 +3836,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -3965,7 +3965,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -4334,7 +4334,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -4466,7 +4466,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -4598,7 +4598,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -4967,7 +4967,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -5099,7 +5099,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -5232,7 +5232,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -5334,7 +5334,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -5486,7 +5486,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -5855,7 +5855,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -5987,7 +5987,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -6093,7 +6093,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -6222,7 +6222,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -6347,7 +6347,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -6716,7 +6716,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -6848,7 +6848,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -6954,7 +6954,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -7056,7 +7056,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -7181,7 +7181,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -7550,7 +7550,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               "selected": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -7683,7 +7683,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}

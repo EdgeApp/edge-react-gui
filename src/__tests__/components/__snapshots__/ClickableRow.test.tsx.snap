@@ -2,6 +2,7 @@
 
 exports[`ClickableRow should render with loading props 1`] = `
 <TouchableHighlight
+  accessible={false}
   onLongPress={[Function]}
   onPress={[Function]}
   underlayColor="#06090c"

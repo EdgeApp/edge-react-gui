@@ -200,12 +200,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         <View style={styles.balanceBoxRow}>
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-              <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+              <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
                 <CryptoIcon sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
-                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+                <EdgeText accessible style={styles.balanceBoxWalletName}>
+                  {walletName}
+                </EdgeText>
                 <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.handleMenu} style={styles.settingsIcon}>
+              <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
                 <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
               </TouchableOpacity>
             </View>
@@ -402,13 +404,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {this.renderBalanceBox()}
               {isStakingAvailable && this.renderStakedBalance()}
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
+                <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
                   <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{lstrings.fragment_request_subtitle}</EdgeText>
+                  <EdgeText accessible style={styles.buttonsText}>
+                    {lstrings.fragment_request_subtitle}
+                  </EdgeText>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
+                <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
                   <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{lstrings.fragment_send_subtitle}</EdgeText>
+                  <EdgeText accessible style={styles.buttonsText}>
+                    {lstrings.fragment_send_subtitle}
+                  </EdgeText>
                 </TouchableOpacity>
                 {!isStakePoliciesLoaded ? (
                   <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />

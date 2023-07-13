@@ -34,7 +34,7 @@ function ShareButton(props: { text: string; onPress: () => Promise<void>; icon: 
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress} disabled={pending}>
+    <TouchableOpacity accessible={false} style={styles.button} onPress={handlePress} disabled={pending}>
       <Fontello name={icon} size={theme.rem(1.5)} style={styles.image} color={theme.iconTappable} />
       <EdgeText style={styles.text}>{text}</EdgeText>
     </TouchableOpacity>

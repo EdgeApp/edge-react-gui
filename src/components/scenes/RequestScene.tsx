@@ -364,7 +364,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
+          <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
             <View style={styles.rightChevronContainer}>
               <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
               {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
