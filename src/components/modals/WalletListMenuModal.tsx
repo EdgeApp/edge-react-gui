@@ -101,7 +101,6 @@ export const WALLET_LIST_MENU: Array<{
       'ufo',
       'vertcoin',
       'wax',
-      'piratechain',
       'zcash'
     ],
     label: lstrings.fragment_wallets_view_xpub,
