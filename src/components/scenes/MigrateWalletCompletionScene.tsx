@@ -18,7 +18,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
@@ -228,15 +227,15 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <Fade visible={done}>
-        <MainButton
-          label={lstrings.string_done_cap}
-          type="secondary"
-          marginRem={[1]}
-          onPress={() => navigation.navigate('walletList', {})}
-          alignSelf="center"
-        />
-      </Fade>
+      <MainButton
+        spinner={!done}
+        disabled={!done}
+        label={!done ? undefined : lstrings.string_done_cap}
+        type="secondary"
+        marginRem={[1]}
+        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+        alignSelf="center"
+      />
     )
   }, [done, navigation])
 
@@ -257,7 +256,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             ref={flatListRef}
             renderItem={renderRow}
-            scrollEnabled={false}
+            scrollEnabled={done}
           />
           {renderNextButton}
         </View>
