@@ -182,7 +182,7 @@
     "react-native-screens": "^3.19.0",
     "react-native-share": "^7.1.2",
     "react-native-sound": "^0.11.0",
-    "react-native-store-review": "^0.1.5",
+    "react-native-store-review": "^0.4.1",
     "react-native-svg": "^13.9.0",
     "react-native-tcp-socket": "^6.0.6",
     "react-native-vector-icons": "^7.1.0",
