@@ -7,6 +7,8 @@ import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 
+export type MainButtonType = 'primary' | 'secondary' | 'escape'
+
 interface Props {
   children?: React.ReactNode
 
@@ -37,7 +39,7 @@ interface Props {
   spinner?: boolean
 
   // Which visual style to use. Defaults to primary (solid):
-  type?: 'primary' | 'secondary' | 'escape'
+  type?: MainButtonType
 }
 
 /**
