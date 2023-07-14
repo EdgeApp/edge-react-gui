@@ -169,7 +169,7 @@ export function walletListMenuAction(
                 type="warning"
                 title={lstrings.string_warning}
                 marginRem={0.5}
-                message={lstrings.fragment_wallets_view_private_view_key_warning}
+                message={sprintf(lstrings.fragment_wallets_view_private_view_key_warning_s, getWalletName(wallet))}
                 numberOfLines={0}
               />
             )}
