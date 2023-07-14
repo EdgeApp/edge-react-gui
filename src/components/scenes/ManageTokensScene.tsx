@@ -13,6 +13,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeTokenId, FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { ButtonInfo, ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -21,7 +22,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
+import { MainButtonType } from '../themed/MainButton'
 import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -149,7 +150,11 @@ function ManageTokensSceneComponent(props: Props) {
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          <MainButton alignSelf="center" label={lstrings.addtoken_add} marginRem={1} type="secondary" onPress={handleAdd} />
+          <ButtonsContainer
+            primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
+            secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
+            layout="row"
+          />
         </>
       )}
     </SceneWrapper>
