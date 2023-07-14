@@ -73,7 +73,7 @@ export const WcConnectScene = (props: Props) => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
-      await Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />)
+      Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_confirm_return_to_browser} onPress={() => {}} />).catch(e => showError(e))
       navigation.navigate('wcConnections', {})
     } catch (error: any) {
       console.error('WalletConnect connection error:', String(error))
@@ -109,7 +109,7 @@ export const WcConnectScene = (props: Props) => {
       const walletImage = (
         <CryptoIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
       )
-      const walletAddressStr = truncateString(JSON.stringify(walletAddress), MAX_ADDRESS_CHARACTERS, true)
+      const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
       return (
         <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
       )
