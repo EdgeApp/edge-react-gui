@@ -71,7 +71,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -241,7 +241,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -346,7 +346,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -502,7 +502,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -657,7 +657,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -788,7 +788,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1144,7 +1144,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1314,7 +1314,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1419,7 +1419,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1575,7 +1575,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1730,7 +1730,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -1861,7 +1861,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}

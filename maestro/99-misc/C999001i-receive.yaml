@@ -1,0 +1,46 @@
+# Priority: Critical
+# Test ID: C999001i
+# Title: Navigate to Receive scene and verify addresses
+# Note: iOS version cannot swipe (Maestro limitation)
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- ios
+- C999001i
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: DGB
+    timeout: 120000
+- tapOn: DGB
+- extendedWaitUntil:
+    visible: 18.79649375 DGB
+    timeout: 120000
+- tapOn: Receive
+
+- assertVisible: "You have 18.796493 DGB"
+- assertVisible: "Receive to My DigiByte"
+- assertVisible: "Your Segwit Address"
+- assertVisible: "dgb1quxmpr34muutkgjuqwcssj4cz07hpukqsr4c3d8"
+# - swipe:
+#     direction: LEFT
+# - assertVisible: "Your Wrapped-Segwit Address"
+# - assertVisible: "SW5aFhYyDwhKA511bfj8FvHR2AjgDGqPUH"
+# - swipe:
+#     direction: LEFT
+# - assertVisible: "Your Legacy Address"
+# - assertVisible: "3AUb9QGG3UpVivuzBLQe8eVnWuny12caXU"
+
+- assertVisible: "FIO Request"
+- assertVisible: "Copy"
+- assertVisible: "Share"
+
+- stopApp
+

@@ -1,0 +1,36 @@
+# Priority: Critical
+# Test ID: C999000
+# Title: Navigate to tx details and verify Tile headers
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C999000
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: FIRO
+    timeout: 120000
+- tapOn: FIRO
+- extendedWaitUntil:
+    visible: 0.369074 FIRO
+    timeout: 120000
+- tapOn: "Sent Firo"
+
+- assertVisible: "Recipient Name"
+- assertVisible: "Firo Amount"
+- assertVisible: "Amount in USD"
+- assertVisible: "Amount at Current Price"
+- assertVisible: "Category"
+- assertVisible: "Recipient Addresses"
+- assertVisible: "Notes"
+
+- stopApp
+

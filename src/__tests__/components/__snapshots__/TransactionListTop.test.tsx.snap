@@ -373,7 +373,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   "text": undefined,
                 }
               }
-              accessible={true}
+              accessible={false}
               collapsable={false}
               focusable={true}
               onClick={[Function]}
@@ -521,6 +521,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 </View>
               </View>
               <Text
+                accessible={true}
                 adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
@@ -599,6 +600,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   "opacity": 1,
                 }
               }
+              testID="gearIcon"
             >
               <Text
                 accessibilityHint="Wallet settings"
@@ -732,7 +734,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "text": undefined,
           }
         }
-        accessible={true}
+        accessible={false}
         collapsable={false}
         focusable={true}
         onClick={[Function]}
@@ -774,6 +776,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           
         </Text>
         <Text
+          accessible={true}
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
           numberOfLines={1}
@@ -816,7 +819,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "text": undefined,
           }
         }
-        accessible={true}
+        accessible={false}
         collapsable={false}
         focusable={true}
         onClick={[Function]}
@@ -858,6 +861,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           
         </Text>
         <Text
+          accessible={true}
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
           numberOfLines={1}
@@ -1474,7 +1478,7 @@ exports[`TransactionListTop should render 1`] = `
                   "text": undefined,
                 }
               }
-              accessible={true}
+              accessible={false}
               collapsable={false}
               focusable={true}
               onClick={[Function]}
@@ -1622,6 +1626,7 @@ exports[`TransactionListTop should render 1`] = `
                 </View>
               </View>
               <Text
+                accessible={true}
                 adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
@@ -1700,6 +1705,7 @@ exports[`TransactionListTop should render 1`] = `
                   "opacity": 1,
                 }
               }
+              testID="gearIcon"
             >
               <Text
                 accessibilityHint="Wallet settings"
@@ -1833,7 +1839,7 @@ exports[`TransactionListTop should render 1`] = `
             "text": undefined,
           }
         }
-        accessible={true}
+        accessible={false}
         collapsable={false}
         focusable={true}
         onClick={[Function]}
@@ -1875,6 +1881,7 @@ exports[`TransactionListTop should render 1`] = `
           
         </Text>
         <Text
+          accessible={true}
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
           numberOfLines={1}
@@ -1917,7 +1924,7 @@ exports[`TransactionListTop should render 1`] = `
             "text": undefined,
           }
         }
-        accessible={true}
+        accessible={false}
         collapsable={false}
         focusable={true}
         onClick={[Function]}
@@ -1959,6 +1966,7 @@ exports[`TransactionListTop should render 1`] = `
           
         </Text>
         <Text
+          accessible={true}
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
           numberOfLines={1}

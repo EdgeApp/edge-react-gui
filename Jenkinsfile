@@ -2,6 +2,7 @@ def global = [:]
 
 def preBuildStages(String stageName, versionFile) {
   stage("${stageName}: preBuildStages") {
+    echo "Running on ${env.NODE_NAME}"
     deleteDir()
     checkout scm
 
@@ -35,6 +36,7 @@ def preTest(String stageName) {
 
 def buildProduction(String stageName) {
   stage("Build ${stageName}") {
+    echo "Running on ${env.NODE_NAME}"
     if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'testMaestro', 'yolo']) {
       if (stageName == 'ios' && params.IOS_BUILD) {
         sh 'npm run prepare.ios'
@@ -52,6 +54,7 @@ def buildSim(String stageName) {
   stage("Build Sim ${stageName}") {
     if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'testMaestro']) {
       if (stageName == 'ios' && params.IOS_BUILD_SIM) {
+        echo "Running on ${env.NODE_NAME}"
         sh 'npm run prepare.ios'
         sh "node -r sucrase/register ./scripts/deploy.ts edge ios-sim ${BRANCH_NAME}"
       }
@@ -91,6 +94,7 @@ pipeline {
       agent { label 'ios-build || android-build' }
       steps {
         script {
+          echo "Running on ${env.NODE_NAME}"
           deleteDir()
           checkout scm
 

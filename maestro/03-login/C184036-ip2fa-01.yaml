@@ -21,3 +21,5 @@ tags:
     visible: "Username and password are correct. This device cannot log in due\
     \ to an unrecognized IP address."
     timeout: 120000
+
+- stopApp

@@ -92,7 +92,7 @@ export function RightChevronButton(props: { text: string; onPress: () => void; p
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity accessible={false} onPress={onPress}>
       <View style={[padding, styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />

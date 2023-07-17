@@ -65,7 +65,7 @@ export class TileComponent extends React.PureComponent<Props> {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={this.handlePress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback accessible={false} onPress={this.handlePress} disabled={type === 'static'}>
         <View>
           <View style={styles.container}>
             <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
