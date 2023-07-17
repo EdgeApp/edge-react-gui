@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Platform, TextInput, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, LayoutChangeEvent, Platform, TextInput, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -140,13 +140,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
 
   // Captures the width of the placeholder label:
   const [labelWidth, setLabelWidth] = React.useState(0)
-  // @ts-expect-error
-  const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
+  const handleLabelLayout = (event: LayoutChangeEvent) => setLabelWidth(event.nativeEvent.layout.width)
 
   // Captures the width of the counter label:
   const [counterWidth, setCounterWidth] = React.useState(0)
-  // @ts-expect-error
-  const handleCounterLayout = event => setCounterWidth(event.nativeEvent.layout.width)
+  const handleCounterLayout = (event: LayoutChangeEvent) => setCounterWidth(event.nativeEvent.layout.width)
 
   // Animates between 0 and 1 based our disabled state:
   const disabledAnimation = useSharedValue(0)
@@ -327,8 +325,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   // Character limit
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
-  // @ts-expect-error
-  const numpad = props.keyboardType === 'decimal-pad' || props.keyboardType === 'decimal'
+  const numpad = props.keyboardType === 'decimal-pad'
   const textStyle = numpad ? styles.numberInput : styles.textInput
   const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixAndroidAdjust : null], [styles])
 
