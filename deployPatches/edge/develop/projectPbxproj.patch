@@ -9,7 +9,7 @@ index 89aff8e06..da19fac6b 100644
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+				PRODUCT_NAME = Edge Develop;
++				PRODUCT_NAME = "Edge Develop";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -20,7 +20,7 @@ index 89aff8e06..da19fac6b 100644
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+				PRODUCT_NAME = Edge Develop;
++				PRODUCT_NAME = "Edge Develop";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;

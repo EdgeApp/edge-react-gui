@@ -18,7 +18,7 @@ index 89aff8e06..20841311a 100644
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.beta;
-+				PRODUCT_NAME = Edge Beta;
++				PRODUCT_NAME = "Edge Beta";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -38,7 +38,7 @@ index 89aff8e06..20841311a 100644
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.beta;
-+				PRODUCT_NAME = Edge Beta;
++				PRODUCT_NAME = "Edge Beta";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
