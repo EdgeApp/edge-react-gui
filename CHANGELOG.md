@@ -1,5 +1,54 @@
 # edge-react-gui
 
+## 3.13.0
+
+- Add WalletConnect v2 support
+- Refactor transaction list scene to reduce redux use and implement streamTransactions method
+- Fixed Polkadot sends
+- Fix zkSync max send calculation
+- Fix exchange settings persistance
+- Use SendScene2 for create wallet payments
+- Port more scenes and components to use hooks
+- Enable long tap to copy Visa card url (beta)
+- Fix crash when a gui plugin isn't present
+- Add steps to deploy script to faciliate maestro testing
+- Various UX and visual fixes
+- Upgrade edge-core-js to v1.3.0
+  - added: Add an EdgeAccount.getPin method.
+  - fixed: Allow the EdgeAccount.username property to update after calling changeUsername.
+  - added: Add an EdgeCurrencyWallet.streamTransactions method.
+  - deprecated: Pagination options for getTransactions. Use streamTransactions if you need pagination.
+  - fixed: Add the correct URI to changeUsername, so it works.
+  - fixed: Send a 'transactionsChanged' event when editing metadata.
+  - added: Add an EdgeContext.forgetAccount method.
+  - deprecated: EdgeContext.deleteLocalAccount. Use EdgeContext.forgetAccount instead.
+  - fixed: Do not throw a "No username in reply" error when logging into light accounts via barcode.
+- Upgrade edge-currency-accountbased v1.4.4
+  - Fixed: Critical bug that is missing data field for native EVM transactions including a memo
+  - Disable using TRX for PIX codes
+  - Upgrade @polkadot/api to v10.9.1
+  - Fixed: Fixed Ethereum broken max-spend for spend info with undefined nativeAmount
+  - Added: Add PulseChain (PLS)
+  - Fixed: Fix broken max-spend for zkSync
+  - Deprecate WalletConnect v1
+  - EVM/ALGO: Add parseWalletConnectV2Payload to parse out amounts from WalletConnect v2 payloads
+ZEC: Update checkpoints
+- Upgrade edge-login-ui-rn to v2.3.3
+  - fixed: Modal close button covering modal submit buttons while Android keyboard is open
+  - fixed: Username availability check error would incorrectly show in some cases
+  - fixed: Modal close button overlapping submit button in PW Recovery modal
+  - fixed: Allow pressing modal buttons without dismissing the keyboard.
+  - fixed: Remove an extra close button from the security alerts modal.
+  - changed: Simplify the create-account flow internals.
+  - changed: Update the Android gradle build file.
+  - fixed: Sometimes the username availability check mis-reports availability status
+  - added: Add an appconfig prop to LoginScreen.
+  - changed: Update routing behavior when onComplete is not passed to LoginScreen.
+  - changed: Give scrolling modals a bottom fade-out effect.
+  - changed: Make the QR login modal and text input modals scrollable.
+  - changed: Allow the PIN scene to log into username-less accounts.
+  - removed: Remove OTP support for PIN logins. The login server will never return OTP errors for PIN logins, so this capability is not needed.
+
 ## 3.12.0
 
 - Core refactor removes private key properties from EdgeCurrencyWallet
