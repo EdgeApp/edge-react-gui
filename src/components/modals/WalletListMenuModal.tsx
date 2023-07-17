@@ -256,7 +256,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modalCloseButton: {
     position: 'absolute',
-    width: '100%',
+    left: 0,
+    right: 0,
     bottom: theme.rem(4),
     height: theme.rem(3)
   },
