@@ -158,7 +158,7 @@
   "fragment_wallets_copied_seed": "Copied Seed",
   "fragment_wallets_get_seed_wallet": "获取种子",
   "fragment_wallets_view_private_view_key": "Private View Key",
-  "fragment_wallets_view_private_view_key_warning": "The private view key allows the receiver to see the balance in your Monero wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.",
+  "fragment_wallets_view_private_view_key_warning_s": "The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.",
   "fragment_wallets_view_xpub": "查看XPub地址",
   "fragment_wallets_pubkey_copied_title": "XPub 地址已复制",
   "fragment_wallets_export_transactions": "导出交易",
