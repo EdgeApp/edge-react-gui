@@ -1,5 +1,5 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index cf6da0b82..beb5806d5 100644
+index 89aff8e06..da19fac6b 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
 @@ -429,8 +429,8 @@
@@ -9,18 +9,18 @@ index cf6da0b82..beb5806d5 100644
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+				PRODUCT_NAME = "Edge Develop";
- 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
- 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
- 				SWIFT_VERSION = 5.0;
-@@ -457,8 +457,8 @@
++				PRODUCT_NAME = Edge Develop;
+ 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+ 				SUPPORTS_MACCATALYST = NO;
+ 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+@@ -461,8 +461,8 @@
  					"-ObjC",
  					"-lc++",
  				);
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+				PRODUCT_NAME = "Edge Develop";
- 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "Edge-Swift.h";
- 				SWIFT_VERSION = 5.0;
- 				VERSIONING_SYSTEM = "apple-generic";
++				PRODUCT_NAME = Edge Develop;
+ 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+ 				SUPPORTS_MACCATALYST = NO;
+ 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
