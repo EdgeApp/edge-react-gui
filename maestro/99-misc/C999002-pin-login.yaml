@@ -42,3 +42,5 @@ tags:
 - extendedWaitUntil:
     visible: 0.369074 FIRO
     timeout: 120000
+
+- stopApp
