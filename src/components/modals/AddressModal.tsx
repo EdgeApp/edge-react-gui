@@ -136,8 +136,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
       if (this.checkIfDomain(domain)) {
         await this.resolveAddress(domain, currencyCode)
       }
-      await this.checkIfFioAddress(domain)
       this.updateUri(domain)
+      await this.checkIfFioAddress(domain)
     } catch (error) {
       showError(error)
     }
