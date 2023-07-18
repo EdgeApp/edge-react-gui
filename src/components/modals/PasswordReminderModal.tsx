@@ -6,9 +6,9 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { MainButton } from '../themed/MainButton'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -31,7 +31,7 @@ interface DispatchProps {
 interface State {
   errorMessage?: string
   password: string
-  spinning: boolean
+  checkingPassword: boolean
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -39,49 +39,44 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 export class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { spinning: false, password: '' }
+    this.state = { checkingPassword: false, password: '' }
   }
 
   handleCancel = () => {
-    if (!this.state.spinning) {
+    if (!this.state.checkingPassword) {
       this.props.onPostpone()
       this.props.bridge.resolve()
     }
   }
 
   handleRequestChangePassword = () => {
-    if (!this.state.spinning) {
+    if (!this.state.checkingPassword) {
       this.props.bridge.resolve()
       this.props.onRequestChangePassword()
       setTimeout(() => this.props.navigation.navigate('changePassword', {}), 10)
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { bridge, account } = this.props
     const { password } = this.state
 
-    this.setState({ spinning: true })
-    account
-      .checkPassword(password)
-      .then(isValidPassword => {
-        if (isValidPassword) {
-          this.props.onSuccess()
-          this.setState({ spinning: false })
-          showToast(lstrings.password_reminder_great_job)
-          setTimeout(() => bridge.resolve(), 10)
-        } else {
-          this.setState({ errorMessage: lstrings.password_reminder_invalid, spinning: false })
-        }
-      })
-      .catch(err => showError(err))
+    const isValidPassword = await account.checkPassword(password).catch(err => showError(err))
+    if (isValidPassword) {
+      this.props.onSuccess()
+      this.setState({ checkingPassword: false })
+      showToast(lstrings.password_reminder_great_job)
+      setTimeout(() => bridge.resolve(), 10)
+    } else {
+      this.setState({ errorMessage: lstrings.password_reminder_invalid, checkingPassword: false })
+    }
   }
 
   handleChangeText = (password: string) => this.setState({ password })
 
   render() {
     const { bridge, theme } = this.props
-    const { errorMessage, password, spinning } = this.state
+    const { errorMessage, password, checkingPassword } = this.state
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
@@ -98,16 +93,19 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           onSubmitEditing={this.handleSubmit}
           value={password}
         />
+        {/* HACK: Extra padding to accommodate potential error message 
+            TODO: Roll this into the built-in OutlinedTextInput margins and 
+            update all callers */}
+        <View style={{ margin: theme.rem(0.5) }} />
         {
           // Hack around the Android keyboard glitch:
           Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
         }
-        {spinning ? (
-          <MainButton marginRem={0.5} spinner />
-        ) : (
-          <MainButton label={lstrings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
-        )}
-        <MainButton label={lstrings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
+        <ButtonsContainer
+          primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
+          secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
+          layout="column"
+        />
         <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )

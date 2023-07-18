@@ -4,6 +4,8 @@ import { View } from 'react-native'
 import { styled } from '../hoc/styled'
 import { MainButton, MainButtonType } from '../themed/MainButton'
 
+const BUTTON_MARGINS = [0.5, 0]
+
 export interface ButtonInfo {
   label: string
   onPress: () => void | Promise<void>
@@ -24,7 +26,7 @@ export const ButtonsContainer = React.memo(({ primary, secondary, escape, layout
   const renderButton = (type: MainButtonType, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
     const { label, onPress, disabled } = buttonProps
-    return <MainButton label={label} onPress={onPress} type={type} marginRem={0.5} disabled={disabled} />
+    return <MainButton label={label} onPress={onPress} type={type} marginRem={BUTTON_MARGINS} disabled={disabled} />
   }
 
   return (
@@ -37,10 +39,11 @@ export const ButtonsContainer = React.memo(({ primary, secondary, escape, layout
 })
 
 const StyledButtonContainer = styled(View)<{ layout: 'row' | 'column' }>(props => {
+  const isRowLayout = props.layout === 'row'
   return {
-    flexDirection: props.layout === 'row' ? 'row-reverse' : 'column',
-    justifyContent: 'space-between',
-    padding: props.theme.rem(0.5),
-    paddingHorizontal: props.theme.rem(1)
+    flexDirection: isRowLayout ? 'row-reverse' : 'column',
+    justifyContent: 'space-evenly',
+    margin: props.theme.rem(0.5),
+    marginHorizontal: isRowLayout ? 0 : props.theme.rem(0.5)
   }
 })
