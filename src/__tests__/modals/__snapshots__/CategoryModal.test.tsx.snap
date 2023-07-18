@@ -401,9 +401,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       style={
         [
           {
+            "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderRadius": 11,
-            "justifyContent": "center",
+            "flexDirection": "row",
             "minHeight": 67,
             "paddingHorizontal": 22,
           },
@@ -662,56 +663,42 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           
         </Text>
       </View>
-      <View
+      <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        autoCapitalize="none"
+        autoFocus={true}
+        editable={true}
+        multiline={false}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        onSubmitEditing={[Function]}
+        returnKeyType="done"
+        secureTextEntry={false}
+        selectionColor="#FFFFFF"
         style={
           [
             {
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
+              "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "padding": 0,
             },
             {
-              "paddingRight": 65,
+              "fontSize": 22,
             },
           ]
         }
-      >
-        <TextInput
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoCapitalize="none"
-          autoFocus={true}
-          editable={true}
-          multiline={false}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="done"
-          secureTextEntry={false}
-          selectionColor="#FFFFFF"
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "padding": 0,
-              },
-              {
-                "flexGrow": 0,
-              },
-            ]
-          }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value="Paycheck"
-        />
-      </View>
+        testID="undefined.textInput"
+        textAlignVertical="top"
+        value="Paycheck"
+      />
     </View>
     <View
       style={
@@ -1486,9 +1473,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       style={
         [
           {
+            "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderRadius": 11,
-            "justifyContent": "center",
+            "flexDirection": "row",
             "minHeight": 67,
             "paddingHorizontal": 22,
           },
@@ -1684,56 +1672,42 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         }
         testID="undefined.charLimit"
       />
-      <View
+      <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        autoCapitalize="none"
+        autoFocus={true}
+        editable={true}
+        multiline={false}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        onSubmitEditing={[Function]}
+        returnKeyType="done"
+        secureTextEntry={false}
+        selectionColor="#FFFFFF"
         style={
           [
             {
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
+              "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "padding": 0,
             },
             {
-              "paddingRight": 65,
+              "fontSize": 22,
             },
           ]
         }
-      >
-        <TextInput
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoCapitalize="none"
-          autoFocus={true}
-          editable={true}
-          multiline={false}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="done"
-          secureTextEntry={false}
-          selectionColor="#FFFFFF"
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "padding": 0,
-              },
-              {
-                "flexGrow": 0,
-              },
-            ]
-          }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value=""
-        />
-      </View>
+        testID="undefined.textInput"
+        textAlignVertical="top"
+        value=""
+      />
     </View>
     <View
       style={
