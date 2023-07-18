@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { getCreateWalletType, guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
@@ -142,6 +142,7 @@ function createAndSelectToken({
     const state = getState()
     const { account, disklet } = state.core
     const { defaultIsoFiat } = state.ui.settings
+    const { walletType } = account.currencyConfig[pluginId].currencyInfo
     const parentCurrencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
     try {
@@ -150,8 +151,7 @@ function createAndSelectToken({
 
       // Try to find existing Parent Edge Wallet, if no specific wallet was given
       const { currencyWallets } = account
-      const parentWalletId =
-        createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === parentCurrencyCode)
+      const parentWalletId = createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
       const wallet: EdgeCurrencyWallet =
         parentWalletId != null
           ? currencyWallets[parentWalletId]
@@ -159,8 +159,6 @@ function createAndSelectToken({
             await showFullScreenSpinner(
               lstrings.wallet_list_modal_enabling_token,
               (async (): Promise<EdgeCurrencyWallet> => {
-                const { walletType } = getCreateWalletType(account, parentCurrencyCode) ?? {}
-                if (walletType == null) throw new Error(lstrings.create_wallet_failed_message)
                 return await createWallet(account, {
                   walletType,
                   walletName: getUniqueWalletName(account, pluginId),
