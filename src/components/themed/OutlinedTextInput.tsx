@@ -212,10 +212,6 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
   }
 
-  const suffixPadding = {
-    paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
-  }
-
   const containerStyle = {
     ...containerPadding,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
@@ -226,9 +222,6 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
         ? theme.rem(0.75)
         : theme.rem(0.625)
       : 0
-  }
-  const textInputStyle = {
-    flexGrow: multiline ? 1 : 0
   }
 
   // Animated styles:
@@ -301,6 +294,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
       opacity: labelProgressAlt,
+      top: Platform.OS === 'android' ? -1 : 0,
       transform: [{ translateY: (1 - labelProgressAlt) * prefixTranslateY }, { scale: labelProgressAlt }]
     }
   })
@@ -326,12 +320,14 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const charLimitLabel = maxLength === undefined ? '' : `${maxLength - value.length}`
 
   const numpad = props.keyboardType === 'decimal-pad'
-  const textStyle = numpad ? styles.numberInput : styles.textInput
-  const suffixStyle = React.useMemo(() => [styles.suffixText, Platform.OS === 'android' ? styles.suffixAndroidAdjust : null], [styles])
+  const textSize: TextStyle = {
+    fontSize: theme.rem(numpad ? 1.5 : 1)
+  }
 
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
       <View style={[styles.container, containerStyle]}>
+        {/* Absolutely positioned children */}
         <Animated.View style={[styles.bottomLine, bottomStyle]} />
         <Animated.View style={[styles.leftCap, leftStyle]} />
         <Animated.View style={[styles.rightCap, rightStyle]} />
@@ -368,55 +364,54 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
           </TouchableWithoutFeedback>
         ) : null}
 
-        <View style={[styles.suffixContainer, suffixPadding]}>
-          {prefix != null ? <Animated.Text style={[textStyle, prefixStyle]}>{`${prefix} `}</Animated.Text> : null}
-          {numeric ? (
-            <NumericInput
-              accessible
-              ref={inputRef}
-              {...inputProps}
-              accessibilityState={{ disabled }}
-              minDecimals={minDecimals}
-              maxDecimals={maxDecimals}
-              autoFocus={autoFocus}
-              multiline={multiline}
-              editable={!showSpinner}
-              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-              style={[textStyle, textInputStyle]}
-              textAlignVertical="top"
-              testID={`${testID}.textInput`}
-              value={value}
-              secureTextEntry={hidePassword}
-              // Callbacks:
-              onBlur={handleBlur}
-              onChangeText={onChangeText}
-              onFocus={handleFocus}
-              maxLength={maxLength}
-            />
-          ) : (
-            <TextInput
-              accessible
-              ref={inputRef}
-              {...inputProps}
-              accessibilityState={{ disabled }}
-              autoFocus={autoFocus}
-              multiline={multiline}
-              editable={!showSpinner}
-              selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
-              style={[textStyle, textInputStyle]}
-              textAlignVertical="top"
-              testID={`${testID}.textInput`}
-              value={value}
-              secureTextEntry={hidePassword}
-              // Callbacks:
-              onBlur={handleBlur}
-              onChangeText={onChangeText}
-              onFocus={handleFocus}
-              maxLength={maxLength}
-            />
-          )}
-          {suffix != null ? <EdgeText style={suffixStyle}>{suffix}</EdgeText> : null}
-        </View>
+        {/* Normal flexbox children */}
+        {prefix == null ? null : <Animated.Text style={[styles.prefixText, textSize, prefixStyle]}>{`${prefix} `}</Animated.Text>}
+        {numeric ? (
+          <NumericInput
+            accessible
+            ref={inputRef}
+            {...inputProps}
+            accessibilityState={{ disabled }}
+            minDecimals={minDecimals}
+            maxDecimals={maxDecimals}
+            autoFocus={autoFocus}
+            multiline={multiline}
+            editable={!showSpinner}
+            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+            style={[styles.input, textSize]}
+            textAlignVertical="top"
+            testID={`${testID}.textInput`}
+            value={value}
+            secureTextEntry={hidePassword}
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            maxLength={maxLength}
+          />
+        ) : (
+          <TextInput
+            accessible
+            ref={inputRef}
+            {...inputProps}
+            accessibilityState={{ disabled }}
+            autoFocus={autoFocus}
+            multiline={multiline}
+            editable={!showSpinner}
+            selectionColor={hasError ? theme.dangerText : theme.outlineTextInputTextColor}
+            style={[styles.input, textSize]}
+            textAlignVertical="top"
+            testID={`${testID}.textInput`}
+            value={value}
+            secureTextEntry={hidePassword}
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            maxLength={maxLength}
+          />
+        )}
+        {suffix == null ? null : <EdgeText style={[styles.prefixText, textSize]}>{suffix}</EdgeText>}
       </View>
     </TouchableWithoutFeedback>
   )
@@ -451,9 +446,10 @@ const getStyles = cacheStyles((theme: Theme) => {
   return {
     // Provides a layout container for the text input:
     container: {
+      alignItems: 'center',
       backgroundColor: theme.outlineTextInputColor,
       borderRadius: theme.rem(0.5),
-      justifyContent: 'center',
+      flexDirection: 'row',
       minHeight: theme.rem(3),
       paddingHorizontal: theme.rem(1)
     },
@@ -469,12 +465,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       top: 0
     },
 
-    // Layout container for grouping the text input and suffix text
-    suffixContainer: {
-      justifyContent: 'flex-start',
-      flexDirection: 'row'
-    },
-
     // The text input and placeholder label both float
     // in their respective containers, allowing React to center them:
     labelText: {
@@ -483,24 +473,16 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(1),
       padding: 0
     },
-    suffixText: {
-      color: theme.secondaryText
-    },
-    suffixAndroidAdjust: {
-      marginTop: 3.5
-    },
-    textInput: {
-      alignSelf: 'stretch',
-      color: theme.outlineTextInputTextColor,
+    prefixText: {
+      color: theme.secondaryText,
       fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1),
-      padding: 0
+      includeFontPadding: false
     },
-    numberInput: {
-      alignSelf: 'stretch',
+    input: {
       color: theme.outlineTextInputTextColor,
+      flexGrow: 1,
+      flexShrink: 1,
       fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1.5),
       padding: 0
     },
 
