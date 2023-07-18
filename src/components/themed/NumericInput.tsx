@@ -20,7 +20,7 @@ export const NumericInput = forwardRef<TextInput, Props>((props: Props, ref) => 
     setInnerValue(displayNum)
   }, [maxDecimals, minDecimals, props.value])
 
-  const onChangeTextInner = useHandler(text => {
+  const handleChangeText = useHandler(text => {
     if (isValidInput(text)) {
       const nativeNum = text === '' ? '' : formatToNativeNumber(text)
       const displayNum = text === '' ? '' : formatNumberInput(nativeNum, { minDecimals, maxDecimals })
@@ -31,5 +31,5 @@ export const NumericInput = forwardRef<TextInput, Props>((props: Props, ref) => 
     }
   })
 
-  return <TextInput ref={ref} onChangeText={onChangeTextInner} keyboardType="decimal-pad" value={innerValue} {...rest} />
+  return <TextInput ref={ref} onChangeText={handleChangeText} keyboardType="decimal-pad" value={innerValue} {...rest} />
 })

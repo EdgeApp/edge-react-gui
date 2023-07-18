@@ -5,9 +5,9 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { NumericInput } from '../modals/NumericInput'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { NumericInput } from './NumericInput'
 
 export type OutlinedTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 

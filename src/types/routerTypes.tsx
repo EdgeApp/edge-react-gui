@@ -10,7 +10,7 @@ import { CreateWalletImportOptionsParams } from '../components/scenes/CreateWall
 import { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
-import { FioCreateHandleProps } from '../components/scenes/Fio/FioCreateHandleScene'
+import { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
@@ -122,7 +122,7 @@ export interface RouteParamList {
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
-  fioCreateHandle: FioCreateHandleProps
+  fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: {
     fioAddressName: string
     bundledTxs: number
