@@ -1,140 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`] = `
-<SceneWrapper
+<NotificationSceneWrapper
   background="theme"
->
-  <Memo(SceneHeaderComponent)
-    title="Exchange"
-    underline={true}
-    withTopMargin={true}
-  />
-  <ScrollView
-    contentContainerStyle={
-      {
-        "paddingTop": 11,
-      }
+  navigation={
+    {
+      "addListener": [Function],
+      "canGoBack": [Function],
+      "dispatch": [Function],
+      "getId": [Function],
+      "getParent": [Function],
+      "getState": [Function],
+      "goBack": [Function],
+      "isFocused": [Function],
+      "navigate": [Function],
+      "pop": [Function],
+      "popToTop": [Function],
+      "push": [Function],
+      "removeListener": [Function],
+      "replace": [Function],
+      "reset": [Function],
+      "setOptions": [Function],
+      "setParams": [Function],
     }
-  >
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="From"
-    />
-    <WithTheme(ExchangeQuoteComponent)
-      cryptoAmount="1"
-      currency={
-        {
-          "fromDenomination": "",
-        }
-      }
-      currencyCode="BTC"
-      fiatCurrencyAmount="1"
-      fiatCurrencyCode="USD"
-      isTop={true}
-      miningFee="1"
-      showFeeWarning={false}
-      total="1"
-      walletName=""
-    />
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="To"
-    />
-    <WithTheme(ExchangeQuoteComponent)
-      cryptoAmount="1"
-      currency={
-        {
-          "fromDenomination": "",
-        }
-      }
-      currencyCode="ETH"
-      fiatCurrencyAmount="1"
-      fiatCurrencyCode="USD"
-      walletName=""
-    />
-    <TouchableOpacity
-      onPress={[Function]}
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "flex-end",
-          "marginTop": 22,
-          "paddingRight": 22,
-        }
-      }
-    >
-      <WithTheme(EdgeTextComponent)
-        style={
-          {
-            "color": "#A4C7DF",
-            "fontSize": 17,
-          }
-        }
-      >
-        Powered by  
-      </WithTheme(EdgeTextComponent)>
-      <FastImage
-        resizeMode="contain"
-        source={
-          {
-            "uri": "https://content.edge.app/exchangeIcons/ChangeNow/icon.png",
-          }
-        }
-        style={
-          {
-            "aspectRatio": 1,
-            "height": 17,
-            "width": 17,
-          }
-        }
-      />
-      <WithTheme(EdgeTextComponent)
-        style={
-          {
-            "color": "#A4C7DF",
-            "fontSize": 17,
-          }
-        }
-      >
-         ChangeNow
-      </WithTheme(EdgeTextComponent)>
-      <Icon
-        allowFontScaling={false}
-        color="#00f1a2"
-        name="chevron-forward"
-        size={22}
-      />
-    </TouchableOpacity>
-    <Alert
-      marginRem={
-        [
-          1.5,
-          1,
-        ]
-      }
-      message="The amount above is an estimate. This exchange may result in less funds received than quoted."
-      onPress={[Function]}
-      title="Estimated Quote"
-      type="warning"
-    />
-    <WithTheme(SliderComponent)
-      disabled={true}
-      onSlidingComplete={[Function]}
-      parentStyle={
-        {
-          "marginTop": 56,
-        }
-      }
-      showSpinner={true}
-    />
-    <View
-      style={
-        {
-          "height": 180,
-        }
-      }
-    />
-  </ScrollView>
-</SceneWrapper>
+  }
+>
+  [Function]
+</NotificationSceneWrapper>
 `;

@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -63,6 +63,7 @@ const CoinRankingComponent = (props: Props) => {
   const [searching, setSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
+
   const extraData = React.useMemo(() => ({ assetSubText, lastUsedFiat, percentChangeTimeFrame }), [assetSubText, lastUsedFiat, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
@@ -197,52 +198,57 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <SceneWrapper background="theme" hasTabs>
-      <View style={styles.searchContainer}>
-        <View style={{ flex: 1, flexDirection: 'column' }}>
-          <OutlinedTextInput
-            returnKeyType="search"
-            label={lstrings.search_assets}
-            onChangeText={handleOnChangeText}
-            value={searchText ?? ''}
-            onFocus={handleTextFieldFocus}
-            onSubmitEditing={handleSubmit}
-            ref={textInput}
-            marginRem={0}
-            searchIcon
-          />
-        </View>
-        {searching && (
-          <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
-            <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
-        )}
-      </View>
+    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
+      {(gap, notificationHeight) => (
+        <>
+          <View style={styles.searchContainer}>
+            <View style={styles.searchTextInputContainer}>
+              <OutlinedTextInput
+                returnKeyType="search"
+                label={lstrings.search_assets}
+                onChangeText={handleOnChangeText}
+                value={searchText ?? ''}
+                onFocus={handleTextFieldFocus}
+                onSubmitEditing={handleSubmit}
+                ref={textInput}
+                marginRem={0}
+                searchIcon
+              />
+            </View>
+            {searching && (
+              <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
+                <EdgeText style={styles.tappableHeaderText}>{lstrings.string_done_cap}</EdgeText>
+              </TouchableOpacity>
+            )}
+          </View>
 
-      <View style={styles.container}>
-        <View style={styles.rankView}>
-          <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
-        </View>
-        <TouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
-          <EdgeText style={styles.assetText}>{assetSubTextString}</EdgeText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.percentChangeView} onPress={handlePercentChange}>
-          <EdgeText style={styles.percentChangeText}>{timeFrameString}</EdgeText>
-        </TouchableOpacity>
-        <View style={styles.priceView}>
-          <EdgeText style={styles.priceText}>{lstrings.coin_rank_price}</EdgeText>
-        </View>
-      </View>
-      <DividerLine marginRem={[0, 0, 0, 1]} />
-      <FlashList
-        estimatedItemSize={theme.rem(3.75)}
-        data={listdata}
-        extraData={extraData}
-        renderItem={renderItem}
-        onEndReachedThreshold={1}
-        onEndReached={handleEndReached}
-      />
-    </SceneWrapper>
+          <View style={styles.container}>
+            <View style={styles.rankView}>
+              <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
+            </View>
+            <TouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
+              <EdgeText style={styles.assetText}>{assetSubTextString}</EdgeText>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.percentChangeView} onPress={handlePercentChange}>
+              <EdgeText style={styles.percentChangeText}>{timeFrameString}</EdgeText>
+            </TouchableOpacity>
+            <View style={styles.priceView}>
+              <EdgeText style={styles.priceText}>{lstrings.coin_rank_price}</EdgeText>
+            </View>
+          </View>
+          <DividerLine marginRem={[0, 0, 0, 1]} />
+          <FlashList
+            estimatedItemSize={theme.rem(3.75)}
+            data={listdata}
+            extraData={extraData}
+            renderItem={renderItem}
+            onEndReachedThreshold={1}
+            onEndReached={handleEndReached}
+            contentContainerStyle={{ paddingBottom: notificationHeight }}
+          />
+        </>
+      )}
+    </NotificationSceneWrapper>
   )
 }
 
@@ -267,6 +273,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexDirection: 'row',
       marginVertical: theme.rem(0.5),
       marginHorizontal: theme.rem(1)
+    },
+    searchTextInputContainer: {
+      flex: 1,
+      flexDirection: 'column'
     },
     searchDoneButton: {
       justifyContent: 'center',
@@ -306,6 +316,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     priceText: {
       ...baseTextStyle,
       textAlign: 'right'
+    },
+    tappableHeaderText: {
+      color: theme.textLink
     }
   }
 })

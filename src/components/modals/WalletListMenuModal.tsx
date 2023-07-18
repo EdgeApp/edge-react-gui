@@ -185,6 +185,10 @@ export function WalletListMenuModal(props: Props) {
       if (value === 'manageTokens') {
         if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
       }
+
+      // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
+      if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+
       result.push({ label, value })
     }
 

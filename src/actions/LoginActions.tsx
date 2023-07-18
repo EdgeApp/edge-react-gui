@@ -60,6 +60,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
     await dispatch(loadAccountReferral(account))
     const newAccount = account.newAccount
+    const isLightAccount = account.username == null
 
     if (newAccount) {
       let { defaultFiat } = syncedSettings
@@ -85,7 +86,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
         const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
 
-        if (freeRegApiToken !== '' && freeRegRefCode !== '') {
+        if (freeRegApiToken !== '' && freeRegRefCode !== '' && !isLightAccount) {
           const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
           if (isCreateHandle) {
             navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })

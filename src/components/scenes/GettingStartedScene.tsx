@@ -107,7 +107,7 @@ export const GettingStartedScene = (props: Props) => {
       if (localUsersLength > 0) {
         navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
       } else {
-        navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+        navigation.navigate('login', { loginUiInitialRoute: 'new-light-account' })
       }
     }
   })
@@ -120,7 +120,7 @@ export const GettingStartedScene = (props: Props) => {
   })
   const handlePressSignUp = useHandler(() => {
     logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
-    navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+    navigation.navigate('login', { loginUiInitialRoute: 'new-light-account' })
   })
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})

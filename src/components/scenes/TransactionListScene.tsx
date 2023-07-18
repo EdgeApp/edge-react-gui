@@ -14,7 +14,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
@@ -198,27 +198,32 @@ function TransactionListComponent(props: Props) {
   })
 
   return (
-    <SceneWrapper hasTabs>
-      {SHOW_FLIP_INPUT_TESTER ? (
-        <ExchangedFlipInputTester />
-      ) : (
-        <FlashList
-          ref={flashList}
-          data={listItems}
-          estimatedItemSize={theme.rem(4.25)}
-          getItemType={getItemType}
-          keyboardShouldPersistTaps="handled"
-          keyExtractor={keyExtractor}
-          ListEmptyComponent={emptyComponent}
-          ListHeaderComponent={topArea}
-          onEndReachedThreshold={0.5}
-          refreshControl={refreshControl}
-          renderItem={renderItem}
-          stickyHeaderIndices={stickyHeaderIndices}
-          onEndReached={handleScrollEnd}
-        />
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
+      {(gap, notificationHeight) => (
+        <>
+          {SHOW_FLIP_INPUT_TESTER ? (
+            <ExchangedFlipInputTester />
+          ) : (
+            <FlashList
+              ref={flashList}
+              contentContainerStyle={{ paddingBottom: notificationHeight }}
+              data={listItems}
+              estimatedItemSize={theme.rem(4.25)}
+              getItemType={getItemType}
+              keyboardShouldPersistTaps="handled"
+              keyExtractor={keyExtractor}
+              ListEmptyComponent={emptyComponent}
+              ListHeaderComponent={topArea}
+              onEndReachedThreshold={0.5}
+              refreshControl={refreshControl}
+              renderItem={renderItem}
+              stickyHeaderIndices={stickyHeaderIndices}
+              onEndReached={handleScrollEnd}
+            />
+          )}
+        </>
       )}
-    </SceneWrapper>
+    </NotificationSceneWrapper>
   )
 }
 

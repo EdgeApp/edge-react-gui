@@ -44,6 +44,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -54,7 +55,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -72,6 +73,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -81,6 +83,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -638,12 +645,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -827,6 +834,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -837,7 +845,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -855,6 +863,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -864,6 +873,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -1631,12 +1645,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -1820,6 +1834,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -1830,7 +1845,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -1848,6 +1863,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -1857,6 +1873,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -2546,12 +2567,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -2735,6 +2756,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -2745,7 +2767,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -2763,6 +2785,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -2772,6 +2795,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -3331,12 +3359,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -3520,6 +3548,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -3530,7 +3559,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -3548,6 +3577,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -3557,6 +3587,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -4094,12 +4129,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -4283,6 +4318,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -4293,7 +4329,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -4311,6 +4347,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -4320,6 +4357,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -4727,12 +4769,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -4916,6 +4958,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -4926,7 +4969,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -4944,6 +4987,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -4953,6 +4997,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -5615,12 +5664,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -5804,6 +5853,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -5814,7 +5864,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -5832,6 +5882,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -5841,6 +5892,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -6476,12 +6532,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -6665,6 +6721,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -6675,7 +6732,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -6693,6 +6750,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -6702,6 +6760,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -7310,12 +7373,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }
@@ -7499,6 +7562,7 @@ exports[`SendScene2 Render SendScene 1`] = `
           "bottom": 0,
           "left": 0,
           "padding": 0,
+          "paddingBottom": undefined,
           "right": 0,
           "top": 64,
         },
@@ -7509,7 +7573,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 135,
+          "paddingBottom": 22,
         }
       }
       contentInset={
@@ -7527,6 +7591,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
+      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -7536,6 +7601,11 @@ exports[`SendScene2 Render SendScene 1`] = `
       scrollToFocusedInput={[Function]}
       scrollToPosition={[Function]}
       showsVerticalScrollIndicator={true}
+      style={
+        {
+          "marginBottom": 0,
+        }
+      }
       update={[Function]}
       viewIsInsideTabBar={false}
     >
@@ -8214,12 +8284,12 @@ exports[`SendScene2 Render SendScene 1`] = `
       </View>
     </RCTScrollView>
     <View
+      notificationHeight={0}
       style={
         {
           "alignItems": "center",
-          "bottom": 0,
+          "bottom": 22,
           "justifyContent": "center",
-          "marginBottom": 45,
           "position": "absolute",
           "width": "100%",
         }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
@@ -22,7 +22,8 @@ export const SepaFormScene = React.memo((props: Props) => {
   const styles = getStyles(theme)
 
   // TODO: headerIconUri
-  const { headerTitle, onSubmit } = props.route.params
+  const { navigation, route } = props
+  const { headerTitle, onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
   const [name, setName] = React.useState('')
@@ -57,22 +58,32 @@ export const SepaFormScene = React.memo((props: Props) => {
   }, [])
 
   return (
-    <SceneWrapper background="theme">
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" extraScrollHeight={theme.rem(2.75)} enableAutomaticScroll enableOnAndroid>
-        <SceneHeader title={headerTitle} underline withTopMargin />
-        <EdgeText style={styles.formSectionTitle}>{lstrings.bank_info_title}</EdgeText>
-        <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
-        <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
-        <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
-        <MainButton
-          label={lstrings.string_next_capitalized}
-          marginRem={[1, 0.5, 1, 0.5]}
-          type="secondary"
-          disabled={!name.trim() || !iban.trim() || !swift.trim()}
-          onPress={handleSubmit}
-        />
-      </KeyboardAwareScrollView>
-    </SceneWrapper>
+    <NotificationSceneWrapper navigation={navigation} background="theme">
+      {(gap, notificationHeight) => (
+        <>
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            extraScrollHeight={theme.rem(2.75)}
+            enableAutomaticScroll
+            enableOnAndroid
+            contentContainerStyle={{ paddingBottom: notificationHeight }}
+          >
+            <SceneHeader title={headerTitle} underline withTopMargin />
+            <EdgeText style={styles.formSectionTitle}>{lstrings.bank_info_title}</EdgeText>
+            <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
+            <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
+            <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
+            <MainButton
+              label={lstrings.string_next_capitalized}
+              marginRem={[1, 0.5, 1, 0.5]}
+              type="secondary"
+              disabled={!name.trim() || !iban.trim() || !swift.trim()}
+              onPress={handleSubmit}
+            />
+          </KeyboardAwareScrollView>
+        </>
+      )}
+    </NotificationSceneWrapper>
   )
 })
 

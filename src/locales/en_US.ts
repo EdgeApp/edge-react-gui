@@ -1321,6 +1321,19 @@ const strings = {
 
   // #endregion GuiPlugins
 
+  // #region Light Account
+
+  backup_account: 'Back Up Account',
+  backup_delete_confirm_message:
+    'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
+  backup_info_message: 'Create a username and password to securely encrypt and back up your account',
+  backup_dismiss_button: 'Continue Without a Backup',
+  backup_title: 'Back Up Your Account',
+  backup_warning_message: 'Without a backup, you risk losing your funds!',
+  tap_to_learn_more: 'Tap to learn more.',
+
+  // #endregion Light Account
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

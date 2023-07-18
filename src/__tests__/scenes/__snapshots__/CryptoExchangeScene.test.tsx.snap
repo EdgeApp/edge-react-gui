@@ -1,21 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
-  hasTabs={true}
->
+<React.Fragment>
   <Memo(SceneHeaderComponent)
     title="Exchange"
     underline={true}
-    withTopMargin={true}
   />
   <KeyboardAwareScrollView
     contentContainerStyle={
-      {
-        "alignItems": "center",
-        "paddingTop": 11,
-      }
+      [
+        {
+          "paddingBottom": 0,
+        },
+        {
+          "alignItems": "center",
+          "paddingTop": 11,
+        },
+      ]
     }
     enableAutomaticScroll={true}
     enableOnAndroid={false}
@@ -27,6 +28,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     style={
       {
         "flex": 1,
+        "marginBottom": 22,
       }
     }
     viewIsInsideTabBar={false}
@@ -130,13 +132,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
       walletId=""
     />
-    <View
-      style={
-        {
-          "height": 337,
-        }
-      }
-    />
   </KeyboardAwareScrollView>
-</SceneWrapper>
+</React.Fragment>
 `;

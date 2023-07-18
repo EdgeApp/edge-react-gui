@@ -60,7 +60,7 @@ export function Services(props: Props) {
     const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
     const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
 
-    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && !hasFioWallets) {
+    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && account.username != null && !hasFioWallets) {
       const fioCreateHandleRecord = await account.dataStore
         .getItem('', FIO_CREATE_HANDLE_ITEM_ID)
         .then(asFioCreateHandleRecord)

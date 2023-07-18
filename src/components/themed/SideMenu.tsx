@@ -15,6 +15,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
@@ -70,6 +71,8 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
+  const watchedUsername = useWatch(account, 'username')
+
   const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
   const closeButtonContainerStyle = React.useMemo(() => {
@@ -91,24 +94,28 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
-    Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.forget_account_title}
-        message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
-        buttons={{
-          ok: {
-            label: lstrings.string_forget,
-            onPress: async () => {
-              await context.forgetAccount(userInfo.loginId)
-              return true
+    if (userInfo.username == null) {
+      showBackupModal({ navigation, forgetLoginId: userInfo.loginId })
+    } else {
+      Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.forget_account_title}
+          message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
+          buttons={{
+            ok: {
+              label: lstrings.string_forget,
+              onPress: async () => {
+                await context.forgetAccount(userInfo.loginId)
+                return true
+              },
+              type: 'primary'
             },
-            type: 'primary'
-          },
-          cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
-        }}
-      />
-    )).catch(err => showError(err))
+            cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      )).catch(err => showError(err))
+    }
   }
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
@@ -320,7 +327,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
-            <TitleText style={styles.text}>{account.username ?? lstrings.missing_username}</TitleText>
+            <TitleText style={styles.text}>{watchedUsername ?? lstrings.missing_username}</TitleText>
           </View>
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>

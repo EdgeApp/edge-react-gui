@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { Card } from '../../../components/cards/Card'
-import { SceneWrapper } from '../../../components/common/SceneWrapper'
+import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { MainButton } from '../../../components/themed/MainButton'
@@ -62,7 +62,8 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = props.route.params
+  const { navigation, route } = props
+  const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = route.params
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
@@ -130,7 +131,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const poweredByIconPath = poweredBy != null ? { uri: getPartnerIconUri(poweredBy.poweredByIcon) } : {}
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
+    <NotificationSceneWrapper navigation={navigation} scroll keyboardShouldPersistTaps="handled" background="theme">
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
         {headerIcon}
       </SceneHeader>
@@ -189,7 +190,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         ) : null}
         <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
-    </SceneWrapper>
+    </NotificationSceneWrapper>
   )
 })
 

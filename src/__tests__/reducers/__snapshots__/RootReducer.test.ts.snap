@@ -77,6 +77,7 @@ exports[`initialState 1`] = `
   },
   "exchangeRates": {},
   "isLoggedIn": false,
+  "isNotificationViewActive": false,
   "loanManager": {
     "lastResyncTimestamp": 0,
     "loanAccounts": {},

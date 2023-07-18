@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { needToShowConfetti } from '../../util/show-confetti'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -71,10 +71,11 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
   }
 
   render() {
+    const { navigation, theme } = this.props
     const { showButton } = this.state
-    const styles = getStyles(this.props.theme)
+    const styles = getStyles(theme)
     return (
-      <SceneWrapper background="theme">
+      <NotificationSceneWrapper navigation={navigation} background="theme">
         <View style={styles.container}>
           <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
           <EdgeText style={styles.text} numberOfLines={2}>
@@ -88,7 +89,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
           </Fade>
           {this.renderConfetti()}
         </View>
-      </SceneWrapper>
+      </NotificationSceneWrapper>
     )
   }
 }

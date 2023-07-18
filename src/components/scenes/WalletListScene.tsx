@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -89,32 +89,37 @@ export function WalletListScene(props: Props) {
   const handlePressDone = useHandler(() => setSorting(false))
 
   return (
-    <SceneWrapper hasTabs>
-      <WiredProgressBar />
-      {sorting && (
-        <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
-          <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
-            <EdgeText style={styles.doneButton}>{lstrings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
-        </View>
+    <NotificationSceneWrapper navigation={navigation} hasTabs>
+      {(gap, notificationHeight) => (
+        <>
+          <WiredProgressBar />
+          {sorting && (
+            <View style={styles.headerContainer}>
+              <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
+              <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
+                <EdgeText style={styles.doneButton}>{lstrings.string_done_cap}</EdgeText>
+              </TouchableOpacity>
+            </View>
+          )}
+          <View style={styles.listStack}>
+            <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
+              <WalletListSwipeable
+                key="fullList"
+                header={header}
+                footer={searching ? undefined : footer}
+                navigation={navigation}
+                overscroll={notificationHeight}
+                searching={searching}
+                searchText={searchText}
+                onRefresh={handleRefresh}
+                onReset={handlReset}
+              />
+              <WalletListSortable key="sortList" />
+            </CrossFade>
+          </View>
+        </>
       )}
-      <View style={styles.listStack}>
-        <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
-          <WalletListSwipeable
-            key="fullList"
-            header={header}
-            footer={searching ? undefined : footer}
-            navigation={navigation}
-            searching={searching}
-            searchText={searchText}
-            onRefresh={handleRefresh}
-            onReset={handlReset}
-          />
-          <WalletListSortable key="sortList" />
-        </CrossFade>
-      </View>
-    </SceneWrapper>
+    </NotificationSceneWrapper>
   )
 }
 

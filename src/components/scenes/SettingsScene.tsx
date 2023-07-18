@@ -6,6 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
@@ -259,6 +260,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       .catch(showError)
   }
 
+  handleUpgrade = (): void => {
+    const { navigation } = this.props
+    showBackupModal({ navigation })
+  }
+
   render() {
     const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
@@ -277,18 +283,24 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${account.username}`}
+            label={`${lstrings.settings_account_title_cap}: ${account.username ?? lstrings.missing_username}`}
           />
-          <SettingsTappableRow
-            action={isLocked ? 'lock' : 'unlock'}
-            label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
-            onPress={this.handleUnlock}
-          />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-          <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
+          {account.username == null ? (
+            <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
+          ) : (
+            <>
+              <SettingsTappableRow
+                action={isLocked ? 'lock' : 'unlock'}
+                label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
+                onPress={this.handleUnlock}
+              />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+              <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
+            </>
+          )}
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
           <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} />

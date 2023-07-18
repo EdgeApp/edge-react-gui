@@ -241,6 +241,7 @@ export interface RouteParamList {
   }
   otpSetup: {}
   passwordRecovery: {}
+  upgradeUsername: {}
   pluginListBuy: {
     launchPluginId?: string
   }

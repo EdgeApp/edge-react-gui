@@ -37,7 +37,8 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -948,27 +949,50 @@ const SendComponent = (props: Props) => {
     disabledText = lstrings.spending_limits_enter_pin
   }
   return (
-    <SceneWrapper background="theme">
-      <KeyboardAwareScrollView contentContainerStyle={styles.contentContainerStyle} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        {renderSelectedWallet()}
-        {renderAddressAmountPairs()}
-        {renderAddAddress()}
-        {renderTimeout()}
-        {renderError()}
-        {renderFees()}
-        {renderMetadataNotes()}
-        {renderSelectFioAddress()}
-        {renderUniqueIdentifier()}
-        {renderInfoTiles()}
-        {renderAuthentication()}
-        {renderScamWarning()}
-      </KeyboardAwareScrollView>
-      <View style={styles.footer}>
-        {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
-      </View>
-    </SceneWrapper>
+    <NotificationSceneWrapper navigation={navigation} background="theme">
+      {(gap, notificationHeight) => (
+        <>
+          <StyledKeyboardAwareScrollView
+            notificationHeight={notificationHeight}
+            contentContainerStyle={{ paddingBottom: theme.rem(1) + notificationHeight }}
+            extraScrollHeight={theme.rem(2.75)}
+            enableOnAndroid
+          >
+            {renderSelectedWallet()}
+            {renderAddressAmountPairs()}
+            {renderAddAddress()}
+            {renderTimeout()}
+            {renderError()}
+            {renderFees()}
+            {renderMetadataNotes()}
+            {renderSelectFioAddress()}
+            {renderUniqueIdentifier()}
+            {renderInfoTiles()}
+            {renderAuthentication()}
+            {renderScamWarning()}
+          </StyledKeyboardAwareScrollView>
+          <StyledSliderView notificationHeight={notificationHeight}>
+            {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+          </StyledSliderView>
+        </>
+      )}
+    </NotificationSceneWrapper>
   )
 }
+
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(props => ({
+  marginBottom: props.notificationHeight
+}))
+
+const StyledSliderView = styled(View)<{ notificationHeight: number }>(props => {
+  return {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: props.theme.rem(1) + props.notificationHeight
+  }
+})
 
 export const SendScene2 = React.memo(SendComponent)
 
@@ -980,14 +1004,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1)
   },
   contentContainerStyle: { paddingBottom: theme.rem(6) },
-  footer: {
-    width: '100%',
-    marginBottom: theme.rem(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0
-  },
   pinContainer: {
     marginTop: theme.rem(0.25)
   },
