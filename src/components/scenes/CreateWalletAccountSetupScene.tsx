@@ -1,6 +1,7 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions'
@@ -9,7 +10,6 @@ import validIcon from '../../assets/images/createWallet/valid_icon.png'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { lstrings } from '../../locales/strings'
 import { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer'
-import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
@@ -18,7 +18,8 @@ import { logEvent } from '../../util/tracking'
 import { debounce } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
-import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
+import { Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface OwnProps extends EdgeSceneProps<'createWalletAccountSetup'> {}
@@ -33,7 +34,7 @@ interface DispatchProps {
   checkHandleAvailability: (handle: string) => void
 }
 
-type Props = OwnProps & DispatchProps & StateProps
+type Props = OwnProps & DispatchProps & StateProps & ThemeProps
 interface State {
   accountHandle: string
 }
@@ -80,7 +81,8 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   renderButton = () => {
-    const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
+    const { isCheckingHandleAvailability, handleAvailableStatus, theme } = this.props
+    const styles = getStyles(theme)
     return (
       <View style={styles.buttons}>
         <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
@@ -91,7 +93,8 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, handleAvailableStatus, isCheckingHandleAvailability, route } = this.props
+    const { account, handleAvailableStatus, isCheckingHandleAvailability, route, theme } = this.props
+    const styles = getStyles(theme)
     const { accountHandle } = this.state
 
     const { selectedWalletType } = route.params
@@ -115,15 +118,17 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
-      <SceneWrapper background="legacy">
+      <SceneWrapper>
         <ScrollView>
           <View style={styles.scrollableView}>
             <CryptoIcon marginRem={[1.5, 0, 0, 0]} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
-            <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
-              <Text style={styles.instructionalText}>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</Text>
+            <View style={[styles.createWalletPromptArea, { paddingTop: theme.rem(1.5), paddingBottom: theme.rem(0.5) }]}>
+              <EdgeText numberOfLines={4}>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</EdgeText>
             </View>
-            <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
-              <Text style={styles.handleRequirementsText}>{lstrings.create_wallet_account_requirements_eos}</Text>
+            <View style={[styles.createWalletPromptArea, { paddingVertical: theme.rem(0.5) }]}>
+              <EdgeText numberOfLines={4} style={styles.handleRequirementsText}>
+                {lstrings.create_wallet_account_requirements_eos}
+              </EdgeText>
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -139,7 +144,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
               />
               <View style={{ width: scale(25), height: scale(25) }}>
                 {isCheckingHandleAvailability ? (
-                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.feedbackIcon} />
+                  <ActivityIndicator color={theme.iconTappable} style={styles.feedbackIcon} />
                 ) : (
                   <Image source={validityIcon} style={styles.feedbackIcon} />
                 )}
@@ -154,10 +159,10 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 }
 
-const styles = StyleSheet.create({
+const getStyles = cacheStyles((theme: Theme) => ({
   scrollableView: {
     position: 'relative',
-    paddingHorizontal: 20
+    paddingHorizontal: theme.rem(1.25)
   },
   createWalletPromptArea: {
     paddingTop: scale(16),
@@ -165,13 +170,10 @@ const styles = StyleSheet.create({
   },
   instructionalText: {
     fontSize: scale(16),
-    textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
+    textAlign: 'center'
   },
   handleRequirementsText: {
-    fontSize: scale(16),
-    textAlign: 'left',
-    color: THEME.COLORS.GRAY_1
+    fontSize: scale(16)
   },
   buttons: {
     marginTop: scale(24),
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
     width: scale(25),
     height: scale(25)
   }
-})
+}))
 
 export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
@@ -200,4 +202,4 @@ export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, 
       dispatch(checkHandleAvailability(params.selectedWalletType.walletType, handle))
     }
   })
-)(CreateWalletAccountSetup)
+)(withTheme(CreateWalletAccountSetup))
