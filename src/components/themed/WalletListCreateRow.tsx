@@ -150,8 +150,7 @@ function createAndSelectToken({
 
       // Try to find existing Parent Edge Wallet, if no specific wallet was given
       const { currencyWallets } = account
-      const parentWalletId =
-        createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === parentCurrencyCode)
+      const parentWalletId = createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
       const wallet: EdgeCurrencyWallet =
         parentWalletId != null
           ? currencyWallets[parentWalletId]
