@@ -1,20 +1,40 @@
 import { execSync, ExecSyncOptions } from 'child_process'
-import { asObject, asString } from 'cleaners'
-import fs from 'fs'
+import { makeConfig } from 'cleaner-config'
+import { asObject, asOptional, asString } from 'cleaners'
 import { join } from 'path'
 
-const asTestConfig = asObject({
-  env: asObject(asString)
-})
-
-const cwd = join(__dirname, '..')
 const TESTER_CONFIG = 'testerConfig.json'
 
-let env
-if (fs.existsSync(TESTER_CONFIG)) {
-  const testerConfigJson = fs.readFileSync(TESTER_CONFIG, { encoding: 'utf8' })
-  env = asTestConfig(JSON.parse(testerConfigJson)).env
-}
+const asTestConfig = asObject({
+  env: asOptional(
+    asObject({
+      MAESTRO_APP_ID: asOptional(asString, 'co.edgesecure.app'),
+      MAESTRO_EDGE_UTXO_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_UTXO_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_UTXO_PIN_1: asOptional(asString, '1'),
+      MAESTRO_EDGE_UTXO_PIN_2: asOptional(asString, '1'),
+      MAESTRO_EDGE_UTXO_PIN_3: asOptional(asString, '1'),
+      MAESTRO_EDGE_UTXO_PIN_4: asOptional(asString, '1'),
+      MAESTRO_EDGE_IP2FA_MEXICO_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: asOptional(asString, 'passwd')
+    }),
+    {
+      MAESTRO_APP_ID: 'co.edgesecure.app',
+      MAESTRO_EDGE_UTXO_USERNAME: 'user',
+      MAESTRO_EDGE_UTXO_PASSWORD: 'passwd',
+      MAESTRO_EDGE_UTXO_PIN_1: '1',
+      MAESTRO_EDGE_UTXO_PIN_2: '1',
+      MAESTRO_EDGE_UTXO_PIN_3: '1',
+      MAESTRO_EDGE_UTXO_PIN_4: '1',
+      MAESTRO_EDGE_IP2FA_MEXICO_USERNAME: 'user',
+      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: 'passwd'
+    }
+  )
+}).withRest
+
+const cwd = join(__dirname, '..')
+
+const { env } = makeConfig(asTestConfig, TESTER_CONFIG)
 
 const execSyncOpts: ExecSyncOptions = { cwd, stdio: 'inherit', env: { ...process.env, ...env } }
 const args = process.argv.slice(2).join(' ')
