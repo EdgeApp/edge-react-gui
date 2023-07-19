@@ -24,81 +24,17 @@ import path from 'path'
 
 import { asVersionFile, VersionFile } from './cleaners'
 
-const specialBranches: { [branch: string]: string } = {
-  develop: '-d',
-  master: '',
-  beta: '',
-  coinhub: '',
-  staging: '-rc',
-  test: '-t',
-  yolo: '-yolo',
-  'test-cheddar': '-cheddar',
-  'test-feta': '-feta',
-  'test-gouda': '-gouda',
-  'test-halloumi': '-halloumi',
-  'test-paneer': '-paneer'
-}
-
 async function main() {
   const cwd = path.join(__dirname, '..')
   const disklet = makeNodeDisklet(cwd)
-  const [branch] = process.argv.slice(2)
 
-  // Determine the current build number:
-  const build = Math.max(pickBuildNumber(), 1 + (await readLastBuildNumber(disklet)))
+  const file = await disklet.getText('release-version.json')
+  const versionFile = asVersionFile(file)
 
-  // Determine the current version:
-  const packageJson = JSON.parse(await disklet.getText('package.json'))
-  const version = `${packageJson.version}${pickVersionSuffix(branch)}`
-
-  // Write the vesion info file:
-  const versionFile = {
-    branch,
-    build,
-    version
-  }
   console.log(versionFile)
-  await disklet.setText('release-version.json', JSON.stringify(versionFile, null, 2))
 
   // Update the native project files:
   await Promise.all([updateAndroid(disklet, versionFile), updateIos(cwd, versionFile)])
-}
-
-/**
- * Pick a build number based on the current date.
- */
-function pickBuildNumber(now: Date = new Date()) {
-  const year = now.getFullYear() - 2000
-  const month = now.getMonth() + 1
-  const day = now.getDate()
-  const counter = 1
-
-  return (year % 100) * 1000000 + month * 10000 + day * 100 + counter
-}
-
-/**
- * Pick a suffix to add to the package.json version.
- */
-function pickVersionSuffix(branch?: string): string {
-  if (branch == null || branch === '') return ''
-
-  const specialSuffix = specialBranches[branch]
-  if (specialSuffix != null) return specialSuffix
-
-  return '-' + branch.replace(/[^0-9a-zA-Z]+/g, '-')
-}
-
-/**
- * Read the previous build number from release-version.json file.
- */
-async function readLastBuildNumber(disklet: Disklet): Promise<number> {
-  try {
-    const text = await disklet.getText('release-version.json')
-    const { build } = asVersionFile(text)
-    return build
-  } catch (e) {
-    return 0
-  }
 }
 
 /**
