@@ -200,26 +200,37 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               Search Transactions
             </Text>
           </View>
-          <Text
-            accessible={true}
-            numberOfLines={1}
+          <View
             style={
-              [
-                {
-                  "bottom": -28,
-                  "color": "#E85466",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
-                  "left": 28,
-                  "position": "absolute",
-                },
-                {
-                  "opacity": 0,
-                },
-              ]
+              {
+                "bottom": -45,
+                "height": 45,
+                "left": 0,
+                "paddingLeft": 22,
+                "paddingRight": 39,
+                "position": "absolute",
+                "right": 0,
+              }
             }
-            testID="undefined.subText"
-          />
+          >
+            <Text
+              accessible={true}
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "color": "#E85466",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 17,
+                  },
+                  {
+                    "opacity": 0,
+                  },
+                ]
+              }
+              testID="undefined.subText"
+            />
+          </View>
           <Text
             accessible={true}
             numberOfLines={1}
@@ -1292,26 +1303,37 @@ exports[`TransactionListTop should render 1`] = `
               Search Transactions
             </Text>
           </View>
-          <Text
-            accessible={true}
-            numberOfLines={1}
+          <View
             style={
-              [
-                {
-                  "bottom": -28,
-                  "color": "#E85466",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
-                  "left": 28,
-                  "position": "absolute",
-                },
-                {
-                  "opacity": 0,
-                },
-              ]
+              {
+                "bottom": -45,
+                "height": 45,
+                "left": 0,
+                "paddingLeft": 22,
+                "paddingRight": 39,
+                "position": "absolute",
+                "right": 0,
+              }
             }
-            testID="undefined.subText"
-          />
+          >
+            <Text
+              accessible={true}
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "color": "#E85466",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 17,
+                  },
+                  {
+                    "opacity": 0,
+                  },
+                ]
+              }
+              testID="undefined.subText"
+            />
+          </View>
           <Text
             accessible={true}
             numberOfLines={1}

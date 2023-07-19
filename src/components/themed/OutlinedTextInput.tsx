@@ -337,9 +337,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             {label}
           </Animated.Text>
         </View>
-        <Animated.Text accessible numberOfLines={1} style={[styles.errorText, errorStyle]} testID={`${testID}.subText`}>
-          {error}
-        </Animated.Text>
+        <View style={styles.footerContainer}>
+          <Animated.Text accessible numberOfLines={2} style={[styles.errorText, errorStyle]} testID={`${testID}.subText`}>
+            {error}
+          </Animated.Text>
+        </View>
         <Animated.Text accessible numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout} testID={`${testID}.charLimit`}>
           {charLimitLabel}
         </Animated.Text>
@@ -437,10 +439,9 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   // Common footer attributes, applies to the counter and the error text
-  const footerCommon: TextStyle = {
+  const footerTextCommon: TextStyle = {
     fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(0.75),
-    position: 'absolute'
+    fontSize: theme.rem(0.75)
   }
 
   return {
@@ -463,6 +464,15 @@ const getStyles = cacheStyles((theme: Theme) => {
       left: 0,
       right: 0,
       top: 0
+    },
+    footerContainer: {
+      height: theme.rem(2),
+      paddingLeft: theme.rem(1),
+      paddingRight: theme.rem(1.75),
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: theme.rem(-2)
     },
 
     // The text input and placeholder label both float
@@ -555,17 +565,16 @@ const getStyles = cacheStyles((theme: Theme) => {
 
     // The error text hangs out in the margin area below the main box:
     errorText: {
-      ...footerCommon,
-      color: theme.dangerText,
-      left: theme.rem(1.25),
-      bottom: -theme.rem(1.25)
+      ...footerTextCommon,
+      color: theme.dangerText
     },
 
     // The counter text splits the bottom right border line:
     counterText: {
-      ...footerCommon,
+      ...footerTextCommon,
       right: theme.rem(1.25),
-      bottom: -theme.rem(0.45)
+      bottom: -theme.rem(0.45),
+      position: 'absolute'
     }
   }
 })
