@@ -125,11 +125,6 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
             <View style={[styles.createWalletPromptArea, { paddingTop: theme.rem(1.5), paddingBottom: theme.rem(0.5) }]}>
               <EdgeText numberOfLines={4}>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</EdgeText>
             </View>
-            <View style={[styles.createWalletPromptArea, { paddingVertical: theme.rem(0.5) }]}>
-              <EdgeText numberOfLines={4} style={styles.handleRequirementsText}>
-                {lstrings.create_wallet_account_requirements_eos}
-              </EdgeText>
-            </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <OutlinedTextInput
@@ -171,9 +166,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   instructionalText: {
     fontSize: scale(16),
     textAlign: 'center'
-  },
-  handleRequirementsText: {
-    fontSize: scale(16)
   },
   buttons: {
     marginTop: scale(24),
