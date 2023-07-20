@@ -20,10 +20,11 @@ import {
 } from '../../actions/SettingsActions'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -34,7 +35,7 @@ import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { changeTheme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { changeTheme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow'
@@ -367,55 +368,85 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 }
 
-export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    account: state.core.account,
-    context: state.core.context,
-    autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds,
-    defaultFiat: getDefaultFiat(state),
-    developerModeOn: state.ui.settings.developerModeOn,
-    spamFilterOn: state.ui.settings.spamFilterOn,
-    isLocked: state.ui.settings.changesLocked,
-    pinLoginEnabled: state.ui.settings.pinLoginEnabled,
-    supportsTouchId: state.ui.settings.isTouchSupported,
-    touchIdEnabled: state.ui.settings.isTouchEnabled
-  }),
-  dispatch => ({
-    async dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
-      await dispatch(updateTouchIdEnabled(arg, account))
-    },
-    async handleClearLogs() {
-      await dispatch(showClearLogsModal())
-    },
-    async handleSendLogs() {
-      await dispatch(showSendLogsModal())
-    },
-    lockSettings() {
-      dispatch({
-        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
-        data: true
-      })
-    },
-    async onTogglePinLoginEnabled(enableLogin: boolean) {
-      await dispatch(togglePinLoginEnabled(enableLogin))
-    },
-    async setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
-      await dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
-    },
-    async showRestoreWalletsModal(navigation: NavigationBase) {
-      await dispatch(showRestoreWalletsModal(navigation))
-    },
-    async showUnlockSettingsModal() {
-      await dispatch(showUnlockSettingsModal())
-    },
-    toggleDeveloperMode(developerModeOn: boolean) {
-      dispatch(setDeveloperModeOn(developerModeOn))
-    },
-    toggleSpamFilter(spamFilterOn: boolean) {
-      dispatch(setSpamFilterOn(spamFilterOn))
-    },
-    async logoutRequest(navigation: NavigationBase) {
-      await dispatch(logoutRequest(navigation))
-    }
+export const SettingsScene = (props: OwnProps) => {
+  const { navigation, route } = props
+  const theme = useTheme()
+  const dispatch = useDispatch()
+
+  const account = useSelector(state => state.core.account)
+  const context = useSelector(state => state.core.context)
+  const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds)
+  const defaultFiat = useSelector(state => getDefaultFiat(state))
+  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  const isLocked = useSelector(state => state.ui.settings.changesLocked)
+  const pinLoginEnabled = useSelector(state => state.ui.settings.pinLoginEnabled)
+  const supportsTouchId = useSelector(state => state.ui.settings.isTouchSupported)
+  const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
+
+  const handleDispatchUpdateEnableTouchIdEnable = useHandler(async (arg: boolean, account: EdgeAccount) => {
+    await dispatch(updateTouchIdEnabled(arg, account))
   })
-)(withTheme(SettingsSceneComponent))
+  const handleClearLogs = useHandler(async () => {
+    await dispatch(showClearLogsModal())
+  })
+  const handleSendLogs = useHandler(async () => {
+    await dispatch(showSendLogsModal())
+  })
+  const handleLockSettings = useHandler(() => {
+    dispatch({
+      type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+      data: true
+    })
+  })
+  const handleTogglePinLoginEnabled = useHandler(async (enableLogin: boolean) => {
+    await dispatch(togglePinLoginEnabled(enableLogin))
+  })
+  const handleSetAutoLogoutTimeInSeconds = useHandler(async (autoLogoutTimeInSeconds: number) => {
+    await dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
+  })
+  const handleShowRestoreWalletsModal = useHandler(async (navigation: NavigationBase) => {
+    await dispatch(showRestoreWalletsModal(navigation))
+  })
+  const handleShowUnlockSettingsModal = useHandler(async () => {
+    await dispatch(showUnlockSettingsModal())
+  })
+  const handleToggleDeveloperMode = useHandler(async (developerModeOn: boolean) => {
+    dispatch(setDeveloperModeOn(developerModeOn))
+  })
+  const handleToggleSpamFilter = useHandler((spamFilterOn: boolean) => {
+    dispatch(setSpamFilterOn(spamFilterOn))
+  })
+  const handleLogoutRequest = useHandler(async (navigation: NavigationBase) => {
+    await dispatch(logoutRequest(navigation))
+  })
+
+  return (
+    <SettingsSceneComponent
+      navigation={navigation}
+      route={route}
+      theme={theme}
+      account={account}
+      context={context}
+      autoLogoutTimeInSeconds={autoLogoutTimeInSeconds}
+      defaultFiat={defaultFiat}
+      developerModeOn={developerModeOn}
+      spamFilterOn={spamFilterOn}
+      isLocked={isLocked}
+      pinLoginEnabled={pinLoginEnabled}
+      supportsTouchId={supportsTouchId}
+      touchIdEnabled={touchIdEnabled}
+      dispatchUpdateEnableTouchIdEnable={handleDispatchUpdateEnableTouchIdEnable}
+      handleClearLogs={handleClearLogs}
+      handleSendLogs={handleSendLogs}
+      lockSettings={handleLockSettings}
+      onTogglePinLoginEnabled={handleTogglePinLoginEnabled}
+      setAutoLogoutTimeInSeconds={handleSetAutoLogoutTimeInSeconds}
+      showRestoreWalletsModal={handleShowRestoreWalletsModal}
+      showUnlockSettingsModal={handleShowUnlockSettingsModal}
+      toggleDeveloperMode={handleToggleDeveloperMode}
+      toggleSpamFilter={handleToggleSpamFilter}
+      logoutRequest={handleLogoutRequest}
+    />
+  )
+}
