@@ -22,7 +22,7 @@ PODS:
     - React-Core
   - edge-currency-accountbased (1.4.7):
     - React-Core
-  - edge-login-ui-rn (2.5.1):
+  - edge-login-ui-rn (2.5.2):
     - React
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -1190,7 +1190,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: feb83d209d0fa7cda9107ce3117f8625797152de
   edge-currency-accountbased: 025d6a2deb10b662ae417f94a15f5dbfaf0a62b8
-  edge-login-ui-rn: 22763eacd9eacae16d677267f88bc171d0bad15f
+  edge-login-ui-rn: b063f69b7253e393084c7f95756da1d225d1674a
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
