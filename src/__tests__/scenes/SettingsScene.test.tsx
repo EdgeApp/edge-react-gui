@@ -25,6 +25,7 @@ describe('MyComponent', () => {
       <FakeProviders>
         <SettingsSceneComponent
           {...fakeSceneProps('settingsOverview', {})}
+          username="some user"
           theme={config.darkTheme}
           // StateProps:
           account={account}
@@ -62,6 +63,7 @@ describe('MyComponent', () => {
       <FakeProviders>
         <SettingsSceneComponent
           {...fakeSceneProps('settingsOverview', {})}
+          username="some user"
           theme={config.darkTheme}
           // StateProps:
           account={account}

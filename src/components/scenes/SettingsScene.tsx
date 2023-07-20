@@ -21,6 +21,7 @@ import {
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
@@ -55,6 +56,7 @@ interface StateProps {
   pinLoginEnabled: boolean
   supportsTouchId: boolean
   touchIdEnabled: boolean
+  username: string | undefined
 }
 interface DispatchProps {
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => Promise<void>
@@ -267,7 +269,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation } = this.props
+    const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation, username } = this.props
     const iconSize = theme.rem(1.25)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
@@ -284,9 +286,9 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${account.username ?? lstrings.missing_username}`}
+            label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
           />
-          {account.username == null ? (
+          {username == null ? (
             <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
           ) : (
             <>
@@ -384,6 +386,8 @@ export const SettingsScene = (props: OwnProps) => {
   const supportsTouchId = useSelector(state => state.ui.settings.isTouchSupported)
   const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
 
+  const username = useWatch(account, 'username')
+
   const handleDispatchUpdateEnableTouchIdEnable = useHandler(async (arg: boolean, account: EdgeAccount) => {
     await dispatch(updateTouchIdEnabled(arg, account))
   })
@@ -436,6 +440,7 @@ export const SettingsScene = (props: OwnProps) => {
       pinLoginEnabled={pinLoginEnabled}
       supportsTouchId={supportsTouchId}
       touchIdEnabled={touchIdEnabled}
+      username={username}
       dispatchUpdateEnableTouchIdEnable={handleDispatchUpdateEnableTouchIdEnable}
       handleClearLogs={handleClearLogs}
       handleSendLogs={handleSendLogs}
