@@ -178,6 +178,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         message={sprintf(lstrings.delete_account_verification_body, username)}
         title={lstrings.delete_account_title}
         warning
+        autoCorrect={false}
+        autoCapitalize="none"
         onSubmit={async text => {
           if (text !== username) return lstrings.delete_account_verification_error
           await this.props.account.deleteRemoteAccount()
