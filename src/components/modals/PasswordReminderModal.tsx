@@ -86,15 +86,16 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
         </ScrollView>
         <OutlinedTextInput
-          secureTextEntry
+          autoFocus={false}
           error={errorMessage}
           label={lstrings.password}
           onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
+          secureTextEntry
           value={password}
         />
-        {/* HACK: Extra padding to accommodate potential error message 
-            TODO: Roll this into the built-in OutlinedTextInput margins and 
+        {/* HACK: Extra padding to accommodate potential error message
+            TODO: Roll this into the built-in OutlinedTextInput margins and
             update all callers */}
         <View style={{ margin: theme.rem(0.5) }} />
         {
