@@ -241,7 +241,7 @@ export const fakeRootState: FakeState = {
     'ETH_iso:USD_2022-11-08T01:00:00.000Z': '1562.74372528628146028495',
     'iso:USD_ETH_2022-11-08T01:00:00.000Z': '0.000639900185692192'
   },
-  nextUsername: null,
+  nextLoginId: null,
   pendingDeepLink: null,
   notificationSettings: {
     ignoreMarketing: false,
