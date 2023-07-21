@@ -6,7 +6,7 @@ import { PasswordReminder } from '../../types/types'
 import { matchJson } from '../../util/matchJson'
 
 interface StateProps {
-  loginStatus: boolean | null
+  settingsLoaded: boolean | null
   passwordReminder: PasswordReminder
 }
 interface DispatchProps {
@@ -16,7 +16,7 @@ type Props = StateProps & DispatchProps
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.loginStatus && !matchJson(prevProps.passwordReminder, this.props.passwordReminder)) {
+    if (this.props.settingsLoaded && !matchJson(prevProps.passwordReminder, this.props.passwordReminder)) {
       this.props.setPasswordReminder(this.props.passwordReminder)
     }
   }
@@ -28,7 +28,7 @@ class PasswordReminderComponent extends React.PureComponent<Props> {
 
 export const PasswordReminderService = connect<StateProps, DispatchProps, {}>(
   state => ({
-    loginStatus: state.ui.settings.loginStatus,
+    settingsLoaded: state.ui.settings.settingsLoaded,
     passwordReminder: state.ui.passwordReminder
   }),
   dispatch => ({
