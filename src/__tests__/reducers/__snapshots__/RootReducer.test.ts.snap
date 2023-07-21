@@ -104,8 +104,6 @@ exports[`initialState 1`] = `
         "activationCost": "",
         "supportedAssets": [],
       },
-      "handleAvailableStatus": "",
-      "isCheckingHandleAvailability": false,
       "walletAccountActivationPaymentInfo": {
         "amount": "",
         "currencyCode": "",

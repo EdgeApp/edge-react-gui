@@ -11,8 +11,6 @@ test('initialState', () => {
       exchangeAmount: '',
       expireTime: 0
     },
-    isCheckingHandleAvailability: false,
-    handleAvailableStatus: '',
     handleActivationInfo: {
       supportedAssets: [],
       activationCost: ''

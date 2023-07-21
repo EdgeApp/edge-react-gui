@@ -377,30 +377,6 @@ export async function openLink(url: string): Promise<void> {
   }
 }
 
-export function debounce(func: any, wait: number, immediate: boolean): any {
-  let timeout: ReturnType<typeof setTimeout> | null = null
-
-  return function executedFunction() {
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const context = this
-    const args = arguments
-
-    const later = function () {
-      timeout = null
-      if (!immediate) func.apply(context, args)
-    }
-
-    const callNow = immediate && !timeout
-
-    if (timeout) clearTimeout(timeout)
-
-    timeout = setTimeout(later, wait)
-
-    if (callNow) func.apply(context, args)
-  }
-}
-
 export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0

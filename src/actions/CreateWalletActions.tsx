@@ -10,7 +10,6 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -135,31 +134,6 @@ export function fetchWalletAccountActivationPaymentInfo(paymentParams: AccountPa
         .catch(showError)
     } catch (error: any) {
       showError(error)
-    }
-  }
-}
-
-export function checkHandleAvailability(walletType: string, accountName: string): ThunkAction<void> {
-  return async (dispatch, getState) => {
-    dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
-    const state = getState()
-    const { account } = state.core
-    const currencyPluginName = getPluginId(walletType)
-    const currencyPlugin = account.currencyConfig[currencyPluginName]
-    try {
-      const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-      if (data.result === 'AccountAvailable') {
-        dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
-      }
-    } catch (error: any) {
-      console.log('checkHandleAvailability error: ', error)
-      let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
-      if (error.name === 'ErrorAccountUnavailable') {
-        data = 'UNAVAILABLE'
-      } else if (error.name === 'ErrorInvalidAccountName') {
-        data = 'INVALID'
-      }
-      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
     }
   }
 }
