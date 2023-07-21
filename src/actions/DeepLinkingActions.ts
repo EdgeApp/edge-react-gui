@@ -65,13 +65,12 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
   const { account } = state.core
   const { activeWalletIds, currencyWallets } = account
   const deviceId = base58ToUuid(state.core.context.clientId)
-  const isLoggedIn = state.isLoggedIn
 
   // Wait for all wallets to load before handling deep links
   const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
 
   // We can't handle any links without being logged into the app:
-  if (!isLoggedIn) return false
+  if (!state.ui.settings.settingsLoaded) return false
 
   switch (link.type) {
     case 'edgeLogin':

@@ -4,8 +4,10 @@ import { Dispatch, RootState } from '../../types/reduxTypes'
 
 export const loginStatusChecker: Middleware<{}, RootState, Dispatch> = store => next => action => {
   const state = store.getState()
-  const { loginStatus } = state.ui.settings
+  const { settingsLoaded } = state.ui.settings
 
-  const allowedActions = ['LOGOUT', 'REACT_NATIVE_ROUTER_FLUX_PUSH', 'REACT_NATIVE_ROUTER_FLUX_FOCUS']
-  return loginStatus === false && !allowedActions.includes(action.type) ? action : next(action)
+  // Once we un-load our settings, ban all actions except logout:
+  if (settingsLoaded === false && action.type !== 'LOGOUT') return action
+
+  return next(action)
 }

@@ -76,7 +76,6 @@ exports[`initialState 1`] = `
     "plugins": [],
   },
   "exchangeRates": {},
-  "isLoggedIn": false,
   "isNotificationViewActive": false,
   "loanManager": {
     "lastResyncTimestamp": 0,
@@ -86,7 +85,7 @@ exports[`initialState 1`] = `
   "network": {
     "isConnected": true,
   },
-  "nextUsername": null,
+  "nextLoginId": null,
   "notificationSettings": {
     "ignoreMarketing": false,
     "ignorePriceChanges": false,
@@ -204,7 +203,6 @@ exports[`initialState 1`] = `
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,
-      "loginStatus": null,
       "mostRecentWallets": [],
       "passwordRecoveryRemindersShown": {
         "20": false,
@@ -225,6 +223,7 @@ exports[`initialState 1`] = `
       "preferredSwapPluginId": "",
       "preferredSwapPluginType": undefined,
       "securityCheckedWallets": {},
+      "settingsLoaded": null,
       "spamFilterOn": true,
       "spendingLimits": {
         "transaction": {
