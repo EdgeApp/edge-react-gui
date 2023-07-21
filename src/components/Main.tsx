@@ -7,12 +7,9 @@ import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
-import { logout } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { ENV } from '../env'
-import { useMount } from '../hooks/useMount'
-import { useUnmount } from '../hooks/useUnmount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
@@ -255,7 +252,6 @@ export const Main = () => {
 
 const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
-  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
 
   useBackEvent(() => {
@@ -274,14 +270,6 @@ const EdgeApp = () => {
       backPressedOnce.current = false
     }, 3000)
     return false
-  })
-
-  // Login/Logout events:
-  useMount(() => {
-    dispatch({ type: 'IS_LOGGED_IN' })
-  })
-  useUnmount(() => {
-    dispatch(logout()).catch(err => showError(err))
   })
 
   return (
