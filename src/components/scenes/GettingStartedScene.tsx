@@ -120,7 +120,7 @@ export const GettingStartedScene = (props: Props) => {
   })
   const handlePressSignUp = useHandler(() => {
     logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
-    navigation.navigate('login', { loginUiInitialRoute: 'new-light-account' })
+    navigation.navigate('login', { loginUiInitialRoute: localUsersLength > 0 ? 'new-account' : 'new-light-account' })
   })
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})
