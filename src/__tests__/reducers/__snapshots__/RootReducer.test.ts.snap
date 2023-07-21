@@ -204,7 +204,6 @@ exports[`initialState 1`] = `
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,
-      "loginStatus": null,
       "mostRecentWallets": [],
       "passwordRecoveryRemindersShown": {
         "20": false,
@@ -225,6 +224,7 @@ exports[`initialState 1`] = `
       "preferredSwapPluginId": "",
       "preferredSwapPluginType": undefined,
       "securityCheckedWallets": {},
+      "settingsLoaded": null,
       "spamFilterOn": true,
       "spendingLimits": {
         "transaction": {

@@ -13,7 +13,7 @@ export const AutoLogout = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationBase>()
   const stateRef = React.useRef({ timestamp: new Date(), isAppForeground: true })
-  const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
+  const settingsLoaded = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds || Infinity)
   const isAppForeground = useIsAppForeground()
 
@@ -26,14 +26,14 @@ export const AutoLogout = () => {
     const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met
-    if (appForegrounded && loginStatus && timeExpired)
+    if (appForegrounded && settingsLoaded && timeExpired)
       dispatch(logoutRequest(navigation)).catch(err => {
         console.warn(err)
         showError(sprintf(lstrings.auto_log_off_failed_message_s, String(err)))
       })
     // Update the new appState
     stateRef.current = { timestamp, isAppForeground }
-  }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, loginStatus, navigation])
+  }, [autoLogoutTimeInSeconds, dispatch, isAppForeground, settingsLoaded, navigation])
 
   return null
 }
