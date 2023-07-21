@@ -6,6 +6,8 @@ export const loginStatusChecker: Middleware<{}, RootState, Dispatch> = store => 
   const state = store.getState()
   const { settingsLoaded } = state.ui.settings
 
-  const allowedActions = ['LOGOUT', 'REACT_NATIVE_ROUTER_FLUX_PUSH', 'REACT_NATIVE_ROUTER_FLUX_FOCUS']
-  return settingsLoaded === false && !allowedActions.includes(action.type) ? action : next(action)
+  // Once we un-load our settings, ban all actions except logout:
+  if (settingsLoaded === false && action.type !== 'LOGOUT') return action
+
+  return next(action)
 }
