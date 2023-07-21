@@ -6,8 +6,8 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
@@ -19,7 +19,7 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "flex": 1,
           "flexDirection": "row",
@@ -28,8 +28,8 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "flexDirection": "column",
               "marginLeft": 28,
               "width": "100%",
@@ -49,7 +49,7 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
       name="chevron-forward-outline"
       size={34}
       style={
-        Object {
+        {
           "marginRight": -11,
         }
       }

@@ -94,6 +94,7 @@ describe('TransactionDetailsScene', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render with negative nativeAmount and fiatAmount', () => {
@@ -125,5 +126,6 @@ describe('TransactionDetailsScene', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

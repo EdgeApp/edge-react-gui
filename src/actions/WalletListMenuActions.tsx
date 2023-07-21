@@ -38,12 +38,12 @@ export function walletListMenuAction(
   walletId: string,
   option: WalletListMenuKey,
   tokenId?: string
-): ThunkAction<void | Promise<void>> {
+): ThunkAction<Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
   switch (switchString) {
     case 'manageTokens': {
-      return (dispatch, getState) => {
+      return async (dispatch, getState) => {
         navigation.navigate('manageTokens', {
           walletId
         })
@@ -65,7 +65,7 @@ export function walletListMenuAction(
         const wallet = currencyWallets[walletId]
 
         if (Object.values(currencyWallets).length === 1) {
-          Airship.show(bridge => (
+          await Airship.show(bridge => (
             <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
               <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
               <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
@@ -130,14 +130,14 @@ export function walletListMenuAction(
     }
 
     case 'resync': {
-      return dispatch => {
-        dispatch(showResyncWalletModal(walletId))
+      return async dispatch => {
+        await dispatch(showResyncWalletModal(walletId))
       }
     }
 
     case 'split': {
       return async dispatch => {
-        dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
+        await dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
       }
     }
     case 'viewPrivateViewKey':
@@ -162,19 +162,19 @@ export function walletListMenuAction(
 
         const title = switchString === 'viewPrivateViewKey' ? lstrings.fragment_wallets_view_private_view_key : lstrings.fragment_wallets_view_xpub
 
-        Airship.show<'copy' | 'link' | undefined>(bridge => (
+        await Airship.show<'copy' | 'link' | undefined>(bridge => (
           <ButtonsModal bridge={bridge} buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }} closeArrow message={displayPublicSeed} title={title}>
             {switchString === 'viewXPub' ? null : (
               <Alert
                 type="warning"
                 title={lstrings.string_warning}
                 marginRem={0.5}
-                message={lstrings.fragment_wallets_view_private_view_key_warning}
+                message={sprintf(lstrings.fragment_wallets_view_private_view_key_warning_s, getWalletName(wallet))}
                 numberOfLines={0}
               />
             )}
           </ButtonsModal>
-        )).then(result => {
+        )).then(async result => {
           switch (result) {
             case 'copy':
               Clipboard.setString(displayPublicSeed)
@@ -182,7 +182,7 @@ export function walletListMenuAction(
               break
             case 'link':
               if (xpubExplorer != null) {
-                Linking.openURL(sprintf(xpubExplorer, displayPublicSeed))
+                await Linking.openURL(sprintf(xpubExplorer, displayPublicSeed))
               }
               break
             case undefined:
@@ -263,7 +263,7 @@ export function walletListMenuAction(
 
           const rawKeys = await account.getRawPrivateKey(walletId)
           const keys = JSON.stringify(rawKeys, null, 2)
-          Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
+          await Airship.show(bridge => <RawTextModal bridge={bridge} body={keys} title={lstrings.string_raw_keys} disableCopy />)
         }
       }
     }
@@ -293,6 +293,6 @@ export function walletListMenuAction(
     }
 
     default:
-      return () => undefined
+      return async () => {}
   }
 }

@@ -8,10 +8,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
-import { NumericInput } from '../modals/NumericInput'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { NumericInput } from './NumericInput'
 import { ButtonBox } from './ThemedButtons'
 
 export interface FlipInputRef {

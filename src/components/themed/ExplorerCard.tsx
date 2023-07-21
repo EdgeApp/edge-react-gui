@@ -36,7 +36,7 @@ export const ExplorerCard = (props: Props) => {
   const handlePress = useHandler(async () => {
     const receiveAddress = await wallet.getReceiveAddress()
     const url = sprintf(addressExplorer, receiveAddress.publicAddress)
-    Linking.openURL(url)
+    await Linking.openURL(url)
   })
 
   //

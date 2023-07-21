@@ -36,15 +36,7 @@ const Component = (props: Props) => {
           <Stop offset="0.8" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
           <Stop offset="1" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
         </LinearGradient>
-        <Mask
-          id="Mask"
-          // @ts-expect-error
-          maskUnits="userSpaceOnUse"
-          x="0"
-          y="0"
-          width={width}
-          height={height}
-        >
+        <Mask id="Mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
           <Rect x="0" y="0" width={width} height={height} fill="white" />
           <Rect x={holeX} y={holeY} height={holeSize} width={holeSize} fill="black" rx={cornerRadius} />
         </Mask>
@@ -58,6 +50,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -71,6 +64,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -84,6 +78,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -97,6 +92,7 @@ const Component = (props: Props) => {
             `}
             x={-strokeWidth}
             y={-strokeWidth}
+            fill="transparent"
             stroke={highlightColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"

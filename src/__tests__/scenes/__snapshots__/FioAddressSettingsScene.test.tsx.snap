@@ -13,7 +13,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
     <MainButton
       label="Purchase more bundled transactions"
       marginRem={
-        Array [
+        [
           1.5,
           1,
           0.25,
@@ -24,7 +24,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
     <MainButton
       label="Transfer FIO Address"
       marginRem={
-        Array [
+        [
           0.25,
           1,
         ]

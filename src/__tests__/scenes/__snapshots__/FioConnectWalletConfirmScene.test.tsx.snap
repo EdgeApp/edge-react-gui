@@ -12,7 +12,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
     />
     <Radio
       marginRem={
-        Array [
+        [
           2,
           2,
           0,
@@ -24,7 +24,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       <WithTheme(EdgeTextComponent)
         numberOfLines={4}
         style={
-          Object {
+          {
             "color": "#FFFFFF",
             "fontSize": 17,
             "marginLeft": 22,
@@ -39,7 +39,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       disabledText="Slide to Confirm"
       onSlidingComplete={[Function]}
       parentStyle={
-        Object {
+        {
           "paddingVertical": 45,
         }
       }

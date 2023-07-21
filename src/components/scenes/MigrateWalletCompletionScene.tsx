@@ -4,6 +4,7 @@ import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -17,7 +18,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
@@ -103,6 +103,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         fiatCurrencyCode
       } = oldWallet
       const oldWalletName = getWalletName(oldWallet)
+      const newWalletName = `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`
 
       // Create new wallet
       const createNewWalletPromise = async () => {
@@ -114,7 +115,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         let createdNewWallet = false
         if (newWallet == null) {
           newWallet = await account.createCurrencyWallet(walletType, {
-            name: `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`,
+            name: newWalletName,
             fiatCurrencyCode,
             migratedFromWalletId: oldWalletId
           })
@@ -168,6 +169,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           let spendInfo: EdgeSpendInfo = {
             currencyCode: oldWallet.currencyInfo.currencyCode,
             spendTargets: [{ publicAddress: newPublicAddress }],
+            metadata: {
+              category: 'Transfer',
+              name: newWalletName,
+              notes: sprintf(lstrings.migrate_wallet_tx_notes, newWalletName)
+            },
             pendingTxs,
             networkFeeOption: 'standard'
           }
@@ -221,15 +227,15 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <Fade visible={done}>
-        <MainButton
-          label={lstrings.string_done_cap}
-          type="secondary"
-          marginRem={[1]}
-          onPress={() => navigation.navigate('walletList', {})}
-          alignSelf="center"
-        />
-      </Fade>
+      <MainButton
+        spinner={!done}
+        disabled={!done}
+        label={!done ? undefined : lstrings.string_done_cap}
+        type="secondary"
+        marginRem={[1]}
+        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+        alignSelf="center"
+      />
     )
   }, [done, navigation])
 
@@ -250,7 +256,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             ref={flatListRef}
             renderItem={renderRow}
-            scrollEnabled={false}
+            scrollEnabled={done}
           />
           {renderNextButton}
         </View>
@@ -268,7 +274,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const makeSpendSignAndBroadcast = async (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
   const edgeUnsignedTransaction = await wallet.makeSpend(spendInfo)
   const edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
-  return await wallet.broadcastTx(edgeSignedTransaction)
+  const edgeBroadcastedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
+  await wallet.saveTx(edgeBroadcastedTransaction)
+  return edgeBroadcastedTransaction
 }
 
 export const MigrateWalletCompletionScene = React.memo(MigrateWalletCompletionComponent)

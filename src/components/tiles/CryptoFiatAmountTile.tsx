@@ -19,7 +19,7 @@ interface Props {
   walletId: string
   tokenId?: string
   type?: TileType
-  onPress?: () => void
+  onPress?: () => Promise<void> | void
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {

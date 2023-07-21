@@ -57,7 +57,9 @@ export interface TrackingValues {
 // Set up the global Firebase instance at boot:
 if (ENV.USE_FIREBASE) {
   const inner = analytics()
-  inner.setUserId(getUniqueId())
+  // We require a conditional accessor operator because Jest tests will fail
+  // with an error at runtime.
+  inner.setUserId(getUniqueId())?.catch(err => console.error(err))
   // @ts-expect-error
   global.firebase = {
     analytics() {
@@ -70,13 +72,13 @@ if (ENV.USE_FIREBASE) {
  * Track error to external reporting service (ie. Bugsnag)
  */
 
-export async function trackError(
+export function trackError(
   error: unknown,
   tag?: string,
   metadata?: {
     [key: string]: any
   }
-): Promise<void> {
+): void {
   let err: Error | string
   if (error instanceof Error || typeof error === 'string') {
     err = error
@@ -97,9 +99,9 @@ export async function trackError(
 /**
  * Send a raw event to all backends.
  */
-export async function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
+export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
   consify({ logEvent: { event, values } })
-  return await Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+  Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
 /**
@@ -145,7 +147,7 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEventName, values: TrackingValues) {
-  fetchReferral(`api/v1/event`, {
+  await fetchReferral(`api/v1/event`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

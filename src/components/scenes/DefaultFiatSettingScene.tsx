@@ -15,6 +15,7 @@ import { FlatListItem, GuiFiatType } from '../../types/types'
 import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -26,7 +27,7 @@ interface StateProps {
   supportedFiats: GuiFiatType[]
 }
 interface DispatchProps {
-  onSelectFiat: (selectedDefaultFiat: string) => void
+  onSelectFiat: (selectedDefaultFiat: string) => Promise<void>
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
@@ -116,7 +117,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat)
+      this.props.onSelectFiat(selectedFiat).catch(err => showError(err))
       navigation.goBack()
     }
   }
@@ -151,8 +152,8 @@ export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, OwnPro
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
   dispatch => ({
-    onSelectFiat(selectedDefaultFiat) {
-      dispatch(setDefaultFiatRequest(selectedDefaultFiat))
+    async onSelectFiat(selectedDefaultFiat) {
+      await dispatch(setDefaultFiatRequest(selectedDefaultFiat))
     }
   })
 )(withTheme(DefaultFiatSettingComponent))

@@ -1,0 +1,41 @@
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
+index d5f3533..6e88590 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
+@@ -325,10 +325,6 @@ public class RNCWebViewModuleImpl implements ActivityEventListener {
+ 
+     public boolean grantFileDownloaderPermissions(String downloadingMessage, String lackPermissionToDownloadMessage) {
+         Activity activity = mContext.getCurrentActivity();
+-        // Permission not required for Android Q and above
+-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+-            return true;
+-        }
+ 
+         boolean result = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+         if (!result && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+diff --git a/node_modules/react-native-webview/lib/WebViewShared.js b/node_modules/react-native-webview/lib/WebViewShared.js
+index 347e915..167692f 100644
+--- a/node_modules/react-native-webview/lib/WebViewShared.js
++++ b/node_modules/react-native-webview/lib/WebViewShared.js
+@@ -17,7 +17,7 @@ var extractOrigin = function (url) {
+     return result === null ? '' : result[0];
+ };
+ var originWhitelistToRegex = function (originWhitelist) {
+-    return "^".concat(escapeStringRegexp(originWhitelist).replace(/\\\*/g, '.*'));
++    return "^" + escapeStringRegexp(originWhitelist).replace(/\\\*/g, '.*') + "$";
+ };
+ var passesWhitelist = function (compiledWhitelist, url) {
+     var origin = extractOrigin(url);
+diff --git a/node_modules/react-native-webview/src/WebViewShared.tsx b/node_modules/react-native-webview/src/WebViewShared.tsx
+index 7e4bc18..759bed8 100644
+--- a/node_modules/react-native-webview/src/WebViewShared.tsx
++++ b/node_modules/react-native-webview/src/WebViewShared.tsx
+@@ -199,6 +199,8 @@ export const useWebViewLogic = ({
+     }
+     // !patch for Android only
+     onLoadProgress?.(event);
++    // @ts-expect-error
++    updateNavigationState(event);
+   }, [onLoadProgress]);
+ 
+   const onShouldStartLoadWithRequest = useMemo(() =>  createOnShouldStartLoadWithRequest(

@@ -3,26 +3,26 @@
 exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = `
 <BVLinearGradient
   colors={
-    Array [
+    [
       4278585612,
       4279971643,
     ]
   }
   endPoint={
-    Object {
+    {
       "x": 1,
       "y": 0,
     }
   }
   locations={null}
   startPoint={
-    Object {
+    {
       "x": 0,
       "y": 0,
     }
   }
   style={
-    Object {
+    {
       "bottom": 0,
       "left": 0,
       "position": "absolute",
@@ -33,14 +33,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
           "position": "absolute",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "padding": 0,
@@ -52,13 +52,13 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "justifyContent": "center",
             "marginHorizontal": 22,
             "paddingBottom": 22,
           },
-          Object {
+          {
             "marginTop": 22,
           },
           undefined,
@@ -67,7 +67,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
     >
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
@@ -79,14 +79,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 27,
               },
@@ -100,14 +100,31 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
     </View>
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "paddingTop": 11,
         }
       }
     >
       <View
-        accessible={true}
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
         collapsable={false}
         focusable={true}
         onClick={[Function]}
@@ -118,28 +135,28 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "opacity": 1,
           }
         }
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "flexDirection": "row",
                 "height": 96,
                 "justifyContent": "center",
                 "paddingHorizontal": 22,
               },
-              Object {
+              {
                 "marginBottom": 0,
                 "marginLeft": 0,
                 "marginRight": 0,
                 "marginTop": 0,
               },
-              Object {
+              {
                 "paddingBottom": 0,
                 "paddingLeft": 22,
                 "paddingRight": 22,
@@ -152,8 +169,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         >
           <View
             style={
-              Array [
-                Object {
+              [
+                {
                   "alignItems": "center",
                   "flexDirection": "row",
                   "justifyContent": "space-between",
@@ -165,7 +182,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           >
             <View
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "flex": 1,
                   "flexDirection": "row",
@@ -174,11 +191,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "overflow": "hidden",
                     },
-                    Object {
+                    {
                       "backgroundColor": "#1b2f3b",
                       "borderRadius": 22,
                       "height": 45,
@@ -191,12 +208,12 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 <FastImageView
                   resizeMode="cover"
                   source={
-                    Object {
+                    {
                       "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
                     }
                   }
                   style={
-                    Object {
+                    {
                       "bottom": 0,
                       "left": 0,
                       "position": "absolute",
@@ -208,8 +225,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               </View>
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "flexDirection": "column",
                       "marginLeft": 28,
                       "width": "100%",
@@ -223,8 +240,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
@@ -242,14 +259,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   minimumFontScale={0.65}
                   numberOfLines={2}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      Object {
+                      {
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "marginTop": 6,
@@ -266,20 +283,20 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             <Text
               allowFontScaling={false}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "color": "#FFFFFF",
                     "fontSize": 34,
                   },
-                  Object {
+                  {
                     "marginRight": -11,
                   },
-                  Object {
+                  {
                     "fontFamily": "Ionicons",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
-                  Object {},
+                  {},
                 ]
               }
             >
@@ -293,14 +310,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
-            Object {
+            {
               "color": "#FFFFFF",
               "fontSize": 17,
               "paddingBottom": 11,
@@ -315,7 +332,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       </Text>
       <View
         style={
-          Object {
+          {
             "flex": 1,
             "overflow": "hidden",
           }
@@ -326,7 +343,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           automaticallyAdjustContentInsets={false}
           canChangeSize={true}
           contentContainerStyle={
-            Object {
+            {
               "backgroundColor": undefined,
               "minHeight": 1,
               "minWidth": 1,
@@ -337,23 +354,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           contentHeight={0}
           contentWidth={0}
           data={
-            Array [
-              Object {
+            [
+              {
                 "currencyCode": "BTC",
                 "displayName": "Bitcoin (no Segwit)",
                 "key": "create-wallet:bitcoin-bip44-bitcoin",
                 "pluginId": "bitcoin",
                 "walletType": "wallet:bitcoin-bip44",
               },
-              Object {
+              {
                 "currencyCode": "ETH",
                 "displayName": "Ethereum",
                 "key": "create-wallet:ethereum-ethereum",
                 "pluginId": "ethereum",
                 "walletType": "wallet:ethereum",
               },
-              Object {
-                "createWalletIds": Array [
+              {
+                "createWalletIds": [
                   "bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=",
                 ],
                 "currencyCode": "POLY",
@@ -366,23 +383,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           }
           dataProvider={
             DataProvider {
-              "_data": Array [
-                Object {
+              "_data": [
+                {
                   "currencyCode": "BTC",
                   "displayName": "Bitcoin (no Segwit)",
                   "key": "create-wallet:bitcoin-bip44-bitcoin",
                   "pluginId": "bitcoin",
                   "walletType": "wallet:bitcoin-bip44",
                 },
-                Object {
+                {
                   "currencyCode": "ETH",
                   "displayName": "Ethereum",
                   "key": "create-wallet:ethereum-ethereum",
                   "pluginId": "ethereum",
                   "walletType": "wallet:ethereum",
                 },
-                Object {
-                  "createWalletIds": Array [
+                {
+                  "createWalletIds": [
                     "bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=",
                   ],
                   "currencyCode": "POLY",
@@ -403,8 +420,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           disableRecycling={false}
           estimatedItemSize={96}
           extendedState={
-            Object {
-              "value": Object {
+            {
+              "value": {
                 "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
                 "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
                 "create-wallet:ethereum-ethereum": "My Ether 2",
@@ -413,7 +430,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           }
           externalScrollView={[Function]}
           extraData={
-            Object {
+            {
               "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
               "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
               "create-wallet:ethereum-ethereum": "My Ether 2",
@@ -435,42 +452,42 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               "_hasExpired": false,
               "_maxSpan": 1,
               "_setLayoutForType": [Function],
-              "_tempDim": Object {
+              "_tempDim": {
                 "height": 0,
                 "width": 0,
               },
               "averageWindow": AverageWindow {
                 "currentAverage": 96,
                 "currentCount": 1,
-                "inputValues": Array [
+                "inputValues": [
                   96,
                 ],
                 "nextIndex": 1,
               },
               "defaultEstimatedItemSize": 100,
-              "layoutObject": Object {
+              "layoutObject": {
                 "size": undefined,
                 "span": undefined,
               },
-              "props": Object {
+              "props": {
                 "automaticallyAdjustContentInsets": false,
-                "data": Array [
-                  Object {
+                "data": [
+                  {
                     "currencyCode": "BTC",
                     "displayName": "Bitcoin (no Segwit)",
                     "key": "create-wallet:bitcoin-bip44-bitcoin",
                     "pluginId": "bitcoin",
                     "walletType": "wallet:bitcoin-bip44",
                   },
-                  Object {
+                  {
                     "currencyCode": "ETH",
                     "displayName": "Ethereum",
                     "key": "create-wallet:ethereum-ethereum",
                     "pluginId": "ethereum",
                     "walletType": "wallet:ethereum",
                   },
-                  Object {
-                    "createWalletIds": Array [
+                  {
+                    "createWalletIds": [
                       "bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=",
                     ],
                     "currencyCode": "POLY",
@@ -481,7 +498,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   },
                 ],
                 "estimatedItemSize": 96,
-                "extraData": Object {
+                "extraData": {
                   "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
                   "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
                   "create-wallet:ethereum-ethereum": "My Ether 2",
@@ -490,7 +507,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "numColumns": 1,
                 "renderItem": [Function],
               },
-              "renderWindowInsets": Object {
+              "renderWindowInsets": {
                 "height": 0,
                 "width": 0,
               },
@@ -518,8 +535,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           scrollEventThrottle={16}
           scrollThrottle={16}
           scrollViewProps={
-            Object {
-              "contentContainerStyle": Object {
+            {
+              "contentContainerStyle": {
                 "backgroundColor": undefined,
                 "minHeight": 1,
                 "minWidth": 1,
@@ -529,24 +546,24 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               "onLayout": [Function],
               "onScrollBeginDrag": [Function],
               "refreshControl": undefined,
-              "style": Object {
+              "style": {
                 "minHeight": 1,
                 "minWidth": 1,
               },
             }
           }
           style={
-            Object {
+            {
               "minHeight": 1,
               "minWidth": 1,
             }
           }
           suppressBoundedSizeException={true}
           windowCorrectionConfig={
-            Object {
+            {
               "applyToInitialOffset": true,
               "applyToItemScroll": true,
-              "value": Object {
+              "value": {
                 "endCorrection": 0,
                 "startCorrection": 0,
                 "windowShift": -0,
@@ -557,7 +574,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           <View>
             <View
               style={
-                Object {
+                {
                   "flexDirection": "column",
                 }
               }
@@ -570,7 +587,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 renderAheadOffset={0}
                 scrollOffset={0}
                 style={
-                  Object {
+                  {
                     "height": 0,
                     "width": 0,
                   }
@@ -583,8 +600,20 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       </View>
       <View
         accessibilityState={
-          Object {
+          {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
         accessible={true}
@@ -598,11 +627,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "elevation": 0,
             "opacity": 1,
             "shadowColor": "#000000",
-            "shadowOffset": Object {
+            "shadowOffset": {
               "height": 0,
               "width": 0,
             },
@@ -613,27 +642,27 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       >
         <BVLinearGradient
           colors={
-            Array [
+            [
               16777215,
               16777215,
             ]
           }
           endPoint={
-            Object {
+            {
               "x": 1,
               "y": 1,
             }
           }
           locations={null}
           startPoint={
-            Object {
+            {
               "x": 0,
               "y": 0,
             }
           }
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "borderColor": "#00f1a2",
                 "borderRadius": 6,
@@ -643,7 +672,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "minHeight": 67,
                 "minWidth": 202,
               },
-              Object {
+              {
                 "alignSelf": "center",
                 "marginBottom": 0,
                 "marginLeft": 11,
@@ -655,7 +684,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "paddingRight": 0,
                 "paddingTop": 0,
               },
-              Object {
+              {
                 "borderRadius": 6,
                 "paddingLeft": 0,
                 "paddingRight": 0,
@@ -668,7 +697,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             minimumFontScale={0.75}
             numberOfLines={1}
             style={
-              Object {
+              {
                 "color": "#00f1a2",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
@@ -686,8 +715,20 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       </View>
       <View
         accessibilityState={
-          Object {
+          {
+            "busy": undefined,
+            "checked": undefined,
             "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
         accessible={true}
@@ -701,11 +742,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
         style={
-          Object {
+          {
             "elevation": 0,
             "opacity": 1,
             "shadowColor": "#000000",
-            "shadowOffset": Object {
+            "shadowOffset": {
               "height": 0,
               "width": 0,
             },
@@ -716,27 +757,27 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       >
         <BVLinearGradient
           colors={
-            Array [
+            [
               16777215,
               16777215,
             ]
           }
           endPoint={
-            Object {
+            {
               "x": 1,
               "y": 1,
             }
           }
           locations={null}
           startPoint={
-            Object {
+            {
               "x": 0,
               "y": 0,
             }
           }
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignItems": "center",
                 "borderColor": "rgba(255, 255, 255, 0)",
                 "borderRadius": 6,
@@ -746,7 +787,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "minHeight": 67,
                 "minWidth": 202,
               },
-              Object {
+              {
                 "alignSelf": "center",
                 "marginBottom": 22,
                 "marginLeft": 11,
@@ -758,7 +799,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "paddingRight": 0,
                 "paddingTop": 0,
               },
-              Object {
+              {
                 "borderRadius": 6,
                 "paddingLeft": 0,
                 "paddingRight": 0,
@@ -771,7 +812,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             minimumFontScale={0.75}
             numberOfLines={1}
             style={
-              Object {
+              {
                 "color": "#00f1a2",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,

@@ -92,7 +92,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     setNumSelected(!selectedItems[key] ? numSelected + 1 : numSelected - 1)
   })
 
-  const handleNext = useHandler(async () => {
+  const handleNextPress = useHandler(async () => {
     if (numSelected === 0) {
       showError(lstrings.create_wallet_no_assets_selected)
       return
@@ -186,7 +186,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
     if (newAccountFlow != null) {
       // This scene is used when an account is just created. Allow the initialization method to define what needs to be done.
-      newAccountFlow(navigation, newList)
+      await newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
       navigation.push('createWalletSelectFiat', { createWalletList: newList })
@@ -195,6 +195,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       await dispatch(enableTokensAcrossWallets(newTokenItems))
       navigation.navigate('walletsTab', { screen: 'walletList' })
     }
+  })
+
+  const handleSubmitEditing = useHandler(() => {
+    handleNextPress().catch(err => showError(err))
   })
 
   const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
@@ -233,11 +237,11 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNext} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
         </View>
       </Fade>
     ),
-    [defaultSelection, handleNext, numSelected, styles.bottomButton]
+    [defaultSelection, handleNextPress, numSelected, styles.bottomButton]
   )
 
   return (
@@ -257,7 +261,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             clearIcon
             blurOnClear={false}
             onClear={() => setSearchTerm('')}
-            onSubmitEditing={handleNext}
+            onSubmitEditing={handleSubmitEditing}
           />
           <FlashList
             automaticallyAdjustContentInsets={false}

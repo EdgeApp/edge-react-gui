@@ -21,6 +21,7 @@ interface Props {
   navigation: NavigationProp<'walletList'>
   searching: boolean
   searchText: string
+  overscroll?: number
 
   // Callbacks:
   onRefresh?: () => void
@@ -37,6 +38,7 @@ function WalletListSwipeableComponent(props: Props) {
     navigation,
     searching,
     searchText,
+    overscroll = 0,
 
     // Callbacks:
     onRefresh,
@@ -110,6 +112,7 @@ function WalletListSwipeableComponent(props: Props) {
     <FlashList
       estimatedItemSize={theme.rem(4.25)}
       contentOffset={flatListContentOffset}
+      contentContainerStyle={{ paddingBottom: overscroll }}
       data={data}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}

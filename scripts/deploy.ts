@@ -56,6 +56,7 @@ interface BuildObj extends BuildConfigFile {
   guiDir: string
   guiPlatformDir: string
   platformType: string // 'android' | 'ios'
+  simBuild: boolean
   repoBranch: string // 'develop' | 'master' | 'test'
   tmpDir: string
   buildArchivesDir: string
@@ -91,8 +92,8 @@ function main() {
   if (argv.length < 4) {
     mylog('Usage: node -r sucrase/register deploy.ts [project] [platform] [branch]')
     mylog('  project options: edge')
-    mylog('  platform options: ios, android')
-    mylog('  network options: master, develop')
+    mylog('  platform options: ios, android, ios-sim')
+    mylog('  branch options: master, develop')
   }
 
   const buildObj: BuildObj = {} as any
@@ -102,9 +103,13 @@ function main() {
   makeCommonPost(buildObj)
 
   // buildCommonPre()
-  if (argv[3] === 'ios') {
-    buildIos(buildObj)
-  } else if (argv[3] === 'android') {
+  if (buildObj.platformType === 'ios') {
+    if (buildObj.simBuild) {
+      buildIosSim(buildObj)
+    } else {
+      buildIos(buildObj)
+    }
+  } else if (buildObj.platformType === 'android') {
     buildAndroid(buildObj)
   }
   buildCommonPost(buildObj)
@@ -113,7 +118,8 @@ function main() {
 function makeCommonPre(argv: string[], buildObj: BuildObj) {
   buildObj.guiDir = _rootProjectDir
   buildObj.repoBranch = argv[4] // master or develop
-  buildObj.platformType = argv[3] // ios or android
+  buildObj.platformType = argv[3] === 'ios-sim' ? 'ios' : argv[3] // ios or android
+  buildObj.simBuild = argv[3] === 'ios-sim'
   buildObj.projectName = argv[2]
   buildObj.guiPlatformDir = buildObj.guiDir + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}temp`
@@ -285,6 +291,44 @@ function buildIos(buildObj: BuildObj) {
 
   cmdStr = `cp -a "${buildDir}/${archiveDir}/Products/Applications/${buildObj.productName}.app/main.jsbundle" ${buildObj.guiPlatformDir}/`
   call(cmdStr)
+
+  // Do not update the testRepo for production iOS builds. Only simulator builds are usable for testing
+  buildObj.testRepoUrl = undefined
+}
+
+function buildIosSim(buildObj: BuildObj) {
+  const { buildNum, guiDir, guiHash, guiPlatformDir, productName, productNameClean, repoBranch, tmpDir, xcodeScheme, xcodeWorkspace } = buildObj
+
+  chdir(guiDir)
+
+  const patchDir = getPatchDir(buildObj)
+  if (fs.existsSync(join(patchDir, 'GoogleService-Info.plist'))) {
+    call(`cp -a ${join(patchDir, 'GoogleService-Info.plist')} ios/edge/`)
+  } else if (fs.existsSync(`${guiDir}/GoogleService-Info.plist`)) {
+    call(`cp -a ${guiDir}/GoogleService-Info.plist ${guiPlatformDir}/edge/`)
+  }
+  const buildDir = `${tmpDir}/derivedData`
+
+  chdir(guiPlatformDir)
+
+  let cmdStr
+  cmdStr = `xcodebuild -workspace ${xcodeWorkspace} -scheme ${xcodeScheme} -sdk iphonesimulator -configuration Release -derivedDataPath ${buildDir}`
+  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
+  call(cmdStr)
+
+  const appFile = escapePath(`${productName}.app`)
+  const appFileDir = escapePath(`${buildDir}/Build/Products/Release-iphonesimulator/`)
+
+  buildObj.ipaFile = escapePath(`${tmpDir}/${productNameClean}-${repoBranch}-${buildNum}-${guiHash.slice(0, 8)}.zip`)
+  if (fs.existsSync(buildObj.ipaFile)) {
+    call('rm ' + buildObj.ipaFile)
+  }
+
+  mylog('Creating Zipped .app for ' + xcodeScheme)
+  chdir(appFileDir)
+  cmdStr = `/usr/bin/zip -r ${buildObj.ipaFile} ./${appFile}`
+  call(cmdStr)
 }
 
 function buildAndroid(buildObj: BuildObj) {
@@ -341,10 +385,11 @@ function buildAndroid(buildObj: BuildObj) {
 }
 
 function buildCommonPost(buildObj: BuildObj) {
+  const { simBuild } = buildObj
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
-  if (buildObj.hockeyAppToken && buildObj.hockeyAppId) {
+  if (buildObj.hockeyAppToken && buildObj.hockeyAppId && !simBuild) {
     mylog('\n\nUploading to HockeyApp')
     mylog('**********************\n')
     const url = sprintf('https://rink.hockeyapp.net/api/2/apps/%s/app_versions/upload', buildObj.hockeyAppId)
@@ -367,7 +412,7 @@ function buildCommonPost(buildObj: BuildObj) {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (buildObj.bugsnagApiKey && buildObj.dSymFile) {
+  if (buildObj.bugsnagApiKey && buildObj.dSymFile && !simBuild) {
     mylog('\n\nUploading to Bugsnag')
     mylog('*********************\n')
 
@@ -380,7 +425,7 @@ function buildCommonPost(buildObj: BuildObj) {
     call(curl)
   }
 
-  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName) {
+  if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !simBuild) {
     mylog('\n\nUploading to App Center')
     mylog('***********************\n')
 

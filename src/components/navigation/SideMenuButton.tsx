@@ -18,7 +18,7 @@ export const SideMenuButton = () => {
 
   return (
     <NavigationButton paddingRem={[0, 1]} onPress={handlePress}>
-      <Fontello name="hamburgerButton" size={theme.rem(1)} color={theme.icon} />
+      <Fontello name="hamburgerButton" size={theme.rem(1)} testID="sideMenuButton" color={theme.icon} />
     </NavigationButton>
   )
 }

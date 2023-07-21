@@ -2,19 +2,21 @@
 
 exports[`OutlinedTextInput should render with some props 1`] = `
 <TouchableWithoutFeedback
+  accessible={false}
   onPress={[Function]}
+  testID="string"
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "borderRadius": 11,
           "justifyContent": "center",
           "minHeight": 67,
           "paddingHorizontal": 22,
         },
-        Object {
+        {
           "flexGrow": 1,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -29,15 +31,15 @@ exports[`OutlinedTextInput should render with some props 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "borderTopWidth": 1,
             "bottom": 0,
             "left": 22,
             "position": "absolute",
             "right": 22,
           },
-          Object {
+          {
             "borderColor": undefined,
             "right": 34,
           },
@@ -46,8 +48,8 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "borderBottomLeftRadius": 11,
             "borderBottomWidth": 1,
             "borderLeftWidth": 1,
@@ -60,7 +62,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "top": 0,
             "width": 22,
           },
-          Object {
+          {
             "borderColor": undefined,
           },
         ]
@@ -68,8 +70,8 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "borderBottomRightRadius": 11,
             "borderBottomWidth": 1,
             "borderLeftWidth": 0,
@@ -82,7 +84,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "top": 0,
             "width": 22,
           },
-          Object {
+          {
             "borderColor": undefined,
           },
         ]
@@ -90,15 +92,15 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "borderTopWidth": 1,
             "left": 22,
             "position": "absolute",
             "right": 22,
             "top": 0,
           },
-          Object {
+          {
             "borderColor": undefined,
             "left": 34,
           },
@@ -107,8 +109,8 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     />
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "height": 67,
             "justifyContent": "center",
             "left": 0,
@@ -117,7 +119,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "right": 0,
             "top": 0,
           },
-          Object {
+          {
             "paddingLeft": 65,
             "paddingRight": 65,
           },
@@ -125,41 +127,44 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       }
     >
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "alignSelf": "flex-start",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "padding": 0,
             },
-            Object {
+            {
               "color": undefined,
-              "transform": Array [
-                Object {
+              "transform": [
+                {
                   "translateX": -36,
                 },
-                Object {
+                {
                   "translateY": -34,
                 },
-                Object {
+                {
                   "scale": 0.75,
                 },
               ],
             },
           ]
         }
+        testID="string.labelText"
       >
         string
       </Text>
     </View>
     <Text
+      accessible={true}
       numberOfLines={1}
       style={
-        Array [
-          Object {
+        [
+          {
             "bottom": -28,
             "color": "#E85466",
             "fontFamily": "Quicksand-Regular",
@@ -167,40 +172,43 @@ exports[`OutlinedTextInput should render with some props 1`] = `
             "left": 28,
             "position": "absolute",
           },
-          Object {
+          {
             "opacity": 0,
           },
         ]
       }
+      testID="string.subText"
     >
       string
     </Text>
     <Text
+      accessible={true}
       numberOfLines={1}
       onLayout={[Function]}
       style={
-        Array [
-          Object {
+        [
+          {
             "bottom": -10,
             "fontFamily": "Quicksand-Regular",
             "fontSize": 17,
             "position": "absolute",
             "right": 28,
           },
-          Object {
+          {
             "color": undefined,
             "opacity": 1,
-            "transform": Array [
-              Object {
+            "transform": [
+              {
                 "translateX": 0,
               },
-              Object {
+              {
                 "scale": 1,
               },
             ],
           },
         ]
       }
+      testID="string.charLimit"
     >
       5
     </Text>
@@ -209,7 +217,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       name="search1"
       size={12}
       style={
-        Object {
+        {
           "color": "rgba(255, 255, 255, .75)",
           "fontSize": 22,
           "left": 0,
@@ -220,21 +228,23 @@ exports[`OutlinedTextInput should render with some props 1`] = `
       }
     />
     <TouchableOpacity
+      accessible={true}
       onPress={[Function]}
       style={
-        Object {
+        {
           "position": "absolute",
           "right": 0,
           "top": 0,
         }
       }
+      testID="string.clearIcon"
     >
       <Icon
         allowFontScaling={false}
         name="close"
         size={12}
         style={
-          Object {
+          {
             "color": "rgba(255, 255, 255, .75)",
             "fontSize": 22,
             "padding": 22,
@@ -242,8 +252,26 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         }
       />
     </TouchableOpacity>
-    <React.Fragment>
+    <View
+      style={
+        [
+          {
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+          {
+            "paddingRight": 65,
+          },
+        ]
+      }
+    >
       <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
         autoCapitalize="none"
         autoCorrect={true}
         autoFocus={true}
@@ -261,24 +289,24 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         secureTextEntry={false}
         selectionColor="#E85466"
         style={
-          Array [
-            Object {
+          [
+            {
               "alignSelf": "stretch",
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "padding": 0,
             },
-            Object {
+            {
               "flexGrow": 1,
             },
           ]
         }
-        testID="string"
+        testID="string.textInput"
         textAlignVertical="top"
         value="string"
       />
-    </React.Fragment>
+    </View>
   </View>
 </TouchableWithoutFeedback>
 `;

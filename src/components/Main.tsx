@@ -5,7 +5,6 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
-import { useDispatch } from 'react-redux'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logout } from '../actions/LoginActions'
@@ -22,7 +21,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
-import { useSelector } from '../types/reactRedux'
+import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
@@ -110,11 +109,12 @@ import { TermsOfServiceComponent as TermsOfServiceComponentComponent } from './s
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
+import { UpgradeUsernameScene as UpgradeUsernameSceneComponent } from './scenes/UpgradeUsernameScreen'
 import { WalletListScene as WalletListSceneComponent } from './scenes/WalletListScene'
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
-import { Airship } from './services/AirshipInstance'
+import { Airship, showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
@@ -124,6 +124,7 @@ const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
+const UpgradeUsernameScene = ifLoggedIn(UpgradeUsernameSceneComponent)
 const CoinRankingDetailsScene = ifLoggedIn(CoinRankingDetailsSceneComponent)
 const CoinRankingScene = ifLoggedIn(CoinRankingSceneComponent)
 const ConfirmScene = ifLoggedIn(ConfirmSceneComponent)
@@ -263,9 +264,11 @@ const EdgeApp = () => {
       return true
     }
     backPressedOnce.current = true
-    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />).then(() => {
-      backPressedOnce.current = false
-    })
+    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
+      .then(() => {
+        backPressedOnce.current = false
+      })
+      .catch(err => showError(err))
     // Timeout the back press after 3 seconds so the state isn't "sticky"
     setTimeout(() => {
       backPressedOnce.current = false
@@ -278,7 +281,7 @@ const EdgeApp = () => {
     dispatch({ type: 'IS_LOGGED_IN' })
   })
   useUnmount(() => {
-    dispatch(logout())
+    dispatch(logout()).catch(err => showError(err))
   })
 
   return (
@@ -547,13 +550,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="fioStakingChange" component={FioStakingChangeScene} />
       <Stack.Screen name="fioStakingOverview" component={FioStakingOverviewScene} />
       <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
         name="guiPluginAddressForm"
         component={AddressFormScene}
         options={{
@@ -660,28 +656,17 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
+        name="upgradeUsername"
+        component={UpgradeUsernameScene}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
         name="pluginView"
         component={GuiPluginViewScene}
         options={{
           headerTitle: () => <ParamHeaderTitle<'pluginView'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="pluginViewBuy"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="pluginViewSell"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
           headerRight: () => <HeaderTextButton type="exit" />,
           headerLeft: () => <PluginBackButton />
         }}
@@ -711,7 +696,9 @@ const EdgeAppStack = () => {
           title: lstrings.title_settings
         }}
         listeners={{
-          focus: () => dispatch(showReEnableOtpModal())
+          focus: () => {
+            dispatch(showReEnableOtpModal()).catch(err => showError(err))
+          }
         }}
       />
       <Stack.Screen

@@ -2,6 +2,23 @@
 
 exports[`WalletListSortableRow should render with fake wallet 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
   accessible={true}
   collapsable={false}
   focusable={false}
@@ -13,7 +30,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "opacity": 1,
       "paddingHorizontal": 22,
     }
@@ -21,7 +38,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "backgroundColor": "rgba(255, 255, 255, 0)",
         "flexDirection": "row",
@@ -32,7 +49,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "justifyContent": "center",
           "marginRight": 22,
@@ -43,18 +60,18 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
       <Text
         allowFontScaling={false}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#FFFFFF",
               "fontSize": 28,
             },
             undefined,
-            Object {
+            {
               "fontFamily": "Ionicons",
               "fontStyle": "normal",
               "fontWeight": "normal",
             },
-            Object {},
+            {},
           ]
         }
       >
@@ -63,7 +80,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "justifyContent": "center",
           "marginRight": 22,
@@ -73,7 +90,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     >
       <View
         style={
-          Object {
+          {
             "height": 45,
             "marginBottom": 0,
             "marginLeft": 0,
@@ -85,11 +102,11 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
       >
         <View
           style={
-            Array [
-              Object {
+            [
+              {
                 "overflow": "hidden",
               },
-              Object {
+              {
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -102,12 +119,12 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           <FastImageView
             resizeMode="cover"
             source={
-              Object {
+              {
                 "uri": "https://content.edge.app/currencyIconsV3/fake/fake.png",
               }
             }
             style={
-              Object {
+              {
                 "bottom": 0,
                 "left": 0,
                 "position": "absolute",
@@ -121,7 +138,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "flexDirection": "column",
         }
@@ -129,7 +146,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     >
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "center",
@@ -141,14 +158,14 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "flex": 1,
               },
               null,
@@ -162,14 +179,14 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "textAlign": "right",
               },
               null,
@@ -181,7 +198,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
       </View>
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "center",
@@ -193,14 +210,14 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "color": "#A4C7DF",
                 "flex": 1,
                 "fontSize": 17,
@@ -216,14 +233,14 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "color": "#A4C7DF",
                 "fontSize": 17,
                 "textAlign": "right",
@@ -242,6 +259,23 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
 
 exports[`WalletListSortableRow should render with loading wallet 1`] = `
 <View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
   accessible={true}
   collapsable={false}
   focusable={false}
@@ -253,7 +287,7 @@ exports[`WalletListSortableRow should render with loading wallet 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "opacity": 1,
       "paddingHorizontal": 22,
     }
@@ -261,15 +295,15 @@ exports[`WalletListSortableRow should render with loading wallet 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "flexDirection": "row",
           "height": 96,
           "justifyContent": "center",
         },
-        Object {
+        {
           "alignItems": "center",
           "justifyContent": "center",
         },

@@ -6,6 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
@@ -56,13 +57,13 @@ interface StateProps {
 }
 interface DispatchProps {
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => Promise<void>
-  handleClearLogs: () => void
+  handleClearLogs: () => Promise<void>
   handleSendLogs: () => void
   lockSettings: () => void
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
-  setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void
-  showRestoreWalletsModal: (navigation: NavigationBase) => void
-  showUnlockSettingsModal: () => void
+  setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => Promise<void>
+  showRestoreWalletsModal: (navigation: NavigationBase) => Promise<void>
+  showUnlockSettingsModal: () => Promise<void>
   toggleDeveloperMode: (developerModeOn: boolean) => void
   toggleSpamFilter: (spamFilterOn: boolean) => void
   logoutRequest: (navigation: NavigationBase) => Promise<void>
@@ -127,7 +128,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     if (!this.props.isLocked) {
       this.props.lockSettings()
     } else {
-      this.props.showUnlockSettingsModal()
+      this.props.showUnlockSettingsModal().catch(err => showError(err))
     }
   }
 
@@ -179,7 +180,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           await this.props.account.deleteRemoteAccount()
           await this.props.logoutRequest(this.props.navigation)
           await this.props.context.forgetAccount(rootLoginId)
-          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />)
+          Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
           return true
         }}
       />
@@ -197,13 +198,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleAutoLogout = (): void => {
-    Airship.show<number | undefined>(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />).then(
-      result => {
+    Airship.show<number | undefined>(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
+      .then(result => {
         if (typeof result === 'number') {
-          this.props.setAutoLogoutTimeInSeconds(result)
+          return this.props.setAutoLogoutTimeInSeconds(result)
         }
-      }
-    )
+      })
+      .catch(err => showError(err))
   }
 
   handleDefaultFiat = (): void => {
@@ -259,6 +260,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       .catch(showError)
   }
 
+  handleUpgrade = (): void => {
+    const { navigation } = this.props
+    showBackupModal({ navigation })
+  }
+
   render() {
     const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
@@ -277,18 +283,24 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${account.username}`}
+            label={`${lstrings.settings_account_title_cap}: ${account.username ?? lstrings.missing_username}`}
           />
-          <SettingsTappableRow
-            action={isLocked ? 'lock' : 'unlock'}
-            label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
-            onPress={this.handleUnlock}
-          />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-          <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
+          {account.username == null ? (
+            <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
+          ) : (
+            <>
+              <SettingsTappableRow
+                action={isLocked ? 'lock' : 'unlock'}
+                label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
+                onPress={this.handleUnlock}
+              />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+              <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
+            </>
+          )}
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
           <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
@@ -336,7 +348,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={() => this.props.showRestoreWalletsModal(navigation)} />
+          <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={async () => await this.props.showRestoreWalletsModal(navigation)} />
           <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
           <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
@@ -372,8 +384,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     async dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
       await dispatch(updateTouchIdEnabled(arg, account))
     },
-    handleClearLogs() {
-      dispatch(showClearLogsModal())
+    async handleClearLogs() {
+      await dispatch(showClearLogsModal())
     },
     async handleSendLogs() {
       await dispatch(showSendLogsModal())
@@ -387,14 +399,14 @@ export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     async onTogglePinLoginEnabled(enableLogin: boolean) {
       await dispatch(togglePinLoginEnabled(enableLogin))
     },
-    setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
-      dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
+    async setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
+      await dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
     },
-    showRestoreWalletsModal(navigation: NavigationBase) {
-      dispatch(showRestoreWalletsModal(navigation))
+    async showRestoreWalletsModal(navigation: NavigationBase) {
+      await dispatch(showRestoreWalletsModal(navigation))
     },
-    showUnlockSettingsModal() {
-      dispatch(showUnlockSettingsModal())
+    async showUnlockSettingsModal() {
+      await dispatch(showUnlockSettingsModal())
     },
     toggleDeveloperMode(developerModeOn: boolean) {
       dispatch(setDeveloperModeOn(developerModeOn))

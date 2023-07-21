@@ -18,7 +18,7 @@ import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { RadioListModal } from '../modals/RadioListModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
@@ -29,7 +29,7 @@ interface OwnProps extends EdgeSceneProps<'exchangeSettings'> {}
 interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void
   changePreferredSwapPluginType: (swapPluginType: EdgeSwapPluginType | undefined) => void
-  ignoreAccountSwap: () => void
+  ignoreAccountSwap: () => Promise<void>
   removePromotion: (installerId: string) => Promise<void>
 }
 
@@ -153,17 +153,23 @@ export class SwapSettings extends React.Component<Props, State> {
         items={[preferCheapest, preferDex, preferCex, ...exchangeItems]}
         selected={selected}
       />
-    )).then(result => {
-      if (result == null) return
-      if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
-      if (result === preferDex.name) {
-        changePreferredSwapPluginType('DEX')
-      } else if (result === preferCex.name) {
-        changePreferredSwapPluginType('CEX')
-      } else {
-        changePreferredSwapPlugin(Object.keys(swapConfigs).find(pluginId => swapConfigs[pluginId].swapInfo.displayName === result))
-      }
-    })
+    ))
+      .then(async result => {
+        if (result == null) return
+
+        // Cancel any active promotions:
+        if (activePlugins.swapSource.type === 'account') await ignoreAccountSwap()
+
+        // Apply the user's choice:
+        if (result === preferDex.name) {
+          changePreferredSwapPluginType('DEX')
+        } else if (result === preferCex.name) {
+          changePreferredSwapPluginType('CEX')
+        } else {
+          changePreferredSwapPlugin(Object.keys(swapConfigs).find(pluginId => swapConfigs[pluginId].swapInfo.displayName === result))
+        }
+      })
+      .catch(err => showError(err))
   }
 
   render() {
@@ -197,7 +203,7 @@ export class SwapSettings extends React.Component<Props, State> {
         value={pluginEnabled}
         onPress={async () => {
           this.setState({ enabled: { ...this.state.enabled, [pluginId]: !pluginEnabled } })
-          swapConfigs[pluginId].changeEnabled(!pluginEnabled)
+          await swapConfigs[pluginId].changeEnabled(!pluginEnabled)
         }}
       >
         {this.renderPluginIcon(pluginId)}
@@ -307,8 +313,8 @@ export const SwapSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
     changePreferredSwapPluginType(swapPluginType) {
       dispatch(setPreferredSwapPluginType(swapPluginType))
     },
-    ignoreAccountSwap() {
-      dispatch(ignoreAccountSwap())
+    async ignoreAccountSwap() {
+      await dispatch(ignoreAccountSwap())
     },
     async removePromotion(installerId: string) {
       await dispatch(removePromotion(installerId))

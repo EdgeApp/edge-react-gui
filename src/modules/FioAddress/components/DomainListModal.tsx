@@ -1,5 +1,4 @@
 import { FlashList } from '@shopify/flash-list'
-import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -26,8 +25,6 @@ interface Item {
 
 interface StateProps {
   userDomains: FioDomain[]
-  fioWallets: EdgeCurrencyWallet[]
-  fioPlugin?: EdgeCurrencyConfig
 }
 
 interface OwnProps {
@@ -219,9 +216,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const DomainListModal = connect<StateProps, {}, OwnProps>(
   state => ({
-    userDomains: state.ui.fioAddress.fioDomains,
-    fioWallets: state.ui.wallets.fioWallets,
-    fioPlugin: state.core.account.currencyConfig.fio
+    userDomains: state.ui.fioAddress.fioDomains
   }),
   dispatch => ({})
 )(withTheme(DomainListModalComponent))

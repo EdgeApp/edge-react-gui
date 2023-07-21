@@ -344,7 +344,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedW
       if (threeButtonModal === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
-        dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
+        await dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       }
     } catch (e: any) {

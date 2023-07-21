@@ -21,7 +21,7 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
-import { Airship } from '../../services/AirshipInstance'
+import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
@@ -110,10 +110,16 @@ const StakeModifySceneComponent = (props: Props) => {
             const { currencyCode, nativeMin } = err
             let errMessage = changeQuoteRequest.action === 'stake' ? lstrings.stake_error_stake_below_minimum : lstrings.stake_error_unstake_below_minimum
             if (nativeMin != null) {
-              wallet.nativeToDenomination(nativeMin, currencyCode).then(minExchangeAmount => {
-                errMessage += `: ${minExchangeAmount} ${currencyCode}`
-                setErrorMessage(errMessage)
-              })
+              wallet
+                .nativeToDenomination(nativeMin, currencyCode)
+                .then(minExchangeAmount => {
+                  errMessage += `: ${minExchangeAmount} ${currencyCode}`
+                  setErrorMessage(errMessage)
+                })
+                .catch(err => {
+                  showError(err)
+                  setErrorMessage(errMessage)
+                })
             } else {
               setErrorMessage(errMessage)
             }
@@ -122,7 +128,8 @@ const StakeModifySceneComponent = (props: Props) => {
             const errMessage = sprintf(lstrings.state_error_pool_full_s, currencyCode)
             setErrorMessage(errMessage)
           } else {
-            setErrorMessage(err.message)
+            showError(err)
+            setErrorMessage(lstrings.unknown_error_occurred_fragment)
           }
         })
         .finally(() => {
@@ -165,13 +172,14 @@ const StakeModifySceneComponent = (props: Props) => {
       setSliderLocked(true)
       changeQuote
         .approve()
-        .then(success => {
-          Airship.show(bridge => <FlashNotification bridge={bridge} message={message[modification]} onPress={() => {}} />)
+        .then(async () => {
+          await Airship.show(bridge => <FlashNotification bridge={bridge} message={message[modification]} onPress={() => {}} />)
           navigation.pop()
         })
         .catch(err => {
           reset()
-          setErrorMessage(err.message)
+          showError(err)
+          setErrorMessage(lstrings.unknown_error_occurred_fragment)
         })
         .finally(() => {
           setSliderLocked(false)
@@ -203,10 +211,10 @@ const StakeModifySceneComponent = (props: Props) => {
         // set the modified amount
         if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: currencyCode, nativeAmount: nativeAmount })
       })
-      .catch(error => console.log(error))
+      .catch(error => showError(error))
   }
 
-  const handlePressStakingFee = (modification: ChangeQuoteRequest['action']) => () => {
+  const handlePressStakingFee = (modification: ChangeQuoteRequest['action']) => async () => {
     let title: string
     let message: string
     if (modification === 'stake') {
@@ -217,7 +225,7 @@ const StakeModifySceneComponent = (props: Props) => {
       message = lstrings.stake_unstaking_fee_message
     }
 
-    Airship.show<'ok' | undefined>(bridge => (
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={title}
@@ -229,8 +237,8 @@ const StakeModifySceneComponent = (props: Props) => {
     ))
   }
 
-  const handlePressFutureUnstakingFee = () => {
-    Airship.show<'ok' | undefined>(bridge => (
+  const handlePressFutureUnstakingFee = async () => {
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.stake_future_unstaking_fee}
@@ -242,8 +250,8 @@ const StakeModifySceneComponent = (props: Props) => {
     ))
   }
 
-  const handlePressBreakEvenDays = () => {
-    Airship.show<'ok' | undefined>(bridge => (
+  const handlePressBreakEvenDays = async () => {
+    await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={lstrings.stake_break_even_time}

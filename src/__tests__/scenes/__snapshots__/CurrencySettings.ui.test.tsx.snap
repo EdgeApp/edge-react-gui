@@ -3,26 +3,26 @@
 exports[`CurrencySettings should render 1`] = `
 <BVLinearGradient
   colors={
-    Array [
+    [
       4278585612,
       4279971643,
     ]
   }
   endPoint={
-    Object {
+    {
       "x": 1,
       "y": 0,
     }
   }
   locations={null}
   startPoint={
-    Object {
+    {
       "x": 0,
       "y": 0,
     }
   }
   style={
-    Object {
+    {
       "bottom": 0,
       "left": 0,
       "position": "absolute",
@@ -33,14 +33,14 @@ exports[`CurrencySettings should render 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
           "position": "absolute",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "padding": 0,
@@ -54,26 +54,26 @@ exports[`CurrencySettings should render 1`] = `
       <View>
         <BVLinearGradient
           colors={
-            Array [
+            [
               4279377189,
               4279377189,
             ]
           }
           endPoint={
-            Object {
+            {
               "x": 1,
               "y": 1,
             }
           }
           locations={null}
           startPoint={
-            Object {
+            {
               "x": 0,
               "y": 0,
             }
           }
           style={
-            Object {
+            {
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "flex-start",
@@ -84,7 +84,7 @@ exports[`CurrencySettings should render 1`] = `
         >
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
@@ -98,6 +98,14 @@ exports[`CurrencySettings should render 1`] = `
           </Text>
         </BVLinearGradient>
         <View
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           accessible={true}
           focusable={true}
           onClick={[Function]}
@@ -108,7 +116,7 @@ exports[`CurrencySettings should render 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
+            {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "flexDirection": "row",
@@ -120,7 +128,7 @@ exports[`CurrencySettings should render 1`] = `
         >
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
@@ -132,7 +140,7 @@ exports[`CurrencySettings should render 1`] = `
           >
             <Text
               style={
-                Object {
+                {
                   "fontFamily": "Quicksand-Regular",
                 }
               }
@@ -143,7 +151,7 @@ exports[`CurrencySettings should render 1`] = `
           </Text>
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
@@ -153,21 +161,19 @@ exports[`CurrencySettings should render 1`] = `
                 "textAlign": "left",
               }
             }
-          >
-            
-          </Text>
+          />
           <View>
             <View
               pending={false}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "aspectRatio": 1,
                     "position": "absolute",
                     "width": "100%",
                     "zIndex": 1,
                   },
-                  Object {
+                  {
                     "opacity": 0,
                   },
                 ]
@@ -176,7 +182,7 @@ exports[`CurrencySettings should render 1`] = `
               <ActivityIndicator
                 color="#00f1a2"
                 style={
-                  Object {
+                  {
                     "height": 34,
                     "marginHorizontal": 11,
                   }
@@ -186,7 +192,7 @@ exports[`CurrencySettings should render 1`] = `
             <View
               pending={false}
               style={
-                Object {
+                {
                   "opacity": 1,
                 }
               }
@@ -196,22 +202,22 @@ exports[`CurrencySettings should render 1`] = `
                 accessibilityRole="radio"
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": undefined,
                       "fontSize": 12,
                     },
-                    Object {
+                    {
                       "color": "#00f1a2",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },
-                    Object {
+                    {
                       "fontFamily": "Ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    {},
                   ]
                 }
               >
@@ -221,6 +227,14 @@ exports[`CurrencySettings should render 1`] = `
           </View>
         </View>
         <View
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           accessible={true}
           focusable={true}
           onClick={[Function]}
@@ -231,7 +245,7 @@ exports[`CurrencySettings should render 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
+            {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "flexDirection": "row",
@@ -243,7 +257,7 @@ exports[`CurrencySettings should render 1`] = `
         >
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
@@ -255,7 +269,7 @@ exports[`CurrencySettings should render 1`] = `
           >
             <Text
               style={
-                Object {
+                {
                   "fontFamily": "Quicksand-Regular",
                 }
               }
@@ -266,7 +280,7 @@ exports[`CurrencySettings should render 1`] = `
           </Text>
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
@@ -276,21 +290,19 @@ exports[`CurrencySettings should render 1`] = `
                 "textAlign": "left",
               }
             }
-          >
-            
-          </Text>
+          />
           <View>
             <View
               pending={false}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "aspectRatio": 1,
                     "position": "absolute",
                     "width": "100%",
                     "zIndex": 1,
                   },
-                  Object {
+                  {
                     "opacity": 0,
                   },
                 ]
@@ -299,7 +311,7 @@ exports[`CurrencySettings should render 1`] = `
               <ActivityIndicator
                 color="#00f1a2"
                 style={
-                  Object {
+                  {
                     "height": 34,
                     "marginHorizontal": 11,
                   }
@@ -309,7 +321,7 @@ exports[`CurrencySettings should render 1`] = `
             <View
               pending={false}
               style={
-                Object {
+                {
                   "opacity": 1,
                 }
               }
@@ -319,22 +331,22 @@ exports[`CurrencySettings should render 1`] = `
                 accessibilityRole="radio"
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": undefined,
                       "fontSize": 12,
                     },
-                    Object {
+                    {
                       "color": "#00f1a2",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },
-                    Object {
+                    {
                       "fontFamily": "Ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    {},
                   ]
                 }
               >
@@ -344,6 +356,14 @@ exports[`CurrencySettings should render 1`] = `
           </View>
         </View>
         <View
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           accessible={true}
           focusable={true}
           onClick={[Function]}
@@ -354,7 +374,7 @@ exports[`CurrencySettings should render 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
+            {
               "alignItems": "center",
               "backgroundColor": "rgba(255, 255, 255, 0)",
               "flexDirection": "row",
@@ -366,7 +386,7 @@ exports[`CurrencySettings should render 1`] = `
         >
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
@@ -378,7 +398,7 @@ exports[`CurrencySettings should render 1`] = `
           >
             <Text
               style={
-                Object {
+                {
                   "fontFamily": "Quicksand-Regular",
                 }
               }
@@ -389,7 +409,7 @@ exports[`CurrencySettings should render 1`] = `
           </Text>
           <Text
             style={
-              Object {
+              {
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
@@ -399,21 +419,19 @@ exports[`CurrencySettings should render 1`] = `
                 "textAlign": "left",
               }
             }
-          >
-            
-          </Text>
+          />
           <View>
             <View
               pending={false}
               style={
-                Array [
-                  Object {
+                [
+                  {
                     "aspectRatio": 1,
                     "position": "absolute",
                     "width": "100%",
                     "zIndex": 1,
                   },
-                  Object {
+                  {
                     "opacity": 0,
                   },
                 ]
@@ -422,7 +440,7 @@ exports[`CurrencySettings should render 1`] = `
               <ActivityIndicator
                 color="#00f1a2"
                 style={
-                  Object {
+                  {
                     "height": 34,
                     "marginHorizontal": 11,
                   }
@@ -432,7 +450,7 @@ exports[`CurrencySettings should render 1`] = `
             <View
               pending={false}
               style={
-                Object {
+                {
                   "opacity": 1,
                 }
               }
@@ -442,22 +460,22 @@ exports[`CurrencySettings should render 1`] = `
                 accessibilityRole="radio"
                 allowFontScaling={false}
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "color": undefined,
                       "fontSize": 12,
                     },
-                    Object {
+                    {
                       "color": "#00f1a2",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },
-                    Object {
+                    {
                       "fontFamily": "Ionicons",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    {},
                   ]
                 }
               >

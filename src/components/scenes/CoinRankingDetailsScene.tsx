@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -11,7 +11,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -74,7 +74,8 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
 const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { coinRankingData } = props.route.params
+  const { navigation, route } = props
+  const { coinRankingData } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
 
@@ -158,8 +159,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <SceneWrapper background="theme">
-      <ScrollView style={styles.container}>
+    <NotificationSceneWrapper navigation={navigation} background="theme" scroll>
+      <View style={styles.container}>
         <View style={styles.titleContainer}>
           <FastImage style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
@@ -169,8 +170,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
         </View>
-      </ScrollView>
-    </SceneWrapper>
+      </View>
+    </NotificationSceneWrapper>
   )
 }
 

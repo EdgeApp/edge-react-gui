@@ -30,5 +30,6 @@ describe('AdvancedDetailsModal', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

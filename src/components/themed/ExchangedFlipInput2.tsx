@@ -204,7 +204,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   return coreWallet != null ? (
     <>
-      <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
+      <TouchableOpacity accessible={false} onPress={headerCallback} style={styles.headerContainer}>
         <CryptoIcon marginRem={[0, 1, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />
         {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
       </TouchableOpacity>

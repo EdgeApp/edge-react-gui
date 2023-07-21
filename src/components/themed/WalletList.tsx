@@ -13,6 +13,7 @@ import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
+import { showError } from '../services/AirshipInstance'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { ModalFooter } from './ModalParts'
@@ -95,7 +96,7 @@ export function WalletList(props: Props) {
       ((walletId: string, currencyCode: string) => {
         const wallet = account.currencyWallets[walletId]
         const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-        dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+        dispatch(selectWalletToken({ navigation, walletId, tokenId })).catch(err => showError(err))
       }),
     [account, dispatch, navigation, onPress]
   )

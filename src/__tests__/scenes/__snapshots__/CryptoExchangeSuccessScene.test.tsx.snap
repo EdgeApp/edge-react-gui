@@ -1,12 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
-<SceneWrapper
+<NotificationSceneWrapper
   background="theme"
+  navigation={
+    {
+      "addListener": [Function],
+      "canGoBack": [Function],
+      "dispatch": [Function],
+      "getId": [Function],
+      "getParent": [Function],
+      "getState": [Function],
+      "goBack": [Function],
+      "isFocused": [Function],
+      "navigate": [Function],
+      "pop": [Function],
+      "popToTop": [Function],
+      "push": [Function],
+      "removeListener": [Function],
+      "replace": [Function],
+      "reset": [Function],
+      "setOptions": [Function],
+      "setParams": [Function],
+    }
+  }
 >
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flex": 1,
         "justifyContent": "center",
@@ -15,7 +36,7 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
   >
     <WithTheme(EdgeTextComponent)
       style={
-        Object {
+        {
           "fontSize": 28,
           "fontWeight": "600",
           "marginBottom": 28,
@@ -29,7 +50,7 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       numberOfLines={2}
       style={
-        Object {
+        {
           "fontSize": 17,
           "fontWeight": "600",
           "marginBottom": 34,
@@ -43,15 +64,15 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
     <WithTheme(EdgeTextComponent)
       numberOfLines={3}
       style={
-        Array [
-          Object {
+        [
+          {
             "fontSize": 17,
             "fontWeight": "600",
             "marginBottom": 34,
             "maxWidth": 225,
             "textAlign": "center",
           },
-          Object {
+          {
             "maxWidth": 213,
           },
         ]
@@ -69,5 +90,5 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       />
     </Fade>
   </View>
-</SceneWrapper>
+</NotificationSceneWrapper>
 `;

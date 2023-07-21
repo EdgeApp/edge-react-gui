@@ -1,0 +1,46 @@
+# Priority: Critical
+# Test ID: C999002
+# Title: PIN login after password login
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C999002
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: FIRO
+    timeout: 120000
+- tapOn: FIRO
+- extendedWaitUntil:
+    visible: 0.369074 FIRO
+    timeout: 120000
+
+- stopApp
+- launchApp
+
+- extendedWaitUntil:
+    visible: ${MAESTRO_EDGE_UTXO_USERNAME}
+    timeout: 120000
+
+- tapOn: ${MAESTRO_EDGE_UTXO_PIN_1}
+- tapOn: ${MAESTRO_EDGE_UTXO_PIN_2}
+- tapOn: ${MAESTRO_EDGE_UTXO_PIN_3}
+- tapOn: ${MAESTRO_EDGE_UTXO_PIN_4}
+
+- extendedWaitUntil:
+    visible: FIRO
+    timeout: 120000
+- tapOn: FIRO
+- extendedWaitUntil:
+    visible: 0.369074 FIRO
+    timeout: 120000
+
+- stopApp

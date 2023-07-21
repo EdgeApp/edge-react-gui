@@ -56,7 +56,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
     if (tokenId != null) {
       const { unactivatedTokenIds } = wallet
       if (unactivatedTokenIds.find(unactivatedTokenId => unactivatedTokenId === tokenId) != null) {
-        activateWalletTokens(dispatch, state, navigation, wallet, [tokenId])
+        await activateWalletTokens(dispatch, state, navigation, wallet, [tokenId])
         return false
       }
       if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
@@ -110,7 +110,7 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
     } else {
       // Update all wallets' addresses. Hopefully gets the updated address for the next time
       // We enter the EOSIO wallet
-      dispatch(updateWalletsRequest())
+      await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto (EOSIO) types and populate scene props
       const supportedFiats = getSupportedFiats()
@@ -146,7 +146,7 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
           message={sprintf(lstrings.create_wallet_account_unfinished_activation_message, currencyCode)}
           buttons={{ ok: { label: lstrings.string_ok } }}
         />
-      ))
+      )).catch(err => showError(err))
       return false
     }
   }
@@ -207,7 +207,7 @@ export function updateWalletsRequest(): ThunkAction<Promise<void>> {
       data: { fioWallets }
     })
 
-    refreshConnectedWallets(dispatch, getState, currencyWallets)
+    await refreshConnectedWallets(dispatch, getState, currencyWallets)
   }
 }
 
@@ -277,7 +277,7 @@ const activateWalletTokens = async (
               message={sprintf(msg, feeString)}
               buttons={{ ok: { label: lstrings.string_ok } }}
             />
-          ))
+          )).catch(err => showError(err))
           navigation.pop()
           return
         }

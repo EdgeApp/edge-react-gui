@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>bugsnag</key>
-	<dict>
-		<key>apiKey</key>
-		<string>a0000000000000000000000000000000</string>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -62,28 +57,16 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>99999999</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
 		<string>http</string>
 		<string>bankid</string>
 	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>This application does not use Bluetooth. However, it does utilize a third-party SDK that includes Bluetooth capability, even though $(PRODUCT_NAME) does not use or need the Bluetooth features.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses bluetooth to detect nearby transaction requests.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not access your calendar.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
-	<key>NSContactsUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions. No contact information leaves your device and no-one, including $(PRODUCT_NAME), has access to the contact information used.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>This allows you to securely and conveniently access your $(PRODUCT_NAME) wallet</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -97,9 +80,21 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This allows you to find nearby places where you can purchase bitcoin.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This application does not use Bluetooth. However, it does utilize a third-party SDK that includes Bluetooth capability, even though $(PRODUCT_NAME) does not use or need the Bluetooth features.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses bluetooth to detect nearby transaction requests.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not access your calendar.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions. No contact information leaves your device and no-one, including $(PRODUCT_NAME), has access to the contact information used.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This allows you to securely and conveniently access your $(PRODUCT_NAME) wallet</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This allows you to find nearby places where you can purchase bitcoin.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This allows you to find nearby places where you can purchase bitcoin.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
@@ -149,7 +144,7 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -168,5 +163,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>bugsnag</key>
+	<dict>
+		<key>apiKey</key>
+		<string>a0000000000000000000000000000000</string>
+	</dict>
 </dict>
 </plist>

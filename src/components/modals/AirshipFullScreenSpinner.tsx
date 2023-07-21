@@ -11,27 +11,26 @@ import { Airship } from '../services/AirshipInstance'
  * No touches will be registed at it's lifetime.
  */
 export async function showFullScreenSpinner<T>(message: string, promise: Promise<T>): Promise<T> {
-  Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
-  return await promise
+  return await Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
 }
 
 const fadeInTime = 300
 const fadeOutTime = 1000
 const visibleTime = 3000
 
-interface Props {
-  bridge: AirshipBridge<void>
+interface Props<T> {
+  bridge: AirshipBridge<T>
   // The message to show in the toast:
   message?: string
   // If set, the toast will stay up for the lifetime of the promise,
   // and will include a spinner.
-  activity?: Promise<unknown>
+  activity?: Promise<T>
 }
 
-export class AirshipFullScreenSpinner extends React.Component<Props> {
+export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
   opacity: Animated.Value
 
-  constructor(props: Props) {
+  constructor(props: Props<T>) {
     super(props)
     this.opacity = new Animated.Value(0)
   }
@@ -46,17 +45,22 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
       useNativeDriver: true
     }).start()
 
-    // Animate out:
     const hide = () => {
-      bridge.resolve()
+      // Animate out:
       Animated.timing(this.opacity, {
         toValue: 0,
         duration: fadeOutTime,
         useNativeDriver: true
       }).start(() => bridge.remove())
     }
+
     if (activity != null) {
-      activity.then(hide, hide)
+      activity
+        .then(result => bridge.resolve(result))
+        .catch(error => bridge.reject(error))
+        .finally(() => {
+          hide()
+        })
     } else {
       setTimeout(hide, fadeInTime + visibleTime)
     }

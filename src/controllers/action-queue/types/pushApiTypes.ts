@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, uncleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asJSON, asNull, asNumber, asObject, asOptional, asString, asUnknown, Cleaner, uncleaner } from 'cleaners'
 
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import { asBroadcastTx, asPushEventState, asPushMessage, asPushTrigger, asPushTriggerState } from './pushCleaners'
@@ -54,6 +54,11 @@ export interface LoginUpdatePayload {
   removeEvents?: string[]
 }
 
+export type PushError = ReturnType<typeof asPushError>
+export const asPushError = asObject({
+  error: asString
+})
+
 // ---------------------------------------------------------------------------
 // Request cleaners
 // ---------------------------------------------------------------------------
@@ -100,6 +105,19 @@ export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)
 // Response cleaners
 // ---------------------------------------------------------------------------
 
+const asPushServerResponse =
+  <T>(asT: Cleaner<T>): Cleaner<T> =>
+  raw => {
+    try {
+      const res = asJSON(asEither(asT, asPushError))(raw)
+      if ('error' in res) throw new Error(res.error)
+      return res
+    } catch (err) {
+      console.warn(`${String(err)}:`, raw)
+      throw err
+    }
+  }
+
 /**
  * A push event returned from a query.
  */
@@ -123,12 +141,15 @@ export const asPushEventStatus = asObject<Omit<PushEvent, 'created' | 'deviceId'
 /**
  * POST /v2/device response payload.
  */
-export const asDevicePayload = asObject({
-  events: asArray(asPushEventStatus),
-  ignoreMarketing: asBoolean,
-  ignorePriceChanges: asBoolean,
-  loginIds: asArray(asBase64)
-})
+
+export const asDevicePayload = asPushServerResponse(
+  asObject({
+    events: asArray(asPushEventStatus),
+    ignoreMarketing: asBoolean,
+    ignorePriceChanges: asBoolean,
+    loginIds: asArray(asBase64)
+  })
+)
 
 /**
  * POST /v2/login response payload.
@@ -138,8 +159,4 @@ export const asLoginPayload = asObject({
   events: asArray(asPushEventStatus)
 })
 
-export const asErrorResponse = asJSON(
-  asObject({
-    error: asString
-  })
-)
+export const asErrorResponse = asJSON(asPushError)

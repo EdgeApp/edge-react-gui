@@ -57,6 +57,6 @@ export const needToShowConfetti = async (userId: string, disklet: Disklet): Prom
   const needToShow = userData.showNext
   userData.doneAmount++
   data[userId] = calculateNewShownData(userData)
-  setConfettiShownTimes(data, disklet)
+  await setConfettiShownTimes(data, disklet)
   return needToShow
 }

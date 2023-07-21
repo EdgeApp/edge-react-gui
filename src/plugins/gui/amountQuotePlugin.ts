@@ -72,7 +72,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
       for (const provider of providers) {
-        assetPromises.push(provider.getSupportedAssets(paymentTypes))
+        assetPromises.push(provider.getSupportedAssets({ regionCode, paymentTypes }))
       }
 
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {

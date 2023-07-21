@@ -4,31 +4,31 @@ exports[`MenuTabs should render with loading props 1`] = `
 <View>
   <BVLinearGradient
     colors={
-      Array [
+      [
         4279377189,
         4279377189,
       ]
     }
     endPoint={
-      Object {
+      {
         "x": 1,
         "y": 0.5,
       }
     }
     locations={null}
     startPoint={
-      Object {
+      {
         "x": 0,
         "y": 0.5,
       }
     }
     style={
-      Array [
-        Object {
+      [
+        {
           "alignSelf": "stretch",
           "height": 1,
         },
-        Object {
+        {
           "marginBottom": 0,
           "marginLeft": 0,
           "marginRight": -22,
@@ -39,26 +39,26 @@ exports[`MenuTabs should render with loading props 1`] = `
   />
   <BVLinearGradient
     colors={
-      Array [
+      [
         4279377189,
         4279377189,
       ]
     }
     endPoint={
-      Object {
+      {
         "x": 1,
         "y": 1,
       }
     }
     locations={null}
     startPoint={
-      Object {
+      {
         "x": 0,
         "y": 0,
       }
     }
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
         "justifyContent": "center",

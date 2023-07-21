@@ -7,6 +7,7 @@ import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActio
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { GuiMakeSpendInfo } from '../../../types/types'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
@@ -25,7 +26,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {}
@@ -41,7 +42,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   componentDidMount() {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
-    refreshAllFioAddresses()
+    refreshAllFioAddresses().catch(err => showError(err))
     if (showAddBundledTxs) {
       this.setState({ showAddBundledTxs: true })
     }
@@ -50,7 +51,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   afterAddBundledTxsSuccess = () => {
     const { refreshAllFioAddresses, navigation } = this.props
 
-    refreshAllFioAddresses()
+    refreshAllFioAddresses().catch(err => showError(err))
 
     this.setState({ showAddBundledTxs: false })
     showToast(lstrings.fio_request_add_bundled_txs_ok_text)
@@ -109,7 +110,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
     this.cancelOperation()
 
-    const guiMakeSpendInfo = {
+    const guiMakeSpendInfo: GuiMakeSpendInfo = {
       nativeAmount: '',
       currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
@@ -118,10 +119,9 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
           params: { fioAddress: fioAddressName, maxFee: transferFee }
         }
       },
-      // @ts-expect-error
-      onDone: (err, edgeTransaction) => {
+      onDone: err => {
         if (!err) {
-          this.afterTransferSuccess()
+          this.afterTransferSuccess().catch(err => showError(err))
         }
       }
     }
@@ -188,8 +188,8 @@ export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnPro
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(FioAddressSettingsComponent))

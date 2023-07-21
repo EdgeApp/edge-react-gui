@@ -1,12 +1,13 @@
 import { jest } from '@jest/globals'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
-jest.useFakeTimers()
-
-let _nonce = 0
-global.nonce = () => _nonce++
-
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
+
+jest.mock('react-native-webview', () => ({
+  WebView: () => {
+    return null
+  }
+}))
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'ios',

@@ -9,6 +9,7 @@ import { FioActionSubmit } from '../../../modules/FioAddress/components/FioActio
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../modules/FioAddress/util'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { GuiMakeSpendInfo } from '../../../types/types'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -29,7 +30,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
 }
 interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {}
 
@@ -49,9 +50,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     }
   }
 
-  afterSuccess = () => {
+  afterSuccess = async () => {
     const { navigation } = this.props
-    this.props.refreshAllFioAddresses()
+    await this.props.refreshAllFioAddresses()
     navigation.goBack()
   }
 
@@ -122,7 +123,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { route } = this.props
     const { fioDomainName, fioWallet } = route.params
 
-    const guiMakeSpendInfo = {
+    const guiMakeSpendInfo: GuiMakeSpendInfo = {
       nativeAmount: '',
       currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
@@ -131,10 +132,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
           params: { fioDomain: fioDomainName, maxFee: transferFee }
         }
       },
-      // @ts-expect-error
-      onDone: (err, edgeTransaction) => {
+      onDone: err => {
         if (!err) {
-          this.afterTransferSuccess()
+          this.afterTransferSuccess().catch(err => showError(err))
         }
       }
     }
@@ -227,8 +227,8 @@ export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProp
     isConnected: state.network.isConnected
   }),
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(FioDomainSettingsComponent))

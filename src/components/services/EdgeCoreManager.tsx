@@ -5,15 +5,17 @@ import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, p
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import * as React from 'react'
 import { Alert } from 'react-native'
+import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
-import SplashScreen from 'react-native-smart-splash-screen'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
+import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
 interface Props {}
@@ -75,16 +77,14 @@ export function EdgeCoreManager(props: Props) {
 
   function hideSplash() {
     if (!splashHidden.current) {
-      SplashScreen.close({
-        animationType: SplashScreen.animationType.fade,
-        duration: 850,
-        delay: 500
-      })
+      setTimeout(() => {
+        RNBootSplash.hide({ fade: true }).catch(err => showError(err))
+      }, 200)
       splashHidden.current = true
     }
   }
 
-  function handleContext(context: EdgeContext) {
+  const handleContext = useHandler((context: EdgeContext) => {
     console.log('EdgeContext opened')
     context.on('close', () => {
       console.log('EdgeContext closed')
@@ -93,17 +93,17 @@ export function EdgeCoreManager(props: Props) {
     ++counter.current
     setContext(context)
     hideSplash()
-  }
+  })
 
-  function handleError(error: Error) {
+  const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
     Alert.alert('Edge core failed to load', String(error))
-  }
+  })
 
-  function handleFakeEdgeWorld(world: EdgeFakeWorld) {
+  const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
     world.makeEdgeContext({ ...contextOptions }).then(handleContext, handleError)
-  }
+  })
 
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,

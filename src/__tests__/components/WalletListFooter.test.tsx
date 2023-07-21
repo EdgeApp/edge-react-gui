@@ -15,5 +15,6 @@ describe('WalletListFooter', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

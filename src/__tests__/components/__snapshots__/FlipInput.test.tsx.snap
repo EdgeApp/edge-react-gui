@@ -5,7 +5,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
   <TouchableOpacity
     onPress={[Function]}
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
         "marginBottom": 22,
@@ -15,7 +15,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
   >
     <Memo(CryptoIconComponent)
       marginRem={
-        Array [
+        [
           0,
           1,
           0,
@@ -31,7 +31,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
   </TouchableOpacity>
   <View
     style={
-      Object {
+      {
         "alignItems": "flex-end",
         "height": 0,
         "top": 11,
@@ -46,26 +46,26 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       onSelect={[Function]}
       renderer={[Function]}
       rendererProps={
-        Object {
+        {
           "placement": "top",
         }
       }
     >
       <ForwardRef(enhanceContext-Context.Consumer(MenuTrigger))
-        customStyles={Object {}}
+        customStyles={{}}
         disabled={false}
       />
       <ForwardRef(enhanceContext-Context.Consumer(MenuOptions))
-        customStyles={Object {}}
+        customStyles={{}}
       >
         <ForwardRef(enhanceContext-Context.Consumer(MenuOption))
-          customStyles={Object {}}
+          customStyles={{}}
           disableTouchable={false}
           disabled={false}
         >
           <WithTheme(EdgeTextComponent)
             style={
-              Object {
+              {
                 "color": "#000000",
                 "padding": 6,
               }
@@ -79,7 +79,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
   </View>
   <View
     style={
-      Object {
+      {
         "alignItems": "center",
         "flexDirection": "row",
       }
@@ -87,7 +87,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "flex": 1,
           "paddingRight": 11,
         }
@@ -96,18 +96,18 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       <ForwardRef(AnimatedComponentWrapper)
         pointerEvents="auto"
         style={
-          Array [
-            Object {
+          [
+            {
               "backfaceVisibility": "hidden",
             },
-            Object {
-              "transform": Array [
-                Object {
+            {
+              "transform": [
+                {
                   "rotateX": "0deg",
                 },
               ],
             },
-            Object {
+            {
               "opacity": 1,
             },
           ]
@@ -125,7 +125,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "flexDirection": "row",
                 "marginRight": 34,
                 "minHeight": 45,
@@ -134,7 +134,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
           >
             <View
               style={
-                Object {
+                {
                   "flexDirection": "row",
                   "marginRight": 11,
                 }
@@ -145,7 +145,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               />
               <WithTheme(EdgeTextComponent)
                 style={
-                  Object {
+                  {
                     "color": "#87939E",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 34,
@@ -158,7 +158,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
             </View>
             <WithTheme(EdgeTextComponent)
               style={
-                Object {
+                {
                   "color": "#87939E",
                   "paddingTop": 3,
                 }
@@ -176,7 +176,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               onSubmitEditing={[Function]}
               returnKeyType="done"
               style={
-                Object {
+                {
                   "height": 0,
                   "position": "absolute",
                   "width": 0,
@@ -190,25 +190,25 @@ exports[`FlipInputComponent should render with loading props 1`] = `
       <ForwardRef(AnimatedComponentWrapper)
         pointerEvents="none"
         style={
-          Array [
-            Object {
+          [
+            {
               "backfaceVisibility": "hidden",
             },
-            Object {
+            {
               "bottom": 0,
               "left": 0,
               "position": "absolute",
               "right": 0,
               "top": 0,
             },
-            Object {
-              "transform": Array [
-                Object {
+            {
+              "transform": [
+                {
                   "rotateX": "180deg",
                 },
               ],
             },
-            Object {
+            {
               "opacity": 0,
             },
           ]
@@ -226,7 +226,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
         >
           <View
             style={
-              Object {
+              {
                 "flexDirection": "row",
                 "marginRight": 34,
                 "minHeight": 45,
@@ -235,7 +235,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
           >
             <View
               style={
-                Object {
+                {
                   "flexDirection": "row",
                   "marginRight": 11,
                 }
@@ -246,7 +246,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               />
               <WithTheme(EdgeTextComponent)
                 style={
-                  Object {
+                  {
                     "color": "#87939E",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 34,
@@ -259,7 +259,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
             </View>
             <WithTheme(EdgeTextComponent)
               style={
-                Object {
+                {
                   "color": "#87939E",
                   "paddingTop": 3,
                 }
@@ -277,7 +277,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               onSubmitEditing={[Function]}
               returnKeyType="done"
               style={
-                Object {
+                {
                   "height": 0,
                   "position": "absolute",
                   "width": 0,
@@ -292,7 +292,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
     <ButtonBox
       onPress={[Function]}
       paddingRem={
-        Array [
+        [
           0.5,
           0,
           0.5,
@@ -306,7 +306,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
         name="exchange"
         size={39}
         style={
-          Object {
+          {
             "marginRight": -3,
           }
         }

@@ -53,7 +53,8 @@ describe('CreateWalletSelectCrypto', () => {
               pluginId: 'ethereum'
             }
           }
-        }
+        },
+        watch: () => () => {}
       }
     }
   }
@@ -66,5 +67,6 @@ describe('CreateWalletSelectCrypto', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

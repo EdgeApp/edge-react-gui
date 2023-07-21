@@ -40,13 +40,11 @@ export function ConfirmContinueModal(props: Props) {
   const handleTogggle = () => setAgreed(!isAgreed)
 
   const handleClose = () => bridge.resolve(false)
-  const handleAgreed = (): Promise<void> | undefined => {
+  const handleAgreed = async () => {
     if (!isAgreed) return
-    // @ts-expect-error
     if (onPress == null) return bridge.resolve(true)
-    onPress().then(result => {
-      if (result) bridge.resolve(true)
-    })
+    const result = await onPress()
+    if (result) bridge.resolve(true)
   }
 
   return (

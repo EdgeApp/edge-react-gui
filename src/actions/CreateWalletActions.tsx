@@ -222,12 +222,11 @@ export function createAccountTransaction(
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
               notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
-            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              navigation.navigate('walletsTab', { screen: 'walletList' })
-              setTimeout(() => {
-                Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
-              }, 750)
-            })
+            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).catch(err => console.warn(err))
+            navigation.navigate('walletsTab', { screen: 'walletList' })
+            setTimeout(() => {
+              Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
+            }, 750)
           }
         },
         alternateBroadcast:
@@ -235,7 +234,7 @@ export function createAccountTransaction(
       })
     } else {
       // if handle is now unavailable
-      dispatch(createHandleUnavailableModal(navigation, createdWalletId, accountName))
+      await dispatch(createHandleUnavailableModal(navigation, createdWalletId, accountName))
     }
   }
 }
@@ -244,7 +243,7 @@ export function createHandleUnavailableModal(navigation: NavigationBase, newWall
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    account.changeWalletStates({
+    await account.changeWalletStates({
       [newWalletId]: {
         deleted: true
       }

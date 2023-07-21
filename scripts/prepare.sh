@@ -37,9 +37,6 @@ fi
 node ./node_modules/.bin/rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
 
-# Copy pre-built buy/sell plugins:
-node -r sucrase/register ./scripts/copy-plugin.ts
-
 # Bundle currency, swap, & rate plugins:
 core_assets="./android/app/src/main/assets/edge-core"
 if [ -d "$core_assets" ]; then

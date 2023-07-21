@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sendConfirmation reducer address NEW_SPEND_INFO 1`] = `
-Object {
+{
   "address": "123123123",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -18,8 +18,8 @@ Object {
     "nativeAmount": "0",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
-    "spendTargets": Array [
-      Object {
+    "spendTargets": [
+      {
         "nativeAmount": "0",
         "publicAddress": "123123123",
       },
@@ -30,10 +30,10 @@ Object {
   "maxSpendSet": false,
   "nativeAmount": "0",
   "pin": "",
-  "spendInfo": Object {
-    "metadata": Object {},
-    "spendTargets": Array [
-      Object {
+  "spendInfo": {
+    "metadata": {},
+    "spendTargets": [
+      {
         "nativeAmount": "0",
         "publicAddress": "123123123",
       },
@@ -41,19 +41,19 @@ Object {
   },
   "toggleCryptoOnTop": 0,
   "transaction": null,
-  "transactionMetadata": Object {},
+  "transactionMetadata": {},
 }
 `;
 
 exports[`sendConfirmation reducer destination newSpendInfo with name 1`] = `
-Object {
+{
   "address": "123123123",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -63,8 +63,8 @@ Object {
     "nativeAmount": "1000",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
-    "spendTargets": Array [
-      Object {
+    "spendTargets": [
+      {
         "currencyCode": "BTC",
         "nativeAmount": "1000",
         "publicAddress": "123123123",
@@ -76,14 +76,14 @@ Object {
   "maxSpendSet": false,
   "nativeAmount": "1000",
   "pin": "",
-  "spendInfo": Object {
+  "spendInfo": {
     "currencyCode": "BTC",
-    "metadata": Object {
+    "metadata": {
       "name": "airbitz",
     },
     "nativeAmount": "1000",
-    "spendTargets": Array [
-      Object {
+    "spendTargets": [
+      {
         "currencyCode": "BTC",
         "nativeAmount": "1000",
         "publicAddress": "123123123",
@@ -92,21 +92,21 @@ Object {
   },
   "toggleCryptoOnTop": 0,
   "transaction": null,
-  "transactionMetadata": Object {
+  "transactionMetadata": {
     "name": "airbitz",
   },
 }
 `;
 
 exports[`sendConfirmation reducer destination newSpendInfo without name 1`] = `
-Object {
+{
   "address": "123123123",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -116,8 +116,8 @@ Object {
     "nativeAmount": "1000",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
-    "spendTargets": Array [
-      Object {
+    "spendTargets": [
+      {
         "currencyCode": "BTC",
         "nativeAmount": "1000",
         "publicAddress": "123123123",
@@ -129,12 +129,12 @@ Object {
   "maxSpendSet": false,
   "nativeAmount": "1000",
   "pin": "",
-  "spendInfo": Object {
+  "spendInfo": {
     "currencyCode": "BTC",
-    "metadata": Object {},
+    "metadata": {},
     "nativeAmount": "1000",
-    "spendTargets": Array [
-      Object {
+    "spendTargets": [
+      {
         "currencyCode": "BTC",
         "nativeAmount": "1000",
         "publicAddress": "123123123",
@@ -143,19 +143,19 @@ Object {
   },
   "toggleCryptoOnTop": 0,
   "transaction": null,
-  "transactionMetadata": Object {},
+  "transactionMetadata": {},
 }
 `;
 
 exports[`sendConfirmation reducer destination updateTransaction with error 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": [Error],
   "forceUpdateGuiCounter": 1,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -178,14 +178,14 @@ Object {
 `;
 
 exports[`sendConfirmation reducer destination updateTransaction with pin error 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": [Error: Incorrect PIN],
   "forceUpdateGuiCounter": 1,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -202,15 +202,15 @@ Object {
   "pin": "",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": 0,
     "currencyCode": "BCH",
     "date": 0,
     "isSend": true,
     "nativeAmount": "-681",
     "networkFee": "681",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [
+    "otherParams": {},
+    "ourReceiveAddresses": [
       "123123123",
     ],
     "signedTx": "",
@@ -222,16 +222,16 @@ Object {
 `;
 
 exports[`sendConfirmation reducer destination updateTransaction with transaction and legacyAddress 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 1,
-  "guiMakeSpendInfo": Object {
+  "guiMakeSpendInfo": {
     "currencyCode": "BCH",
-    "customNetworkFee": Object {},
+    "customNetworkFee": {},
     "legacyAddress": "123412341234",
-    "metadata": Object {
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -248,35 +248,35 @@ Object {
   "pin": "",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": 0,
     "currencyCode": "BCH",
     "date": 0,
     "isSend": true,
     "nativeAmount": "-681",
     "networkFee": "681",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [
+    "otherParams": {},
+    "ourReceiveAddresses": [
       "123123123",
     ],
     "signedTx": "",
     "txid": "",
     "walletId": "",
   },
-  "transactionMetadata": Object {},
+  "transactionMetadata": {},
 }
 `;
 
 exports[`sendConfirmation reducer destination updateTransaction with transaction and name 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 1,
-  "guiMakeSpendInfo": Object {
+  "guiMakeSpendInfo": {
     "currencyCode": "BCH",
-    "customNetworkFee": Object {},
-    "metadata": Object {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -293,36 +293,36 @@ Object {
   "pin": "",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": 0,
     "currencyCode": "BCH",
     "date": 0,
     "isSend": true,
     "nativeAmount": "-681",
     "networkFee": "681",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [
+    "otherParams": {},
+    "ourReceiveAddresses": [
       "123123123",
     ],
     "signedTx": "",
     "txid": "",
     "walletId": "",
   },
-  "transactionMetadata": Object {
+  "transactionMetadata": {
     "name": "airbitz",
   },
 }
 `;
 
 exports[`sendConfirmation reducer initialState 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -339,16 +339,16 @@ Object {
   "pin": "",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": -1,
     "currencyCode": "",
     "date": 0,
     "isSend": true,
-    "metadata": Object {},
+    "metadata": {},
     "nativeAmount": "",
     "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
+    "otherParams": {},
+    "ourReceiveAddresses": [],
     "parentNetworkFee": "",
     "signedTx": "",
     "txid": "",
@@ -359,14 +359,14 @@ Object {
 `;
 
 exports[`sendConfirmation reducer pin 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -383,16 +383,16 @@ Object {
   "pin": "1234",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": -1,
     "currencyCode": "",
     "date": 0,
     "isSend": true,
-    "metadata": Object {},
+    "metadata": {},
     "nativeAmount": "",
     "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
+    "otherParams": {},
+    "ourReceiveAddresses": [],
     "parentNetworkFee": "",
     "signedTx": "",
     "txid": "",
@@ -403,14 +403,14 @@ Object {
 `;
 
 exports[`sendConfirmation reducer reset 1`] = `
-Object {
+{
   "address": "",
   "authRequired": "none",
   "error": null,
   "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
+  "guiMakeSpendInfo": {
+    "customNetworkFee": {},
+    "metadata": {
       "amountFiat": 0,
       "bizId": 0,
       "category": "",
@@ -427,16 +427,16 @@ Object {
   "pin": "",
   "spendInfo": null,
   "toggleCryptoOnTop": 0,
-  "transaction": Object {
+  "transaction": {
     "blockHeight": -1,
     "currencyCode": "",
     "date": 0,
     "isSend": true,
-    "metadata": Object {},
+    "metadata": {},
     "nativeAmount": "",
     "networkFee": "",
-    "otherParams": Object {},
-    "ourReceiveAddresses": Array [],
+    "otherParams": {},
+    "ourReceiveAddresses": [],
     "parentNetworkFee": "",
     "signedTx": "",
     "txid": "",

@@ -44,11 +44,11 @@ function updateAmount(
   selectedWalletId?: string,
   selectedCurrencyCode?: string
 ): ThunkAction<void> {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const amountFiatString: string = mul(exchangeAmount, fiatPerCrypto)
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
-    dispatch(sendConfirmationUpdateTx(navigation, { nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
+    await dispatch(sendConfirmationUpdateTx(navigation, { nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
   }
 }
 
@@ -96,7 +96,7 @@ export function sendConfirmationUpdateTx(
       })
 
     if (maxSpendSet && isFeeChanged) {
-      return dispatch(updateMaxSpend(navigation, walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+      return await dispatch(updateMaxSpend(navigation, walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
     }
     await edgeWallet
       .makeSpend(spendInfo)
@@ -136,8 +136,8 @@ export function updateMaxSpend(
   selectedWalletId?: string,
   selectedCurrencyCode?: string,
   guiMakeSpendInfo?: GuiMakeSpendInfo
-): ThunkAction<void> {
-  return (dispatch, getState) => {
+): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
@@ -145,34 +145,31 @@ export function updateMaxSpend(
     const edgeWallet = currencyWallets[walletId]
     const spendInfo = getSpendInfo(state, guiMakeSpendInfo, selectedCurrencyCode)
 
-    edgeWallet
-      .getMaxSpendable(spendInfo)
-      .then(nativeAmount => {
-        const state = getState()
-        const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
-        const authRequired = getAuthRequired(state, spendInfo, walletId)
+    await edgeWallet.getMaxSpendable(spendInfo).then(nativeAmount => {
+      const state = getState()
+      const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
+      const authRequired = getAuthRequired(state, spendInfo, walletId)
 
-        const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
-        const isoFiatCurrencyCode = state.core.account.currencyWallets[walletId].fiatCurrencyCode
-        const exchangeDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
+      const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
+      const isoFiatCurrencyCode = state.core.account.currencyWallets[walletId].fiatCurrencyCode
+      const exchangeDenomination = getExchangeDenomination(state, edgeWallet.currencyInfo.pluginId, currencyCode)
 
-        const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
-        const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+      const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
+      const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
-        dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
-        dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
-        dispatch({
-          type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
-          data: { spendInfo, authRequired }
-        })
-        dispatch({
-          type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND',
-          data: true
-        })
-
-        dispatch(updateAmount(navigation, nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
+      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+        data: { spendInfo, authRequired }
       })
-      .catch(showError)
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND',
+        data: true
+      })
+
+      return dispatch(updateAmount(navigation, nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
+    })
   }
 }
 
@@ -307,7 +304,7 @@ export function signBroadcastAndSave(
       edgeSignedTransaction.metadata = edgeMetadata
 
       if (payeeFioAddress != null) {
-        addToFioAddressCache(account, [payeeFioAddress])
+        await addToFioAddressCache(account, [payeeFioAddress])
       }
 
       // fio
@@ -338,7 +335,7 @@ export function signBroadcastAndSave(
             const chainCode = wallet.currencyInfo.currencyCode
 
             try {
-              recordSend(fioWallet, fioAddress, {
+              await recordSend(fioWallet, fioAddress, {
                 payeeFioAddress,
                 payerPublicAddress,
                 payeePublicAddress: guiMakeSpendInfo.publicAddress ?? publicAddress ?? '',

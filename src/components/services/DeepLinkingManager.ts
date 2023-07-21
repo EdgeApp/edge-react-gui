@@ -36,9 +36,9 @@ export function DeepLinkingManager(props: Props) {
     })
   }, [accountReferralLoaded, dispatch, navigation, pendingDeepLink, wallets])
 
-  const handleUrl = (url: string) => {
+  const handleUrl = async (url: string) => {
     try {
-      dispatch(launchDeepLink(navigation, parseDeepLink(url)))
+      await dispatch(launchDeepLink(navigation, parseDeepLink(url)))
     } catch (error: any) {
       showError(error)
     }
@@ -46,23 +46,23 @@ export function DeepLinkingManager(props: Props) {
 
   // Startup tasks:
   useAsyncEffect(async () => {
-    const listener = Linking.addEventListener('url', event => handleUrl(event.url))
+    const listener = Linking.addEventListener('url', async event => await handleUrl(event.url))
 
     let url = await Linking.getInitialURL()
     if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
-    if (url != null) handleUrl(url)
+    if (url != null) await handleUrl(url)
 
     return () => listener.remove()
   }, [])
 
-  const handlePushMessage = (message: FirebaseMessagingTypes.RemoteMessage) => {
+  const handlePushMessage = async (message: FirebaseMessagingTypes.RemoteMessage) => {
     try {
       const url = pushMessagePayloadToEdgeUri(message)
       if (url == null) {
         // Unhandled push message ie. security alerts
         return
       }
-      handleUrl(url)
+      await handleUrl(url)
     } catch (error) {
       showError(error)
     }
@@ -73,19 +73,16 @@ export function DeepLinkingManager(props: Props) {
     /**
      * Fires when the app launches from push notification
      * */
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage != null) {
-          handlePushMessage(remoteMessage)
-        }
-      })
+    const remoteMessage = await messaging().getInitialNotification()
+    if (remoteMessage != null) {
+      await handlePushMessage(remoteMessage)
+    }
 
     /**
      * Fires when the app is in background
      * */
     messaging().onNotificationOpenedApp(remoteMessage => {
-      handlePushMessage(remoteMessage)
+      handlePushMessage(remoteMessage).catch(err => console.warn(err))
     })
 
     /**

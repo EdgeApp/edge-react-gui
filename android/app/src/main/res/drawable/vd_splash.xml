@@ -1,0 +1,25 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="vector"
+    android:width="432dp"
+    android:height="432dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    <group
+        android:name="edge_logo"
+        android:translateX="100"
+        android:translateY="100"
+        android:scaleX="0.4"
+        android:scaleY="0.4">
+        <path
+            android:name="body"
+            android:pathData="M 538.3 115.7 L 388.6 526 L 41.9 526 L 119.8 312.7 L 257.3 312.7 L 329.1 115.7 Z"
+            android:fillColor="#00f1a2"
+            android:strokeWidth="1"/>
+        <path
+            android:name="corner"
+            android:pathData="M 298.3 46 L 218.3 261.4 L 33.7 261.4 L 111.6 46 Z"
+            android:fillColor="#00f1a2"
+            android:strokeWidth="1"/>
+    </group>
+</vector>

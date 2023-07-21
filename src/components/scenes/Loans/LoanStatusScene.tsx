@@ -74,7 +74,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
     ))
 
     if (approve) {
-      dispatch(cancelActionProgram(actionQueueId))
+      await dispatch(cancelActionProgram(actionQueueId))
       navigation.pop()
     }
   })

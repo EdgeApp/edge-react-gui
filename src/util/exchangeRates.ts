@@ -113,7 +113,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   }
   if (Object.keys(resolverMap).length > 0) {
     clog(`${n} Calling doQuery again`)
-    doQuery(doFetch)
+    await doQuery(doFetch)
   } else {
     clog(`${n} doQuery complete`)
     inQuery = false

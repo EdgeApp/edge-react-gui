@@ -2,9 +2,11 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
+import { useHandler } from '../../hooks/useHandler'
 import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
 import { zeroString } from '../../util/utils'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Card } from './Card'
@@ -30,9 +32,18 @@ const UnderlinedNumInputCardComponent = (props: {
     setExponentTextWidth(event.nativeEvent.layout.width)
   }
 
+  const handlePress = useHandler(async () => {
+    if (onPress == null) return null
+    try {
+      await onPress()
+    } catch (err) {
+      showError(err)
+    }
+  })
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={handlePress}>
         <Card>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>

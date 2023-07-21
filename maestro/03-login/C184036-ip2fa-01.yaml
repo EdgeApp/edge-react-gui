@@ -1,0 +1,25 @@
+# Priority: Critical
+# Test ID: C184036
+# Title: Login from Edgy WiFi into an account created in Mexico - Blocked IP2FA
+# Expected Result:
+#   1. User is blocked and prevented from being able to login due to IP2FA
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C184036
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_IP2FA_MEXICO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Username and password are correct. This device cannot log in due\
+    \ to an unrecognized IP address."
+    timeout: 120000
+
+- stopApp

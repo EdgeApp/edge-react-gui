@@ -23,7 +23,10 @@ describe('CurrencySettings', () => {
       core: {
         account: {
           currencyConfig: {
-            'bitcoin-gold': { currencyInfo }
+            'bitcoin-gold': {
+              currencyInfo,
+              watch: () => () => {}
+            }
           }
         }
       }
@@ -40,5 +43,6 @@ describe('CurrencySettings', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

@@ -15,3 +15,5 @@ tags:
 
 - runFlow:
     file: ../common/launch.yaml
+
+- stopApp

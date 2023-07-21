@@ -39,7 +39,7 @@ describe('SelectFioAddress', () => {
         fioAddresses={[]}
         fioWallets={[]}
         selectedWalletId="123123"
-        refreshAllFioAddresses={() => undefined}
+        refreshAllFioAddresses={async () => {}}
         theme={getTheme()}
       />
     )

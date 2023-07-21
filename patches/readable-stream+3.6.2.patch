@@ -1,0 +1,13 @@
+diff --git a/node_modules/readable-stream/lib/_stream_writable.js b/node_modules/readable-stream/lib/_stream_writable.js
+index 292415e..a36257e 100644
+--- a/node_modules/readable-stream/lib/_stream_writable.js
++++ b/node_modules/readable-stream/lib/_stream_writable.js
+@@ -440,7 +440,7 @@ function onwrite(stream, er) {
+ function afterWrite(stream, state, finished, cb) {
+   if (!finished) onwriteDrain(stream, state);
+   state.pendingcb--;
+-  cb();
++  if (cb != null) cb();
+   finishMaybe(stream, state);
+ }
+ 

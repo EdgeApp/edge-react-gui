@@ -19,6 +19,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   fio: ENV.FIO_INIT,
   kovan: ENV.KOVAN_INIT,
   optimism: ENV.OPTIMISM_INIT,
+  pulsechain: ENV.PULSECHAIN_INIT,
   polygon: ENV.POLYGON_INIT,
   avalanche: ENV.AVALANCHE_INIT,
   ripple: true,

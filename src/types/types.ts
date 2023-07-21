@@ -292,6 +292,7 @@ export interface AppConfig {
   appName: string
   appNameShort: string
   appStore: string
+  backupAccountSite: string
   configName: string
   darkTheme: Theme
   defaultWallets: string[]
