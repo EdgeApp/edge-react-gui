@@ -21,8 +21,6 @@ export interface RootState {
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates
 
-  readonly isLoggedIn: boolean
-
   // Flag to signal scrolling components to add extra padding at the bottom to
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
@@ -65,17 +63,6 @@ export const rootReducer = combineReducers<RootState, Action>({
         return action.data.exchangeRates
       case 'LOGOUT':
         return {}
-      default:
-        return state
-    }
-  },
-
-  isLoggedIn: (state = false, action: Action): boolean => {
-    switch (action.type) {
-      case 'IS_LOGGED_IN':
-        return true
-      case 'LOGOUT':
-        return false
       default:
         return state
     }

@@ -71,7 +71,6 @@ export type Action =
       data: { activeWalletIds: string[] }
     }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY'; data: boolean }
-  | { type: 'IS_LOGGED_IN' }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
   | { type: 'LOGOUT'; data: { username?: string } }
