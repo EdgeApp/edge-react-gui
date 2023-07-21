@@ -52,7 +52,7 @@ export function LoginSceneComponent(props: Props) {
   const context = useSelector(state => state.core.context)
   const disklet = useSelector(state => state.core.disklet)
   const pendingDeepLink = useSelector(state => state.pendingDeepLink)
-  const nextUsername = useSelector(state => state.nextUsername ?? undefined)
+  const nextLoginId = useSelector(state => state.nextLoginId)
   const loggedIn = useWatch(account, 'loggedIn')
 
   const [counter, setCounter] = React.useState<number>(0)
@@ -185,19 +185,19 @@ export function LoginSceneComponent(props: Props) {
       <LoginScreen
         key={String(counter)}
         accountOptions={accountOptions}
-        appId={config.appId}
         appConfig={config}
+        appId={config.appId}
         appName={config.appNameShort}
         backgroundImage={backgroundImage}
         context={context}
         fontDescription={fontDescription}
+        initialLoginId={nextLoginId ?? undefined}
         initialRoute={loginUiInitialRoute}
         parentButton={parentButton}
         primaryLogo={theme.primaryLogo}
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
         skipSecurityAlerts
-        username={nextUsername}
         onComplete={maybeHandleComplete}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}

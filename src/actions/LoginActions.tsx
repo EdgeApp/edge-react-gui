@@ -286,12 +286,12 @@ export const mergeSettings = (
   }
 }
 
-export function logoutRequest(navigation: NavigationBase, username?: string): ThunkAction<Promise<void>> {
+export function logoutRequest(navigation: NavigationBase, nextLoginId?: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     Airship.clear()
-    dispatch({ type: 'LOGOUT', data: { username } })
+    dispatch({ type: 'LOGOUT', data: { nextLoginId } })
     if (typeof account.logout === 'function') await account.logout()
     navigation.navigate('login', {})
   }
