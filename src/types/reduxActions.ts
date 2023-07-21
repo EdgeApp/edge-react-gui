@@ -9,7 +9,7 @@ import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
 import { PasswordReminderTime, SecurityCheckedWallets } from '../modules/Core/Account/settings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
-import { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
+import { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer'
 import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsReducer'
 import { TweakSource } from '../util/ReferralHelpers'
 import { DeepLink } from './DeepLinkTypes'
@@ -70,7 +70,6 @@ export type Action =
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS'
       data: { activeWalletIds: string[] }
     }
-  | { type: 'IS_CHECKING_HANDLE_AVAILABILITY'; data: boolean }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
   | { type: 'LOGOUT'; data: { nextLoginId?: string } }
@@ -79,7 +78,6 @@ export type Action =
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
-  | { type: 'HANDLE_AVAILABLE_STATUS'; data: HandleAvailableStatus }
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
       data: {
