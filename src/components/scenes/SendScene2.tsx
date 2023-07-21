@@ -412,8 +412,8 @@ const SendComponent = (props: Props) => {
   })
 
   const renderAddAddress = () => {
-    const type = coreWallet.type
-    const maxSpendTargets = getSpecialCurrencyInfo(type)?.maxSpendTargets ?? 1
+    const { pluginId } = coreWallet.currencyInfo
+    const maxSpendTargets = getSpecialCurrencyInfo(pluginId)?.maxSpendTargets ?? 1
     if (maxSpendTargets < 2 || hiddenFeaturesMap.address || hiddenFeaturesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
       return null
     }
