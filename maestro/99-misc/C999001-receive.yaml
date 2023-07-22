@@ -31,12 +31,12 @@ tags:
 - assertVisible: "dgb1quxmpr34muutkgjuqwcssj4cz07hpukqsr4c3d8"
 - swipe:
     start: "70%, 50%"
-    end: "20%, 50%"
+    end: "5%, 50%"
 # - assertVisible: "Your Wrapped-Segwit Address"
 # - assertVisible: "SW5aFhYyDwhKA511bfj8FvHR2AjgDGqPUH"
 - swipe:
     start: "70%, 50%"
-    end: "20%, 50%"
+    end: "5%, 50%"
 - assertVisible: "Your Legacy Address"
 - assertVisible: "3AUb9QGG3UpVivuzBLQe8eVnWuny12caXU"
 
