@@ -16,6 +16,7 @@ import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -135,11 +136,8 @@ export function WalletListMenuModal(props: Props) {
   const handleCancel = () => props.bridge.resolve()
 
   const optionAction = useHandler((option: WalletListMenuKey) => {
-    dispatch(walletListMenuAction(navigation, walletId, option, tokenId))
-      .then(() => bridge.resolve())
-      .catch((error: any) => {
-        bridge.reject(error)
-      })
+    bridge.resolve()
+    dispatch(walletListMenuAction(navigation, walletId, option, tokenId)).catch(error => showError(error))
   })
 
   useAsyncEffect(async () => {
