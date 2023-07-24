@@ -10,9 +10,10 @@ exports[`OutlinedTextInput should render with some props 1`] = `
     style={
       [
         {
+          "alignItems": "center",
           "backgroundColor": "rgba(255, 255, 255, 0)",
           "borderRadius": 11,
-          "justifyContent": "center",
+          "flexDirection": "row",
           "minHeight": 67,
           "paddingHorizontal": 22,
         },
@@ -252,61 +253,47 @@ exports[`OutlinedTextInput should render with some props 1`] = `
         }
       />
     </TouchableOpacity>
-    <View
+    <TextInput
+      accessibilityState={
+        {
+          "disabled": false,
+        }
+      }
+      accessible={true}
+      autoCapitalize="none"
+      autoCorrect={true}
+      autoFocus={true}
+      blurOnSubmit={true}
+      editable={true}
+      inputAccessoryViewID="string"
+      keyboardType="default"
+      maxLength={11}
+      multiline={true}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      returnKeyType="done"
+      secureTextEntry={false}
+      selectionColor="#E85466"
       style={
         [
           {
-            "flexDirection": "row",
-            "justifyContent": "flex-start",
+            "color": "#FFFFFF",
+            "flexGrow": 1,
+            "flexShrink": 1,
+            "fontFamily": "Quicksand-Regular",
+            "padding": 0,
           },
           {
-            "paddingRight": 65,
+            "fontSize": 22,
           },
         ]
       }
-    >
-      <TextInput
-        accessibilityState={
-          {
-            "disabled": false,
-          }
-        }
-        accessible={true}
-        autoCapitalize="none"
-        autoCorrect={true}
-        autoFocus={true}
-        blurOnSubmit={true}
-        editable={true}
-        inputAccessoryViewID="string"
-        keyboardType="default"
-        maxLength={11}
-        multiline={true}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        returnKeyType="done"
-        secureTextEntry={false}
-        selectionColor="#E85466"
-        style={
-          [
-            {
-              "alignSelf": "stretch",
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "padding": 0,
-            },
-            {
-              "flexGrow": 1,
-            },
-          ]
-        }
-        testID="string.textInput"
-        textAlignVertical="top"
-        value="string"
-      />
-    </View>
+      testID="string.textInput"
+      textAlignVertical="top"
+      value="string"
+    />
   </View>
 </TouchableWithoutFeedback>
 `;

@@ -141,9 +141,10 @@ exports[`WalletListModal should render with loading props 1`] = `
       style={
         [
           {
+            "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderRadius": 11,
-            "justifyContent": "center",
+            "flexDirection": "row",
             "minHeight": 67,
             "paddingHorizontal": 22,
           },
@@ -366,54 +367,40 @@ exports[`WalletListModal should render with loading props 1`] = `
       >
         
       </Text>
-      <View
+      <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
+        autoFocus={false}
+        editable={true}
+        multiline={false}
+        onBlur={[Function]}
+        onChangeText={[Function]}
+        onFocus={[Function]}
+        returnKeyType="search"
+        secureTextEntry={false}
+        selectionColor="#FFFFFF"
         style={
           [
             {
-              "flexDirection": "row",
-              "justifyContent": "flex-start",
+              "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "padding": 0,
             },
             {
-              "paddingRight": 65,
+              "fontSize": 22,
             },
           ]
         }
-      >
-        <TextInput
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoFocus={false}
-          editable={true}
-          multiline={false}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          returnKeyType="search"
-          secureTextEntry={false}
-          selectionColor="#FFFFFF"
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "padding": 0,
-              },
-              {
-                "flexGrow": 0,
-              },
-            ]
-          }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value=""
-        />
-      </View>
+        testID="undefined.textInput"
+        textAlignVertical="top"
+        value=""
+      />
     </View>
     <View
       style={
