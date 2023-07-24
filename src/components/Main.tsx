@@ -219,6 +219,8 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
+  const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
+
   // Match react navigation theme background with the patina theme
   const reactNavigationTheme = React.useMemo(() => {
     return {
@@ -232,6 +234,11 @@ export const Main = () => {
 
   React.useEffect(() => {
     logEvent('Start_App')
+
+    // Used to re-enable animations to login scene:
+    setTimeout(() => {
+      setHasInitialScenesLoaded(true)
+    }, 0)
   }, [])
 
   return (
@@ -244,7 +251,7 @@ export const Main = () => {
       >
         <Stack.Screen name="edgeApp" component={EdgeApp} />
         <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} />
+        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
