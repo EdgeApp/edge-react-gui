@@ -35,6 +35,7 @@
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",
+    "gitVersionFile": "node -r sucrase/register scripts/gitVersionFile.ts",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "localize": "node -r sucrase/register ./scripts/localizeLanguage.ts; git add ./src/locales/strings",
@@ -49,7 +50,7 @@
     "start": "react-native start",
     "test": "jest",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
-    "update-version": "node -r sucrase/register scripts/updateVersion.ts",
+    "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
     "watch": "npm test -- --watch"
   },
