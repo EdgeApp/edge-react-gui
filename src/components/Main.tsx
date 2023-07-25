@@ -1,12 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HeaderTitleProps } from '@react-navigation/elements'
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { AirshipToast } from 'react-native-airship'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
+import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { ENV } from '../env'
@@ -19,7 +20,7 @@ import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { AppParamList } from '../types/routerTypes'
+import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
@@ -260,10 +261,13 @@ export const Main = () => {
 const EdgeApp = () => {
   const backPressedOnce = React.useRef(false)
   const account = useSelector(state => state.core.account)
+  const dispatch = useDispatch()
+  const navigation = useNavigation<NavigationBase>()
 
   useBackEvent(() => {
     // Allow back if logged out or this is the second back press
     if (account === defaultAccount || backPressedOnce.current) {
+      dispatch(logoutRequest(navigation)).catch(err => showError(err))
       return true
     }
     backPressedOnce.current = true
