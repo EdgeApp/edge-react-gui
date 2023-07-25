@@ -16,7 +16,7 @@ export class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps
   render() {
     const { children, style, theme, disableFontScaling = false, ...props } = this.props
     const { text, androidAdjust } = getStyles(theme)
-    let numberOfLines = this.props.numberOfLines || 1
+    let { numberOfLines = 1 } = this.props
     if (typeof children === 'string' && children.includes('\n')) {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }

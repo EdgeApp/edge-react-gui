@@ -163,8 +163,7 @@ interface SpecialCurrencyInfo {
 /*
  * Accepts a walletType or pluginId
  */
-export const getSpecialCurrencyInfo = (walletType: string = ''): SpecialCurrencyInfo => {
-  const pluginId = getPluginId(walletType)
+export const getSpecialCurrencyInfo = (pluginId: string): SpecialCurrencyInfo => {
   if (SPECIAL_CURRENCY_INFO[pluginId]) {
     return SPECIAL_CURRENCY_INFO[pluginId]
   } else {
