@@ -46,7 +46,7 @@ const versionFileName = 'release-version.json'
 
 async function main() {
   const cwd = join(__dirname, '..')
-  const [branch] = process.argv.slice(2)
+  const branch = process.argv[2] ?? 'master'
 
   // Determine the current version:
   const packageJson = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), { encoding: 'utf8' }))
