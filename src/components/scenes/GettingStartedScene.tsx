@@ -94,8 +94,6 @@ export const GettingStartedScene = (props: Props) => {
   const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
   const swipeOffset = useSharedValue(0)
 
-  const variantId = isFinalSwipeEnabled ? 'A' : 'B'
-
   const handleFinalSwipe = useHandler(() => {
     if (isFinalSwipeEnabled) {
       // This delay is necessary to properly reset the scene since it remains on
@@ -105,8 +103,7 @@ export const GettingStartedScene = (props: Props) => {
       }, 500)
 
       logEvent('Signup_Welcome', {
-        variantId,
-        variantParams: { doneMethod: 'swipe' }
+        variant: { doneMethod: 'swipe' }
       })
       if (hasLocalUsers) {
         navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
@@ -123,7 +120,7 @@ export const GettingStartedScene = (props: Props) => {
     navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
   })
   const handlePressSignUp = useHandler(() => {
-    logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
+    logEvent('Signup_Welcome', { variant: { doneMethod: 'click' } })
     navigation.navigate('login', { loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account' })
   })
   const handlePressSkip = useHandler(() => {

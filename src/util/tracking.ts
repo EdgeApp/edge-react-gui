@@ -38,12 +38,7 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch'
 
 export interface TrackingValues {
-  // For new features initially deployed with vanilla A/B testing, 'A' denotes
-  // the new feature was enabled for the event reported.
-  // This prop can also arbitrarily be named depending on the context of the
-  // event, i.e.: 'Plan A' | 'Experiment B' | 'Mod C' | 'Something Else'
-  variantId?: string
-  variantParams?: { [key: string]: string | number } // Any additional params to report
+  variant?: { [key: string]: string | number } // Any info about an A/B variant
 
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
@@ -108,7 +103,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, variantId, variantParams } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, variant } = values
 
   // @ts-expect-error
   if (!global.firebase) return
@@ -125,10 +120,9 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (pluginId != null) params.plugin = pluginId
   if (error != null) params.error = error
 
-  if (variantId != null) params.variant = variantId
-  if (variantParams != null) {
-    for (const variantParamKey of Object.keys(variantParams)) {
-      params[`${variantId}_${variantParamKey}`] = variantParams[variantParamKey]
+  if (variant != null) {
+    for (const variantParamKey of Object.keys(variant)) {
+      params[variantParamKey] = variant[variantParamKey]
     }
   }
 
