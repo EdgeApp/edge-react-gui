@@ -1,8 +1,10 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
+import { firebase } from '@react-native-firebase/remote-config'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
+import { FB_REMOTE_CONFIG } from '../fbRemote'
 import { fetchReferral } from './network'
 import { consify } from './utils'
 
@@ -66,6 +68,34 @@ if (ENV.USE_FIREBASE) {
       return inner
     }
   }
+
+  // Initialize remote config:
+  // @ts-expect-error
+  global.remoteConfig = firebase.remoteConfig()
+  // @ts-expect-error
+  global.remoteConfig.setDefaults(FB_REMOTE_CONFIG).then(() => {
+    // @ts-expect-error
+    global.remoteConfig.fetchAndActivate().catch((err: any) => {
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      console.warn(`Failed to fetch and activate remote config, error: ${errorMessage}`)
+      console.warn(`Using default remote config values: ${JSON.stringify(FB_REMOTE_CONFIG)}`)
+    })
+  })
+}
+
+export const getRemoteConfigValue = (key: keyof typeof FB_REMOTE_CONFIG) => {
+  // Return defaults
+  // @ts-expect-error
+  if (global.remoteConfig == null) {
+    console.debug('DEFAULT VALS')
+    return FB_REMOTE_CONFIG[key]
+  }
+
+  // Return remote config value
+  console.debug('REMOTE VALS')
+  // @ts-expect-error
+  const rawValue = global.remoteConfig.getValue(key)
+  return typeof FB_REMOTE_CONFIG[key] === 'boolean' ? rawValue.asBoolean() : rawValue.asString()
 }
 
 /**

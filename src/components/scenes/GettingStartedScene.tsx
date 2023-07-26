@@ -1,4 +1,3 @@
-import { firebase } from '@react-native-firebase/remote-config'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
@@ -21,14 +20,13 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
-import { logEvent } from '../../util/tracking'
+import { getRemoteConfigValue, logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
@@ -74,14 +72,11 @@ const sections: SectionData[] = [
   }
 ]
 
-const REMOTE_CONFIG_DEFAULT = {
-  swipe_last_usp: true
-}
-
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
   const localUsersLength = useSelector(state => state.core.context.localUsers.length)
-  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(REMOTE_CONFIG_DEFAULT.swipe_last_usp)
+  const isFinalSwipeEnabled = getRemoteConfigValue('awesome_new_feature')
+  console.debug('🚀 - file: GettingStartedScene.tsx:79 - GettingStartedScene - isFinalSwipeEnabled:', isFinalSwipeEnabled)
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -120,7 +115,7 @@ export const GettingStartedScene = (props: Props) => {
   })
   const handlePressSignUp = useHandler(() => {
     logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
-    navigation.navigate('login', { loginUiInitialRoute: localUsersLength > 0 ? 'new-account' : 'new-light-account' })
+    navigation.navigate('login', { loginUiInitialRoute: 'new-light-account' })
   })
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})
@@ -136,20 +131,6 @@ export const GettingStartedScene = (props: Props) => {
       }
     }
   )
-
-  // Fetch and activate remote config (A/B testing).
-  useAsyncEffect(async () => {
-    const remoteConfig = firebase.remoteConfig()
-
-    await remoteConfig.setDefaults(REMOTE_CONFIG_DEFAULT)
-    await remoteConfig.fetchAndActivate().catch((err: any) => {
-      const errorMessage = err instanceof Error ? err.message : String(err)
-      console.warn(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
-    })
-
-    const featureVal = remoteConfig.getValue('swipe_last_usp').asBoolean()
-    setIsFinalSwipeEnabled(featureVal)
-  }, [])
 
   // Redirect to login screen if device has memory of accounts
   useEffect(() => {
