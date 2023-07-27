@@ -282,6 +282,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       days: lstrings.settings_days
     }
     const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+    const isLightAccount = username == null
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
@@ -290,7 +291,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
             label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
           />
-          {username == null ? (
+          {isLightAccount ? (
             <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
           ) : (
             <>
@@ -313,8 +314,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
-          <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
-          {this.props.supportsTouchId && (
+          {isLightAccount ? null : (
+            <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
+          )}
+          {this.props.supportsTouchId && !isLightAccount && (
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
