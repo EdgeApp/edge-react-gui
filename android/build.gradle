@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "33.0.0"
-        minSdkVersion = 24 // Edge modified from 21
+        minSdkVersion = 27 // Edge modified from 24
         compileSdkVersion = 33
         targetSdkVersion = 33
 
@@ -11,7 +11,7 @@ buildscript {
         ndkVersion = "23.1.7779620"
 
         // Edge addition:
-        kotlinVersion = "1.6.10"
+        kotlinVersion = "1.7.21"
     }
     repositories {
         google()
