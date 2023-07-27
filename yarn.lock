@@ -7602,10 +7602,10 @@ edge-core-js@^1.3.4:
     yaob "^0.3.9"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^1.4.9:
-  version "1.4.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.4.9.tgz#a79045b1dfa78c1efee817eb3c93214ea1ab0e8b"
-  integrity sha512-uWug3TcSUFPuJffeVY/pdpV45Y+/57n2WDr1eXPhDyH+SQOPlWF6Zxsqr6MymHjHoIRfJq07HRHTpuptxxJFnA==
+edge-currency-accountbased@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.4.10.tgz#ab8ee392773d78e83a9c834bda24ab46c54a92c3"
+  integrity sha512-80KKQqnN4vrvIGedhjRW5GLHWqexQrSxGa+enxVhAPsPdGHdpOso/yeZikF24hRIn4n+ISek0OJA/lX+pdBnGg==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
