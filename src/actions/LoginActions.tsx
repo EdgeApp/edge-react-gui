@@ -149,9 +149,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     // Sign up for push notifications:
     dispatch(registerNotificationsV2()).catch(e => console.error(e))
 
-    const walletInfos = account.allKeys
-    const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
-    console.log('Wallet Infos:', filteredWalletInfos)
+    // const walletInfos = account.allKeys
+    // const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
+    // console.log('Wallet Infos:', filteredWalletInfos)
 
     // Merge and prepare settings files:
     let accountInitObject: AccountInitPayload = {

@@ -29,7 +29,9 @@ const contextOptions: EdgeContextOptions = {
   logSettings: {
     defaultLogLevel: 'warn',
     sources: {
-      'edge-core': 'warn'
+      'edge-core': 'warn',
+      // 'edge-currency-accountbased': 'warn',
+      'edge-currency-plugins': 'silent'
     }
   },
 

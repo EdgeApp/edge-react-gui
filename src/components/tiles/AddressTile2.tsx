@@ -166,7 +166,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const checkClipboard = useHandler(async () => {
     try {
       setLoading(true)
-      const uri = await Clipboard.getString()
+      // const uri = await Clipboard.getString()
+      const uri =
+        'u1tqfeyn0g3mztsyqv6q56frtr74nd8glvye0q5way69kp8xd085j87mmeamd5sf3j92u82z6k8gdj29fhsgqs9g4scvdeqdnqn8x49kl73zuyn650wtqygvlsj8v9gd3de3g80cptg94h25j09je6cqeutw7uf3080ccm7py7es20x9jzk4ftvyhdzdvw54dfxx6j2dhmrrudugaq7cv'
 
       // Will throw in case uri is invalid
       await coreWallet.parseUri(uri, currencyCode)

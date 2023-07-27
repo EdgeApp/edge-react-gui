@@ -41,7 +41,7 @@
     android:usesCleartextTraffic="true"
     android:theme="@style/Theme.App.Starting">
     <meta-data android:name="com.bugsnag.android.API_KEY"
-               android:value="a0000000000000000000000000000000"/>
+               android:value="5aca2dbe708503471d8137625e092675"/>
     <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
                android:resource="@mipmap/edge_logo_hollow" />
     <activity
