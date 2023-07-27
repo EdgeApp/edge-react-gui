@@ -23,6 +23,7 @@ import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -80,7 +81,10 @@ const REMOTE_CONFIG_DEFAULT = {
 
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
-  const localUsersLength = useSelector(state => state.core.context.localUsers.length)
+  const context = useSelector(state => state.core.context)
+  const localUsers = useWatch(context, 'localUsers')
+  const hasLocalUsers = localUsers.length > 0
+
   const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(REMOTE_CONFIG_DEFAULT.swipe_last_usp)
 
   // An extra index is added to account for the extra initial usp slide OR to
@@ -104,7 +108,7 @@ export const GettingStartedScene = (props: Props) => {
         variantId,
         variantParams: { doneMethod: 'swipe' }
       })
-      if (localUsersLength > 0) {
+      if (hasLocalUsers) {
         navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
       } else {
         navigation.navigate('login', { loginUiInitialRoute: 'new-light-account' })
@@ -120,7 +124,7 @@ export const GettingStartedScene = (props: Props) => {
   })
   const handlePressSignUp = useHandler(() => {
     logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
-    navigation.navigate('login', { loginUiInitialRoute: localUsersLength > 0 ? 'new-account' : 'new-light-account' })
+    navigation.navigate('login', { loginUiInitialRoute: hasLocalUsers ? 'new-account' : 'new-light-account' })
   })
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})
@@ -153,10 +157,10 @@ export const GettingStartedScene = (props: Props) => {
 
   // Redirect to login screen if device has memory of accounts
   useEffect(() => {
-    if (localUsersLength > 0) {
+    if (hasLocalUsers) {
       navigation.navigate('login', {})
     }
-  }, [navigation, localUsersLength])
+  }, [navigation, hasLocalUsers])
 
   return (
     <SceneWrapper hasHeader={false}>
