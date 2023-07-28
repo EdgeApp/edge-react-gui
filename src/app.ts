@@ -15,7 +15,6 @@ Bugsnag.start({
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
   }
 })
-
 const asServerDetails = asObject({
   host: asString,
   port: asString

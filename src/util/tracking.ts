@@ -3,6 +3,7 @@ import analytics from '@react-native-firebase/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
+import { FbRemoteConfig, getStickyRemoteConfig } from '../fbRemoteConfig'
 import { fetchReferral } from './network'
 import { consify } from './utils'
 
@@ -38,13 +39,6 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch'
 
 export interface TrackingValues {
-  // For new features initially deployed with vanilla A/B testing, 'A' denotes
-  // the new feature was enabled for the event reported.
-  // This prop can also arbitrarily be named depending on the context of the
-  // event, i.e.: 'Plan A' | 'Experiment B' | 'Mod C' | 'Something Else'
-  variantId?: string
-  variantParams?: { [key: string]: string | number } // Any additional params to report
-
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
@@ -100,7 +94,6 @@ export function trackError(
  * Send a raw event to all backends.
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  consify({ logEvent: { event, values } })
   Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
@@ -108,7 +101,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, variantId, variantParams } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
 
   // @ts-expect-error
   if (!global.firebase) return
@@ -125,13 +118,12 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (pluginId != null) params.plugin = pluginId
   if (error != null) params.error = error
 
-  if (variantId != null) params.variant = variantId
-  if (variantParams != null) {
-    for (const variantParamKey of Object.keys(variantParams)) {
-      params[`${variantId}_${variantParamKey}`] = variantParams[variantParamKey]
-    }
-  }
+  // Add all 'sticky' remote config variant values:
+  const stickyConfig = await getStickyRemoteConfig()
 
+  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof FbRemoteConfig]
+
+  consify({ logEvent: { name, params } })
   // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 
