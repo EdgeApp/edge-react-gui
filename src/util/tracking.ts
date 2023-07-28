@@ -3,6 +3,7 @@ import analytics from '@react-native-firebase/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
+import { FbRemoteConfig, getStickyRemoteConfig } from '../fbRemoteConfig'
 import { fetchReferral } from './network'
 import { consify } from './utils'
 
@@ -38,8 +39,6 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch'
 
 export interface TrackingValues {
-  variant?: { [key: string]: string | number } // Any info about an A/B variant
-
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
@@ -95,7 +94,6 @@ export function trackError(
  * Send a raw event to all backends.
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  consify({ logEvent: { event, values } })
   Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
 }
 
@@ -103,7 +101,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, variant } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
 
   // @ts-expect-error
   if (!global.firebase) return
@@ -120,12 +118,12 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (pluginId != null) params.plugin = pluginId
   if (error != null) params.error = error
 
-  if (variant != null) {
-    for (const variantParamKey of Object.keys(variant)) {
-      params[variantParamKey] = variant[variantParamKey]
-    }
-  }
+  // Add all 'sticky' remote config variant values:
+  const stickyConfig = await getStickyRemoteConfig()
 
+  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof FbRemoteConfig]
+
+  consify({ logEvent: { name, params } })
   // @ts-expect-error
   global.firebase.analytics().logEvent(name, params)
 
