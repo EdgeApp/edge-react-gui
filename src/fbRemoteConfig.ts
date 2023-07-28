@@ -13,6 +13,7 @@ const stickyDistribution = {
 }
 
 let stickyRemoteConfig: FbRemoteConfig | null = null
+let stickyRemoteConfigPromise: Promise<void> | null = null
 
 /**
  * Initializes the local 'sticky remote config' file containing the randomly
@@ -21,45 +22,39 @@ let stickyRemoteConfig: FbRemoteConfig | null = null
  * Once generated, values 'stick' until the remote config type changes.
  */
 export const initializeStickyRemoteConfig = async () => {
-  try {
-    const stickyRemoteConfigJson = await stickyRemoteConfigDisklet.getText(REMOTE_CONFIG_STICKY)
-    stickyRemoteConfig = asFbRemoteConfig(JSON.parse(stickyRemoteConfigJson))
-  } catch (err) {
-    // Not found or mismatched. Re-generate with random values according to the
-    // defined distribution.
-    const generatedRemoteConfigSticky: FbRemoteConfig = {
-      swipeLastUsp: Math.random() < stickyDistribution.swipeLastUsp,
-      createAccountType: Math.random() < stickyDistribution.createAccountType ? 'light' : 'full'
+  stickyRemoteConfigPromise = (async () => {
+    try {
+      const stickyRemoteConfigJson = await stickyRemoteConfigDisklet.getText(REMOTE_CONFIG_STICKY)
+      stickyRemoteConfig = asFbRemoteConfig(JSON.parse(stickyRemoteConfigJson))
+    } catch (err) {
+      const generatedRemoteConfigSticky: FbRemoteConfig = {
+        swipeLastUsp: Math.random() < stickyDistribution.swipeLastUsp,
+        createAccountType: Math.random() < stickyDistribution.createAccountType ? 'light' : 'full'
+      }
+      const generatedJsonData = JSON.stringify(generatedRemoteConfigSticky)
+      await stickyRemoteConfigDisklet.setText(REMOTE_CONFIG_STICKY, generatedJsonData)
+      stickyRemoteConfig = generatedRemoteConfigSticky
     }
-    const generatedJsonData = JSON.stringify(generatedRemoteConfigSticky)
-    await stickyRemoteConfigDisklet.setText(REMOTE_CONFIG_STICKY, generatedJsonData)
-    stickyRemoteConfig = generatedRemoteConfigSticky
-  }
-}
-
-/**
- * Copied from utils.ts, to avoid crash from other imports in that file on app start
- */
-async function snooze(ms: number): Promise<void> {
-  return await new Promise(resolve => setTimeout(resolve, ms))
+  })()
 }
 
 /**
  * Returns sticky config, waiting for initialization first.
  */
 export const getStickyRemoteConfig = async (): Promise<FbRemoteConfig> => {
-  while (true) {
-    if (stickyRemoteConfig != null) return stickyRemoteConfig
-    await snooze(10)
-  }
+  await stickyRemoteConfigPromise
+
+  // Should not happen
+  if (stickyRemoteConfig == null) throw new Error('Failed to initialize sticky remote config')
+
+  // Return the stickyRemoteConfig if it is available, or a default value if not
+  return stickyRemoteConfig
 }
 
 /**
  * Returns the sticky remote config value
  */
 export const getStickyRemoteConfigValue = async (key: keyof FbRemoteConfig): Promise<string | boolean> => {
-  while (true) {
-    if (stickyRemoteConfig != null) return stickyRemoteConfig[key]
-    await snooze(10)
-  }
+  const config = await getStickyRemoteConfig()
+  return config[key]
 }
