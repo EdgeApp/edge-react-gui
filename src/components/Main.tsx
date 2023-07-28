@@ -4,7 +4,9 @@ import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
+import { Platform } from 'react-native'
 import { AirshipToast } from 'react-native-airship'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
@@ -203,12 +205,15 @@ const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
 const Tab = createBottomTabNavigator<AppParamList>()
 
+const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefined
+
 const defaultScreenOptions: StackNavigationOptions = {
   title: '',
   headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
+  headerMode,
   headerTitleAlign: 'center',
   headerTransparent: true
 }
