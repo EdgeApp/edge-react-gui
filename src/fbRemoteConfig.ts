@@ -9,7 +9,7 @@ const stickyRemoteConfigDisklet = makeReactNativeDisklet()
 
 const stickyDistribution = {
   swipeLastUsp: 0.5,
-  createAccountType: 0.1
+  createAccountType: 1
 }
 
 let stickyRemoteConfig: FbRemoteConfig | null = null
