@@ -31,7 +31,7 @@ interface OwnProps {
   successMessage?: string
   onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>
   onSuccess?: (attrs: ActionResult) => Promise<void> | void
-  cancelOperation?: () => void
+  onCancel?: () => void
   goTo?: (params: any) => void
   getOperationFee: (wallet: EdgeCurrencyWallet) => Promise<number>
   fioWallet: EdgeCurrencyWallet
@@ -226,9 +226,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
-          {!feeLoading && (
-            <MainButton disabled={loading || feeLoading} label={lstrings.string_cancel_cap} type="secondary" onPress={this.props.cancelOperation} />
-          )}
+          {!feeLoading && <MainButton disabled={loading || feeLoading} label={lstrings.string_cancel_cap} type="secondary" onPress={this.props.onCancel} />}
         </View>
       </View>
     )
