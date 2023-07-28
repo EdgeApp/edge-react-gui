@@ -1,6 +1,18 @@
 import { jest } from '@jest/globals'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
+jest.mock('disklet', () => {
+  const originalModule = jest.requireActual('disklet')
+
+  return {
+    ...originalModule,
+    makeReactNativeDisklet: () => ({
+      setText: () => {},
+      getText: () => {}
+    })
+  }
+})
+
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 
 jest.mock('react-native-webview', () => ({
