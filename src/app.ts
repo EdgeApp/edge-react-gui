@@ -7,6 +7,7 @@ import RNFS from 'react-native-fs'
 
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
+import { initializeStickyRemoteConfig } from './fbRemoteConfig'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 
@@ -14,6 +15,10 @@ Bugsnag.start({
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
   }
+})
+
+initializeStickyRemoteConfig().catch(e => {
+  console.error('Error initializing sticky remote config: ', e)
 })
 
 const asServerDetails = asObject({
