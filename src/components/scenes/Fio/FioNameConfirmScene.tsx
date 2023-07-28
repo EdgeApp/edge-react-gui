@@ -153,7 +153,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             getOperationFee={this.getFee}
             fioWallet={paymentWallet}
             navigation={this.props.navigation}
-            cancelOperation={() => navigation.goBack()}
+            onCancel={() => navigation.goBack()}
           />
         </View>
       </SceneWrapper>

@@ -156,7 +156,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
             onSuccess={this.afterAddBundledTxsSuccess}
             getOperationFee={getAddBundledTxsFee}
             successMessage={lstrings.fio_request_add_bundled_txs_ok_text}
-            cancelOperation={this.cancelOperation}
+            onCancel={this.cancelOperation}
             fioWallet={fioWallet}
             addressTitles
             showPaymentWalletPicker
