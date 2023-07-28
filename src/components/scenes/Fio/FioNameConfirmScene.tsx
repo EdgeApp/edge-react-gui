@@ -135,7 +135,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   render() {
-    const { route, theme } = this.props
+    const { route, theme, navigation } = this.props
     const { fioName, paymentWallet } = route.params
     const styles = getStyles(theme)
 
@@ -148,7 +148,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
             title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
             body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
           />
-          <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} navigation={this.props.navigation} />
+          <FioActionSubmit
+            onSubmit={this.saveFioName}
+            getOperationFee={this.getFee}
+            fioWallet={paymentWallet}
+            navigation={this.props.navigation}
+            cancelOperation={() => navigation.goBack()}
+          />
         </View>
       </SceneWrapper>
     )
