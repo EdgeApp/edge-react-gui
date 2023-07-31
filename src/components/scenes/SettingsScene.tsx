@@ -11,6 +11,7 @@ import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
+  setContactsPermissionOn,
   setDeveloperModeOn,
   setSpamFilterOn,
   showRestoreWalletsModal,
@@ -47,13 +48,14 @@ interface OwnProps extends EdgeSceneProps<'settingsOverview'> {}
 
 interface StateProps {
   account: EdgeAccount
-  context: EdgeContext
   autoLogoutTimeInSeconds: number
+  contactsPermissionOn: boolean
+  context: EdgeContext
   defaultFiat: string
   developerModeOn: boolean
-  spamFilterOn: boolean
   isLocked: boolean
   pinLoginEnabled: boolean
+  spamFilterOn: boolean
   supportsTouchId: boolean
   touchIdEnabled: boolean
   username: string | undefined
@@ -64,6 +66,7 @@ interface DispatchProps {
   handleSendLogs: () => void
   lockSettings: () => void
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
+  onToggleContactsPermissionOn: (contactsPermissionOn: boolean) => Promise<void>
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => Promise<void>
   showRestoreWalletsModal: (navigation: NavigationBase) => Promise<void>
   showUnlockSettingsModal: () => Promise<void>
@@ -222,6 +225,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     navigation.navigate('promotionSettings', {})
   }
 
+  handleContactsAccessToggle = async (): Promise<void> => {
+    await this.props.onToggleContactsPermissionOn(!this.props.contactsPermissionOn)
+  }
+
   handlePinToggle = async (): Promise<void> => {
     await this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
   }
@@ -271,7 +278,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, theme, handleClearLogs, handleSendLogs, isLocked, navigation, username } = this.props
+    const { account, contactsPermissionOn, isLocked, navigation, theme, username, handleClearLogs, handleSendLogs } = this.props
     const iconSize = theme.rem(1.25)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
@@ -321,6 +328,11 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
+          <SettingsSwitchRow
+            label={lstrings.settings_button_contacts_access_permission}
+            value={contactsPermissionOn}
+            onPress={this.handleContactsAccessToggle}
+          />
           <SettingsSwitchRow
             key="spamFilter"
             label={lstrings.settings_hide_spam_transactions}
@@ -383,6 +395,7 @@ export const SettingsScene = (props: OwnProps) => {
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
   const autoLogoutTimeInSeconds = useSelector(state => state.ui.settings.autoLogoutTimeInSeconds)
+  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
@@ -429,6 +442,9 @@ export const SettingsScene = (props: OwnProps) => {
   const handleLogoutRequest = useHandler(async (navigation: NavigationBase) => {
     await dispatch(logoutRequest(navigation))
   })
+  const handleToggleContactsPermission = useHandler(async (contactsPermissionOn: boolean) => {
+    await dispatch(setContactsPermissionOn(contactsPermissionOn))
+  })
 
   return (
     <SettingsSceneComponent
@@ -436,13 +452,14 @@ export const SettingsScene = (props: OwnProps) => {
       route={route}
       theme={theme}
       account={account}
-      context={context}
       autoLogoutTimeInSeconds={autoLogoutTimeInSeconds}
+      contactsPermissionOn={contactsPermissionOn}
+      context={context}
       defaultFiat={defaultFiat}
       developerModeOn={developerModeOn}
-      spamFilterOn={spamFilterOn}
       isLocked={isLocked}
       pinLoginEnabled={pinLoginEnabled}
+      spamFilterOn={spamFilterOn}
       supportsTouchId={supportsTouchId}
       touchIdEnabled={touchIdEnabled}
       username={username}
@@ -451,6 +468,7 @@ export const SettingsScene = (props: OwnProps) => {
       handleSendLogs={handleSendLogs}
       lockSettings={handleLockSettings}
       onTogglePinLoginEnabled={handleTogglePinLoginEnabled}
+      onToggleContactsPermissionOn={handleToggleContactsPermission}
       setAutoLogoutTimeInSeconds={handleSetAutoLogoutTimeInSeconds}
       showRestoreWalletsModal={handleShowRestoreWalletsModal}
       showUnlockSettingsModal={handleShowUnlockSettingsModal}
