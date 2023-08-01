@@ -57,7 +57,7 @@ const SettingsRowComponent = (props: Props) => {
   )
 }
 
-const ActivityContainer = styled(Animated.View)<{ pending: boolean }>(props => {
+const ActivityContainer = styled(Animated.View)<{ pending: boolean }>(_theme => props => {
   return [
     {
       position: 'absolute',
@@ -74,13 +74,14 @@ const ActivityContainer = styled(Animated.View)<{ pending: boolean }>(props => {
   ]
 })
 
-const RightContainer = styled(Animated.View)<{ pending: boolean }>(props =>
-  useAnimatedStyle(() => ({
-    opacity: withDelay(
-      props.pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
-      withTiming(props.pending ? 0 : 1, { duration: ACTIVITY_INDICATOR_FADE_IN_DURATION })
-    )
-  }))
+const RightContainer = styled(Animated.View)<{ pending: boolean }>(
+  _theme => props =>
+    useAnimatedStyle(() => ({
+      opacity: withDelay(
+        props.pending ? ACTIVITY_INDICATOR_FADE_IN_DELAY : 0,
+        withTiming(props.pending ? 0 : 1, { duration: ACTIVITY_INDICATOR_FADE_IN_DURATION })
+      )
+    }))
 )
 
 const getStyles = cacheStyles((theme: Theme) => {

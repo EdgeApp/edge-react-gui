@@ -60,12 +60,12 @@ export const FioCreateHandleModal = (props: Props) => {
   )
 }
 
-const GetFioHandleTitle = styled(Text)(props => ({
-  color: props.theme.primaryText,
-  fontSize: props.theme.rem(1.75),
-  fontFamily: props.theme.fontFaceDefault,
+const GetFioHandleTitle = styled(Text)(theme => ({
+  color: theme.primaryText,
+  fontSize: theme.rem(1.75),
+  fontFamily: theme.fontFaceDefault,
   fontWeight: 'bold',
-  marginBottom: props.theme.rem(1),
+  marginBottom: theme.rem(1),
   textAlign: 'center'
 }))
 
