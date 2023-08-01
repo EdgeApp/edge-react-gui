@@ -62,8 +62,9 @@ export const WalletSyncCircle = (props: Props) => {
   // Animated Params
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - syncRatio.value),
-    opacity: withTiming(syncRatio.value > DONE_THRESHOLD ? 0 : 1, { duration: 500 }),
-    stroke: withTiming(syncRatio.value > DONE_THRESHOLD ? theme.walletProgressIconDone : theme.walletProgressIconFill)
+    opacity: withTiming(syncRatio.value > DONE_THRESHOLD ? 0 : 1, { duration: 500 })
+    // Stroke animations crash the latest react-native-svg:
+    // stroke: withTiming(syncRatio.value > DONE_THRESHOLD ? theme.walletProgressIconDone : theme.walletProgressIconFill)
   }))
 
   // Memoized SvgStyle to reduce rerenders
@@ -83,6 +84,7 @@ export const WalletSyncCircle = (props: Props) => {
         cx={center}
         cy={center}
         r={radius}
+        stroke={theme.walletProgressIconFill}
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeWidth={strokeWidth}

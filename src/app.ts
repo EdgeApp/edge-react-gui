@@ -15,7 +15,6 @@ Bugsnag.start({
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
   }
 })
-
 const asServerDetails = asObject({
   host: asString,
   port: asString
@@ -185,7 +184,7 @@ if (ENV.DEBUG_THEME) {
         method: 'POST',
         body: JSON.stringify(oldTheme)
       }
-      realFetch(url, postOptions)
+      await realFetch(url, postOptions)
       const getOptions = {
         headers: {
           'Content-Type': 'application/json'
@@ -212,5 +211,5 @@ if (ENV.DEBUG_THEME) {
       console.log(`Failed to access theme server`)
     }
   }
-  themeFunc()
+  themeFunc().catch(err => console.error(err))
 }

@@ -1,0 +1,120 @@
+# Priority: Critical
+# Test ID: C184035
+# Title: UTXO Assets balances load and show correctly
+# Expected Result:
+#   1. User is able to login and see correct balances for UTXO related assets
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C184035
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+
+- extendedWaitUntil:
+    visible: FIRO
+    timeout: 120000
+- tapOn: FIRO
+- extendedWaitUntil:
+    visible: 0.369074 FIRO
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: DGB
+    direction: DOWN
+- tapOn: DGB
+- extendedWaitUntil:
+    visible: 18.79649375 DGB
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: DOGE
+    direction: DOWN
+- tapOn: DOGE
+- extendedWaitUntil:
+    visible: 25.81052584 DOGE
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: RVN
+    direction: DOWN
+- tapOn: RVN
+- extendedWaitUntil:
+    visible: 22.85548 RVN
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: BCH
+    direction: DOWN
+- tapOn: BCH
+- extendedWaitUntil:
+    visible: 0.00588867 BCH
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: DASH
+    direction: DOWN
+- tapOn: DASH
+- extendedWaitUntil:
+    visible: 0.03081175 DASH
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: QTUM
+    direction: DOWN
+- tapOn: QTUM
+- extendedWaitUntil:
+    visible: 0.17765112 QTUM
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: BTG
+    direction: DOWN
+- tapOn: BTG
+- extendedWaitUntil:
+    visible: 0.05370395 BTG
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: LTC
+    direction: DOWN
+- tapOn: LTC
+- extendedWaitUntil:
+    visible: 0.00921812 LTC
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: BTC
+    direction: DOWN
+- tapOn: BTC
+- extendedWaitUntil:
+    visible: 0.00013643 BTC
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: GRS
+    direction: DOWN
+- tapOn: GRS
+- extendedWaitUntil:
+    visible: 1.43161025 GRS
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp

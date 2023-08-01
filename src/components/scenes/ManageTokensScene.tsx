@@ -1,27 +1,22 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { EdgeTokenId, FlatListItem } from '../../types/types'
+import { FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
-import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -36,7 +31,6 @@ function ManageTokensSceneComponent(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const account = useSelector(state => state.core.account)
   const walletName = useWalletName(wallet)
   const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
@@ -84,21 +78,6 @@ function ManageTokensSceneComponent(props: Props) {
     })
   }, [allTokens, searchValue, sortedTokenIds])
 
-  // Shows the wallet picker modal:
-  const handleSelectWallet = useHandler(async () => {
-    const allowedAssets: EdgeTokenId[] = Object.keys(account.currencyConfig)
-      .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.isCustomTokensSupported)
-      .map(pluginId => ({ pluginId }))
-
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal allowedAssets={allowedAssets} bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />
-    ))
-
-    if (walletId != null && currencyCode != null) {
-      navigation.setParams({ walletId })
-    }
-  })
-
   // Goes to the add token scene:
   const handleAdd = useHandler(() => {
     navigation.navigate('editToken', {
@@ -128,13 +107,7 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <TouchableOpacity onPress={handleSelectWallet}>
-          <Title
-            leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />}
-            rightIcon={<FontAwesomeIcon name="angle-right" size={theme.rem(2)} style={styles.rightIcon} />}
-            text={walletName}
-          />
-        </TouchableOpacity>
+        <Title leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <OutlinedTextInput
           label={lstrings.search_tokens}
@@ -149,7 +122,11 @@ function ManageTokensSceneComponent(props: Props) {
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          <MainButton alignSelf="center" label={lstrings.addtoken_add} marginRem={1} type="secondary" onPress={handleAdd} />
+          <ButtonsContainer
+            primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
+            secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
+            layout="row"
+          />
         </>
       )}
     </SceneWrapper>

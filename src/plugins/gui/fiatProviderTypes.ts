@@ -67,6 +67,11 @@ export interface FiatProviderGetQuoteParams {
   paymentTypes: FiatPaymentType[]
 }
 
+export interface FiatProviderGetSupportedAssetsParams {
+  paymentTypes: FiatPaymentType[]
+  regionCode: FiatPluginRegionCode
+}
+
 export interface FiatProviderStore {
   readonly deleteItem: (itemId: string) => Promise<void>
   readonly listItemIds: () => Promise<string[]>
@@ -78,7 +83,7 @@ export interface FiatProvider<OtherMethods = null> {
   providerId: string
   partnerIcon: string
   pluginDisplayName: string
-  getSupportedAssets: (paymentTypes: FiatPaymentType[]) => Promise<FiatProviderAssetMap>
+  getSupportedAssets: (params: FiatProviderGetSupportedAssetsParams) => Promise<FiatProviderAssetMap>
   getQuote: (params: FiatProviderGetQuoteParams) => Promise<FiatProviderQuote>
   otherMethods: OtherMethods
 }

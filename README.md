@@ -77,8 +77,6 @@ Otherwise, to get an APK, do:
 
 ### Build release version of app
 
-First, run `./scripts/updateVersion.js` to copy the `package.json` version into the native project files, and to assign a unique build number.
-
 #### iOS
 
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
@@ -98,18 +96,41 @@ First, run `./scripts/updateVersion.js` to copy the `package.json` version into 
 
 ---
 
-## Deploying (macOS Only)
+## Deploying (MacOS Only)
 
-The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
+This repo includes several utility scripts that can be used in a CI/CD
+environment to build and deploy a release version of the app. The
+included `Jenkinsfile` utilizes all the scripts but you are free to
+use them in your own CI environment.
+
+### Update the version file
+
+Set `BUILD_REPO_URL` to the URL of an empty Git repo that will hold a version
+file that will be auto updated to increment the version and build number. Then
+run the following to update a local `release-version.json` file
+
+    yarn gitVersionFile
+
+Update the project files based on the version in `release-version.json`
+
+    yarn updateVersion
+
+
+### Build, sign, and deploy
+
+The included `deploy.ts` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
 
 - Auto sign Android APK with Android keystore files
 - Auto sign iOS IPA with provisioning profiles
+- Build release version of iOS and Android
+- Upload iOS IPA and Android APK files to AppCenter for developer testing
 
 ### To Use
 
-- Run `yarn update-version` to set up your build number & version.
 - Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
 - Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
+- Download a copy of the Google Bundle tool (https://github.com/google/bundletool/releases)
+- Set the `bundleToolPath` in `deploy-config.json` to the path to the bundle tool `.jar` file
 - Put any Android keystore files into `edge-react-gui/keystores/`
 - If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
 - Install xcpretty `sudo gem install xcpretty`
@@ -121,6 +142,22 @@ yarn deploy edge ios master
 yarn deploy edge android master
 ```
 
+## Fastlane support
+
+This repo supports utilizing Fastlane to automate updates to iOS Provisioning
+Profiles. To use Fastlane, set the following environment variables and run
+`yarn deploy` as mentioned above
+
+    BUILD_REPO_URL          // Git repo used to store encrypted provisioning
+                            // keys.
+                            // Will be shared with the gitVersionFile.ts script
+    FASTLANE_USER           // Apple ID email
+    FASTLANE_PASSWORD       // Apple ID password
+    GITHUB_SSH_KEY          // (Optional) SSH Key file to use when accessing
+                            // BUILD_REPO_URL
+    MATCH_KEYCHAIN_PASSWORD // Password to unlock the current users keychain
+    MATCH_PASSWORD          // Password used to encrypt profile information
+                            // before being saved to the BUILD_REPO_URL
 ---
 
 ## Debugging

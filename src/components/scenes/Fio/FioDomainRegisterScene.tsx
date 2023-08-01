@@ -65,7 +65,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet()
+      this.createFioWallet().catch(err => showError(err))
     }
   }
 
@@ -101,12 +101,12 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  onDomainPress = () => {
-    this.setDomain()
+  onDomainPress = async () => {
+    await this.setDomain()
   }
 
-  onWalletPress = () => {
-    this.selectFioWallet()
+  onWalletPress = async () => {
+    await this.selectFioWallet()
   }
 
   checkFioDomain(fioDomain: string) {

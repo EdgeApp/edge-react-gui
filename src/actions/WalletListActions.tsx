@@ -58,8 +58,8 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
     }
 
     const parsed = parseDeepLink(uri)
-    if (parsed.type === 'other') Linking.openURL(uri)
-    else dispatch(launchDeepLink(navigation, parsed))
+    if (parsed.type === 'other') await Linking.openURL(uri)
+    else await dispatch(launchDeepLink(navigation, parsed))
   }
 }
 

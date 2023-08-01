@@ -16,6 +16,7 @@ import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
@@ -42,7 +43,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  refreshAllFioAddresses: () => void
+  refreshAllFioAddresses: () => Promise<void>
 }
 
 interface State {
@@ -73,7 +74,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.getFioAddresses()
+    this.getFioAddresses().catch(err => showError(err))
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -88,7 +89,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   getFioAddresses = async () => {
     const { useUserFioAddressesOnly, refreshAllFioAddresses, account } = this.props
     if (useUserFioAddressesOnly) {
-      refreshAllFioAddresses()
+      await refreshAllFioAddresses()
     } else {
       this.setState({ fioAddresses: await getFioAddressCache(account) })
       this.filterFioAddresses('')
@@ -129,13 +130,17 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
   }
 
-  onChangeTextDelayed = (domain: string) => {
-    const { currencyCode } = this.props
-    if (this.checkIfDomain(domain)) {
-      this.resolveAddress(domain, currencyCode)
+  onChangeTextDelayed = async (domain: string) => {
+    try {
+      const { currencyCode } = this.props
+      if (this.checkIfDomain(domain)) {
+        await this.resolveAddress(domain, currencyCode)
+      }
+      this.updateUri(domain)
+      await this.checkIfFioAddress(domain)
+    } catch (error) {
+      showError(error)
     }
-    this.checkIfFioAddress(domain)
-    this.updateUri(domain)
   }
 
   checkIfDomain = (domain: string): boolean => {
@@ -389,8 +394,8 @@ export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
     fioPlugin: state.core.account.currencyConfig.fio
   }),
   dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
+    async refreshAllFioAddresses() {
+      await dispatch(refreshAllFioAddresses())
     }
   })
 )(withTheme(AddressModalComponent))

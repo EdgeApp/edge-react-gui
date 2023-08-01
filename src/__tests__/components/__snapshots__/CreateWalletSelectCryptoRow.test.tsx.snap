@@ -3,8 +3,20 @@
 exports[`WalletListRow should render with loading props 1`] = `
 <View
   accessibilityState={
-    Object {
+    {
+      "busy": undefined,
+      "checked": undefined,
       "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
     }
   }
   accessible={true}
@@ -18,7 +30,7 @@ exports[`WalletListRow should render with loading props 1`] = `
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
   style={
-    Object {
+    {
       "alignItems": "center",
       "flexDirection": "row",
       "justifyContent": "center",
@@ -29,7 +41,7 @@ exports[`WalletListRow should render with loading props 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "height": 45,
         "marginBottom": 22,
         "marginLeft": 22,
@@ -41,11 +53,11 @@ exports[`WalletListRow should render with loading props 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "overflow": "hidden",
           },
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -58,12 +70,12 @@ exports[`WalletListRow should render with loading props 1`] = `
       <FastImageView
         resizeMode="cover"
         source={
-          Object {
+          {
             "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
           }
         }
         style={
-          Object {
+          {
             "bottom": 0,
             "left": 0,
             "position": "absolute",
@@ -76,7 +88,7 @@ exports[`WalletListRow should render with loading props 1`] = `
   </View>
   <View
     style={
-      Object {
+      {
         "flexDirection": "column",
         "flexGrow": 1,
         "flexShrink": 1,
@@ -89,14 +101,14 @@ exports[`WalletListRow should render with loading props 1`] = `
       minimumFontScale={0.65}
       numberOfLines={1}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
-          Object {
+          {
             "flexBasis": "auto",
             "flexShrink": 1,
             "fontFamily": "Quicksand-Medium",
@@ -112,14 +124,14 @@ exports[`WalletListRow should render with loading props 1`] = `
       minimumFontScale={0.65}
       numberOfLines={1}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
-          Object {
+          {
             "color": "#A4C7DF",
             "fontSize": 17,
           },
@@ -132,7 +144,7 @@ exports[`WalletListRow should render with loading props 1`] = `
   </View>
   <View
     style={
-      Object {
+      {
         "paddingRight": 11,
       }
     }
@@ -140,18 +152,18 @@ exports[`WalletListRow should render with loading props 1`] = `
     <Text
       allowFontScaling={false}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#66EDA8",
             "fontSize": 26,
           },
           undefined,
-          Object {
+          {
             "fontFamily": "Ionicons",
             "fontStyle": "normal",
             "fontWeight": "normal",
           },
-          Object {},
+          {},
         ]
       }
     >

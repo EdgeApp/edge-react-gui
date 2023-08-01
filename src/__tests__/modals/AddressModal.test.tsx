@@ -39,7 +39,7 @@ describe('AddressModalComponent', () => {
         ]}
         userFioAddressesLoading
         coreWallet={fakeWallet}
-        refreshAllFioAddresses={() => undefined}
+        refreshAllFioAddresses={async () => {}}
         theme={getTheme()}
       />
     )

@@ -75,7 +75,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   componentDidMount() {
-    this.setAddressesState()
+    this.setAddressesState().catch(err => showError(err))
   }
 
   setAddressesState = async () => {
@@ -194,7 +194,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         await fioSignAndBroadcast(fioWallet, edgeTx)
         this.setState({ loading: false })
         showToast(lstrings.fio_request_ok_body)
-        addToFioAddressCache(account, [this.state.fioAddressTo])
+        await addToFioAddressCache(account, [this.state.fioAddressTo])
         navigation.navigate('request', {})
       } catch (error: any) {
         this.setState({ loading: false })
@@ -208,16 +208,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     }
   }
 
-  onAddressFromPressed = () => {
-    this.openFioAddressFromModal()
+  onAddressFromPressed = async () => {
+    await this.openFioAddressFromModal()
   }
 
-  onAddressToPressed = () => {
-    this.openFioAddressToModal()
+  onAddressToPressed = async () => {
+    await this.openFioAddressToModal()
   }
 
-  onMemoPressed = () => {
-    this.openMemoModal()
+  onMemoPressed = async () => {
+    await this.openMemoModal()
   }
 
   openFioAddressFromModal = async () => {

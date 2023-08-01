@@ -193,7 +193,7 @@ export const dummyProvider: FiatProviderFactory = {
           direction: params.direction,
           expirationDate: new Date(Date.now() + 60000),
           approveQuote: async (params: FiatProviderApproveQuoteParams): Promise<void> => {
-            params.showUi.openWebView({ url: 'https://edge.app' })
+            await params.showUi.openWebView({ url: 'https://edge.app' })
           },
           closeQuote: async (): Promise<void> => {}
         }

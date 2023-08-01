@@ -290,7 +290,7 @@ export const LoanCreateScene = (props: Props) => {
       .catch(e => showError(e.message))
   }
 
-  const handleBorrowAmountChanged = React.useCallback((fiatAmount, nativeCryptoAmount) => {
+  const handleBorrowAmountChanged = React.useCallback((fiatAmount: string, nativeCryptoAmount: string) => {
     setBorrowAmountFiat(fiatAmount)
     setNativeCryptoBorrowAmount(nativeCryptoAmount)
   }, [])

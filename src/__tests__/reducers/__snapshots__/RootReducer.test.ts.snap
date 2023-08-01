@@ -1,49 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`initialState 1`] = `
-Object {
-  "account": Object {
-    "accountReferral": Object {
-      "hiddenAccountMessages": Object {},
+{
+  "account": {
+    "accountReferral": {
+      "hiddenAccountMessages": {},
       "ignoreAccountSwap": false,
-      "promotions": Array [],
+      "promotions": [],
     },
     "accountReferralLoaded": false,
-    "referralCache": Object {
-      "accountMessages": Array [],
-      "accountPlugins": Array [],
+    "referralCache": {
+      "accountMessages": [],
+      "accountPlugins": [],
     },
   },
-  "actionQueue": Object {
-    "actionQueueMap": Object {},
-    "activeProgramIds": Array [],
+  "actionQueue": {
+    "actionQueueMap": {},
+    "activeProgramIds": [],
   },
-  "contacts": Array [],
-  "core": Object {
-    "account": Object {
-      "activeWalletIds": Array [],
-      "currencyConfig": Object {},
-      "currencyWallets": Object {},
+  "contacts": [],
+  "core": {
+    "account": {
+      "activeWalletIds": [],
+      "currencyConfig": {},
+      "currencyWallets": {},
       "watch": [Function],
     },
-    "context": Object {},
-    "disklet": Object {},
+    "context": {},
+    "disklet": {},
     "otpErrorShown": false,
   },
-  "cryptoExchange": Object {
+  "cryptoExchange": {
     "fromBalanceMessage": "",
     "fromCurrencyCode": null,
     "fromDisplayAmount": "0",
     "fromNativeAmount": "0",
     "fromWalletId": null,
-    "fromWalletPrimaryInfo": Object {
+    "fromWalletPrimaryInfo": {
       "displayCurrencyCode": "",
-      "displayDenomination": Object {
+      "displayDenomination": {
         "multiplier": "1",
         "name": "",
       },
       "exchangeCurrencyCode": "",
-      "exchangeDenomination": Object {
+      "exchangeDenomination": {
         "multiplier": "1",
         "name": "",
       },
@@ -57,56 +57,54 @@ Object {
     "toDisplayAmount": "0",
     "toNativeAmount": "0",
     "toWalletId": null,
-    "toWalletPrimaryInfo": Object {
+    "toWalletPrimaryInfo": {
       "displayCurrencyCode": "",
-      "displayDenomination": Object {
+      "displayDenomination": {
         "multiplier": "1",
         "name": "",
       },
       "exchangeCurrencyCode": "",
-      "exchangeDenomination": Object {
+      "exchangeDenomination": {
         "multiplier": "1",
         "name": "",
       },
       "walletId": "",
     },
   },
-  "deviceReferral": Object {
-    "messages": Array [],
-    "plugins": Array [],
+  "deviceReferral": {
+    "messages": [],
+    "plugins": [],
   },
-  "exchangeRates": Object {},
-  "isLoggedIn": false,
-  "loanManager": Object {
+  "exchangeRates": {},
+  "isNotificationViewActive": false,
+  "loanManager": {
     "lastResyncTimestamp": 0,
-    "loanAccounts": Object {},
+    "loanAccounts": {},
     "syncRatio": 0,
   },
-  "network": Object {
+  "network": {
     "isConnected": true,
   },
-  "nextUsername": null,
-  "notificationSettings": Object {
+  "nextLoginId": null,
+  "notificationSettings": {
     "ignoreMarketing": false,
     "ignorePriceChanges": false,
-    "plugins": Object {},
+    "plugins": {},
   },
   "pendingDeepLink": null,
-  "permissions": Object {
+  "permissions": {
     "camera": "denied",
     "contacts": "denied",
     "location": "denied",
   },
-  "sortedWalletList": Array [],
-  "ui": Object {
-    "createWallet": Object {
-      "handleActivationInfo": Object {
+  "sortedWalletList": [],
+  "ui": {
+    "createWallet": {
+      "handleActivationInfo": {
         "activationCost": "",
-        "supportedAssets": Array [],
+        "supportedAssets": [],
       },
-      "handleAvailableStatus": "",
-      "isCheckingHandleAvailability": false,
-      "walletAccountActivationPaymentInfo": Object {
+      "walletAccountActivationPaymentInfo": {
         "amount": "",
         "currencyCode": "",
         "exchangeAmount": "",
@@ -115,34 +113,34 @@ Object {
       },
       "walletAccountActivationQuoteError": "",
     },
-    "exchangeInfo": Object {
-      "buy": Object {
-        "disablePlugins": Object {},
+    "exchangeInfo": {
+      "buy": {
+        "disablePlugins": {},
       },
-      "sell": Object {
-        "disablePlugins": Object {},
+      "sell": {
+        "disablePlugins": {},
       },
-      "swap": Object {
-        "disableAssets": Object {
-          "destination": Array [],
-          "source": Array [],
+      "swap": {
+        "disableAssets": {
+          "destination": [],
+          "source": [],
         },
-        "disablePlugins": Object {},
+        "disablePlugins": {},
       },
     },
-    "fio": Object {
-      "connectedWalletsByFioAddress": Object {},
+    "fio": {
+      "connectedWalletsByFioAddress": {},
       "expireReminderShown": false,
       "expiredChecking": false,
-      "expiredLastChecks": Object {},
-      "walletsCheckedForExpired": Object {},
+      "expiredLastChecks": {},
+      "walletsCheckedForExpired": {},
     },
-    "fioAddress": Object {
-      "fioAddresses": Array [],
+    "fioAddress": {
+      "fioAddresses": [],
       "fioAddressesLoading": false,
-      "fioDomains": Array [],
+      "fioDomains": [],
     },
-    "passwordReminder": Object {
+    "passwordReminder": {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,
       "needsPasswordCheck": false,
@@ -151,14 +149,14 @@ Object {
       "nonPasswordLoginsLimit": 2,
       "passwordUseCount": 0,
     },
-    "sendConfirmation": Object {
+    "sendConfirmation": {
       "address": "",
       "authRequired": "none",
       "error": null,
       "forceUpdateGuiCounter": 0,
-      "guiMakeSpendInfo": Object {
-        "customNetworkFee": Object {},
-        "metadata": Object {
+      "guiMakeSpendInfo": {
+        "customNetworkFee": {},
+        "metadata": {
           "amountFiat": 0,
           "bizId": 0,
           "category": "",
@@ -175,16 +173,16 @@ Object {
       "pin": "",
       "spendInfo": null,
       "toggleCryptoOnTop": 0,
-      "transaction": Object {
+      "transaction": {
         "blockHeight": -1,
         "currencyCode": "",
         "date": 0,
         "isSend": true,
-        "metadata": Object {},
+        "metadata": {},
         "nativeAmount": "",
         "networkFee": "",
-        "otherParams": Object {},
-        "ourReceiveAddresses": Array [],
+        "otherParams": {},
+        "ourReceiveAddresses": [],
         "parentNetworkFee": "",
         "signedTx": "",
         "txid": "",
@@ -192,27 +190,26 @@ Object {
       },
       "transactionMetadata": null,
     },
-    "settings": Object {
+    "settings": {
       "autoLogoutTimeInSeconds": 3600,
       "changesLocked": true,
       "countryCode": "",
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
-      "denominationSettings": Object {},
+      "denominationSettings": {},
       "developerModeOn": false,
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,
-      "loginStatus": null,
-      "mostRecentWallets": Array [],
-      "passwordRecoveryRemindersShown": Object {
+      "mostRecentWallets": [],
+      "passwordRecoveryRemindersShown": {
         "20": false,
         "200": false,
         "2000": false,
         "20000": false,
         "200000": false,
       },
-      "passwordReminder": Object {
+      "passwordReminder": {
         "lastPasswordUseDate": 0,
         "needsPasswordCheck": false,
         "nonPasswordDaysLimit": 4,
@@ -223,22 +220,23 @@ Object {
       "pinLoginEnabled": false,
       "preferredSwapPluginId": "",
       "preferredSwapPluginType": undefined,
-      "securityCheckedWallets": Object {},
+      "securityCheckedWallets": {},
+      "settingsLoaded": null,
       "spamFilterOn": true,
-      "spendingLimits": Object {
-        "transaction": Object {
+      "spendingLimits": {
+        "transaction": {
           "amount": 0,
           "isEnabled": false,
         },
       },
       "walletsSort": "manual",
     },
-    "subcategories": Array [],
-    "wallets": Object {
-      "fioWallets": Array [],
+    "subcategories": [],
+    "wallets": {
+      "fioWallets": [],
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
-      "walletLoadingProgress": Object {},
+      "walletLoadingProgress": {},
     },
   },
 }

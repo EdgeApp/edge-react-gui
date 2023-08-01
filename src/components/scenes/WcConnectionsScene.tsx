@@ -41,8 +41,8 @@ export const WcConnectionsScene = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const walletConnect = useWalletConnect()
 
-  useMount(async () => {
-    if (uri != null) await onScanSuccess(uri)
+  useMount(() => {
+    if (uri != null) onScanSuccess(uri).catch(err => showError(err))
   })
 
   useAsyncEffect(async () => {
@@ -67,8 +67,8 @@ export const WcConnectionsScene = (props: Props) => {
     navigation.navigate('wcDisconnect', { wcConnectionInfo })
   }
 
-  const handleNewConnectionPress = () => {
-    Airship.show<string | undefined>(bridge => (
+  const handleNewConnectionPress = async () => {
+    const result = await Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
         title={lstrings.scan_qr_label}
@@ -76,16 +76,11 @@ export const WcConnectionsScene = (props: Props) => {
         textModalTitle={lstrings.wc_scan_modal_text_modal_title}
       />
     ))
-      .then((result: string | undefined) => {
-        if (result != null) {
-          onScanSuccess(result)
-        } else {
-          showError('No scan result')
-        }
-      })
-      .catch(error => {
-        showError(error)
-      })
+    if (result != null) {
+      await onScanSuccess(result)
+    } else {
+      showError(lstrings.no_scan_results_message)
+    }
   }
 
   return (
@@ -97,7 +92,7 @@ export const WcConnectionsScene = (props: Props) => {
           label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
           type="secondary"
           marginRem={[1, 0.5]}
-          onPress={() => handleNewConnectionPress()}
+          onPress={async () => await handleNewConnectionPress()}
           alignSelf="center"
           spinner={connecting}
         />

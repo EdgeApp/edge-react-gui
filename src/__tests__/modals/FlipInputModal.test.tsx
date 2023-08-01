@@ -53,7 +53,7 @@ describe('FlipInputModalComponent', () => {
         feeDisplayDenomination={{ multiplier: '100000000000', name: 'BTC' }}
         feeNativeAmount="1"
         feeAmount="1"
-        updateMaxSpend={(walletId, currencyCode) => undefined}
+        updateMaxSpend={async (walletId, currencyCode) => {}}
         updateTransactionAmount={(nativeAmount, exchangeAmount, walletId, currencyCode) => undefined}
         theme={getTheme()}
       />

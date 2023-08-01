@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
+import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -16,7 +18,7 @@ interface Props {
   tokenId?: string
 
   // Callbacks:
-  onPress?: () => void
+  onPress?: () => Promise<void> | void
 }
 
 export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
@@ -38,8 +40,12 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
   const currencyConfigs = useWatch(account, 'currencyConfig')
   const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].allTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
 
+  const handlePress = useHandler(() => {
+    if (onPress != null) onPress()?.catch(err => showError(err))
+  })
+
   return (
-    <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={onPress}>
+    <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
       <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>

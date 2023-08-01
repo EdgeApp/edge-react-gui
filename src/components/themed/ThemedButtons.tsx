@@ -3,7 +3,9 @@ import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -35,8 +37,12 @@ export function ButtonBox(props: Props) {
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
 
+  const handlePress = useHandler(() => {
+    if (onPress != null) onPress()?.catch(err => showError(err))
+  })
+
   return (
-    <TouchableOpacity onPress={onPress} style={[margin, padding]}>
+    <TouchableOpacity onPress={handlePress} style={[margin, padding]}>
       {children}
     </TouchableOpacity>
   )
@@ -86,7 +92,7 @@ export function RightChevronButton(props: { text: string; onPress: () => void; p
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity accessible={false} onPress={onPress}>
       <View style={[padding, styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />

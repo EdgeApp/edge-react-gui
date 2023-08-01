@@ -3,26 +3,26 @@
 exports[`CreateWalletImportScene should render with loading props 1`] = `
 <BVLinearGradient
   colors={
-    Array [
+    [
       4278585612,
       4279971643,
     ]
   }
   endPoint={
-    Object {
+    {
       "x": 1,
       "y": 0,
     }
   }
   locations={null}
   startPoint={
-    Object {
+    {
       "x": 0,
       "y": 0,
     }
   }
   style={
-    Object {
+    {
       "bottom": 0,
       "left": 0,
       "position": "absolute",
@@ -33,14 +33,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
 >
   <View
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
           "position": "absolute",
         },
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "padding": 0,
@@ -52,13 +52,13 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
   >
     <View
       style={
-        Array [
-          Object {
+        [
+          {
             "justifyContent": "center",
             "marginHorizontal": 22,
             "paddingBottom": 22,
           },
-          Object {
+          {
             "marginTop": 22,
           },
           undefined,
@@ -67,7 +67,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     >
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
@@ -79,14 +79,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            Array [
-              Object {
+            [
+              {
                 "color": "#FFFFFF",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              Object {
+              {
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 27,
               },
@@ -100,7 +100,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "flexDirection": "row",
           "justifyContent": "center",
           "marginVertical": 45,
@@ -119,14 +119,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       minimumFontScale={0.65}
       numberOfLines={2}
       style={
-        Array [
-          Object {
+        [
+          {
             "color": "#FFFFFF",
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
-          Object {
+          {
             "color": "#FFFFFF",
             "fontSize": 22,
             "marginBottom": 22,
@@ -142,7 +142,16 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       Enter your private seed, private key, or active key to verify and restore the associated wallet
     </Text>
     <View
-      accessible={true}
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessible={false}
       focusable={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
@@ -152,15 +161,16 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
+        [
+          {
+            "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
             "borderRadius": 11,
-            "justifyContent": "center",
+            "flexDirection": "row",
             "minHeight": 67,
             "paddingHorizontal": 22,
           },
-          Object {
+          {
             "flexGrow": 0,
             "marginBottom": 28,
             "marginLeft": 17,
@@ -175,15 +185,15 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderTopWidth": 1,
               "bottom": 0,
               "left": 22,
               "position": "absolute",
               "right": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
               "right": 11,
             },
@@ -192,8 +202,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderBottomLeftRadius": 11,
               "borderBottomWidth": 1,
               "borderLeftWidth": 1,
@@ -206,7 +216,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "top": 0,
               "width": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
             },
           ]
@@ -214,8 +224,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderBottomRightRadius": 11,
               "borderBottomWidth": 1,
               "borderLeftWidth": 0,
@@ -228,7 +238,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "top": 0,
               "width": 22,
             },
-            Object {
+            {
               "borderColor": undefined,
             },
           ]
@@ -236,15 +246,15 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "borderTopWidth": 1,
               "left": 22,
               "position": "absolute",
               "right": 22,
               "top": 0,
             },
-            Object {
+            {
               "borderColor": undefined,
               "left": 22,
             },
@@ -253,8 +263,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       />
       <View
         style={
-          Array [
-            Object {
+          [
+            {
               "height": 67,
               "justifyContent": "center",
               "left": 0,
@@ -263,7 +273,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "right": 0,
               "top": 0,
             },
-            Object {
+            {
               "paddingLeft": 22,
               "paddingRight": 65,
             },
@@ -271,84 +281,105 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         }
       >
         <Text
+          accessible={true}
           numberOfLines={1}
           onLayout={[Function]}
           style={
-            Array [
-              Object {
+            [
+              {
                 "alignSelf": "flex-start",
                 "fontFamily": "Quicksand-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
-              Object {
+              {
                 "color": undefined,
-                "transform": Array [
-                  Object {
+                "transform": [
+                  {
                     "translateX": 0,
                   },
-                  Object {
+                  {
                     "translateY": -0,
                   },
-                  Object {
+                  {
                     "scale": 1,
                   },
                 ],
               },
             ]
           }
+          testID="undefined.labelText"
         >
           Private Key or Private Seed
         </Text>
       </View>
-      <Text
-        numberOfLines={1}
+      <View
         style={
-          Array [
-            Object {
-              "bottom": -28,
-              "color": "#E85466",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 17,
-              "left": 28,
-              "position": "absolute",
-            },
-            Object {
-              "opacity": 0,
-            },
-          ]
+          {
+            "bottom": -45,
+            "height": 45,
+            "left": 0,
+            "paddingLeft": 22,
+            "paddingRight": 39,
+            "position": "absolute",
+            "right": 0,
+          }
         }
-      />
+      >
+        <Text
+          accessible={true}
+          numberOfLines={2}
+          style={
+            [
+              {
+                "color": "#E85466",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+              },
+              {
+                "opacity": 0,
+              },
+            ]
+          }
+          testID="undefined.subText"
+        />
+      </View>
       <Text
+        accessible={true}
         numberOfLines={1}
         onLayout={[Function]}
         style={
-          Array [
-            Object {
+          [
+            {
               "bottom": -10,
               "fontFamily": "Quicksand-Regular",
               "fontSize": 17,
               "position": "absolute",
               "right": 28,
             },
-            Object {
+            {
               "color": undefined,
               "opacity": 0,
-              "transform": Array [
-                Object {
+              "transform": [
+                {
                   "translateX": 6,
                 },
-                Object {
+                {
                   "scale": 0,
                 },
               ],
             },
           ]
         }
-      >
-        
-      </Text>
+        testID="undefined.charLimit"
+      />
       <TextInput
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessible={true}
         autoCapitalize="none"
         autoCorrect={false}
         autoFocus={true}
@@ -362,27 +393,40 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         secureTextEntry={false}
         selectionColor="#FFFFFF"
         style={
-          Array [
-            Object {
-              "alignSelf": "stretch",
+          [
+            {
               "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
               "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
               "padding": 0,
             },
-            Object {
-              "flexGrow": 0,
+            {
+              "fontSize": 22,
             },
           ]
         }
+        testID="undefined.textInput"
         textAlignVertical="top"
         value=""
       />
     </View>
     <View
       accessibilityState={
-        Object {
+        {
+          "busy": undefined,
+          "checked": undefined,
           "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
         }
       }
       accessible={true}
@@ -396,11 +440,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Object {
+        {
           "elevation": 0,
           "opacity": 1,
           "shadowColor": "#000000",
-          "shadowOffset": Object {
+          "shadowOffset": {
             "height": 0,
             "width": 0,
           },
@@ -411,27 +455,27 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     >
       <BVLinearGradient
         colors={
-          Array [
+          [
             16777215,
             16777215,
           ]
         }
         endPoint={
-          Object {
+          {
             "x": 1,
             "y": 1,
           }
         }
         locations={null}
         startPoint={
-          Object {
+          {
             "x": 0,
             "y": 0,
           }
         }
         style={
-          Array [
-            Object {
+          [
+            {
               "alignItems": "center",
               "borderColor": "#00f1a2",
               "borderRadius": 6,
@@ -441,7 +485,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "minHeight": 67,
               "minWidth": 202,
             },
-            Object {
+            {
               "alignSelf": "center",
               "marginBottom": 11,
               "marginLeft": 11,
@@ -453,7 +497,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "paddingRight": 0,
               "paddingTop": 0,
             },
-            Object {
+            {
               "borderRadius": 6,
               "paddingLeft": 0,
               "paddingRight": 0,
@@ -466,7 +510,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           minimumFontScale={0.75}
           numberOfLines={1}
           style={
-            Object {
+            {
               "color": "#00f1a2",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,

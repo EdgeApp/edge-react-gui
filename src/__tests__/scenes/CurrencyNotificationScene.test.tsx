@@ -58,5 +58,6 @@ describe('CurrencyNotificationComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

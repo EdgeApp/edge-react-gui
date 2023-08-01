@@ -12,7 +12,7 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
   onAmountChanged={[Function]}
   overridePrimaryDecimalAmount="3119046"
   primaryInfo={
-    Object {
+    {
       "currencyCode": "BTC",
       "currencyName": "BTC",
       "currencySymbol": "₿",
@@ -22,7 +22,7 @@ exports[`ExchangedFlipInput should render with loading props 1`] = `
     }
   }
   secondaryInfo={
-    Object {
+    {
       "currencyCode": "BTC",
       "currencyName": "BTC",
       "currencySymbol": "₿",

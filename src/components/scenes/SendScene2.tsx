@@ -37,7 +37,8 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -180,7 +181,7 @@ const SendComponent = (props: Props) => {
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
-      triggerScamWarningModal(account.disklet)
+      triggerScamWarningModal(account.disklet).catch(err => showError(err))
     }
     initialMount.current = false
   }
@@ -329,7 +330,7 @@ const SendComponent = (props: Props) => {
           await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
-      .catch(error => console.log(error))
+      .catch(error => showError(error))
   }
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -557,8 +558,8 @@ const SendComponent = (props: Props) => {
     if (uniqueIdentifierInfo != null && spendTarget.publicAddress != null) {
       const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
 
-      const handleUniqueIdentifier = () => {
-        Airship.show<string | undefined>(bridge => (
+      const handleUniqueIdentifier = async () => {
+        await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
             inputLabel={identifierName}
@@ -678,20 +679,16 @@ const SendComponent = (props: Props) => {
           const amount = nativeAmount ?? '0'
           const chainCode = coreWallet.currencyInfo.currencyCode
 
-          try {
-            recordSend(fioWallet, payerFioAddress, {
-              payeeFioAddress,
-              payerPublicAddress,
-              payeePublicAddress,
-              amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
-              currencyCode: currencyCode,
-              chainCode,
-              txid,
-              memo
-            })
-          } catch (e: any) {
-            showError(e)
-          }
+          await recordSend(fioWallet, payerFioAddress, {
+            payeeFioAddress,
+            payerPublicAddress,
+            payeePublicAddress,
+            amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
+            currencyCode: currencyCode,
+            chainCode,
+            txid,
+            memo
+          })
         }
       }
     }
@@ -749,7 +746,7 @@ const SendComponent = (props: Props) => {
           }
         }
       }
-      addToFioAddressCache(account, payeeFioAddresses)
+      await addToFioAddressCache(account, payeeFioAddresses)
 
       if (broadcastedTx.metadata == null) {
         broadcastedTx.metadata = {}
@@ -864,7 +861,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode))
+      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode)).catch(err => showError(err))
     }
   })
   useUnmount(() => {
@@ -952,27 +949,50 @@ const SendComponent = (props: Props) => {
     disabledText = lstrings.spending_limits_enter_pin
   }
   return (
-    <SceneWrapper background="theme">
-      <KeyboardAwareScrollView contentContainerStyle={styles.contentContainerStyle} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
-        {renderSelectedWallet()}
-        {renderAddressAmountPairs()}
-        {renderAddAddress()}
-        {renderTimeout()}
-        {renderError()}
-        {renderFees()}
-        {renderMetadataNotes()}
-        {renderSelectFioAddress()}
-        {renderUniqueIdentifier()}
-        {renderInfoTiles()}
-        {renderAuthentication()}
-        {renderScamWarning()}
-      </KeyboardAwareScrollView>
-      <View style={styles.footer}>
-        {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
-      </View>
-    </SceneWrapper>
+    <NotificationSceneWrapper navigation={navigation} background="theme">
+      {(gap, notificationHeight) => (
+        <>
+          <StyledKeyboardAwareScrollView
+            notificationHeight={notificationHeight}
+            contentContainerStyle={{ paddingBottom: theme.rem(1) + notificationHeight }}
+            extraScrollHeight={theme.rem(2.75)}
+            enableOnAndroid
+          >
+            {renderSelectedWallet()}
+            {renderAddressAmountPairs()}
+            {renderAddAddress()}
+            {renderTimeout()}
+            {renderError()}
+            {renderFees()}
+            {renderMetadataNotes()}
+            {renderSelectFioAddress()}
+            {renderUniqueIdentifier()}
+            {renderInfoTiles()}
+            {renderAuthentication()}
+            {renderScamWarning()}
+          </StyledKeyboardAwareScrollView>
+          <StyledSliderView notificationHeight={notificationHeight}>
+            {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+          </StyledSliderView>
+        </>
+      )}
+    </NotificationSceneWrapper>
   )
 }
+
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(props => ({
+  marginBottom: props.notificationHeight
+}))
+
+const StyledSliderView = styled(View)<{ notificationHeight: number }>(props => {
+  return {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: props.theme.rem(1) + props.notificationHeight
+  }
+})
 
 export const SendScene2 = React.memo(SendComponent)
 
@@ -984,14 +1004,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1)
   },
   contentContainerStyle: { paddingBottom: theme.rem(6) },
-  footer: {
-    width: '100%',
-    marginBottom: theme.rem(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0
-  },
   pinContainer: {
     marginTop: theme.rem(0.25)
   },

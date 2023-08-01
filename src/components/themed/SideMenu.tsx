@@ -15,6 +15,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
@@ -70,6 +71,8 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   // Maintain the list of usernames:
   const localUsers = useWatch(context, 'localUsers')
+  const watchedUsername = useWatch(account, 'username')
+
   const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
   const closeButtonContainerStyle = React.useMemo(() => {
@@ -91,28 +94,32 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   /// ---- Callbacks ----
 
   const handleDeleteAccount = (userInfo: EdgeUserInfo) => () => {
-    Airship.show<'ok' | 'cancel' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={lstrings.forget_account_title}
-        message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
-        buttons={{
-          ok: {
-            label: lstrings.string_forget,
-            onPress: async () => {
-              await context.forgetAccount(userInfo.loginId)
-              return true
+    if (userInfo.username == null) {
+      showBackupModal({ navigation, forgetLoginId: userInfo.loginId })
+    } else {
+      Airship.show<'ok' | 'cancel' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.forget_account_title}
+          message={sprintf(lstrings.forget_account_message_common, userInfo.username ?? lstrings.missing_username)}
+          buttons={{
+            ok: {
+              label: lstrings.string_forget,
+              onPress: async () => {
+                await context.forgetAccount(userInfo.loginId)
+                return true
+              },
+              type: 'primary'
             },
-            type: 'primary'
-          },
-          cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
-        }}
-      />
-    ))
+            cancel: { label: lstrings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      )).catch(err => showError(err))
+    }
   }
 
   const handleSwitchAccount = (userInfo: EdgeUserInfo) => () => {
-    dispatch(logoutRequest(navigation, userInfo.username))
+    dispatch(logoutRequest(navigation, userInfo.loginId)).catch(err => showError(err))
   }
 
   const handleBorrow = () => {
@@ -139,10 +146,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       .then((result: string | undefined) => {
         if (result) {
           const deepLink = parseDeepLink(result)
-          dispatch(launchDeepLink(navigation, deepLink))
+          return dispatch(launchDeepLink(navigation, deepLink))
         }
       })
-      .catch(showError)
+      .catch(err => showError(err))
   }
 
   const handleShareApp = () => {
@@ -269,7 +276,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   if (ENV.ENABLE_VISA_PROGRAM && IONIA_SUPPORTED_FIATS.includes(defaultFiat)) {
     rowDatas.unshift({
       pressHandler: () => {
-        dispatch(executePluginAction(navigation, 'rewardscard', 'sell'))
+        dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
         navigation.dispatch(DrawerActions.closeDrawer())
       },
       iconNameFontAwesome: 'credit-card',
@@ -320,7 +327,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
           <View style={styles.rowBodyContainer}>
-            <TitleText style={styles.text}>{account.username ?? lstrings.missing_username}</TitleText>
+            <TitleText style={styles.text}>{watchedUsername ?? lstrings.missing_username}</TitleText>
           </View>
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>

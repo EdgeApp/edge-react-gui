@@ -18,6 +18,7 @@ export interface MessageTweak {
   iconUri?: string
 
   countryCodes?: string[]
+  excludeCountryCodes?: string[]
   hasLinkedBankMap?: { [pluginId: string]: boolean }
   exactBuildNum?: string
   minBuildNum?: string
@@ -26,6 +27,7 @@ export interface MessageTweak {
 
   startDate?: Date
   durationDays: number
+  version?: string
 }
 
 export const asMessageTweak = asObject<MessageTweak>({
@@ -35,6 +37,7 @@ export const asMessageTweak = asObject<MessageTweak>({
   iconUri: asOptional(asString),
 
   countryCodes: asOptional(asArray(asString)),
+  excludeCountryCodes: asOptional(asArray(asString)),
   hasLinkedBankMap: asOptional(asObject(asBoolean)), // Map of pluginIds
   exactBuildNum: asOptional(asString),
   minBuildNum: asOptional(asString),
@@ -42,7 +45,8 @@ export const asMessageTweak = asObject<MessageTweak>({
   osTypes: asOptional(asArray(asValue('ios', 'android', 'windows', 'macos', 'web'))),
 
   startDate: asOptional(asDate),
-  durationDays: asNumber
+  durationDays: asNumber,
+  version: asOptional(asString)
 })
 
 /**

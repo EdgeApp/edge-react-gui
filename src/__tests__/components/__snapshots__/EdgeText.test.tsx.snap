@@ -7,14 +7,14 @@ exports[`EdgeText should render with some props 1`] = `
   minimumFontScale={0.65}
   numberOfLines={2}
   style={
-    Array [
-      Object {
+    [
+      {
         "color": "#FFFFFF",
         "fontFamily": "Quicksand-Regular",
         "fontSize": 22,
         "includeFontPadding": false,
       },
-      Object {},
+      {},
       null,
     ]
   }

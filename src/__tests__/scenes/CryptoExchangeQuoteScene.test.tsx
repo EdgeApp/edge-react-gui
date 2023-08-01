@@ -100,8 +100,8 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
         pending
         toDenomination="ETH"
         toWalletCurrencyName={{ fromDenomination: '' } as any}
-        shift={(swapInfo, onApprove) => undefined}
-        timeExpired={(swapInfo, onApprove) => undefined}
+        shift={async (swapInfo, onApprove) => {}}
+        timeExpired={async (swapInfo, onApprove) => {}}
         theme={getTheme()}
       />
     )

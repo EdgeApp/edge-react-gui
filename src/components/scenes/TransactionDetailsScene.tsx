@@ -1,7 +1,7 @@
 import { eq } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -11,7 +11,7 @@ import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
@@ -93,25 +93,23 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     return await wallet.accelerate(transaction)
   }
 
-  openPersonInput = () => {
+  openPersonInput = async () => {
     const personLabel = this.state.direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
-    Airship.show<ContactModalResult | undefined>(bridge => <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />).then(
-      person => {
-        if (person != null) this.onSaveTxDetails({ name: person.contactName })
-      }
-    )
+    const person = await Airship.show<ContactModalResult | undefined>(bridge => (
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />
+    ))
+    if (person != null) this.onSaveTxDetails({ name: person.contactName })
   }
 
-  openCategoryInput = () => {
-    const { category } = this.state
-    Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />).then(async category => {
-      if (category == null) return
-      this.onSaveTxDetails({ category })
-    })
+  openCategoryInput = async () => {
+    const { category: initialCategory } = this.state
+    const category = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={initialCategory} />)
+    if (category == null) return
+    this.onSaveTxDetails({ category })
   }
 
-  openNotesInput = () => {
-    Airship.show<string | undefined>(bridge => (
+  openNotesInput = async () => {
+    const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.notes}
@@ -121,7 +119,8 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
       />
-    )).then(notes => (notes != null ? this.onSaveTxDetails({ notes }) : null))
+    ))
+    if (notes != null) this.onSaveTxDetails({ notes })
   }
 
   openAccelerateModel = async () => {
@@ -159,13 +158,13 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  openAdvancedDetails = async () => {
+  openAdvancedDetails = () => {
     const { wallet, route } = this.props
     const { edgeTransaction } = route.params
 
     Airship.show(bridge => (
       <AdvancedDetailsModal bridge={bridge} transaction={edgeTransaction} url={sprintf(wallet.currencyInfo.transactionExplorer, edgeTransaction.txid)} />
-    ))
+    )).catch(err => showError(err))
   }
 
   onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
@@ -210,37 +209,33 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const categoriesText = formatCategory(splitCategory(category))
 
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <View style={styles.tilesContainer}>
-            <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
-              <View style={styles.tileRow}>
-                {thumbnailPath ? (
-                  <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
-                ) : (
-                  <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
-                )}
-                <EdgeText>{personName}</EdgeText>
-              </View>
-            </Tile>
-            <TransactionCryptoAmountTile transaction={edgeTransaction} wallet={wallet} />
-            <TransactionFiatTiles transaction={edgeTransaction} wallet={wallet} onMetadataEdit={this.onSaveTxDetails} />
-            <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={this.openCategoryInput}>
-              <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
-            </Tile>
-            {edgeTransaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-            {edgeTransaction.swapData == null ? null : <SwapDetailsTiles swapData={edgeTransaction.swapData} transaction={edgeTransaction} wallet={wallet} />}
-            {acceleratedTx == null ? null : (
-              <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
+      <View style={styles.tilesContainer}>
+        <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
+          <View style={styles.tileRow}>
+            {thumbnailPath ? (
+              <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+            ) : (
+              <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
             )}
-            <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
-            <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-              <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
-            </TouchableWithoutFeedback>
-            <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+            <EdgeText>{personName}</EdgeText>
           </View>
-        </ScrollView>
-      </SceneWrapper>
+        </Tile>
+        <TransactionCryptoAmountTile transaction={edgeTransaction} wallet={wallet} />
+        <TransactionFiatTiles transaction={edgeTransaction} wallet={wallet} onMetadataEdit={this.onSaveTxDetails} />
+        <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={this.openCategoryInput}>
+          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
+        </Tile>
+        {edgeTransaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
+        {edgeTransaction.swapData == null ? null : <SwapDetailsTiles swapData={edgeTransaction.swapData} transaction={edgeTransaction} wallet={wallet} />}
+        {acceleratedTx == null ? null : (
+          <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
+        )}
+        <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
+        <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
+          <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
+        </TouchableWithoutFeedback>
+        <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+      </View>
     )
   }
 }
@@ -287,5 +282,9 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
 
   const thumbnailPath = useContactThumbnail(metadata?.name)
 
-  return <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
+  return (
+    <NotificationSceneWrapper navigation={navigation} scroll>
+      <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
+    </NotificationSceneWrapper>
+  )
 })

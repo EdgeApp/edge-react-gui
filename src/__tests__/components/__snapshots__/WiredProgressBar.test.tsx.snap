@@ -3,15 +3,15 @@
 exports[`ProgressBar should render with loading props 1`] = `
 <View
   style={
-    Object {
+    {
       "flexDirection": "row",
     }
   }
 >
   <ForwardRef(AnimatedComponentWrapper)
     style={
-      Array [
-        Object {
+      [
+        {
           "backgroundColor": "#00f1a2",
           "bottom": 0,
           "left": 0,
@@ -19,7 +19,7 @@ exports[`ProgressBar should render with loading props 1`] = `
           "top": -3,
           "zIndex": 100,
         },
-        Object {
+        {
           "width": "19.9%",
         },
       ]

@@ -10,7 +10,6 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -139,31 +138,6 @@ export function fetchWalletAccountActivationPaymentInfo(paymentParams: AccountPa
   }
 }
 
-export function checkHandleAvailability(walletType: string, accountName: string): ThunkAction<void> {
-  return async (dispatch, getState) => {
-    dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
-    const state = getState()
-    const { account } = state.core
-    const currencyPluginName = getPluginId(walletType)
-    const currencyPlugin = account.currencyConfig[currencyPluginName]
-    try {
-      const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-      if (data.result === 'AccountAvailable') {
-        dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
-      }
-    } catch (error: any) {
-      console.log('checkHandleAvailability error: ', error)
-      let data: HandleAvailableStatus = 'UNKNOWN_ERROR'
-      if (error.name === 'ErrorAccountUnavailable') {
-        data = 'UNAVAILABLE'
-      } else if (error.name === 'ErrorInvalidAccountName') {
-        data = 'INVALID'
-      }
-      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
-    }
-  }
-}
-
 export function createAccountTransaction(
   navigation: NavigationBase,
   createdWalletId: string,
@@ -222,12 +196,11 @@ export function createAccountTransaction(
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
               notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
-            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              navigation.navigate('walletsTab', { screen: 'walletList' })
-              setTimeout(() => {
-                Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
-              }, 750)
-            })
+            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).catch(err => console.warn(err))
+            navigation.navigate('walletsTab', { screen: 'walletList' })
+            setTimeout(() => {
+              Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)
+            }, 750)
           }
         },
         alternateBroadcast:
@@ -235,7 +208,7 @@ export function createAccountTransaction(
       })
     } else {
       // if handle is now unavailable
-      dispatch(createHandleUnavailableModal(navigation, createdWalletId, accountName))
+      await dispatch(createHandleUnavailableModal(navigation, createdWalletId, accountName))
     }
   }
 }
@@ -244,7 +217,7 @@ export function createHandleUnavailableModal(navigation: NavigationBase, newWall
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    account.changeWalletStates({
+    await account.changeWalletStates({
       [newWalletId]: {
         deleted: true
       }

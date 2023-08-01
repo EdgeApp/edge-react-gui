@@ -21,10 +21,12 @@ export interface RootState {
   readonly deviceReferral: DeviceReferral
   readonly exchangeRates: GuiExchangeRates
 
-  readonly isLoggedIn: boolean
+  // Flag to signal scrolling components to add extra padding at the bottom to
+  // avoid blocking content with the notification view
+  readonly isNotificationViewActive: boolean
 
   // Next username to auto-fill at the login screen, or blank if none:
-  readonly nextUsername: string | null
+  readonly nextLoginId: string | null
 
   // Deep link waiting to be fulfilled:
   readonly pendingDeepLink: DeepLink | null
@@ -66,22 +68,19 @@ export const rootReducer = combineReducers<RootState, Action>({
     }
   },
 
-  isLoggedIn: (state = false, action: Action): boolean => {
+  isNotificationViewActive: (state = false, action: Action): boolean => {
     switch (action.type) {
-      case 'IS_LOGGED_IN':
-        return true
-      case 'LOGOUT':
-        return false
+      case 'IS_NOTIFICATION_VIEW_ACTIVE':
+        return action.data.isNotificationViewActive
       default:
         return state
     }
   },
 
-  nextUsername(state: string | null = null, action: Action): string | null {
+  nextLoginId(state: string | null = null, action: Action): string | null {
     switch (action.type) {
       case 'LOGOUT': {
-        const { username = null } = action.data
-        return username
+        return action.data.nextLoginId ?? null
       }
       default:
         return state

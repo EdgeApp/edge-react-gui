@@ -13,6 +13,7 @@ import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
 import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
@@ -59,7 +60,7 @@ export function Services(props: Props) {
     const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
     const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
 
-    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && !hasFioWallets) {
+    if (freeRegApiToken != null && freeRegRefCode != null && !account.newAccount && account.username != null && !hasFioWallets) {
       const fioCreateHandleRecord = await account.dataStore
         .getItem('', FIO_CREATE_HANDLE_ITEM_ID)
         .then(asFioCreateHandleRecord)
@@ -70,17 +71,22 @@ export function Services(props: Props) {
         if (shouldCreateHandle) {
           navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
         } else {
-          account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
+          await account.dataStore.setItem('', FIO_CREATE_HANDLE_ITEM_ID, uncleaner(asFioCreateHandleRecord)({ ignored: new Date() }))
         }
       }
     }
   })
 
+  React.useEffect(() => {
+    console.log(`Dimensions: get(window) width=${width} height=${height}`)
+    console.log(`Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`)
+  }, [])
+
   // Methods to call immediately after login:
   useAsyncEffect(
     async () => {
       if (account != null) {
-        maybeShowFioHandleModal(account)
+        await maybeShowFioHandleModal(account)
       }
     },
     [account, maybeShowFioHandleModal],
@@ -110,9 +116,9 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      makeStakePlugins().catch(() => {})
-      updateAssetOverrides()
-      dispatch(updateExchangeInfo())
+      makeStakePlugins().catch(err => console.warn(err))
+      updateAssetOverrides().catch(err => console.warn(err))
+      dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
     REFRESH_INFO_SERVER_MS

@@ -5,6 +5,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showHelpModal } from '../modals/HelpModal'
+import { showError } from '../services/AirshipInstance'
 import { EdgeText } from '../themed/EdgeText'
 import { NavigationButton } from './NavigationButton'
 
@@ -26,7 +27,7 @@ export const HeaderTextButton = (props: Props) => {
     if (type === 'exit') {
       navigation.goBack()
     } else if (type === 'help') {
-      showHelpModal()
+      showHelpModal().catch(err => showError(err))
     }
   })
 

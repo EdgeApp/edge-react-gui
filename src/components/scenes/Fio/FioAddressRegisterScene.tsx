@@ -77,14 +77,14 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   componentDidMount() {
     const { fioWallets } = this.props
-    this.getPublicDomains()
-    this.checkFreeAddress()
+    this.getPublicDomains().catch(err => showError(err))
+    this.checkFreeAddress().catch(err => showError(err))
     if (fioWallets.length > 0) {
       this.setState({
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet()
+      this.createFioWallet().catch(err => showError(err))
     }
     this.setState({ inputWidth: this.props.theme.rem(12.5) })
   }
@@ -142,7 +142,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     }
   }
 
-  registerFreeAddress = () => {
+  registerFreeAddress = async () => {
     const { fioPlugin, fioWallets } = this.props
     const { selectedWallet } = this.state
     if (!fioPlugin) return
@@ -151,7 +151,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const publicKey = selectedWallet.publicWalletInfo.keys.publicKey
     const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
     try {
-      openLink(url)
+      await openLink(url)
     } catch (e: any) {
       showError(sprintf(lstrings.open_url_err, url))
     }
@@ -269,9 +269,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
     }
   }
 
-  editAddressPressed = () => {
+  editAddressPressed = async () => {
     this.handleFioAddressFocus()
-    Airship.show<string | undefined>(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={this.state.fioAddress}
@@ -292,8 +292,8 @@ export class FioAddressRegister extends React.Component<Props, State> {
     })
   }
 
-  selectFioWallet = () => {
-    Airship.show<WalletListResult>(bridge => (
+  selectFioWallet = async () => {
+    await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
@@ -302,18 +302,17 @@ export class FioAddressRegister extends React.Component<Props, State> {
     })
   }
 
-  selectFioDomain = () => {
+  selectFioDomain = async () => {
     const { navigation } = this.props
     const { domainsLoading } = this.state
     if (domainsLoading) return
-    Airship.show<FioDomain | undefined>(bridge => <DomainListModal bridge={bridge} navigation={navigation} publicDomains={this.state.publicDomains} />).then(
-      response => {
-        if (response) {
-          this.setState({ selectedDomain: response })
-          this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
-        }
-      }
-    )
+    const response = await Airship.show<FioDomain | undefined>(bridge => (
+      <DomainListModal bridge={bridge} navigation={navigation} publicDomains={this.state.publicDomains} />
+    ))
+    if (response) {
+      this.setState({ selectedDomain: response })
+      this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
+    }
   }
 
   renderButton() {

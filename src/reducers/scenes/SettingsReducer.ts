@@ -32,9 +32,9 @@ export interface AccountInitPayload {
   pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
   preferredSwapPluginType: EdgeSwapPluginType | undefined
+  securityCheckedWallets: SecurityCheckedWallets
   spamFilterOn: boolean
   spendingLimits: SpendingLimits
-  securityCheckedWallets: SecurityCheckedWallets
   touchIdInfo: GuiTouchIdInfo
   walletId: string
   walletsSort: SortOption
@@ -48,7 +48,6 @@ export const initialState: SettingsState = {
   isAccountBalanceVisible: true,
   isTouchEnabled: false,
   isTouchSupported: false,
-  loginStatus: null,
   mostRecentWallets: [],
   // prettier-ignore
   passwordRecoveryRemindersShown: {
@@ -59,6 +58,7 @@ export const initialState: SettingsState = {
     '200000': false
   },
   pinLoginEnabled: false,
+  settingsLoaded: null,
   spendingLimits: {
     transaction: {
       isEnabled: false,
@@ -79,13 +79,13 @@ export interface SettingsState {
   isAccountBalanceVisible: boolean
   isTouchEnabled: boolean
   isTouchSupported: boolean
-  loginStatus: boolean | null
   mostRecentWallets: MostRecentWallet[]
   passwordRecoveryRemindersShown: PasswordReminderLevels
   pinLoginEnabled: boolean
   preferredSwapPluginId: string | undefined
   preferredSwapPluginType: EdgeSwapPluginType | undefined
   securityCheckedWallets: SecurityCheckedWallets
+  settingsLoaded: boolean | null
   spamFilterOn: boolean
   spendingLimits: {
     transaction: {
@@ -151,13 +151,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isAccountBalanceVisible,
         isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
-        loginStatus: true,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         pinLoginEnabled,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
         securityCheckedWallets,
+        settingsLoaded: true,
         spamFilterOn,
         walletsSort
       }

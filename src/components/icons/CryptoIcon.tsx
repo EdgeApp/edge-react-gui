@@ -101,7 +101,14 @@ const CryptoIconComponent = (props: Props) => {
 
   return (
     <View style={spacingStyle}>
-      {wallet == null ? null : <WalletSyncCircle size={size} wallet={wallet} />}
+      {wallet == null ? null : (
+        <WalletSyncCircle
+          /* key prevents component from being recycled and shared between wallets */
+          key={`${wallet.id}${String(tokenId)}`}
+          size={size}
+          wallet={wallet}
+        />
+      )}
       {primaryCurrencyIcon}
       {hideSecondary ? null : secondaryCurrencyIcon}
     </View>

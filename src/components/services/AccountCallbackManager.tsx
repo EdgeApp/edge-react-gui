@@ -2,6 +2,7 @@ import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkFioObtData } from '../../actions/FioActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
@@ -89,12 +90,17 @@ export function AccountCallbackManager(props: Props) {
 
         // Check for incoming FIO requests:
         const receivedTxs = transactions.filter(tx => !tx.isSend)
-        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs))
+        if (receivedTxs.length > 0) dispatch(checkFioObtData(wallet, receivedTxs)).catch(err => console.warn(err))
 
         // Show the dropdown for the first transaction:
         const [firstReceive] = receivedTxs
         if (firstReceive != null) {
           dispatch(showReceiveDropdown(navigation, firstReceive))
+
+          // Notify the user to consider backing up their account
+          if (account.username == null) {
+            showBackupModal({ navigation })
+          }
         }
 
         // Check if password recovery is set up:

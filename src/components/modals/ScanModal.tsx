@@ -53,10 +53,8 @@ export const ScanModal = (props: Props) => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    edgeRequestPermission('camera')
-
+    edgeRequestPermission('camera').catch(err => showError(err))
     return () => setScanEnabled(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleBarCodeRead = (result: { data: string }) => {
@@ -64,9 +62,9 @@ export const ScanModal = (props: Props) => {
     bridge.resolve(result.data)
   }
 
-  const handleSettings = () => {
+  const handleSettings = async () => {
     triggerHaptic('impactLight')
-    Linking.openSettings()
+    await Linking.openSettings()
   }
 
   const handleTextInput = async () => {
@@ -86,7 +84,7 @@ export const ScanModal = (props: Props) => {
       {
         mediaType: 'photo'
       },
-      async result => {
+      result => {
         if (result.didCancel) return
 
         if (result.errorMessage) {
@@ -101,23 +99,23 @@ export const ScanModal = (props: Props) => {
           return
         }
 
-        try {
-          const response = await RNQRGenerator.detect({
-            uri: asset.uri
+        RNQRGenerator.detect({
+          uri: asset.uri
+        })
+          .then(response => {
+            if (response.values.length === 0) {
+              showWarning(lstrings.scan_camera_missing_qrcode)
+              return
+            }
+
+            logActivity(`QR code read from photo library.`)
+            bridge.resolve(response.values[0])
           })
-
-          if (response.values.length === 0) {
-            showWarning(lstrings.scan_camera_missing_qrcode)
-            return
-          }
-
-          logActivity(`QR code read from photo library.`)
-          bridge.resolve(response.values[0])
-        } catch (error: any) {
-          showError(error)
-        }
+          .catch(error => {
+            showError(error)
+          })
       }
-    )
+    ).catch(err => showError(err))
   }
 
   const handleClose = () => {

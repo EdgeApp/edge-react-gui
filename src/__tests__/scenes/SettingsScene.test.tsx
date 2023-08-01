@@ -12,7 +12,9 @@ const typeHack: any = {
   currencyConfig: {},
   username: 'some user',
   logSettings: { defaultLogLevel: 'info' },
-  watch() {}
+  watch() {
+    return () => {}
+  }
 }
 const account: EdgeAccount = typeHack
 const context: EdgeContext = typeHack
@@ -37,13 +39,13 @@ describe('MyComponent', () => {
           touchIdEnabled
           // DispatchProps:
           dispatchUpdateEnableTouchIdEnable={async () => undefined}
-          handleClearLogs={() => undefined}
+          handleClearLogs={async () => {}}
           handleSendLogs={() => undefined}
           lockSettings={() => undefined}
           onTogglePinLoginEnabled={async () => undefined}
-          setAutoLogoutTimeInSeconds={() => undefined}
-          showRestoreWalletsModal={() => undefined}
-          showUnlockSettingsModal={() => undefined}
+          setAutoLogoutTimeInSeconds={async () => {}}
+          showRestoreWalletsModal={async () => {}}
+          showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
@@ -52,6 +54,7 @@ describe('MyComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 
   it('should render Locked SettingsOverview', () => {
@@ -74,12 +77,12 @@ describe('MyComponent', () => {
           // DispatchProps:
           dispatchUpdateEnableTouchIdEnable={async () => undefined}
           lockSettings={() => undefined}
-          handleClearLogs={() => undefined}
+          handleClearLogs={async () => {}}
           handleSendLogs={() => undefined}
           onTogglePinLoginEnabled={async () => undefined}
-          setAutoLogoutTimeInSeconds={() => undefined}
-          showRestoreWalletsModal={() => undefined}
-          showUnlockSettingsModal={() => undefined}
+          setAutoLogoutTimeInSeconds={async () => {}}
+          showRestoreWalletsModal={async () => {}}
+          showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
@@ -88,5 +91,6 @@ describe('MyComponent', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

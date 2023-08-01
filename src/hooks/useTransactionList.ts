@@ -106,7 +106,7 @@ export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: string |
       cleanupStream()
       cleanupStream = () => {
         closed = true
-        if (stream.return != null) stream.return()
+        if (stream.return != null) stream.return().catch(err => showError(err))
       }
 
       requestMore.current = () => {

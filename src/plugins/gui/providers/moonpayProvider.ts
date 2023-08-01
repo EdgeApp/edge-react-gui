@@ -113,11 +113,11 @@ export const moonpayProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const apiKey: string | null = typeof params.apiKeys === 'string' ? params.apiKeys : null
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
-    const out = {
+    const out: FiatProvider = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async (paymentTypes: FiatPaymentType[]): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
 
@@ -135,6 +135,9 @@ export const moonpayProvider: FiatProviderFactory = {
         }
         for (const currency of moonpayCurrencies) {
           if (currency.type === 'crypto') {
+            if (regionCode.countryCode === 'US' && currency.isSupportedInUS !== true) {
+              continue
+            }
             if (currency.name.includes('(ERC-20)')) {
               addToAllowedCurrencies('ethereum', currency, currency.code)
             } else {
@@ -260,7 +263,7 @@ export const moonpayProvider: FiatProviderFactory = {
             url.set('query', queryObj)
 
             console.log('Approving moonpay quote url=' + url.href)
-            showUi.openWebView({ url: url.href })
+            await showUi.openWebView({ url: url.href })
           },
           closeQuote: async (): Promise<void> => {}
         }

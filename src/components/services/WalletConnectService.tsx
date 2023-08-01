@@ -1,7 +1,7 @@
 import '@walletconnect/react-native-compat'
 
 import { Core } from '@walletconnect/core'
-import Web3Wallet from '@walletconnect/web3wallet'
+import Web3Wallet, { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
@@ -10,7 +10,7 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { getAccounts, getWalletIdFromSessionNamespace } from '../../hooks/useWalletConnect'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 
 export let walletConnectClient: Web3Wallet | undefined
 
@@ -51,7 +51,7 @@ export const WalletConnectService = (props: Props) => {
       const iconUri = session.peer.metadata.icons[0] ?? '.svg'
       const icon = iconUri.endsWith('.svg') ? 'https://content.edge.app/walletConnectLogo.png' : iconUri
       const dApp = { peerMeta: { name: session.peer.metadata.name, icons: [icon] } }
-      Airship.show(bridge => (
+      await Airship.show(bridge => (
         <WcSmartContractModal
           bridge={bridge}
           dApp={dApp}
@@ -89,14 +89,18 @@ export const WalletConnectService = (props: Props) => {
       })
     }
 
+    const handleSessionRequestSync = (event: Web3WalletTypes.SessionRequest) => {
+      handleSessionRequest(event).catch(err => showError(err))
+    }
+
     if (walletConnectClient.events.listenerCount('session_request') === 0) {
-      walletConnectClient.on('session_request', handleSessionRequest)
+      walletConnectClient.on('session_request', handleSessionRequestSync)
     }
     console.log('WalletConnect initialized')
     waitingClients.forEach(f => f(walletConnectClient as Web3Wallet))
 
     return () => {
-      walletConnectClient?.events.removeListener('session_request', handleSessionRequest)
+      walletConnectClient?.events.removeListener('session_request', handleSessionRequestSync)
     }
   }, [])
 

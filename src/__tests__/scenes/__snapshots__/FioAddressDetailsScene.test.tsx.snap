@@ -6,7 +6,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
 >
   <WithTheme(EdgeTextComponent)
     style={
-      Object {
+      {
         "color": "#FFFFFF",
         "fontSize": 17,
         "marginTop": -11,
@@ -27,7 +27,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       name="ios-settings"
       size={12}
       style={
-        Object {
+        {
           "fontSize": 34,
           "paddingHorizontal": 11,
         }
@@ -50,7 +50,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     fioAddressName="Fio@edge"
     fioWallet={null}
     navigation={
-      Object {
+      {
         "addListener": [Function],
         "canGoBack": [Function],
         "dispatch": [Function],

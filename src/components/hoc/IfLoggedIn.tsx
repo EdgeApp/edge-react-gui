@@ -5,7 +5,7 @@ import { LoadingScene } from '../scenes/LoadingScene'
 
 export function ifLoggedIn<Props extends {}>(Component: React.ComponentType<Props>): React.FunctionComponent<Props> {
   return function (props: Props) {
-    const loginStatus = useSelector(state => state.ui.settings.loginStatus ?? false)
-    return loginStatus ? <Component {...props} /> : <LoadingScene />
+    const settingsLoaded = useSelector(state => state.ui.settings.settingsLoaded ?? false)
+    return settingsLoaded ? <Component {...props} /> : <LoadingScene />
   }
 }

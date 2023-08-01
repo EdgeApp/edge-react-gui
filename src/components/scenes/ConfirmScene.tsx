@@ -36,7 +36,7 @@ const ConfirmComponent = (props: Props) => {
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
-    onConfirm(resetSlider)
+    await onConfirm(resetSlider)
   })
 
   const handleBackButton = useHandler(() => {

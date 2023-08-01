@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -15,6 +16,7 @@ import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -99,15 +101,13 @@ export const WALLET_LIST_MENU: Array<{
       'telos',
       'ufo',
       'vertcoin',
-      'wax',
-      'piratechain',
-      'zcash'
+      'wax'
     ],
     label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
   },
   {
-    pluginIds: ['monero', 'piratechain'],
+    pluginIds: ['monero', 'piratechain', 'zcash'],
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
@@ -135,10 +135,10 @@ export function WalletListMenuModal(props: Props) {
 
   const handleCancel = () => props.bridge.resolve()
 
-  const optionAction = (option: WalletListMenuKey) => {
-    dispatch(walletListMenuAction(navigation, walletId, option, tokenId))
+  const optionAction = useHandler((option: WalletListMenuKey) => {
     bridge.resolve()
-  }
+    dispatch(walletListMenuAction(navigation, walletId, option, tokenId)).catch(error => showError(error))
+  })
 
   useAsyncEffect(async () => {
     if (wallet == null) {
@@ -183,6 +183,10 @@ export function WalletListMenuModal(props: Props) {
       if (value === 'manageTokens') {
         if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
       }
+
+      // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
+      if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+
       result.push({ label, value })
     }
 
@@ -254,7 +258,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modalCloseButton: {
     position: 'absolute',
-    width: '100%',
+    left: 0,
+    right: 0,
     bottom: theme.rem(4),
     height: theme.rem(3)
   },

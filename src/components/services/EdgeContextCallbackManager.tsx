@@ -6,7 +6,7 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { makeErrorLog, translateError } from '../../util/translateError'
 import { AlertDropdown } from '../navigation/AlertDropdown'
-import { Airship, yellowText } from './AirshipInstance'
+import { Airship, showError, yellowText } from './AirshipInstance'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -39,9 +39,11 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
         if (!errorShown) {
           errorShown = true
-          this.showError(error).then(() => {
-            errorShown = false
-          })
+          this.showError(error)
+            .then(() => {
+              errorShown = false
+            })
+            .catch(err => showError(err))
         }
       })
     )

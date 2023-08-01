@@ -21,7 +21,7 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
-import { connect } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
@@ -30,11 +30,11 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -77,6 +77,7 @@ interface StateProps {
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
+  contentContainerStyle: { paddingBottom?: number }
 }
 
 interface DispatchProps {
@@ -110,7 +111,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    this.updatePlugins()
+    this.updatePlugins().catch(err => showError(err))
     this.checkCountry()
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
@@ -152,7 +153,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     } catch (e: any) {
       console.log(e.message, `Error opening ${PLUGIN_LIST_FILE}. Trying network instead`)
     }
-    this.updatePluginsNetwork(diskPlugins)
+    await this.updatePluginsNetwork(diskPlugins)
   }
 
   async updatePluginsNetwork(diskPlugins: BuySellPlugins | undefined) {
@@ -316,7 +317,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, contentContainerStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
@@ -343,7 +344,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <SceneWrapper background="theme" hasTabs>
+      <>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
@@ -362,9 +363,14 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlashList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
+          <FlashList
+            data={plugins}
+            renderItem={this.renderPlugin}
+            keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+            contentContainerStyle={contentContainerStyle}
+          />
         )}
-      </SceneWrapper>
+      </>
     )
   }
 }
@@ -442,25 +448,44 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, props) => {
-    const context = state.core.context
-    const deviceId = base58ToUuid(context.clientId)
-    const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
-    return {
-      account: state.core.account,
-      accountPlugins: state.account.referralCache.accountPlugins,
-      accountReferral: state.account.accountReferral,
-      coreDisklet: state.core.disklet,
-      countryCode: state.ui.settings.countryCode,
-      developerModeOn: state.ui.settings.developerModeOn,
-      deviceId,
-      disablePlugins: state.ui.exchangeInfo[direction].disablePlugins
-    }
-  },
-  dispatch => ({
-    updateCountryCode(countryCode: string) {
-      dispatch(updateOneSetting({ countryCode }))
-    }
-  })
-)(withTheme(GuiPluginList))
+export const GuiPluginListScene = React.memo((props: OwnProps) => {
+  const { navigation, route } = props
+  const dispatch = useDispatch()
+  const theme = useTheme()
+
+  const account = useSelector(state => state.core.account)
+  const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
+  const accountReferral = useSelector(state => state.account.accountReferral)
+  const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
+  const coreDisklet = useSelector(state => state.core.disklet)
+  const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
+  const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+
+  const updateCountryCode = (countryCode: string) => {
+    dispatch(updateOneSetting({ countryCode }))
+  }
+
+  return (
+    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
+      {(gap, notificationHeight) => (
+        <GuiPluginList
+          navigation={navigation}
+          route={route}
+          deviceId={deviceId}
+          account={account}
+          accountPlugins={accountPlugins}
+          accountReferral={accountReferral}
+          coreDisklet={coreDisklet}
+          countryCode={countryCode}
+          developerModeOn={developerModeOn}
+          disablePlugins={disablePlugins}
+          updateCountryCode={updateCountryCode}
+          theme={theme}
+          contentContainerStyle={{ paddingBottom: notificationHeight }}
+        />
+      )}
+    </NotificationSceneWrapper>
+  )
+})

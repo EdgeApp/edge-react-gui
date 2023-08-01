@@ -1,6 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Linking, TouchableOpacity, View } from 'react-native'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,10 +12,11 @@ import { FlatListItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
+import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 import { Tile } from '../tiles/Tile'
@@ -87,7 +89,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     }
   })
 
-  const handleEditValue = (initialValue: string, pluginId: string, opt: ImportKeyOption) => {
+  const handleEditValue = async (initialValue: string, pluginId: string, opt: ImportKeyOption) => {
     const onSubmit = async (input: string) => {
       if (input === '') return true
       return await currencyConfig[pluginId]
@@ -98,12 +100,34 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
         })
     }
 
-    Airship.show<string | undefined>(bridge => (
+    let description: React.ReactNode | undefined
+    if (opt.displayDescription != null) {
+      const { message, knowledgeBaseUri } = opt.displayDescription
+
+      if (knowledgeBaseUri != null) {
+        const onPress = () => {
+          Linking.openURL(knowledgeBaseUri).catch(err => showError(err))
+        }
+        description = (
+          <ModalMessage>
+            {message}
+            <TouchableOpacity onPress={onPress}>
+              <Ionicon name="help-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
+            </TouchableOpacity>
+          </ModalMessage>
+        )
+      } else {
+        description = message
+      }
+    }
+
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         initialValue={initialValue}
         inputLabel={opt.displayName}
         title={opt.displayName}
+        message={description}
         keyboardType={opt.inputType}
         onSubmit={onSubmit}
       />
@@ -137,7 +161,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                 type="editable"
                 title={opt.displayName}
                 maximumHeight="large"
-                onPress={() => handleEditValue(value, pluginId, opt)}
+                onPress={async () => await handleEditValue(value, pluginId, opt)}
                 error={error || value === ''}
               >
                 <View

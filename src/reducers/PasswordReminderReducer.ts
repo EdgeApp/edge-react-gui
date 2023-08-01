@@ -207,7 +207,12 @@ function translateAction(action: Action): PasswordReminderReducerAction {
     }
   }
 
-  if (action.type === 'ACCOUNT_INIT_COMPLETE' && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+  if (
+    action.type === 'ACCOUNT_INIT_COMPLETE' &&
+    !action.data.account.passwordLogin &&
+    !action.data.account.newAccount &&
+    action.data.account.username != null
+  ) {
     return {
       type: 'NON_PASSWORD_LOGIN',
       data: {

@@ -2,55 +2,56 @@
 
 exports[`ClickableRow should render with loading props 1`] = `
 <TouchableHighlight
+  accessible={false}
   onLongPress={[Function]}
   onPress={[Function]}
   underlayColor="#06090c"
 >
   <LinearGradient
     colors={
-      Array [
+      [
         "#06090c",
         "#1b2f3b",
       ]
     }
     end={
-      Object {
+      {
         "x": 1,
         "y": 0,
       }
     }
     start={
-      Object {
+      {
         "x": 0,
         "y": 0,
       }
     }
     style={
-      Array [
-        Object {
+      [
+        {
           "alignItems": "center",
           "flexDirection": "row",
           "height": 96,
           "justifyContent": "center",
           "paddingHorizontal": 22,
         },
-        Object {
+        {
           "marginBottom": 247,
           "marginLeft": 247,
           "marginRight": 247,
           "marginTop": 247,
         },
-        Object {
+        {
           "paddingBottom": 247,
           "paddingLeft": 247,
           "paddingRight": 247,
           "paddingTop": 247,
         },
-        Object {
+        {
           "borderBottomColor": "rgba(255, 255, 255, .1)",
           "borderBottomWidth": 1,
         },
-        Object {
+        {
           "height": "auto",
         },
       ]

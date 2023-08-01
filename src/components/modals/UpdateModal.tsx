@@ -21,9 +21,9 @@ export function UpdateModal(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     const url = Platform.OS === 'android' ? `http://play.app.goo.gl/?link=http://play.google.com/store/apps/details?id=${getBundleId()}` : config.appStore
-    Linking.openURL(url)
+    await Linking.openURL(url)
     bridge.resolve()
   }
 

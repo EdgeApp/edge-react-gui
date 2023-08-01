@@ -77,14 +77,13 @@ export const LoanDashboardScene = (props: Props) => {
   //
 
   useAsyncEffect(async () => {
-    if (await isShowLoanWelcomeModal(account.disklet)) Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
   }, [])
 
-  React.useEffect(() => {
+  useAsyncEffect(async () => {
     // Only resync on scene mount every 5 minutes
     if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
-      dispatch(resyncLoanAccounts(account))
+      await dispatch(resyncLoanAccounts(account))
     }
   }, [account, dispatch, lastResyncTimestamp])
 

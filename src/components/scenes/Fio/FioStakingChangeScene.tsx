@@ -1,5 +1,5 @@
 import { add, gt } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -8,18 +8,20 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
 import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
-import { convertCurrency } from '../../../selectors/WalletSelectors'
-import { connect } from '../../../types/reactRedux'
+import { convertCurrencyFromExchangeRates } from '../../../selectors/WalletSelectors'
+import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { FioAddress } from '../../../types/types'
+import { MapObject } from '../../../types/types'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
 import { Airship, showToast } from '../../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { ModalFooter, ModalMessage, ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -27,39 +29,26 @@ import { Slider } from '../../themed/Slider'
 import { ThemedModal } from '../../themed/ThemedModal'
 import { Tile } from '../../tiles/Tile'
 
-interface OwnProps extends EdgeSceneProps<'fioStakingChange'> {}
-
-interface StateProps {
-  stakingBalances: {
-    [cCode: string]: {
-      native: string
-      crypto: string
-      fiat: string
-    }
-  }
-  currencyWallet: EdgeCurrencyWallet
-  currencyPlugin: EdgeCurrencyConfig
-  currencyDenomination: EdgeDenomination
-  fioAddresses: FioAddress[]
+interface Props extends EdgeSceneProps<'fioStakingChange'> {
+  wallet: EdgeCurrencyWallet
 }
-interface DispatchProps {
-  refreshAllFioAddresses: () => void
-}
-type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
-export const FioStakingChangeSceneComponent = (props: Props) => {
+type StakingBalances = MapObject<{
+  native: string
+  crypto: string
+  fiat: string
+}>
+
+export const FioStakingChangeScene = withWallet((props: Props) => {
+  const theme = useTheme()
   const {
-    theme,
+    wallet: currencyWallet,
     route: {
       params: { change, currencyCode, walletId }
     },
-    currencyWallet,
-    currencyPlugin,
-    currencyDenomination,
-    stakingBalances,
-    navigation,
-    fioAddresses
+    navigation
   } = props
+
   const styles = getStyles(theme)
   const { pluginId } = currencyWallet.currencyInfo
 
@@ -74,15 +63,44 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
   const [selectedFioAddress, setSelectedFioAddress] = React.useState<string | undefined>(undefined)
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
+  const dispatch = useDispatch()
+  const currencyPlugin = useSelector(state => state.core.account.currencyConfig[pluginId])
+  const stakingBalances: StakingBalances = {}
+
+  const currencyDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
+  const defaultDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+
+  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
+    for (const cCodeKey in STAKING_BALANCES) {
+      const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
+
+      const stakingNativeAmount = currencyWallet.balances[stakingCurrencyCode] ?? '0'
+      const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
+      const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
+
+      const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
+      const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
+      const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
+
+      stakingBalances[stakingCurrencyCode] = {
+        native: stakingNativeAmount,
+        crypto: stakingCryptoAmountFormat,
+        fiat: stakingFiatBalanceFormat
+      }
+    }
+  }
+
   const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
     setExchangeAmount(exchangeAmount)
     setNativeAmount(nativeAmount)
   }
 
-  const onMaxSet = () => {
+  const onMaxSet = async () => {
     switch (change) {
       case 'add': {
-        currencyWallet
+        await currencyWallet
           .getMaxSpendable({
             currencyCode,
             spendTargets: [{ publicAddress: '' }],
@@ -149,8 +167,8 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     )).catch(error => setError(error))
   }
 
-  const handleUnlockDate = () => {
-    Airship.show(bridge => {
+  const handleUnlockDate = async () => {
+    await Airship.show(bridge => {
       return (
         <ThemedModal bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
           <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
@@ -164,9 +182,8 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
     })
   }
 
-  React.useEffect(() => {
-    props.refreshAllFioAddresses()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useAsyncEffect(async () => {
+    await dispatch(refreshAllFioAddresses())
   }, [])
 
   React.useEffect(() => {
@@ -322,7 +339,7 @@ export const FioStakingChangeSceneComponent = (props: Props) => {
       </View>
     </SceneWrapper>
   )
-}
+})
 
 const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
@@ -360,52 +377,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center'
   }
 }))
-
-export const FioStakingChangeScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
-    const {
-      route: {
-        params: { walletId, currencyCode }
-      }
-    } = ownProps
-    const currencyWallet = state.core.account.currencyWallets[walletId]
-    const currencyPlugin = state.core.account.currencyConfig[currencyWallet.currencyInfo.pluginId]
-    const stakingBalances = {}
-
-    const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
-    const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
-
-    if (SPECIAL_CURRENCY_INFO[currencyWallet.currencyInfo.pluginId]?.isStakingSupported) {
-      for (const cCodeKey in STAKING_BALANCES) {
-        const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
-
-        const stakingNativeAmount = currencyWallet.balances[stakingCurrencyCode] ?? '0'
-        const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
-        const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
-
-        const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakingNativeAmount)
-        const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
-        const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
-
-        // @ts-expect-error
-        stakingBalances[stakingCurrencyCode] = {
-          native: stakingNativeAmount,
-          crypto: stakingCryptoAmountFormat,
-          fiat: stakingFiatBalanceFormat
-        }
-      }
-    }
-    return {
-      stakingBalances,
-      currencyWallet,
-      currencyDenomination,
-      currencyPlugin,
-      fioAddresses: state.ui.fioAddress.fioAddresses
-    }
-  },
-  dispatch => ({
-    refreshAllFioAddresses() {
-      dispatch(refreshAllFioAddresses())
-    }
-  })
-)(withTheme(FioStakingChangeSceneComponent))

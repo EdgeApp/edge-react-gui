@@ -7,7 +7,7 @@ exports[`Request should render with loaded props 1`] = `
 >
   <View
     style={
-      Object {
+      {
         "flex": 1,
         "justifyContent": "flex-start",
         "paddingHorizontal": 22,
@@ -16,7 +16,7 @@ exports[`Request should render with loaded props 1`] = `
   >
     <View
       style={
-        Object {
+        {
           "flexDirection": "row",
           "justifyContent": "space-between",
         }
@@ -24,7 +24,7 @@ exports[`Request should render with loaded props 1`] = `
     >
       <WithTheme(EdgeTextComponent)
         style={
-          Object {
+          {
             "fontFamily": "Quicksand-Medium",
             "fontSize": 45,
           }
@@ -34,7 +34,7 @@ exports[`Request should render with loaded props 1`] = `
       </WithTheme(EdgeTextComponent)>
       <WithTheme(EdgeTextComponent)
         style={
-          Object {
+          {
             "alignSelf": "flex-end",
             "fontFamily": "Quicksand-Bold",
             "textAlign": "right",
@@ -46,7 +46,7 @@ exports[`Request should render with loaded props 1`] = `
     </View>
     <View
       style={
-        Object {
+        {
           "flexDirection": "row",
           "justifyContent": "space-between",
           "marginBottom": 11,
@@ -62,7 +62,7 @@ exports[`Request should render with loaded props 1`] = `
       </TouchableOpacity>
       <WithTheme(EdgeTextComponent)
         style={
-          Object {
+          {
             "alignSelf": "flex-end",
             "fontFamily": "Quicksand-Bold",
             "textAlign": "right",
@@ -73,11 +73,11 @@ exports[`Request should render with loaded props 1`] = `
           appendFiatCurrencyCode={true}
           nativeCryptoAmount="100000000"
           wallet={
-            Object {
-              "balances": Object {
+            {
+              "balances": {
                 "BTC": "1234",
               },
-              "currencyInfo": Object {
+              "currencyInfo": {
                 "displayName": "Bitcoin",
                 "pluginId": "bitcoin",
               },
@@ -97,18 +97,19 @@ exports[`Request should render with loaded props 1`] = `
       />
     </WithTheme(CardComponent)>
     <Carousel
-      items={Array []}
+      items={[]}
       keyExtractor={[Function]}
       onChangeItem={[Function]}
       renderItem={[Function]}
     />
     <TouchableOpacity
+      accessible={false}
       disabled={false}
       onPress={[Function]}
     >
       <View
         style={
-          Object {
+          {
             "alignItems": "center",
             "flexDirection": "row",
           }
@@ -126,7 +127,7 @@ exports[`Request should render with loaded props 1`] = `
       </View>
       <WithTheme(EdgeTextComponent)
         style={
-          Object {
+          {
             "fontSize": 17,
           }
         }
@@ -148,7 +149,7 @@ exports[`Request should render with loading props 1`] = `
   color="#FFFFFF"
   size="large"
   style={
-    Object {
+    {
       "alignSelf": "center",
       "flex": 1,
     }

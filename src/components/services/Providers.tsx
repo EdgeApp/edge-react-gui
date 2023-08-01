@@ -11,7 +11,6 @@ import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
 import { Dispatch, RootState, Store } from '../../types/reduxTypes'
-import { errorAlert } from '../../util/middleware/errorAlert'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
 import { Main } from '../Main'
@@ -34,7 +33,7 @@ export function Providers(props: Props) {
   // and we don't want to create dummy stores on each render.
   // The `useState` hook lets us pass an initializer that only runs once:
   const [store] = React.useState<Store>(() => {
-    const middleware = [errorAlert, loginStatusChecker, thunk]
+    const middleware = [loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
     if (__DEV__) {
@@ -58,7 +57,7 @@ export function Providers(props: Props) {
 
   // Actions to perform at startup:
   React.useEffect(() => {
-    store.dispatch(loadDeviceReferral())
+    store.dispatch(loadDeviceReferral()).catch(err => console.warn(err))
   }, [store])
 
   return (

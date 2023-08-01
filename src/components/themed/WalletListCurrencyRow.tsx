@@ -49,7 +49,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   })
 
   return (
-    <TouchableOpacity style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
+    <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
       {customAsset != null ? <CustomAssetRow customAsset={customAsset} /> : <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />}
     </TouchableOpacity>
   )

@@ -157,12 +157,12 @@ export async function logWithType(type: LogType, ...info: Array<number | string 
   global.clog(logs)
 }
 
-export async function log(...info: Array<number | string | null | {}>): Promise<void> {
-  await logWithType('info', ...info)
+export function log(...info: Array<number | string | null | {}>): void {
+  logWithType('info', ...info).catch(err => console.warn(err))
 }
 
-export async function logActivity(...info: Array<number | string | null | {}>): Promise<void> {
-  await logWithType('activity', ...info)
+export function logActivity(...info: Array<number | string | null | {}>): void {
+  logWithType('activity', ...info).catch(err => console.warn(err))
 }
 
 async function request(data: string) {
@@ -177,7 +177,7 @@ async function request(data: string) {
   })
 }
 
-export async function logToServer(...info: any[]) {
+export function logToServer(...info: any[]) {
   const args = info[0]
   let logs = ''
   for (const item of args) {
@@ -187,7 +187,8 @@ export async function logToServer(...info: any[]) {
       logs = logs + (' ' + item)
     }
   }
-  request(logs).catch(e => {
+  request(logs).catch(err => {
+    console.error(err)
     console.log('Failed logToServer')
   })
 }

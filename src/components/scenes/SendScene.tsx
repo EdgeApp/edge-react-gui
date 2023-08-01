@@ -76,7 +76,7 @@ interface DispatchProps {
     selectedWalletId?: string,
     selectedCurrencyCode?: string,
     isFeeChanged?: boolean
-  ) => void
+  ) => Promise<void>
   signBroadcastAndSave: (
     navigation: NavigationBase,
     fioSender: FioSenderInfo | undefined,
@@ -85,10 +85,10 @@ interface DispatchProps {
     resetSlider: () => void
   ) => Promise<void>
   onChangePin: (pin: string) => void
-  selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => void
+  selectWalletToken: (navigation: NavigationBase, walletId: string, tokenId?: string) => Promise<void>
   getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
-  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => void
+  checkAndShowGetCryptoModal: (navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) => Promise<void>
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -161,10 +161,12 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { route } = this.props
     const { guiMakeSpendInfo } = route.params
 
-    this.props.checkAndShowGetCryptoModal(this.props.navigation, this.props.route.params.selectedWalletId, this.props.route.params.selectedCurrencyCode)
+    this.props
+      .checkAndShowGetCryptoModal(this.props.navigation, this.props.route.params.selectedWalletId, this.props.route.params.selectedCurrencyCode)
+      .catch(err => showError(err))
 
     if (guiMakeSpendInfo != null) {
-      this.updateSendConfirmationTx(guiMakeSpendInfo, true)
+      this.updateSendConfirmationTx(guiMakeSpendInfo, true).catch(err => showError(err))
     }
   }
 
@@ -179,13 +181,13 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   componentDidUpdate(prevProps: Props): void {
     if (prevProps.route.params.guiMakeSpendInfo == null && this.props.route.params.guiMakeSpendInfo != null) {
-      this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo)
+      this.updateSendConfirmationTx(this.props.route.params.guiMakeSpendInfo).catch(err => showError(err))
     }
   }
 
-  updateSendConfirmationTx = (guiMakeSpendInfo: GuiMakeSpendInfo, isOnMount?: boolean) => {
+  updateSendConfirmationTx = async (guiMakeSpendInfo: GuiMakeSpendInfo, isOnMount?: boolean) => {
     const { navigation } = this.props
-    this.props.sendConfirmationUpdateTx(navigation, guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    await this.props.sendConfirmationUpdateTx(navigation, guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
     const recipientAddress =
       guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
         ? guiMakeSpendInfo.publicAddress
@@ -199,7 +201,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       // A SendScene with the above initialization hides the scam warning that
       // is visible only when accessing the SendScene without a pre-populated
       // address
-      triggerScamWarningModal(this.props.account.disklet)
+      await triggerScamWarningModal(this.props.account.disklet)
     }
     this.setState({ recipientAddress })
   }
@@ -214,12 +216,12 @@ class SendComponent extends React.PureComponent<Props, State> {
     const prevCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.fio_src_wallet} />)
-      .then(({ walletId, currencyCode }: WalletListResult) => {
+      .then(async ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId == null || currencyCode == null) return
         const wallet = account.currencyWallets[walletId]
         const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
 
-        selectWalletToken(navigation, walletId, tokenId)
+        await selectWalletToken(navigation, walletId, tokenId)
         this.setState({
           ...this.state,
           ...this.setWallets(this.props, walletId, currencyCode),
@@ -228,9 +230,9 @@ class SendComponent extends React.PureComponent<Props, State> {
 
         if (this.addressTile == null) return
         if (currencyCode !== prevCurrencyCode) return this.resetSendTransaction()
-        this.addressTile.onChangeAddress(this.state.recipientAddress)
+        await this.addressTile.onChangeAddress(this.state.recipientAddress)
       })
-      .catch(error => console.log(error))
+      .catch(err => showError(err))
   }
 
   handleChangeAddressFromScan = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
@@ -263,13 +265,13 @@ class SendComponent extends React.PureComponent<Props, State> {
         ...newGuiMakeSpendInfo
       }
     }
-    sendConfirmationUpdateTx(navigation, newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    await sendConfirmationUpdateTx(navigation, newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
 
     // In this use case, the address is not populated on the SendScene and the
     // scam warning card is **technically** visible, but only for a split second
     // before the QR scanner appears.
     // Ensure the user sees the scam warning, if necessary.
-    triggerScamWarningModal(this.props.account.disklet)
+    await triggerScamWarningModal(this.props.account.disklet)
     this.setState({ recipientAddress: recipientAddress ?? '' })
   }
 
@@ -300,7 +302,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           this.state.selectedWalletId,
           this.state.selectedCurrencyCode,
           true
-        )
+        ).catch(err => showError(err))
       }
     })
   }
@@ -589,10 +591,12 @@ class SendComponent extends React.PureComponent<Props, State> {
             title={identifierName}
             maxLength={this.state.coreWallet?.currencyInfo?.memoMaxLength}
           />
-        )).then(uniqueIdentifier => {
-          if (uniqueIdentifier == null) return
-          this.props.sendConfirmationUpdateTx(navigation, { uniqueIdentifier })
-        })
+        ))
+          .then(uniqueIdentifier => {
+            if (uniqueIdentifier == null) return
+            return this.props.sendConfirmationUpdateTx(navigation, { uniqueIdentifier })
+          })
+          .catch(err => showError(err))
       }
 
       return (
@@ -721,14 +725,14 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    sendConfirmationUpdateTx(
+    async sendConfirmationUpdateTx(
       navigation: NavigationBase,
       guiMakeSpendInfo: GuiMakeSpendInfo,
       selectedWalletId?: string,
       selectedCurrencyCode?: string,
       isFeeChanged = false
     ) {
-      dispatch(sendConfirmationUpdateTx(navigation, guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
+      await dispatch(sendConfirmationUpdateTx(navigation, guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode, isFeeChanged))
     },
     async signBroadcastAndSave(
       navigation: NavigationBase,
@@ -742,8 +746,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     },
-    selectWalletToken(navigation: NavigationBase, walletId: string, tokenId?: string) {
-      dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+    async selectWalletToken(navigation: NavigationBase, walletId: string, tokenId?: string) {
+      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     },
     getExchangeDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
@@ -751,8 +755,8 @@ export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
     getDisplayDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
     },
-    checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
-      dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
+    async checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      await dispatch(checkAndShowGetCryptoModal(navigation, selectedWalletId, selectedCurrencyCode))
     }
   })
 )(withTheme(SendComponent))

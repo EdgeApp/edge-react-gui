@@ -32,23 +32,24 @@ const dummyCard: MessageTweak = {
   durationDays: 0
 }
 
-const getPassFuncs = (countryCode: string, wyreHasLinked: boolean, buildNumber: string, languageTag: string, os: string): ValidateFuncs => ({
+const getPassFuncs = (countryCode: string, wyreHasLinked: boolean, buildNumber: string, languageTag: string, os: string, version: string): ValidateFuncs => ({
   getCountryCodeByIp: async () => countryCode,
   checkWyreHasLinkedBank: async () => wyreHasLinked,
   getBuildNumber: () => buildNumber,
   getLanguageTag: () => languageTag,
-  getOs: () => os
+  getOs: () => os,
+  getVersion: () => version
 })
 
 describe('validatePromoCardsInner', () => {
   test('No cards', async () => {
     const cards: MessageTweak[] = []
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', '', '1.2.3'))
     expect(result.length).toBe(0)
   })
   test('Card no filters', async () => {
     const cards = [{ ...dummyCard, message: 'Just a message' }]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', '', '1.2.3'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('Just a message')
   })
@@ -59,7 +60,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, osTypes: ['ios'], message: 'Another iOS Message' }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', 'ios'))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '', '', 'ios', '1.2.3'))
     expect(result.length).toBe(2)
     expect(result[0].message).toBe('iOS Message')
     expect(result[1].message).toBe('Another iOS Message')
@@ -71,9 +72,20 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, exactBuildNum: '432', osTypes: ['web'], message: 'Web Message' },
       { ...dummyCard, exactBuildNum: '432', osTypes: ['android'], message: 'Another Android Message' }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '432', '', 'android'))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '432', '', 'android', '1.2.3'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('Another Android Message')
+  })
+  test('Cards for Android, version', async () => {
+    const cards: MessageTweak[] = [
+      { ...dummyCard, osTypes: ['android'], message: 'Android message', version: '1.2.3' },
+      { ...dummyCard, osTypes: ['ios'], message: 'iOS Message' },
+      { ...dummyCard, osTypes: ['web'], message: 'Web Message' },
+      { ...dummyCard, osTypes: ['android'], message: 'Another Android Message', version: '1.2.4' }
+    ]
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '432', '', 'android', '1.2.3'))
+    expect(result.length).toBe(1)
+    expect(result[0].message).toBe('Android message')
   })
   test('Cards with min/max build number', async () => {
     const cards = [
@@ -82,7 +94,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, minBuildNum: '4', maxBuildNum: '5', message: '4-5' },
       { ...dummyCard, minBuildNum: '1', maxBuildNum: '4', message: '1-4' }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '4', '', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', true, '4', '', '', '1.2.3'))
     expect(result.length).toBe(3)
     expect(result[0].message).toBe('3-5')
     expect(result[1].message).toBe('4-5')
@@ -95,7 +107,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, minBuildNum: '4', maxBuildNum: '5', message: 'not linked 4-5' },
       { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, minBuildNum: '1', maxBuildNum: '4', message: 'link 1-4' }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', '', '1.2.3'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('not linked 4-5')
   })
@@ -106,9 +118,20 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, countryCodes: ['UK'], message: 'not linked UK' },
       { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, countryCodes: ['UK'], message: 'link UK' }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', '', '1.2.3'))
     expect(result.length).toBe(1)
     expect(result[0].message).toBe('not linked US')
+  })
+  test('Cards for not in US', async () => {
+    const cards = [
+      { ...dummyCard, excludeCountryCodes: ['US'], message: 'US 1 message' },
+      { ...dummyCard, excludeCountryCodes: ['US'], message: 'US 2 message' },
+      { ...dummyCard, excludeCountryCodes: ['UK'], message: 'UK message' },
+      { ...dummyCard, excludeCountryCodes: ['ES'], message: 'ES message' }
+    ]
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', '', '1.2.3'))
+    expect(result.length).toBe(2)
+    expect(result[0].message).toBe('UK message')
   })
   test('Localized message no match', async () => {
     const cards: MessageTweak[] = [
@@ -117,7 +140,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'ru', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'ru', '', '1.2.3'))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('0: plain english')
     expect(result[3].message).toBe('3: plain english')
@@ -129,7 +152,7 @@ describe('validatePromoCardsInner', () => {
       { ...dummyCard, message: '2: plain english', localeMessages: { it_IT: 'Italy Italian' } },
       { ...dummyCard, message: '3: plain english', localeMessages: { es_SP: 'Spain Spanish' } }
     ]
-    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'es', ''))
+    const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', 'es', '', '1.2.3'))
     expect(result.length).toBe(4)
     expect(result[0].message).toBe('Mex Spanish')
     expect(result[1].message).toBe('1: plain english')

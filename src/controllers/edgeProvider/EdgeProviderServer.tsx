@@ -180,7 +180,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   async openURL(url: string): Promise<void> {
-    Linking.openURL(url)
+    await Linking.openURL(url)
   }
 
   async openEmailApp(emailAddress: string): Promise<void> {
@@ -433,8 +433,8 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   }
 
   async openSafariView(url: string): Promise<void> {
-    if (Platform.OS === 'ios') SafariView.show({ url })
-    else CustomTabs.openURL(url)
+    if (Platform.OS === 'ios') await SafariView.show({ url })
+    else await CustomTabs.openURL(url)
   }
 
   async displayError(error: Error | string): Promise<void> {

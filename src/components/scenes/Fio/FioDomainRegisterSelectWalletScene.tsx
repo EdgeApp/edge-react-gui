@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -13,6 +13,7 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { GuiMakeSpendInfo } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -63,7 +64,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   componentDidMount(): void {
-    this.getRegInfo()
+    this.getRegInfo().catch(err => showError(err))
   }
 
   getRegInfo = async () => {
@@ -88,12 +89,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     this.setState({ loading: false })
   }
 
-  onWalletPress = () => {
+  onWalletPress = async () => {
     const { activationCost, loading } = this.state
 
     if (!activationCost || activationCost === 0 || loading) return
 
-    this.selectWallet()
+    await this.selectWallet()
   }
 
   selectWallet = async () => {
@@ -140,7 +141,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const guiMakeSpendInfo = {
+        const guiMakeSpendInfo: GuiMakeSpendInfo = {
           currencyCode: paymentCurrencyCode,
           nativeAmount,
           publicAddress: allPaymentInfo[paymentCurrencyCode].address,
@@ -150,7 +151,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           },
           dismissAlert: true,
           lockInputs: true,
-          onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+          onDone: (error, edgeTransaction) => {
             if (error) {
               setTimeout(() => {
                 showError(lstrings.create_wallet_account_error_sending_transaction)
@@ -163,7 +164,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   message={sprintf(lstrings.fio_address_register_pending, lstrings.fio_domain_label)}
                   buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
-              ))
+              )).catch(err => showError(err))
               navigation.navigate('walletsTab', { screen: 'walletList' })
             }
           }

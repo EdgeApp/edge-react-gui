@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { div, eq, mul } from 'biggystring'
 import * as React from 'react'
 import { Animated, NativeSyntheticEvent, Platform, TextInput, TextInputKeyPressEventData, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
+import { Menu, MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
@@ -324,15 +324,17 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  async openClipboardMenu() {
+  openClipboardMenu() {
     this.clipboardMenu.close()
-    try {
-      if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && (await Clipboard.getString())) {
-        this.clipboardMenu.open()
-      }
-    } catch (error: any) {
-      showError(error)
-    }
+    Clipboard.getString()
+      .then(clipboardString => {
+        if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && clipboardString) {
+          this.clipboardMenu.open()
+        }
+      })
+      .catch(err => {
+        showError(err)
+      })
   }
 
   handlePasteClipboard = async () => {
@@ -367,7 +369,7 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     if (this.props.onBlur) this.props.onBlur()
   }
 
-  textInputFrontFocus = async () => {
+  textInputFrontFocus = () => {
     this.openClipboardMenu()
     const { textInputFront } = this
     if (textInputFront != null) {
@@ -532,7 +534,6 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </TouchableOpacity>
         <View style={styles.clipboardContainer}>
-          {/* @ts-expect-error */}
           <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
             <MenuTrigger />
             <MenuOptions>

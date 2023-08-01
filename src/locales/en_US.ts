@@ -210,7 +210,7 @@ const strings = {
   fragment_wallets_copied_seed: 'Copied Seed',
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_view_private_view_key: 'Private View Key',
-  fragment_wallets_view_private_view_key_warning: `The private view key allows the receiver to see the balance in your Monero wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
+  fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
@@ -242,6 +242,7 @@ const strings = {
   create_wallet_import_title: 'Import Wallet',
   create_wallet_import_options_title: 'Import Options',
   create_wallet_import_options_birthday_height: 'Wallet Birthday Height',
+  create_wallet_import_options_birthday_height_description: 'The birthday height is the network block height that your wallet will start synchronizing from.',
   create_wallet_imports_title: 'Import Wallets',
   create_wallet_import_all_instructions: 'Enter your private seed, private key, or active key to verify and restore the associated wallet',
   create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet',
@@ -522,6 +523,7 @@ const strings = {
   string_first_hedera_wallet_name: 'My Hedera',
   string_first_polkadot_wallet_name: 'My Polkadot',
   string_first_polygon_wallet_name: 'My Polygon',
+  string_first_pulsechain_wallet_name: 'My PulseChain',
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
   string_first_algorand_wallet_name: 'My Algorand',
@@ -614,7 +616,7 @@ const strings = {
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
   transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_error_invalid: 'Invalid Transaction',
-  transaction_details_choose_a_sub_category: 'Choose a sub-category',
+  sub_category_label: 'Sub-category',
   transaction_details_recipient_addresses: 'Recipient Addresses',
   transaction_details_advance_details_header: 'Advanced Details',
   transaction_details_advance_details_fee_setting: 'Fee Setting',
@@ -652,7 +654,7 @@ const strings = {
   transaction_details_fee_warning: 'High Network Fees',
   my_receive_addresses_title: 'My Receive Addresses',
 
-  tx_detail_picker_title: 'Choose a Category:',
+  category_modal_title: 'Choose a Category',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
   fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
@@ -1027,6 +1029,7 @@ const strings = {
   migrate_wallet_new_fragment: ' (new)',
   migrate_unknown_error_fragment: 'Unknown error',
   migrate_wallets_modal_message: `The following wallets were found to be potentially impacted by a recent security incident:\n%1$s\nIt is highly recommended that you discontinue using these wallets and migrate the assets to a new wallet in your account. Would you like to use the automated Migrate Wallets feature to do so?`,
+  migrate_wallet_tx_notes: 'Migrate funds to %1$s',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
@@ -1318,6 +1321,19 @@ const strings = {
 
   // #endregion GuiPlugins
 
+  // #region Light Account
+
+  backup_account: 'Back Up Account',
+  backup_delete_confirm_message:
+    'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
+  backup_info_message: 'Create a username and password to securely encrypt and back up your account',
+  backup_dismiss_button: 'Continue Without a Backup',
+  backup_title: 'Back Up Your Account',
+  backup_warning_message: 'Without a backup, you risk losing your funds!',
+  tap_to_learn_more: 'Tap to learn more.',
+
+  // #endregion Light Account
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
@@ -1547,7 +1563,13 @@ const strings = {
   purchase_asset_label: `Purchase Asset`,
   purchase_date_label: `Purchase Date`,
   purchase_price_label: `Purchase Price`,
-  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`
+  select_wallet_to_purchase_card_title: `Select wallet to use to purchase card`,
+
+  unknown_error_occurred_fragment: 'Unknown error occurred',
+  no_scan_results_message: 'No scan results',
+
+  auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
+  contacts_load_failed_message_s: 'Failed to load contacts: %s'
 }
 
 // eslint-disable-next-line import/no-default-export

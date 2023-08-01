@@ -22,12 +22,12 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 
-interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
-
-export interface FioCreateHandleProps {
+export interface FioCreateHandleParams {
   freeRegApiToken: string
   freeRegRefCode: string
 }
+
+interface Props extends EdgeSceneProps<'fioCreateHandle'> {}
 
 const asRegisterSuccessRes = asObject({
   account_id: asNumber,
@@ -122,7 +122,7 @@ export const FioCreateHandleScene = (props: Props) => {
       try {
         asRegisterSuccessRes(regAddressRes)
 
-        dispatch(refreshAllFioAddresses())
+        await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
         navigation.pop()
       } catch (e: any) {

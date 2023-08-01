@@ -1,6 +1,6 @@
 // This script sets up the version numbers for a release build.
 //
-// Run it as `node -r sucrase/register ./scripts/updateVersion.ts [<branch>]`
+// Run it as `node -r sucrase/register ./scripts/gitVersionFile.ts [<branch>]`
 //
 // Each production build has a version number and a build number.
 // The version number is a human-readable string like, "1.2.3-d",
@@ -11,19 +11,19 @@
 // based on the current branch name, which this script takes as a parameter.
 //
 // Once this script determines the version information,
-// it writes to to a file called release-version.json.
-// It is important that the CI system preserves this file between builds,
-// since it contains the auto-incrementing build number.
+// it returns a JSON string with all version information.
 //
-// Finally, this script inserts the build number and version into
-// the native project files, leaving the project ready for a release build.
+
+/****************************************************************************/
+// WARNING: This script is run from the Jenkinsfile without yarn install of
+// the package.json dependencies. It should require only default nodejs
+// packages. It may use typescript as sucrase will be install globally by the
+// Jenkinsfile
+/****************************************************************************/
 
 import childProcess from 'child_process'
-import { Disklet, makeNodeDisklet } from 'disklet'
 import fs from 'fs'
-import path, { join } from 'path'
-
-import { asVersionFile, VersionFile } from './cleaners'
+import { join } from 'path'
 
 const specialBranches: { [branch: string]: string } = {
   develop: '-d',
@@ -45,24 +45,17 @@ const baseDir = join(_currentPath, '..')
 const versionFileName = 'release-version.json'
 
 async function main() {
-  const cwd = path.join(__dirname, '..')
-  const disklet = makeNodeDisklet(cwd)
-  const [branch] = process.argv.slice(2)
+  const cwd = join(__dirname, '..')
+  const branch = process.argv[2] ?? 'master'
 
   // Determine the current version:
-  const packageJson = JSON.parse(await disklet.getText('package.json'))
+  const packageJson = JSON.parse(fs.readFileSync(join(cwd, 'package.json'), { encoding: 'utf8' }))
   const version = `${packageJson.version}${pickVersionSuffix(branch)}`
 
-  const versionFile = getVersionFile(branch, version)
-  if (versionFile == null) throw new Error('Could not get version file')
-
-  console.log(versionFile)
-
-  // Update the native project files:
-  await Promise.all([updateAndroid(disklet, versionFile), updateIos(cwd, versionFile)])
+  updateVersionFile(branch, version)
 }
 
-function getVersionFile(branch: string, version: string): VersionFile | undefined {
+function updateVersionFile(branch: string, version: string): void {
   const buildRepoUrl = process.env.BUILD_REPO_URL ?? 'git@github.com:EdgeApp/edge-build-server.git'
   const githubSshKey = process.env.GITHUB_SSH_KEY ?? join(baseDir, 'id_github')
 
@@ -70,7 +63,6 @@ function getVersionFile(branch: string, version: string): VersionFile | undefine
 
   const pathTemp = buildRepoUrl.split('/')
   const repo = pathTemp[pathTemp.length - 1].replace('.git', '')
-  let versionFile: VersionFile | undefined
   const repoPath = join(baseDir, repo)
 
   let retries = 5
@@ -88,12 +80,13 @@ function getVersionFile(branch: string, version: string): VersionFile | undefine
     const versionFilePath = join(versionFileDir, versionFileName)
     if (fs.existsSync(versionFilePath)) {
       const result = fs.readFileSync(versionFilePath, { encoding: 'utf8' })
-      const verFile = asVersionFile(result)
-      build = Math.max(verFile.build + 1, newBuildNum)
+      const { build: previousBuild } = JSON.parse(result)
+      if (typeof previousBuild !== 'number') throw new Error(`Invalid previous buildNum ${previousBuild}`)
+      build = Math.max(previousBuild + 1, newBuildNum)
     } else {
       build = newBuildNum
     }
-    const tryVersionFile: VersionFile = {
+    const tryVersionFile = {
       build,
       version,
       branch
@@ -108,13 +101,14 @@ function getVersionFile(branch: string, version: string): VersionFile | undefine
     call(`git commit -m "Update ${branch} to build ${build}"`)
     try {
       call(`GIT_SSH_COMMAND="ssh -i ${githubSshKey}" git push`)
-      versionFile = tryVersionFile
-      break
+      fs.writeFileSync(join(baseDir, versionFileName), versionFileString, { encoding: 'utf8' })
+      process.exit(0)
     } catch (e: any) {
-      console.log('Error pushing version file...')
+      // Error pushing file. Retry a few times
     }
   }
-  return versionFile
+  console.error(`Unable to get new version`)
+  process.exit(-1)
 }
 
 /**
@@ -141,39 +135,11 @@ function pickVersionSuffix(branch?: string): string {
   return '-' + branch.replace(/[^0-9a-zA-Z]+/g, '-')
 }
 
-/**
- * Inserts the build information into the Android project files.
- */
-async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promise<void> {
-  let gradle = await disklet.getText('android/app/build.gradle')
-
-  gradle = gradle.replace(/versionName "[0-9.]+"/g, `versionName "${versionFile.version}"`)
-  gradle = gradle.replace(/versionCode [0-9]+/g, `versionCode ${versionFile.build}`)
-
-  await disklet.setText('android/app/build.gradle', gradle)
-}
-
-/**
- * Inserts the build information into the iOS project files.
- */
-function updateIos(cwd: string, versionFile: VersionFile): void {
-  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, {
-    cwd: path.join(cwd, 'ios'),
-    stdio: 'inherit'
-  })
-  childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, {
-    cwd: path.join(cwd, 'ios'),
-    stdio: 'inherit'
-  })
-}
-
 function chdir(path: string) {
-  console.log('chdir: ' + path)
   _currentPath = path
 }
 
 function call(cmdstring: string) {
-  console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
     timeout: 3600000,
@@ -183,4 +149,7 @@ function call(cmdstring: string) {
   })
 }
 
-main().catch(error => console.log(error))
+main().catch(error => {
+  console.error(error)
+  process.exit(-1)
+})

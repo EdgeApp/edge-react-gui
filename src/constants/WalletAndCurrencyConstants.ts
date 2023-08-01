@@ -102,6 +102,10 @@ export const getPluginId = (walletType: string): string => walletType.replace('w
 export interface ImportKeyOption {
   optionName: string
   displayName: string
+  displayDescription?: {
+    message: string
+    knowledgeBaseUri?: string
+  }
   required: boolean
   inputType: OutlinedTextInputProps['keyboardType']
   inputValidation: (input: string) => boolean
@@ -650,6 +654,10 @@ export const SPECIAL_CURRENCY_INFO: {
       {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+        },
         required: true,
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
@@ -671,6 +679,10 @@ export const SPECIAL_CURRENCY_INFO: {
       {
         optionName: 'birthdayHeight',
         displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message: lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri: 'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+        },
         required: true,
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
@@ -693,6 +705,21 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '137'
+    }
+  },
+  pulsechain: {
+    initWalletName: lstrings.string_first_pulsechain_wallet_name,
+    chainCode: 'PLS',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '369'
     }
   },
   avalanche: {

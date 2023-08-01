@@ -1,8 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AdvancedDetailsModal should render with loading props 1`] = `
-Array [
+[
   <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
     accessible={true}
     collapsable={false}
     focusable={true}
@@ -14,7 +23,7 @@ Array [
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      Object {
+      {
         "backgroundColor": "transparent",
         "bottom": 0,
         "left": 0,
@@ -29,7 +38,7 @@ Array [
       blurAmount={10}
       blurType="light"
       style={
-        Object {
+        {
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -42,7 +51,7 @@ Array [
   <View
     collapsable={false}
     style={
-      Object {
+      {
         "alignSelf": "flex-end",
         "backgroundColor": "#121d25",
         "borderColor": "rgba(255, 255, 255, 0)",
@@ -62,14 +71,14 @@ Array [
         "paddingLeft": 0,
         "paddingRight": 0,
         "paddingTop": 0,
-        "shadowOffset": Object {
+        "shadowOffset": {
           "height": 0,
           "width": 0,
         },
         "shadowOpacity": 1,
         "shadowRadius": 10,
-        "transform": Array [
-          Object {
+        "transform": [
+          {
             "translateY": 1334,
           },
         ],
@@ -79,7 +88,7 @@ Array [
   >
     <View
       style={
-        Object {
+        {
           "alignItems": "center",
           "height": 84,
           "justifyContent": "center",
@@ -91,14 +100,14 @@ Array [
         minimumFontScale={0.65}
         numberOfLines={1}
         style={
-          Array [
-            Object {
+          [
+            {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
-            Object {
+            {
               "color": "#FFFFFF",
               "fontSize": 22,
             },
@@ -111,7 +120,7 @@ Array [
     </View>
     <View
       style={
-        Object {
+        {
           "maxHeight": 449,
         }
       }
@@ -120,11 +129,15 @@ Array [
         <View>
           <View
             accessibilityState={
-              Object {
+              {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -136,7 +149,7 @@ Array [
           >
             <View
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
@@ -148,11 +161,11 @@ Array [
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "flex": 1,
                     },
-                    Object {
+                    {
                       "paddingLeft": 6,
                     },
                   ]
@@ -161,12 +174,12 @@ Array [
                 <Text
                   allowFontScaling={false}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": undefined,
                         "fontSize": 12,
                       },
-                      Object {
+                      {
                         "color": "#00f1a2",
                         "height": 17,
                         "position": "absolute",
@@ -174,12 +187,12 @@ Array [
                         "top": 6,
                         "width": 17,
                       },
-                      Object {
+                      {
                         "fontFamily": "FontAwesome",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
-                      Object {},
+                      {},
                     ]
                   }
                 >
@@ -191,14 +204,14 @@ Array [
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      Object {
+                      {
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
@@ -216,28 +229,26 @@ Array [
                   minimumFontScale={0.65}
                   numberOfLines={3}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      Object {
+                      {
                         "color": "#FFFFFF",
                         "fontSize": 22,
                       },
                       null,
                     ]
                   }
-                >
-                  
-                </Text>
+                />
               </View>
             </View>
             <View
               style={
-                Object {
+                {
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
@@ -248,11 +259,15 @@ Array [
           </View>
           <View
             accessibilityState={
-              Object {
+              {
+                "busy": undefined,
+                "checked": undefined,
                 "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -264,7 +279,7 @@ Array [
           >
             <View
               style={
-                Object {
+                {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
@@ -276,11 +291,11 @@ Array [
             >
               <View
                 style={
-                  Array [
-                    Object {
+                  [
+                    {
                       "flex": 1,
                     },
-                    Object {
+                    {
                       "paddingLeft": 6,
                     },
                   ]
@@ -292,14 +307,14 @@ Array [
                   minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      Object {
+                      {
                         "color": "#A4C7DF",
                         "fontSize": 17,
                         "paddingBottom": 6,
@@ -317,14 +332,14 @@ Array [
                   minimumFontScale={0.65}
                   numberOfLines={3}
                   style={
-                    Array [
-                      Object {
+                    [
+                      {
                         "color": "#FFFFFF",
                         "fontFamily": "Quicksand-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      Object {
+                      {
                         "color": "#FFFFFF",
                         "fontSize": 22,
                       },
@@ -338,7 +353,7 @@ Array [
             </View>
             <View
               style={
-                Object {
+                {
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
@@ -353,6 +368,23 @@ Array [
     <View>
       <View>
         <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           accessible={true}
           collapsable={false}
           focusable={true}
@@ -364,7 +396,7 @@ Array [
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
+            {
               "alignItems": "center",
               "opacity": 1,
               "padding": 22,
@@ -375,18 +407,18 @@ Array [
             accessibilityHint="Close modal"
             allowFontScaling={false}
             style={
-              Array [
-                Object {
+              [
+                {
                   "color": "#00f1a2",
                   "fontSize": 28,
                 },
                 undefined,
-                Object {
+                {
                   "fontFamily": "anticon",
                   "fontStyle": "normal",
                   "fontWeight": "normal",
                 },
-                Object {},
+                {},
               ]
             }
           >

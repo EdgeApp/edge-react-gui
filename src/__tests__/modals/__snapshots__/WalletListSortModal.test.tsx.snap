@@ -3,7 +3,7 @@
 exports[`WalletListSortModalComponent should render with loading props 1`] = `
 <ListModal
   bridge={
-    Object {
+    {
       "on": [Function],
       "onResult": [Function],
       "reject": [Function],
@@ -14,28 +14,28 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
   fullScreen={false}
   rowComponent={[Function]}
   rowsData={
-    Array [
-      Array [
+    [
+      [
         "manual",
         "Manual sort",
       ],
-      Array [
+      [
         "name",
         "Sort by name",
       ],
-      Array [
+      [
         "currencyCode",
         "Sort by currency code",
       ],
-      Array [
+      [
         "currencyName",
         "Sort by currency name",
       ],
-      Array [
+      [
         "highest",
         "Sort by highest value",
       ],
-      Array [
+      [
         "lowest",
         "Sort by lowest value",
       ],

@@ -13,7 +13,8 @@ describe('CryptoIcon', () => {
           '332s0ds39f': {
             watch: () => {}
           }
-        }
+        },
+        watch: () => () => {}
       }
     }
   }
@@ -26,5 +27,6 @@ describe('CryptoIcon', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

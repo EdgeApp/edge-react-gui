@@ -22,6 +22,7 @@ import { getAvailableBalance, getWalletFiat, getWalletName } from '../../util/Cu
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, DEFAULT_TRUNCATE_PRECISION, getDenomFromIsoCode, truncateDecimals } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { ExchangeRate } from '../common/ExchangeRate'
+import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
@@ -40,7 +41,7 @@ interface OwnProps {
   walletId: string
   currencyCode: string
   onFeesChange?: () => void
-  onMaxSet?: () => void
+  onMaxSet?: () => Promise<void> | void
   onAmountChanged?: (nativeAmount: string, exchangeAmount: string) => void
   overrideExchangeAmount?: string
   headerText?: string
@@ -72,7 +73,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateMaxSpend: (navigation: NavigationBase, walletId: string, currencyCode: string) => void
+  updateMaxSpend: (navigation: NavigationBase, walletId: string, currencyCode: string) => Promise<void>
   updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
 }
 
@@ -135,10 +136,10 @@ export class FlipInputModalComponent extends React.PureComponent<Props, State> {
   handleSendMaxAmount = () => {
     const { navigation } = this.props
     if (this.props.onMaxSet != null) {
-      this.props.onMaxSet()
+      this.props.onMaxSet()?.catch(err => showError(err))
       return this.handleCloseModal()
     }
-    return this.props.updateMaxSpend(navigation, this.props.walletId, this.props.currencyCode)
+    this.props.updateMaxSpend(navigation, this.props.walletId, this.props.currencyCode).catch(err => showError(err))
   }
 
   renderErrorMessge = () => {
@@ -394,8 +395,8 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
   },
   dispatch => ({
-    updateMaxSpend(navigation: NavigationBase, walletId: string, currencyCode: string) {
-      dispatch(updateMaxSpend(navigation, walletId, currencyCode))
+    async updateMaxSpend(navigation: NavigationBase, walletId: string, currencyCode: string) {
+      await dispatch(updateMaxSpend(navigation, walletId, currencyCode))
     },
     updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))

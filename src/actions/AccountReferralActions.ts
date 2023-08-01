@@ -2,7 +2,7 @@ import { asArray, asBoolean, asDate, asObject, asOptional, asString } from 'clea
 import { EdgeDataStore } from 'edge-core-js'
 import { EdgeAccount } from 'edge-core-js/types'
 import { Platform } from 'react-native'
-import { getBuildNumber } from 'react-native-device-info'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { getLocales } from 'react-native-localize'
 
 import { ENV } from '../env'
@@ -126,7 +126,7 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
       plugins: lockStartDates(clean.plugins, now)
     }
     dispatch({ type: 'PROMOTION_ADDED', data: promotion })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -136,7 +136,7 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
 export function removePromotion(installerId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'PROMOTION_REMOVED', data: installerId })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -146,7 +146,7 @@ export function removePromotion(installerId: string): ThunkAction<Promise<void>>
 export function hideMessageTweak(messageId: string, source: TweakSource): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId, source } })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -156,7 +156,7 @@ export function hideMessageTweak(messageId: string, source: TweakSource): ThunkA
 export function ignoreAccountSwap(ignore: boolean = true): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     dispatch({ type: 'ACCOUNT_SWAP_IGNORED', data: ignore })
-    saveAccountReferral(getState())
+    await saveAccountReferral(getState())
   }
 }
 
@@ -201,7 +201,7 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
 
     if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
     dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
-    saveReferralCache(getState())
+    await saveReferralCache(getState())
   }
 }
 
@@ -211,6 +211,7 @@ export interface ValidateFuncs {
   getBuildNumber: () => string
   getLanguageTag: () => string
   getOs: () => string
+  getVersion: () => string
 }
 
 const getCountryCodeByIp = async (): Promise<string> => {
@@ -232,7 +233,7 @@ const getLanguageTag = (): string => {
 const getOs = (): string => Platform.OS
 
 async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
-  const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs }
+  const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs, getVersion }
   return await validatePromoCardsInner(account.dataStore, cards, funcs)
 }
 export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
@@ -258,11 +259,23 @@ export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: M
       if (card.maxBuildNum < buildNum) continue
     }
 
+    if (typeof card.version === 'string') {
+      const version = funcs.getVersion()
+      if (card.version !== version) continue
+    }
+
     if (card.countryCodes != null) {
       // Validate Country
       const countryCode = await funcs.getCountryCodeByIp()
       const match = (card.countryCodes ?? []).some(cc => cc === countryCode)
       if (!match) continue
+    }
+
+    if (card.excludeCountryCodes != null) {
+      // Validate Country
+      const countryCode = await funcs.getCountryCodeByIp()
+      const excludeMatch = (card.excludeCountryCodes ?? []).some(cc => cc === countryCode)
+      if (excludeMatch) continue
     }
 
     // Validate Bank Linkage

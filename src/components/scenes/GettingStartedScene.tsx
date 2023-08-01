@@ -1,4 +1,4 @@
-import { firebase } from '@react-native-firebase/remote-config'
+import { CreateAccountType, InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
@@ -21,8 +21,11 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import { asFbRemoteConfig } from '../../envConfig'
+import { getStickyRemoteConfigValue } from '../../fbRemoteConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -74,14 +77,14 @@ const sections: SectionData[] = [
   }
 ]
 
-const REMOTE_CONFIG_DEFAULT = {
-  swipe_last_usp: true
-}
-
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
-  const localUsersLength = useSelector(state => state.core.context.localUsers.length)
-  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(REMOTE_CONFIG_DEFAULT.swipe_last_usp)
+  const context = useSelector(state => state.core.context)
+  const localUsers = useWatch(context, 'localUsers')
+  const hasLocalUsers = localUsers.length > 0
+
+  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState<Boolean>(asFbRemoteConfig({}).swipeLastUsp)
+  const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>(asFbRemoteConfig({}).createAccountType as CreateAccountType)
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -90,7 +93,13 @@ export const GettingStartedScene = (props: Props) => {
   const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
   const swipeOffset = useSharedValue(0)
 
-  const variantId = isFinalSwipeEnabled ? 'A' : 'B'
+  // Route helpers
+  const getNewAccountRoute = (createAccountType: CreateAccountType): InitialRouteName => {
+    return hasLocalUsers || createAccountType === 'full' ? 'new-account' : 'new-light-account'
+  }
+  const getPasswordLoginRoute = (createAccountType: CreateAccountType): InitialRouteName => {
+    return hasLocalUsers || createAccountType === 'full' ? 'login-password' : 'login-password-light'
+  }
 
   const handleFinalSwipe = useHandler(() => {
     if (isFinalSwipeEnabled) {
@@ -100,14 +109,13 @@ export const GettingStartedScene = (props: Props) => {
         swipeOffset.value = 0
       }, 500)
 
-      logEvent('Signup_Welcome', {
-        variantId,
-        variantParams: { doneMethod: 'swipe' }
-      })
-      if (localUsersLength > 0) {
-        navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
+      logEvent('Signup_Welcome')
+
+      // Either route to password login or account creation
+      if (hasLocalUsers) {
+        navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
       } else {
-        navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+        navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
       }
     }
   })
@@ -115,13 +123,16 @@ export const GettingStartedScene = (props: Props) => {
   const handlePressIndicator = useHandler((itemIndex: number) => {
     swipeOffset.value = withTiming(itemIndex)
   })
+
   const handlePressSignIn = useHandler(() => {
-    navigation.navigate('login', { loginUiInitialRoute: 'login-password' })
+    navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
   })
+
   const handlePressSignUp = useHandler(() => {
-    logEvent('Signup_Welcome', { variantId, variantParams: { doneMethod: 'click' } })
-    navigation.navigate('login', { loginUiInitialRoute: 'new-account' })
+    logEvent('Signup_Welcome')
+    navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
   })
+
   const handlePressSkip = useHandler(() => {
     navigation.navigate('login', {})
   })
@@ -137,26 +148,18 @@ export const GettingStartedScene = (props: Props) => {
     }
   )
 
-  // Fetch and activate remote config (A/B testing).
+  // Initialize variant config values
   useAsyncEffect(async () => {
-    const remoteConfig = firebase.remoteConfig()
-
-    await remoteConfig.setDefaults(REMOTE_CONFIG_DEFAULT)
-    await remoteConfig.fetchAndActivate().catch((err: any) => {
-      const errorMessage = err instanceof Error ? err.message : String(err)
-      console.warn(`Failed to fetch and activate remote config, using default values. Error: ${errorMessage}`)
-    })
-
-    const featureVal = remoteConfig.getValue('swipe_last_usp').asBoolean()
-    setIsFinalSwipeEnabled(featureVal)
+    setIsFinalSwipeEnabled(Boolean(await getStickyRemoteConfigValue('swipeLastUsp')))
+    setCreateAccountType((await getStickyRemoteConfigValue('createAccountType')) as CreateAccountType)
   }, [])
 
   // Redirect to login screen if device has memory of accounts
   useEffect(() => {
-    if (localUsersLength > 0) {
+    if (hasLocalUsers) {
       navigation.navigate('login', {})
     }
-  }, [navigation, localUsersLength])
+  }, [navigation, hasLocalUsers])
 
   return (
     <SceneWrapper hasHeader={false}>
@@ -189,7 +192,7 @@ export const GettingStartedScene = (props: Props) => {
             })}
           </HeroContainer>
           <Pagination>
-            {Array.from({ length: paginationCount }).map((_, index) => (
+            {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
               <Pressable key={index} onPress={() => handlePressIndicator(index)}>
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>

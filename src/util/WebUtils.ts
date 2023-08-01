@@ -1,6 +1,7 @@
 import { Linking } from 'react-native'
 import URL from 'url-parse'
 
+import { showError } from '../components/services/AirshipInstance'
 import { UriQueryMap } from '../types/WebTypes'
 
 /**
@@ -10,13 +11,15 @@ export const openBrowserUri = (uri: string) => {
   if (uri === '') {
     throw new Error('openBrowserUri: Empty uri prop')
   }
-  Linking.canOpenURL(uri).then(supported => {
-    if (supported) {
-      Linking.openURL(uri)
-    } else {
-      throw new Error('openBrowserUri: Unsupported uri: ' + uri)
-    }
-  })
+  Linking.canOpenURL(uri)
+    .then(async supported => {
+      if (supported) {
+        await Linking.openURL(uri)
+      } else {
+        throw new Error('openBrowserUri: Unsupported uri: ' + uri)
+      }
+    })
+    .catch(err => showError(err))
 }
 
 /**

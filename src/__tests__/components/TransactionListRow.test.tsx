@@ -64,5 +64,6 @@ describe('TransactionListRow', () => {
     )
 
     expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

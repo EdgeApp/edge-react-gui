@@ -18,11 +18,10 @@ export function useContactThumbnail(name?: string): string | undefined {
     if (isModalShowing) return
     isModalShowing = true
     edgeRequestPermission('contacts')
-      .catch((e: any) => {
-        showError(e)
-        isModalShowing = false
+      .catch(err => {
+        showError(err)
       })
-      .then(() => (isModalShowing = false))
+      .finally(() => (isModalShowing = false))
   }, [name])
 
   return React.useMemo(() => {
