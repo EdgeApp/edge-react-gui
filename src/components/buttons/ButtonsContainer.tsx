@@ -38,12 +38,12 @@ export const ButtonsContainer = React.memo(({ primary, secondary, escape, layout
   )
 })
 
-const StyledButtonContainer = styled(View)<{ layout: 'row' | 'column' }>(props => {
+const StyledButtonContainer = styled(View)<{ layout: 'row' | 'column' }>(theme => props => {
   const isRowLayout = props.layout === 'row'
   return {
     flexDirection: isRowLayout ? 'row-reverse' : 'column',
     justifyContent: 'space-evenly',
-    margin: props.theme.rem(0.5),
-    marginHorizontal: isRowLayout ? 0 : props.theme.rem(0.5)
+    margin: theme.rem(0.5),
+    marginHorizontal: isRowLayout ? 0 : theme.rem(0.5)
   }
 })

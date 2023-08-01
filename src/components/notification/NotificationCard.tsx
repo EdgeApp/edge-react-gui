@@ -26,35 +26,35 @@ const NotificationCardComponent = (props: Props) => {
   )
 }
 
-const CardContainer = styled(TouchableOpacity)(props => ({
+const CardContainer = styled(TouchableOpacity)(theme => ({
   alignItems: 'center',
-  backgroundColor: props.theme.modal,
-  borderRadius: props.theme.rem(0.5),
+  backgroundColor: theme.modal,
+  borderRadius: theme.rem(0.5),
   elevation: 6,
   flexDirection: 'row',
   justifyContent: 'center',
-  padding: props.theme.rem(0.5),
+  padding: theme.rem(0.5),
   shadowOffset: { width: 0, height: 0 },
   shadowOpacity: 0.7,
-  shadowRadius: props.theme.rem(0.5)
+  shadowRadius: theme.rem(0.5)
 }))
 
-const Icon = styled(FastImage)(props => ({
-  height: props.theme.rem(2.5),
-  width: props.theme.rem(2.5)
+const Icon = styled(FastImage)(theme => ({
+  height: theme.rem(2.5),
+  width: theme.rem(2.5)
 }))
 
-const TitleText = styled(EdgeText)(props => ({
-  color: props.theme.warningIcon,
-  marginLeft: props.theme.rem(0.5),
-  fontSize: props.theme.rem(0.75),
-  fontFamily: props.theme.fontFaceBold
+const TitleText = styled(EdgeText)(theme => ({
+  color: theme.warningIcon,
+  marginLeft: theme.rem(0.5),
+  fontSize: theme.rem(0.75),
+  fontFamily: theme.fontFaceBold
 }))
 
-const MessageText = styled(EdgeText)(props => ({
-  color: props.theme.warningIcon,
-  marginLeft: props.theme.rem(0.5),
-  fontSize: props.theme.rem(0.75)
+const MessageText = styled(EdgeText)(theme => ({
+  color: theme.warningIcon,
+  marginLeft: theme.rem(0.5),
+  fontSize: theme.rem(0.75)
 }))
 
 export const NotificationCard = React.memo(NotificationCardComponent)
