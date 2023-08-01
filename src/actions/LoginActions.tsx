@@ -157,6 +157,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     let accountInitObject: AccountInitPayload = {
       account,
       autoLogoutTimeInSeconds: 3600,
+      contactsPermissionOn: true,
       countryCode: '',
       currencyCode: '',
       defaultFiat: '',
