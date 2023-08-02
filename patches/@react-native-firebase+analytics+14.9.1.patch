@@ -1,0 +1,15 @@
+diff --git a/node_modules/@react-native-firebase/analytics/android/build.gradle b/node_modules/@react-native-firebase/analytics/android/build.gradle
+index ff14680..cdc296f 100644
+--- a/node_modules/@react-native-firebase/analytics/android/build.gradle
++++ b/node_modules/@react-native-firebase/analytics/android/build.gradle
+@@ -143,7 +143,9 @@ repositories {
+ dependencies {
+   api appProject
+   implementation platform("com.google.firebase:firebase-bom:${ReactNative.ext.getVersion("firebase", "bom")}")
+-  implementation "com.google.firebase:firebase-analytics"
++  implementation("com.google.firebase:firebase-analytics") {
++    exclude module: "play-services-ads-identifier"
++  }
+ }
+ 
+ ReactNative.shared.applyPackageVersion()
