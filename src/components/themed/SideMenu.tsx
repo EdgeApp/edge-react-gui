@@ -234,14 +234,6 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       title: lstrings.drawer_scan_qr_send
     },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
-    {
-      pressHandler: () => {
-        navigation.navigate('termsOfService', {})
-        navigation.dispatch(DrawerActions.closeDrawer())
-      },
-      iconName: 'control-panel-tos',
-      title: lstrings.title_terms_of_service
-    },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
       pressHandler: () => {
