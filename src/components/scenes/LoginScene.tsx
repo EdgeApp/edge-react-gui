@@ -143,11 +143,11 @@ export function LoginSceneComponent(props: Props) {
     () => ({
       callback() {
         Keyboard.dismiss()
-        showHelpModal().catch(err => showError(err))
+        showHelpModal(navigation).catch(err => showError(err))
       },
       text: lstrings.string_help
     }),
-    []
+    [navigation]
   )
 
   const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
