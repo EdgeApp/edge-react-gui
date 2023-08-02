@@ -103,7 +103,6 @@ import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
 import { SwapSettingsScene as SwapSettingsSceneComponent } from './scenes/SwapSettingsScene'
-import { TermsOfServiceComponent as TermsOfServiceComponentComponent } from './scenes/TermsOfServiceScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
@@ -112,6 +111,7 @@ import { WalletListScene as WalletListSceneComponent } from './scenes/WalletList
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
+import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
 import { Airship, showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
@@ -190,7 +190,6 @@ const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
 const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
-const TermsOfServiceComponent = ifLoggedIn(TermsOfServiceComponentComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
@@ -198,6 +197,7 @@ const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
+const WebViewScene = ifLoggedIn(WebViewSceneComponent)
 
 const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
@@ -712,13 +712,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="stakeOptions" component={StakeOptionsScene} />
       <Stack.Screen name="stakeOverview" component={StakeOverviewScene} />
       <Stack.Screen
-        name="termsOfService"
-        component={TermsOfServiceComponent}
-        options={{
-          title: lstrings.title_terms_of_service
-        }}
-      />
-      <Stack.Screen
         name="transactionDetails"
         component={TransactionDetailsScene}
         options={{
@@ -736,6 +729,13 @@ const EdgeAppStack = () => {
       <Stack.Screen name="wcConnect" component={WcConnectScene} />
       <Stack.Screen name="wcConnections" component={WcConnectionsScene} />
       <Stack.Screen name="wcDisconnect" component={WcDisconnectScene} />
+      <Stack.Screen
+        name="webView"
+        component={WebViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'webView'> fromParams={params => params.title} />
+        }}
+      />
     </Stack.Navigator>
   )
 }

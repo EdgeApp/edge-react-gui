@@ -258,7 +258,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleTermsOfService = (): void => {
     const { navigation } = this.props
-    navigation.navigate('termsOfService', {})
+    navigation.navigate('webView', { title: lstrings.title_terms_of_service, uri: config.termsOfServiceSite })
   }
 
   handleVerboseLoggingToggle = (): void => {
