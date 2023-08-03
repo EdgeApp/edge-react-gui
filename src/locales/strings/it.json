@@ -317,6 +317,7 @@
   "settings_developer_mode": "Modalità sviluppatore",
   "settings_verbose_logging": "Log Dettagliati",
   "settings_dark_theme": "Tema scuro",
+  "settings_button_contacts_access_permission": "Contacts Access",
   "settings_button_lock_settings": "Fai tap per bloccare le impostazioni dell'account",
   "settings_button_password_recovery": "Imposta il Recupero Password",
   "settings_button_logout": "Esci",
