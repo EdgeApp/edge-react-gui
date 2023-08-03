@@ -317,6 +317,7 @@
   "settings_developer_mode": "Developer Mode",
   "settings_verbose_logging": "Verbose Logging",
   "settings_dark_theme": "Dark Theme",
+  "settings_button_contacts_access_permission": "Contacts Access",
   "settings_button_lock_settings": "탭하여 계정 설정 잠금",
   "settings_button_password_recovery": "암호 복구 셋업",
   "settings_button_logout": "로그아웃",
