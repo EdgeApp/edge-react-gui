@@ -317,6 +317,7 @@
   "settings_developer_mode": "Developer Mode",
   "settings_verbose_logging": "Verbose Logging",
   "settings_dark_theme": "Dark Theme",
+  "settings_button_contacts_access_permission": "Contacts Access",
   "settings_button_lock_settings": "Bấm để khóa cài đặt tài khoản",
   "settings_button_password_recovery": "Thiết lập mật khẩu phục hồi",
   "settings_button_logout": "Đăng xuất",
