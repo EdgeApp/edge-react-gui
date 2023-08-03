@@ -36,6 +36,6 @@ export function parseMarkedText(str: string): React.ReactNode[] {
   return parsedArr
 }
 
-const Em = styled(Text)(props => ({
-  color: props.theme.emphasizedText
+const Em = styled(Text)(theme => ({
+  color: theme.emphasizedText
 }))

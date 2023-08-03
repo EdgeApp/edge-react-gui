@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list'
 import { lt } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
 
@@ -37,9 +37,9 @@ interface Props extends EdgeSceneProps<'transactionList'> {
 
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
-  const { tokenId } = route.params
   const theme = useTheme()
 
+  const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
@@ -225,6 +225,16 @@ function TransactionListComponent(props: Props) {
       )}
     </NotificationSceneWrapper>
   )
+}
+
+/**
+ * If the token gets deleted, the scene will crash.
+ * Fall back to the main currency code if this happens.
+ */
+function checkToken(tokenId: string | undefined, allTokens: EdgeTokenMap): string | undefined {
+  if (tokenId == null) return undefined
+  if (allTokens[tokenId] == null) return undefined
+  return tokenId
 }
 
 export const TransactionList = withWallet(TransactionListComponent)

@@ -40,11 +40,11 @@ const NotificationViewComponent = (props: Props) => {
   )
 }
 
-const NotificationCardsContainer = styled(View)(props => ({
+const NotificationCardsContainer = styled(View)(theme => ({
   alignSelf: 'center',
-  height: props.theme.rem(3.5),
-  marginHorizontal: props.theme.rem(0.5),
-  bottom: props.theme.rem(0.5),
+  height: theme.rem(3.5),
+  marginHorizontal: theme.rem(0.5),
+  bottom: theme.rem(0.5),
   position: 'absolute'
 }))
 

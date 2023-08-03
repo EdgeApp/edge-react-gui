@@ -169,7 +169,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
             onSubmit={this.setDomainVisibility}
             onSuccess={this.afterSuccess}
-            cancelOperation={this.cancelOperation}
+            onCancel={this.cancelOperation}
             getOperationFee={getDomainSetVisibilityFee}
             successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
             fioWallet={fioWallet}
@@ -181,7 +181,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
           <FioActionSubmit
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
-            cancelOperation={this.cancelOperation}
+            onCancel={this.cancelOperation}
             getOperationFee={this.getRenewalFee}
             successMessage={lstrings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
