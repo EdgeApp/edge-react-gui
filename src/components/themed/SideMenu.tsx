@@ -322,7 +322,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
           )}
         </View>
         {/* ==== Rate Display End ==== */}
-        <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
+        <Pressable accessible={false} onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
           </View>
@@ -332,7 +332,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
           {isMultiUsers ? (
             <View style={styles.rowIconContainer}>
               <Animated.View style={aRotate}>
-                <Feather name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
+                <Feather testID="downArrow" name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
               </Animated.View>
             </View>
           ) : null}
@@ -366,7 +366,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         <View style={styles.rowsContainer}>
           <ScrollView overScrollMode="always">
             {rowDatas.map(rowData => (
-              <TouchableOpacity onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+              <TouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
                   {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
                   {rowData.iconNameFontAwesome != null ? (
@@ -384,7 +384,13 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {/* === Translucent X Close Button Start === */}
         <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
           <TouchableOpacity onPress={handlePressClose}>
-            <AntDesignIcon name="close" size={theme.rem(1.25)} color={theme.iconTappable} accessibilityHint={lstrings.close_control_panel_hint} />
+            <AntDesignIcon
+              testID="closeX"
+              name="close"
+              size={theme.rem(1.25)}
+              color={theme.iconTappable}
+              accessibilityHint={lstrings.close_control_panel_hint}
+            />
           </TouchableOpacity>
         </LinearGradient>
         {/* === Translucent X Close Button End === */}
