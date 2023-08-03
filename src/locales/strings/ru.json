@@ -317,6 +317,7 @@
   "settings_developer_mode": "Режим разработчика",
   "settings_verbose_logging": "Verbose Logging",
   "settings_dark_theme": "Тёмная тема",
+  "settings_button_contacts_access_permission": "Contacts Access",
   "settings_button_lock_settings": "Нажмите, чтобы заблокировать настройки учетной записи",
   "settings_button_password_recovery": "Настройка восстановления пароля",
   "settings_button_logout": "Выход",
