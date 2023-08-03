@@ -42,7 +42,7 @@ export function ButtonBox(props: Props) {
   })
 
   return (
-    <TouchableOpacity onPress={handlePress} style={[margin, padding]}>
+    <TouchableOpacity accessible={false} onPress={handlePress} style={[margin, padding]}>
       {children}
     </TouchableOpacity>
   )
