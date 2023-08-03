@@ -1403,6 +1403,119 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             }
           >
+            Contacts Access
+          </Text>
+          <View>
+            <View
+              pending={false}
+              style={
+                [
+                  {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    [
+                      {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
             Hide spam transactions
           </Text>
           <View>
@@ -3898,6 +4011,119 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             }
           >
             PIN Re-login
+          </Text>
+          <View>
+            <View
+              pending={false}
+              style={
+                [
+                  {
+                    "aspectRatio": 1,
+                    "position": "absolute",
+                    "width": "100%",
+                    "zIndex": 1,
+                  },
+                  {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              <ActivityIndicator
+                color="#00f1a2"
+                style={
+                  {
+                    "height": 34,
+                    "marginHorizontal": 11,
+                  }
+                }
+              />
+            </View>
+            <View
+              pending={false}
+              style={
+                {
+                  "opacity": 1,
+                }
+              }
+            >
+              <View
+                pointerEvents="none"
+                style={
+                  {
+                    "marginHorizontal": 11,
+                    "padding": 0,
+                  }
+                }
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#00f1a2"
+                  style={
+                    [
+                      {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "marginBottom": 1,
+              "minHeight": 67,
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "paddingHorizontal": 11,
+                "textAlign": "left",
+              }
+            }
+          >
+            Contacts Access
           </Text>
           <View>
             <View

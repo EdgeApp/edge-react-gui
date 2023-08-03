@@ -16,7 +16,7 @@ import { logActivity } from '../../util/logger'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
-import { edgeRequestPermission } from '../services/PermissionsManager'
+import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
@@ -53,7 +53,7 @@ export const ScanModal = (props: Props) => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    edgeRequestPermission('camera').catch(err => showError(err))
+    checkAndRequestPermission('camera').catch(err => showError(err))
     return () => setScanEnabled(false)
   }, [])
 

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Disklet } from 'disklet'
 import * as React from 'react'
 import { check, checkMultiple, PermissionStatus, request } from 'react-native-permissions'
@@ -12,8 +11,6 @@ import { ThunkAction } from '../../types/reduxTypes'
 import { ContactsPermissionModal, ContactsPermissionResult } from '../modals/ContactsPermissionModal'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
-
-const IS_CONTACTS_PERMISSION_SHOWN_BEFORE = 'IS_CONTACTS_PERMISSION_SHOWN_BEFORE'
 
 export const PermissionsManager = () => {
   const dispatch = useDispatch()
@@ -32,23 +29,41 @@ export const PermissionsManager = () => {
   return null
 }
 
-export async function edgeRequestPermission(data: Permission): Promise<PermissionStatus> {
+let showModalPromise: Promise<ContactsPermissionResult | undefined>
+/**
+ * Show the contacts permission modal if we enabled the Edge Contacts Access
+ * setting, but the corresponding system permission is not granted. Only shows
+ * modal once for simultaneous callers.
+ *
+ * Responding 'Deny' to the modal will disable the Edge Contacts Access setting.
+ *
+ * @param contactsAccessSettingOn - Edge Local Contact Access setting
+ * @returns Result of Contacts Access modal or undefined if no modal shown or
+ * the modal was dismissed somehow.
+ */
+export async function showContactsPermissionModal(contactsAccessSettingOn: boolean): Promise<ContactsPermissionResult | undefined> {
+  // We requested to show the modal when the setting was off already or another
+  // caller to this fn is already handling it. Ignore this call.
+  if (!contactsAccessSettingOn || showModalPromise != null) return undefined
+
+  showModalPromise = (async () => {
+    if (contactsAccessSettingOn && (await check(permissionNames.contacts)) !== 'granted') {
+      return await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
+    }
+  })()
+
+  return await showModalPromise
+}
+
+/**
+ * Checks permission and attempts to request permissions (only if checked
+ * permission was 'denied')
+ */
+export async function checkAndRequestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(permissionNames[data])
 
-  if (status === 'denied') {
-    if (data === 'contacts') {
-      const isContactsPermissionShownBefore = await AsyncStorage.getItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE).catch(showError)
-
-      // @ts-expect-error: Undefined is not a valid return value
-      if (isContactsPermissionShownBefore === 'true') return
-
-      const result = await Airship.show<ContactsPermissionResult | undefined>(bridge => <ContactsPermissionModal bridge={bridge} />)
-      AsyncStorage.setItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE, 'true').catch(showError)
-      if (result === 'deny') return status
-    }
-    return await request(permissionNames[data])
-  }
-  return status
+  if (status === 'denied') return await request(permissionNames[data])
+  else return status
 }
 
 export const checkIfDenied = (status: PermissionStatus) => status === 'blocked' || status === 'denied' || status === 'unavailable'
@@ -71,7 +86,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
 
   // User first time check. If mandatory, it needs to be checked if denied or accepted
   if (status === 'denied') {
-    const result = await edgeRequestPermission(data)
+    const result = await checkAndRequestPermission(data)
     return mandatory && checkIfDenied(result)
   }
 

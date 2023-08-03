@@ -4,12 +4,11 @@ import { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { maybeShowContactsPermissionModal } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
-import { showError } from '../services/AirshipInstance'
-import { edgeRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ListModal } from './ListModal'
@@ -29,6 +28,8 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const contacts = useSelector(state => state.contacts)
+  const dispatch = useDispatch()
+  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
 
   const rowComponent = ({ givenName, familyName, hasThumbnail, thumbnailPath }: GuiContact) => {
     const fullName = familyName ? `${givenName} ${familyName}` : givenName
@@ -58,8 +59,12 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   const handleSubmitEditing = (contactName: string) => bridge.resolve({ contactName, thumbnailPath: null })
 
   React.useEffect(() => {
-    edgeRequestPermission('contacts').catch(showError)
-  }, [])
+    maybeShowContactsPermissionModal(dispatch, contactsPermissionOn)
+
+    // Avoid popping up the modal when component is mounted and the user changes
+    // contactsPermissionOn.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   return (
     <ListModal
