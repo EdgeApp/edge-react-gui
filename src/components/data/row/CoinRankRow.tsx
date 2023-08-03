@@ -141,9 +141,9 @@ const CoinRankRowComponent = (props: Props) => {
   const percentString = `${plusMinus}${percentChangeString}`
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
+    <TouchableOpacity accessible={false} style={styles.container} onPress={handlePress}>
       <View style={styles.rank}>
-        <EdgeText numberOfLines={1} disableFontScaling>
+        <EdgeText accessible numberOfLines={1} disableFontScaling>
           {rank}
         </EdgeText>
       </View>
