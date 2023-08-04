@@ -21,10 +21,8 @@ import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
-import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -32,13 +30,11 @@ import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { LoadingScene } from '../scenes/LoadingScene'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { FiatText } from '../text/FiatText'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 import { ModalMessage, ModalTitle } from './ModalParts'
@@ -61,12 +57,6 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
-  const selectedWallet = useSelectedWallet()
-  const selectedDenomination = useSelector(state => {
-    if (selectedWallet == null) return
-    return getDisplayDenomination(state, selectedWallet.wallet.currencyInfo.pluginId, selectedWallet.currencyCode)
-  })
-
   /// ---- Local State ----
 
   // Maintain the list of usernames:
@@ -244,14 +234,6 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       title: lstrings.drawer_scan_qr_send
     },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
-    {
-      pressHandler: () => {
-        navigation.navigate('termsOfService', {})
-        navigation.dispatch(DrawerActions.closeDrawer())
-      },
-      iconName: 'control-panel-tos',
-      title: lstrings.title_terms_of_service
-    },
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
       pressHandler: () => {
@@ -296,32 +278,6 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
-        {/* ==== Rate Display Start ==== */}
-        <View style={styles.rowContainer}>
-          {selectedWallet == null || selectedDenomination == null ? (
-            <TitleText style={{ ...styles.text, marginLeft: theme.rem(1), marginRight: theme.rem(1) }}>{lstrings.exchange_rate_loading_singular}</TitleText>
-          ) : (
-            <>
-              <View style={styles.rowIconContainer}>
-                <CryptoIcon pluginId={selectedWallet.wallet.currencyInfo.pluginId} sizeRem={1.5} tokenId={selectedWallet.tokenId} />
-              </View>
-              <View style={styles.rowBodyContainer}>
-                <TitleText style={styles.text}>
-                  {`1 ${selectedDenomination.name} = `}
-                  <FiatText
-                    appendFiatCurrencyCode
-                    autoPrecision
-                    fiatSymbolSpace
-                    nativeCryptoAmount={selectedDenomination.multiplier}
-                    tokenId={selectedWallet.tokenId}
-                    wallet={selectedWallet.wallet}
-                  />
-                </TitleText>
-              </View>
-            </>
-          )}
-        </View>
-        {/* ==== Rate Display End ==== */}
         <Pressable onPress={handleToggleDropdown} style={styles.rowContainer}>
           <View style={styles.rowIconContainer}>
             <Fontello name="control-panel-account" style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} />
@@ -433,7 +389,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderLeftColor: theme.sideMenuBorderColor,
     borderTopWidth: theme.sideMenuBorderWidth,
     borderLeftWidth: theme.sideMenuBorderWidth,
-    height: theme.rem(10.5)
+    height: theme.rem(7.75)
   },
   closeButtonContainer: {
     position: 'absolute',
