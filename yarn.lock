@@ -13689,6 +13689,11 @@ react-native-iphone-x-helper@^1.0.3:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
   integrity sha512-xIeTo4s77wwKgBZLVRIZC9tM9/PkXS46Ul76NXmvmixEb3ZwqGdQesR3zRiLMOoIdfOURB6N9bba9po7+x9Bag==
 
+react-native-is-maestro@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-is-maestro/-/react-native-is-maestro-2.1.0.tgz#5c8f7b9405f10c984f1bc450eef8cc4f6d7c631c"
+  integrity sha512-mceBJ+QPOiLvwnXePvrAyctr3jNEZGjysL1pnM3eqxlPNgykIbEnyL/hwR4+UFlNqCTDwKqz0ZwDdCSSXjW3pQ==
+
 react-native-keyboard-aware-scroll-view@^0.9.5:
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.5.tgz#e2e9665d320c188e6b1f22f151b94eb358bf9b71"
