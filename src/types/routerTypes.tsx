@@ -119,7 +119,12 @@ export interface RouteParamList {
     swapInfo: GuiSwapInfo
     onApprove: () => void
   }
-  exchangeQuoteProcessing: {}
+  exchangeQuoteProcessing: {
+    fetchSwapQuotePromise: Promise<GuiSwapInfo>
+    onCancel: () => void
+    onError: (error: any) => Promise<void>
+    onDone: (swapInfo: GuiSwapInfo) => void
+  }
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
