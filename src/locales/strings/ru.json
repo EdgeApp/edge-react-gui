@@ -713,6 +713,7 @@
   "send_to_wallet": "Получить на %s",
   "exchange_from_wallet": "Обмен с %s",
   "exchange_to_wallet": "Обменять на %s",
+  "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
   "wallet_list_modal_header_mru": "Последние кошельки",
   "wallet_list_modal_header_all": "Все кошельки",
   "wallet_list_modal_creating_wallet": "Создание кошелька. Пожалуйста подождите",
