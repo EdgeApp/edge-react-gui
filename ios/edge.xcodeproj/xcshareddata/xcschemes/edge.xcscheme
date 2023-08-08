@@ -53,11 +53,11 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-FIRDebugEnabled"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-FIRDebugDisabled"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
