@@ -78,7 +78,7 @@
   "azteco_invalid_code": "Código Azteco inválido.",
   "azteco_service_unavailable": "Erro ao contatar o servidor Azteco. Por favor, tente novamente mais tarde.",
   "reqaddr_error_unsupported_chains": "%1$s Não suporta as seguintes cadeias listadas na solicitação: %2$s",
-  "reqaddr_error_invalid_redir": "Invalid 'redir' query in request for payment address",
+  "reqaddr_error_invalid_redir": "Consulta 'redir' inválida na solicitação de endereço de pagamento",
   "reqaddr_error_no_currencies_found": "No currencies found in request for payment address",
   "reqaddr_error_no_wallets_selected": "No wallets selected for request for payment address",
   "reqaddr_error_post_redir": "Post and redir address not found in request for payment address",
