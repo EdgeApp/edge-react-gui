@@ -1,5 +1,86 @@
 # edge-react-gui
 
+## 3.14.0
+
+- added: Light account support
+- added: PulseChain (PLS)
+- added: New animated splash screen logo
+- added: Next button on enable token scene
+- added: Close button on notification dropdown
+- added: Improved Maestro testability
+- added: Allow scrolling on wallet creation completion scene
+- added: Wallet Birthday Height description on modal for Zcash/Pirate Chain seed import
+- changed: Upgrade react-native to 0.71.11
+- changed: Rewrite new activation-needed wallet name validation scene
+- changed: Reduce bridge traffic by attempting plugin fetches through proxy server
+- changed: Reduce excessive FIO plugin calls
+- changed: Upgrade GALA token to latest contract
+- changed: Disable Firebase AD ID
+- changed: Upgrade to ESLint v8
+- removed: Unused React-based partner plugins
+- fixed: Rename "View Xpub address"  to "Private View Key" for Pirate Chain and Zcash
+- fixed: Private view key modal warning text for other currencies besides Monero
+- fixed: Handle unhandled promises
+- fixed: Wallet list row sync circle component recycling
+- fixed: Missing wallet migration transaction metadata
+- fixed: Enabling tokens from wallet list row now relies on tokenId rather than parent currency code
+- fixed: Deleted account name no longer persists on PIN screen
+- fixed: Inability to select preferred swap provider in settings
+- fixed: Various visual, UX, and text issues
+- Upgrade edge-core-js v1.3.6
+  - fixed: Interpret HTTP 418 responses from the CORS proxy as errors.
+  - changed: Remove fetch fallback logic. No proxy servers will be used.
+  - changed: The fetchCors method is no longer deprecated. Use this if CORS might be an issue. Do not use this for any secrets or credentials.
+  - fixed: Escape bridge strings closer to serialization, for possibly better performance.
+  - fixed: Fallback to CORS-safe fetch functions on all errors to fix inconsistency with error messages across platforms.
+  - changed: Add fallback to bridged fetch if request to edge-cors-proxy server fails.
+  - changed: Added a fallback to edge-cors-proxy server to fetch method on EdgeIo.
+  - fixed: Enable WebView debugging on iOS 16.4+
+  - fixed: Correctly return transactions after a resync.
+- Upgrade edge-currency-accountbased to v1.4.11
+  - fixed: Use io.fetchCors for all requests, instead of io.fetch.
+  - fixed: Replace asMaybe and asOptional cleaner default objects with functions that return new objects in otherData cleaners
+  - changed: Update XRP explorer url
+  - changed: Update checkpoints
+  - Optimism: Replace deprecated rpc method rollup_gasPrices with l1BaseFee query
+  - EVM: Handle null gas parameter in WalletConnect requests
+  - FIO: Treat 403 status code as error
+  - Fixed: FIO transaction reliability issues resolved by adding more historical nodes
+  - Update GALA token
+  - Remove EthGasStation test
+- Upgrade edge-currency-plugins to v2.0.4
+  - Fixed: Race condition during re-sync causing impartial processor data ("Missing processor address" bug)
+  - Fixed: Throw DustSpendError instead of obscure blockbook error message for dust spend transaction broadcasts.
+- Upgrade edge exchange plugins to v0.19.8
+  - Use EdgeIo.fetchCors for all requests
+  - Swapuz/LetsExchange: Disable MATH
+  - Fixed: Increased gas limit by 40% for all chains for LI.FI
+- Upgrade edge-login-ui-rn to v2.6.5
+  - fixed: Correctly handle errors during account creation.
+  - fixed: Allow biometric logins for light accounts.
+  - changed: Update password login to allow configurable account creation options
+  - fixed: Don't clear modals upon unmounting UpgradeUsernameScreen
+  - changed: Update translations
+  - fixed: Stop returning the incorrect keychain data for light accounts.
+  - fixed: Update the wording on the new light account PIN scene, since there is no password.
+  - fixed: Update the terms & conditions wording for light accounts, which have no password.
+  - fixed: Reinstate login screen back button, conditionalize light username-less vs full account creation
+  - added: Accept an initialLoginId prop for the LoginScreen. Use this to select the initial user.
+  - deprecated: The username prop for the LoginScreen. Use initialLoginId instead.
+  - fixed: Enable the username dropdown for > 0 saved users on the password login scene
+  - fixed: Password login scene user list dropdown fade covering last entry
+  - fixed: Unnecessary scene scrolling in password login scene
+  - fixed: Add missing gradient in Password Login Scene scrollable list
+  - fixed: Allow text wrapping in PIN Login Scene account dropdown list
+  - changed: Update translations
+  - changed: Upgrade to edge-core-js v1.3.2.
+  - changed: Support for username-less (light) account.
+  - fixed: Correctly handle username deletion on the PIN scene.
+  - fixed: Maestro testing targetability of components
+  - changed: Update password login scene to use themed text input
+  - fixed: Password login scene errors were not localized
+  - changed: Allow biometric logins for accounts without usernames.
+
 ## 3.13.0
 
 - Add WalletConnect v2 support
