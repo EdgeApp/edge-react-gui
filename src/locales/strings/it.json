@@ -713,6 +713,7 @@
   "send_to_wallet": "Ricevi su %s",
   "exchange_from_wallet": "Scambia da %s",
   "exchange_to_wallet": "Scambia in %s",
+  "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
   "wallet_list_modal_header_mru": "Portafogli più recenti",
   "wallet_list_modal_header_all": "Tutti i portafogli",
   "wallet_list_modal_creating_wallet": "Creazione Portafoglio. Attendere prego",
