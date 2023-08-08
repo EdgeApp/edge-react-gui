@@ -6,13 +6,13 @@ index 029990137..9bee5519f 100644
        <CommandLineArguments>
           <CommandLineArgument
              argument = "-FIRDebugEnabled"
--            isEnabled = "YES">
-+            isEnabled = "NO">
+-            isEnabled = "NO">
++            isEnabled = "YES">
           </CommandLineArgument>
           <CommandLineArgument
              argument = "-FIRDebugDisabled"
--            isEnabled = "NO">
-+            isEnabled = "YES">
+-            isEnabled = "YES">
++            isEnabled = "NO">
           </CommandLineArgument>
        </CommandLineArguments>
     </LaunchAction>
