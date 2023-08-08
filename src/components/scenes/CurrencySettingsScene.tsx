@@ -11,6 +11,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting } from '../themed/MaybeCustomServersSetting'
+import { MaybeMoneroUserSettings } from '../themed/MaybeMoneroUserSettings'
 
 interface Props extends EdgeSceneProps<'currencySettings'> {}
 
@@ -57,6 +58,7 @@ export function CurrencySettingsScene(props: Props) {
         <MaybeBlockbookSetting currencyConfig={currencyConfig} />
         <MaybeCustomServersSetting currencyConfig={currencyConfig} />
         <MaybeElectrumSetting currencyConfig={currencyConfig} />
+        <MaybeMoneroUserSettings currencyConfig={currencyConfig} />
       </ScrollView>
     </SceneWrapper>
   )

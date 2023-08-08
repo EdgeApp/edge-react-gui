@@ -34,6 +34,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'dash',
   'litecoin',
   'bitcoinsv',
+  'monero',
   'zcoin',
   'digibyte',
   'dogecoin',
