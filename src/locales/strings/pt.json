@@ -713,6 +713,7 @@
   "send_to_wallet": "Receive to %s",
   "exchange_from_wallet": "Cambiar de %s",
   "exchange_to_wallet": "Cambiar para %s",
+  "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
   "wallet_list_modal_header_mru": "Carteiras Mais Recentes",
   "wallet_list_modal_header_all": "Todas as Carteiras",
   "wallet_list_modal_creating_wallet": "Creating Wallet. Please Wait",
