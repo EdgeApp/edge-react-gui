@@ -79,6 +79,7 @@ const sections: SectionData[] = [
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
   const context = useSelector(state => state.core.context)
+  const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const localUsers = useWatch(context, 'localUsers')
   const hasLocalUsers = localUsers.length > 0
 
@@ -154,11 +155,14 @@ export const GettingStartedScene = (props: Props) => {
   }, [])
 
   // Redirect to login screen if device has memory of accounts
+  // HACK: It's unknown how the localUsers dependency makes the routing work
+  // properly, but use isLoggedIn explicitly to address the bug where this
+  // effect would cause an unwanted navigation while logged in.
   useEffect(() => {
-    if (hasLocalUsers) {
+    if (localUsers.length > 0 && !isLoggedIn) {
       navigation.navigate('login', {})
     }
-  }, [navigation, hasLocalUsers])
+  }, [isLoggedIn, localUsers, navigation])
 
   return (
     <SceneWrapper hasHeader={false}>
