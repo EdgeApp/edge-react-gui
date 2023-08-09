@@ -790,6 +790,12 @@ const strings = {
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
+  can_be_partial_quote_title: 'Partial Quote',
+  can_be_partial_quote_message: 'This quote may be partially fulfilled.',
+  can_be_partial_quote_with_max_body:
+    'This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nThe order will stay open for %s minutes after which funds that have not been swapped will remain in your source wallet or be returned.',
+  can_be_partial_quote_body:
+    'This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nFunds that fail to swap will remain in your source wallet or be returned.',
   fixed_quote: 'Fixed Quote',
   estimated_quote: 'Estimated Quote',
   estimated_exchange_rate: 'Estimated Exchange Rate',

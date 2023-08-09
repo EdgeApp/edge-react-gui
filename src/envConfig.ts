@@ -229,6 +229,11 @@ export const asEnvConfig = asObject({
       projectId: asOptional(asString, '')
     }).withRest
   ),
+  XRPDEX_INIT: asCorePluginInit(
+    asObject({
+      appId: asOptional(asString, 'edge')
+    }).withRest
+  ),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { lstrings } from '../../locales/strings'
@@ -97,6 +98,22 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     ))
   }
 
+  showExplanationForCanBePartial = async () => {
+    const { canBePartial, maxFulfillmentSeconds } = this.props.route.params.swapInfo.quote
+    let canBePartialString: string | undefined
+    if (canBePartial === true) {
+      if (maxFulfillmentSeconds != null) {
+        const t = Math.ceil(maxFulfillmentSeconds / 60)
+        canBePartialString = sprintf(lstrings.can_be_partial_quote_with_max_body, t.toString())
+      } else {
+        canBePartialString = lstrings.can_be_partial_quote_body
+      }
+    }
+    await Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} title={lstrings.can_be_partial_quote_title} message={canBePartialString} buttons={{ ok: { label: lstrings.string_ok } }} />
+    ))
+  }
+
   handlePoweredByTap = () => {
     this.props.navigation.navigate('exchangeSettings', {})
   }
@@ -112,6 +129,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const feePercent = div(quote.networkFee.nativeAmount, quote.fromNativeAmount, 2)
     const showFeeWarning = gte(feePercent, '0.05')
     const styles = getStyles(theme)
+
     return (
       <NotificationSceneWrapper navigation={navigation} background="theme">
         {(gap, notificationHeight) => (
@@ -158,6 +176,16 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
                   onPress={this.showExplanationForEstimate}
                 />
               )}
+              {quote.canBePartial === true && (
+                <Alert
+                  title={lstrings.can_be_partial_quote_title}
+                  message={lstrings.can_be_partial_quote_message}
+                  type="warning"
+                  marginRem={[1, 1]}
+                  onPress={this.showExplanationForCanBePartial}
+                />
+              )}
+
               <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
               {this.renderTimer()}
             </ScrollView>
