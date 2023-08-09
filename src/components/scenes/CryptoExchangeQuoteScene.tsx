@@ -131,7 +131,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const styles = getStyles(theme)
 
     return (
-      <NotificationSceneWrapper navigation={navigation} background="theme">
+      <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
         {(gap, notificationHeight) => (
           <>
             <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
@@ -172,7 +172,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
                   title={lstrings.estimated_quote}
                   message={lstrings.estimated_exchange_message}
                   type="warning"
-                  marginRem={[1.5, 1]}
+                  marginRem={[1, 1]}
                   onPress={this.showExplanationForEstimate}
                 />
               )}
@@ -217,8 +217,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   slider: {
-    marginTop: theme.rem(2.5),
-    marginBottom: theme.rem(2)
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(1)
   },
   spacer: {
     height: theme.rem(8)
