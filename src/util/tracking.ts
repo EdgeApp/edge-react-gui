@@ -33,6 +33,7 @@ export type TrackingEventName =
   | 'Welcome_Signin'
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
+  | 'Signup_Wallets_Selected_Next'
   | 'Start_App'
   | 'purchase'
   | 'Visa_Card_Launch'
@@ -47,6 +48,7 @@ export interface TrackingValues {
   installerId?: string // Account installerId, i.e. referralId
   orderId?: string // Unique order identifier provided by plugin
   pluginId?: string // Plugin that provided the conversion
+  numSelectedWallets?: number // Number of wallets to be created
 }
 
 // Set up the global Firebase instance at boot:

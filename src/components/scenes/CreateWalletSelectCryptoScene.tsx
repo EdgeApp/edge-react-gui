@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -97,6 +98,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       showError(lstrings.create_wallet_no_assets_selected)
       return
     }
+
+    if (newAccountFlow != null) logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: numSelected })
 
     const createItems = createWalletList.filter(item => selectedItems[item.key])
     const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
