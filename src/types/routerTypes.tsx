@@ -95,6 +95,7 @@ export interface RouteParamList {
   createWalletImport: CreateWalletImportParams
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
+  createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
   createWalletSelectFiat: CreateWalletSelectFiatParams
   currencyNotificationSettings: {
     currencyInfo: EdgeCurrencyInfo

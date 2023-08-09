@@ -394,6 +394,15 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen name="createWalletSelectCrypto" component={CreateWalletSelectCryptoScene} />
+      <Stack.Screen
+        name="createWalletSelectCryptoNewAccount"
+        component={CreateWalletSelectCryptoScene}
+        options={{
+          headerRight: () => null,
+          headerTitle: () => <EdgeLogoHeader />,
+          headerLeft: () => null
+        }}
+      />
       <Stack.Screen name="createWalletSelectFiat" component={CreateWalletSelectFiatScene} />
       <Stack.Screen
         name="currencyNotificationSettings"

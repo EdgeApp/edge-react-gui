@@ -24,11 +24,11 @@ import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCrea
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 export interface CreateWalletSelectCryptoParams {
-  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
+  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
   defaultSelection?: EdgeTokenId[]
 }
 
-interface Props extends EdgeSceneProps<'createWalletSelectCrypto'> {}
+interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
