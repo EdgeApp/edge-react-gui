@@ -4,8 +4,8 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { SettingsRadioRow } from '../themed/SettingsRadioRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { SettingsRadioRow } from '../settings/SettingsRadioRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { ListModal } from './ListModal'
 
 const options = [

@@ -20,9 +20,9 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { RadioListModal } from '../modals/RadioListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface OwnProps extends EdgeSceneProps<'exchangeSettings'> {}
 

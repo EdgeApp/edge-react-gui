@@ -11,8 +11,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface OwnProps extends EdgeSceneProps<'promotionSettings'> {}
 
