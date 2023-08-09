@@ -1,6 +1,6 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { Keyboard, Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -198,7 +198,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   })
 
   const handleSubmitEditing = useHandler(() => {
-    handleNextPress().catch(err => showError(err))
+    Keyboard.dismiss()
   })
 
   const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
@@ -255,7 +255,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onChangeText={setSearchTerm}
             value={searchTerm}
             label={lstrings.wallet_list_wallet_search}
-            returnKeyType="next"
             marginRem={[0.5, 1]}
             searchIcon
             clearIcon
