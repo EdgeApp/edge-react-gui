@@ -35,6 +35,7 @@ export type TrackingEventName =
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
   | 'Signup_Wallets_Selected_Next'
+  | 'Signup_Complete'
   | 'Start_App'
   | 'purchase'
   | 'Visa_Card_Launch'
