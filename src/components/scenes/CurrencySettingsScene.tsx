@@ -26,9 +26,9 @@ export function CurrencySettingsScene(props: Props) {
   const account = useSelector(state => state.core.account)
   const currencyConfig = account.currencyConfig[pluginId]
 
-  return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>
+  function renderDenominations() {
+    return (
+      <>
         <SettingsHeaderRow label={lstrings.settings_denominations_title} />
         {denominations.map(denomination => {
           const key = denomination.multiplier
@@ -46,6 +46,14 @@ export function CurrencySettingsScene(props: Props) {
             </SettingsRadioRow>
           )
         })}
+      </>
+    )
+  }
+
+  return (
+    <SceneWrapper background="theme" hasTabs={false}>
+      <ScrollView>
+        {denominations.length > 1 ? renderDenominations() : null}
         <MaybeBlockbookSetting currencyConfig={currencyConfig} />
         <MaybeCustomServersSetting currencyConfig={currencyConfig} />
         <MaybeElectrumSetting currencyConfig={currencyConfig} />
