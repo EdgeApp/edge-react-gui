@@ -39,38 +39,38 @@ export const RewardsCardWelcomeScene = (props: Props) => {
   )
 }
 
-const SceneContainer = styled(View)(props => ({
+const SceneContainer = styled(View)(theme => ({
   flex: 1,
   justifyContent: 'space-between',
-  marginVertical: props.theme.rem(1),
-  marginHorizontal: props.theme.rem(2)
+  marginVertical: theme.rem(1),
+  marginHorizontal: theme.rem(2)
 }))
 
-const WelcomeContainer = styled(View)(props => ({
+const WelcomeContainer = styled(View)(theme => ({
   alignItems: 'center',
   flex: 1,
   justifyContent: 'flex-start'
 }))
 
-const IllustrationImage = styled(Image)(props => ({
+const IllustrationImage = styled(Image)(theme => ({
   resizeMode: 'contain',
   flex: 1,
   aspectRatio: 1
 }))
 
-const VisaBrandImage = styled(Image)(props => ({
+const VisaBrandImage = styled(Image)(theme => ({
   resizeMode: 'contain',
   height: 50,
   aspectRatio: 3.0802005013,
   margin: 30
 }))
 
-const WelcomeInto = styled(Text)(props => ({
+const WelcomeInto = styled(Text)(theme => ({
   alignSelf: 'stretch',
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(1),
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(1),
   includeFontPadding: false,
-  marginBottom: props.theme.rem(1),
+  marginBottom: theme.rem(1),
   textAlign: 'center'
 }))

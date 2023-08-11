@@ -412,8 +412,8 @@ const SendComponent = (props: Props) => {
   })
 
   const renderAddAddress = () => {
-    const type = coreWallet.type
-    const maxSpendTargets = getSpecialCurrencyInfo(type)?.maxSpendTargets ?? 1
+    const { pluginId } = coreWallet.currencyInfo
+    const maxSpendTargets = getSpecialCurrencyInfo(pluginId)?.maxSpendTargets ?? 1
     if (maxSpendTargets < 2 || hiddenFeaturesMap.address || hiddenFeaturesMap.amount || lockTilesMap.address || lockTilesMap.amount) {
       return null
     }
@@ -980,17 +980,17 @@ const SendComponent = (props: Props) => {
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(props => ({
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(_theme => props => ({
   marginBottom: props.notificationHeight
 }))
 
-const StyledSliderView = styled(View)<{ notificationHeight: number }>(props => {
+const StyledSliderView = styled(View)<{ notificationHeight: number }>(theme => props => {
   return {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: props.theme.rem(1) + props.notificationHeight
+    bottom: theme.rem(1) + props.notificationHeight
   }
 })
 

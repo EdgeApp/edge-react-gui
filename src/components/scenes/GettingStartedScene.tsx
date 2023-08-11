@@ -36,7 +36,6 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
-import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 
@@ -231,32 +230,33 @@ export const GettingStartedScene = (props: Props) => {
 // Local Components
 // -----------------------------------------------------------------------------
 
-const Container = styled(View)(() => ({
+const Container = styled(View)({
   flex: 1
-}))
+})
 
 //
 // Skip Button
 //
 
-const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props =>
-  useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(props.swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
-    }
-  })
+const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
+  _theme => props =>
+    useAnimatedStyle(() => {
+      return {
+        opacity: interpolate(props.swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
+      }
+    })
 )
 
 //
 // Hero
 //
 
-const HeroContainer = styled(View)(() => ({
+const HeroContainer = styled(View)({
   flex: 1,
   alignItems: 'center'
-}))
+})
 
-const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
+const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => [
   {
     alignItems: 'center',
     justifyContent: 'center',
@@ -268,27 +268,27 @@ const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
   }))
 ])
 
-const WelcomeHeroTitle = styled(Text)(props => ({
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(2.25),
+const WelcomeHeroTitle = styled(Text)(theme => ({
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(2.25),
   includeFontPadding: false,
-  lineHeight: props.theme.rem(2.8),
-  paddingVertical: props.theme.rem(1),
+  lineHeight: theme.rem(2.8),
+  paddingVertical: theme.rem(1),
   textAlign: 'center'
 }))
-const WelcomeHeroMessage = styled(EdgeText)(props => ({
-  fontSize: props.theme.rem(0.78),
-  paddingVertical: props.theme.rem(1),
+const WelcomeHeroMessage = styled(EdgeText)(theme => ({
+  fontSize: theme.rem(0.78),
+  paddingVertical: theme.rem(1),
   textAlign: 'center'
 }))
-const WelcomeHeroPrompt = styled(EdgeText)(props => ({
-  fontSize: props.theme.rem(0.75),
-  fontFamily: props.theme.fontFaceBold,
+const WelcomeHeroPrompt = styled(EdgeText)(theme => ({
+  fontSize: theme.rem(0.75),
+  fontFamily: theme.fontFaceBold,
   textAlign: 'center'
 }))
 
-const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(props => {
+const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
   const { swipeOffset, itemIndex } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
@@ -297,7 +297,7 @@ const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemI
     {
       alignItems: 'center',
       aspectRatio: 1,
-      padding: props.theme.rem(1),
+      padding: theme.rem(1),
       position: 'absolute',
       height: '100%',
       width: '100%'
@@ -314,7 +314,7 @@ const HeroItem = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemI
   ]
 })
 
-const HeroImageContainer = styled(View)(() => ({
+const HeroImageContainer = styled(View)({
   alignItems: 'stretch',
   aspectRatio: 1,
   backgroundColor: 'white',
@@ -322,34 +322,34 @@ const HeroImageContainer = styled(View)(() => ({
   maxHeight: '100%',
   overflow: 'hidden',
   width: '100%'
-}))
-const HeroImage = styled(Image)(() => ({
+})
+const HeroImage = styled(Image)({
   maxHeight: '100%',
   maxWidth: '100%',
   aspectRatio: 1
-}))
+})
 
 //
 // Pagination
 //
 
-const Pagination = styled(View)(props => ({
+const Pagination = styled(View)(theme => ({
   flexDirection: 'row',
   justifyContent: 'center',
-  marginVertical: props.theme.rem(0.7)
+  marginVertical: theme.rem(0.7)
 }))
 
-const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(props => [
+const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => [
   {
     borderRadius: 10,
-    margin: props.theme.rem(0.3),
-    height: props.theme.rem(0.6),
-    width: props.theme.rem(0.6)
+    margin: theme.rem(0.3),
+    height: theme.rem(0.6),
+    width: theme.rem(0.6)
   },
   useAnimatedStyle(() => {
     const delta = 1 - Math.max(0, Math.min(1, Math.abs(props.itemIndex - props.swipeOffset.value)))
     const opacity = interpolate(delta, [0, 1], [0.5, 1])
-    const backgroundColor = interpolateColor(delta, [0, 1], [props.theme.icon, props.theme.iconTappable])
+    const backgroundColor = interpolateColor(delta, [0, 1], [theme.icon, theme.iconTappable])
     return {
       backgroundColor,
       opacity
@@ -361,8 +361,7 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 // Sections
 //
 
-const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => {
-  const theme = useTheme()
+const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
   const themeRem = theme.rem(1)
   const insets = useSafeAreaInsets()
 
@@ -371,12 +370,12 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
       alignItems: 'stretch',
       justifyContent: 'space-between',
       backgroundColor: '#0F1D26',
-      paddingVertical: props.theme.rem(1),
+      paddingVertical: theme.rem(1),
       paddingBottom: insets.bottom,
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${props.theme.modal}00`, `${props.theme.modal}ff`])
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, `${theme.modal}ff`])
       const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
       const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {
@@ -388,9 +387,9 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   ]
 })
 
-const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(props => [
+const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => [
   {
-    paddingBottom: props.theme.rem(1)
+    paddingBottom: theme.rem(1)
   },
   useAnimatedStyle(() => {
     const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.5])
@@ -400,14 +399,14 @@ const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(pro
   })
 ])
 
-const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(props => {
+const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
   const { swipeOffset, itemIndex } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
   const translateWidth = screenWidth / 2
   return [
     {
-      marginHorizontal: props.theme.rem(2),
+      marginHorizontal: theme.rem(2),
       position: 'absolute',
       height: '100%'
     },
@@ -422,23 +421,23 @@ const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIn
   ]
 })
 
-const SectionTitle = styled(EdgeText)(props => ({
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(1.6875),
+const SectionTitle = styled(EdgeText)(theme => ({
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(1.6875),
   includeFontPadding: false
 }))
 
-const SectionParagraph = styled(EdgeText)(props => ({
-  fontSize: props.theme.rem(0.75),
-  marginVertical: props.theme.rem(1)
+const SectionParagraph = styled(EdgeText)(theme => ({
+  fontSize: theme.rem(0.75),
+  marginVertical: theme.rem(1)
 }))
 
-const Footnote = styled(EdgeText)(props => ({
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.6),
-  marginBottom: props.theme.rem(1),
+const Footnote = styled(EdgeText)(theme => ({
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.6),
+  marginBottom: theme.rem(1),
   opacity: 0.75,
   includeFontPadding: false
 }))

@@ -172,44 +172,44 @@ export const RewardsCard = (props: RewardsCardProps) => {
   )
 }
 
-const MessageText = styled(EdgeText)(props => ({
-  fontFamily: props.theme.fontFaceMedium,
-  color: props.theme.secondaryText,
+const MessageText = styled(EdgeText)(theme => ({
+  fontFamily: theme.fontFaceMedium,
+  color: theme.secondaryText,
   textAlign: 'center'
 }))
 
-const CardList = styled(View)<{ bottomSpace: number }>(props => ({
+const CardList = styled(View)<{ bottomSpace: number }>(theme => props => ({
   marginBottom: props.bottomSpace,
-  padding: props.theme.rem(1.5)
+  padding: theme.rem(1.5)
 }))
 
-const CardContainer = styled(View)(props => ({
-  maxWidth: props.theme.rem(20),
+const CardContainer = styled(View)(theme => ({
+  maxWidth: theme.rem(20),
   width: '100%',
   alignSelf: 'center'
 }))
 
-const CardBackground = styled(View)(props => ({
+const CardBackground = styled(View)(theme => ({
   // This is the aspect ratio of a standard US credit card
   aspectRatio: 1.5882352941,
-  backgroundColor: props.theme.modal,
+  backgroundColor: theme.modal,
   // 0.75 rem is roughly proportional to a 1/8th inches border radius of a standard US credit card
-  borderRadius: props.theme.rem(0.75),
+  borderRadius: theme.rem(0.75),
   borderWidth: 1,
   borderTopColor: 'rgba(255,255,255,.2)',
   borderColor: 'rgba(255,255,255,.1)',
   position: 'absolute',
   shadowOpacity: 0.5,
-  shadowRadius: props.theme.rem(0.5),
+  shadowRadius: theme.rem(0.5),
   width: '100%'
 }))
 
-const CardInner = styled(View)<{ shouldStack?: boolean }>(props => ({
+const CardInner = styled(View)<{ shouldStack?: boolean }>(theme => props => ({
   aspectRatio: props.shouldStack === false ? 1.5882352941 : undefined,
-  padding: props.theme.rem(1.25)
+  padding: theme.rem(1.25)
 }))
 
-const BottomFloat = styled(View)(props => ({
+const BottomFloat = styled(View)(theme => ({
   alignSelf: 'center',
   bottom: 0,
   position: 'absolute'
@@ -220,26 +220,26 @@ const CardHeader = styled(View)(_props => ({
   justifyContent: 'space-between'
 }))
 
-const VisaBrandImage = styled(Image)(props => ({
+const VisaBrandImage = styled(Image)(theme => ({
   resizeMode: 'contain',
-  height: props.theme.rem(1.75),
-  width: props.theme.rem(4),
-  marginBottom: props.theme.rem(1.25),
-  marginRight: props.theme.rem(0.5)
+  height: theme.rem(1.75),
+  width: theme.rem(4),
+  marginBottom: theme.rem(1.25),
+  marginRight: theme.rem(0.5)
 }))
 
-const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
-  color: props.theme.secondaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.7),
+const CardFieldLabel = styled(Text)<{ textAlign?: 'left' | 'right' }>(theme => props => ({
+  color: theme.secondaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.7),
   includeFontPadding: false,
   textAlign: props.textAlign ?? 'left'
 }))
 
-const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(props => ({
-  color: props.theme.primaryText,
-  fontFamily: props.theme.fontFaceDefault,
-  fontSize: props.theme.rem(0.8),
+const CardFieldValue = styled(Text)<{ textAlign?: 'left' | 'right' }>(theme => props => ({
+  color: theme.primaryText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.8),
   includeFontPadding: false,
   textAlign: props.textAlign ?? 'left'
 }))
