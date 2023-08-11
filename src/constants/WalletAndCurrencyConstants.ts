@@ -297,19 +297,20 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: false
   },
   eos: {
-    initWalletName: lstrings.string_first_eos_wallet_name,
     chainCode: 'EOS',
-    isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
+    initWalletName: lstrings.string_first_eos_wallet_name,
+    isAccountActivationRequired: true,
+    isCustomTokensSupported: true,
+    isImportKeySupported: true,
+    keysOnlyMode: true,
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
-    },
-    isImportKeySupported: true,
-    isCustomTokensSupported: true
+    }
   },
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
