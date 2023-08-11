@@ -11,10 +11,12 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getStickyConfigValue } from '../../stickyConfig'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -58,6 +60,7 @@ export function LoginSceneComponent(props: Props) {
   const [counter, setCounter] = React.useState<number>(0)
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
+  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>()
 
   const fontDescription = React.useMemo(
     () => ({
@@ -150,11 +153,12 @@ export function LoginSceneComponent(props: Props) {
     [navigation]
   )
 
-  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
-    ? () => {
-        navigation.navigate('gettingStarted', {})
-      }
-    : undefined
+  const maybeHandleComplete =
+    ENV.USE_WELCOME_SCREENS && !legacyLanding
+      ? () => {
+          navigation.navigate('gettingStarted', {})
+        }
+      : undefined
 
   const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
     setPasswordRecoveryKey(undefined)
@@ -177,6 +181,11 @@ export function LoginSceneComponent(props: Props) {
   const handleSendLogs = useHandler(() => {
     dispatch(showSendLogsModal()).catch(err => showError(err))
   })
+
+  // Wait for the sticky config to initialize before rendering anything
+  useAsyncEffect(async () => {
+    setLegacyLanding(await getStickyConfigValue('legacyLanding'))
+  }, [])
 
   return loggedIn ? (
     <LoadingScene />

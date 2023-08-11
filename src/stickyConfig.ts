@@ -1,5 +1,6 @@
 import { asBoolean, asObject, asOptional, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
+import { CreateAccountType } from 'edge-login-ui-rn'
 
 import { STICKY_CONFIG } from './constants/constantSettings'
 
@@ -9,16 +10,18 @@ const stickyConfigDisklet = makeReactNativeDisklet()
 
 const stickyDistribution = {
   swipeLastUsp: 0.5,
-  createAccountType: 0.1
+  createAccountType: 0.1,
+  legacyLanding: 0.5
 }
 
-const generateStickyConfigVal = (key: keyof typeof stickyDistribution) => {
+const generateStickyConfigVal = (key: keyof typeof stickyDistribution): boolean => {
   return Math.random() < stickyDistribution[key]
 }
 
 const asStickyConfig = asObject({
   swipeLastUsp: asOptional(asBoolean, generateStickyConfigVal('swipeLastUsp')),
-  createAccountType: asOptional(asValue('full', 'light'), generateStickyConfigVal('createAccountType') ? 'light' : 'full')
+  createAccountType: asOptional<CreateAccountType>(asValue('full', 'light'), generateStickyConfigVal('createAccountType') ? 'light' : 'full'),
+  legacyLanding: asOptional(asBoolean, generateStickyConfigVal('legacyLanding'))
 })
 
 /**
@@ -51,7 +54,7 @@ export const getStickyConfig = async (): Promise<StickyConfig> => {
 /**
  * Returns the sticky  config value
  */
-export const getStickyConfigValue = async (key: keyof StickyConfig): Promise<string | boolean> => {
+export const getStickyConfigValue = async <K extends keyof StickyConfig>(key: K): Promise<StickyConfig[K]> => {
   const config = await getStickyConfig()
   return config[key]
 }
