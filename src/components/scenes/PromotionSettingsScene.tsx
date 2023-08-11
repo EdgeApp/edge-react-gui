@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions'
@@ -10,9 +9,10 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsSubHeader } from '../settings/SettingsSubHeader'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface OwnProps extends EdgeSceneProps<'promotionSettings'> {}
 
@@ -28,27 +28,28 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class PromotionSettingsComponent extends React.Component<Props> {
   render() {
-    const { accountReferral, deviceReferral, removePromotion, theme } = this.props
-    const styles = getStyles(theme)
+    const { accountReferral, deviceReferral, removePromotion } = this.props
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <SettingsHeaderRow label={lstrings.settings_promotion_affiliation_header} />
-        <View style={styles.textBlock}>
-          <Text style={styles.textRow}>
-            {deviceReferral.installerId == null
+        <SettingsSubHeader
+          label={
+            deviceReferral.installerId == null
               ? lstrings.settings_promotion_device_normal
-              : sprintf(lstrings.settings_promotion_device_installer, deviceReferral.installerId)}
-          </Text>
-          {deviceReferral.currencyCodes != null ? (
-            <Text style={styles.textRow}>{sprintf(lstrings.settings_promotion_device_currencies, deviceReferral.currencyCodes.join(', '))}</Text>
-          ) : null}
-          <Text style={styles.textRow}>
-            {accountReferral.installerId == null
+              : sprintf(lstrings.settings_promotion_device_installer, deviceReferral.installerId)
+          }
+        />
+        {deviceReferral.currencyCodes == null ? null : (
+          <SettingsSubHeader label={sprintf(lstrings.settings_promotion_device_currencies, deviceReferral.currencyCodes.join(', '))} />
+        )}
+        <SettingsSubHeader
+          label={
+            accountReferral.installerId == null
               ? lstrings.settings_promotion_account_normal
-              : sprintf(lstrings.settings_promotion_account_installer, accountReferral.installerId)}
-          </Text>
-        </View>
+              : sprintf(lstrings.settings_promotion_account_installer, accountReferral.installerId)
+          }
+        />
         <SettingsHeaderRow label={lstrings.settings_promotion_header} />
         {accountReferral.promotions.map(promotion => (
           <SettingsTappableRow
@@ -79,19 +80,6 @@ export class PromotionSettingsComponent extends React.Component<Props> {
     )).catch(err => showError(err))
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  textBlock: {
-    backgroundColor: theme.settingsRowBackground,
-    padding: theme.rem(0.5)
-  },
-  textRow: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.5)
-  }
-}))
 
 export const PromotionSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({

@@ -10,9 +10,9 @@ import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrency
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SettingsHeaderRow } from './SettingsHeaderRow'
-import { SettingsSwitchRow } from './SettingsSwitchRow'
-import { SettingsTappableRow } from './SettingsTappableRow'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface CustomServersSetting {
   enableCustomServers: boolean

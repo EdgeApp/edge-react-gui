@@ -38,11 +38,11 @@ import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { changeTheme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsLabelRow } from '../settings/SettingsLabelRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { MainButton } from '../themed/MainButton'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsLabelRow } from '../themed/SettingsLabelRow'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
 
 interface OwnProps extends EdgeSceneProps<'settingsOverview'> {}
 

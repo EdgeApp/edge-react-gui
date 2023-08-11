@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 
 interface Props extends EdgeSceneProps<'currencyNotificationSettings'> {}
 

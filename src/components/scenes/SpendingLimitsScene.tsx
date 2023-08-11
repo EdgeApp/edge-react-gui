@@ -12,10 +12,10 @@ import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
 interface Props extends EdgeSceneProps<'spendingLimits'> {}
 
