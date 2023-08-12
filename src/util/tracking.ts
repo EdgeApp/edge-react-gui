@@ -5,6 +5,7 @@ import { getUniqueId, getVersion } from 'react-native-device-info'
 import { ENV } from '../env'
 import { FbRemoteConfig, getStickyRemoteConfig } from '../fbRemoteConfig'
 import { fetchReferral } from './network'
+import { makeErrorLog } from './translateError'
 import { consify } from './utils'
 
 export type TrackingEventName =
@@ -33,6 +34,8 @@ export type TrackingEventName =
   | 'Welcome_Signin'
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
+  | 'Signup_Wallets_Selected_Next'
+  | 'Signup_Complete'
   | 'Start_App'
   | 'purchase'
   | 'Visa_Card_Launch'
@@ -43,10 +46,11 @@ export interface TrackingValues {
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
-  error?: string // Any error message string
+  error?: unknown | string // Any error
   installerId?: string // Account installerId, i.e. referralId
   orderId?: string // Unique order identifier provided by plugin
   pluginId?: string // Plugin that provided the conversion
+  numSelectedWallets?: number // Number of wallets to be created
 }
 
 // Set up the global Firebase instance at boot:
@@ -117,7 +121,7 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   }
   if (installerId != null) params.aid = installerId
   if (pluginId != null) params.plugin = pluginId
-  if (error != null) params.error = error
+  if (error != null) params.error = makeErrorLog(error)
 
   // Add all 'sticky' remote config variant values:
   const stickyConfig = await getStickyRemoteConfig()
