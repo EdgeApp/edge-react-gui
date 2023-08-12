@@ -125,6 +125,7 @@ export const GettingStartedScene = (props: Props) => {
   })
 
   const handlePressSignIn = useHandler(() => {
+    logEvent('Welcome_Signin')
     navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
   })
 

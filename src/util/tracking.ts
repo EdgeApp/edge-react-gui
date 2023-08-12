@@ -30,6 +30,7 @@ export type TrackingEventName =
   | 'Sell_Quote_Change_Provider'
   | 'Sell_Quote_Next'
   | 'Signup_Welcome'
+  | 'Welcome_Signin'
   | 'Signup_Wallets_Created_Failed'
   | 'Signup_Wallets_Created_Success'
   | 'Start_App'
