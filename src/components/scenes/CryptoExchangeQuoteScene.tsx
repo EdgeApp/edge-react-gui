@@ -87,7 +87,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     return <CircleTimer timeExpired={async () => await timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
   }
 
-  showExplanationForEstimate = async () => {
+  handleForEstimateExplanation = async () => {
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -98,7 +98,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     ))
   }
 
-  showExplanationForCanBePartial = async () => {
+  handleCanBePartialExplanation = async () => {
     const { canBePartial, maxFulfillmentSeconds } = this.props.route.params.swapInfo.quote
     let canBePartialString: string | undefined
     if (canBePartial === true) {
@@ -173,7 +173,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
                   message={lstrings.estimated_exchange_message}
                   type="warning"
                   marginRem={[1, 1]}
-                  onPress={this.showExplanationForEstimate}
+                  onPress={this.handleForEstimateExplanation}
                 />
               )}
               {quote.canBePartial === true && (
@@ -182,7 +182,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
                   message={lstrings.can_be_partial_quote_message}
                   type="warning"
                   marginRem={[1, 1]}
-                  onPress={this.showExplanationForCanBePartial}
+                  onPress={this.handleCanBePartialExplanation}
                 />
               )}
 
