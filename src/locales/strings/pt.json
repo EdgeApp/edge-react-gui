@@ -1092,7 +1092,7 @@
   "stake_break_even_days_months_s": "%1$s days (%2$s months)",
   "stake_earn_button_label": "Earn",
   "stake_unable_to_query_locked": "Unable to query locked balance. Please try again later.",
-  "stake_resource_display_name": "TRON Resources",
+  "stake_resource_display_name": "Recursos TRON",
   "stake_resource_display_name_v2": "TRON Resources v2",
   "stake_resource_bandwidth": "Bandwidth",
   "stake_resource_energy": "Energy",
