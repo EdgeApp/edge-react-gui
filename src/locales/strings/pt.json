@@ -921,7 +921,7 @@
   "migrate_wallet_new_fragment": " (novo)",
   "migrate_unknown_error_fragment": "Erro desconhecido",
   "migrate_wallets_modal_message": "As seguintes carteiras foram potencialmente afetadas por um recente incidente de segurança:\n%1$s\nÉ altamente recomendável que interrompa o uso dessas carteiras e migre os ativos para uma nova carteira na sua conta. Gostaria de usar o recurso automatizado Migrate Wallets para fazer isso?",
-  "migrate_wallet_tx_notes": "Migrate funds to %1$s",
+  "migrate_wallet_tx_notes": "Migrar fundos para %1$s",
   "wallet_list_sort_title": "Sort Wallets",
   "wallet_list_sort_manual": "Manual sort",
   "wallet_list_sort_name": "Sort by name",
