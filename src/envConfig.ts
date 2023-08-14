@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -13,11 +13,6 @@ function asCorePluginInit<T>(cleaner: Cleaner<T>): Cleaner<T | false> {
     return cleaner(raw)
   }
 }
-
-export const asFbRemoteConfig = asObject({
-  swipeLastUsp: asOptional(asBoolean, true),
-  createAccountType: asOptional(asValue('full', 'light'), 'full')
-})
 
 export const asEnvConfig = asObject({
   // API keys:
@@ -270,6 +265,5 @@ export const asEnvConfig = asObject({
       port: asOptional(asString, '8008')
     }),
     { host: 'localhost', port: '8008' }
-  ),
-  REMOTE_CONFIG_DEFAULTS: asOptional(asFbRemoteConfig, () => asFbRemoteConfig({}))
+  )
 }).withRest

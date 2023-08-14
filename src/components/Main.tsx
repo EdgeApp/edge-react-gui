@@ -13,6 +13,7 @@ import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { ENV } from '../env'
+import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
@@ -21,6 +22,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
+import { getStickyConfigValue } from '../stickyConfig'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -78,6 +80,7 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
+import { LoadingScene } from './scenes/LoadingScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -225,6 +228,7 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
+  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>()
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
@@ -247,10 +251,17 @@ export const Main = () => {
     }, 0)
   }, [])
 
-  return (
+  // Wait for the sticky config to initialize before rendering anything
+  useAsyncEffect(async () => {
+    setLegacyLanding(await getStickyConfigValue('legacyLanding'))
+  }, [])
+
+  return legacyLanding == null ? (
+    <LoadingScene />
+  ) : (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
-        initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+        initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
         screenOptions={{
           headerShown: false
         }}

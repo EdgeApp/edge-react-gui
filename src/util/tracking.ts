@@ -3,7 +3,7 @@ import analytics from '@react-native-firebase/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { ENV } from '../env'
-import { FbRemoteConfig, getStickyRemoteConfig } from '../fbRemoteConfig'
+import { getStickyConfig, StickyConfig } from '../stickyConfig'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
@@ -124,9 +124,9 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (error != null) params.error = makeErrorLog(error)
 
   // Add all 'sticky' remote config variant values:
-  const stickyConfig = await getStickyRemoteConfig()
+  const stickyConfig = await getStickyConfig()
 
-  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof FbRemoteConfig]
+  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof StickyConfig]
 
   consify({ logEvent: { name, params } })
   // @ts-expect-error
