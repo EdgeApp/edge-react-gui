@@ -16,7 +16,7 @@ import {
 } from '../fiatProviderTypes'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
-const partnerIcon = 'icon_white_small.png'
+const partnerIcon = 'moonpay_symbol_prp.png'
 const pluginDisplayName = 'Moonpay'
 
 const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
