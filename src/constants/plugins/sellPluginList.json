@@ -5,7 +5,7 @@
     "paymentTypes": ["credit"],
     "description": "Fee: 4-5% / Settlement: 1 - 4 days",
     "title": "ACH Bank Transfer",
-    "partnerIconPath": "icon_black_small.png",
+    "partnerIconPath": "moonpay_symbol_prp.png",
     "forCountries": ["US"],
     "paymentTypeLogoKey": "bank"
   },

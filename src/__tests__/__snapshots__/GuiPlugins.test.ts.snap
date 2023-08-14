@@ -235,7 +235,7 @@ exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
     "deepPath": "",
     "deepQuery": {},
     "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "partnerIconPath": "icon_black_small.png",
+    "partnerIconPath": "moonpay_symbol_prp.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": [
       "credit",
