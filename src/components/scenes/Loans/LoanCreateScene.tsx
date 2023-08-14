@@ -199,7 +199,7 @@ export const LoanCreateScene = (props: Props) => {
 
   const minSwapInputNativeAmount = useSelector(state =>
     isRequiresSwap && borrowPlugin.borrowInfo.currencyPluginId === 'polygon' && srcCurrencyCode != null && srcExchangeMultiplier != null
-      ? truncateDecimals(mul('110', convertCurrency(state, 'iso:USD', srcCurrencyCode, srcExchangeMultiplier)), 0)
+      ? truncateDecimals(mul('30', convertCurrency(state, 'iso:USD', srcCurrencyCode, srcExchangeMultiplier)), 0)
       : '0'
   )
 
