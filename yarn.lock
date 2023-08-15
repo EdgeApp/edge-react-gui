@@ -1830,9 +1830,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+"@fioprotocol/fiosdk@git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
   version "1.8.0"
-  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
+  resolved "git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -5353,17 +5353,17 @@ base-64@^0.1.0:
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
   integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
 
-base-x@3.0.9, base-x@^3.0.2, base-x@^3.0.8:
+base-x@^1.0.1, base-x@^1.0.4:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-1.1.0.tgz#42d3d717474f9ea02207f6d1aa1f426913eeb7ac"
+  integrity sha512-c0WLeG3K5OlL4Skz2/LVdS+MjggByKhowxQpG+JpCLA48s/bGwIDyzA1naFjywtNvp/37fLK0p0FpjTNNLLUXQ==
+
+base-x@^3.0.2, base-x@^3.0.8, base-x@^3.0.9:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.9.tgz#6349aaabb58526332de9f60995e548a53fe21320"
   integrity sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ==
   dependencies:
     safe-buffer "^5.0.1"
-
-base-x@^1.0.1, base-x@^1.0.4:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/base-x/-/base-x-1.1.0.tgz#42d3d717474f9ea02207f6d1aa1f426913eeb7ac"
-  integrity sha512-c0WLeG3K5OlL4Skz2/LVdS+MjggByKhowxQpG+JpCLA48s/bGwIDyzA1naFjywtNvp/37fLK0p0FpjTNNLLUXQ==
 
 base-x@^4.0.0:
   version "4.0.0"
@@ -7602,10 +7602,10 @@ edge-core-js@^1.4.0:
     yaob "^0.3.11"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^1.4.12:
-  version "1.4.12"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.4.12.tgz#68b2dc56eea739fbb0db78e7088d10fe609c5dd8"
-  integrity sha512-S3CjkZVemmwgA/j5NMaH0uitk/d8vN/PN0l5eGD/N6t41ld4LcrFHmVV9k0ThM+7tm4GBwKzj0Oa7ORI/vJxug==
+edge-currency-accountbased@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-1.5.0.tgz#6ff8317744efcdadd36aa02b0b6445bda69de300"
+  integrity sha512-0N+ZLZQ1960QeBjd1PG3ClCYGeItWOXrBPQQ86TsZW1foaF2en+AmLZ6Dt2WkRdhWWhTJEfLe89Sq+NjpQ4OGA==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7633,7 +7633,7 @@ edge-currency-accountbased@^1.4.12:
     tweetnacl "^1.0.3"
     uri-js "^3.0.2"
     url-parse "^1.4.1"
-    xrpl "^2.1.1"
+    xrpl "^2.10.0"
     yaob "^0.3.6"
 
 edge-currency-monero@^1.1.0:
@@ -7678,10 +7678,10 @@ edge-currency-plugins@^2.1.0:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.19.8:
-  version "0.19.8"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.19.8.tgz#4f16acda524b1361694a3c363cb54ea5bd7ba2f8"
-  integrity sha512-rcx1sZAoQ4k1kky973GkuMbfZ/Bh6CAU87q5tWcGeBjYPLfFscUN6uAqBOsRF/ASHhwOESofqynycKyIooKpgQ==
+edge-exchange-plugins@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.20.0.tgz#b93238017942248b390080656216f0712b44041b"
+  integrity sha512-LauaTXjAiESuzLWxNkuTH1O4x8/T002mXDlXR9CJagt1fsJ6Jhx2zuKRNxn02t4fkqDQXJFLVrKhAFL39JuMFg==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -7694,6 +7694,7 @@ edge-exchange-plugins@^0.19.8:
     hashjs "^1.2.0"
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
+    xrpl "^2.10.0"
 
 edge-login-ui-rn@^2.7.0:
   version "2.7.0"
@@ -8835,9 +8836,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -14366,15 +14367,15 @@ ripple-address-codec@^2.0.1:
     hash.js "^1.0.3"
     x-address-codec "^0.7.0"
 
-ripple-address-codec@^4.2.4:
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/ripple-address-codec/-/ripple-address-codec-4.2.4.tgz#a56c2168c8bb81269ea4d15ed96d6824c5a866f8"
-  integrity sha512-roAOjKz94+FboTItey1XRh5qynwt4xvfBLvbbcx+FiR94Yw2x3LrKLF2GVCMCSAh5I6PkcpADg6AbYsUbGN3nA==
+ripple-address-codec@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/ripple-address-codec/-/ripple-address-codec-4.3.0.tgz#45edeb0312b4fe4607b37b7c4cff467802ad571d"
+  integrity sha512-Tvd81i7hpDmNqHvkj6iYlj8Tv3I1Romw5gfjni9eacewJvGV2xe+p2y0FAw39z72qfciRMhQyHvpnviBcWVBNw==
   dependencies:
-    base-x "3.0.9"
+    base-x "^3.0.9"
     create-hash "^1.1.2"
 
-ripple-binary-codec@0.2.3, ripple-binary-codec@^1.4.2:
+ripple-binary-codec@0.2.3, ripple-binary-codec@^1.8.0:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/ripple-binary-codec/-/ripple-binary-codec-0.2.3.tgz#ca16ba39bb8f32fce693b63947eb8b3e1dd8ca2c"
   integrity sha512-1HptJcjcEvmD35dO3DaKhXxYoZYMu4k+D2khmuSctQ8ATUoktKRoBpe1x/+zK5bCHKu7Ep2iAzCaDmjJM9zr1g==
@@ -14387,16 +14388,16 @@ ripple-binary-codec@0.2.3, ripple-binary-codec@^1.4.2:
     lodash "^4.17.15"
     ripple-address-codec "^2.0.1"
 
-ripple-keypairs@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ripple-keypairs/-/ripple-keypairs-1.1.4.tgz#4486fca703b8a2fc4f30cfd568478f3d12c1a911"
-  integrity sha512-PMMjTOxZmCSBOvHPj6bA+V/HGx7oFgDtGGI8VcZYuaFO2H87UX0X0jhfHy+LA2Xy31WYlD7GaDIDDt2QO+AMtw==
+ripple-keypairs@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ripple-keypairs/-/ripple-keypairs-1.3.0.tgz#fb28f15d0c764e36af7b25c4c782c3997abf84ad"
+  integrity sha512-LzM3Up9Pwz3dYqnczzNptimN3AxtjeGbDGeiOzREzbkslKiZcJ615b/ghBN4H23SC6W1GAL95juEzzimDi4THw==
   dependencies:
     bn.js "^5.1.1"
     brorand "^1.0.5"
     elliptic "^6.5.4"
     hash.js "^1.0.3"
-    ripple-address-codec "^4.2.4"
+    ripple-address-codec "^4.3.0"
 
 rlp@^2.0.0, rlp@^2.2.3, rlp@^2.2.4:
   version "2.2.7"
@@ -17151,19 +17152,19 @@ xregexp@2.0.0:
   resolved "https://registry.yarnpkg.com/xregexp/-/xregexp-2.0.0.tgz#52a63e56ca0b84a7f3a5f3d61872f126ad7a5943"
   integrity sha1-UqY+VsoLhKfzpfPWGHLxJq16WUM=
 
-xrpl@^2.1.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/xrpl/-/xrpl-2.3.1.tgz#7f7e788a283c5a15f66a18a75edc5d784538ab80"
-  integrity sha512-gg+Ifo9A9Hr/2CxUarWUlje9JgM1esD+YR533y7tD7plVHI9rG9kp13ZovUxoypy/0NMZW/ZLRX7Ae6oGr5+cA==
+xrpl@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/xrpl/-/xrpl-2.10.0.tgz#1a8b84c32e12adeaabb31f8c8527df1566991624"
+  integrity sha512-E77rkZ2cnOfJpGp5Tx6+BYAL2rFrEMvEksJmnhtHW9zC9rV4VqkwehrvPgt7duUXO7Vk9SutJ/HYsnz+Pw7KCA==
   dependencies:
     bignumber.js "^9.0.0"
     bip32 "^2.0.6"
     bip39 "^3.0.4"
     https-proxy-agent "^5.0.0"
     lodash "^4.17.4"
-    ripple-address-codec "^4.2.4"
-    ripple-binary-codec "^1.4.2"
-    ripple-keypairs "^1.1.4"
+    ripple-address-codec "^4.3.0"
+    ripple-binary-codec "^1.8.0"
+    ripple-keypairs "^1.3.0"
     ws "^8.2.2"
 
 xtend@^4.0.0, xtend@^4.0.2, xtend@~4.0.1:
