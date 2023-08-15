@@ -4,6 +4,7 @@ import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTyp
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
+import { isMaestro } from 'react-native-is-maestro'
 import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -184,7 +185,7 @@ export function LoginSceneComponent(props: Props) {
 
   // Wait for the sticky config to initialize before rendering anything
   useAsyncEffect(async () => {
-    setLegacyLanding(await getStickyConfigValue('legacyLanding'))
+    setLegacyLanding(isMaestro() ? false : await getStickyConfigValue('legacyLanding'))
   }, [])
 
   return loggedIn ? (
