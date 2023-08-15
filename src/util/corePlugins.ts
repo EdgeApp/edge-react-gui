@@ -74,6 +74,7 @@ export const swapPlugins = {
   thorchain: ENV.THORCHAIN_INIT,
   thorchainda: ENV.THORCHAIN_INIT,
   velodrome: true,
+  xrpdex: ENV.XRPDEX_INIT,
 
   transfer: true
 }
