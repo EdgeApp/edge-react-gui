@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface Props extends EdgeSceneProps<'notificationSettings'> {}
 

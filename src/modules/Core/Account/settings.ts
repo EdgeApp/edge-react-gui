@@ -66,6 +66,7 @@ export const asSyncedAccountSettings = asObject({
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
+  contactsPermissionOn: true,
   developerModeOn: false,
   passwordReminder: {
     needsPasswordCheck: false,
@@ -86,6 +87,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
 }
 
 export const LOCAL_ACCOUNT_TYPES = {
+  contactsPermissionOn: 'boolean',
   developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
@@ -160,6 +162,13 @@ export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: 
 export const setSpamFilterOn = async (account: EdgeAccount, spamFilterOn: boolean) => {
   return await getLocalSettings(account).then(async settings => {
     const updatedSettings = updateSettings(settings, { spamFilterOn })
+    return await setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setContactsPermissionOn = async (account: EdgeAccount, contactsPermissionOn: boolean) => {
+  return await getLocalSettings(account).then(async settings => {
+    const updatedSettings = updateSettings(settings, { contactsPermissionOn })
     return await setLocalSettings(account, updatedSettings)
   })
 }

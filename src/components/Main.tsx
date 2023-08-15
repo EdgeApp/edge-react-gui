@@ -4,13 +4,16 @@ import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
+import { Platform } from 'react-native'
 import { AirshipToast } from 'react-native-airship'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { ENV } from '../env'
+import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
@@ -19,6 +22,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
+import { getStickyConfigValue } from '../stickyConfig'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -76,6 +80,7 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
+import { LoadingScene } from './scenes/LoadingScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -103,7 +108,6 @@ import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
 import { SwapSettingsScene as SwapSettingsSceneComponent } from './scenes/SwapSettingsScene'
-import { TermsOfServiceComponent as TermsOfServiceComponentComponent } from './scenes/TermsOfServiceScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
@@ -112,6 +116,7 @@ import { WalletListScene as WalletListSceneComponent } from './scenes/WalletList
 import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcConnectionsScene'
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
+import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
 import { Airship, showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
@@ -190,7 +195,6 @@ const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
 const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
-const TermsOfServiceComponent = ifLoggedIn(TermsOfServiceComponentComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
@@ -198,10 +202,13 @@ const WalletListScene = ifLoggedIn(WalletListSceneComponent)
 const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
+const WebViewScene = ifLoggedIn(WebViewSceneComponent)
 
 const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
 const Tab = createBottomTabNavigator<AppParamList>()
+
+const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefined
 
 const defaultScreenOptions: StackNavigationOptions = {
   title: '',
@@ -209,6 +216,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
+  headerMode,
   headerTitleAlign: 'center',
   headerTransparent: true
 }
@@ -220,6 +228,7 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
+  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>()
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
@@ -242,10 +251,17 @@ export const Main = () => {
     }, 0)
   }, [])
 
-  return (
+  // Wait for the sticky config to initialize before rendering anything
+  useAsyncEffect(async () => {
+    setLegacyLanding(await getStickyConfigValue('legacyLanding'))
+  }, [])
+
+  return legacyLanding == null ? (
+    <LoadingScene />
+  ) : (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator
-        initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+        initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
         screenOptions={{
           headerShown: false
         }}
@@ -389,6 +405,15 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen name="createWalletSelectCrypto" component={CreateWalletSelectCryptoScene} />
+      <Stack.Screen
+        name="createWalletSelectCryptoNewAccount"
+        component={CreateWalletSelectCryptoScene}
+        options={{
+          headerRight: () => null,
+          headerTitle: () => <EdgeLogoHeader />,
+          headerLeft: () => null
+        }}
+      />
       <Stack.Screen name="createWalletSelectFiat" component={CreateWalletSelectFiatScene} />
       <Stack.Screen
         name="currencyNotificationSettings"
@@ -712,13 +737,6 @@ const EdgeAppStack = () => {
       <Stack.Screen name="stakeOptions" component={StakeOptionsScene} />
       <Stack.Screen name="stakeOverview" component={StakeOverviewScene} />
       <Stack.Screen
-        name="termsOfService"
-        component={TermsOfServiceComponent}
-        options={{
-          title: lstrings.title_terms_of_service
-        }}
-      />
-      <Stack.Screen
         name="transactionDetails"
         component={TransactionDetailsScene}
         options={{
@@ -736,6 +754,13 @@ const EdgeAppStack = () => {
       <Stack.Screen name="wcConnect" component={WcConnectScene} />
       <Stack.Screen name="wcConnections" component={WcConnectionsScene} />
       <Stack.Screen name="wcDisconnect" component={WcDisconnectScene} />
+      <Stack.Screen
+        name="webView"
+        component={WebViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'webView'> fromParams={params => params.title} />
+        }}
+      />
     </Stack.Navigator>
   )
 }

@@ -38,77 +38,90 @@ export interface SetNativeAmountInfo {
 
 export function getQuoteForTransaction(navigation: NavigationBase, info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    navigation.push('exchangeQuoteProcessing', {})
-
     const state = getState()
     const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
-    try {
-      if (fromWalletId == null || toWalletId == null) {
-        throw new Error('No wallet selected') // Should never happen
-      }
-      if (fromCurrencyCode == null || toCurrencyCode == null) {
-        throw new Error('No currency selected') // Should never happen
-      }
 
-      const { currencyWallets } = state.core.account
-      const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
-      const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
-      const request: EdgeSwapRequest = {
-        fromCurrencyCode,
-        fromWallet: fromCoreWallet,
-        nativeAmount: info.primaryNativeAmount,
-        quoteFor: info.whichWallet,
-        toCurrencyCode,
-        toWallet: toCoreWallet
-      }
-
-      const swapInfo = await fetchSwapQuote(state, request)
-
-      navigation.replace('exchangeQuote', {
-        swapInfo,
-        onApprove
-      })
-      dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
-    } catch (error: any) {
-      navigation.navigate('exchangeTab', { screen: 'exchange' })
-
-      const insufficientFunds = asMaybeInsufficientFundsError(error)
-      if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode && fromWalletId != null) {
-        const { currencyCode } = insufficientFunds
-        const { currencyWallets } = state.core.account
-        await Airship.show(bridge => (
-          <InsufficientFeesModal
-            bridge={bridge}
-            coreError={insufficientFunds}
-            navigation={navigation}
-            wallet={currencyWallets[fromWalletId]}
-            onSwap={() => {
-              dispatch({ type: 'SHIFT_COMPLETE' })
-              dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to')).catch(err => showError(err))
-            }}
-          />
-        ))
-      }
-      dispatch(processSwapQuoteError(error))
+    if (fromWalletId == null || toWalletId == null) {
+      throw new Error('No wallet selected') // Should never happen
     }
+    if (fromCurrencyCode == null || toCurrencyCode == null) {
+      throw new Error('No currency selected') // Should never happen
+    }
+
+    const { currencyWallets } = state.core.account
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
+    const request: EdgeSwapRequest = {
+      fromCurrencyCode,
+      fromWallet: fromCoreWallet,
+      nativeAmount: info.primaryNativeAmount,
+      quoteFor: info.whichWallet,
+      toCurrencyCode,
+      toWallet: toCoreWallet
+    }
+
+    navigation.navigate('exchangeQuoteProcessing', {
+      fetchSwapQuotePromise: fetchSwapQuote(state, request),
+      onCancel: () => {
+        navigation.goBack()
+      },
+      onDone: swapInfo => {
+        navigation.replace('exchangeQuote', {
+          swapInfo,
+          onApprove
+        })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+      },
+      onError: async (error: any) => {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+
+        const insufficientFunds = asMaybeInsufficientFundsError(error)
+        if (
+          insufficientFunds != null &&
+          insufficientFunds.currencyCode != null &&
+          fromCurrencyCode !== insufficientFunds.currencyCode &&
+          fromWalletId != null
+        ) {
+          const { currencyCode } = insufficientFunds
+          const { currencyWallets } = state.core.account
+          await Airship.show(bridge => (
+            <InsufficientFeesModal
+              bridge={bridge}
+              coreError={insufficientFunds}
+              navigation={navigation}
+              wallet={currencyWallets[fromWalletId]}
+              onSwap={() => {
+                dispatch({ type: 'SHIFT_COMPLETE' })
+                dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to')).catch(err => showError(err))
+              }}
+            />
+          ))
+        }
+        dispatch(processSwapQuoteError(error))
+      }
+    })
   }
 }
 
 export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    navigation.replace('exchangeQuoteProcessing', {})
-
-    try {
-      swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-      navigation.replace('exchangeQuote', {
-        swapInfo,
-        onApprove
-      })
-      dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
-    } catch (error: any) {
-      navigation.navigate('exchangeTab', { screen: 'exchange' })
-      dispatch(processSwapQuoteError(error))
-    }
+    navigation.replace('exchangeQuoteProcessing', {
+      fetchSwapQuotePromise: fetchSwapQuote(getState(), swapInfo.request),
+      onCancel: () => {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+      },
+      onDone: swapInfo => {
+        navigation.replace('exchangeQuote', {
+          swapInfo,
+          onApprove
+        })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+      },
+      onError: async (error: any) => {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+        dispatch(processSwapQuoteError(error))
+      }
+    })
   }
 }
 

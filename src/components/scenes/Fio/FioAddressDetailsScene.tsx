@@ -11,9 +11,9 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
+import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
-import { SettingsHeaderRow } from '../../themed/SettingsHeaderRow'
-import { SettingsTappableRow } from '../../themed/SettingsTappableRow'
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]

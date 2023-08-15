@@ -21,12 +21,11 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
-import { asFbRemoteConfig } from '../../envConfig'
-import { getStickyRemoteConfigValue } from '../../fbRemoteConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getStickyConfigValue } from '../../stickyConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
@@ -79,11 +78,12 @@ const sections: SectionData[] = [
 export const GettingStartedScene = (props: Props) => {
   const { navigation } = props
   const context = useSelector(state => state.core.context)
+  const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const localUsers = useWatch(context, 'localUsers')
   const hasLocalUsers = localUsers.length > 0
 
-  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState<Boolean>(asFbRemoteConfig({}).swipeLastUsp)
-  const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>(asFbRemoteConfig({}).createAccountType as CreateAccountType)
+  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(true)
+  const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>('full')
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -124,6 +124,7 @@ export const GettingStartedScene = (props: Props) => {
   })
 
   const handlePressSignIn = useHandler(() => {
+    logEvent('Welcome_Signin')
     navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
   })
 
@@ -149,16 +150,19 @@ export const GettingStartedScene = (props: Props) => {
 
   // Initialize variant config values
   useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled(Boolean(await getStickyRemoteConfigValue('swipeLastUsp')))
-    setCreateAccountType((await getStickyRemoteConfigValue('createAccountType')) as CreateAccountType)
+    setIsFinalSwipeEnabled(await getStickyConfigValue('swipeLastUsp'))
+    setCreateAccountType(await getStickyConfigValue('createAccountType'))
   }, [])
 
   // Redirect to login screen if device has memory of accounts
+  // HACK: It's unknown how the localUsers dependency makes the routing work
+  // properly, but use isLoggedIn explicitly to address the bug where this
+  // effect would cause an unwanted navigation while logged in.
   useEffect(() => {
-    if (hasLocalUsers) {
+    if (localUsers.length > 0 && !isLoggedIn) {
       navigation.navigate('login', {})
     }
-  }, [navigation, hasLocalUsers])
+  }, [isLoggedIn, localUsers, navigation])
 
   return (
     <SceneWrapper hasHeader={false}>

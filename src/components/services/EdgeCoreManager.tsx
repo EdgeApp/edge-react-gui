@@ -33,7 +33,8 @@ const contextOptions: EdgeContextOptions = {
     }
   },
 
-  plugins: allPlugins
+  plugins: allPlugins,
+  skipBlockHeight: true
 }
 
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative

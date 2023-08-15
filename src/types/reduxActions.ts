@@ -120,6 +120,7 @@ export type Action =
   | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'; data: { isTouchEnabled: boolean } }
   | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'; data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME'; data: { autoLogoutTimeInSeconds: number } }
+  | { type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION'; data: { contactsPermissionOn: boolean } }
   | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT'; data: { defaultFiat: string } }
   | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY'; data: { pluginId: string; currencyCode: string; denomination: EdgeDenomination } }
   | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'; data: { mostRecentWallets: MostRecentWallet[] } }

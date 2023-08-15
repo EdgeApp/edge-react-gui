@@ -1,17 +1,21 @@
 import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import TestRenderer from 'react-test-renderer'
 
-import { HelpModalComponent } from '../../components/modals/HelpModal'
-import { getTheme } from '../../components/services/ThemeContext'
+import { HelpModal } from '../../components/modals/HelpModal'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { FakeProviders } from '../../util/fake/FakeProviders'
+import { fakeNavigation } from '../../util/fake/fakeSceneProps'
 
 describe('HelpModal', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
+    const renderer = TestRenderer.create(
+      <FakeProviders>
+        <HelpModal bridge={fakeAirshipBridge} navigation={fakeNavigation} />
+      </FakeProviders>
+    )
 
-    const actual = renderer.render(<HelpModalComponent bridge={fakeAirshipBridge} theme={getTheme()} />)
-
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
 })

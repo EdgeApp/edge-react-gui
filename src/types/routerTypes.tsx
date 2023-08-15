@@ -20,6 +20,7 @@ import { TransactionListParams } from '../components/scenes/TransactionListScene
 import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import { WcConnectParams } from '../components/scenes/WcConnectScene'
 import { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
+import { WebViewSceneParams } from '../components/scenes/WebViewScene'
 import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
 import { PaymentMethod } from '../controllers/action-queue/WyreClient'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
@@ -94,6 +95,7 @@ export interface RouteParamList {
   createWalletImport: CreateWalletImportParams
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
+  createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
   createWalletSelectFiat: CreateWalletSelectFiatParams
   currencyNotificationSettings: {
     currencyInfo: EdgeCurrencyInfo
@@ -118,7 +120,12 @@ export interface RouteParamList {
     swapInfo: GuiSwapInfo
     onApprove: () => void
   }
-  exchangeQuoteProcessing: {}
+  exchangeQuoteProcessing: {
+    fetchSwapQuotePromise: Promise<GuiSwapInfo>
+    onCancel: () => void
+    onError: (error: any) => Promise<void>
+    onDone: (swapInfo: GuiSwapInfo) => void
+  }
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined
@@ -271,7 +278,6 @@ export interface RouteParamList {
   }
   stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
   stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
-  termsOfService: {}
   testScene: {}
   transactionDetails: {
     edgeTransaction: EdgeTransaction
@@ -283,6 +289,7 @@ export interface RouteParamList {
     currencyCode: string
   }
   walletList: {}
+  webView: WebViewSceneParams
   wcConnections: WcConnectionsParams
   wcDisconnect: WcDisconnectParams
   wcConnect: WcConnectParams

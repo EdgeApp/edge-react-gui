@@ -1,31 +1,45 @@
 import * as React from 'react'
 
+import { setContactsPermissionOn } from '../../actions/SettingsActions'
 import { showError } from '../../components/services/AirshipInstance'
-import { edgeRequestPermission } from '../../components/services/PermissionsManager'
-import { useSelector } from '../../types/reactRedux'
+import { showContactsPermissionModal } from '../../components/services/PermissionsManager'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { Dispatch } from '../../types/reduxTypes'
 import { normalizeForSearch } from '../../util/utils'
 
-let isModalShowing = false
+export const maybeShowContactsPermissionModal = (dispatch: Dispatch, contactsPermissionOn: boolean) => {
+  // Ignored if 'Contacts Access' setting is disabled
+  if (!contactsPermissionOn) return
+
+  // Contacts permission request:
+  showContactsPermissionModal(contactsPermissionOn)
+    .then(modalResult => {
+      if (modalResult !== undefined) {
+        // Update the Edge setting and system permission setting
+        dispatch(setContactsPermissionOn(modalResult === 'allow')).catch(showError)
+      }
+    })
+    .catch(showError)
+}
 
 /**
  * Looks up a thumbnail image for a contact.
  */
-export function useContactThumbnail(name?: string): string | undefined {
+export const useContactThumbnail = (name?: string): string | undefined => {
+  const dispatch = useDispatch()
   const contacts = useSelector(state => state.contacts)
+  const contactsPermissionOn = useSelector(state => state.ui.settings.contactsPermissionOn)
 
   React.useEffect(() => {
-    if (name == null) return
-    if (isModalShowing) return
-    isModalShowing = true
-    edgeRequestPermission('contacts')
-      .catch(err => {
-        showError(err)
-      })
-      .finally(() => (isModalShowing = false))
-  }, [name])
+    maybeShowContactsPermissionModal(dispatch, contactsPermissionOn)
+
+    // Avoid popping up the modal when the scene calling the hook is mounted and
+    // the user changes contactsPermissionOn.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   return React.useMemo(() => {
-    if (name == null) return
+    if (name == null || !contactsPermissionOn) return
 
     const searchName = normalizeForSearch(name)
     for (const contact of contacts) {
@@ -35,5 +49,5 @@ export function useContactThumbnail(name?: string): string | undefined {
         return contact.thumbnailPath
       }
     }
-  }, [contacts, name])
+  }, [contacts, contactsPermissionOn, name])
 }

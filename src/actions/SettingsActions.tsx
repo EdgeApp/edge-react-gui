@@ -1,12 +1,15 @@
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { openSettings, PermissionStatus, request } from 'react-native-permissions'
+import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import {
   setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
+  setContactsPermissionOn as setContactsPermissionOnAccountSettings,
   setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
   setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
   setDeveloperModeOn as setDeveloperModeOnAccountSettings,
@@ -15,7 +18,9 @@ import {
   setSpamFilterOn as setSpamFilterOnAccountSettings,
   setSpendingLimits as setSpendingLimitsAccountSettings
 } from '../modules/Core/Account/settings'
+import { permissionNames } from '../reducers/PermissionsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
+import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
@@ -296,5 +301,42 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
         dispatch({ type: 'SPAM_FILTER_OFF' })
       })
       .catch(showError)
+  }
+}
+
+/**
+ * Toggle the 'Contacts Access' Edge setting. Will request permissions if
+ * toggled on/enabled AND system-level contacts permissions are not granted.
+ * Does NOT modify system-level contacts permissions if toggling the 'Contacts
+ * Access' setting OFF
+ */
+export function setContactsPermissionOn(contactsPermissionOn: boolean): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+
+    await setContactsPermissionOnAccountSettings(account, contactsPermissionOn)
+
+    if (contactsPermissionOn) {
+      // Initial prompt to inform the reason of the permissions request.
+      // Denying this prompt will cause permissionStatus to be 'blocked',
+      // regardless of the prior permissions state.
+      await request(permissionNames.contacts, {
+        title: lstrings.contacts_permission_modal_title,
+        message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
+        buttonPositive: lstrings.string_allow,
+        buttonNegative: lstrings.string_deny
+      })
+        .then(async (permissionStatus: PermissionStatus) => {
+          // Can't request permission from within the app if previously blocked
+          if (permissionStatus === 'blocked') await openSettings()
+        })
+        // Handle any other potential failure in enabling the permission
+        // progmatically from within Edge by redirecting to the system settings
+        // instead. Any manual change in system settings causes an app restart.
+        .catch(async _e => await openSettings())
+    }
+
+    dispatch({ type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION', data: { contactsPermissionOn } })
   }
 }

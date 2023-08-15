@@ -3,6 +3,7 @@
 exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`] = `
 <NotificationSceneWrapper
   background="theme"
+  hasTabs={true}
   navigation={
     {
       "addListener": [Function],

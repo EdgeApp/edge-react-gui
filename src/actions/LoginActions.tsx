@@ -25,6 +25,7 @@ import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
+import { logEvent } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
@@ -99,7 +100,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       navigation.navigate('edgeApp', {
         screen: 'edgeAppStack',
         params: {
-          screen: 'createWalletSelectCrypto',
+          screen: 'createWalletSelectCryptoNewAccount',
           params: { newAccountFlow, defaultSelection }
         }
       })
@@ -157,6 +158,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     let accountInitObject: AccountInitPayload = {
       account,
       autoLogoutTimeInSeconds: 3600,
+      contactsPermissionOn: true,
       countryCode: '',
       currencyCode: '',
       defaultFiat: '',
@@ -321,7 +323,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
     return wallet
   } catch (error) {
     showError(error)
-    dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error: String(error) }))
+    dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   }
 }
@@ -382,6 +384,8 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     const wallet = await safeCreateWallet(account, currencyConfig.currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
     if (pluginIdTokenIdMap[pluginId].length > 0) await wallet.changeEnabledTokenIds(pluginIdTokenIdMap[pluginId])
   }
+
+  logEvent('Signup_Complete')
 }
 
 /**
