@@ -61,7 +61,7 @@ export function LoginSceneComponent(props: Props) {
   const [counter, setCounter] = React.useState<number>(0)
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
-  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>()
+  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
 
   const fontDescription = React.useMemo(
     () => ({
@@ -185,7 +185,8 @@ export function LoginSceneComponent(props: Props) {
 
   // Wait for the sticky config to initialize before rendering anything
   useAsyncEffect(async () => {
-    setLegacyLanding(isMaestro() ? false : await getStickyConfigValue('legacyLanding'))
+    if (isMaestro()) return
+    setLegacyLanding(await getStickyConfigValue('legacyLanding'))
   }, [])
 
   return loggedIn ? (
