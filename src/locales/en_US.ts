@@ -1002,6 +1002,7 @@ const strings = {
   string_end: 'End',
   export_transaction_quickbooks_qbo: 'Quickbooks QBO',
   export_transaction_csv: 'CSV',
+  export_transaction_bitwave_csv: 'Bitwave CSV',
   string_export: 'Export',
   string_status: 'Status',
   string_fee: 'Fee',

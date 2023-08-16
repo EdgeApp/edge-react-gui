@@ -5,10 +5,10 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
+import { exportTransactionsToBitwave, exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -33,6 +33,8 @@ interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
 
 interface StateProps {
   multiplier: string
+  exchangeMultiplier: string
+  parentMultiplier: string
 }
 
 interface DispatchProps {
@@ -46,6 +48,7 @@ interface State {
   endDate: Date
   isExportQbo: boolean
   isExportCsv: boolean
+  isExportBitwave: boolean
 }
 
 class TransactionsExportSceneComponent extends React.PureComponent<Props, State> {
@@ -58,7 +61,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
       isExportQbo: false,
-      isExportCsv: true
+      isExportCsv: true,
+      isExportBitwave: false
     }
   }
 
@@ -80,7 +84,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   render() {
-    const { startDate, endDate, isExportCsv, isExportQbo } = this.state
+    const { startDate, endDate, isExportBitwave, isExportCsv, isExportQbo } = this.state
     const { theme, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const iconSize = theme.rem(1.25)
@@ -88,7 +92,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const walletName = `${getWalletName(sourceWallet)} (${currencyCode})`
     const startDateString = formatDate(startDate)
     const endDateString = formatDate(endDate)
-    const disabledExport = !isExportQbo && !isExportCsv
+    const disabledExport = !isExportQbo && !isExportCsv && !isExportBitwave
 
     return (
       <SceneWrapper background="theme">
@@ -108,21 +112,23 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   renderAndroidSwitches() {
-    const { isExportCsv, isExportQbo } = this.state
+    const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsRadioRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
-        <SettingsRadioRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
+        <SettingsRadioRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
+        <SettingsRadioRow label={lstrings.export_transaction_bitwave_csv} value={isExportBitwave} onPress={this.handleBitwaveToggle} />
       </>
     )
   }
 
   renderIosSwitches() {
-    const { isExportCsv, isExportQbo } = this.state
+    const { isExportBitwave, isExportCsv, isExportQbo } = this.state
     return (
       <>
         <SettingsSwitchRow label={lstrings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
         <SettingsSwitchRow label={lstrings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
+        <SettingsSwitchRow label={lstrings.export_transaction_bitwave_csv} value={isExportBitwave} onPress={this.handleBitwaveToggle} />
       </>
     )
   }
@@ -139,25 +145,34 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     this.setState({ endDate: date })
   }
 
-  handleAndroidToggle = () => {
-    this.setState(state => ({
-      isExportCsv: !state.isExportCsv,
-      isExportQbo: !state.isExportQbo
-    }))
-  }
-
   handleQboToggle = () => {
-    this.setState(state => ({ isExportQbo: !state.isExportQbo }))
+    if (Platform.OS === 'android') {
+      this.setState({ isExportQbo: true, isExportCsv: false, isExportBitwave: false })
+    } else {
+      this.setState(state => ({ isExportQbo: !state.isExportQbo }))
+    }
   }
 
   handleCsvToggle = () => {
-    this.setState(state => ({ isExportCsv: !state.isExportCsv }))
+    if (Platform.OS === 'android') {
+      this.setState({ isExportCsv: true, isExportBitwave: false, isExportQbo: false })
+    } else {
+      this.setState(state => ({ isExportCsv: !state.isExportCsv }))
+    }
+  }
+
+  handleBitwaveToggle = () => {
+    if (Platform.OS === 'android') {
+      this.setState({ isExportBitwave: true, isExportCsv: false, isExportQbo: false })
+    } else {
+      this.setState(state => ({ isExportBitwave: !state.isExportBitwave }))
+    }
   }
 
   handleSubmit = async (): Promise<void> => {
-    const { multiplier, route } = this.props
+    const { exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
-    const { isExportQbo, isExportCsv, startDate, endDate } = this.state
+    const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
     if (startDate.getTime() > endDate.getTime()) {
       showError(lstrings.export_transaction_error)
       return
@@ -222,6 +237,16 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       formats.push('QBO')
     }
 
+    if (isExportBitwave) {
+      const bitwaveFile = await exportTransactionsToBitwave(sourceWallet, txs, currencyCode, exchangeMultiplier, parentMultiplier)
+      files.push({
+        contents: bitwaveFile,
+        mimeType: 'text/comma-separated-values',
+        fileName: fileName + '.bitwave.csv'
+      })
+      formats.push('Bitwave CSV')
+    }
+
     const title = 'Share Transactions ' + formats.join(', ')
     if (Platform.OS === 'android') {
       await this.shareAndroid(title, files[0])
@@ -268,7 +293,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
 export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
-    multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier
+    multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
+    exchangeMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
+    parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>

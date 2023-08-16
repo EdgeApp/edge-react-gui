@@ -148,6 +148,17 @@ function makeCsvDateTime(date: number): { date: string; time: string } {
   }
 }
 
+function makeBitwaveDateTime(date: number): string {
+  const d = new Date(date * 1000)
+  const yy = d.getUTCFullYear().toString().slice(-2)
+  const mm = padZero((d.getUTCMonth() + 1).toString())
+  const dd = padZero(d.getUTCDate().toString())
+  const hh = padZero(d.getUTCHours().toString())
+  const min = padZero(d.getUTCMinutes().toString())
+
+  return `${mm}/${dd}/${yy} ${hh}:${min}`
+}
+
 //
 // Check if tx is
 // 1. A transfer
@@ -370,6 +381,71 @@ export function exportTransactionsToCSVInner(
       OUR_RECEIVE_ADDRESSES: edgeTx.ourReceiveAddresses.join(','),
       VER: 1,
       DEVICE_DESCRIPTION: edgeTx.deviceDescription ?? ''
+    })
+  }
+
+  return csvStringify(items, {
+    header: true,
+    quoted_string: true,
+    record_delimiter: '\n'
+  })
+}
+
+export async function exportTransactionsToBitwave(
+  wallet: EdgeCurrencyWallet,
+  edgeTransactions: EdgeTransaction[],
+  currencyCode: string,
+  multiplier: string,
+  parentMultiplier: string
+): Promise<string> {
+  const items: any[] = []
+  const parentCode = wallet.currencyInfo.currencyCode
+
+  for (const tx of edgeTransactions) {
+    edgeTxToCsv(tx)
+  }
+
+  function edgeTxToCsv(edgeTx: EdgeTransaction) {
+    const { date, isSend, metadata, nativeAmount, networkFee, parentNetworkFee, txid } = edgeTx
+    const amount: string = abs(div(nativeAmount, multiplier, DECIMAL_PRECISION))
+    const time = makeBitwaveDateTime(date)
+    let fee: string = ''
+    let feeTicker: string = ''
+    const { name = '', category = '', notes = '' } = metadata ?? {}
+
+    if (isSend) {
+      if (parentNetworkFee != null) {
+        feeTicker = parentCode
+        fee = div(parentNetworkFee, parentMultiplier, DECIMAL_PRECISION)
+      } else {
+        feeTicker = currencyCode
+        fee = div(networkFee, multiplier, DECIMAL_PRECISION)
+      }
+    }
+
+    items.push({
+      id: txid,
+      remoteContactId: '',
+      amount,
+      amountTicker: currencyCode,
+      cost: '',
+      costTicker: '',
+      fee,
+      feeTicker,
+      time,
+      blockchainId: txid,
+      memo: category,
+      transactionType: isSend ? 'withdrawal' : 'deposit',
+      accountId: '',
+      contactId: '',
+      categoryId: '',
+      taxExempt: 'FALSE',
+      tradeId: '',
+      description: name,
+      fromAddress: '',
+      toAddress: '',
+      groupId: '',
+      'metadata:myCustomMetadata1': notes
     })
   }
 
