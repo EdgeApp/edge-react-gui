@@ -228,7 +228,7 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
-  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>()
+  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
@@ -253,6 +253,7 @@ export const Main = () => {
 
   // Wait for the sticky config to initialize before rendering anything
   useAsyncEffect(async () => {
+    if (isMaestro()) return
     setLegacyLanding(await getStickyConfigValue('legacyLanding'))
   }, [])
 
