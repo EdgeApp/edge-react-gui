@@ -393,6 +393,7 @@ export function exportTransactionsToCSVInner(
 
 export async function exportTransactionsToBitwave(
   wallet: EdgeCurrencyWallet,
+  accountId: string,
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
   multiplier: string,
@@ -436,7 +437,7 @@ export async function exportTransactionsToBitwave(
       blockchainId: txid,
       memo: category,
       transactionType: isSend ? 'withdrawal' : 'deposit',
-      accountId: '',
+      accountId,
       contactId: '',
       categoryId: '',
       taxExempt: 'FALSE',

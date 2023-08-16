@@ -1,3 +1,4 @@
+import { asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
@@ -14,6 +15,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
+import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
@@ -50,6 +52,14 @@ interface State {
   isExportCsv: boolean
   isExportBitwave: boolean
 }
+
+const EXPORT_TX_INFO_FILE = 'exportTxInfo.json'
+
+const asExportTxInfo = asObject({
+  bitwaveAccountId: asString
+})
+
+type ExportTxInfo = ReturnType<typeof asExportTxInfo>
 
 class TransactionsExportSceneComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -173,6 +183,40 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
+
+    let accountId = ''
+    if (isExportBitwave) {
+      let fileAccountId = ''
+      try {
+        const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
+        fileAccountId = asExportTxInfo(JSON.parse(result)).bitwaveAccountId
+      } catch (e) {
+        console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
+      }
+
+      accountId =
+        (await Airship.show<string | undefined>(bridge => (
+          <TextInputModal
+            autoFocus
+            autoCorrect={false}
+            bridge={bridge}
+            initialValue={fileAccountId}
+            inputLabel={lstrings.export_transaction_bitwave_accountid_modal_input_label}
+            message={lstrings.export_transaction_bitwave_accountid_modal_message}
+            returnKeyType="next"
+            submitLabel={lstrings.string_next_capitalized}
+            title={lstrings.export_transaction_bitwave_accountid_modal_title}
+          />
+        ))) ?? ''
+
+      if (accountId !== fileAccountId) {
+        const exportTxInfo: ExportTxInfo = {
+          bitwaveAccountId: accountId
+        }
+        await sourceWallet.disklet.setText(EXPORT_TX_INFO_FILE, JSON.stringify(exportTxInfo))
+      }
+    }
+
     if (startDate.getTime() > endDate.getTime()) {
       showError(lstrings.export_transaction_error)
       return
@@ -238,7 +282,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportBitwave) {
-      const bitwaveFile = await exportTransactionsToBitwave(sourceWallet, txs, currencyCode, exchangeMultiplier, parentMultiplier)
+      const bitwaveFile = await exportTransactionsToBitwave(sourceWallet, accountId, txs, currencyCode, exchangeMultiplier, parentMultiplier)
       files.push({
         contents: bitwaveFile,
         mimeType: 'text/comma-separated-values',
