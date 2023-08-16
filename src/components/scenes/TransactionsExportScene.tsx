@@ -1,4 +1,4 @@
-import { asObject, asString } from 'cleaners'
+import { asBoolean, asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
@@ -12,6 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
@@ -37,6 +38,7 @@ interface StateProps {
   multiplier: string
   exchangeMultiplier: string
   parentMultiplier: string
+  tokenId: string | undefined
 }
 
 interface DispatchProps {
@@ -56,9 +58,15 @@ interface State {
 const EXPORT_TX_INFO_FILE = 'exportTxInfo.json'
 
 const asExportTxInfo = asObject({
-  bitwaveAccountId: asString
+  bitwaveAccountId: asString,
+  isExportQbo: asBoolean,
+  isExportCsv: asBoolean,
+  isExportBitwave: asBoolean
 })
 
+const asExportTxInfoMap = asObject(asExportTxInfo)
+
+type ExportTxInfoMap = ReturnType<typeof asExportTxInfoMap>
 type ExportTxInfo = ReturnType<typeof asExportTxInfo>
 
 class TransactionsExportSceneComponent extends React.PureComponent<Props, State> {
@@ -91,6 +99,24 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
     })
+  }
+
+  async componentDidMount(): Promise<void> {
+    try {
+      const { sourceWallet } = this.props.route.params
+      const { tokenId = sourceWallet.currencyInfo.currencyCode } = this.props
+      const { disklet } = sourceWallet
+      const result = await disklet.getText(EXPORT_TX_INFO_FILE)
+      const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
+      const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenId]
+      this.setState({
+        isExportBitwave,
+        isExportCsv,
+        isExportQbo
+      })
+    } catch (e) {
+      console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
+    }
   }
 
   render() {
@@ -183,17 +209,22 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
+    const { tokenId = sourceWallet.currencyInfo.currencyCode } = this.props
+
+    let exportTxInfo: ExportTxInfo | undefined
+    let exportTxInfoMap: ExportTxInfoMap | undefined
+    try {
+      const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
+      exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
+      exportTxInfo = exportTxInfoMap[tokenId]
+    } catch (e) {
+      console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
+    }
 
     let accountId = ''
-    if (isExportBitwave) {
-      let fileAccountId = ''
-      try {
-        const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
-        fileAccountId = asExportTxInfo(JSON.parse(result)).bitwaveAccountId
-      } catch (e) {
-        console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
-      }
+    const fileAccountId = exportTxInfo?.bitwaveAccountId ?? ''
 
+    if (isExportBitwave) {
       accountId =
         (await Airship.show<string | undefined>(bridge => (
           <TextInputModal
@@ -208,13 +239,24 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
             title={lstrings.export_transaction_bitwave_accountid_modal_title}
           />
         ))) ?? ''
+    }
 
-      if (accountId !== fileAccountId) {
-        const exportTxInfo: ExportTxInfo = {
-          bitwaveAccountId: accountId
-        }
-        await sourceWallet.disklet.setText(EXPORT_TX_INFO_FILE, JSON.stringify(exportTxInfo))
+    if (
+      exportTxInfo?.bitwaveAccountId !== accountId ||
+      exportTxInfo?.isExportBitwave !== isExportBitwave ||
+      exportTxInfo?.isExportCsv !== isExportCsv ||
+      exportTxInfo?.isExportQbo !== isExportQbo
+    ) {
+      if (exportTxInfoMap == null) {
+        exportTxInfoMap = {}
       }
+      exportTxInfoMap[tokenId] = {
+        bitwaveAccountId: accountId,
+        isExportBitwave,
+        isExportQbo,
+        isExportCsv
+      }
+      await sourceWallet.disklet.setText(EXPORT_TX_INFO_FILE, JSON.stringify(exportTxInfoMap))
     }
 
     if (startDate.getTime() > endDate.getTime()) {
@@ -339,7 +381,8 @@ export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnPro
   (state, { route: { params } }) => ({
     multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
     exchangeMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
-    parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier
+    parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier,
+    tokenId: getTokenId(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>
