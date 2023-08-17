@@ -81,7 +81,4 @@ target 'edge' do
   pod 'CNIOLinux', :modular_headers => true
   pod 'CNIOWindows', :modular_headers => true
 
-  # Piratechain:
-  pod 'react-native-piratechain', :path => '../node_modules/react-native-piratechain'
-  pod 'PirateLightClientKit', :git => 'https://github.com/PirateNetwork/PirateLightClientKit.git', :commit => 'f939db082643d73cead7172da0a862f3b3df34a9'
 end

@@ -189,7 +189,6 @@ PODS:
     - hermes-engine/Pre-built (= 0.71.11)
   - hermes-engine/Pre-built (0.71.11)
   - libevent (2.1.12)
-  - libpiratelc (0.0.5)
   - libwebp (1.2.1):
     - libwebp/demux (= 1.2.1)
     - libwebp/mux (= 1.2.1)
@@ -218,10 +217,6 @@ PODS:
     - RNPermissions
   - Permission-Notifications (3.8.3):
     - RNPermissions
-  - PirateLightClientKit (0.14.3-beta):
-    - gRPC-Swift (~> 1.0)
-    - libpiratelc (= 0.0.5)
-    - SQLite.swift (~> 0.12.2)
   - PromisesObjC (2.1.0)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -501,9 +496,10 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
-  - react-native-piratechain (0.3.3):
-    - PirateLightClientKit (= 0.14.3-beta)
-    - React
+  - react-native-piratechain (0.3.5):
+    - gRPC-Swift (~> 1.0)
+    - React-Core
+    - SQLite.swift (~> 0.12)
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (4.6.4):
@@ -783,7 +779,7 @@ PODS:
     - SwiftNIOFoundationCompat (< 3, >= 2.32.0)
     - SwiftNIOPosix (< 3, >= 2.32.0)
     - SwiftNIOTLS (< 3, >= 2.32.0)
-  - SwiftProtobuf (1.20.3)
+  - SwiftProtobuf (1.22.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -841,7 +837,6 @@ DEPENDENCIES:
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
-  - PirateLightClientKit (from `https://github.com/PirateNetwork/PirateLightClientKit.git`, commit `f939db082643d73cead7172da0a862f3b3df34a9`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -951,7 +946,6 @@ SPEC REPOS:
     - GoogleUtilities
     - gRPC-Swift
     - libevent
-    - libpiratelc
     - libwebp
     - Logging
     - nanopb
@@ -1015,9 +1009,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
   Permission-Notifications:
     :path: "../node_modules/react-native-permissions/ios/Notifications"
-  PirateLightClientKit:
-    :commit: f939db082643d73cead7172da0a862f3b3df34a9
-    :git: https://github.com/PirateNetwork/PirateLightClientKit.git
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1161,11 +1152,6 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
-CHECKOUT OPTIONS:
-  PirateLightClientKit:
-    :commit: f939db082643d73cead7172da0a862f3b3df34a9
-    :git: https://github.com/PirateNetwork/PirateLightClientKit.git
-
 SPEC CHECKSUMS:
   _NIODataStructures: e2077c7dc7c1d6c93e698c85fe04d663a17f53a4
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
@@ -1212,7 +1198,6 @@ SPEC CHECKSUMS:
   gRPC-Swift: 77154009a019e97f8c4bd8f2bb75fe9726801157
   hermes-engine: 34c863b446d0135b85a6536fa5fd89f48196f848
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  libpiratelc: 8b923888cb473667fb7a84fa9b590e95a57f8a3d
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
@@ -1223,7 +1208,6 @@ SPEC CHECKSUMS:
   Permission-LocationAlways: 6b001084436e802fb1a3ec725ad81e935ee3a6aa
   Permission-LocationWhenInUse: a7243a69be958b5422bc0deea8bae0c937ca79f6
   Permission-Notifications: 05a9c72e2ae989d28eb1eecf3d6a12daba73d375
-  PirateLightClientKit: b5e76b77affabfc6eb6b1a01dad738d9c58c5ade
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: f6187ec763637e6a57f5728dd9a3bdabc6d6b4e0
@@ -1249,7 +1233,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
-  react-native-piratechain: 3976b76abdc9822d1b23568e4bda8db480df6499
+  react-native-piratechain: b6670583e25d27216c016ce49781a67ea218f352
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
@@ -1312,11 +1296,11 @@ SPEC CHECKSUMS:
   SwiftNIOSSL: 7c2ddcbcbb2a8188468b7fe9c2bc6124df4b3772
   SwiftNIOTLS: 1b8290ec775238ccc714ed842d929494df95a2c2
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
-  SwiftProtobuf: b02b5075dcf60c9f5f403000b3b0c202a11b6ae1
+  SwiftProtobuf: 7773c4e96a99d7b8ab7cda0fc30a883732ff93b1
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: b8006b1d677c7c684b18986cd606d6adc03317b0
+PODFILE CHECKSUM: 94e88a464a12f97deefd1dc898fad1a271469ef2
 
 COCOAPODS: 1.12.1

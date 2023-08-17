@@ -13733,10 +13733,10 @@ react-native-permissions@^3.8.3:
     picocolors "^1.0.0"
     pkg-dir "^5.0.0"
 
-react-native-piratechain@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.3.3.tgz#5f8d7822a32ce139323f0844896ed420d419d9c8"
-  integrity sha512-okHESDgnbZDQF5V3oy8L6qDnybkiXKa9VZ2uJlOSuy9uChlwv2DHERN+xkaLa3nEHVhm5XnaMGsIT8PpVVKayg==
+react-native-piratechain@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.3.5.tgz#fcfb1e4f5f0dc534579d71a78ad74a5fdded5e3d"
+  integrity sha512-8ejBjFItuglnTnsMUBD3t2j5ltWIvdh3U3Yr6/d4bGyqNypv7QhfmLizPdrlR6xLkcfreGGnk2Abzi81TfYdlg==
   dependencies:
     rfc4648 "^1.3.0"
 
