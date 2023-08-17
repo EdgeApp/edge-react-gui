@@ -139,7 +139,7 @@
     "deepmerge": "^4.3.1",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
-    "edge-core-js": "^1.4.0",
+    "edge-core-js": "^1.4.1",
     "edge-currency-accountbased": "^1.5.0",
     "edge-currency-monero": "^1.1.1",
     "edge-currency-plugins": "^2.1.0",
