@@ -735,7 +735,7 @@
   "fio_address_reg_free": "Registrar um FIO Crypto Handle gratuitamente",
   "fio_domain_label": "Domínio FIO",
   "fio_domain_free": "Free",
-  "fio_address_payment_required_text": "This payment is required by the FIO Protocol and not a requirement of %1$s. Each FIO Crypto Handle includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:",
+  "fio_address_payment_required_text": "Este pagamento é exigido pelo Protocolo FIO e não é um requisito do %1$s. Cada FIO Crypto Handle inclui um número de ações gratuitas, como solicitações de pagamento, onde a taxa de mineração é dispensada. Selecione uma carteira para pagar:",
   "fio_domain_wallet_selection_text": "FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of %1$s. The current annual cost is equivalent to %2$s FIO, but may fluctuate in the future. Select a wallet to pay from:",
   "fio_address_list": "Lista de Endereços FIO",
   "fio_address_register_form_field_label": "FIO Crypto Handle",
