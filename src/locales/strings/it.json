@@ -79,7 +79,7 @@
   "azteco_service_unavailable": "Errore: server Azteco non raggiungibile. Riprova più tardi.",
   "reqaddr_error_unsupported_chains": "%1$s non supporta le seguenti catene elencate nella richiesta: %2$s",
   "reqaddr_error_invalid_redir": "Query 'redir' non valida nella richiesta di indirizzo di pagamento",
-  "reqaddr_error_no_currencies_found": "Nessuna valuta trovata nella richiesta di indirizzo di pagamento",
+  "reqaddr_error_no_currencies_found": "Nessuna valuta trovata in Request for Payment Address",
   "reqaddr_error_no_wallets_selected": "Nessun portafoglio selezionato per la richiesta di indirizzo di pagamento",
   "reqaddr_error_post_redir": "Indirizzo post e redir non trovato nella richiesta di indirizzo di pagamento",
   "reqaddr_application_fragment": "Un'applicazione",
