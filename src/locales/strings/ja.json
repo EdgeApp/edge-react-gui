@@ -9,7 +9,7 @@
   "action_queue_display_par_message": "一度に複数のアクションを実行します。",
   "action_queue_display_fiat_buy_title": "購入 %s",
   "action_queue_display_fiat_buy_message": "%1$s を %3$sから購入する",
-  "action_queue_display_fiat_sell_title": "銀行への送金",
+  "action_queue_display_fiat_sell_title": "銀行への入金",
   "action_queue_display_fiat_sell_message": "あなたの %1$s は当社のパートナーによって販売され、 %2$sを通じてあなたの銀行口座に入金されます。",
   "action_queue_display_loan_borrow_title": "ローンを利用する",
   "action_queue_display_loan_borrow_message_1s": "%1$s ローンがリクエストされ、ウォレットに送金中です。",
