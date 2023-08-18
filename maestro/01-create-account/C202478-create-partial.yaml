@@ -57,7 +57,7 @@ tags:
 - assertVisible: "Test12345"
 - assertVisible: "Passwords don't match"
 - inputText: "6!"
-- tapOn: "Go"
+- pressKey: Enter
 - assertVisible:
     id: "headerLeftButton"
 - assertVisible: "Your PIN is a 4 digit code used to quickly log back into your account.\n\
