@@ -1,0 +1,111 @@
+# Priority: Critical
+# Test ID: C202478
+# Title: Partial Create account flow
+# Expected Result:
+#   1. Visuals and functionality leading prior to full account creation
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- ios
+- C202748
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+
+- tapOn: "Already have an account? Sign in"
+- tapOn:
+    id: "createAccountButton"
+- assertVisible:
+    id: "headerLeftButton"
+- assertVisible: "Choose Username"
+- assertVisible: "Username"
+- inputText: "abc"
+- assertVisible: "Username already exists"
+- tapOn:
+    id: "undefined.clearIcon"
+- inputRandomText
+- assertVisible: "Username available"
+- tapOn: "Next"
+- assertVisible:
+    id: "headerLeftButton"
+- assertVisible: "Set Password"
+- assertVisible: "Your password is used to encrypt your account and to log in."
+- assertVisible: "Password"
+- assertVisible: "Confirm Password"
+- assertVisible:
+    id: "undefined.eyeIcon"
+    index: 0
+- assertVisible:
+    id: "undefined.eyeIcon"
+    index: 1
+- tapOn: "Password"
+- inputText: "Test123456!"
+- assertVisible: " Password Requirements • Must have at least 10 characters • Must\
+    \ have at least 1 lowercase letter • Must have at least 1 uppercase letter • Must\
+    \ have at least 1 number"
+- tapOn:
+    id: "undefined.eyeIcon"
+    index: 0
+- assertVisible:
+    text: "Test123456!"
+    index: 0
+- tapOn: "Confirm Password"
+- inputText: "Test12345"
+- tapOn:
+    id: "undefined.eyeIcon"
+    index: 1
+- assertVisible: "Test12345"
+- assertVisible: "Passwords don't match"
+- inputText: "6!"
+- tapOn: "Go"
+- assertVisible:
+    id: "headerLeftButton"
+- assertVisible: "Your PIN is a 4 digit code used to quickly log back into your account.\n\
+    \nPIN login is only usable on a device after first login with password."
+- inputText: 1111
+- tapOn: "Next"
+- assertVisible:
+    id: "headerLeftButton"
+- assertVisible: "Account Confirmation"
+- assertVisible: "Review: Terms of Use  (Tap each circle to agree)"
+- assertVisible: "I understand that my funds are held securely on this device, not\
+    \ by Edge"
+- assertVisible: "I understand that if I lose this device or uninstall the app, my\
+    \ digital assets can only be recovered with my username and password"
+- assertVisible: "I understand that if I lose my username and password, Edge will\
+    \ not be able to recover my account, unless I set up password recovery"
+- assertVisible: "I understand that I am responsible for safekeeping of my passwords,\
+    \ private key pairs, PIN, and any other codes to access the software. Edge is\
+    \ not responsible if my information is compromised or accessed by a 3rd party\
+    \ where funds are lost"
+- assertVisible: "I have read, understood, and agree to the Terms of Use  (Tap each\
+    \ circle to agree)"
+- tapOn: "I understand that my funds are held securely on this device, not by Edge"
+- tapOn: "I understand that if I lose this device or uninstall the app, my digital\
+    \ assets can only be recovered with my username and password"
+- tapOn: "I understand that if I lose my username and password, Edge will not be able\
+    \ to recover my account, unless I set up password recovery"
+- tapOn: "I understand that I am responsible for safekeeping of my passwords, private\
+    \ key pairs, PIN, and any other codes to access the software. Edge is not responsible\
+    \ if my information is compromised or accessed by a 3rd party where funds are\
+    \ lost"
+- assertVisible: "Confirm"
+- tapOn: " I understand that I am responsible for safekeeping of my passwords, private\
+    \ key pairs, PIN, and any other codes to access the software. Edge is not responsible\
+    \ if my information is compromised or accessed by a 3rd party where funds are\
+    \ lost"
+- assertNotVisible: "Confirm"
+- tapOn:
+    id: "headerLeftButton"
+- assertVisible: "Set PIN"
+- tapOn:
+    id: "headerLeftButton"
+- assertVisible: "Set Password"
+- tapOn:
+    id: "headerLeftButton"
+- assertVisible: "Choose Username"
+- tapOn:
+    id: "headerLeftButton"
+- assertVisible: "Create an Account"
+
+- stopApp
