@@ -2,9 +2,11 @@ import { asMaybe, asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -12,6 +14,7 @@ import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
@@ -78,11 +81,8 @@ function EditTokenSceneComponent(props: Props) {
     if (isNaN(decimals)) {
       return await showMessage(lstrings.edittoken_invalid_decimal_places)
     }
-    // TODO:
-    // We need to check for conflicts with the other tokens in the account,
-    // both for matching contract addresses and for currency codes.
 
-    const token: EdgeToken = {
+    const customTokenInput: EdgeToken = {
       currencyCode,
       displayName,
       denominations: [
@@ -98,13 +98,43 @@ function EditTokenSceneComponent(props: Props) {
     }
 
     if (tokenId != null) {
-      await wallet.currencyConfig.changeCustomToken(tokenId, token)
+      await wallet.currencyConfig.changeCustomToken(tokenId, customTokenInput)
+      navigation.goBack()
     } else {
-      const tokenId = await wallet.currencyConfig.addCustomToken(token)
-      await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
-      logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`)
+      const { currencyConfig } = wallet
+      const { builtinTokens } = currencyConfig
+
+      // Check if custom token input conflicts with built-in tokens.
+      // There's currently no mechanism to obtain a new custom token's tokenId
+      // for proper comparison against built-in tokens besides physically adding
+      // the new custom token first.
+      const newTokenId = await currencyConfig.addCustomToken(customTokenInput)
+
+      const matchingContractToken =
+        Object.keys(builtinTokens).find(builtinTokenId => builtinTokenId === newTokenId) == null ? undefined : builtinTokens[newTokenId]
+
+      const warningMessage =
+        Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
+          ? sprintf(lstrings.warning_token_code_override_2s, currencyCode, config.supportEmail)
+          : matchingContractToken != null
+          ? sprintf(lstrings.warning_token_contract_override_3s, currencyCode, matchingContractToken.currencyCode, config.supportEmail)
+          : undefined
+
+      const approveAdd =
+        warningMessage == null
+          ? true
+          : await Airship.show<boolean>(bridge => (
+              <ConfirmContinueModal bridge={bridge} body={warningMessage} title={lstrings.string_warning} warning isSkippable />
+            ))
+
+      if (approveAdd) {
+        await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, newTokenId])
+        logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`)
+        navigation.goBack()
+      } else {
+        await currencyConfig.removeCustomToken(newTokenId)
+      }
     }
-    navigation.goBack()
   })
 
   return (
