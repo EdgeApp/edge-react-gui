@@ -36,6 +36,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
+import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { WarningCard } from '../cards/WarningCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -166,7 +167,7 @@ const SendComponent = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const [tokenId, setTokenId] = useState<string | undefined>(spendInfo.tokenId ?? tokenIdProp)
   const coreWallet = currencyWallets[walletId]
-  const { pluginId } = coreWallet.currencyInfo
+  const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
   const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
   const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
@@ -553,22 +554,43 @@ const SendComponent = (props: Props) => {
   const renderUniqueIdentifier = () => {
     const spendTarget = spendInfo.spendTargets[0]
     const uniqueIdentifier = spendTarget?.memo ?? spendTarget?.uniqueIdentifier
-    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(coreWallet.currencyInfo.pluginId)
+    const [memoOption] = memoOptions.filter(option => option.hidden !== true)
 
-    if (uniqueIdentifierInfo != null && spendTarget.publicAddress != null) {
-      const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
+    if (memoOption != null && spendTarget.publicAddress != null) {
+      const memoLabel = getMemoLabel(memoOption.memoName)
+      const memoTitle = getMemoTitle(memoOption.memoName)
+      const addButtonText = sprintf(lstrings.memo_dropdown_option_s, memoLabel)
+
+      let maxLength: number | undefined
+      if (memoOption.type === 'text') {
+        maxLength = memoOption.maxLength
+      } else if (memoOption.type === 'number') {
+        maxLength = memoOption.maxValue?.length
+      } else if (memoOption.type === 'hex' && memoOption.maxBytes != null) {
+        maxLength = 2 * memoOption.maxBytes
+      }
 
       const handleUniqueIdentifier = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
-            inputLabel={identifierName}
             initialValue={uniqueIdentifier}
-            keyboardType={keyboardType}
-            message={sprintf(lstrings.unique_identifier_modal_description, identifierName)}
+            inputLabel={memoTitle}
+            keyboardType={memoOption.type === 'number' ? 'numeric' : 'default'}
+            maxLength={maxLength}
+            message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
-            title={identifierName}
-            maxLength={coreWallet?.currencyInfo?.memoMaxLength}
+            title={memoTitle}
+            onSubmit={async text =>
+              getMemoError(
+                {
+                  type: memoOption.type,
+                  memoName: memoOption.memoName,
+                  value: text
+                },
+                memoOption
+              ) ?? true
+            }
           />
         )).then(newUniqueIdentifier => {
           if (newUniqueIdentifier == null) return
@@ -579,7 +601,7 @@ const SendComponent = (props: Props) => {
       }
 
       return (
-        <Tile type="touchable" title={identifierName} onPress={handleUniqueIdentifier}>
+        <Tile type="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
           <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
         </Tile>
       )

@@ -75,7 +75,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
         <Tile type="static" title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
         {this.statusField(selectedFioSentRequest.status)}
         <Tile type="static" title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
-        <Tile type="static" title={lstrings.unique_identifier_memo} body={selectedFioSentRequest.content.memo} />
+        <Tile type="static" title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
       </SceneWrapper>
     )
   }
