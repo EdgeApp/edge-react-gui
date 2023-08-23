@@ -6,9 +6,12 @@ import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -31,12 +34,20 @@ interface Props {
 export const HelpModal = (props: Props) => {
   const { bridge, navigation } = props
   const theme = useTheme()
+  const account = useSelector(state => state.core.account)
+  const loggedIn = useWatch(account, 'loggedIn')
 
   const handleClose = useHandler(() => bridge.resolve())
 
   const handleSitePress = useHandler((title: string, uri: string) => {
-    navigation.navigate('webView', { title, uri })
-    Airship.clear()
+    if (loggedIn) {
+      navigation.navigate('webView', { title, uri })
+      Airship.clear()
+    } else {
+      // Just open in a browser since we don't all the features of a full
+      // logged-in scene:
+      openBrowserUri(uri)
+    }
   })
 
   React.useEffect(() => {
