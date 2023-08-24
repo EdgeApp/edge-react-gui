@@ -701,7 +701,7 @@
   "edge_login_fail_stale_qr": "O QR code escaneado era inválido.\n\nPor favor, gere um novo QR code no dispositivo em que pretende fazer o login e tente novamente.",
   "edge_login_fail_message": "Não foi possível conectar à rede. Por favor, verifique a sua conexão de rede e tente novamente.",
   "edge_login_fetching": "Buscando informações de login da Edge...",
-  "modal_addressexplorer_message": "Mostrar Endereço no Explorador de Blocos?",
+  "modal_addressexplorer_message": "Mostrar Endereço no Block Explorer?",
   "can_be_partial_quote_title": "Cotação Parcial",
   "can_be_partial_quote_message": "Esta cotação pode ser parcialmente cumprida.",
   "can_be_partial_quote_with_max_body": "Esse swap criará um pedido para trocar fundos na taxa cotada, mas talvez só cumpra uma parte do seu pedido.\n\nO pedido ficará aberto por %s minutos, após o qual os fundos que não foram trocados permanecerão na sua carteira de origem ou serão devolvidos.",
