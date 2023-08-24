@@ -280,6 +280,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'XRP DEX',
+    hasThumbnail: true,
+    thumbnailPath: 'xrpdex.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ].map(({ thumbnailPath, ...rest }) => ({ ...rest, thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/${thumbnailPath}` }))
 
