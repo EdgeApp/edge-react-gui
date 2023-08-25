@@ -21,7 +21,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooterFade, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
@@ -239,8 +239,8 @@ export function WalletListModal(props: Props) {
           onPress={handleWalletListPress}
           navigation={navigation}
         />
+        <ModalFooterFade />
       </View>
-      <ModalFooter onPress={handleCancel} fadeOut />
     </ThemedModal>
   )
 }

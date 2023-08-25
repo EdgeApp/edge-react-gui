@@ -5,6 +5,7 @@ import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
+import { ModalFooter, ModalScrollArea } from './ModalParts'
 
 interface Props<T> {
   bridge: AirshipBridge<T>
@@ -12,9 +13,13 @@ interface Props<T> {
   onCancel: () => void
 
   // Control over the content area:
+  closeButton?: boolean
   flexDirection?: ViewStyle['flexDirection']
   justifyContent?: ViewStyle['justifyContent']
   paddingRem?: number[] | number
+
+  // Scroll area with a fade
+  scroll?: boolean
 
   // Gives the box a border:
   warning?: boolean
@@ -24,7 +29,7 @@ interface Props<T> {
  * The Airship modal, but connected to our theming system.
  */
 export function ThemedModal<T>(props: Props<T>) {
-  const { bridge, children, flexDirection, justifyContent, warning = false, onCancel } = props
+  const { bridge, closeButton = true, children, flexDirection, justifyContent, warning = false, scroll = false, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
 
@@ -45,7 +50,10 @@ export function ThemedModal<T>(props: Props<T>) {
       padding={paddingRem.map(theme.rem)}
       underlay={<BlurView blurType={theme.isDark ? 'light' : 'dark'} style={StyleSheet.absoluteFill} />}
     >
-      {children}
+      <>
+        {scroll ? <ModalScrollArea>{children}</ModalScrollArea> : children}
+        {closeButton ? <ModalFooter onPress={onCancel} /> : null}
+      </>
     </AirshipModal>
   )
 }

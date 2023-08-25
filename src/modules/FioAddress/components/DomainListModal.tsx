@@ -7,7 +7,7 @@ import { Fontello } from '../../../assets/vector'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableText } from '../../../components/themed/ClickableText'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { ModalFooter, ModalTitle } from '../../../components/themed/ModalParts'
+import { ModalFooter, ModalFooterFade, ModalTitle } from '../../../components/themed/ModalParts'
 import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { ThemedModal } from '../../../components/themed/ThemedModal'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
@@ -150,6 +150,8 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const { bridge, theme } = this.props
     const { input } = this.state
     const items = this.getItems()
+    const styles = getStyles(theme)
+
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
@@ -174,8 +176,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
           keyboardShouldPersistTaps="handled"
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
+          contentContainerStyle={styles.scrollPadding}
         />
-        <ModalFooter onPress={() => bridge.resolve(undefined)} />
+        <ModalFooterFade />
       </ThemedModal>
     )
   }
@@ -211,6 +214,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   domainRegisterIcon: {
     marginTop: theme.rem(0.25)
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   }
 }))
 

@@ -14,7 +14,7 @@ import { MinimalButton } from '../buttons/MinimalButton'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -142,15 +142,17 @@ export function CategoryModal(props: Props) {
         onSubmitEditing={handleSubmit}
         value={subcategory}
       />
-      <FlashList
-        contentContainerStyle={styles.scrollPadding}
-        data={sortedCategories}
-        estimatedItemSize={theme.rem(3)}
-        keyboardShouldPersistTaps="handled"
-        keyExtractor={keyExtractor}
-        renderItem={renderRow}
-      />
-      <ModalFooter onPress={handleCancel} fadeOut />
+      <View style={styles.categoryListContainer}>
+        <FlashList
+          contentContainerStyle={styles.scrollPadding}
+          data={sortedCategories}
+          estimatedItemSize={theme.rem(3)}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={keyExtractor}
+          renderItem={renderRow}
+        />
+        <ModalFooterFade />
+      </View>
     </ThemedModal>
   )
 }
@@ -165,6 +167,9 @@ const getStyle = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(1),
     marginBottom: theme.rem(1)
+  },
+  categoryListContainer: {
+    flex: 1
   },
   rowContainer: {
     flex: 1,
