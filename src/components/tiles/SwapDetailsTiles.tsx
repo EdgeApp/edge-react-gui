@@ -11,7 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { convertNativeToDisplay } from '../../util/utils'
+import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -99,10 +99,11 @@ export function SwapDetailsTiles(props: Props) {
   const createExchangeDataString = (newline: string = '\n') => {
     const uniqueIdentifier = spendTargets[0].uniqueIdentifier ?? ''
     const exchangeAddresses = spendTargets.map((target, index) => `${target.publicAddress}${index + 1 !== spendTargets.length ? newline : ''}`).toString()
+    const { dateTime } = unixToLocaleDateTime(transaction.date)
 
-    return `${lstrings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${lstrings.transaction_details_exchange_order_id}: ${
-      orderId || ''
-    }${newline}${lstrings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
+    return `${lstrings.fio_date_label}: ${dateTime}${newline}${lstrings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${
+      lstrings.transaction_details_exchange_order_id
+    }: ${orderId || ''}${newline}${lstrings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
       lstrings.fragment_send_from_label
     }: ${sourceAmount} ${symbolString}${newline}${lstrings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
       lstrings.transaction_details_exchange_destination_wallet
