@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -35,7 +35,6 @@ export function RawTextModal(props: Props) {
       {disableCopy ? null : (
         <MainButton alignSelf="center" label={lstrings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />
       )}
-      <ModalFooter onPress={handleCancel} />
     </ThemedModal>
   )
 }

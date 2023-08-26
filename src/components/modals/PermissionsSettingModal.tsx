@@ -10,7 +10,7 @@ import { Permission, permissionNames } from '../../reducers/PermissionsReducer'
 import { showError } from '../services/AirshipInstance'
 import { checkIfDenied } from '../services/PermissionsManager'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 export function PermissionsSettingModal(props: {
@@ -44,7 +44,6 @@ export function PermissionsSettingModal(props: {
     <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleClose}>
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={lstrings.string_ok_cap} marginRem={0.5} type="primary" onPress={handlePress} />
-      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }

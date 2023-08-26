@@ -7,6 +7,8 @@ import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
+// TODO:
+// KeyboardAwareScrollView (login) instead of ScrollView (here)
 
 interface ModalTitleProps {
   children: React.ReactNode
@@ -17,8 +19,8 @@ interface ModalTitleProps {
 
 interface ModalFooterProps {
   onPress: () => void
-  fadeOut?: boolean | undefined
 }
+
 export function ModalTitle(props: ModalTitleProps) {
   const { center, children, icon = null, paddingRem } = props
   const theme = useTheme()
@@ -43,51 +45,61 @@ export function ModalMessage(props: { children: React.ReactNode; paddingRem?: nu
 }
 
 /**
- * Renders a close button and an optional fade-out gradient.
- *
- * If you use the fade-out gradient, your scroll element's
- * `contentContainerStyle` needs `theme.rem(ModalFooter.bottomRem)`
- * worth of bottom padding, so the close button does not cover your content.
+ * Renders a close button
  */
 export function ModalFooter(props: ModalFooterProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { fadeOut } = props
-
-  const footerFadeContainer = fadeOut === true ? styles.footerFadeContainer : undefined
-  const footerFade = fadeOut === true ? styles.footerFade : undefined
 
   return (
-    <View style={footerFadeContainer}>
-      <View style={footerFade}>
-        <TouchableOpacity onPress={props.onPress} style={styles.closeIcon}>
-          <AntDesignIcon accessibilityHint={lstrings.modal_close_hint} color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
-        </TouchableOpacity>
-      </View>
-      {fadeOut !== true ? null : <GradientFadeOut />}
-    </View>
+    <TouchableOpacity onPress={props.onPress} style={styles.closeContainer}>
+      <AntDesignIcon accessibilityHint={lstrings.modal_close_hint} color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
+    </TouchableOpacity>
   )
 }
 
-ModalFooter.bottomRem = 2.5
+ModalFooter.bottomRem = 3
 
-export function ModalScrollArea(props: { children: React.ReactNode; onCancel: () => void }) {
-  const { children, onCancel } = props
+/**
+ * A consistently styled scroll area for use in modals. Should only be used
+ * within ThemedModal.
+ */
+export function ModalScrollArea(props: { children: React.ReactNode }) {
+  const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <View>
+    <View style={styles.scrollContainer}>
       <ScrollView contentContainerStyle={styles.scrollPadding}>{children}</ScrollView>
-      <ModalFooter onPress={onCancel} fadeOut />
+      <ModalFooterFade />
+    </View>
+  )
+}
+
+/**
+ * For fading the bottom of the modal if the modal caller has its own special
+ * scroll implementation and does not use the ThemedModal's built-in 'scroll'
+ * prop
+ */
+export const ModalFooterFade = () => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  return (
+    <View style={styles.footerFadeContainer}>
+      <GradientFadeOut />
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  closeIcon: {
+  closeContainer: {
     alignItems: 'center',
-    padding: theme.rem(1)
+    padding: theme.rem(1),
+    marginBottom: theme.rem(-1)
+  },
+  scrollContainer: {
+    marginBottom: theme.rem(-ModalFooter.bottomRem + 0.5)
   },
   scrollPadding: {
     paddingBottom: theme.rem(ModalFooter.bottomRem)
@@ -120,9 +132,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'left'
   },
   footerFadeContainer: {
-    marginBottom: theme.rem(-1)
-  },
-  footerFade: {
     position: 'absolute',
     bottom: 0,
     left: 0,

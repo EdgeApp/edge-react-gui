@@ -19,7 +19,7 @@ import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -350,7 +350,6 @@ export class AddressModalComponent extends React.Component<Props, State> {
           )}
           <MainButton label={lstrings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
         </View>
-        <ModalFooter onPress={this.handleClose} />
       </ThemedModal>
     )
   }

@@ -9,7 +9,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -48,7 +48,7 @@ export function ConfirmContinueModal(props: Props) {
   }
 
   return (
-    <ThemedModal bridge={bridge} warning={warning} onCancel={handleClose}>
+    <ThemedModal bridge={bridge} closeButton={isSkippable} warning={warning} onCancel={handleClose}>
       {title != null && (
         <View style={styles.headerContainer}>
           <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />
@@ -71,7 +71,6 @@ export function ConfirmContinueModal(props: Props) {
           <MainButton alignSelf="center" label={lstrings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
         </Fade>
       </ScrollView>
-      {isSkippable && <ModalFooter onPress={handleClose} />}
     </ThemedModal>
   )
 }
