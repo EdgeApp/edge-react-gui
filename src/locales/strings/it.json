@@ -72,6 +72,8 @@
   "warning_scam_message_irreversibility": "Le transazioni di criptovalute sono irreversibili.",
   "warning_scam_message_unknown_recipients": "Non inviare denaro a persone o organizzazioni che non conosci.",
   "warning_scam_footer_s": "Se hai domande o dubbi su questo invio, contatta %s",
+  "warning_token_code_override_2s": "The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.",
+  "warning_token_contract_override_3s": "The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "azteco_success": "Hai riscattato una carta bitcoin Azteco. I fondi dovrebbero arrivare a breve.",
