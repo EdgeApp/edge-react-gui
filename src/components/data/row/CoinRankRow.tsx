@@ -1,4 +1,4 @@
-import { lt, round } from 'biggystring'
+import { div, lt, round } from 'biggystring'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -15,6 +15,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { NavigationProp } from '../../../types/routerTypes'
 import { triggerHaptic } from '../../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../../util/logger'
+import { DECIMAL_PRECISION } from '../../../util/utils'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
@@ -130,7 +131,9 @@ const CoinRankRowComponent = (props: Props) => {
   // Calculate percent change string
   const percentChangeRaw = percentChange[percentChangeTimeFrame]
   numDecimals = getNumDecimals(percentChangeRaw, 2)
-  const percentChangeString = toPercentString(percentChangeRaw / 100, { noGrouping: true })
+
+  const decimalChangeRaw = div(String(percentChangeRaw), '100', DECIMAL_PRECISION)
+  const percentChangeString = toPercentString(decimalChangeRaw, { noGrouping: true })
   const negative = lt(percentChangeString, '0')
 
   // Calculate price string
