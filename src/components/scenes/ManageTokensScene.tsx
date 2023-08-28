@@ -1,6 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -111,7 +112,7 @@ function ManageTokensSceneComponent(props: Props) {
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <OutlinedTextInput
           label={lstrings.search_tokens}
-          marginRem={[1, 2, 0, 1]}
+          marginRem={[1, 0, 0, 0]}
           returnKeyType="search"
           searchIcon
           value={searchValue}
@@ -122,11 +123,14 @@ function ManageTokensSceneComponent(props: Props) {
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          <ButtonsContainer
-            primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
-            secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
-            layout="row"
-          />
+          {/* TODO: Remove extra padding in ThemedModal so we don't need to compensate margins with this View */}
+          <View style={styles.buttonsContainer}>
+            <ButtonsContainer
+              primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
+              secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
+              layout="column"
+            />
+          </View>
         </>
       )}
     </SceneWrapper>
@@ -136,6 +140,7 @@ function ManageTokensSceneComponent(props: Props) {
 const keyExtractor = (tokenId: string) => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  buttonsContainer: { marginHorizontal: theme.rem(0.5) },
   rightIcon: {
     color: theme.iconTappable,
     marginRight: theme.rem(1)
