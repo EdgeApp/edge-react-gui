@@ -11,13 +11,13 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
@@ -176,16 +176,11 @@ function EditTokenSceneComponent(props: Props) {
           value={decimalPlaces}
           onChangeText={setDecimalPlaces}
         />
-        <MainButton alignSelf="center" label={lstrings.string_save} marginRem={marginRem} onPress={handleSave} />
-        {tokenId == null ? null : (
-          <MainButton //
-            alignSelf="center"
-            label={lstrings.edittoken_delete_token}
-            marginRem={marginRem}
-            type="secondary"
-            onPress={handleDelete}
-          />
-        )}
+        <ButtonsContainer
+          primary={{ label: lstrings.string_save, onPress: handleSave }}
+          secondary={tokenId == null ? undefined : { label: lstrings.edittoken_delete_token, onPress: handleDelete }}
+          layout="column"
+        />
       </ScrollView>
     </SceneWrapper>
   )
