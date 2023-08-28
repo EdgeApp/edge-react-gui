@@ -273,8 +273,10 @@ export const trimEnd = (val: string): string => {
 // and greater than -1.0
 export const toPercentString = (percentVal: string | number, options?: IntlNumberFormatOptionsType): string => {
   if (typeof percentVal === 'string') {
+    // Remove negative sign
+    const checkVal = percentVal.replace('-', '')
     // Check that this is a regular decimal (not hex) number
-    if (!/^\d*\.?\d+$/.test(percentVal)) {
+    if (!/^\d*\.?\d+$/.test(checkVal)) {
       return ''
     }
   }
