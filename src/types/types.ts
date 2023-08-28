@@ -309,6 +309,7 @@ export interface AppConfig {
   disableSwaps?: boolean
   extraTab?: {
     webviewUrl: string
+    tabType: 'edgeProvider' | 'webview'
     tabTitleKey: LocaleStringKey
     extraTabBarIconFont: string
     extraTabBarIconName: string

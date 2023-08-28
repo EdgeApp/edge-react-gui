@@ -23,6 +23,7 @@ export const testConfig: AppConfig = {
   website: 'https://testy.com',
   extraTab: {
     tabTitleKey: 'title_map',
+    tabType: 'edgeProvider',
     webviewUrl: 'https://amazon.com/',
     extraTabBarIconFont: 'Feather',
     extraTabBarIconName: 'map-pin'
