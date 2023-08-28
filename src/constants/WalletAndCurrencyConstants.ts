@@ -34,6 +34,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'dash',
   'litecoin',
   'bitcoinsv',
+  'monero',
   'zcoin',
   'digibyte',
   'dogecoin',
@@ -296,19 +297,20 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: false
   },
   eos: {
-    initWalletName: lstrings.string_first_eos_wallet_name,
     chainCode: 'EOS',
-    isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
+    initWalletName: lstrings.string_first_eos_wallet_name,
+    isAccountActivationRequired: true,
+    isCustomTokensSupported: true,
+    isImportKeySupported: true,
+    keysOnlyMode: true,
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
     uniqueIdentifierInfo: {
       addButtonText: lstrings.unique_identifier_dropdown_option_memo,
       identifierName: lstrings.unique_identifier_memo,
       keyboardType: 'default'
-    },
-    isImportKeySupported: true,
-    isCustomTokensSupported: true
+    }
   },
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
@@ -391,6 +393,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
+    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '61'

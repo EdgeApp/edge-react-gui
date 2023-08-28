@@ -19,6 +19,7 @@ export interface PasswordReminderLevels {
 export interface AccountInitPayload {
   account: EdgeAccount
   autoLogoutTimeInSeconds: number
+  contactsPermissionOn: boolean
   countryCode: string
   currencyCode: string
   defaultFiat: string
@@ -44,6 +45,7 @@ export const initialState: SettingsState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   changesLocked: true,
+  contactsPermissionOn: true,
   developerModeOn: false,
   isAccountBalanceVisible: true,
   isTouchEnabled: false,
@@ -71,6 +73,7 @@ export const initialState: SettingsState = {
 export interface SettingsState {
   autoLogoutTimeInSeconds: number
   changesLocked: any
+  contactsPermissionOn: boolean
   countryCode: string
   defaultFiat: string
   defaultIsoFiat: string
@@ -124,6 +127,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'ACCOUNT_INIT_COMPLETE': {
       const {
         autoLogoutTimeInSeconds,
+        contactsPermissionOn,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
@@ -143,6 +147,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const newState: SettingsState = {
         ...state,
         autoLogoutTimeInSeconds,
+        contactsPermissionOn,
         countryCode,
         defaultFiat,
         defaultIsoFiat,
@@ -206,6 +211,14 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         autoLogoutTimeInSeconds
+      }
+    }
+
+    case 'UI/SETTINGS/SET_CONTACTS_PERMISSION': {
+      const { contactsPermissionOn } = action.data
+      return {
+        ...state,
+        contactsPermissionOn
       }
     }
 

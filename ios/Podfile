@@ -62,9 +62,8 @@ target 'edge' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  # Permissions
+  # Permissions:
   permissions_path = '../node_modules/react-native-permissions/ios'
-
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts"
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
@@ -72,17 +71,17 @@ target 'edge' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
-  # Necessary for Zcash and Piratechain
-  pod 'react-native-zcash', :path => '../node_modules/react-native-zcash'
-  pod 'react-native-piratechain', :path => '../node_modules/react-native-piratechain'
+  # Zcash transitive dependency:
+  pod 'CGRPCZlib', :modular_headers => true
   pod 'CNIOAtomics', :modular_headers => true
   pod 'CNIOBoringSSL', :modular_headers => true
   pod 'CNIOBoringSSLShims', :modular_headers => true
-  pod 'CNIOLinux', :modular_headers => true
   pod 'CNIODarwin', :modular_headers => true
   pod 'CNIOHTTPParser', :modular_headers => true
+  pod 'CNIOLinux', :modular_headers => true
   pod 'CNIOWindows', :modular_headers => true
-  pod 'CGRPCZlib', :modular_headers => true
-  pod 'ZcashLightClientKit', :git => 'https://github.com/EdgeApp/ZcashLightClientKit.git', :commit => 'c36c79c3d3cfdfc01054795d834d1742d1a7914d'
+
+  # Piratechain:
+  pod 'react-native-piratechain', :path => '../node_modules/react-native-piratechain'
   pod 'PirateLightClientKit', :git => 'https://github.com/PirateNetwork/PirateLightClientKit.git', :commit => 'f939db082643d73cead7172da0a862f3b3df34a9'
 end

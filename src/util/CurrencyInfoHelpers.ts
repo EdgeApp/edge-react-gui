@@ -5,17 +5,19 @@ import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAnd
 import { ENV } from '../env'
 import { CreateWalletType } from '../types/types'
 
-const activationRequiredCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO)
-  .filter(pluginId => SPECIAL_CURRENCY_INFO[pluginId].isAccountActivationRequired ?? false)
-  .map(pluginId => SPECIAL_CURRENCY_INFO[pluginId].chainCode)
-const possibleKeysOnlyPlugins = [...new Set([...Object.keys(SPECIAL_CURRENCY_INFO), ...Object.keys(ENV.KEYS_ONLY_PLUGINS)])]
-export const keysOnlyModePlugins = possibleKeysOnlyPlugins.filter(pluginId => {
-  if (ENV.KEYS_ONLY_PLUGINS[pluginId]) {
-    return true
-  } else {
-    return SPECIAL_CURRENCY_INFO[pluginId]?.keysOnlyMode ?? false
-  }
-})
+/**
+ * Returns true if this currency supports existing wallets,
+ * but doesn't allow new wallets.
+ */
+export function isKeysOnlyPlugin(pluginId: string): boolean {
+  const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
+}
+
+function requiresActivation(pluginId: string) {
+  const { isAccountActivationRequired = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+  return isAccountActivationRequired
+}
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
@@ -71,9 +73,9 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
   for (const currencyInfo of infos) {
     const { currencyCode, displayName, pluginId, walletType } = currencyInfo
     // Prevent plugins that are "watch only" from being allowed to create new wallets
-    if (keysOnlyModePlugins.includes(pluginId)) continue
+    if (isKeysOnlyPlugin(pluginId)) continue
     // Prevent currencies that needs activation from being created from a modal
-    if (filterActivation && activationRequiredCurrencyCodes.includes(currencyCode.toUpperCase())) continue
+    if (filterActivation && requiresActivation(pluginId)) continue
     // FIO disable changes
     if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
       out.push({

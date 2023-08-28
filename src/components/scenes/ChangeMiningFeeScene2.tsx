@@ -10,11 +10,11 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
 import { MainButton } from '../themed/MainButton'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SettingsRadioRow } from '../themed/SettingsRadioRow'
 
 interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
 

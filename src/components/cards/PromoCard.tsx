@@ -46,11 +46,18 @@ export function PromoCard(props: Props) {
     <ButtonBox marginRem={1} onPress={handlePress}>
       <View style={styles.container}>
         {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
-        <EdgeText numberOfLines={0} style={styles.text}>
+        <EdgeText testID="promoCard" numberOfLines={0} style={styles.text}>
           {message.message}
         </EdgeText>
-        <TouchableOpacity onPress={handleClose}>
-          <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} accessibilityHint={lstrings.close_hint} />
+        <TouchableOpacity accessible={false} onPress={handleClose}>
+          <AntDesignIcon
+            testID="closePromo"
+            name="close"
+            color={theme.iconTappable}
+            size={theme.rem(1)}
+            style={styles.close}
+            accessibilityHint={lstrings.close_hint}
+          />
         </TouchableOpacity>
       </View>
     </ButtonBox>

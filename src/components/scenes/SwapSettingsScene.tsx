@@ -1,6 +1,6 @@
 import { EdgePluginMap, EdgeSwapConfig, EdgeSwapPluginType } from 'edge-core-js/types'
 import * as React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
@@ -20,9 +20,10 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { RadioListModal } from '../modals/RadioListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
-import { SettingsTappableRow } from '../themed/SettingsTappableRow'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsSubHeader } from '../settings/SettingsSubHeader'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface OwnProps extends EdgeSceneProps<'exchangeSettings'> {}
 
@@ -173,13 +174,10 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   render() {
-    const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
-          <View style={styles.instructionArea}>
-            <Text style={styles.instructionText}>{lstrings.settings_exchange_instruction}</Text>
-          </View>
+          <SettingsSubHeader label={lstrings.settings_exchange_instruction} />
           <SettingsHeaderRow label={lstrings.swap_options_header_decentralized} />
           {this.sortedDexIds.map(pluginId => this.renderPlugin(pluginId))}
           <SettingsHeaderRow label={lstrings.swap_options_header_centralized} />
@@ -254,9 +252,7 @@ export class SwapSettings extends React.Component<Props, State> {
     if (swapSource.type === 'promotion') {
       return (
         <>
-          <View style={styles.instructionArea}>
-            <Text style={styles.instructionText}>{lstrings.swap_preferred_promo_instructions}</Text>
-          </View>
+          <SettingsSubHeader label={lstrings.swap_preferred_promo_instructions} />
           <SettingsTappableRow action="delete" label={label} onPress={async () => await this.props.removePromotion(swapSource.installerId)}>
             {icon}
           </SettingsTappableRow>
@@ -266,9 +262,7 @@ export class SwapSettings extends React.Component<Props, State> {
 
     return (
       <>
-        <View style={styles.instructionArea}>
-          <Text style={styles.instructionText}>{lstrings.swap_preferred_instructions}</Text>
-        </View>
+        <SettingsSubHeader label={lstrings.swap_preferred_instructions} />
         <SettingsTappableRow label={label} onPress={this.handlePreferredModal}>
           {icon}
         </SettingsTappableRow>
@@ -278,15 +272,6 @@ export class SwapSettings extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  instructionArea: {
-    backgroundColor: theme.settingsRowSubHeader,
-    padding: theme.rem(1)
-  },
-  instructionText: {
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    color: theme.primaryText
-  },
   swapIcon: {
     height: theme.rem(1.25),
     width: theme.rem(1.25),

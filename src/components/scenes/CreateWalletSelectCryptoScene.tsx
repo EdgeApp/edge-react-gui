@@ -1,6 +1,6 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { Keyboard, Switch, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -24,11 +25,11 @@ import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCrea
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 export interface CreateWalletSelectCryptoParams {
-  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => Promise<void>
+  newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
   defaultSelection?: EdgeTokenId[]
 }
 
-interface Props extends EdgeSceneProps<'createWalletSelectCrypto'> {}
+interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
@@ -97,6 +98,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       showError(lstrings.create_wallet_no_assets_selected)
       return
     }
+
+    if (newAccountFlow != null) logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: numSelected })
 
     const createItems = createWalletList.filter(item => selectedItems[item.key])
     const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
@@ -198,7 +201,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   })
 
   const handleSubmitEditing = useHandler(() => {
-    handleNextPress().catch(err => showError(err))
+    Keyboard.dismiss()
   })
 
   const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
@@ -255,7 +258,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onChangeText={setSearchTerm}
             value={searchTerm}
             label={lstrings.wallet_list_wallet_search}
-            returnKeyType="next"
             marginRem={[0.5, 1]}
             searchIcon
             clearIcon

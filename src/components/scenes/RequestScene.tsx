@@ -19,7 +19,7 @@ import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
-import { getTokenId, keysOnlyModePlugins } from '../../util/CurrencyInfoHelpers'
+import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals, zeroString } from '../../util/utils'
@@ -27,9 +27,9 @@ import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { showWebViewModal } from '../modals/HelpModal'
 import { QrModal } from '../modals/QrModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { showWebViewModal } from '../modals/WebViewModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -262,7 +262,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
 
-  handleKeysOnlyModePress = async () => await showWebViewModal(config.supportSite, lstrings.help_support)
+  handleKeysOnlyModePress = async () => await showWebViewModal(lstrings.help_support, config.supportSite)
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
@@ -300,7 +300,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const selectedAddress = this.state.selectedAddress
     const requestAddress = selectedAddress?.addressString ?? lstrings.loading
     const flipInputHeaderText = sprintf(lstrings.send_to_wallet, getWalletName(wallet))
-    const keysOnlyMode = keysOnlyModePlugins.includes(wallet.currencyInfo.pluginId)
+    const keysOnlyMode = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
     const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance

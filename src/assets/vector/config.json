@@ -515,6 +515,12 @@
       "search": [
         "close-loan"
       ]
+    },
+    {
+      "uid": "5408be43f7c42bccee419c6be53fdef5",
+      "css": "doc-text",
+      "code": 61686,
+      "src": "fontawesome"
     }
   ]
 }

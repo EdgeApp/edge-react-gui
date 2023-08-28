@@ -16,12 +16,12 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
+import { SettingsLabelRow } from '../settings/SettingsLabelRow'
+import { SettingsRadioRow } from '../settings/SettingsRadioRow'
+import { SettingsRow } from '../settings/SettingsRow'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { MainButton } from '../themed/MainButton'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsLabelRow } from '../themed/SettingsLabelRow'
-import { SettingsRadioRow } from '../themed/SettingsRadioRow'
-import { SettingsRow } from '../themed/SettingsRow'
-import { SettingsSwitchRow } from '../themed/SettingsSwitchRow'
 
 interface File {
   contents: string

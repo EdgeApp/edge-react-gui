@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { lstrings } from '../../locales/strings'
@@ -86,7 +87,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     return <CircleTimer timeExpired={async () => await timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
   }
 
-  showExplanationForEstimate = async () => {
+  handleForEstimateExplanation = async () => {
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -94,6 +95,22 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
         message={lstrings.estimated_exchange_rate_body}
         buttons={{ ok: { label: lstrings.string_ok } }}
       />
+    ))
+  }
+
+  handleCanBePartialExplanation = async () => {
+    const { canBePartial, maxFulfillmentSeconds } = this.props.route.params.swapInfo.quote
+    let canBePartialString: string | undefined
+    if (canBePartial === true) {
+      if (maxFulfillmentSeconds != null) {
+        const t = Math.ceil(maxFulfillmentSeconds / 60)
+        canBePartialString = sprintf(lstrings.can_be_partial_quote_with_max_body, t.toString())
+      } else {
+        canBePartialString = lstrings.can_be_partial_quote_body
+      }
+    }
+    await Airship.show<'ok' | undefined>(bridge => (
+      <ButtonsModal bridge={bridge} title={lstrings.can_be_partial_quote_title} message={canBePartialString} buttons={{ ok: { label: lstrings.string_ok } }} />
     ))
   }
 
@@ -112,8 +129,9 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const feePercent = div(quote.networkFee.nativeAmount, quote.fromNativeAmount, 2)
     const showFeeWarning = gte(feePercent, '0.05')
     const styles = getStyles(theme)
+
     return (
-      <NotificationSceneWrapper navigation={navigation} background="theme">
+      <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
         {(gap, notificationHeight) => (
           <>
             <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
@@ -154,10 +172,20 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
                   title={lstrings.estimated_quote}
                   message={lstrings.estimated_exchange_message}
                   type="warning"
-                  marginRem={[1.5, 1]}
-                  onPress={this.showExplanationForEstimate}
+                  marginRem={[1, 1]}
+                  onPress={this.handleForEstimateExplanation}
                 />
               )}
+              {quote.canBePartial === true && (
+                <Alert
+                  title={lstrings.can_be_partial_quote_title}
+                  message={lstrings.can_be_partial_quote_message}
+                  type="warning"
+                  marginRem={[1, 1]}
+                  onPress={this.handleCanBePartialExplanation}
+                />
+              )}
+
               <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
               {this.renderTimer()}
             </ScrollView>
@@ -189,8 +217,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   slider: {
-    marginTop: theme.rem(2.5),
-    marginBottom: theme.rem(2)
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(1)
   },
   spacer: {
     height: theme.rem(8)
