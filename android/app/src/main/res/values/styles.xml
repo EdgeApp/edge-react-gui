@@ -7,7 +7,6 @@
 
     <style name="BootTheme" parent="Theme.BootSplash">
         <item name="bootSplashBackground">@color/bootsplash_background</item>
-        <item name="bootSplashLogo">@drawable/vd_splash</item>
         <item name="postBootSplashTheme">@style/AppTheme</item>
     </style>
 </resources>
