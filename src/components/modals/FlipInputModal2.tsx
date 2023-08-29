@@ -2,7 +2,7 @@ import { div, log10, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { Dimensions, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Platform, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -240,7 +240,7 @@ const deviceHeight = Dimensions.get('window').height
 
 const getStyles = cacheStyles((theme: Theme) => ({
   hackContainer: {
-    flex: deviceHeight <= 580 ? 1 : 0
+    flex: deviceHeight <= 580 || Platform.OS === 'android' ? 1 : 0
   },
   flipInput: {
     justifyContent: 'flex-start'
