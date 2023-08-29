@@ -358,6 +358,16 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '1'
     }
   },
+  filecoin: {
+    initWalletName: lstrings.string_first_filecoin_wallet_name,
+    chainCode: 'FIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
+  },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
     chainCode: 'TRX',
