@@ -5,13 +5,13 @@
 	<key>method</key>
 	<string>development</string>
 	<key>teamID</key>
-	<string>G5LQ7MERPK</string>
+	<string>7D84KDP9RF</string>
 	<key>compileBitcode</key>
 	<false/>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>co.edgesecure.app</key>
-		<string>Edge - Absinthe - Development</string>
+		<key>app.coinhubatm.wallet</key>
+		<string>Coinhub Development</string>
 	</dict>
 	<key>uploadBitcode</key>
 	<false/>

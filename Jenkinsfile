@@ -37,7 +37,7 @@ def preTest(String stageName) {
 def buildProduction(String stageName) {
   stage("Build ${stageName}") {
     echo "Running on ${env.NODE_NAME}"
-    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'testMaestro', 'yolo']) {
+    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test', 'testMaestro', 'yolo', 'coinhub']) {
       if (stageName == 'ios' && params.IOS_BUILD) {
         sh 'npm run prepare.ios'
         sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME}"

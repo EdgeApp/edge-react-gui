@@ -30,7 +30,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>co.edgesecure.app</string>
+			<string>app.coinhubatm.wallet</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>edge</string>
@@ -43,7 +43,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>co.edgesecure.app</string>
+			<string>app.coinhubatm.wallet</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>dash</string>
@@ -114,6 +114,9 @@
 		<string>Ionicons.ttf</string>
 		<string>MaterialIcons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
+		<string>NunitoSans-Bold.ttf</string>
+		<string>NunitoSans-Light.ttf</string>
+		<string>NunitoSans-Regular.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
