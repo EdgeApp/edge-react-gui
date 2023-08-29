@@ -9,6 +9,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
   hedera: true,
   eos: true,
+  filecoin: true,
   telos: true,
   wax: true,
   polkadot: true,

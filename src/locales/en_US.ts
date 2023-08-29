@@ -497,6 +497,7 @@ const strings = {
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_ethereum_classic_wallet_name: 'My Ethereum Classic',
   string_first_ethereum_pow_wallet_name: 'My Ethereum POW',
+  string_first_filecoin_wallet_name: 'My Filecoin',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
