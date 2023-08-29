@@ -7,7 +7,6 @@ import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../tiles/Tile'
 
@@ -115,7 +114,6 @@ export class AdvancedDetailsModalComponent extends PureComponent<Props> {
             {deviceDescription != null && <Tile type="static" title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
           </ScrollView>
         </View>
-        <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )
   }

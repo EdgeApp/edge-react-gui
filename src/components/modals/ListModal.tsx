@@ -72,7 +72,7 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ThemedModal bridge={bridge} closeButton={closeArrow} onCancel={handleCancel}>
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
       {textInput == null ? null : (
@@ -102,7 +102,6 @@ export function ListModal<T>({
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-      {!closeArrow ? null : <ModalFooter onPress={handleCancel} fadeOut />}
     </ThemedModal>
   )
 }

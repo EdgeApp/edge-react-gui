@@ -15,7 +15,7 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -127,8 +127,6 @@ export const HelpModal = (props: Props) => {
         <EdgeText style={styles.version}>{versionText}</EdgeText>
         <EdgeText style={styles.version}>{buildText}</EdgeText>
       </View>
-
-      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }

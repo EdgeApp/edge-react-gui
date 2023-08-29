@@ -114,6 +114,11 @@ const strings = {
   warning_scam_message_unknown_recipients: 'Do not send money to people or organizations you do not know.',
   warning_scam_footer_s: 'If you have any questions or concerns regarding this send, please contact %s',
 
+  warning_token_code_override_2s:
+    'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
+  warning_token_contract_override_3s:
+    'The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.',
+
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
@@ -492,6 +497,7 @@ const strings = {
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_ethereum_classic_wallet_name: 'My Ethereum Classic',
   string_first_ethereum_pow_wallet_name: 'My Ethereum POW',
+  string_first_filecoin_wallet_name: 'My Filecoin',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
@@ -529,6 +535,7 @@ const strings = {
   string_first_fantom_wallet_name: 'My Fantom',
   string_first_hedera_wallet_name: 'My Hedera',
   string_first_polkadot_wallet_name: 'My Polkadot',
+  string_first_liberland_wallet_name: 'My Liberland',
   string_first_polygon_wallet_name: 'My Polygon',
   string_first_pulsechain_wallet_name: 'My PulseChain',
   string_first_avalanche_wallet_name: 'My Avalanche',
@@ -1002,6 +1009,10 @@ const strings = {
   string_end: 'End',
   export_transaction_quickbooks_qbo: 'Quickbooks QBO',
   export_transaction_csv: 'CSV',
+  export_transaction_bitwave_csv: 'Bitwave CSV',
+  export_transaction_bitwave_accountid_modal_title: 'Bitwave Account ID',
+  export_transaction_bitwave_accountid_modal_message: 'Please enter the Bitwave account ID for this wallet',
+  export_transaction_bitwave_accountid_modal_input_label: 'Account ID',
   string_export: 'Export',
   string_status: 'Status',
   string_fee: 'Fee',

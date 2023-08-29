@@ -5,19 +5,21 @@ import { BlurView } from 'rn-id-blurview'
 
 import { fixSides } from '../../util/sides'
 import { useTheme } from '../services/ThemeContext'
+import { ModalFooter, ModalScrollArea } from './ModalParts'
 
 interface Props<T> {
   bridge: AirshipBridge<T>
   children?: React.ReactNode
   onCancel: () => void
 
-  // Use this to create space at the top for an icon circle:
-  iconRem?: number
-
   // Control over the content area:
+  closeButton?: boolean
   flexDirection?: ViewStyle['flexDirection']
   justifyContent?: ViewStyle['justifyContent']
   paddingRem?: number[] | number
+
+  // Scroll area with a fade
+  scroll?: boolean
 
   // Gives the box a border:
   warning?: boolean
@@ -27,11 +29,9 @@ interface Props<T> {
  * The Airship modal, but connected to our theming system.
  */
 export function ThemedModal<T>(props: Props<T>) {
-  const { bridge, children, flexDirection, iconRem = 0, justifyContent, warning = false, onCancel } = props
+  const { bridge, closeButton = true, children, flexDirection, justifyContent, warning = false, scroll = false, onCancel } = props
   const paddingRem = fixSides(props.paddingRem, 1)
   const theme = useTheme()
-
-  paddingRem[0] += iconRem / 2
 
   // TODO: The warning styles are incorrectly hard-coded:
   const borderColor = warning ? theme.warningText : theme.modalBorderColor
@@ -46,12 +46,14 @@ export function ThemedModal<T>(props: Props<T>) {
       borderWidth={borderWidth}
       flexDirection={flexDirection}
       justifyContent={justifyContent}
-      margin={[theme.rem(iconRem / 2), 0, 0]}
       onCancel={onCancel}
       padding={paddingRem.map(theme.rem)}
       underlay={<BlurView blurType={theme.isDark ? 'light' : 'dark'} style={StyleSheet.absoluteFill} />}
     >
-      {children}
+      <>
+        {scroll ? <ModalScrollArea>{children}</ModalScrollArea> : children}
+        {closeButton ? <ModalFooter onPress={onCancel} /> : null}
+      </>
     </AirshipModal>
   )
 }

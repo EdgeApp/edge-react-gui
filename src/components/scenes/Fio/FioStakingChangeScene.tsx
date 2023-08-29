@@ -23,7 +23,7 @@ import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModa
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { ModalFooter, ModalMessage, ModalTitle } from '../../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { ThemedModal } from '../../themed/ThemedModal'
@@ -176,7 +176,6 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           </ModalTitle>
           <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
           <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
-          <ModalFooter onPress={bridge.resolve} />
         </ThemedModal>
       )
     })

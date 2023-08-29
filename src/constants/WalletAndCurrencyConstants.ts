@@ -91,7 +91,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:hedera',
   'wallet:polygon',
   'wallet:avalanche',
-  'wallet:binancesmartchain'
+  'wallet:binancesmartchain',
+  'wallet:liberland',
+  'wallet:liberlandtestnet'
 ]
 
 // Put these in reverse order of preference
@@ -357,6 +359,16 @@ export const SPECIAL_CURRENCY_INFO: {
       namespace: 'eip155',
       reference: '1'
     }
+  },
+  filecoin: {
+    initWalletName: lstrings.string_first_filecoin_wallet_name,
+    chainCode: 'FIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
   },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
@@ -644,6 +656,34 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_dot_minimum_notification_body,
       alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
+    isImportKeySupported: true
+  },
+  liberland: {
+    initWalletName: lstrings.string_first_liberland_wallet_name,
+    chainCode: 'LLD',
+    dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
+    noChangeMiningFee: true,
+    allowZeroTx: true,
+    minimumPopupModals: {
+      minimumNativeBalance: '1000000000000',
+      modalMessage: lstrings.request_dot_minimum_notification_body,
+      alertMessage: lstrings.request_dot_minimum_notification_alert_body
+    },
+    isCustomTokensSupported: true,
+    isImportKeySupported: true
+  },
+  liberlandtestnet: {
+    initWalletName: lstrings.string_first_liberland_wallet_name,
+    chainCode: 'LDN',
+    dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
+    noChangeMiningFee: true,
+    allowZeroTx: true,
+    minimumPopupModals: {
+      minimumNativeBalance: '1000000000000',
+      modalMessage: lstrings.request_dot_minimum_notification_body,
+      alertMessage: lstrings.request_dot_minimum_notification_alert_body
+    },
+    isCustomTokensSupported: true,
     isImportKeySupported: true
   },
   zcash: {

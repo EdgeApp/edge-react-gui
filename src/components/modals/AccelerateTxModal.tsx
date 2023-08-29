@@ -9,7 +9,7 @@ import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
 import { ThemedModal } from '../themed/ThemedModal'
 import { Tile } from '../tiles/Tile'
@@ -130,7 +130,6 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
-        <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )
   }
