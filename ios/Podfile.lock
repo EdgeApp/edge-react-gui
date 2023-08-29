@@ -18,11 +18,11 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (1.4.1):
+  - edge-core-js (1.4.2):
     - React-Core
   - edge-currency-accountbased (2.0.0):
     - React-Core
-  - edge-login-ui-rn (2.7.0):
+  - edge-login-ui-rn (2.8.0):
     - React
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -1168,9 +1168,9 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 8fedecef2b0a09b32fd0a44de7c82c75943cfad3
+  edge-core-js: bd6a3109f6e4989be1d72449c5d7df9572c9336b
   edge-currency-accountbased: f6702d9c46008d14bff8476dc9c592c3639efdb5
-  edge-login-ui-rn: 20ee19ab6c5036b5ee159f0e40b215e16e8a7952
+  edge-login-ui-rn: f3026b8cd5f4c949e07afa0ced4f5d1815663797
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
