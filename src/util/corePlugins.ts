@@ -13,6 +13,8 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   telos: true,
   wax: true,
   polkadot: true,
+  liberland: true,
+  liberlandtestnet: false,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
   ethereumpow: ENV.ETHEREUM_POW_INIT,
