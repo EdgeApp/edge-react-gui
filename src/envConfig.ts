@@ -21,6 +21,7 @@ const asEvmApiKeys = asObject({
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
   infuraProjectId: asOptional(asString, ''),
+  poktPortalApiKey: asOptional(asString, ''),
   quiknodeApiKey: asOptional(asString, '')
 }).withRest
 
