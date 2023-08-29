@@ -39,10 +39,13 @@
 		3D5BD9CE2A4D27C400590088 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9B02A4D277B00590088 /* SourceSansPro-Bold.ttf */; };
 		3D5BD9CF2A4D27F300590088 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9AD2A4D277B00590088 /* custom.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		DA4D15D82953E68F00CFB3EC /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA4D15D52953E68F00CFB3EC /* NunitoSans-Regular.ttf */; };
+		DA4D15D92953E68F00CFB3EC /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA4D15D62953E68F00CFB3EC /* NunitoSans-Bold.ttf */; };
+		DA4D15DA2953E68F00CFB3EC /* NunitoSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA4D15D72953E68F00CFB3EC /* NunitoSans-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		13B07F961A680F5B00A75B9A /* Edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Coinhub Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coinhub Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = edge/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = edge/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = edge/Images.xcassets; sourceTree = "<group>"; };
@@ -81,6 +84,9 @@
 		5B7EB9410499542E8C5724F5 /* Pods-edge-edgeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge-edgeTests.debug.xcconfig"; path = "Target Support Files/Pods-edge-edgeTests/Pods-edge-edgeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = edge/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DA4D15D52953E68F00CFB3EC /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NunitoSans-Regular.ttf"; path = "../android/app/src/main/assets/fonts/NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
+		DA4D15D62953E68F00CFB3EC /* NunitoSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NunitoSans-Bold.ttf"; path = "../android/app/src/main/assets/fonts/NunitoSans-Bold.ttf"; sourceTree = "<group>"; };
+		DA4D15D72953E68F00CFB3EC /* NunitoSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NunitoSans-Light.ttf"; path = "../android/app/src/main/assets/fonts/NunitoSans-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -146,6 +152,9 @@
 				3D5BD9B42A4D277B00590088 /* SourceSansPro-Regular.ttf */,
 				3D5BD9AB2A4D277B00590088 /* SourceSansPro-Semibold.ttf */,
 				3D5BD9B82A4D277B00590088 /* SourceSansPro-SemiboldItalic.ttf */,
+				DA4D15D62953E68F00CFB3EC /* NunitoSans-Bold.ttf */,
+				DA4D15D72953E68F00CFB3EC /* NunitoSans-Light.ttf */,
+				DA4D15D52953E68F00CFB3EC /* NunitoSans-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -178,7 +187,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Edge.app */,
+				13B07F961A680F5B00A75B9A /* Coinhub Wallet.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,8 +224,8 @@
 			dependencies = (
 			);
 			name = edge;
-			productName = edge;
-			productReference = 13B07F961A680F5B00A75B9A /* Edge.app */;
+			productName = "Coinhub Bitcoin Wallet";
+			productReference = 13B07F961A680F5B00A75B9A /* Coinhub Wallet.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -270,6 +279,9 @@
 				3D5BD9C02A4D27C400590088 /* Quicksand-Regular.ttf in Resources */,
 				3D5BD9BD2A4D27C400590088 /* SourceSansPro-ExtraLightItalic.ttf in Resources */,
 				3D5BD9CB2A4D27C400590088 /* SourceSansPro-BlackItalic.ttf in Resources */,
+				DA4D15D92953E68F00CFB3EC /* NunitoSans-Bold.ttf in Resources */,
+				DA4D15DA2953E68F00CFB3EC /* NunitoSans-Light.ttf in Resources */,
+				DA4D15D82953E68F00CFB3EC /* NunitoSans-Regular.ttf in Resources */,
 				3D5BD9962A4D250700590088 /* blank.html in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3D18A8FB2A5333DC00F3B19B /* audio_sent.mp3 in Resources */,
@@ -413,11 +425,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-edge.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = CoinhubAppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G5LQ7MERPK;
+				DEVELOPMENT_TEAM = 7D84KDP9RF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -431,8 +443,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
-				PRODUCT_NAME = Edge;
+				PRODUCT_BUNDLE_IDENTIFIER = app.coinhubatm.wallet;
+				PRODUCT_NAME = "Coinhub Wallet";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -448,11 +460,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-edge.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = CoinhubAppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = edge/edge.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G5LQ7MERPK;
+				DEVELOPMENT_TEAM = 7D84KDP9RF;
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -465,8 +477,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
-				PRODUCT_NAME = Edge;
+				PRODUCT_BUNDLE_IDENTIFIER = app.coinhubatm.wallet;
+				PRODUCT_NAME = "Coinhub Wallet";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
