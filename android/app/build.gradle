@@ -100,7 +100,7 @@ android {
 
     namespace "co.edgesecure.app"
     defaultConfig {
-        applicationId "co.edgesecure.app"
+        applicationId "app.coinhubatm.wallet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 21000000

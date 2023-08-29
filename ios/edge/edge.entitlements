@@ -6,9 +6,8 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:www.edge.app</string>
-		<string>applinks:dl.edge.app</string>
-		<string>applinks:deep.edge.app</string>
+		<string>applinks:dl.coinhubatm.com</string>
+		<string>applinks:dl.coinhubatm.app</string>
 	</array>
 </dict>
 </plist>
