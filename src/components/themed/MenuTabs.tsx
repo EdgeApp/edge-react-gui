@@ -36,7 +36,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const colors = theme.tabBarBackground
   const start = theme.tabBarBackgroundStart
   const end = theme.tabBarBackgroundEnd
-  let routes = state.routes
+  const routes = state.routes
 
   const handleOnPress = useHandler((route: string) => {
     const currentName = routes[activeTabIndex].name
@@ -57,7 +57,13 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   })
 
   if (config.extraTab == null) {
-    routes = routes.slice(0, -1)
+    const index = routes.findIndex(route => route.name === 'extraTab')
+    routes.splice(index, 1)
+  }
+
+  if (config.disableSwaps === true) {
+    const index = routes.findIndex(route => route.name === 'exchangeTab')
+    routes.splice(index, 1)
   }
 
   const contentStyle = React.useMemo(() => {

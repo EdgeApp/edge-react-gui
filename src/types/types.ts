@@ -306,6 +306,7 @@ export interface AppConfig {
   supportSite: string
   termsOfServiceSite: string
   website: string
+  disableSwaps?: boolean
   extraTab?: {
     webviewUrl: string
     tabTitleKey: LocaleStringKey
