@@ -75,6 +75,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
     MANA: 'MANA',
     MATIC: 'MATIC-ERC20',
     MKR: 'MKR',
+    PEPE: 'PEPE',
     PRT: 'PRT',
     REVV: 'REVV',
     RFOX: 'RFOX',
