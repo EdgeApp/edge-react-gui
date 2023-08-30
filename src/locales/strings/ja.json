@@ -430,6 +430,7 @@
   "string_first_ethereum_wallet_name": "私のイーサリアム",
   "string_first_ethereum_classic_wallet_name": "イーサリアムクラシック",
   "string_first_ethereum_pow_wallet_name": "イーサリアムPOW",
+  "string_first_filecoin_wallet_name": "My Filecoin",
   "string_first_bitcoin_wallet_name": "私のビットコイン",
   "string_first_bitcoin_testnet_wallet_name": "Bitcoinテストネット",
   "string_first_bitcoincash_wallet_name": "私のビットコインキャッシュ",
