@@ -2,6 +2,7 @@ import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
+import { getIsFirstOpen } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { getStickyConfig, StickyConfig } from '../stickyConfig'
 import { fetchReferral } from './network'
@@ -70,7 +71,6 @@ if (ENV.USE_FIREBASE) {
 /**
  * Track error to external reporting service (ie. Bugsnag)
  */
-
 export function trackError(
   error: unknown,
   tag?: string,
@@ -111,8 +111,10 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   // @ts-expect-error
   if (!global.firebase) return
 
+  // Persistent params:
+  const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen() }
+
   // Adjust params:
-  const params: any = { edgeVersion: getVersion() }
   if (accountDate != null) params.adate = accountDate
   if (currencyCode != null) params.currency = currencyCode
   if (dollarValue != null) {
