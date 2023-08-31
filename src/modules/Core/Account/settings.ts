@@ -4,9 +4,7 @@ import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, 
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
-import { showError } from '../../../components/services/AirshipInstance'
 import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
-import { defaultCategories } from '../../../util/categories'
 import { logActivity } from '../../../util/logger'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
@@ -97,7 +95,6 @@ export const LOCAL_ACCOUNT_TYPES = {
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
-const CATEGORIES_FILENAME = 'Categories.json'
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = async (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
@@ -224,44 +221,6 @@ export async function setSyncedSettings(account: EdgeAccount, settings: object):
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
-export interface CategoriesFile {
-  categories: string[]
-}
-
-export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
-  // const subcats = await getSyncedSubcategories(account)
-  return await setSyncedSubcategories(account, subcategories)
-}
-
-export async function setSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
-  let finalText = {}
-  if (!subcategories.categories) {
-    // @ts-expect-error
-    finalText.categories = subcategories
-  } else {
-    finalText = subcategories
-  }
-  const stringifiedSubcategories = JSON.stringify(finalText)
-  try {
-    await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
-  } catch (error: any) {
-    showError(error)
-  }
-}
-
-export const getSyncedSubcategories = async (account: EdgeAccount) =>
-  await account.disklet
-    .getText(CATEGORIES_FILENAME)
-    .then(text => {
-      const categoriesText = JSON.parse(text)
-      return categoriesText.categories
-    })
-    .catch(
-      async () =>
-        // If Categories.json doesn't exist yet, create it, and return it
-        await setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
-    )
-
 export const getLocalSettings = async (account: EdgeAccount) => {
   return await account.localDisklet
     .getText(LOCAL_SETTINGS_FILENAME)
@@ -300,8 +259,4 @@ export const updateSettings = (currentSettings: any, newSettings: object) => {
     ...newSettings
   }
   return updatedSettings
-}
-
-export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  categories: defaultCategories
 }

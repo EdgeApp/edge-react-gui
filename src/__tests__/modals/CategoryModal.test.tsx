@@ -2,8 +2,8 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
+import { defaultCategories } from '../../actions/CategoriesActions'
 import { CategoryModal } from '../../components/modals/CategoryModal'
-import { defaultCategories } from '../../util/categories'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 

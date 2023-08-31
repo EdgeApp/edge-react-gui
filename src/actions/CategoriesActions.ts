@@ -1,10 +1,54 @@
+import { EdgeAccount } from 'edge-core-js'
+
+import { showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
+import { ThunkAction } from '../types/reduxTypes'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
 
 export interface SplitCategory {
   category: Category
   subcategory: string
+}
+
+/**
+ * Use these strings to show categories in a user's language.
+ */
+export const displayCategories = {
+  transfer: lstrings.fragment_transaction_transfer,
+  exchange: lstrings.fragment_transaction_exchange,
+  expense: lstrings.fragment_transaction_expense,
+  income: lstrings.fragment_transaction_income
+}
+
+const CATEGORIES_FILENAME = 'Categories.json'
+
+export function getSubcategories(): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const { account } = getState().core
+    const subcategories = await readSyncedSubcategories(account)
+    dispatch({
+      type: 'SET_TRANSACTION_SUBCATEGORIES',
+      data: { subcategories }
+    })
+  }
+}
+
+export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    const oldSubcats = state.ui.subcategories
+    const newSubcategories = [...oldSubcats, newSubcategory]
+    return await writeSyncedSubcategories(account, { categories: newSubcategories.sort() })
+      .then(() => {
+        dispatch({
+          type: 'SET_TRANSACTION_SUBCATEGORIES',
+          data: { subcategories: newSubcategories.sort() }
+        })
+      })
+      .catch(showError)
+  }
 }
 
 /**
@@ -47,6 +91,50 @@ export function joinCategory(split: SplitCategory): string {
 export function formatCategory(split: SplitCategory): string {
   if (split.subcategory === '') return displayCategories[split.category]
   return `${displayCategories[split.category]}: ${split.subcategory}`
+}
+
+/**
+ * Internal prefixes used on disk.
+ */
+const prefixes = {
+  transfer: 'Transfer:',
+  exchange: 'Exchange:',
+  expense: 'Expense:',
+  income: 'Income:'
+}
+
+const tests: Array<[Category, RegExp, number]> = [
+  ['transfer', /^Transfer:/i, 9],
+  ['exchange', /^Exchange:/i, 9],
+  ['expense', /^Expense:/i, 8],
+  ['income', /^Income:/i, 7]
+]
+
+export interface CategoriesFile {
+  categories: string[]
+}
+
+async function writeSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
+  const stringifiedSubcategories = JSON.stringify(subcategories)
+  try {
+    await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
+  } catch (error: any) {
+    showError(error)
+  }
+}
+
+async function readSyncedSubcategories(account: EdgeAccount): Promise<string[]> {
+  try {
+    const text = await account.disklet.getText(CATEGORIES_FILENAME)
+    const categoriesJson = JSON.parse(text)
+    return categoriesJson.categories
+  } catch (error) {
+    // If Categories.json doesn't exist yet, create it, and return it
+    await writeSyncedSubcategories(account, {
+      categories: defaultCategories
+    })
+    return defaultCategories
+  }
 }
 
 export const defaultCategories = [
@@ -166,31 +254,4 @@ export const defaultCategories = [
   'Transfer:Multibit',
   'Transfer:Mycelium',
   'Transfer:Dark Wallet'
-]
-
-/**
- * Use these strings to show categories in a user's language.
- */
-export const displayCategories = {
-  transfer: lstrings.fragment_transaction_transfer,
-  exchange: lstrings.fragment_transaction_exchange,
-  expense: lstrings.fragment_transaction_expense,
-  income: lstrings.fragment_transaction_income
-}
-
-/**
- * Internal prefixes used on disk.
- */
-const prefixes = {
-  transfer: 'Transfer:',
-  exchange: 'Exchange:',
-  expense: 'Expense:',
-  income: 'Income:'
-}
-
-const tests: Array<[Category, RegExp, number]> = [
-  ['transfer', /^Transfer:/i, 9],
-  ['exchange', /^Exchange:/i, 9],
-  ['expense', /^Expense:/i, 8],
-  ['income', /^Income:/i, 7]
 ]
