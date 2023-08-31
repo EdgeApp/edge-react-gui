@@ -16,7 +16,15 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_UTXO_PIN_3: asOptional(asString, '1'),
       MAESTRO_EDGE_UTXO_PIN_4: asOptional(asString, '1'),
       MAESTRO_EDGE_IP2FA_MEXICO_USERNAME: asOptional(asString, 'user'),
-      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: asOptional(asString, 'passwd')
+      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_XMR_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_XMR_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_2FA_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_2FA_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_XRP_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_XRP_PASSWORD: asOptional(asString, 'passwd'),
+      MAESTRO_EDGE_TXDETAILS_USERNAME: asOptional(asString, 'user'),
+      MAESTRO_EDGE_TXDETAILS_PASSWORD: asOptional(asString, 'passwd')
     }),
     {
       MAESTRO_APP_ID: 'co.edgesecure.app',
@@ -27,7 +35,15 @@ const asTestConfig = asObject({
       MAESTRO_EDGE_UTXO_PIN_3: '1',
       MAESTRO_EDGE_UTXO_PIN_4: '1',
       MAESTRO_EDGE_IP2FA_MEXICO_USERNAME: 'user',
-      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: 'passwd'
+      MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD: 'passwd',
+      MAESTRO_EDGE_XMR_USERNAME: 'user',
+      MAESTRO_EDGE_XMR_PASSWORD: 'passwd',
+      MAESTRO_EDGE_2FA_USERNAME: 'user',
+      MAESTRO_EDGE_2FA_PASSWORD: 'passwd',
+      MAESTRO_EDGE_XRP_USERNAME: 'user',
+      MAESTRO_EDGE_XRP_PASSWORD: 'passwd',
+      MAESTRO_EDGE_TXDETAILS_USERNAME: 'user',
+      MAESTRO_EDGE_TXDETAILS_PASSWORD: 'passwd'
     }
   )
 }).withRest

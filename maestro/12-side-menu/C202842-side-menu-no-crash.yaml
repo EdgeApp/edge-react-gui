@@ -1,0 +1,85 @@
+# Priority: High
+# Test ID: C202842
+# Title: Side Menu items do not crash
+# Expected Result:
+#   1. No crash when tapping into each Side Menu item
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- ios
+- C202856
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- assertVisible:
+    id: "sideMenuButton"
+- tapOn:
+    id: "sideMenuButton"
+- assertVisible: FIO Names
+- assertVisible: FIO Requests
+- assertVisible: WalletConnect
+- assertVisible: Scan QR
+- assertVisible: Share Edge
+- assertVisible: Settings
+- assertVisible: Logout
+- tapOn: "FIO Names"
+- assertVisible: "FIO Crypto Handles"
+- assertVisible:
+    id: "sideMenuButton"
+- assertVisible:
+    id: "chevronBack"
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "FIO Requests"
+- assertVisible: "Pending Requests"
+- assertVisible:
+    id: "sideMenuButton"
+- assertVisible:
+    id: "chevronBack"
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "WalletConnect"
+- assertVisible: "WalletConnect"
+- assertVisible:
+    id: "chevronBack"
+- assertVisible:
+    id: "sideMenuButton"
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Scan QR"
+#- assertVisible: "OK"
+#- tapOn: "OK"
+- assertVisible: "Scan QR Code"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Share Edge"
+- assertVisible: "Copy"
+- tapOn: "Close"
+- tapOn: "Settings"
+- assertVisible: "Settings"
+- assertVisible:
+    id: "sideMenuButton"
+- assertVisible:
+    id: "chevronBack"
+- tapOn:
+    id: "chevronBack"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- assertVisible: "Exit PIN"
+
+- stopApp
