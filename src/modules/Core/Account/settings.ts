@@ -99,73 +99,85 @@ const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = async (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
   await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { autoLogoutTimeInSeconds })
+    const updatedSettings = { ...settings, autoLogoutTimeInSeconds }
     return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setDefaultFiatRequest = async (account: EdgeAccount, defaultFiat: string) =>
   await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
+    const updatedSettings = {
+      ...settings,
+      defaultFiat,
+      defaultIsoFiat: `iso:${defaultFiat}`
+    }
     return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setPreferredSwapPluginId = async (account: EdgeAccount, pluginId: string | undefined) => {
   return await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId, preferredSwapPluginType: undefined })
+    const updatedSettings = {
+      ...settings,
+      preferredSwapPluginId: pluginId == null ? '' : pluginId,
+      preferredSwapPluginType: undefined
+    }
     return await setSyncedSettings(account, updatedSettings)
   })
 }
 
 export const setPreferredSwapPluginType = async (account: EdgeAccount, swapPluginType: EdgeSwapPluginType | undefined) => {
   return await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { preferredSwapPluginType: swapPluginType, preferredSwapPluginId: '' })
+    const updatedSettings = {
+      ...settings,
+      preferredSwapPluginType: swapPluginType,
+      preferredSwapPluginId: ''
+    }
     return await setSyncedSettings(account, updatedSettings)
   })
 }
 
 export const setMostRecentWalletsSelected = async (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
   await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { mostRecentWallets })
+    const updatedSettings = { ...settings, mostRecentWallets }
     return await setSyncedSettings(account, updatedSettings)
   })
 
 export const setWalletsSort = async (account: EdgeAccount, walletsSort: SortOption) =>
   await getSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { walletsSort })
+    const updatedSettings = { ...settings, walletsSort }
     return await setSyncedSettings(account, updatedSettings)
   })
 
 // Local Settings
 export const setPasswordReminderRequest = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
   await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { passwordReminder })
+    const updatedSettings = { ...settings, passwordReminder }
     return await setLocalSettings(account, updatedSettings)
   })
 
 export const setAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
   return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
+    const updatedSettings = { ...settings, isAccountBalanceVisible }
     return await setLocalSettings(account, updatedSettings)
   })
 }
 
 export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: boolean) => {
   return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { developerModeOn })
+    const updatedSettings = { ...settings, developerModeOn }
     return await setLocalSettings(account, updatedSettings)
   })
 }
 
 export const setSpamFilterOn = async (account: EdgeAccount, spamFilterOn: boolean) => {
   return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { spamFilterOn })
+    const updatedSettings = { ...settings, spamFilterOn }
     return await setLocalSettings(account, updatedSettings)
   })
 }
 
 export const setContactsPermissionOn = async (account: EdgeAccount, contactsPermissionOn: boolean) => {
   return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { contactsPermissionOn })
+    const updatedSettings = { ...settings, contactsPermissionOn }
     return await setLocalSettings(account, updatedSettings)
   })
 }
@@ -179,7 +191,7 @@ export interface SpendingLimits {
 
 export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits) => {
   return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = updateSettings(settings, { spendingLimits })
+    const updatedSettings = { ...settings, spendingLimits }
     const out = setLocalSettings(account, updatedSettings)
     logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
     return await out
@@ -187,9 +199,11 @@ export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: Sp
 }
 export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: PasswordReminderTime) {
   const settings = await getSyncedSettings(account)
-  const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown
+  }
   passwordRecoveryRemindersShown[level] = true
-  const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
+  const updatedSettings = { ...settings, passwordRecoveryRemindersShown }
   return await setSyncedSettings(account, updatedSettings)
 }
 
@@ -249,14 +263,5 @@ export const updateCurrencySettings = (currentSettings: any, pluginId: string, c
   }
   if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
   updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
-  return updatedSettings
-}
-
-export const updateSettings = (currentSettings: any, newSettings: object) => {
-  // update with new settings
-  const updatedSettings = {
-    ...currentSettings,
-    ...newSettings
-  }
   return updatedSettings
 }
