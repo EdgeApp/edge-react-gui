@@ -796,7 +796,7 @@ const SendComponent = (props: Props) => {
 
       for (const target of spendInfo.spendTargets) {
         // Write FIO OBT per spendTarget
-        await recordFioObtData(target, currencyCode, broadcastedTx.txid)
+        await recordFioObtData(target, currencyCode, broadcastedTx.txid).catch(error => showError(error))
       }
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
