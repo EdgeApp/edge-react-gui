@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
-import { updateOneSetting } from '../../actions/SettingsActions'
+import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -17,7 +17,6 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
-import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
@@ -260,13 +259,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const selectedCountryCode: string = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
-        const syncedSettings = await getSyncedSettings(account)
+        const syncedSettings = await readSyncedSettings(account)
         const updatedSettings = {
           ...syncedSettings,
           countryCode: selectedCountryCode
         }
         updateCountryCode(selectedCountryCode)
-        await setSyncedSettings(account, updatedSettings)
+        await writeSyncedSettings(account, updatedSettings)
       } catch (error: any) {
         showError(error)
       }

@@ -4,13 +4,13 @@ import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
+import { PASSWORD_RECOVERY_REMINDERS_SHOWN, readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
-import { getSyncedSettings, PASSWORD_RECOVERY_REMINDERS_SHOWN } from '../modules/Core/Account/settings'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer'
 import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
@@ -50,7 +50,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
 export function initializeAccount(navigation: NavigationBase, account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Log in as quickly as possible, but we do need the sort order:
-    const syncedSettings = await getSyncedSettings(account)
+    const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
     await dispatch(loadAccountReferral(account))

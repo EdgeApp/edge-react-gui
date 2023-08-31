@@ -6,11 +6,11 @@ import { ActivityIndicator, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { readSyncedSettings, writeSyncedSettings } from '../../actions/SettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -84,7 +84,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   // Create the wallets and enable the tokens
   useAsyncEffect(async () => {
-    const settings = await getSyncedSettings(account)
+    const settings = await readSyncedSettings(account)
     const securityCheckedWallets = { ...settings.securityCheckedWallets }
 
     const migrationPromises = []
@@ -201,7 +201,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     for (const migration of migrationPromises) {
       await migration()
     }
-    await setSyncedSettings(account, { ...settings, securityCheckedWallets })
+    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
 
     setDone(true)
     return () => {}
