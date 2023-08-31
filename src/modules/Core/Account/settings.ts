@@ -4,8 +4,7 @@ import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, 
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { asSortOption, SortOption } from '../../../components/modals/WalletListSortModal'
-import { asMostRecentWallet, MostRecentWallet, PasswordReminder } from '../../../types/types'
-import { logActivity } from '../../../util/logger'
+import { asMostRecentWallet, MostRecentWallet } from '../../../types/types'
 
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
@@ -63,38 +62,7 @@ export const asSyncedAccountSettings = asObject({
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
-export const LOCAL_ACCOUNT_DEFAULTS = {
-  contactsPermissionOn: true,
-  developerModeOn: false,
-  passwordReminder: {
-    needsPasswordCheck: false,
-    lastPasswordUseDate: 0,
-    passwordUseCount: 0,
-    nonPasswordLoginsCount: 0,
-    nonPasswordDaysLimit: 4,
-    nonPasswordLoginsLimit: 4
-  },
-  isAccountBalanceVisible: true,
-  spamFilterOn: true,
-  spendingLimits: {
-    transaction: {
-      amount: 0,
-      isEnabled: false
-    }
-  }
-}
-
-export const LOCAL_ACCOUNT_TYPES = {
-  contactsPermissionOn: 'boolean',
-  developerModeOn: 'boolean',
-  passwordReminder: 'object',
-  isAccountBalanceVisible: 'boolean',
-  spamFilterOn: 'boolean',
-  spendingLimits: 'object'
-}
-
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
-const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = async (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
@@ -147,56 +115,6 @@ export const setWalletsSort = async (account: EdgeAccount, walletsSort: SortOpti
     return await setSyncedSettings(account, updatedSettings)
   })
 
-// Local Settings
-export const setPasswordReminderRequest = async (account: EdgeAccount, passwordReminder: PasswordReminder) =>
-  await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, passwordReminder }
-    return await setLocalSettings(account, updatedSettings)
-  })
-
-export const setAccountBalanceVisibility = async (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
-  return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, isAccountBalanceVisible }
-    return await setLocalSettings(account, updatedSettings)
-  })
-}
-
-export const setDeveloperModeOn = async (account: EdgeAccount, developerModeOn: boolean) => {
-  return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, developerModeOn }
-    return await setLocalSettings(account, updatedSettings)
-  })
-}
-
-export const setSpamFilterOn = async (account: EdgeAccount, spamFilterOn: boolean) => {
-  return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, spamFilterOn }
-    return await setLocalSettings(account, updatedSettings)
-  })
-}
-
-export const setContactsPermissionOn = async (account: EdgeAccount, contactsPermissionOn: boolean) => {
-  return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, contactsPermissionOn }
-    return await setLocalSettings(account, updatedSettings)
-  })
-}
-
-export interface SpendingLimits {
-  transaction: {
-    amount: number
-    isEnabled: boolean
-  }
-}
-
-export const setSpendingLimits = async (account: EdgeAccount, spendingLimits: SpendingLimits) => {
-  return await getLocalSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, spendingLimits }
-    const out = setLocalSettings(account, updatedSettings)
-    logActivity(`Set Spending Limits: ${account.username} -- ${JSON.stringify(spendingLimits.transaction)}`)
-    return await out
-  })
-}
 export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: PasswordReminderTime) {
   const settings = await getSyncedSettings(account)
   const passwordRecoveryRemindersShown = {
@@ -233,27 +151,6 @@ export async function setSyncedSettings(account: EdgeAccount, settings: object):
   const text = JSON.stringify(settings)
   if (account?.disklet?.setText == null) return
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
-}
-
-export const getLocalSettings = async (account: EdgeAccount) => {
-  return await account.localDisklet
-    .getText(LOCAL_SETTINGS_FILENAME)
-    .then(JSON.parse)
-    .catch(async () => {
-      // If Settings.json doesn't exist yet, create it, and return it
-      return await setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
-    })
-    .then(settings => {
-      return {
-        ...LOCAL_ACCOUNT_DEFAULTS,
-        ...settings
-      }
-    })
-}
-
-export const setLocalSettings = async (account: EdgeAccount, settings: object) => {
-  const text = JSON.stringify(settings)
-  return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
 export const updateCurrencySettings = (currentSettings: any, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {

@@ -1,7 +1,8 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
+import { LOCAL_ACCOUNT_DEFAULTS } from '../../actions/LocalSettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
-import { DenominationSettings, LOCAL_ACCOUNT_DEFAULTS, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
+import { DenominationSettings, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings'
 import { Action } from '../../types/reduxTypes'
 import { GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
 import { PasswordReminderState } from '../PasswordReminderReducer'

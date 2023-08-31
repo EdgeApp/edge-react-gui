@@ -1,32 +1,25 @@
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { openSettings, PermissionStatus, request } from 'react-native-permissions'
-import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import {
   setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
-  setContactsPermissionOn as setContactsPermissionOnAccountSettings,
   setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
   setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
-  setDeveloperModeOn as setDeveloperModeOnAccountSettings,
   setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
-  setPreferredSwapPluginType as setPreferredSwapPluginTypeAccountSettings,
-  setSpamFilterOn as setSpamFilterOnAccountSettings,
-  setSpendingLimits as setSpendingLimitsAccountSettings
+  setPreferredSwapPluginType as setPreferredSwapPluginTypeAccountSettings
 } from '../modules/Core/Account/settings'
-import { permissionNames } from '../reducers/PermissionsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
-import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
+import { writeSpendingLimits } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
 export function updateOneSetting(setting: object): ThunkAction<void> {
@@ -87,7 +80,7 @@ export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<Promise<
     }
 
     // update spending limits in account settings
-    await setSpendingLimitsAccountSettings(account, nextSpendingLimits)
+    await writeSpendingLimits(account, nextSpendingLimits)
     // update spending limits in settings
     dispatch({
       type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
@@ -269,74 +262,5 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
 
       navigation.navigate('walletsTab', { screen: 'walletList' })
     }
-  }
-}
-
-export function setDeveloperModeOn(developerModeOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    setDeveloperModeOnAccountSettings(account, developerModeOn)
-      .then(() => {
-        if (developerModeOn) {
-          dispatch({ type: 'DEVELOPER_MODE_ON' })
-          return
-        }
-        dispatch({ type: 'DEVELOPER_MODE_OFF' })
-      })
-      .catch(showError)
-  }
-}
-
-export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    setSpamFilterOnAccountSettings(account, spamFilterOn)
-      .then(() => {
-        if (spamFilterOn) {
-          dispatch({ type: 'SPAM_FILTER_ON' })
-          return
-        }
-        dispatch({ type: 'SPAM_FILTER_OFF' })
-      })
-      .catch(showError)
-  }
-}
-
-/**
- * Toggle the 'Contacts Access' Edge setting. Will request permissions if
- * toggled on/enabled AND system-level contacts permissions are not granted.
- * Does NOT modify system-level contacts permissions if toggling the 'Contacts
- * Access' setting OFF
- */
-export function setContactsPermissionOn(contactsPermissionOn: boolean): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    await setContactsPermissionOnAccountSettings(account, contactsPermissionOn)
-
-    if (contactsPermissionOn) {
-      // Initial prompt to inform the reason of the permissions request.
-      // Denying this prompt will cause permissionStatus to be 'blocked',
-      // regardless of the prior permissions state.
-      await request(permissionNames.contacts, {
-        title: lstrings.contacts_permission_modal_title,
-        message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
-        buttonPositive: lstrings.string_allow,
-        buttonNegative: lstrings.string_deny
-      })
-        .then(async (permissionStatus: PermissionStatus) => {
-          // Can't request permission from within the app if previously blocked
-          if (permissionStatus === 'blocked') await openSettings()
-        })
-        // Handle any other potential failure in enabling the permission
-        // progmatically from within Edge by redirecting to the system settings
-        // instead. Any manual change in system settings causes an app restart.
-        .catch(async _e => await openSettings())
-    }
-
-    dispatch({ type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION', data: { contactsPermissionOn } })
   }
 }
