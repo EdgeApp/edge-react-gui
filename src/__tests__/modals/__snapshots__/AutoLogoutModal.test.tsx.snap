@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
-<AutoLogoutModalComponent
-  autoLogoutTimeInSeconds={11}
+<ThemedModal
   bridge={
     {
       "on": [Function],
@@ -12,419 +11,397 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       "resolve": [Function],
     }
   }
-  theme={
-    {
-      "addButtonFont": "Quicksand-Medium",
-      "backgroundGradientColors": [
-        "#06090c",
-        "#1b2f3b",
-      ],
-      "backgroundGradientEnd": {
-        "x": 1,
-        "y": 0,
-      },
-      "backgroundGradientStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "backgroundImage": undefined,
-      "backgroundImageServerUrls": [
-        "https://content.edge.app",
-      ],
-      "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
-      "buttonBorderRadiusRem": 0.25,
-      "buySellCustomPluginModalIcon": "#121d25",
-      "cameraOverlayColor": "#000000",
-      "cameraOverlayOpEnd": 0.3,
-      "cameraOverlayOpStart": 0.7,
-      "cardBorder": 1,
-      "cardBorderColor": "rgba(255, 255, 255, .1)",
-      "cardBorderRadius": 4,
-      "clipboardPopupText": "#000000",
-      "confirmationSlider": "#2B333A",
-      "confirmationSliderArrow": "#1b2f3b",
-      "confirmationSliderText": "#FFFFFF",
-      "confirmationSliderTextDeactivated": "#87939E",
-      "confirmationSliderThumb": "#00f1a2",
-      "confirmationSliderThumbWidth": 55,
-      "confirmationSliderWidth": 295,
-      "confirmationThumbDeactivated": "#87939E",
-      "dangerIcon": "#E85466",
-      "dangerText": "#E85466",
-      "dateModalBackgroundDark": "#1b2f3b",
-      "dateModalBackgroundLight": "#FFFFFF",
-      "dateModalTextDark": "#FFFFFF",
-      "dateModalTextLight": "#0073D9",
-      "deactivatedText": "#87939E",
-      "defaultBorderColor": "#FFFFFF",
-      "dividerLineColors": [
-        "rgba(255, 255, 255, .1)",
-        "rgba(255, 255, 255, .1)",
-      ],
-      "dividerLineHeight": 1,
-      "dropdownError": "#E85466",
-      "dropdownText": "#FFFFFF",
-      "dropdownWarning": "#F1AA19",
-      "emphasizedText": "#00f1a2",
-      "escapeButton": [
-        "rgba(255, 255, 255, 0)",
-        "rgba(255, 255, 255, 0)",
-      ],
-      "escapeButtonColorEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "escapeButtonColorStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "escapeButtonFont": "Quicksand-Regular",
-      "escapeButtonFontSizeRem": 1,
-      "escapeButtonOutline": "rgba(255, 255, 255, 0)",
-      "escapeButtonOutlineWidth": 0,
-      "escapeButtonShadow": {
-        "elevation": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-      },
-      "escapeButtonText": "#00f1a2",
-      "escapeButtonTextShadow": {
-        "textShadowColor": "#000000",
-        "textShadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "textShadowRadius": 0,
-      },
-      "fadeDisable": "#87939E",
-      "fioAddressLogo": {
-        "testUri": "../../../src/assets/images/details_fioAddress.png",
-      },
-      "flipInputBorder": "#A4C7DF",
-      "fontFaceBold": "Quicksand-Bold",
-      "fontFaceDefault": "Quicksand-Regular",
-      "fontFaceMedium": "Quicksand-Medium",
-      "fontFaceSymbols": "Quicksand-Regular",
-      "guiPluginLogoMoonpay": {
-        "testUri": "../../../src/assets/images/guiPlugins/guiPluginLogoMoonpayDark.png",
-      },
-      "headerIcon": {
-        "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_Icon.png",
-      },
-      "icon": "#FFFFFF",
-      "iconDeactivated": "rgba(255, 255, 255, .75)",
-      "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
-      "iconServerBaseUri": "https://content.edge.app",
-      "iconTappable": "#00f1a2",
-      "inputAccessoryBackground": "#FFFFFF",
-      "inputAccessoryText": "#0073D9",
-      "isDark": true,
-      "keypadButton": [
-        "rgba(255, 255, 255, 0)",
-        "rgba(255, 255, 255, 0)",
-      ],
-      "keypadButtonBorderRadiusRem": 0.25,
-      "keypadButtonColorEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "keypadButtonColorStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "keypadButtonFont": "Quicksand-Medium",
-      "keypadButtonFontSizeRem": 1.5,
-      "keypadButtonOutline": "rgba(255, 255, 255, 0)",
-      "keypadButtonOutlineWidth": 1,
-      "keypadButtonShadow": {
-        "elevation": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-      },
-      "keypadButtonText": "#00f1a2",
-      "keypadButtonTextShadow": {
-        "textShadowColor": "#000000",
-        "textShadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "textShadowRadius": 0,
-      },
-      "lineDivider": "rgba(255, 255, 255, .1)",
-      "listSectionHeaderBackgroundGradientColors": [
-        "#06090c",
-        "#1b2f3b",
-      ],
-      "listSectionHeaderBackgroundGradientEnd": {
-        "x": 1,
-        "y": 0,
-      },
-      "listSectionHeaderBackgroundGradientStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "mediumLineWidth": 2,
-      "modal": "#121d25",
-      "modalBorderColor": "rgba(255, 255, 255, 0)",
-      "modalBorderRadiusRem": 1,
-      "modalBorderWidth": 0,
-      "modalCloseIcon": "#00f1a2",
-      "negativeText": "#E85466",
-      "outlineTextInputBorderColor": "#A4C7DF",
-      "outlineTextInputBorderColorDisabled": "#87939E",
-      "outlineTextInputBorderColorFocused": "#00f1a2",
-      "outlineTextInputBorderWidth": 1,
-      "outlineTextInputColor": "rgba(255, 255, 255, 0)",
-      "outlineTextInputLabelColor": "#A4C7DF",
-      "outlineTextInputLabelColorDisabled": "#87939E",
-      "outlineTextInputLabelColorFocused": "#00f1a2",
-      "outlineTextInputTextColor": "#FFFFFF",
-      "paymentTypeLogoApplePay": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
-      },
-      "paymentTypeLogoAuspost": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoAuspost.png",
-      },
-      "paymentTypeLogoBankTransfer": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoBankTransfer.png",
-      },
-      "paymentTypeLogoCash": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCash.png",
-      },
-      "paymentTypeLogoCreditCard": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoCreditCard.png",
-      },
-      "paymentTypeLogoDebitCard": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoDebitCard.png",
-      },
-      "paymentTypeLogoFasterPayments": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoFasterPayments.png",
-      },
-      "paymentTypeLogoGiftCard": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGiftCard.png",
-      },
-      "paymentTypeLogoGooglePay": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoGooglePay.png",
-      },
-      "paymentTypeLogoIdeal": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoIdeal.png",
-      },
-      "paymentTypeLogoInterac": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoInterac.png",
-      },
-      "paymentTypeLogoPayid": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPayid.png",
-      },
-      "paymentTypeLogoPaynow": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
-      },
-      "paymentTypeLogoPoli": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
-      },
-      "paymentTypeLogoSofort": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoSofort.png",
-      },
-      "paymentTypeLogoUpi": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoUpi.png",
-      },
-      "paymentTypeVisa": {
-        "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
-      },
-      "pickerTextDark": "#FFFFFF",
-      "pickerTextLight": "#000000",
-      "pinUsernameButton": [
-        "rgba(255, 255, 255, 0)",
-        "rgba(255, 255, 255, 0)",
-      ],
-      "pinUsernameButtonBorderRadiusRem": 1,
-      "pinUsernameButtonColorEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "pinUsernameButtonColorStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "pinUsernameButtonFont": "Quicksand-Regular",
-      "pinUsernameButtonFontSizeRem": 1.5,
-      "pinUsernameButtonOutline": "rgba(255, 255, 255, 0)",
-      "pinUsernameButtonOutlineWidth": 0,
-      "pinUsernameButtonShadow": {
-        "elevation": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-      },
-      "pinUsernameButtonText": "#FFFFFF",
-      "pinUsernameButtonTextShadow": {
-        "textShadowColor": "#000000",
-        "textShadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "textShadowRadius": 0,
-      },
-      "positiveText": "#77C513",
-      "preferPrimaryButton": true,
-      "primaryButton": [
-        "#089e73",
-        "#00f1a2",
-      ],
-      "primaryButtonColorEnd": {
-        "x": 1,
-        "y": 0,
-      },
-      "primaryButtonColorStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "primaryButtonFont": "Quicksand-Medium",
-      "primaryButtonFontSizeRem": 1,
-      "primaryButtonOutline": "rgba(255, 255, 255, 0)",
-      "primaryButtonOutlineWidth": 0,
-      "primaryButtonShadow": {
-        "elevation": 2,
-        "shadowColor": "#FFFFFF",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0.25,
-        "shadowRadius": 8,
-      },
-      "primaryButtonText": "#1b2f3b",
-      "primaryButtonTextShadow": {
-        "textShadowColor": "#000000",
-        "textShadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "textShadowRadius": 0,
-      },
-      "primaryLogo": {
-        "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
-      },
-      "primaryText": "#FFFFFF",
-      "qrBackgroundColor": "#FFFFFF",
-      "qrForegroundColor": "#000000",
-      "rem": [Function],
-      "searchListRefreshControlIndicator": "rgba(255, 255, 255, 0)",
-      "secondaryButton": [
-        "rgba(255, 255, 255, 0)",
-        "rgba(255, 255, 255, 0)",
-      ],
-      "secondaryButtonColorEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "secondaryButtonColorStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "secondaryButtonFont": "Quicksand-Regular",
-      "secondaryButtonFontSizeRem": 1,
-      "secondaryButtonOutline": "#00f1a2",
-      "secondaryButtonOutlineWidth": 1.5,
-      "secondaryButtonShadow": {
-        "elevation": 0,
-        "shadowColor": "#000000",
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 0,
-        "shadowRadius": 0,
-      },
-      "secondaryButtonText": "#00f1a2",
-      "secondaryButtonTextShadow": {
-        "textShadowColor": "#000000",
-        "textShadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "textShadowRadius": 0,
-      },
-      "secondaryText": "#A4C7DF",
-      "settingsRowBackground": "rgba(255, 255, 255, 0)",
-      "settingsRowHeaderBackground": [
-        "#121d25",
-        "#121d25",
-      ],
-      "settingsRowHeaderBackgroundEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "settingsRowHeaderBackgroundStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "settingsRowHeaderFont": "Quicksand-Medium",
-      "settingsRowHeaderFontSizeRem": 1,
-      "settingsRowPressed": "rgba(255, 255, 255, 0)",
-      "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
-      "shimmerBackgroundColor": "rgba(255, 255, 255, .05)",
-      "shimmerBackgroundHighlight": "rgba(255, 255, 255, .1)",
-      "sideMenuBorderColor": "#121d25",
-      "sideMenuBorderWidth": 0,
-      "sideMenuColor": "#121d25",
-      "sideMenuFont": "Quicksand-Medium",
-      "sliderTabMore": "#0073D9",
-      "sliderTabRequest": "#77C513",
-      "sliderTabSend": "#E85466",
-      "tabBarBackground": [
-        "#121d25",
-        "#121d25",
-      ],
-      "tabBarBackgroundEnd": {
-        "x": 1,
-        "y": 1,
-      },
-      "tabBarBackgroundStart": {
-        "x": 0,
-        "y": 0,
-      },
-      "tabBarIcon": "#FFFFFF",
-      "tabBarIconHighlighted": "#00f1a2",
-      "tabBarTopOutlineColors": [
-        "#121d25",
-        "#121d25",
-      ],
-      "textLink": "#00f1a2",
-      "thickLineWidth": 3,
-      "thinLineWidth": 1,
-      "tileBackground": "rgba(255, 255, 255, 0)",
-      "tileBackgroundMuted": "rgba(255, 255, 255, 0)",
-      "titleLineDivider": "#A4C7DF",
-      "toggleButton": "#00f1a2",
-      "toggleButtonOff": "#87939E",
-      "transactionListIconBackground": "#1b2f3b",
-      "tutorialModalUnderlay": "rgba(255, 255, 255, 0)",
-      "underlayColor": "#FFFFFF",
-      "underlayOpacity": 0.95,
-      "walletListBackground": "#121d25",
-      "walletListMutedBackground": "#121d25",
-      "walletListSlideTutorialImage": {
-        "testUri": "../../../src/assets/images/tutorials/walletList_sliding_dark.gif",
-      },
-      "walletProgressIconDone": "#FFFFFF",
-      "walletProgressIconFill": "#00f1a2",
-      "warningIcon": "#F1AA19",
-      "warningText": "#F1AA19",
+  onCancel={[Function]}
+>
+  <ModalTitle>
+    Set Auto Logoff time
+  </ModalTitle>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+      }
     }
-  }
-/>
+  >
+    <Picker
+      itemStyle={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          null,
+        ]
+      }
+      mode="dialog"
+      onValueChange={[Function]}
+      selectedValue={11}
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <PickerItem
+        color="#FFFFFF"
+        label="Disabled"
+        value={0}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="1"
+        value={1}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="2"
+        value={2}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="3"
+        value={3}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="4"
+        value={4}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="5"
+        value={5}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="6"
+        value={6}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="7"
+        value={7}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="8"
+        value={8}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="9"
+        value={9}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="10"
+        value={10}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="11"
+        value={11}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="12"
+        value={12}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="13"
+        value={13}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="14"
+        value={14}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="15"
+        value={15}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="16"
+        value={16}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="17"
+        value={17}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="18"
+        value={18}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="19"
+        value={19}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="20"
+        value={20}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="21"
+        value={21}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="22"
+        value={22}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="23"
+        value={23}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="24"
+        value={24}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="25"
+        value={25}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="26"
+        value={26}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="27"
+        value={27}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="28"
+        value={28}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="29"
+        value={29}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="30"
+        value={30}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="31"
+        value={31}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="32"
+        value={32}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="33"
+        value={33}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="34"
+        value={34}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="35"
+        value={35}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="36"
+        value={36}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="37"
+        value={37}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="38"
+        value={38}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="39"
+        value={39}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="40"
+        value={40}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="41"
+        value={41}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="42"
+        value={42}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="43"
+        value={43}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="44"
+        value={44}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="45"
+        value={45}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="46"
+        value={46}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="47"
+        value={47}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="48"
+        value={48}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="49"
+        value={49}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="50"
+        value={50}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="51"
+        value={51}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="52"
+        value={52}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="53"
+        value={53}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="54"
+        value={54}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="55"
+        value={55}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="56"
+        value={56}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="57"
+        value={57}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="58"
+        value={58}
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="59"
+        value={59}
+      />
+    </Picker>
+    <Picker
+      itemStyle={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          null,
+        ]
+      }
+      mode="dialog"
+      onValueChange={[Function]}
+      selectedValue="seconds"
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <PickerItem
+        color="#FFFFFF"
+        label="Second(s)"
+        value="seconds"
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="Minute(s)"
+        value="minutes"
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="Hour(s)"
+        value="hours"
+      />
+      <PickerItem
+        color="#FFFFFF"
+        label="Day(s)"
+        value="days"
+      />
+    </Picker>
+  </View>
+  <Memo
+    layout="column"
+    primary={
+      {
+        "label": "Save",
+        "onPress": [Function],
+      }
+    }
+    secondary={
+      {
+        "label": "Cancel",
+        "onPress": [Function],
+      }
+    }
+  />
+</ThemedModal>
 `;
