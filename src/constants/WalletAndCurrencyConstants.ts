@@ -670,6 +670,7 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
     isCustomTokensSupported: true,
+    isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
   liberlandtestnet: {
@@ -684,6 +685,7 @@ export const SPECIAL_CURRENCY_INFO: {
       alertMessage: lstrings.request_dot_minimum_notification_alert_body
     },
     isCustomTokensSupported: true,
+    isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
   zcash: {
