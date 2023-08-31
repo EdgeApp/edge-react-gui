@@ -2,9 +2,6 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
-import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
@@ -23,32 +20,7 @@ interface Props {
  * 3. Localization: commas, decimals, spaces
  **/
 export const CryptoText = React.memo(({ wallet, tokenId, nativeAmount, withSymbol }: Props) => {
-  const cryptoText = useCryptoTextSimple({ wallet, tokenId, nativeAmount, withSymbol })
+  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol })
 
   return <EdgeText>{cryptoText}</EdgeText>
 })
-
-export const useCryptoTextSimple = ({ wallet, tokenId, nativeAmount, withSymbol }: Props): string => {
-  const {
-    denomination: exchangeDenomination,
-    fiatDenomination,
-    assetToFiatRate
-  } = useTokenDisplayData({
-    tokenId,
-    wallet
-  })
-  const displayDenomination = useSelector(state =>
-    getDisplayDenomination(state, wallet.currencyInfo.pluginId, exchangeDenomination.name ?? wallet.currencyInfo.currencyCode)
-  )
-
-  const cryptoText = useCryptoText({
-    displayDenomination,
-    exchangeDenomination,
-    exchangeRate: assetToFiatRate,
-    fiatDenomination,
-    nativeAmount,
-    currencyCode: withSymbol ? undefined : displayDenomination.name
-  })
-
-  return cryptoText
-}

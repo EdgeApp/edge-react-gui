@@ -1,11 +1,11 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { useCryptoText } from '../../hooks/useCryptoText'
 import { useFiatText } from '../../hooks/useFiatText'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { Tile } from './Tile'
 
@@ -30,7 +30,7 @@ export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount
   const displayDenominationName = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).name)
   const displayDenominationSymbol = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).symbol ?? '')
 
-  const feeCryptoAmount = useCryptoText({
+  const feeCryptoAmount = getCryptoText({
     displayDenomination: {
       multiplier: displayDenominationMultiplier,
       name: displayDenominationName,
