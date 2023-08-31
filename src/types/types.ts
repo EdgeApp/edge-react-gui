@@ -194,6 +194,9 @@ export interface FioPublicDomain {
   free: boolean
 }
 
+// https://developers.fioprotocol.io/pages/api/fio-api/#post-/get_sent_fio_requests
+export type FioRequestStatus = 'rejected' | 'requested' | 'sent_to_blockchain'
+
 export interface FioRequest {
   fio_request_id: number
   content: {
@@ -206,7 +209,7 @@ export interface FioRequest {
   payee_fio_address: string
   payer_fio_address: string
   payer_fio_public_key: string
-  status: string
+  status: FioRequestStatus
   time_stamp: string
   fioWalletId?: string
 }

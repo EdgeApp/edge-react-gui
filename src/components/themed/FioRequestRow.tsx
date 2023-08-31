@@ -9,11 +9,10 @@ import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstant
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../modules/FioAddress/util'
-import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { FioRequest } from '../../types/types'
+import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
@@ -69,17 +68,16 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
   }
 
-  showStatus = (status: string) => {
+  showStatus = (status: FioRequestStatus) => {
     const { theme } = this.props
     const styles = getStyles(theme)
 
     let statusStyle = styles.requestPartialConfirmation
     let label = lstrings.fragment_wallet_unconfirmed
-    if (isSentFioRequest(status)) {
+    if (status === 'sent_to_blockchain') {
       statusStyle = styles.requestDetailsReceivedTx
       label = lstrings.fragment_transaction_list_receive_prefix
-    }
-    if (isRejectedFioRequest(status)) {
+    } else if (status === 'rejected') {
       statusStyle = styles.requestPending
       label = lstrings.fio_reject_status
     }
@@ -103,7 +101,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         ref={this.rowRef}
         renderRight={
           // We are only swipeable if we aren't already cancelled or rejected:
-          isSentFioRequest(fioRequest.status) || isRejectedFioRequest(fioRequest.status)
+          fioRequest.status === 'sent_to_blockchain' || fioRequest.status === 'rejected'
             ? undefined
             : (isActive: SharedValue<boolean>) => (
                 <TouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
