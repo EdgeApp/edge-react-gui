@@ -33,7 +33,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const styles = getStyles(theme)
-  const activeTabIndex = state.index
+  const activeTabFullIndex = state.index
   const colors = theme.tabBarBackground
   const start = theme.tabBarBackgroundStart
   const end = theme.tabBarBackgroundEnd
@@ -50,6 +50,9 @@ export const MenuTabs = (props: BottomTabBarProps) => {
       }),
     [state.routes]
   )
+
+  const activeTabRoute = state.routes[activeTabFullIndex]
+  const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
   const handleOnPress = useHandler((route: string) => {
     const currentName = routes[activeTabIndex].name
