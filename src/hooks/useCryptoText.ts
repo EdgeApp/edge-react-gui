@@ -13,12 +13,12 @@ import {
 } from '../util/utils'
 
 interface UseCryptoTextParams {
+  currencyCode?: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
   exchangeRate?: string
-  fiatDenomination: EdgeDenomination
+  fiatDenomination?: EdgeDenomination
   nativeAmount: string
-  currencyCode?: string
 }
 
 /**
@@ -41,7 +41,7 @@ export const useCryptoText = ({
   if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0${currencyCode ? ' ' + currencyCode : ''}`
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
 
-  if (exchangeRate != null && parseFloat(exchangeRate) > 0) {
+  if (exchangeRate != null && fiatDenomination != null && parseFloat(exchangeRate) > 0) {
     const precisionAdjustValue = precisionAdjust({
       primaryExchangeMultiplier: exchangeMultiplier,
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
