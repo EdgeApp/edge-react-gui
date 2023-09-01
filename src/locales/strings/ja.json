@@ -74,6 +74,7 @@
   "warning_scam_footer_s": "この送信に関して質問や懸念事項がある場合は、 %s までお問い合わせください",
   "warning_token_code_override_2s": "The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.",
   "warning_token_contract_override_3s": "The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.",
+  "warning_token_exists_1s": "The entered token is already exists as a built-in token %1$s",
   "alert_dropdown_alert": "警告！ ",
   "alert_dropdown_warning": "注意! ",
   "azteco_success": "Aztecoビットコインカードを使用しました。資金はまもなく届きます。",
