@@ -508,9 +508,6 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-tcp-socket (6.0.6):
-    - CocoaAsyncSocket
-    - React-Core
   - react-native-webview (13.2.2):
     - React-Core
   - react-native-zcash (0.3.5):
@@ -609,8 +606,6 @@ PODS:
     - React-Core
   - RNCClipboard (1.10.0):
     - React-Core
-  - RNCMaskedView (0.1.11):
-    - React
   - RNCPicker (2.4.0):
     - React-Core
   - RNDateTimePicker (7.2.0):
@@ -866,7 +861,6 @@ DEPENDENCIES:
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - react-native-zcash (from `../node_modules/react-native-zcash`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -886,7 +880,6 @@ DEPENDENCIES:
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
-  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -1063,8 +1056,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-tcp-socket:
-    :path: "../node_modules/react-native-tcp-socket"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   react-native-zcash:
@@ -1103,8 +1094,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
-  RNCMaskedView:
-    :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
   RNDateTimePicker:
@@ -1236,7 +1225,6 @@ SPEC CHECKSUMS:
   react-native-piratechain: b6670583e25d27216c016ce49781a67ea218f352
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
-  react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   react-native-zcash: 4b57bcc0e64437b8c5d6a228d0db4648aaaacc9b
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
@@ -1256,7 +1244,6 @@ SPEC CHECKSUMS:
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
   RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
-  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
