@@ -239,7 +239,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const { walletId } = this.state
 
     const instructionSyntax = sprintf(
-      lstrings.create_wallet_account_select_instructions_with_cost,
+      lstrings.create_wallet_account_select_instructions_with_cost_4s,
       selectedWalletType.currencyCode,
       selectedWalletType.currencyCode,
       config.appNameShort,
