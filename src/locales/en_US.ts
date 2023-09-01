@@ -118,6 +118,7 @@ const strings = {
     'The entered contract address differs from the contract address of built-in token %1$s. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature or contract please contact %2$s.',
   warning_token_contract_override_3s:
     'The entered token %1$s exists as a built-in token %2$s with the same contract address. Please proceed with caution and verify the contract is legitimate as use of this token can result in loss of funds. If you have questions about this feature please contact %3$s.',
+  warning_token_exists_1s: 'The entered token is already exists as a built-in token %1$s',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',

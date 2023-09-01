@@ -112,11 +112,17 @@ function EditTokenSceneComponent(props: Props) {
 
       const matchingContractToken =
         Object.keys(builtinTokens).find(builtinTokenId => builtinTokenId === newTokenId) == null ? undefined : builtinTokens[newTokenId]
+      const isMatchingCurrencyCode = Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
+
+      if (matchingContractToken != null && isMatchingCurrencyCode) {
+        await showMessage(sprintf(lstrings.warning_token_exists_1s, currencyCode))
+        return
+      }
 
       const warningMessage =
-        Object.values(builtinTokens).find(builtInToken => builtInToken.currencyCode === currencyCode) != null
+        isMatchingCurrencyCode && matchingContractToken == null
           ? sprintf(lstrings.warning_token_code_override_2s, currencyCode, config.supportEmail)
-          : matchingContractToken != null
+          : matchingContractToken != null && !isMatchingCurrencyCode
           ? sprintf(lstrings.warning_token_contract_override_3s, currencyCode, matchingContractToken.currencyCode, config.supportEmail)
           : undefined
 
