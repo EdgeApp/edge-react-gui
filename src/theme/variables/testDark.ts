@@ -349,8 +349,7 @@ export const testDark: Theme = {
   qrBackgroundColor: palette.white,
 
   // Picker Color
-  pickerTextDark: palette.white,
-  pickerTextLight: palette.black,
+  pickerText: palette.white,
 
   // Input Accessory
   inputAccessoryBackground: palette.white,

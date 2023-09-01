@@ -20,7 +20,7 @@ export const AutoLogoutModal = (props: Props) => {
   const { autoLogoutTimeInSeconds, bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const textColor = theme.pickerTextDark
+  const textColor = theme.pickerText
   const itemStyle = [styles.text, Platform.OS === 'android' ? styles.androidAdjust : null]
 
   const [displayTime, setDisplayTime] = React.useState<DisplayTime>(secondsToDisplay(autoLogoutTimeInSeconds))
