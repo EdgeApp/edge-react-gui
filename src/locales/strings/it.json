@@ -74,6 +74,7 @@
   "warning_scam_footer_s": "Se hai domande o dubbi su questo invio, contatta %s",
   "warning_token_code_override_2s": "L'indirizzo del contratto inserito differisce dall'indirizzo del contratto del token integrato %1$s. Si prega di procedere con cautela e verificare che il contratto sia legittimo in quanto l'uso di questo token può comportare la perdita di fondi. Se hai domande su questa funzione o sul contratto contatta %2$s.",
   "warning_token_contract_override_3s": "Il token %1$s inserito esiste come token %2$s integrato con lo stesso indirizzo del contratto. Si prega di procedere con cautela e verificare che il contratto sia legittimo in quanto l'uso di questo token può comportare la perdita di fondi. Se hai domande su questa funzionalità, contatta %3$s.",
+  "warning_token_exists_1s": "The entered token is already exists as a built-in token %1$s",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "azteco_success": "Hai riscattato una carta bitcoin Azteco. I fondi dovrebbero arrivare a breve.",
