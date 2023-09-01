@@ -38,7 +38,9 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const currencyConfigs = useWatch(account, 'currencyConfig')
-  const { currencyCode } = tokenId != null ? currencyConfigs[pluginId].allTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
+  const isToken = tokenId != null
+  const tokenOrCurrencyInfo = isToken ? currencyConfigs[pluginId].allTokens[tokenId] : currencyConfigs[pluginId].currencyInfo
+  const networkName = isToken ? ` (${currencyConfigs[pluginId].currencyInfo.displayName})` : ''
 
   const handlePress = useHandler(() => {
     if (onPress != null) onPress()?.catch(err => showError(err))
@@ -48,7 +50,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
     <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
       <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
-        <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+        <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
       </View>
       <View style={styles.childrenContainer}>{rightSide}</View>
