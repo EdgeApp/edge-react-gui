@@ -21,7 +21,7 @@ interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
  */
 export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
   const { navigation, route } = props
-  const { accountHandle: initialValue = '', existingWalletId = '', selectedFiat, selectedWalletType } = route.params
+  const { accountHandle: initialValue = '', existingWalletId, selectedFiat, selectedWalletType } = route.params
   const { currencyCode, pluginId } = selectedWalletType
 
   const account = useSelector(state => state.core.account)

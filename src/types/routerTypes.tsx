@@ -80,13 +80,13 @@ export interface RouteParamList {
   confirmScene: ConfirmSceneParams
   createWalletAccountSelect: {
     accountName: string
-    existingWalletId?: string
+    existingWalletId: string
     selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
   }
   createWalletAccountSetup: {
     accountHandle?: string
-    existingWalletId?: string
+    existingWalletId: string
     isReactivation?: boolean
     selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
