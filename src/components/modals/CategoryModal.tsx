@@ -139,7 +139,7 @@ export function CategoryModal(props: Props) {
       <OutlinedTextInput
         autoFocus
         returnKeyType="done"
-        autoCapitalize="none"
+        autoCapitalize="words"
         label={lstrings.sub_category_label}
         onChangeText={setSubcategory}
         onSubmitEditing={handleSubmit}
