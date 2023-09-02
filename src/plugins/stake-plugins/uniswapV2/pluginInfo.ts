@@ -1,4 +1,5 @@
 import { fantomPolicyInfo } from './policyInfo/fantom'
+import { optimismPolicyInfo } from './policyInfo/optimism'
 import { StakePolicyInfo } from './stakePolicy'
 
 export interface StakePluginInfo {
@@ -8,5 +9,5 @@ export interface StakePluginInfo {
 
 export const pluginInfo: StakePluginInfo = {
   pluginId: 'stake:uniswapV2',
-  policyInfo: [...fantomPolicyInfo]
+  policyInfo: [...fantomPolicyInfo, ...optimismPolicyInfo]
 }
