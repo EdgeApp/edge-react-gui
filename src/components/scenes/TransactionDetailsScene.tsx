@@ -283,7 +283,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const thumbnailPath = useContactThumbnail(metadata?.name)
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll>
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
       <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
     </NotificationSceneWrapper>
   )
