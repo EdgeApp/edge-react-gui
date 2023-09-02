@@ -29,7 +29,7 @@ import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnt
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiFiatType, GuiMakeSpendInfo, GuiSwapInfo } from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo, GuiSwapInfo } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -81,14 +81,12 @@ export interface RouteParamList {
   createWalletAccountSelect: {
     accountName: string
     existingWalletId: string
-    selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
   }
   createWalletAccountSetup: {
     accountHandle?: string
     existingWalletId: string
     isReactivation?: boolean
-    selectedFiat: GuiFiatType
     selectedWalletType: CreateWalletType
   }
   createWalletCompletion: CreateWalletCompletionParams

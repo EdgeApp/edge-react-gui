@@ -18,10 +18,6 @@ describe('CreateWalletAccountSelect', () => {
               walletType: 'wallet:bitcoin',
               currencyCode: 'BTC'
             } as any,
-            selectedFiat: {
-              label: 'USD',
-              value: 'USD'
-            },
             isReactivation: true,
             existingWalletId: 'myWallet'
           })}
