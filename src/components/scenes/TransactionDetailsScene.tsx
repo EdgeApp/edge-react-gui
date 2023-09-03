@@ -114,7 +114,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         bridge={bridge}
         initialValue={this.state.notes}
         inputLabel={lstrings.transaction_details_notes_title}
-        returnKeyType="done"
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
