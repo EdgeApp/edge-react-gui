@@ -667,10 +667,10 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     minimumPopupModals: {
       minimumNativeBalance: '1000000000000',
-      modalMessage: lstrings.request_dot_minimum_notification_body,
-      alertMessage: lstrings.request_dot_minimum_notification_alert_body
+      modalMessage: lstrings.request_lld_minimum_notification_body,
+      alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: true,
+    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
@@ -682,10 +682,10 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     minimumPopupModals: {
       minimumNativeBalance: '1000000000000',
-      modalMessage: lstrings.request_dot_minimum_notification_body,
-      alertMessage: lstrings.request_dot_minimum_notification_alert_body
+      modalMessage: lstrings.request_lld_minimum_notification_body,
+      alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: true,
+    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
