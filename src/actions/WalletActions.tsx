@@ -18,7 +18,6 @@ import { MapObject } from '../types/types'
 import { getCurrencyCode, getCurrencyInfos, getToken, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
-import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 
 export interface SelectWalletTokenParams {
@@ -93,7 +92,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
     const {
-      fiatCurrencyCode,
       name,
       currencyInfo: { currencyCode, pluginId }
     } = wallet
@@ -113,9 +111,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto (EOSIO) types and populate scene props
-      const supportedFiats = getSupportedFiats()
-      const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === fiatCurrencyCode.replace('iso:', ''))
-      const selectedFiat = supportedFiats[fiatTypeIndex]
       const currencyInfos = getCurrencyInfos(state.core.account)
       const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
       if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
@@ -123,7 +118,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
       if (specialCurrencyInfo.skipAccountNameValidation) {
         navigation.push('createWalletAccountSelect', {
-          selectedFiat: selectedFiat,
           selectedWalletType,
           accountName: walletName,
           existingWalletId: walletId
@@ -132,7 +126,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
         const createWalletAccountSetupSceneProps = {
           accountHandle: '',
           selectedWalletType,
-          selectedFiat,
           isReactivation: true,
           existingWalletId: walletId
         }
