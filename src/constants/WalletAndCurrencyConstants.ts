@@ -219,6 +219,7 @@ export const SPECIAL_CURRENCY_INFO: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_bitcoin_sv_wallet_name,
     chainCode: 'BSV',
+    keysOnlyMode: true,
     isImportKeySupported: true,
     isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
