@@ -272,8 +272,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeVisa": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
               },
-              "pickerTextDark": "#FFFFFF",
-              "pickerTextLight": "#000000",
+              "pickerText": "#FFFFFF",
               "pinUsernameButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",
@@ -721,8 +720,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeVisa": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeVisa.png",
               },
-              "pickerTextDark": "#FFFFFF",
-              "pickerTextLight": "#000000",
+              "pickerText": "#FFFFFF",
               "pinUsernameButton": [
                 "rgba(255, 255, 255, 0)",
                 "rgba(255, 255, 255, 0)",

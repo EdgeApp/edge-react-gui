@@ -336,8 +336,7 @@ export interface Theme {
   qrBackgroundColor: string
 
   // Picker Color
-  pickerTextDark: string
-  pickerTextLight: string
+  pickerText: string
 
   // Input Accessory
   inputAccessoryBackground: string
