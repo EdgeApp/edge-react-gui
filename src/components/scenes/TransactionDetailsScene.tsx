@@ -114,7 +114,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         bridge={bridge}
         initialValue={this.state.notes}
         inputLabel={lstrings.transaction_details_notes_title}
-        returnKeyType="done"
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
@@ -283,7 +282,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const thumbnailPath = useContactThumbnail(metadata?.name)
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll>
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
       <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
     </NotificationSceneWrapper>
   )

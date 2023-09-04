@@ -96,18 +96,22 @@ export function CategoryModal(props: Props) {
     bridge.resolve(undefined)
   })
 
-  const handleSubmit = useHandler(async () => {
-    const result = joinCategory({ category, subcategory })
-    if (!categories.includes(result)) {
-      await dispatch(setNewSubcategory(result))
+  const handleCategoryUpdate = async (fullCategory: string) => {
+    if (!categories.includes(fullCategory)) {
+      await dispatch(setNewSubcategory(fullCategory))
     }
-    bridge.resolve(result)
+    bridge.resolve(fullCategory)
+  }
+
+  const handleSubmit = useHandler(async () => {
+    const fullCategory = joinCategory({ category, subcategory })
+    await handleCategoryUpdate(fullCategory)
   })
 
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={() => bridge.resolve(item.raw)}>
+    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={async () => await handleCategoryUpdate(item.raw)}>
       <>
         <View style={styles.rowContent}>
           <View style={styles.rowCategoryTextWrap}>
@@ -135,7 +139,7 @@ export function CategoryModal(props: Props) {
       <OutlinedTextInput
         autoFocus
         returnKeyType="done"
-        autoCapitalize="none"
+        autoCapitalize="words"
         label={lstrings.sub_category_label}
         onChangeText={setSubcategory}
         onSubmitEditing={handleSubmit}
