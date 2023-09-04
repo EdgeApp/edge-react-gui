@@ -2,11 +2,11 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../../components/services/ThemeContext'
-import { ClickableRow } from '../../../components/themed/ClickableRow'
-import { EdgeText } from '../../../components/themed/EdgeText'
-import { formatDate } from '../../../locales/intl'
-import { lstrings } from '../../../locales/strings'
+import { formatDate } from '../../locales/intl'
+import { lstrings } from '../../locales/strings'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { ClickableRow } from '../themed/ClickableRow'
+import { EdgeText } from '../themed/EdgeText'
 
 interface FioNameProps {
   name: string

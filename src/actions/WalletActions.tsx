@@ -5,11 +5,11 @@ import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { readSyncedSettings, writeMostRecentWalletsSelected, writeSyncedSettings } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -179,7 +179,7 @@ export function updateMostRecentWalletsSelected(walletId: string, currencyCode: 
     }
     currentMostRecentWallets.unshift({ id: walletId, currencyCode })
 
-    setMostRecentWalletsSelected(account, currentMostRecentWallets)
+    writeMostRecentWalletsSelected(account, currentMostRecentWallets)
       .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
@@ -326,7 +326,7 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
     const { activeWalletIds, currencyWallets } = account
 
     // Get synced setting Settings.json with public key map securityCheckedWallets: {walletId: { checked: boolean, modalShown: number }}
-    const settings = await getSyncedSettings(account)
+    const settings = await readSyncedSettings(account)
     const securityCheckedWallets = { ...settings.securityCheckedWallets }
 
     // Gather list to send to info server
@@ -435,6 +435,6 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       }
     }
 
-    await setSyncedSettings(account, { ...settings, securityCheckedWallets })
+    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
   }
 }

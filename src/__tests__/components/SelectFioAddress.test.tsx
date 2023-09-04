@@ -30,7 +30,7 @@ describe('SelectFioAddress', () => {
           payee_fio_address: 'fio@fio',
           payer_fio_address: 'fio2@fio',
           payer_fio_public_key: '123123',
-          status: 'pending',
+          status: 'requested',
           time_stamp: '11:11',
           fioWalletId: 'myWallet'
         }}

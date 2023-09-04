@@ -7,13 +7,11 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
-  setContactsPermissionOn,
-  setDeveloperModeOn,
-  setSpamFilterOn,
   showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,

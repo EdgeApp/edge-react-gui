@@ -8,6 +8,11 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
+import { connect } from '../../../types/reactRedux'
+import { EdgeSceneProps } from '../../../types/routerTypes'
+import { FioAddress, FioRequest } from '../../../types/types'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -16,12 +21,7 @@ import {
   FIO_NO_BUNDLED_ERR_CODE,
   fioMakeSpend,
   fioSignAndBroadcast
-} from '../../../modules/FioAddress/util'
-import { getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
-import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
-import { FioAddress, FioRequest } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+} from '../../../util/FioAddressUtils'
 import { tokenIdsToCurrencyCodes } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'

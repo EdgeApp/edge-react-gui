@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { setContactsPermissionOn } from '../../actions/SettingsActions'
+import { setContactsPermissionOn } from '../../actions/LocalSettingsActions'
 import { showError } from '../../components/services/AirshipInstance'
 import { showContactsPermissionModal } from '../../components/services/PermissionsManager'
 import { useDispatch, useSelector } from '../../types/reactRedux'
