@@ -1,5 +1,46 @@
 # edge-react-gui
 
+## 3.16.0
+
+- added: New swap provider XRP Decentralized Exchange
+- added: AXL wrapped tokens on Fantom
+- added: Support spending to Taproot bech32m addresses
+- added: Allow user to update permissions in-app
+- added: Monero custom node support
+- added: Cancel button to exchange quote processing scene
+- changed: Overhauled side menu and help modal UI
+- changed: Update AAVE BTC->WBTC swap minimums
+- changed: Replace Moonpay logo
+- removed: Disabled ETC transaction history
+- removed: Removed navigation buttons from new account wallet creation scene
+- fixed: Prevent crash when entering Markets scene
+- Upgrade edge-core-js to v1.4.1
+  - changed: Reduced YAOB throttle to 50ms and apply throttle to return bridge calls
+  - added: canBePartial and maxFulfillmentSeconds to EdgeSwapQuote
+  - added: skipBlockHeight config option
+  - changed: Throttle the react-native bridge to 500ms. This will create some lag, but should improve overall performance.
+  - changed: Move the Android namespace definition out of the AndroidMaifest.xml and into the build.gradle file.
+- Upgrade edge-currency-accountbased to v1.5.2
+  - fixed: Correctly parse more types of Ripple transactions, including DEX transactions.
+  - changed: Removed blockscout API server from ETC info (disabling transaction list retrieval)
+  - added: Support for XRP OfferCreate txs
+  - added: Fantom tokens listed on Axelarscan (AXLUSDC, AXLUSDT, AXLETH, AXLWBTC)
+  - Fixed: Bug in FIO causing missing historical transactions (first page of transactions).
+  - Fixed: Improve FIO transaction history fetching from history nodes by using the nodes with the highest action sequence number.
+- Upgrade edge-currency-monero to v1.1.1
+  - fixed: Fixed address transaction cleaner broken for wallets with no transaction history.
+  - added: Support custom servers via enableCustomServers and moneroLightwalletServer user settings.
+- Upgrade edge-currency-plugins to v2.1.0
+  - Changed: Upgraded AltcoinJS to first published version based on BitcoinJS v6.1.3
+  - Added: Support for pay-to-taproot address support (P2TR) for Bitcoin wallets.
+- Upgrade edge-exchange-plugins to v0.20.2
+  - Fixed: XRP DEX max swaps
+  - Fixed: LI.FI on-chain transactions no longer revert due to missing bridge fees
+  - added: XRP DEX support (Requires minimum of edge-currency-accountbased 1.5.0)
+- Upgrade edge-login-ui-rn to v2.7.0
+  - added: Tracking event for logins
+  - changed: Update translations
+
 ## 3.15.0
 
 - added: simplified Maestro scripts and use cleaner-config for testerConfig.json
