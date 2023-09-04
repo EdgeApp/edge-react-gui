@@ -20,7 +20,7 @@ import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
+import { ModalFooter, ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
@@ -207,6 +207,7 @@ export const ScanModal = (props: Props) => {
       maxWidth={windowWidth}
     >
       {renderModalContent()}
+      <ModalFooter onPress={handleClose} />
     </AirshipModal>
   )
 }
