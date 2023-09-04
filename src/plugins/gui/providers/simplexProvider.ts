@@ -20,6 +20,7 @@ const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
 const pluginDisplayName = 'Simplex'
 
+// https://integrations.simplex.com/docs/supported_currencies
 const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } } = {
   algorand: { ALGO: 'ALGO' },
   avalanche: { AVAX: 'AVAX-C' },
@@ -99,6 +100,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
     XYO: 'XYO'
   },
   fantom: { FTM: 'FTM' },
+  filecoin: { FIL: 'FIL' },
   hedera: { HBAR: 'HBAR' },
   litecoin: { LTC: 'LTC' },
   one: { ONE: 'ONE' },
