@@ -126,6 +126,8 @@
   "request_xlm_minimum_notification_alert_body": "このウォレットは常に最小残高1XLMが必要です",
   "request_dot_minimum_notification_body": "ポルカドット（DOT） ウォレットには最小残高 １DOT が必要です。このウォレットに残高やトランザクションが表示されるには、あなたはこのアドレスに少なくとも 1DOT をデポジットしている必要があります。1DOT は今後このウォレットアドレスから取り出すことはできません。",
   "request_dot_minimum_notification_alert_body": "このウォレットは常に最小残高1DOTが必要です",
+  "request_lld_minimum_notification_body": "Liberland (LLD) wallets require a 0.01 LLD minimum balance. You must deposit at least 0.01 LLD to this address before this wallet will show a balance or transactions. 0.01 LLD will be unspendable for the lifetime of this wallet address.",
+  "request_lld_minimum_notification_alert_body": "This wallet will always require a 0.01 LLD minimum",
   "fragment_send_address": "アドレス",
   "fragment_send_flash": "フラッシュ",
   "fragment_send_album": "アルバム",
