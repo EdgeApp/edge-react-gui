@@ -1,9 +1,11 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
 import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { LAYOUT_ANIMATION, zoomInAnimation, zoomOutAnimation } from '../../constants/animationConstants'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { showError, showToast } from '../services/AirshipInstance'
@@ -53,45 +55,49 @@ export class TileComponent extends React.PureComponent<Props> {
 
     if (type === 'loading') {
       return (
-        <View>
-          <View style={styles.container}>
-            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
-              <EdgeText style={styles.textHeader}>{title}</EdgeText>
-              <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+        <Animated.View layout={LAYOUT_ANIMATION} entering={zoomInAnimation()} exiting={zoomOutAnimation()}>
+          <View>
+            <View style={styles.container}>
+              <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
+                <EdgeText style={styles.textHeader}>{title}</EdgeText>
+                <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+              </View>
             </View>
+            <View style={styles.divider} />
           </View>
-          <View style={styles.divider} />
-        </View>
+        </Animated.View>
       )
     }
     return (
-      <TouchableWithoutFeedback accessible={false} onPress={this.handlePress} disabled={type === 'static'}>
-        <View>
-          <View style={styles.container}>
-            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
-              {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-              {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-              {type === 'delete' && <FontAwesomeIcon name="times" style={styles.editIcon} />}
-              {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
-              <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
-                {title}
-              </EdgeText>
-              {typeof body === 'string' && (
-                <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
-                  {body}
+      <Animated.View layout={LAYOUT_ANIMATION} entering={zoomInAnimation()} exiting={zoomOutAnimation()}>
+        <TouchableWithoutFeedback accessible={false} onPress={this.handlePress} disabled={type === 'static'}>
+          <View>
+            <View style={styles.container}>
+              <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
+                {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+                {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+                {type === 'delete' && <FontAwesomeIcon name="times" style={styles.editIcon} />}
+                {type === 'questionable' && <SimpleLineIcons name="question" style={styles.editIcon} />}
+                <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+                  {title}
                 </EdgeText>
-              )}
-              {children}
-            </View>
-            {type === 'touchable' && (
-              <View style={styles.iconContainer}>
-                <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                {typeof body === 'string' && (
+                  <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
+                    {body}
+                  </EdgeText>
+                )}
+                {children}
               </View>
-            )}
+              {type === 'touchable' && (
+                <View style={styles.iconContainer}>
+                  <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                </View>
+              )}
+            </View>
+            <View style={styles.divider} />
           </View>
-          <View style={styles.divider} />
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </Animated.View>
     )
   }
 }

@@ -3,6 +3,7 @@ import { lt } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import Share, { ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -11,6 +12,7 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
@@ -316,11 +318,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     ) : (
       <SceneWrapper background="theme" hasTabs={false}>
         <View style={styles.container}>
-          <View style={styles.requestContainer}>
+          <Animated.View style={styles.requestContainer} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
             <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
-          </View>
-          <View style={styles.balanceContainer}>
+          </Animated.View>
+          <Animated.View style={styles.balanceContainer} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
             <TouchableOpacity onPress={this.toggleBalanceVisibility}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </TouchableOpacity>
@@ -332,23 +334,25 @@ export class RequestSceneComponent extends React.Component<Props, State> {
                 wallet={wallet}
               />
             </EdgeText>
-          </View>
+          </Animated.View>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <Card>
-            <ExchangedFlipInput2
-              forceField="crypto"
-              headerCallback={this.handleOpenWalletListModal}
-              headerText={flipInputHeaderText}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
-              keyboardVisible={false}
-              onAmountChanged={this.onExchangeAmountChanged}
-              ref={this.flipInputRef}
-              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              tokenId={primaryCurrencyInfo.tokenId}
-              walletId={wallet.id}
-            />
-          </Card>
+          <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+            <Card>
+              <ExchangedFlipInput2
+                forceField="crypto"
+                headerCallback={this.handleOpenWalletListModal}
+                headerText={flipInputHeaderText}
+                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+                keyboardVisible={false}
+                onAmountChanged={this.onExchangeAmountChanged}
+                ref={this.flipInputRef}
+                returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+                tokenId={primaryCurrencyInfo.tokenId}
+                walletId={wallet.id}
+              />
+            </Card>
+          </Animated.View>
 
           <Carousel
             items={this.state.addresses}

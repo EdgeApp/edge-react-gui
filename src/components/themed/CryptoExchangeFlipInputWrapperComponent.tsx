@@ -1,7 +1,9 @@
 import { add } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
@@ -135,25 +137,27 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       <>
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
-        <Card marginRem={[0, 1]}>
-          <ExchangedFlipInput
-            onNext={onNext}
-            onFocus={this.props.onFocus}
-            onBlur={this.props.onBlur}
-            headerText={this.props.headerText}
-            headerCallback={this.launchSelector}
-            primaryCurrencyInfo={primaryCurrencyInfo}
-            secondaryCurrencyInfo={secondaryCurrencyInfo}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            onExchangeAmountChanged={this.onExchangeAmountChanged}
-            onError={this.onError}
-            keyboardVisible={false}
-            isFiatOnTop
-            isFocus={false}
-          />
-          {children}
-        </Card>
+        <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+          <Card marginRem={[0, 1]}>
+            <ExchangedFlipInput
+              onNext={onNext}
+              onFocus={this.props.onFocus}
+              onBlur={this.props.onBlur}
+              headerText={this.props.headerText}
+              headerCallback={this.launchSelector}
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
+              exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+              overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+              onExchangeAmountChanged={this.onExchangeAmountChanged}
+              onError={this.onError}
+              keyboardVisible={false}
+              isFiatOnTop
+              isFocus={false}
+            />
+            {children}
+          </Card>
+        </Animated.View>
       </>
     )
   }

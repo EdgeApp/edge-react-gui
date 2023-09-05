@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { Platform, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -48,7 +50,7 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
     )
   }
   return (
-    <View style={[styles.warning, margin, padding]}>
+    <Animated.View style={[styles.warning, margin, padding]} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
       <View style={styles.titleContainer}>
         <IonIcon
           name={Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'}
@@ -69,7 +71,7 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
           {footer}
         </EdgeText>
       )}
-    </View>
+    </Animated.View>
   )
 }
 
