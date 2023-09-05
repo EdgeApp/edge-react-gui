@@ -233,6 +233,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
+                  const allowanceResult = await tokenAContract.allowance(signer.address, spenderAddress)
+                  if (allowanceResult.gte(allocation.nativeAmount)) return
+
                   const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
                     gasLimit,
                     gasPrice,
@@ -295,7 +298,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                       gasLimit,
                       gasPrice,
                       nonce: nextNonce(),
-                      value: amountTokenBDesired
+                      value: isTokenANative ? amountTokenADesired : amountTokenBDesired
                     }
                   )
               } else {
@@ -363,6 +366,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
               const spenderAddress = poolContract.address
+              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+              if (allowanceResult.gte(liquidity)) return
+
               const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
                 gasLimit,
                 gasPrice,
@@ -461,6 +467,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function approveSwapRouter({ signer }) {
+              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+              if (allowanceResult.gte(expectedLiquidityAmount)) return
+
               const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(expectedLiquidityAmount), {
                 gasLimit,
                 gasPrice,
