@@ -126,6 +126,8 @@
   "request_xlm_minimum_notification_alert_body": "Esta cartera siempre requerirá un mínimo de 1 XRP",
   "request_dot_minimum_notification_body": "Polkadot (DOT) wallets require a 1 DOT minimum balance. You must deposit at least 1 DOT to this address before this wallet will show a balance or transactions. 1 DOT will be unspendable for the lifetime of this wallet address.",
   "request_dot_minimum_notification_alert_body": "This wallet will always require a 1 DOT minimum",
+  "request_lld_minimum_notification_body": "Liberland (LLD) wallets require a 0.01 LLD minimum balance. You must deposit at least 0.01 LLD to this address before this wallet will show a balance or transactions. 0.01 LLD will be unspendable for the lifetime of this wallet address.",
+  "request_lld_minimum_notification_alert_body": "This wallet will always require a 0.01 LLD minimum",
   "fragment_send_address": "Dirección",
   "fragment_send_flash": "Flash",
   "fragment_send_album": "Álbum",
