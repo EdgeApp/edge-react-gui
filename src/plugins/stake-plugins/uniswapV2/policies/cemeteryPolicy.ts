@@ -325,26 +325,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               }
 
               // Cache metadata
-              cacheTxMetadata(
-                result.hash,
-                tokenACurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Transfer:Staking',
-                  notes: `Provide liquidity for ${metadataLpName} - LP`
-                },
-                amountTokenADesired
-              )
-              cacheTxMetadata(
-                result.hash,
-                tokenBCurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Transfer:Staking',
-                  notes: `Provide liquidity for ${metadataLpName} - LP`
-                },
-                amountTokenBDesired
-              )
+              cacheTxMetadata(result.hash, tokenACurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Provide liquidity for ${metadataLpName} - LP`
+              })
+              cacheTxMetadata(result.hash, tokenBCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Provide liquidity for ${metadataLpName} - LP`
+              })
 
               //
               // Decode the log data in the receipt to get the liquidity token transfer amount

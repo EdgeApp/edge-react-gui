@@ -5,7 +5,6 @@ import { EdgeMetadata } from 'edge-core-js/types'
 export interface MetadataCacheEntry {
   currencyCode: string
   metadata: EdgeMetadata
-  nativeAmount?: string // multiple tokens and amounts can be in each tx
 }
 
 export interface MetadataCache {
@@ -14,9 +13,9 @@ export interface MetadataCache {
 
 export const stakeMetadataCache: MetadataCache = {}
 
-export const cacheTxMetadata = (txid: string, currencyCode: string, metadata: EdgeMetadata, nativeAmount?: string) => {
+export const cacheTxMetadata = (txid: string, currencyCode: string, metadata: EdgeMetadata) => {
   // Add metadata cache entry:
   const key = txid.toLowerCase()
   stakeMetadataCache[key] = stakeMetadataCache[key] ?? []
-  stakeMetadataCache[key].push({ currencyCode, metadata, nativeAmount })
+  stakeMetadataCache[key].push({ currencyCode, metadata })
 }
