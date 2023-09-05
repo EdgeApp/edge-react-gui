@@ -126,6 +126,8 @@
   "request_xlm_minimum_notification_alert_body": "Questo portafoglio richiederà sempre un minimo di 1 XLM",
   "request_dot_minimum_notification_body": "I portafogli Polkadot (DOT) richiedono almeno un bilancio di 1 DOT. Devi depositare almeno 1 DOT a questo indirizzo prima che il portafoglio mostri il bilancio o le transazioni. 1 DOT verrà considerato non spendibile per l'intera durata del portafoglio.",
   "request_dot_minimum_notification_alert_body": "Questo portafoglio richiederà sempre un minimo di 1 DOT",
+  "request_lld_minimum_notification_body": "Liberland (LLD) wallets require a 0.01 LLD minimum balance. You must deposit at least 0.01 LLD to this address before this wallet will show a balance or transactions. 0.01 LLD will be unspendable for the lifetime of this wallet address.",
+  "request_lld_minimum_notification_alert_body": "This wallet will always require a 0.01 LLD minimum",
   "fragment_send_address": "Indirizzo",
   "fragment_send_flash": "Flash",
   "fragment_send_album": "Galleria",
