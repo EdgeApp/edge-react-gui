@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { fadeInRightAnimation, fadeOutRightAnimation, LAYOUT_ANIMATION } from '../../../constants/animationConstants'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
@@ -16,6 +18,7 @@ interface Props {
   marginRem?: number[] | number
 }
 
+let keyNum = 0
 // -----------------------------------------------------------------------------
 // A view representing fields of data accompanied by a left-justified icon
 // -----------------------------------------------------------------------------
@@ -24,6 +27,7 @@ const IconDataRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
+  const hideRight = rightText == null && rightSubText == null && rightSubTextExtended == null
 
   return (
     <View style={[styles.container, margin]}>
@@ -39,13 +43,22 @@ const IconDataRowComponent = (props: Props) => {
           {leftSubtext}
         </EdgeText>
       </View>
-      <View style={styles.rightColumn}>
-        {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
-        <View accessible style={styles.row}>
-          {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
-          {rightSubTextExtended}
-        </View>
-      </View>
+      {!hideRight ? (
+        <Animated.View
+          key={(++keyNum).toString()}
+          style={styles.rightColumn}
+          layout={LAYOUT_ANIMATION}
+          entering={fadeInRightAnimation()}
+          exiting={fadeOutRightAnimation()}
+        >
+          {/* <View style={styles.rightColumn}> */}
+          {rightText != null ? <EdgeText>{rightText}</EdgeText> : null}
+          <View accessible style={styles.row}>
+            {rightSubText != null ? <EdgeText style={styles.rightSubText}>{rightSubText}</EdgeText> : null}
+            {rightSubTextExtended}
+          </View>
+        </Animated.View>
+      ) : null}
     </View>
   )
 }

@@ -3,7 +3,9 @@ import { lt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useTransactionList } from '../../hooks/useTransactionList'
@@ -204,22 +206,24 @@ function TransactionListComponent(props: Props) {
           {SHOW_FLIP_INPUT_TESTER ? (
             <ExchangedFlipInputTester />
           ) : (
-            <FlashList
-              ref={flashList}
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
-              data={listItems}
-              estimatedItemSize={theme.rem(4.25)}
-              getItemType={getItemType}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={keyExtractor}
-              ListEmptyComponent={emptyComponent}
-              ListHeaderComponent={topArea}
-              onEndReachedThreshold={0.5}
-              refreshControl={refreshControl}
-              renderItem={renderItem}
-              stickyHeaderIndices={stickyHeaderIndices}
-              onEndReached={handleScrollEnd}
-            />
+            <Animated.View layout={LAYOUT_ANIMATION}>
+              <FlashList
+                ref={flashList}
+                contentContainerStyle={{ paddingBottom: notificationHeight }}
+                data={listItems}
+                estimatedItemSize={theme.rem(4.25)}
+                getItemType={getItemType}
+                keyboardShouldPersistTaps="handled"
+                keyExtractor={keyExtractor}
+                ListEmptyComponent={emptyComponent}
+                ListHeaderComponent={topArea}
+                onEndReachedThreshold={0.5}
+                refreshControl={refreshControl}
+                renderItem={renderItem}
+                stickyHeaderIndices={stickyHeaderIndices}
+                onEndReached={handleScrollEnd}
+              />
+            </Animated.View>
           )}
         </>
       )}
