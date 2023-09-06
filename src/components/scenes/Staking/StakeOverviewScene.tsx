@@ -139,7 +139,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         onPress={handleModifyPress('stake')}
         marginRem={[0.5, 0.5, 0.25, 0.5]}
       />
-      {stakePolicy.rewardsNotClaimable ? null : (
+      {stakePolicy.hideClaimAction ? null : (
         <MainButton
           label={lstrings.stake_claim_rewards}
           disabled={!stakePosition?.canClaim}

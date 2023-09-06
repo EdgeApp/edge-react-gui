@@ -426,7 +426,7 @@ const StakeModifySceneComponent = (props: Props) => {
         }
         {
           // Render claim amount tile
-          stakePolicy.rewardsNotClaimable || (modification !== 'claim' && modification !== 'unstake')
+          stakePolicy.hideClaimAction || (modification !== 'claim' && modification !== 'unstake')
             ? null
             : stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset))
         }

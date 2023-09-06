@@ -76,7 +76,9 @@ export interface StakePolicy {
 
   // The assets which can be earned
   rewardAssets: AssetId[]
-  rewardsNotClaimable?: boolean
+
+  // Actions
+  hideClaimAction?: boolean
 
   // The assets which must be staked
   stakeAssets: AssetId[]

@@ -88,5 +88,5 @@ export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: St
 }
 
 export const getUnstakeText = (policy: StakePolicy): string => {
-  return policy.rewardsNotClaimable ? lstrings.stake_unstake : lstrings.stake_unstake_claim
+  return policy.hideClaimAction ? lstrings.stake_unstake : lstrings.stake_unstake_claim
 }

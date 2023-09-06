@@ -30,7 +30,7 @@ const policyDefault = {
   stakeWarning: null,
   unstakeWarning: null,
   claimWarning: null,
-  rewardsNotClaimable: true,
+  hideClaimAction: true,
   mustMaxUnstake: true
 }
 
