@@ -30,15 +30,12 @@ const policyDefault = {
   stakeWarning: null,
   unstakeWarning: null,
   claimWarning: null,
-  hideClaimAction: true,
-  hideUnstakeAndClaimAction: true,
-  mustMaxUnstake: true
+  hideUnstakeAndClaimAction: true
 }
 
 const policies: StakePolicy[] = [
   {
     ...policyDefault,
-    mustMaxUnstake: false,
     stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
     stakePolicyId: 'currency:tron:BANDWIDTH_V2',
     rewardAssets: [
@@ -58,7 +55,6 @@ const policies: StakePolicy[] = [
   },
   {
     ...policyDefault,
-    mustMaxUnstake: false,
     stakeProviderInfo: { ...stakeProviderInfo, displayName: lstrings.stake_resource_display_name_v2 },
     stakePolicyId: 'currency:tron:ENERGY_V2',
     rewardAssets: [
@@ -79,6 +75,8 @@ const policies: StakePolicy[] = [
   {
     ...policyDefault,
     deprecated: true,
+    hideClaimAction: true,
+    mustMaxUnstake: true,
     stakePolicyId: 'currency:tron:BANDWIDTH',
     rewardAssets: [
       {
@@ -98,6 +96,8 @@ const policies: StakePolicy[] = [
   {
     ...policyDefault,
     deprecated: true,
+    hideClaimAction: true,
+    mustMaxUnstake: true,
     stakePolicyId: 'currency:tron:ENERGY',
     rewardAssets: [
       {
