@@ -1,5 +1,4 @@
 {
-  "aaa": "Test string",
   "action_queue_display_unknown_title": "Unknown actions",
   "action_queue_display_unknown_message": "Edge is unable to identify the type of action being completed.",
   "aciton_queue_display_close_title": "Closing Loan",
