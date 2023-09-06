@@ -148,20 +148,24 @@ const StakeOverviewSceneComponent = (props: Props) => {
           marginRem={[0.25, 0.5, 0.25, 0.5]}
         />
       )}
-      <MainButton
-        label={lstrings.stake_unstake_claim}
-        disabled={canUnstakeAndClaim}
-        type="escape"
-        onPress={handleModifyPress('unstakeAndClaim')}
-        marginRem={[0.25, 0.5, 0.25, 0.5]}
-      />
-      <MainButton
-        label={lstrings.stake_unstake}
-        disabled={canUnstake}
-        type="escape"
-        onPress={handleModifyPress('unstake')}
-        marginRem={[0.25, 0.5, 0.25, 0.5]}
-      />
+      {stakePolicy.hideUnstakeAndClaimAction ? null : (
+        <MainButton
+          label={lstrings.stake_unstake_claim}
+          disabled={canUnstakeAndClaim}
+          type="escape"
+          onPress={handleModifyPress('unstakeAndClaim')}
+          marginRem={[0.25, 0.5, 0.25, 0.5]}
+        />
+      )}
+      {stakePolicy.hideUnstakeAction ? null : (
+        <MainButton
+          label={lstrings.stake_unstake}
+          disabled={canUnstake}
+          type="escape"
+          onPress={handleModifyPress('unstake')}
+          marginRem={[0.25, 0.5, 0.25, 0.5]}
+        />
+      )}
     </SceneWrapper>
   )
 }

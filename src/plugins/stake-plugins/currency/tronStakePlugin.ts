@@ -31,6 +31,7 @@ const policyDefault = {
   unstakeWarning: null,
   claimWarning: null,
   hideClaimAction: true,
+  hideUnstakeAndClaimAction: true,
   mustMaxUnstake: true
 }
 

@@ -79,6 +79,8 @@ export interface StakePolicy {
 
   // Actions
   hideClaimAction?: boolean
+  hideUnstakeAction?: boolean
+  hideUnstakeAndClaimAction?: boolean
 
   // The assets which must be staked
   stakeAssets: AssetId[]
