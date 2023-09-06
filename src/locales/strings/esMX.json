@@ -1,5 +1,4 @@
 {
-  "aaa": "Test string",
   "action_queue_display_unknown_title": "Unknown actions",
   "action_queue_display_unknown_message": "Edge no puede identificar el tipo de acción que se está completando.",
   "aciton_queue_display_close_title": "Cerrando préstamo",
