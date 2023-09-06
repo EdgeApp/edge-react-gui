@@ -10,7 +10,7 @@ import { getDisplayDenominationFromState } from '../../../selectors/Denomination
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
-import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
+import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -114,7 +114,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       </SceneWrapper>
     )
 
-  const unstakeText = getUnstakeText(stakePolicy)
+  const { canStake = true, canClaim = true, canUnstakeAndClaim = true, canUnstake = true } = stakePosition ?? {}
 
   return (
     <SceneWrapper scroll background="theme">
@@ -134,7 +134,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       />
       <MainButton
         label={lstrings.stake_stake_more_funds}
-        disabled={!stakePosition?.canStake}
+        disabled={canStake}
         type="primary"
         onPress={handleModifyPress('stake')}
         marginRem={[0.5, 0.5, 0.25, 0.5]}
@@ -142,15 +142,22 @@ const StakeOverviewSceneComponent = (props: Props) => {
       {stakePolicy.hideClaimAction ? null : (
         <MainButton
           label={lstrings.stake_claim_rewards}
-          disabled={!stakePosition?.canClaim}
+          disabled={canClaim}
           type="secondary"
           onPress={handleModifyPress('claim')}
           marginRem={[0.25, 0.5, 0.25, 0.5]}
         />
       )}
       <MainButton
-        label={unstakeText}
-        disabled={!stakePosition?.canUnstake}
+        label={lstrings.stake_unstake_claim}
+        disabled={canUnstakeAndClaim}
+        type="escape"
+        onPress={handleModifyPress('unstakeAndClaim')}
+        marginRem={[0.25, 0.5, 0.25, 0.5]}
+      />
+      <MainButton
+        label={lstrings.stake_unstake}
+        disabled={canUnstake}
         type="escape"
         onPress={handleModifyPress('unstake')}
         marginRem={[0.25, 0.5, 0.25, 0.5]}

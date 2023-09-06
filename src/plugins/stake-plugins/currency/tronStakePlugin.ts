@@ -216,6 +216,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
         ],
         canStake: !policy.deprecated && gt(balanceTrx, '0'),
         canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
+        canUnstakeAndClaim: false,
         canClaim: false
       }
     }

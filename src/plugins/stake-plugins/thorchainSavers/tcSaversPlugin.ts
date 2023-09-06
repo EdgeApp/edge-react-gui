@@ -377,6 +377,7 @@ const getStakePositionInner = async (opts: EdgeGuiPluginOptions, request: StakeP
     ],
     canStake: true,
     canUnstake,
+    canUnstakeAndClaim: false,
     canClaim: canUnstake
   }
 }
@@ -644,7 +645,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // Only unstake the exact amount specified in the request.nativeAmount
     totalUnstakeNativeAmount = nativeAmount
   } else {
-    // If action === claim
+    // If action === claim || action === unstakeAndClaim
     // The user will be explicitly unstaking the earned amount
     totalUnstakeNativeAmount = earnedAmount
   }
@@ -786,6 +787,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 const changeQuoteFuncs = {
   stake: stakeRequest,
   unstake: unstakeRequest,
+  unstakeAndClaim: unstakeRequest,
   claim: unstakeRequest,
   unstakeExact: unstakeRequest
 }
