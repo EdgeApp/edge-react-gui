@@ -12,37 +12,36 @@ import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
 import { pluginInfo } from '../pluginInfo'
-import { fantomEcosystem as eco } from '../policyInfo/fantom'
+import { optimismEcosystem as eco } from '../policyInfo/optimism'
 import { StakePolicyInfo } from '../stakePolicy'
 import { StakePluginPolicy } from '../types'
 
-export interface CemeteryPolicyOptions {
+export interface UniswapV2LpPolicyOptions {
   disableStake?: boolean
   disableUnstake?: boolean
   disableClaim?: boolean
-  poolId: number
+  isStablePool: boolean
   lpTokenContract: ethers.Contract
-  poolContract: ethers.Contract
+  stakingContract: ethers.Contract
   swapRouterContract: ethers.Contract
   tokenAContract: ethers.Contract
   tokenBContract: ethers.Contract
 }
 
-export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginPolicy => {
+export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): StakePluginPolicy => {
   // Declare contracts:
   const {
     disableStake = false,
     disableUnstake = false,
     disableClaim = false,
+    isStablePool,
+    stakingContract,
     lpTokenContract,
-    poolContract,
     swapRouterContract,
     tokenAContract,
     tokenBContract
   } = options
 
-  // Constants:
-  const { poolId: POOL_ID } = options
   // TODO: Replace DECIMAL hardcode with a configuration for each asset from `options`
   const DECIMALS = 18
   const SLIPPAGE = 0.03 // 3%
@@ -117,7 +116,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       if (isTokenANative && isTokenBNative) throw new Error('Stake plugin does not support two native assets')
 
       // Metadata constants:
-      const metadataName = 'Tomb Finance'
+      const metadataName = 'Velodrome Finance'
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       // Get the signer for the wallet
@@ -155,7 +154,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const rewardNativeAmount = (await eco.multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
+        const rewardNativeAmount = (await eco.multipass(p => stakingContract.connect(p).earned(signerAddress))).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
             return {
@@ -186,14 +185,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       // Transaction builder
       const txs = makeBuilder(async fn => await eco.multipass(provider => fn({ signer: signer.connect(provider) })))
 
+      //
+      // Stake
+      //
       if (action === 'stake') {
-        /*
-        LP Liquidity Providing:
-          1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
-          2. Approve Swap Router contract on non-native token contract
-          3. Add liquidity to to Swap Router contract
-        */
-
         // 1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
         const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
         const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, lpTokenBalance)
@@ -246,7 +241,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                     category: 'Expense:Fees',
                     notes: `Approve ${metadataLpName} liquidity pool contract`
                   })
-                })(gasLimitAcc('50000'))
+                })(gasLimitAcc('100000'))
             )
           })
         )
@@ -289,6 +284,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                   .connect(signer)
                   .addLiquidityETH(
                     isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isStablePool,
                     isTokenANative ? amountTokenBDesired : amountTokenADesired,
                     isTokenANative ? amountTokenBMin : amountTokenAMin,
                     isTokenANative ? amountTokenAMin : amountTokenBMin,
@@ -308,6 +304,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                   .addLiquidity(
                     tokenAContract.address,
                     tokenBContract.address,
+                    isStablePool,
                     amountTokenADesired,
                     amountTokenBDesired,
                     amountTokenAMin,
@@ -365,28 +362,28 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
-              const spenderAddress = poolContract.address
+              const spenderAddress = stakingContract.address
               const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
               if (allowanceResult.gte(liquidity)) return
 
-              const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
+              const approveResult = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
                 gasLimit,
                 gasPrice,
                 nonce: nextNonce()
               })
-              cacheTxMetadata(result.hash, parentCurrencyCode, {
+              cacheTxMetadata(approveResult.hash, parentCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fees',
-                notes: `Approve ${metadataLpName} rewards pool contract`
+                notes: `Approve ${metadataLpName} rewards contract`
               })
-            })(gasLimitAcc('50000'))
+            })(gasLimitAcc('100000'))
         )
 
         // 2. Stake LP token
         txs.build(
           (gasLimit =>
             async function stakeLiquidity({ signer, liquidity }) {
-              const result = await poolContract.connect(signer).deposit(POOL_ID, liquidity, {
+              const result = await stakingContract.connect(signer)['deposit(uint256)'](liquidity, {
                 gasLimit,
                 gasPrice,
                 nonce: nextNonce()
@@ -396,19 +393,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               cacheTxMetadata(result.hash, parentCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fee',
-                notes: `Stake into ${metadataLpName} reward pool`
+                notes: `Stake into ${metadataLpName} rewards contract`
               })
             })(gasLimitAcc('240000'))
         )
       }
 
-      /*
-      Unstaking for LP tokens:
-        1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
-        2. Check liquidity amount balance
-        3. Withdraw LP-token from Pool Contract
-        4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
-      */
+      //
+      // Unstake
+      //
+
       if (action === 'unstake') {
         const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
 
@@ -422,8 +416,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
 
         // 2. Check liquidity amount balances
-        const userInfo = await eco.multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-        const stakedLpTokenBalance = fromHex(userInfo.amount._hex)
+        const stakedLpTokenBalanceResponse = await eco.multipass(p => stakingContract.connect(p).balanceOf(signerAddress))
+        const stakedLpTokenBalance = fromHex(stakedLpTokenBalanceResponse._hex)
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
@@ -439,7 +433,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               // We don't need to unstake liquidity from the pool
               if (lte(amountToUnstake, '0')) return
 
-              const result = await poolContract.connect(signer).withdraw(POOL_ID, amountToUnstake, {
+              const result = await stakingContract.connect(signer).withdraw(amountToUnstake, {
                 gasLimit,
                 gasPrice,
                 nonce: nextNonce()
@@ -457,12 +451,39 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               cacheTxMetadata(result.hash, parentCurrencyCode, {
                 name: metadataName,
                 category: 'Expense:Fees',
-                notes: `Unstake and claim rewards from ${metadataLpName} reward pool`
+                notes: `Unstake and claim rewards from ${metadataLpName} rewards contract`
               })
             })(gasLimitAcc('240000'), lpTokenBalance)
         )
 
-        // 4. Allow Swap on the LP-token contract
+        // 4. Claim all rewards
+        txs.build(
+          (gasLimit =>
+            async function claimReward({ signer }) {
+              const result = await stakingContract.connect(signer).getReward(signer.address, {
+                gasLimit,
+                gasPrice,
+                nonce: nextNonce()
+              })
+
+              policyInfo.rewardAssets
+                .map(asset => asset.currencyCode)
+                .forEach(currencyCode => {
+                  cacheTxMetadata(result.hash, currencyCode, {
+                    name: metadataName,
+                    category: 'Income:Staking',
+                    notes: `Claimed rewards from ${metadataLpName}`
+                  })
+                })
+              cacheTxMetadata(result.hash, parentCurrencyCode, {
+                name: metadataName,
+                category: 'Expense:Fees',
+                notes: `Claimed rewards from ${metadataLpName}`
+              })
+            })(gasLimitAcc('240000'))
+        )
+
+        // 5. Allow Swap on the LP-token contract
         const spenderAddress = swapRouterContract.address
         txs.build(
           (gasLimit =>
@@ -480,10 +501,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                 category: 'Expense:Fees',
                 notes: `Approve ${metadataLpName} liquidity pool contract`
               })
-            })(gasLimitAcc('50000'))
+            })(gasLimitAcc('100000'))
         )
 
-        // 4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
+        // 6. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
         txs.build(
           (gasLimit =>
             async function removeLiquidity({ signer }) {
@@ -497,6 +518,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                   .connect(signer)
                   .removeLiquidityETH(
                     isTokenANative ? tokenBContract.address : tokenAContract.address,
+                    isStablePool,
                     expectedLiquidityAmount,
                     isTokenANative ? amountTokenBMin : amountTokenAMin,
                     isTokenANative ? amountTokenAMin : amountTokenBMin,
@@ -514,6 +536,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                   .removeLiquidity(
                     tokenAContract.address,
                     tokenBContract.address,
+                    isStablePool,
                     expectedLiquidityAmount,
                     amountTokenAMin,
                     amountTokenBMin,
@@ -546,17 +569,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         )
       }
 
-      /*
-      Claiming for LP tokens:
-        1. Withdraw reward by removing 0 liquidity from Swap Router contract
-      */
+      //
+      // Claim
+      //
+
       if (action === 'claim') {
-        // 1. Withdraw reward by removing 0 liquidity from Swap Router contract
-        // Claiming withdraws all earned tokens
+        // 1. Claim rewards
         txs.build(
           (gasLimit =>
             async function claimReward({ signer }) {
-              const result = await poolContract.connect(signer).withdraw(POOL_ID, 0, {
+              const result = await stakingContract.connect(signer).getReward(signer.address, {
                 gasLimit,
                 gasPrice,
                 nonce: nextNonce()
@@ -620,21 +642,23 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
-      const signerAddress = eco.makeSigner(signerSeed).getAddress()
+      const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
       const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
         // Get staked allocations:
         // 1. Get the amount of LP-tokens staked in the pool contract
         eco
-          .multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
-          .then(async userStakePoolInfo => {
-            const stakedLpTokenBalance = userStakePoolInfo.amount.toString()
+          .multipass(p => {
+            return stakingContract.connect(p).balanceOf(signerAddress)
+          })
+          .then(async stakedLpTokenBalanceResponse => {
+            const stakedLpTokenBalance = stakedLpTokenBalanceResponse.toString()
             // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
             const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
             return { stakedLpTokenBalance, assetAmountsFromLp }
           }),
         // Get reward amount:
-        eco.multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
+        eco.multipass(p => stakingContract.connect(p).earned(signerAddress)).then(String),
         // Get token A balance:
         eco.multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
         // Get token B balance:
