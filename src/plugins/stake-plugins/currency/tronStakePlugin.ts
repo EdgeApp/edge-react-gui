@@ -43,7 +43,8 @@ const policies: StakePolicy[] = [
     rewardAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'BANDWIDTH_V2',
+        currencyCode: 'TRX',
+        internalCurrencyCode: 'BANDWIDTH_V2',
         displayName: lstrings.stake_resource_bandwidth,
         cdnName: 'bandwidth'
       }
@@ -62,7 +63,8 @@ const policies: StakePolicy[] = [
     rewardAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'ENERGY_V2',
+        currencyCode: 'TRX',
+        internalCurrencyCode: 'ENERGY_V2',
         displayName: lstrings.stake_resource_energy,
         cdnName: 'energy'
       }
@@ -83,7 +85,8 @@ const policies: StakePolicy[] = [
     rewardAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'BANDWIDTH',
+        currencyCode: 'TRX',
+        internalCurrencyCode: 'BANDWIDTH',
         displayName: lstrings.stake_resource_bandwidth,
         cdnName: 'bandwidth'
       }
@@ -104,7 +107,8 @@ const policies: StakePolicy[] = [
     rewardAssets: [
       {
         pluginId: 'tron',
-        currencyCode: 'ENERGY',
+        currencyCode: 'TRX',
+        internalCurrencyCode: 'ENERGY',
         displayName: lstrings.stake_resource_energy,
         cdnName: 'energy'
       }
@@ -205,7 +209,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const { currencyCode, pluginId } = wallet.currencyInfo
 
       const policy = getPolicyFromId(stakePolicyId)
-      const rewardAsset = policy.rewardAssets[0].currencyCode
+      const rewardAsset = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
       const balanceTrx = wallet.balances[currencyCode] ?? '0'
       const canStake = gt(balanceTrx, '0')
       const stakedAmountRaw = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)

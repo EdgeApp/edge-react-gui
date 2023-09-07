@@ -47,6 +47,7 @@ export class StakePoolFullError extends Error {
 export interface AssetId {
   pluginId: string
   currencyCode: string
+  internalCurrencyCode?: string
   displayName?: string
   cdnName?: string
 }
