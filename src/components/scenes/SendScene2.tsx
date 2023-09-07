@@ -155,8 +155,8 @@ const SendComponent = (props: Props) => {
     memoError: ''
   })
 
-  // 0 = no max spend. 1 and higher = the spendTarget that requested the max spend. 1 = 1st, 2 = 2nd ...
-  const [maxSpendSetter, setMaxSpendSetter] = useState<number>(0)
+  // -1 = no max spend, otherwise equal to the index the spendTarget that requested the max spend.
+  const [maxSpendSetter, setMaxSpendSetter] = useState<number>(-1)
 
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
@@ -285,7 +285,7 @@ const SendComponent = (props: Props) => {
     // the spendInfo object
     setProcessingAmountChanged(true)
     setSpendInfo({ ...spendInfo })
-    setMaxSpendSetter(0)
+    setMaxSpendSetter(-1)
     setFieldChanged(newField)
   }
 
@@ -298,7 +298,7 @@ const SendComponent = (props: Props) => {
 
     navigation.navigate('changeMiningFee2', {
       spendInfo,
-      maxSpendSet: maxSpendSetter > 0,
+      maxSpendSet: maxSpendSetter >= 0,
       wallet: coreWallet,
       onSubmit: (networkFeeOption, customNetworkFee) => {
         setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
@@ -315,7 +315,7 @@ const SendComponent = (props: Props) => {
         startNativeAmount={spendTarget.nativeAmount}
         forceField={fieldChanged}
         onAmountsChanged={handleAmountsChanged(spendTarget)}
-        onMaxSet={handleSetMax(index + 1)}
+        onMaxSet={handleSetMax(index)}
         onFeesChange={handleFeesChange}
         wallet={coreWallet}
         tokenId={tokenId}
@@ -875,11 +875,12 @@ const SendComponent = (props: Props) => {
       if (spendInfo.spendTargets[0].publicAddress == null) {
         setEdgeTransaction(null)
         setSpendingLimitExceeded(false)
-        setMaxSpendSetter(0)
+        setMaxSpendSetter(-1)
         setProcessingAmountChanged(false)
         return
       }
-      if (maxSpendSetter === 1) {
+      if (maxSpendSetter === 0) {
+        spendInfo.spendTargets[0].nativeAmount = '0' // Some currencies error without a nativeAmount
         const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
         spendInfo.spendTargets[0].nativeAmount = maxSpendable
       }
