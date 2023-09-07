@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -24,14 +24,19 @@ export function FlashNotification(props: Props) {
 
   return (
     <AirshipDropdown bridge={bridge} backgroundColor={theme.modal} onPress={onPress}>
-      <AntDesignIcon name="checkcircle" size={theme.rem(2)} style={styles.icon} />
-      <Text style={styles.text}>{message}</Text>
-      <ModalFooter onPress={handleClose} />
+      <View style={styles.container}>
+        <AntDesignIcon name="checkcircle" size={theme.rem(2)} style={styles.icon} />
+        <Text style={styles.text}>{message}</Text>
+        <ModalFooter onPress={handleClose} />
+      </View>
     </AirshipDropdown>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    paddingBottom: theme.rem(1)
+  },
   text: {
     color: THEME.COLORS.WHITE,
     flexShrink: 1,
