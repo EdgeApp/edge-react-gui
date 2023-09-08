@@ -141,6 +141,7 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
 
 const asPasswordReminder = asObject({
   needsPasswordCheck: asMaybe(asBoolean, false),
+  lastLoginDate: asMaybe(asNumber, 0),
   lastPasswordUseDate: asMaybe(asNumber, 0),
   passwordUseCount: asMaybe(asNumber, 0),
   nonPasswordLoginsCount: asMaybe(asNumber, 0),

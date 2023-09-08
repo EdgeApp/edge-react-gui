@@ -23,7 +23,7 @@ import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
-import { LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, readLocalSettings, writeLocalSettings } from './LocalSettingsActions'
+import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 import { trackAccountEvent } from './TrackingActions'
 import { updateWalletsRequest } from './WalletActions'
@@ -189,12 +189,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
       const loadedLocalSettings = await readLocalSettings(account)
-      const localSettings = { ...loadedLocalSettings }
-      const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
-      if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
-        await writeLocalSettings(account, syncedSettings)
-      }
-      accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
+      accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
 
       for (const userInfo of context.localUsers) {
         if (userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled) {
@@ -232,52 +227,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     } catch (error: any) {
       showError(error)
     }
-  }
-}
-
-export const mergeSettings = (
-  loadedSettings: any,
-  defaults: any,
-  types: any
-): { finalSettings: AccountInitPayload; isOverwriteNeeded: boolean; isDefaultTypeIncorrect: boolean } => {
-  const finalSettings: any = {}
-  // begin process for repairing damaged settings data
-  let isOverwriteNeeded = false
-  let isDefaultTypeIncorrect = false
-  for (const key of Object.keys(defaults)) {
-    // if the of the setting default does not meet the enforced type
-    const defaultSettingType = typeof defaults[key]
-    if (defaultSettingType !== types[key]) {
-      isDefaultTypeIncorrect = true
-      console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
-    }
-
-    // if the of the loaded setting does not meet the enforced type
-    // eslint-disable-next-line valid-typeof
-    const loadedSettingType = typeof loadedSettings[key]
-    if (loadedSettingType !== types[key]) {
-      isOverwriteNeeded = true
-      console.warn(
-        'Settings overwrite was needed for: ',
-        key,
-        ' with loaded value: ',
-        loadedSettings[key],
-        ', but needed type: ',
-        types[key],
-        ' so replace with: ',
-        defaults[key]
-      )
-      // change that erroneous value to something that works (default)
-      finalSettings[key] = defaults[key]
-    } else {
-      finalSettings[key] = loadedSettings[key]
-    }
-  }
-
-  return {
-    finalSettings,
-    isOverwriteNeeded,
-    isDefaultTypeIncorrect
   }
 }
 
