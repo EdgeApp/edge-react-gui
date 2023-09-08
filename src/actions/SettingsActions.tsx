@@ -382,7 +382,7 @@ const writeDenominationKeySetting = async (account: EdgeAccount, pluginId: strin
   })
 
 // Helper Functions
-export async function readSyncedSettings(account: EdgeAccount): Promise<ReturnType<typeof asSyncedAccountSettings>> {
+export async function readSyncedSettings(account: EdgeAccount): Promise<SyncedAccountSettings> {
   try {
     if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
@@ -396,7 +396,7 @@ export async function readSyncedSettings(account: EdgeAccount): Promise<ReturnTy
   }
 }
 
-export async function writeSyncedSettings(account: EdgeAccount, settings: object): Promise<void> {
+export async function writeSyncedSettings(account: EdgeAccount, settings: SyncedAccountSettings): Promise<void> {
   const text = JSON.stringify(settings)
   if (account?.disklet?.setText == null) return
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)

@@ -160,7 +160,7 @@ export const readLocalSettings = async (account: EdgeAccount): Promise<LocalAcco
   }
 }
 
-export const writeLocalSettings = async (account: EdgeAccount, settings: object) => {
+export const writeLocalSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
   const text = JSON.stringify(settings)
   return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
