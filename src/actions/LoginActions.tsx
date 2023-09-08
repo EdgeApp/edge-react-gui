@@ -4,14 +4,13 @@ import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
-import { asPasswordReminderLevels, readSyncedSettings } from '../actions/SettingsActions'
+import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
-import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer'
 import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
@@ -152,24 +151,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     let accountInitObject: AccountInitPayload = {
       ...initialState,
       account,
-      autoLogoutTimeInSeconds: 3600,
-      contactsPermissionOn: true,
-      countryCode: '',
       currencyCode: '',
-      defaultFiat: '',
-      defaultIsoFiat: '',
-      denominationSettings: {},
-      developerModeOn: false,
-      isAccountBalanceVisible: false,
-      mostRecentWallets: [],
-      passwordRecoveryRemindersShown: asPasswordReminderLevels({}),
-      passwordReminder: passwordReminderInitialState,
       pinLoginEnabled: false,
-      preferredSwapPluginId: undefined,
-      preferredSwapPluginType: undefined,
-      securityCheckedWallets: {},
-      spamFilterOn: true,
-      spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',
       walletsSort: 'manual'
