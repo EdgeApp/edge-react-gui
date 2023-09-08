@@ -7,15 +7,8 @@ import { lstrings } from '../locales/strings'
 import { permissionNames } from '../reducers/PermissionsReducer'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
-import { PasswordReminder } from '../types/types'
+import { PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
-
-export interface SpendingLimits {
-  transaction: {
-    amount: number
-    isEnabled: boolean
-  }
-}
 
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 
