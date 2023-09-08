@@ -1,10 +1,10 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
 import {
+  asSyncedAccountSettings,
   DenominationSettings,
   PasswordReminderLevels,
   SecurityCheckedWallets,
-  SYNCED_ACCOUNT_DEFAULTS,
   SyncedAccountSettings
 } from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
@@ -39,32 +39,13 @@ export interface AccountInitPayload {
 }
 
 export const initialState: SettingsState = {
-  ...SYNCED_ACCOUNT_DEFAULTS,
+  ...asSyncedAccountSettings({}),
   ...asLocalAccountSettings({}),
   changesLocked: true,
-  contactsPermissionOn: true,
-  developerModeOn: false,
-  isAccountBalanceVisible: true,
   isTouchEnabled: false,
   isTouchSupported: false,
-  mostRecentWallets: [],
-  // prettier-ignore
-  passwordRecoveryRemindersShown: {
-    '20': false,
-    '200': false,
-    '2000': false,
-    '20000': false,
-    '200000': false
-  },
   pinLoginEnabled: false,
-  settingsLoaded: null,
-  spendingLimits: {
-    transaction: {
-      isEnabled: false,
-      amount: 0
-    }
-  },
-  walletsSort: 'manual'
+  settingsLoaded: null
 }
 
 export interface SettingsState extends LocalAccountSettings, SyncedAccountSettings {
