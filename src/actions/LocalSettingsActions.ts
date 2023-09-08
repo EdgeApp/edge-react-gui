@@ -149,15 +149,15 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
 }
 
 export const readLocalSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {
-  return await account.localDisklet
-    .getText(LOCAL_SETTINGS_FILENAME)
-    .then(JSON.parse)
-    .catch(async () => {
-      // If Settings.json doesn't exist yet, create it, and return it
-      const defaults = asLocalAccountSettings({})
-      return await writeLocalSettings(account, defaults).then(() => defaults)
-    })
-    .then(settings => asLocalAccountSettings(settings))
+  try {
+    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
+    const json = JSON.parse(text)
+    const settings = asLocalAccountSettings(json)
+    return settings
+  } catch (e) {
+    const defaults = asLocalAccountSettings({})
+    return await writeLocalSettings(account, defaults).then(() => defaults)
+  }
 }
 
 export const writeLocalSettings = async (account: EdgeAccount, settings: object) => {
