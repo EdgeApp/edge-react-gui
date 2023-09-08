@@ -278,7 +278,7 @@ export const asCurrencyCodeDenom = asObject({
   symbol: asOptional(asString)
 })
 
-const asDenominationSettings = asObject(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
+const asDenominationSettings = asObject(asMaybe(asObject(asMaybe(asCurrencyCodeDenom))))
 
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
@@ -293,16 +293,16 @@ const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
 )
 
 export const asSyncedAccountSettings = asObject({
-  autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
-  defaultFiat: asOptional(asString, 'USD'),
-  defaultIsoFiat: asOptional(asString, 'iso:USD'),
-  preferredSwapPluginId: asOptional(asString),
-  preferredSwapPluginType: asOptional(asSwapPluginType),
-  countryCode: asOptional(asString, ''),
-  mostRecentWallets: asOptional(asArray(asMostRecentWallet), () => []),
+  autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
+  defaultFiat: asMaybe(asString, 'USD'),
+  defaultIsoFiat: asMaybe(asString, 'iso:USD'),
+  preferredSwapPluginId: asMaybe(asString),
+  preferredSwapPluginType: asMaybe(asSwapPluginType),
+  countryCode: asMaybe(asString, ''),
+  mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
-  walletsSort: asOptional(asSortOption, 'manual'),
-  denominationSettings: asOptional<DenominationSettings>(asDenominationSettings, () => ({})),
+  walletsSort: asMaybe(asSortOption, 'manual'),
+  denominationSettings: asMaybe<DenominationSettings>(asDenominationSettings, () => ({})),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
 })
 
