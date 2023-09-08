@@ -1,42 +1,10 @@
-import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 
-import {
-  asSyncedAccountSettings,
-  DenominationSettings,
-  PasswordReminderLevels,
-  SecurityCheckedWallets,
-  SyncedAccountSettings
-} from '../../actions/SettingsActions'
+import { asSyncedAccountSettings, SyncedAccountSettings } from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
-import { asLocalAccountSettings, GuiTouchIdInfo, LocalAccountSettings, MostRecentWallet, SpendingLimits } from '../../types/types'
-import { PasswordReminderState } from '../PasswordReminderReducer'
+import { asLocalAccountSettings, GuiTouchIdInfo, LocalAccountSettings } from '../../types/types'
 import { spendingLimits } from '../SpendingLimitsReducer'
-
-export interface AccountInitPayload {
-  account: EdgeAccount
-  autoLogoutTimeInSeconds: number
-  contactsPermissionOn: boolean
-  countryCode: string
-  currencyCode: string
-  defaultFiat: string
-  defaultIsoFiat: string
-  denominationSettings: DenominationSettings
-  developerModeOn: boolean
-  isAccountBalanceVisible: boolean
-  mostRecentWallets: MostRecentWallet[]
-  passwordRecoveryRemindersShown: PasswordReminderLevels
-  passwordReminder: PasswordReminderState
-  pinLoginEnabled: boolean
-  preferredSwapPluginId: string | undefined
-  preferredSwapPluginType: EdgeSwapPluginType | undefined
-  securityCheckedWallets: SecurityCheckedWallets
-  spamFilterOn: boolean
-  spendingLimits: SpendingLimits
-  touchIdInfo: GuiTouchIdInfo
-  walletId: string
-  walletsSort: SortOption
-}
 
 export const initialState: SettingsState = {
   ...asSyncedAccountSettings({}),
@@ -54,6 +22,15 @@ export interface SettingsState extends LocalAccountSettings, SyncedAccountSettin
   isTouchSupported: boolean
   pinLoginEnabled: boolean
   settingsLoaded: boolean | null
+}
+
+export interface AccountInitPayload extends SettingsState {
+  account: EdgeAccount
+  currencyCode: string
+  pinLoginEnabled: boolean
+  touchIdInfo: GuiTouchIdInfo
+  walletId: string
+  walletsSort: SortOption
 }
 
 export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {

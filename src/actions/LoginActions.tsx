@@ -12,7 +12,7 @@ import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer'
-import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
+import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
@@ -150,6 +150,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Merge and prepare settings files:
     let accountInitObject: AccountInitPayload = {
+      ...initialState,
       account,
       autoLogoutTimeInSeconds: 3600,
       contactsPermissionOn: true,
