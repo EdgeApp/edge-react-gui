@@ -161,7 +161,7 @@ const SendComponent = (props: Props) => {
   const account = useSelector<EdgeAccount>(state => state.core.account)
   const exchangeRates = useSelector<GuiExchangeRates>(state => state.exchangeRates)
   const pinSpendingLimitsEnabled = useSelector<boolean>(state => state.ui.settings.spendingLimits.transaction.isEnabled)
-  const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount)
+  const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount ?? 0)
   const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const [tokenId, setTokenId] = useState<string | undefined>(spendInfo.tokenId ?? tokenIdProp)
