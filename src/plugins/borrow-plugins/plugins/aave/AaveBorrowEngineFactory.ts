@@ -175,8 +175,8 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         }
       } catch (error: any) {
         // TODO: Handle error cases such as rate limits
-        console.warn(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
-        console.error(error)
+        console.log(`Failed to load BorrowEngine for wallet '${wallet.id}': ${String(error)}`)
+        console.log(error)
       } finally {
         // Loop delay
         await snooze(1000)
