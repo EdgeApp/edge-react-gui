@@ -296,7 +296,7 @@ export const asSyncedAccountSettings = asObject({
   autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
   defaultFiat: asOptional(asString, 'USD'),
   defaultIsoFiat: asOptional(asString, 'iso:USD'),
-  preferredSwapPluginId: asOptional(asString, ''),
+  preferredSwapPluginId: asOptional(asString),
   preferredSwapPluginType: asOptional(asSwapPluginType),
   countryCode: asOptional(asString, ''),
   mostRecentWallets: asOptional(asArray(asMostRecentWallet), () => []),
@@ -305,6 +305,8 @@ export const asSyncedAccountSettings = asObject({
   denominationSettings: asOptional<DenominationSettings>(asDenominationSettings, () => ({})),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
 })
+
+export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
 
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})

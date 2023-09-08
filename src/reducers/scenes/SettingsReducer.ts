@@ -1,9 +1,15 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
-import { DenominationSettings, PasswordReminderLevels, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../actions/SettingsActions'
+import {
+  DenominationSettings,
+  PasswordReminderLevels,
+  SecurityCheckedWallets,
+  SYNCED_ACCOUNT_DEFAULTS,
+  SyncedAccountSettings
+} from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
-import { asLocalAccountSettings, GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
+import { asLocalAccountSettings, GuiTouchIdInfo, LocalAccountSettings, MostRecentWallet, SpendingLimits } from '../../types/types'
 import { PasswordReminderState } from '../PasswordReminderReducer'
 import { spendingLimits } from '../SpendingLimitsReducer'
 
@@ -61,33 +67,12 @@ export const initialState: SettingsState = {
   walletsSort: 'manual'
 }
 
-export interface SettingsState {
-  autoLogoutTimeInSeconds: number
-  changesLocked: any
-  contactsPermissionOn: boolean
-  countryCode: string
-  defaultFiat: string
-  defaultIsoFiat: string
-  denominationSettings: DenominationSettings
-  developerModeOn: boolean
-  isAccountBalanceVisible: boolean
+export interface SettingsState extends LocalAccountSettings, SyncedAccountSettings {
+  changesLocked: boolean
   isTouchEnabled: boolean
   isTouchSupported: boolean
-  mostRecentWallets: MostRecentWallet[]
-  passwordRecoveryRemindersShown: PasswordReminderLevels
   pinLoginEnabled: boolean
-  preferredSwapPluginId: string | undefined
-  preferredSwapPluginType: EdgeSwapPluginType | undefined
-  securityCheckedWallets: SecurityCheckedWallets
   settingsLoaded: boolean | null
-  spamFilterOn: boolean
-  spendingLimits: {
-    transaction: {
-      isEnabled: boolean
-      amount: number
-    }
-  }
-  walletsSort: SortOption
 }
 
 export const settingsLegacy = (state: SettingsState = initialState, action: Action): SettingsState => {
