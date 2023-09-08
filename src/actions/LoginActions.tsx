@@ -4,7 +4,7 @@ import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
-import { PASSWORD_RECOVERY_REMINDERS_SHOWN, readSyncedSettings } from '../actions/SettingsActions'
+import { asPasswordReminderLevels, readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
@@ -161,7 +161,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       developerModeOn: false,
       isAccountBalanceVisible: false,
       mostRecentWallets: [],
-      passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
+      passwordRecoveryRemindersShown: asPasswordReminderLevels({}),
       passwordReminder: passwordReminderInitialState,
       pinLoginEnabled: false,
       preferredSwapPluginId: undefined,

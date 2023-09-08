@@ -1,21 +1,12 @@
 import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
 
 import { LOCAL_ACCOUNT_DEFAULTS } from '../../actions/LocalSettingsActions'
-import { DenominationSettings, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../actions/SettingsActions'
+import { DenominationSettings, PasswordReminderLevels, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
 import { GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
 import { PasswordReminderState } from '../PasswordReminderReducer'
 import { spendingLimits } from '../SpendingLimitsReducer'
-
-// prettier-ignore
-export interface PasswordReminderLevels {
-  '20': boolean,
-  '200': boolean,
-  '2000': boolean,
-  '20000': boolean,
-  '200000': boolean
-}
 
 export interface AccountInitPayload {
   account: EdgeAccount

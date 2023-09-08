@@ -261,15 +261,16 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
   }
 }
 
-export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
-  '20': false,
-  '200': false,
-  '2000': false,
-  '20000': false,
-  '200000': false
-}
+export const asPasswordReminderLevels = asObject({
+  '20': asMaybe(asBoolean, false),
+  '200': asMaybe(asBoolean, false),
+  '2000': asMaybe(asBoolean, false),
+  '20000': asMaybe(asBoolean, false),
+  '200000': asMaybe(asBoolean, false)
+})
 
-export type PasswordReminderTime = keyof typeof PASSWORD_RECOVERY_REMINDERS_SHOWN
+export type PasswordReminderLevels = ReturnType<typeof asPasswordReminderLevels>
+export type PasswordReminderTime = keyof PasswordReminderLevels
 
 export const asCurrencyCodeDenom = asObject({
   name: asString,
@@ -299,16 +300,7 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginType: asOptional(asSwapPluginType),
   countryCode: asOptional(asString, ''),
   mostRecentWallets: asOptional(asArray(asMostRecentWallet), () => []),
-  passwordRecoveryRemindersShown: asOptional(
-    asObject({
-      '20': asBoolean,
-      '200': asBoolean,
-      '2000': asBoolean,
-      '20000': asBoolean,
-      '200000': asBoolean
-    }),
-    PASSWORD_RECOVERY_REMINDERS_SHOWN
-  ),
+  passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
   walletsSort: asOptional(asSortOption, 'manual'),
   denominationSettings: asOptional<DenominationSettings>(asDenominationSettings, () => ({})),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
