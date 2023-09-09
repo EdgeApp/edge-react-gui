@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { PaymentMethod } from '../../controllers/action-queue/WyreClient'
+import { PaymentMethod } from '../../controllers/action-queue/PaymentMethod'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'

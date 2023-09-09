@@ -17,7 +17,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
-import { checkWyreHasLinkedBank, executePlugin } from '../../plugins/gui/fiatPlugin'
+import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -87,7 +87,6 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 interface State {
   developerUri: string
   buySellPlugins: BuySellPlugins
-  hasWyreAccountHack: boolean
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
@@ -103,8 +102,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       developerUri: '',
-      buySellPlugins,
-      hasWyreAccountHack: false
+      buySellPlugins
     }
     this.componentMounted = true
   }
@@ -117,13 +115,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       const clean = asDeveloperUri(JSON.parse(text))
       this.setState({ developerUri: clean.uri })
     }
-    checkWyreHasLinkedBank(this.props.account.dataStore)
-      .then(linked => {
-        if (this.componentMounted && linked != null) {
-          this.setState({ hasWyreAccountHack: linked })
-        }
-      })
-      .catch((e: any) => console.error(e.message))
   }
 
   componentWillUnmount() {
@@ -331,10 +322,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     if (!ENV.ENABLE_VISA_PROGRAM) {
       plugins = plugins.filter(plugin => plugin.pluginId !== 'rewardscard')
-    }
-
-    if (!this.state.hasWyreAccountHack) {
-      plugins = plugins.filter(plugin => plugin.pluginId !== 'wyre')
     }
 
     // Add the dev mode plugin if enabled:

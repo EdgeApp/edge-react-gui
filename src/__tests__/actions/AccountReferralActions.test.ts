@@ -34,7 +34,7 @@ const dummyCard: MessageTweak = {
 
 const getPassFuncs = (countryCode: string, wyreHasLinked: boolean, buildNumber: string, languageTag: string, os: string, version: string): ValidateFuncs => ({
   getCountryCodeByIp: async () => countryCode,
-  checkWyreHasLinkedBank: async () => wyreHasLinked,
+  checkDummyPluginHasBank: async () => wyreHasLinked,
   getBuildNumber: () => buildNumber,
   getLanguageTag: () => languageTag,
   getOs: () => os,
@@ -102,10 +102,10 @@ describe('validatePromoCardsInner', () => {
   })
   test('Cards with min/max buildnum and has no linked bank', async () => {
     const cards = [
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, minBuildNum: '3', maxBuildNum: '5', message: 'link 3-5' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, minBuildNum: '1', maxBuildNum: '3', message: 'not linked 1-3' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, minBuildNum: '4', maxBuildNum: '5', message: 'not linked 4-5' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, minBuildNum: '1', maxBuildNum: '4', message: 'link 1-4' }
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': true }, minBuildNum: '3', maxBuildNum: '5', message: 'link 3-5' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': false }, minBuildNum: '1', maxBuildNum: '3', message: 'not linked 1-3' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': false }, minBuildNum: '4', maxBuildNum: '5', message: 'not linked 4-5' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': true }, minBuildNum: '1', maxBuildNum: '4', message: 'link 1-4' }
     ]
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', '', '1.2.3'))
     expect(result.length).toBe(1)
@@ -113,10 +113,10 @@ describe('validatePromoCardsInner', () => {
   })
   test('Cards with linked bank in US', async () => {
     const cards = [
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, countryCodes: ['US'], message: 'link US' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, countryCodes: ['US'], message: 'not linked US' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': false }, countryCodes: ['UK'], message: 'not linked UK' },
-      { ...dummyCard, hasLinkedBankMap: { 'co.edgesecure.wyre': true }, countryCodes: ['UK'], message: 'link UK' }
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': true }, countryCodes: ['US'], message: 'link US' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': false }, countryCodes: ['US'], message: 'not linked US' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': false }, countryCodes: ['UK'], message: 'not linked UK' },
+      { ...dummyCard, hasLinkedBankMap: { 'com.dummyplugin.app': true }, countryCodes: ['UK'], message: 'link UK' }
     ]
     const result = await validatePromoCardsInner(dummyDataStore, cards, getPassFuncs('US', false, '4', '', '', '1.2.3'))
     expect(result.length).toBe(1)
