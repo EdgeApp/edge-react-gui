@@ -105,6 +105,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     onChangeText,
     onClear,
     onFocus,
+    onSubmitEditing,
 
     // TextInput:
     autoFocus = !searchIcon,
@@ -189,6 +190,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     focusAnimationAlt.value = withDelay(animationDelay, withTiming(1, { duration: baseDuration }))
     if (onFocus != null) onFocus()
+  }
+  const handleSubmitEditing = () => {
+    if (onSubmitEditing != null) onSubmitEditing()
   }
 
   // Label dimensions:
@@ -404,6 +408,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             onBlur={handleBlur}
             onChangeText={onChangeText}
             onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
             maxLength={maxLength}
           />
         ) : (
@@ -425,6 +430,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             onBlur={handleBlur}
             onChangeText={onChangeText}
             onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
             maxLength={maxLength}
           />
         )}
