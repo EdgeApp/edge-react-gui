@@ -1,4 +1,4 @@
-import { asObject, asString } from 'cleaners'
+import { asBoolean, asMaybe, asNumber, asObject, asString } from 'cleaners'
 import {
   EdgeCurrencyWallet,
   EdgeDenomination,
@@ -139,21 +139,39 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
   exchangeDenomination: emptyGuiDenomination
 }
 
-export interface PasswordReminder {
-  needsPasswordCheck: boolean
-  lastPasswordUseDate: number
-  passwordUseCount: number
-  nonPasswordLoginsCount: number
-  nonPasswordDaysLimit: number
-  nonPasswordLoginsLimit: number
-}
+const asPasswordReminder = asObject({
+  needsPasswordCheck: asMaybe(asBoolean, false),
+  lastLoginDate: asMaybe(asNumber, 0),
+  lastPasswordUseDate: asMaybe(asNumber, 0),
+  passwordUseCount: asMaybe(asNumber, 0),
+  nonPasswordLoginsCount: asMaybe(asNumber, 0),
+  nonPasswordDaysLimit: asMaybe(asNumber, 4),
+  nonPasswordLoginsLimit: asMaybe(asNumber, 4)
+})
 
-export interface SpendingLimits {
-  transaction: {
-    isEnabled: boolean
-    amount: number
-  }
-}
+const asTransaction = asObject({
+  amount: asMaybe(asNumber, 0),
+  isEnabled: asMaybe(asBoolean, false)
+})
+
+export const asSpendingLimits = asObject({
+  transaction: asMaybe(asTransaction, () => asTransaction({}))
+})
+
+const asLocalAccountSettingsInner = asObject({
+  contactsPermissionOn: asMaybe(asBoolean, true),
+  developerModeOn: asMaybe(asBoolean, false),
+  passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
+  isAccountBalanceVisible: asMaybe(asBoolean, true),
+  spamFilterOn: asMaybe(asBoolean, true),
+  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
+})
+
+export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
+
+export type PasswordReminder = ReturnType<typeof asPasswordReminder>
+export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
+export type SpendingLimits = ReturnType<typeof asSpendingLimits>
 
 export type SpendAuthType = 'pin' | 'none'
 

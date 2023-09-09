@@ -1,102 +1,35 @@
-import { EdgeAccount, EdgeSwapPluginType } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 
-import { LOCAL_ACCOUNT_DEFAULTS } from '../../actions/LocalSettingsActions'
-import { DenominationSettings, SecurityCheckedWallets, SYNCED_ACCOUNT_DEFAULTS } from '../../actions/SettingsActions'
+import { asSyncedAccountSettings, SyncedAccountSettings } from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
-import { GuiTouchIdInfo, MostRecentWallet, SpendingLimits } from '../../types/types'
-import { PasswordReminderState } from '../PasswordReminderReducer'
+import { asLocalAccountSettings, GuiTouchIdInfo, LocalAccountSettings } from '../../types/types'
 import { spendingLimits } from '../SpendingLimitsReducer'
 
-// prettier-ignore
-export interface PasswordReminderLevels {
-  '20': boolean,
-  '200': boolean,
-  '2000': boolean,
-  '20000': boolean,
-  '200000': boolean
-}
-
-export interface AccountInitPayload {
-  account: EdgeAccount
-  autoLogoutTimeInSeconds: number
-  contactsPermissionOn: boolean
-  countryCode: string
-  currencyCode: string
-  defaultFiat: string
-  defaultIsoFiat: string
-  denominationSettings: DenominationSettings
-  developerModeOn: boolean
-  isAccountBalanceVisible: boolean
-  mostRecentWallets: MostRecentWallet[]
-  passwordRecoveryRemindersShown: PasswordReminderLevels
-  passwordReminder: PasswordReminderState
-  pinLoginEnabled: boolean
-  preferredSwapPluginId: string | undefined
-  preferredSwapPluginType: EdgeSwapPluginType | undefined
-  securityCheckedWallets: SecurityCheckedWallets
-  spamFilterOn: boolean
-  spendingLimits: SpendingLimits
-  touchIdInfo: GuiTouchIdInfo
-  walletId: string
-  walletsSort: SortOption
-}
-
 export const initialState: SettingsState = {
-  ...SYNCED_ACCOUNT_DEFAULTS,
-  ...LOCAL_ACCOUNT_DEFAULTS,
+  ...asSyncedAccountSettings({}),
+  ...asLocalAccountSettings({}),
   changesLocked: true,
-  contactsPermissionOn: true,
-  developerModeOn: false,
-  isAccountBalanceVisible: true,
   isTouchEnabled: false,
   isTouchSupported: false,
-  mostRecentWallets: [],
-  // prettier-ignore
-  passwordRecoveryRemindersShown: {
-    '20': false,
-    '200': false,
-    '2000': false,
-    '20000': false,
-    '200000': false
-  },
   pinLoginEnabled: false,
-  settingsLoaded: null,
-  spendingLimits: {
-    transaction: {
-      isEnabled: false,
-      amount: 0
-    }
-  },
-  walletsSort: 'manual'
+  settingsLoaded: null
 }
 
-export interface SettingsState {
-  autoLogoutTimeInSeconds: number
-  changesLocked: any
-  contactsPermissionOn: boolean
-  countryCode: string
-  defaultFiat: string
-  defaultIsoFiat: string
-  denominationSettings: DenominationSettings
-  developerModeOn: boolean
-  isAccountBalanceVisible: boolean
+export interface SettingsState extends LocalAccountSettings, SyncedAccountSettings {
+  changesLocked: boolean
   isTouchEnabled: boolean
   isTouchSupported: boolean
-  mostRecentWallets: MostRecentWallet[]
-  passwordRecoveryRemindersShown: PasswordReminderLevels
   pinLoginEnabled: boolean
-  preferredSwapPluginId: string | undefined
-  preferredSwapPluginType: EdgeSwapPluginType | undefined
-  securityCheckedWallets: SecurityCheckedWallets
   settingsLoaded: boolean | null
-  spamFilterOn: boolean
-  spendingLimits: {
-    transaction: {
-      isEnabled: boolean
-      amount: number
-    }
-  }
+}
+
+export interface AccountInitPayload extends SettingsState {
+  account: EdgeAccount
+  currencyCode: string
+  pinLoginEnabled: boolean
+  touchIdInfo: GuiTouchIdInfo
+  walletId: string
   walletsSort: SortOption
 }
 

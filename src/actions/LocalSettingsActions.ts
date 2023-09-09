@@ -7,47 +7,10 @@ import { lstrings } from '../locales/strings'
 import { permissionNames } from '../reducers/PermissionsReducer'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
-import { PasswordReminder } from '../types/types'
+import { asLocalAccountSettings, LocalAccountSettings, PasswordReminder, SpendingLimits } from '../types/types'
 import { logActivity } from '../util/logger'
 
-export interface SpendingLimits {
-  transaction: {
-    amount: number
-    isEnabled: boolean
-  }
-}
-
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
-
-export const LOCAL_ACCOUNT_DEFAULTS = {
-  contactsPermissionOn: true,
-  developerModeOn: false,
-  passwordReminder: {
-    needsPasswordCheck: false,
-    lastPasswordUseDate: 0,
-    passwordUseCount: 0,
-    nonPasswordLoginsCount: 0,
-    nonPasswordDaysLimit: 4,
-    nonPasswordLoginsLimit: 4
-  },
-  isAccountBalanceVisible: true,
-  spamFilterOn: true,
-  spendingLimits: {
-    transaction: {
-      amount: 0,
-      isEnabled: false
-    }
-  }
-}
-
-export const LOCAL_ACCOUNT_TYPES = {
-  contactsPermissionOn: 'boolean',
-  developerModeOn: 'boolean',
-  passwordReminder: 'object',
-  isAccountBalanceVisible: 'boolean',
-  spamFilterOn: 'boolean',
-  spendingLimits: 'object'
-}
 
 export function toggleAccountBalanceVisibility(): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -185,23 +148,19 @@ export const writeSpendingLimits = async (account: EdgeAccount, spendingLimits: 
   })
 }
 
-export const readLocalSettings = async (account: EdgeAccount) => {
-  return await account.localDisklet
-    .getText(LOCAL_SETTINGS_FILENAME)
-    .then(JSON.parse)
-    .catch(async () => {
-      // If Settings.json doesn't exist yet, create it, and return it
-      return await writeLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
-    })
-    .then(settings => {
-      return {
-        ...LOCAL_ACCOUNT_DEFAULTS,
-        ...settings
-      }
-    })
+export const readLocalSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {
+  try {
+    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
+    const json = JSON.parse(text)
+    const settings = asLocalAccountSettings(json)
+    return settings
+  } catch (e) {
+    const defaults = asLocalAccountSettings({})
+    return await writeLocalSettings(account, defaults).then(() => defaults)
+  }
 }
 
-export const writeLocalSettings = async (account: EdgeAccount, settings: object) => {
+export const writeLocalSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
   const text = JSON.stringify(settings)
   return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }

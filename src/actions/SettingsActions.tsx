@@ -261,15 +261,16 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
   }
 }
 
-export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
-  '20': false,
-  '200': false,
-  '2000': false,
-  '20000': false,
-  '200000': false
-}
+export const asPasswordReminderLevels = asObject({
+  '20': asMaybe(asBoolean, false),
+  '200': asMaybe(asBoolean, false),
+  '2000': asMaybe(asBoolean, false),
+  '20000': asMaybe(asBoolean, false),
+  '200000': asMaybe(asBoolean, false)
+})
 
-export type PasswordReminderTime = keyof typeof PASSWORD_RECOVERY_REMINDERS_SHOWN
+export type PasswordReminderLevels = ReturnType<typeof asPasswordReminderLevels>
+export type PasswordReminderTime = keyof PasswordReminderLevels
 
 export const asCurrencyCodeDenom = asObject({
   name: asString,
@@ -277,7 +278,7 @@ export const asCurrencyCodeDenom = asObject({
   symbol: asOptional(asString)
 })
 
-const asDenominationSettings = asObject(asOptional(asObject(asMaybe(asCurrencyCodeDenom))))
+const asDenominationSettings = asObject(asMaybe(asObject(asMaybe(asCurrencyCodeDenom))))
 
 export type DenominationSettings = ReturnType<typeof asDenominationSettings>
 export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
@@ -292,27 +293,20 @@ const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
 )
 
 export const asSyncedAccountSettings = asObject({
-  autoLogoutTimeInSeconds: asOptional(asNumber, 3600),
-  defaultFiat: asOptional(asString, 'USD'),
-  defaultIsoFiat: asOptional(asString, 'iso:USD'),
-  preferredSwapPluginId: asOptional(asString, ''),
-  preferredSwapPluginType: asOptional(asSwapPluginType),
-  countryCode: asOptional(asString, ''),
-  mostRecentWallets: asOptional(asArray(asMostRecentWallet), () => []),
-  passwordRecoveryRemindersShown: asOptional(
-    asObject({
-      '20': asBoolean,
-      '200': asBoolean,
-      '2000': asBoolean,
-      '20000': asBoolean,
-      '200000': asBoolean
-    }),
-    PASSWORD_RECOVERY_REMINDERS_SHOWN
-  ),
-  walletsSort: asOptional(asSortOption, 'manual'),
-  denominationSettings: asOptional<DenominationSettings>(asDenominationSettings, () => ({})),
+  autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
+  defaultFiat: asMaybe(asString, 'USD'),
+  defaultIsoFiat: asMaybe(asString, 'iso:USD'),
+  preferredSwapPluginId: asMaybe(asString),
+  preferredSwapPluginType: asMaybe(asSwapPluginType),
+  countryCode: asMaybe(asString, ''),
+  mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
+  passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
+  walletsSort: asMaybe(asSortOption, 'manual'),
+  denominationSettings: asMaybe<DenominationSettings>(asDenominationSettings, () => ({})),
   securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
 })
+
+export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
 
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
@@ -388,7 +382,7 @@ const writeDenominationKeySetting = async (account: EdgeAccount, pluginId: strin
   })
 
 // Helper Functions
-export async function readSyncedSettings(account: EdgeAccount): Promise<ReturnType<typeof asSyncedAccountSettings>> {
+export async function readSyncedSettings(account: EdgeAccount): Promise<SyncedAccountSettings> {
   try {
     if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
@@ -402,7 +396,7 @@ export async function readSyncedSettings(account: EdgeAccount): Promise<ReturnTy
   }
 }
 
-export async function writeSyncedSettings(account: EdgeAccount, settings: object): Promise<void> {
+export async function writeSyncedSettings(account: EdgeAccount, settings: SyncedAccountSettings): Promise<void> {
   const text = JSON.stringify(settings)
   if (account?.disklet?.setText == null) return
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
