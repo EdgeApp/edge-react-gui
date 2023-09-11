@@ -1,6 +1,6 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { gt, lt } from 'biggystring'
-import { asArray, asNumber, asObject, asString } from 'cleaners'
+import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
 import { fetchInfo } from '../../../util/network'
@@ -59,9 +59,11 @@ const asBanxaTxLimit = asObject({
   max: asString
 })
 
+const asBanxaPaymentType = asValue('CHECKOUTCREDIT', 'WORLDPAYAPPLE', 'WORLDPAYGOOGLE', 'WORLDPAYCREDIT')
+
 const asBanxaPaymentMethod = asObject({
   id: asNumber,
-  paymentType: asString,
+  paymentType: asMaybe(asBanxaPaymentType),
   name: asString,
   status: asString,
   type: asString,
@@ -131,6 +133,7 @@ interface BanxaPaymentMap {
 
 type BanxaTxLimit = ReturnType<typeof asBanxaTxLimit>
 type BanxaCryptoCoin = ReturnType<typeof asBanxaCryptoCoin>
+type BanxaPaymentType = ReturnType<typeof asBanxaPaymentType>
 type BanxaPaymentMethods = ReturnType<typeof asBanxaPaymentMethods>
 
 // https://support.banxa.com/en/support/solutions/articles/44002459218-supported-cryptocurrencies-and-blockchains
@@ -394,7 +397,7 @@ const addToAllowedCurrencies = (pluginId: string, currencyCode: string, coin: Ba
   allowedCurrencyCodes.crypto[pluginId][currencyCode] = coin
 }
 
-const typeMap = {
+const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
   WORLDPAYAPPLE: 'applepay',
   WORLDPAYGOOGLE: 'googlepay',
   WORLDPAYCREDIT: 'credit',
