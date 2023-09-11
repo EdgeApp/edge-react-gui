@@ -2,10 +2,11 @@ import { abs, div, lt, toFixed } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
-import { convertCurrency } from '../selectors/WalletSelectors'
-import { useSelector } from '../types/reactRedux'
+import { useState } from '../types/reactHooks'
+import { convertCurrencyHistorical } from '../util/exchangeRates'
 import { toBigNumberString } from '../util/toBigNumberString'
 import { DECIMAL_PRECISION, zeroString } from '../util/utils'
+import { useAsyncEffect } from './useAsyncEffect'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 interface Props {
@@ -39,12 +40,14 @@ export const useFiatText = (props: Props): string => {
     subCentTruncation
   } = props
 
+  const [fiatAmount, setFiatAmount] = useState<string>('0')
   // Convert native to fiat amount.
   // Does NOT take into account display denomination settings here,
   // i.e. sats, bits, etc.
-  const fiatAmount = useSelector(state => {
+  useAsyncEffect(async () => {
     const cryptoAmount = div(nativeCryptoAmount, cryptoExchangeMultiplier, DECIMAL_PRECISION)
-    return convertCurrency(state, cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    const amount = await convertCurrencyHistorical(cryptoCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+    setFiatAmount(amount)
   })
 
   const isSubCentTruncationActive = subCentTruncation && lt(abs(fiatAmount), '0.01')

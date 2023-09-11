@@ -1,3 +1,4 @@
+import { mul } from 'biggystring'
 import { asArray, asEither, asNull, asObject, asString } from 'cleaners'
 import { EdgeFetchFunction } from 'edge-core-js'
 
@@ -144,10 +145,13 @@ const addToQueue = (entry: RateQueueEntry, resolve: Function, maxQuerySize: numb
 
 export const getHistoricalRate = async (
   codePair: string,
-  date: string,
+  date?: string,
   maxQuerySize: number = RATES_SERVER_MAX_QUERY_SIZE,
   doFetch?: EdgeFetchFunction
 ): Promise<number> => {
+  if (date == null) {
+    date = new Date().toISOString()
+  }
   const roundDate = roundHalfMinute(date)
   return await new Promise((resolve, reject) => {
     const [code1, code2] = codePair.split('_').sort()
@@ -165,4 +169,10 @@ export const getHistoricalRate = async (
     }
     resolve(out)
   })
+}
+
+export const convertCurrencyHistorical = async (fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1', date?: string): Promise<string> => {
+  const rate = await getHistoricalRate(`${fromCurrencyCode}_${toCurrencyCode}`, date)
+  const out = mul(rate.toString(), amount)
+  return out
 }

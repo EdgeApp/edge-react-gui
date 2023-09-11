@@ -1,7 +1,10 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
+import { useState } from 'react'
 
 import { useSelector } from '../types/reactRedux'
+import { convertCurrencyHistorical } from '../util/exchangeRates'
 import { fixFiatCurrencyCode, getDenomFromIsoCode, zeroString } from '../util/utils'
+import { useAsyncEffect } from './useAsyncEffect'
 import { useWatch } from './useWatch'
 
 /**
@@ -50,8 +53,18 @@ export const useTokenDisplayData = (props: { tokenId?: string; wallet: EdgeCurre
 }
 
 export const useCurrencyFiatRate = ({ currencyCode, isoFiatCurrencyCode }: { currencyCode?: string; isoFiatCurrencyCode?: string }): string => {
-  return useSelector(state => {
-    if (currencyCode == null || isoFiatCurrencyCode == null) return '0'
-    else return state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`]
+  const [fiatRate, setFiatRate] = useState<string>('0')
+  // Convert native to fiat amount.
+  // Does NOT take into account display denomination settings here,
+  // i.e. sats, bits, etc.
+  useAsyncEffect(async () => {
+    if (currencyCode == null || isoFiatCurrencyCode == null) {
+      setFiatRate('0')
+    } else {
+      const amount = await convertCurrencyHistorical(currencyCode, isoFiatCurrencyCode)
+      setFiatRate(amount)
+    }
   })
+
+  return fiatRate
 }
