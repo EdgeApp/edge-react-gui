@@ -133,6 +133,7 @@ type BanxaTxLimit = ReturnType<typeof asBanxaTxLimit>
 type BanxaCryptoCoin = ReturnType<typeof asBanxaCryptoCoin>
 type BanxaPaymentMethods = ReturnType<typeof asBanxaPaymentMethods>
 
+// https://support.banxa.com/en/support/solutions/articles/44002459218-supported-cryptocurrencies-and-blockchains
 // This maps the Banxa blockchain codes to Edge pluginIds
 const CURRENCY_PLUGINID_MAP = {
   'AVAX-C': 'avalanche',
@@ -148,6 +149,7 @@ const CURRENCY_PLUGINID_MAP = {
   EOS: 'eos',
   ETC: 'ethereumclassic',
   ETH: 'ethereum',
+  FIL: 'filecoin',
   HBAR: 'hedera',
   LTC: 'litecoin',
   MATIC: 'polygon',

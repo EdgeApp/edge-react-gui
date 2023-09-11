@@ -9,7 +9,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -107,7 +107,6 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
           layout="column"
         />
-        <ModalFooter onPress={this.handleCancel} />
       </ThemedModal>
     )
   }

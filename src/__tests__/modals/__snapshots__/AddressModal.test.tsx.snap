@@ -75,8 +75,5 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       type="secondary"
     />
   </View>
-  <ModalFooter
-    onPress={[Function]}
-  />
 </ThemedModal>
 `;

@@ -5,7 +5,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 export interface ButtonInfo {
@@ -62,7 +62,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   }
 
   return (
-    <ThemedModal warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
+    <ThemedModal closeButton={closeArrow} warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       <View style={containerStyle}>
         <View style={textStyle}>
           {title != null ? <ModalTitle>{title}</ModalTitle> : null}
@@ -95,7 +95,6 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
 
           return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
         })}
-        {closeArrow ? <ModalFooter onPress={handleCancel} /> : null}
       </View>
     </ThemedModal>
   )

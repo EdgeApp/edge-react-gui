@@ -31,7 +31,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
   const [password, setPassword] = React.useState('')
   const [transactionAmount, setTransactionAmount] = React.useState(
-    !zeroString(transactionSpendingLimit.amount.toString()) ? transactionSpendingLimit.amount.toString() : ''
+    !zeroString(transactionSpendingLimit.amount?.toString()) ? transactionSpendingLimit.amount.toString() : ''
   )
   const [transactionIsEnabled, setTransactionIsEnabled] = React.useState(transactionSpendingLimit.isEnabled)
 

@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 3.15.0
+
+- added: simplified Maestro scripts and use cleaner-config for testerConfig.json
+- changed: updated style sheet caching in the `styled` HOC
+- fixed: prevent crash on transaction history scene when custom token is deleted
+- fixed: added missing cancel button handler in FIO name confirmation scene
+- Upgrade edge-login-ui-rn to v2.6.6
+  - changed: Update translations
+
 ## 3.14.0
 
 - added: Light account support

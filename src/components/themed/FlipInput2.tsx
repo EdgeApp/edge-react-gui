@@ -80,7 +80,6 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
       if (done === true) runOnJS(setPrimaryField)(otherField)
     }
 
-    console.log(`animating to ${otherField}`)
     animatedValue.value = withTiming(
       otherField,
       {
@@ -107,7 +106,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   const bottomRow = useHandler((fieldNum: FieldNum) => {
     const primaryAmount = amounts[fieldNum]
-    const amountBlank = eq(primaryAmount, '0')
+    const amountBlank = eq(primaryAmount, '0') ? lstrings.string_amount : ''
     const currencyNameStyle = amountBlank ? styles.bottomCurrencyMuted : styles.bottomCurrency
     const currencyName = fieldInfos[fieldNum].currencyName
 
@@ -118,7 +117,10 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
             style={styles.bottomAmount}
             value={primaryAmount}
             maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
-            placeholder={amountBlank ? lstrings.string_amount : ''}
+            // HACK: For some reason there's no way to avoid the rightmost
+            // visual cutoff of the 'Amount' string in Android. Pad with an
+            // extra space.
+            placeholder={Platform.OS === 'android' ? amountBlank + ' ' : amountBlank}
             placeholderTextColor={theme.deactivatedText}
             onChangeText={onNumericInputChange}
             autoCorrect={false}
@@ -177,55 +179,60 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   )
 })
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  // Flip Input
-  flipInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  flipInput: {
-    flex: 1,
-    paddingRight: theme.rem(0.5)
-  },
-  flipInputFront: {
-    backfaceVisibility: 'hidden'
-  },
-  flipContainerBack: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  },
-  flipIcon: {
-    marginRight: -theme.rem(0.125)
-  },
+const getStyles = cacheStyles((theme: Theme) => {
+  const isIos = Platform.OS === 'ios'
+  return {
+    // Flip Input
+    flipInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    flipInput: {
+      flex: 1,
+      paddingRight: theme.rem(0.5)
+    },
+    flipInputFront: {
+      backfaceVisibility: 'hidden'
+    },
+    flipContainerBack: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    },
+    flipIcon: {
+      marginRight: -theme.rem(0.125)
+    },
 
-  // Top Amount
-  bottomContainer: {
-    flexDirection: 'row',
-    marginRight: theme.rem(1.5),
-    minHeight: theme.rem(2)
-  },
-  valueContainer: {
-    flexDirection: 'row',
-    marginRight: theme.rem(0.5),
-    marginLeft: Platform.OS === 'ios' ? 0 : -3,
-    marginTop: Platform.OS === 'ios' ? 0 : -theme.rem(0.75),
-    marginBottom: Platform.OS === 'ios' ? 0 : -theme.rem(1)
-  },
-  bottomAmount: {
-    paddingRight: Platform.OS === 'ios' ? 0 : theme.rem(0.25),
-    color: theme.primaryText,
-    includeFontPadding: false,
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.5)
-  },
-  bottomCurrency: {
-    paddingTop: Platform.OS === 'ios' ? theme.rem(0.125) : theme.rem(1)
-  },
-  bottomCurrencyMuted: {
-    paddingTop: Platform.OS === 'ios' ? theme.rem(0.125) : theme.rem(1),
-    color: theme.deactivatedText
+    // Top Amount
+    bottomContainer: {
+      flexDirection: 'row',
+      marginRight: theme.rem(1.5),
+      minHeight: theme.rem(2)
+    },
+    valueContainer: {
+      flexDirection: 'row',
+      marginRight: theme.rem(0.5),
+      marginLeft: isIos ? 0 : -6,
+      marginTop: isIos ? 0 : -theme.rem(0.75),
+      marginBottom: isIos ? 0 : -theme.rem(1)
+    },
+    bottomAmount: {
+      paddingRight: isIos ? 0 : theme.rem(0.25),
+      color: theme.primaryText,
+      includeFontPadding: false,
+      fontFamily: theme.fontFaceMedium,
+      fontSize: isIos ? theme.rem(1.5) : theme.rem(1.45)
+    },
+    bottomCurrency: {
+      paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
+      marginLeft: isIos ? 0 : -theme.rem(0.25)
+    },
+    bottomCurrencyMuted: {
+      paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
+      color: theme.deactivatedText,
+      marginLeft: isIos ? 0 : -theme.rem(0.25)
+    }
   }
-}))
+})

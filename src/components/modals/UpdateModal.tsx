@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -31,7 +31,7 @@ export function UpdateModal(props: Props) {
   const message = sprintf(lstrings.update_fresh_new_version, config.appName)
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+    <ThemedModal bridge={bridge} onCancel={handleClose}>
       <View style={styles.titleContainer}>
         <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
         <ModalTitle>{lstrings.update_header}</ModalTitle>
@@ -39,7 +39,6 @@ export function UpdateModal(props: Props) {
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={lstrings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
-      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }

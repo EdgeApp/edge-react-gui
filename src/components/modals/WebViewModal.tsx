@@ -3,7 +3,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { WebView } from 'react-native-webview'
 
 import { Airship } from '../services/AirshipInstance'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 
 export async function showWebViewModal(title: string, uri: string): Promise<void> {
@@ -30,8 +30,6 @@ export const WebViewModal = (props: Props) => {
         {title}
       </ModalTitle>
       <WebView ref={webviewRef} source={{ uri }} />
-
-      <ModalFooter onPress={handleClose} />
     </ThemedModal>
   )
 }

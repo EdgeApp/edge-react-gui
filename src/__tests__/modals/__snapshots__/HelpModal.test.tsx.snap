@@ -1136,67 +1136,64 @@ exports[`HelpModal should render with loading props 1`] = `
         Build 2019010101
       </Text>
     </View>
-    <View>
-      <View>
-        <View
-          accessibilityState={
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "marginBottom": -22,
+          "opacity": 1,
+          "padding": 22,
+        }
+      }
+    >
+      <Text
+        accessibilityHint="Close modal"
+        allowFontScaling={false}
+        style={
+          [
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
+              "color": "#00f1a2",
+              "fontSize": 28,
+            },
+            undefined,
             {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "opacity": 1,
-              "padding": 22,
-            }
-          }
-        >
-          <Text
-            accessibilityHint="Close modal"
-            allowFontScaling={false}
-            style={
-              [
-                {
-                  "color": "#00f1a2",
-                  "fontSize": 28,
-                },
-                undefined,
-                {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-        </View>
-      </View>
+              "fontFamily": "anticon",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
     </View>
   </View>,
 ]

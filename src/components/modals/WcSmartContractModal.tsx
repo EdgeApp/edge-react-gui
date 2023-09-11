@@ -19,7 +19,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
@@ -146,7 +146,7 @@ export const WcSmartContractModal = (props: Props) => {
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
       </View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollPadding}>
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
@@ -171,7 +171,7 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-      <ModalFooter onPress={handleClose} />
+      <ModalFooterFade />
     </ThemedModal>
   )
 }
@@ -187,6 +187,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     resizeMode: 'contain',
     padding: theme.rem(0.5)
+  },
+  scrollPadding: {
+    paddingBottom: theme.rem(ModalFooter.bottomRem)
   },
   slider: {
     paddingVertical: theme.rem(1)

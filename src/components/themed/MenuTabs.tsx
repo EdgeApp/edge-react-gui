@@ -1,5 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
+import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -36,7 +37,19 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const colors = theme.tabBarBackground
   const start = theme.tabBarBackgroundStart
   const end = theme.tabBarBackgroundEnd
-  let routes = state.routes
+  const routes = useMemo(
+    () =>
+      state.routes.filter(route => {
+        if (config.extraTab == null && route.name === 'extraTab') {
+          return false
+        }
+        if (config.disableSwaps === true && route.name === 'exchangeTab') {
+          return false
+        }
+        return true
+      }),
+    [state.routes]
+  )
 
   const handleOnPress = useHandler((route: string) => {
     const currentName = routes[activeTabIndex].name
@@ -55,10 +68,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         return navigation.navigate('extraTab')
     }
   })
-
-  if (config.extraTab == null) {
-    routes = routes.slice(0, -1)
-  }
 
   const contentStyle = React.useMemo(() => {
     const paddingBottom = insets.bottom === 0 ? theme.rem(0.75) : insets.bottom
