@@ -24,6 +24,7 @@ import {
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
+  FiatPluginStartParams,
   FiatPluginUi,
   FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
@@ -40,7 +41,7 @@ export const executePlugin = async (params: {
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
   const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
-  const { pluginId } = guiPlugin
+  const { forceFiatCurrencyCode, pluginId } = guiPlugin
 
   const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
   const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
@@ -189,10 +190,11 @@ export const executePlugin = async (params: {
   // here. The 'paymentTypes' defined in buy/sellList.json gets ignored, causing
   // confusion.
   const paymentTypes = paymentType != null ? [paymentType] : []
-  const startPluginParams = {
+  const startPluginParams: FiatPluginStartParams = {
     direction,
     regionCode,
     paymentTypes,
+    forceFiatCurrencyCode,
     providerId
   }
   plugin.startPlugin(startPluginParams).catch(showError)

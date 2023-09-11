@@ -25,6 +25,10 @@ export interface GuiPlugin {
   // Is a native plugin written in React Native
   nativePlugin?: FiatPluginFactory
 
+  // Force plugin to use specific fiat currencyCode. Only applicable for
+  // native plugins
+  forceFiatCurrencyCode?: string
+
   // The URI to show in the WebView.
   // Both the plugin list & deep links can add stuff to the end of this:
   baseUri: string

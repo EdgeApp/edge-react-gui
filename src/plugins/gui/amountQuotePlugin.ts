@@ -47,7 +47,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, regionCode, paymentTypes, providerId } = params
+      const { direction, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -127,7 +127,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
       // wallet fiat selection regardless of region.
       // TODO: Remove when Fiat selection is designed.
-      const fiatCurrencyCode = paymentTypes[0] === 'sepa' ? 'iso:EUR' : coreWallet.fiatCurrencyCode
+      const fiatCurrencyCode = forceFiatCurrencyCode ?? coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
 

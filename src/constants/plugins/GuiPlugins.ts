@@ -102,6 +102,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     needsCountryCode: true,
     queryPromoCode: 'client_value',
     nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:EUR',
     displayName: 'Bity'
   },
   bitrefill: {
