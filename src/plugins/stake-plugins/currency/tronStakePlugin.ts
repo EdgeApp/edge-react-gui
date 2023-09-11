@@ -1,4 +1,5 @@
 import { gt, lt } from 'biggystring'
+import { asDate, asMaybe, asObject, asString } from 'cleaners'
 import { EdgeSpendInfo } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -6,6 +7,7 @@ import {
   ChangeQuote,
   ChangeQuoteRequest,
   filterStakePolicies,
+  PositionAllocation,
   QuoteAllocation,
   StakeBelowLimitError,
   StakePlugin,
@@ -204,22 +206,35 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
 
       const policy = getPolicyFromId(stakePolicyId)
       const rewardAsset = policy.rewardAssets[0].currencyCode
-      const stakedAmount = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
-      const nativeAmount = stakedAmount?.nativeAmount ?? '0'
       const balanceTrx = wallet.balances[currencyCode] ?? '0'
-      const locktime = stakedAmount?.unlockDate != null ? new Date(stakedAmount.unlockDate) : undefined
+      const canStake = gt(balanceTrx, '0')
+      const stakedAmountRaw = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
+      const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
+      if (stakedAmount == null) {
+        return {
+          allocations: [],
+          canStake,
+          canUnstake: false,
+          canUnstakeAndClaim: false,
+          canClaim: false
+        }
+      }
+      const { nativeAmount, unlockDate } = stakedAmount
+
+      const locktime = unlockDate != null ? new Date(unlockDate) : undefined
+      const allocations: PositionAllocation[] = [
+        {
+          pluginId,
+          currencyCode,
+          allocationType: 'staked',
+          nativeAmount,
+          locktime
+        }
+      ]
 
       return {
-        allocations: [
-          {
-            pluginId,
-            currencyCode,
-            allocationType: 'staked',
-            nativeAmount,
-            locktime
-          }
-        ],
-        canStake: gt(balanceTrx, '0'),
+        allocations,
+        canStake,
         canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
         canUnstakeAndClaim: false,
         canClaim: false
@@ -316,3 +331,9 @@ const fetchStakePositionV1 = async (request: StakePositionRequest): Promise<Stak
     canClaim: false
   }
 }
+
+const asTronStakedAmount = asObject({
+  nativeAmount: asString,
+  unlockDate: asMaybe(asDate),
+  otherParams: asObject({ type: asString })
+})
