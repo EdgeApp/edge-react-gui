@@ -1,6 +1,6 @@
 import { gt, lt } from 'biggystring'
 import { asDate, asMaybe, asObject, asString } from 'cleaners'
-import { EdgeSpendInfo } from 'edge-core-js'
+import { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
 import {
@@ -155,30 +155,61 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
         throw new Error('pluginId mismatch between request and policy')
       }
 
-      if (lt(nativeAmount, MIN_TRX_STAKE)) {
-        throw new StakeBelowLimitError(request, request.currencyCode, MIN_TRX_STAKE)
-      }
-
       const policy = getPolicyFromId(stakePolicyId)
-      const resource = policy.rewardAssets[0].currencyCode
-      const isStake = action === 'stake'
+      const resource = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
+      const spendTargets = [
+        {
+          publicAddress: (await wallet.getReceiveAddress()).publicAddress
+        }
+      ]
 
-      const spendInfo: EdgeSpendInfo = {
-        spendTargets: [
-          {
-            publicAddress: (await wallet.getReceiveAddress()).publicAddress
+      let edgeTransaction: EdgeTransaction
+      switch (action) {
+        case 'stake': {
+          if (lt(nativeAmount, MIN_TRX_STAKE)) {
+            // Only new stakes in v2 need to meet this min amount
+            throw new StakeBelowLimitError(request, request.currencyCode, MIN_TRX_STAKE)
           }
-        ],
-        otherParams: {
-          type: isStake ? 'addV2' : 'removeV2',
-          params: { nativeAmount, resource }
+
+          const spendInfo: EdgeSpendInfo = {
+            spendTargets,
+            otherParams: {
+              type: 'addV2',
+              params: { nativeAmount, resource }
+            }
+          }
+          edgeTransaction = await wallet.makeSpend(spendInfo)
+          break
+        }
+        case 'unstake': {
+          const spendInfo: EdgeSpendInfo = {
+            spendTargets,
+            otherParams: {
+              type: 'removeV2',
+              params: { nativeAmount, resource }
+            }
+          }
+          edgeTransaction = await wallet.makeSpend(spendInfo)
+          break
+        }
+        case 'claim': {
+          const spendInfo: EdgeSpendInfo = {
+            spendTargets,
+            otherParams: {
+              type: 'withdrawExpireUnfreeze'
+            }
+          }
+          edgeTransaction = await wallet.makeSpend(spendInfo)
+          break
+        }
+        default: {
+          throw new Error('Unsupported action')
         }
       }
-      const edgeTransaction = await wallet.makeSpend(spendInfo)
 
       const allocations: QuoteAllocation[] = [
         {
-          allocationType: isStake ? 'stake' : 'unstake',
+          allocationType: action,
           pluginId,
           currencyCode,
           nativeAmount
@@ -223,25 +254,50 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
           canClaim: false
         }
       }
-      const { nativeAmount, unlockDate } = stakedAmount
 
+      const {
+        nativeAmount: stakedNativeAmount,
+        otherParams: { type: stakedType },
+        unlockDate
+      } = stakedAmount
       const locktime = unlockDate != null ? new Date(unlockDate) : undefined
       const allocations: PositionAllocation[] = [
         {
           pluginId,
           currencyCode,
           allocationType: 'staked',
-          nativeAmount,
+          nativeAmount: stakedNativeAmount,
           locktime
         }
       ]
 
+      let canClaim = false
+
+      for (const amount of wallet.stakingStatus.stakedAmounts) {
+        const {
+          nativeAmount,
+          otherParams: { type },
+          unlockDate
+        } = asTronStakedAmount(amount)
+        if (unlockDate == null || type !== `WITHDRAWEXPIREUNFREEZE_${stakedType}`) continue
+        if (new Date(unlockDate) < new Date()) {
+          canClaim = true
+        }
+        allocations.push({
+          pluginId,
+          currencyCode: 'TRX',
+          allocationType: 'earned',
+          nativeAmount: nativeAmount,
+          locktime: unlockDate
+        })
+      }
+
       return {
         allocations,
         canStake,
-        canUnstake: locktime != null ? new Date() >= new Date(locktime) : true,
+        canUnstake: gt(stakedNativeAmount, '0'),
         canUnstakeAndClaim: false,
-        canClaim: false
+        canClaim
       }
     }
   }
