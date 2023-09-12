@@ -231,7 +231,7 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
           <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
         )}
         <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
-        {edgeTransaction.memos.map((memo, i) =>
+        {edgeTransaction.memos?.map((memo, i) =>
           memo.hidden === true ? null : <Tile body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
         )}
         <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
