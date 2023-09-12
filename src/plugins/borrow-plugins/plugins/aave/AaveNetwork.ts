@@ -1,13 +1,13 @@
 import { BigNumber, ethers } from 'ethers'
 
-import A_TOKEN_ABI from './abi/A_TOKEN_ABI.json'
-import ERC20_ABI from './abi/ERC20_ABI.json'
-import IPRICEORACLE_ABI from './abi/IPRICEORACLE_ABI.json'
-import LENDING_POOL_ABI from './abi/LENDING_POOL_ABI.json'
-import PARASWAP_ABI from './abi/PARASWAP_ABI.json'
-import PROTOCOL_DATA_PROVIDER_ABI from './abi/PROTOCOL_DATA_PROVIDER_ABI.json'
-import STABLE_DEBT_TOKEN_ABI from './abi/STABLE_DEBT_TOKEN_ABI.json'
-import VARIABLE_DEBT_TOKEN_ABI from './abi/VARIABLE_DEBT_TOKEN_ABI.json'
+import A_TOKEN_ABI from '../../../abi/A_TOKEN_ABI.json'
+import ERC20_ABI from '../../../abi/ERC20_ABI.json'
+import IPRICEORACLE_ABI from '../../../abi/IPRICEORACLE_ABI.json'
+import LENDING_POOL_ABI from '../../../abi/LENDING_POOL_ABI.json'
+import PARASWAP_ABI from '../../../abi/PARASWAP_ABI.json'
+import PROTOCOL_DATA_PROVIDER_ABI from '../../../abi/PROTOCOL_DATA_PROVIDER_ABI.json'
+import STABLE_DEBT_TOKEN_ABI from '../../../abi/STABLE_DEBT_TOKEN_ABI.json'
+import VARIABLE_DEBT_TOKEN_ABI from '../../../abi/VARIABLE_DEBT_TOKEN_ABI.json'
 
 export interface AaveNetworkBlueprint {
   provider: ethers.providers.Provider
