@@ -129,11 +129,6 @@ interface SpecialCurrencyInfo {
     modalMessage: string
     alertMessage: string
   }
-  uniqueIdentifierInfo?: {
-    addButtonText: string
-    identifierName: string
-    keyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
-  }
   isImportKeySupported: boolean
   importKeyOptions?: ImportKeyOption[]
 
@@ -261,11 +256,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_stellar_wallet_name,
     chainCode: 'XLM',
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo_id,
-      identifierName: lstrings.unique_identifier_memo_id,
-      keyboardType: 'default'
-    },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
       modalMessage: lstrings.request_xlm_minimum_notification_body,
@@ -279,11 +269,6 @@ export const SPECIAL_CURRENCY_INFO: {
     showTokenNames: true,
     chainCode: 'XRP',
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_destination_tag,
-      identifierName: lstrings.unique_identifier_destination_tag,
-      keyboardType: 'numeric'
-    },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
       modalMessage: lstrings.request_xrp_minimum_notification_body,
@@ -308,12 +293,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     keysOnlyMode: true,
     needsAccountNameSetup: true,
-    noChangeMiningFee: true,
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    }
+    noChangeMiningFee: true
   },
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
@@ -322,11 +302,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    },
     isImportKeySupported: true,
     isCustomTokensSupported: true
   },
@@ -337,11 +312,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: false,
     noChangeMiningFee: true,
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    },
     isImportKeySupported: true,
     isCustomTokensSupported: true,
     keysOnlyMode: true
@@ -379,11 +349,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_note,
-      identifierName: lstrings.unique_identifier_note,
-      keyboardType: 'default'
-    },
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isStakingSupported: true
@@ -467,11 +432,6 @@ export const SPECIAL_CURRENCY_INFO: {
   binance: {
     initWalletName: lstrings.string_first_bnb_wallet_name,
     chainCode: 'BNB',
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    },
     isImportKeySupported: true,
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
@@ -493,11 +453,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'SOL',
     isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    },
     noChangeMiningFee: true
   },
   celo: {
@@ -642,12 +597,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isAccountActivationRequired: true,
     skipAccountNameValidation: true,
     noMaxSpend: true,
-    noChangeMiningFee: true,
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    }
+    noChangeMiningFee: true
   },
   polkadot: {
     initWalletName: lstrings.string_first_polkadot_wallet_name,
@@ -709,12 +659,7 @@ export const SPECIAL_CURRENCY_INFO: {
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '419200') // sapling activation height
       }
-    ],
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    }
+    ]
   },
   piratechain: {
     initWalletName: lstrings.string_first_piratechain_wallet_name,
@@ -734,12 +679,7 @@ export const SPECIAL_CURRENCY_INFO: {
         inputType: 'number-pad',
         inputValidation: (input: string) => /^\d+$/.test(input) && gte(input, '152855') // sapling activation height
       }
-    ],
-    uniqueIdentifierInfo: {
-      addButtonText: lstrings.unique_identifier_dropdown_option_memo,
-      identifierName: lstrings.unique_identifier_memo,
-      keyboardType: 'default'
-    }
+    ]
   },
   polygon: {
     initWalletName: lstrings.string_first_polygon_wallet_name,

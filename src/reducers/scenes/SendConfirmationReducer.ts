@@ -34,6 +34,7 @@ export const initialTransaction: EdgeTransaction = {
   currencyCode: '',
   date: 0,
   isSend: true,
+  memos: [],
   metadata: {},
   nativeAmount: '',
   networkFee: '',

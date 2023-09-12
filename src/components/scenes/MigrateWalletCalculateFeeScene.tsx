@@ -84,6 +84,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         blockHeight: 0,
         currencyCode,
         date: 0,
+        memos: [],
         isSend: true,
         nativeAmount: '0',
         networkFee: fee,

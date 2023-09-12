@@ -29,6 +29,7 @@ import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../util/FioAddressUtils'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -575,21 +576,43 @@ class SendComponent extends React.PureComponent<Props, State> {
     } = this.props
     const { recipientAddress, selectedWalletId } = this.state
     const edgeWallet = currencyWallets[selectedWalletId]
-    const { uniqueIdentifierInfo } = getSpecialCurrencyInfo(edgeWallet.currencyInfo.pluginId)
 
-    if (recipientAddress && uniqueIdentifierInfo != null) {
-      const { addButtonText, identifierName, keyboardType } = uniqueIdentifierInfo
+    const memoOptions = edgeWallet?.currencyInfo.memoOptions ?? []
+    const [memoOption] = memoOptions.filter(option => option.hidden !== true)
+    if (recipientAddress && memoOption != null) {
+      const memoLabel = getMemoLabel(memoOption.memoName)
+      const memoTitle = getMemoTitle(memoOption.memoName)
+      const addButtonText = sprintf(lstrings.memo_dropdown_option_s, memoLabel)
+
+      let maxLength: number | undefined
+      if (memoOption.type === 'text') {
+        maxLength = memoOption.maxLength
+      } else if (memoOption.type === 'number') {
+        maxLength = memoOption.maxValue?.length
+      } else if (memoOption.type === 'hex' && memoOption.maxBytes != null) {
+        maxLength = 2 * memoOption.maxBytes
+      }
 
       const handleUniqueIdentifier = () => {
         Airship.show<string | undefined>(bridge => (
           <TextInputModal
             bridge={bridge}
-            inputLabel={identifierName}
-            keyboardType={keyboardType}
-            message={sprintf(lstrings.unique_identifier_modal_description, identifierName)}
+            inputLabel={memoTitle}
+            keyboardType={memoOption.type === 'number' ? 'numeric' : 'default'}
+            maxLength={maxLength}
+            message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
-            title={identifierName}
-            maxLength={this.state.coreWallet?.currencyInfo?.memoMaxLength}
+            title={memoTitle}
+            onSubmit={async text =>
+              getMemoError(
+                {
+                  type: memoOption.type,
+                  memoName: memoOption.memoName,
+                  value: text
+                },
+                memoOption
+              ) ?? true
+            }
           />
         ))
           .then(uniqueIdentifier => {
@@ -600,7 +623,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       }
 
       return (
-        <Tile type="touchable" title={identifierName} onPress={handleUniqueIdentifier}>
+        <Tile type="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
           <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
         </Tile>
       )

@@ -62,6 +62,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
             date: 1524486980,
             deviceDescription: 'iphone12',
             isSend: true,
+            memos: [],
             metadata: {
               name: 'Crazy Person 2',
               category: 'Expense: Less Money',

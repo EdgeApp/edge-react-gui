@@ -1,14 +1,18 @@
-import { Buffer } from 'buffer'
-import { asCodec } from 'cleaners'
+import { asCodec, asString } from 'cleaners'
+import { base16 } from 'rfc4648'
 
-export const asHex = asCodec(
-  raw => {
-    const hex = raw.replace(/^0x/, '')
-    const buffer = Buffer.from(hex, 'hex')
+/**
+ * Allows the 0x prefix.
+ */
+export const asHex = asCodec<Uint8Array>(
+  raw => base16.parse(asString(raw).replace(/^0x/, '')),
+  clean => base16.stringify(clean).toLowerCase()
+)
 
-    const ui8a = Uint8Array.from(buffer)
-    return ui8a
-  },
-
-  clean => Buffer.from(clean).toString('hex')
+/**
+ * Does not allow the 0x prefix.
+ */
+export const asBase16 = asCodec<Uint8Array>(
+  raw => base16.parse(asString(raw)),
+  clean => base16.stringify(clean).toLowerCase()
 )
