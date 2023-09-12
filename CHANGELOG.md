@@ -1,6 +1,6 @@
 # edge-react-gui
 
-## 3.16.0
+## 3.16.0 (2023-08-28)
 
 - added: New swap provider XRP Decentralized Exchange
 - added: AXL wrapped tokens on Fantom
@@ -41,7 +41,7 @@
   - added: Tracking event for logins
   - changed: Update translations
 
-## 3.15.0
+## 3.15.0 (2023-08-11)
 
 - added: simplified Maestro scripts and use cleaner-config for testerConfig.json
 - changed: updated style sheet caching in the `styled` HOC
@@ -50,7 +50,7 @@
 - Upgrade edge-login-ui-rn to v2.6.6
   - changed: Update translations
 
-## 3.14.0
+## 3.14.0 (2023-08-01)
 
 - added: Light account support
 - added: PulseChain (PLS)
@@ -131,7 +131,7 @@
   - fixed: Password login scene errors were not localized
   - changed: Allow biometric logins for accounts without usernames.
 
-## 3.13.0
+## 3.13.0 (2023-07-12)
 
 - Add WalletConnect v2 support
 - Refactor transaction list scene to reduce redux use and implement streamTransactions method
@@ -180,7 +180,7 @@ ZEC: Update checkpoints
   - changed: Allow the PIN scene to log into username-less accounts.
   - removed: Remove OTP support for PIN logins. The login server will never return OTP errors for PIN logins, so this capability is not needed.
 
-## 3.12.0
+## 3.12.0 (2023-07-05)
 
 - Core refactor removes private key properties from EdgeCurrencyWallet
 - Add USDC (ETH/MATIC) support for Bitrefill
@@ -247,7 +247,7 @@ ZEC: Update checkpoints
   - TRX: Fix memo handling
   - Fixed: Added transaction processing for FIO name registration actions
 
-## 3.11.0
+## 3.11.0 (2023-06-07)
 
 - Add in-app A/B testing
 - Refresh market scene on default fiat code change
