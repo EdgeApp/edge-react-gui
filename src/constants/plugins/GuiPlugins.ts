@@ -79,6 +79,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
+  fasterpayments: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:AUD',
+    displayName: ''
+  },
   iach: {
     pluginId: 'amountquote',
     storeId: '',
@@ -86,6 +95,42 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'ACH Bank Transfer'
+  },
+  interac: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:CAD',
+    displayName: ''
+  },
+  payid: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:AUD',
+    displayName: ''
+  },
+  pix: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:BRL',
+    displayName: ''
+  },
+  turkishbank: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:TRY',
+    displayName: ''
   },
   simplex: {
     pluginId: 'simplex',
