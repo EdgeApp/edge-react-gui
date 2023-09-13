@@ -5,11 +5,11 @@ import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { readSyncedSettings, writeMostRecentWalletsSelected, writeSyncedSettings } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
@@ -18,7 +18,6 @@ import { MapObject } from '../types/types'
 import { getCurrencyCode, getCurrencyInfos, getToken, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
-import { getSupportedFiats } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 
 export interface SelectWalletTokenParams {
@@ -93,7 +92,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
     const {
-      fiatCurrencyCode,
       name,
       currencyInfo: { currencyCode, pluginId }
     } = wallet
@@ -113,9 +111,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto (EOSIO) types and populate scene props
-      const supportedFiats = getSupportedFiats()
-      const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === fiatCurrencyCode.replace('iso:', ''))
-      const selectedFiat = supportedFiats[fiatTypeIndex]
       const currencyInfos = getCurrencyInfos(state.core.account)
       const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
       if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
@@ -123,7 +118,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
       if (specialCurrencyInfo.skipAccountNameValidation) {
         navigation.push('createWalletAccountSelect', {
-          selectedFiat: selectedFiat,
           selectedWalletType,
           accountName: walletName,
           existingWalletId: walletId
@@ -132,7 +126,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
         const createWalletAccountSetupSceneProps = {
           accountHandle: '',
           selectedWalletType,
-          selectedFiat,
           isReactivation: true,
           existingWalletId: walletId
         }
@@ -179,7 +172,7 @@ export function updateMostRecentWalletsSelected(walletId: string, currencyCode: 
     }
     currentMostRecentWallets.unshift({ id: walletId, currencyCode })
 
-    setMostRecentWalletsSelected(account, currentMostRecentWallets)
+    writeMostRecentWalletsSelected(account, currentMostRecentWallets)
       .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
@@ -326,7 +319,7 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
     const { activeWalletIds, currencyWallets } = account
 
     // Get synced setting Settings.json with public key map securityCheckedWallets: {walletId: { checked: boolean, modalShown: number }}
-    const settings = await getSyncedSettings(account)
+    const settings = await readSyncedSettings(account)
     const securityCheckedWallets = { ...settings.securityCheckedWallets }
 
     // Gather list to send to info server
@@ -435,6 +428,6 @@ export function checkCompromisedKeys(navigation: NavigationBase): ThunkAction<Pr
       }
     }
 
-    await setSyncedSettings(account, { ...settings, securityCheckedWallets })
+    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
   }
 }

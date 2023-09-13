@@ -6,11 +6,12 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { formatCategory, joinCategory, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { formatCategory, joinCategory, splitCategory } from '../../util/categories'
+import { getMemoTitle } from '../../util/validateMemos'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -114,7 +115,6 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         bridge={bridge}
         initialValue={this.state.notes}
         inputLabel={lstrings.transaction_details_notes_title}
-        returnKeyType="done"
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
@@ -231,6 +231,9 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
           <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
         )}
         <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
+        {edgeTransaction.memos?.map((memo, i) =>
+          memo.hidden === true ? null : <Tile body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+        )}
         <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
           <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
         </TouchableWithoutFeedback>
@@ -283,7 +286,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const thumbnailPath = useContactThumbnail(metadata?.name)
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll>
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
       <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
     </NotificationSceneWrapper>
   )

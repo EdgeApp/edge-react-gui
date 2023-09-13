@@ -17,6 +17,7 @@ describe('AdvancedDetailsModal', () => {
             currencyCode: 'BCH',
             date: 0,
             isSend: true,
+            memos: [],
             nativeAmount: '-681',
             networkFee: '681',
             otherParams: {},

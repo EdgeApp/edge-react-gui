@@ -53,6 +53,7 @@ describe('TransactionListRow', () => {
             date: 123456789,
             nativeAmount: '-100001',
             isSend: true,
+            memos: [],
             networkFee: '100000',
             ourReceiveAddresses: [],
             signedTx: '0x12897491827459823745',

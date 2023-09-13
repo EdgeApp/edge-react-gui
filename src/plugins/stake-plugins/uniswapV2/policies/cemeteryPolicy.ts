@@ -11,8 +11,8 @@ import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
-import { getContractInfo, makeContract, makeSigner, multipass } from '../contracts'
 import { pluginInfo } from '../pluginInfo'
+import { fantomEcosystem as eco } from '../policyInfo/fantom'
 import { StakePolicyInfo } from '../stakePolicy'
 import { StakePluginPolicy } from '../types'
 
@@ -56,7 +56,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
     lpTokenAmount: string
   ): Promise<{ [assetId: string]: { pluginId: string; currencyCode: string; nativeAmount: string } }> {
     // 1. Get the total supply of LP-tokens in the LP-pool contract
-    const lpTokenSupply = (await multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
+    const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     // 2. Get the amount of each token reserve in the LP-pool contract
     const reservesMap = await getTokenReservesMap()
     // 3. Get the amount of each token in for the policy
@@ -71,7 +71,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
   async function getExpectedLiquidityAmount(policyInfo: StakePolicyInfo, allocation: QuoteAllocation): Promise<string> {
     // 1. Calculate the liquidity amount (LP-token amount) from the unstake-allocations
-    const lpTokenSupply = (await multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
+    const lpTokenSupply = (await eco.multipass(p => lpTokenContract.connect(p).totalSupply())).toString()
     const reservesMap = await getTokenReservesMap()
     const tokenContractAddress = assetToContractAddress(policyInfo, allocation)
     const tokenSupplyInReserve = reservesMap[tokenContractAddress]
@@ -80,9 +80,12 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   }
 
   async function getTokenReservesMap(): Promise<{ [contractAddress: string]: string }> {
-    const reservesResponse = await multipass(p => lpTokenContract.connect(p).getReserves())
+    const reservesResponse = await eco.multipass(p => lpTokenContract.connect(p).getReserves())
     const { _reserve0, _reserve1 } = reservesResponse
-    const [token0, token1] = await Promise.all([multipass(p => lpTokenContract.connect(p).token0()), multipass(p => lpTokenContract.connect(p).token1())])
+    const [token0, token1] = await Promise.all([
+      eco.multipass(p => lpTokenContract.connect(p).token0()),
+      eco.multipass(p => lpTokenContract.connect(p).token1())
+    ])
     const reservesMap = {
       [token0.toLowerCase()]: _reserve0.toString(),
       [token1.toLowerCase()]: _reserve1.toString()
@@ -91,7 +94,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
   }
 
   function assetToContractAddress(policyInfo: StakePolicyInfo, assetId: AssetId): string {
-    const contractInfo = getContractInfo(assetId.currencyCode)
+    const contractInfo = eco.getContractInfo(assetId.currencyCode)
     const { address } = contractInfo
     return address.toLowerCase()
   }
@@ -119,7 +122,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
 
       // Get the signer for the wallet
       const signerSeed = await account.getDisplayPrivateKey(wallet.id)
-      const signerAddress = await makeSigner(signerSeed).getAddress()
+      const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
       if (policyInfo.stakeAssets.length > 2) throw new Error(`Staking more than two assets is not supported`)
@@ -152,7 +155,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const rewardNativeAmount = (await multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
+        const rewardNativeAmount = (await eco.multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress))).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
             return {
@@ -170,10 +173,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       //
 
       // Signer
-      const signer = makeSigner(signerSeed)
+      const signer = eco.makeSigner(signerSeed)
 
       // Get the gasPrice oracle data (from wallet)
-      const gasPrice = await multipass(p => p.getGasPrice())
+      const gasPrice = await eco.multipass(async p => await p.getGasPrice())
 
       // Accumulators
       const gasLimitAcc = makeBigAccumulator('0')
@@ -181,7 +184,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const nextNonce = (): number => txCount++
 
       // Transaction builder
-      const txs = makeBuilder(async fn => await multipass(provider => fn({ signer: signer.connect(provider) })))
+      const txs = makeBuilder(async fn => await eco.multipass(provider => fn({ signer: signer.connect(provider) })))
 
       if (action === 'stake') {
         /*
@@ -192,7 +195,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         */
 
         // 1. Check balance of staked assets and unstaked LP-token to determine if the user can stake
-        const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
+        const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
         const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, lpTokenBalance)
         await Promise.all(
           allocations
@@ -201,10 +204,10 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               const balanceResponse = await (async () => {
                 const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
                 if (isNativeToken) {
-                  return await multipass(p => p.getBalance(signerAddress))
+                  return await eco.multipass(async p => await p.getBalance(signerAddress))
                 }
-                const tokenAContract = makeContract(allocation.currencyCode)
-                return await multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
+                const tokenAContract = eco.makeContract(allocation.currencyCode)
+                return await eco.multipass(p => tokenAContract.connect(p).balanceOf(signerAddress))
               })()
               const balanceAmount = fromHex(balanceResponse._hex)
               const fromLpToken = assetAmountsFromLp[serializeAssetId(allocation)].nativeAmount
@@ -225,11 +228,14 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
             const isNativeToken = allocation.currencyCode === policyInfo.parentCurrencyCode
             if (isNativeToken) return
 
-            const tokenAContract = makeContract(allocation.currencyCode)
+            const tokenAContract = eco.makeContract(allocation.currencyCode)
             const spenderAddress = swapRouterContract.address
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
+                  const allowanceResult = await tokenAContract.allowance(signer.address, spenderAddress)
+                  if (allowanceResult.gte(allocation.nativeAmount)) return
+
                   const result = await tokenAContract.connect(signer).approve(spenderAddress, BigNumber.from(allocation.nativeAmount), {
                     gasLimit,
                     gasPrice,
@@ -292,7 +298,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
                       gasLimit,
                       gasPrice,
                       nonce: nextNonce(),
-                      value: amountTokenBDesired
+                      value: isTokenANative ? amountTokenADesired : amountTokenBDesired
                     }
                   )
               } else {
@@ -322,26 +328,16 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
               }
 
               // Cache metadata
-              cacheTxMetadata(
-                result.hash,
-                tokenACurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Transfer:Staking',
-                  notes: `Provide liquidity for ${metadataLpName} - LP`
-                },
-                amountTokenADesired
-              )
-              cacheTxMetadata(
-                result.hash,
-                tokenBCurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Transfer:Staking',
-                  notes: `Provide liquidity for ${metadataLpName} - LP`
-                },
-                amountTokenBDesired
-              )
+              cacheTxMetadata(result.hash, tokenACurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Provide liquidity for ${metadataLpName} - LP`
+              })
+              cacheTxMetadata(result.hash, tokenBCurrencyCode, {
+                name: metadataName,
+                category: 'Transfer:Staking',
+                notes: `Provide liquidity for ${metadataLpName} - LP`
+              })
 
               //
               // Decode the log data in the receipt to get the liquidity token transfer amount
@@ -370,6 +366,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
           (gasLimit =>
             async function approveStakingPool({ signer, liquidity }) {
               const spenderAddress = poolContract.address
+              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+              if (allowanceResult.gte(liquidity)) return
+
               const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(liquidity), {
                 gasLimit,
                 gasPrice,
@@ -411,7 +410,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         4. Remove the liquidity from Swap Router contract (using the amount of LP-token withdrawn)
       */
       if (action === 'unstake') {
-        const lpTokenBalance = (await multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
+        const lpTokenBalance = (await eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress))).toString()
 
         const tokenAAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenACurrencyCode)
         const tokenBAllocation = allocations.find(allocation => allocation.allocationType === action && allocation.currencyCode === tokenBCurrencyCode)
@@ -423,7 +422,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         const expectedLiquidityAmount = await getExpectedLiquidityAmount(policyInfo, tokenAAllocation)
 
         // 2. Check liquidity amount balances
-        const userInfo = await multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+        const userInfo = await eco.multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
         const stakedLpTokenBalance = fromHex(userInfo.amount._hex)
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
@@ -468,6 +467,9 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
         txs.build(
           (gasLimit =>
             async function approveSwapRouter({ signer }) {
+              const allowanceResult = await lpTokenContract.allowance(signer.address, spenderAddress)
+              if (allowanceResult.gte(expectedLiquidityAmount)) return
+
               const result = await lpTokenContract.connect(signer).approve(spenderAddress, BigNumber.from(expectedLiquidityAmount), {
                 gasLimit,
                 gasPrice,
@@ -618,25 +620,27 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const isTokenBNative = tokenBCurrencyCode === policyInfo.parentCurrencyCode
 
       // Get the signer for the wallet
-      const signerAddress = makeSigner(signerSeed).getAddress()
+      const signerAddress = eco.makeSigner(signerSeed).getAddress()
 
       const [{ stakedLpTokenBalance, assetAmountsFromLp }, rewardNativeAmount, tokenABalance, tokenBBalance, lpTokenBalance] = await Promise.all([
         // Get staked allocations:
         // 1. Get the amount of LP-tokens staked in the pool contract
-        multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress)).then(async userStakePoolInfo => {
-          const stakedLpTokenBalance = userStakePoolInfo.amount.toString()
-          // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
-          const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
-          return { stakedLpTokenBalance, assetAmountsFromLp }
-        }),
+        eco
+          .multipass(p => poolContract.connect(p).userInfo(POOL_ID, signerAddress))
+          .then(async userStakePoolInfo => {
+            const stakedLpTokenBalance = userStakePoolInfo.amount.toString()
+            // 2. Get the conversion amounts for each stakeAsset using the staked LP-token amount
+            const assetAmountsFromLp = await lpTokenToAssetPairAmounts(policyInfo, stakedLpTokenBalance)
+            return { stakedLpTokenBalance, assetAmountsFromLp }
+          }),
         // Get reward amount:
-        multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
+        eco.multipass(p => poolContract.connect(p).pendingShare(POOL_ID, signerAddress)).then(String),
         // Get token A balance:
-        multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
+        eco.multipass(p => (isTokenANative ? p.getBalance(signerAddress) : tokenAContract.connect(p).balanceOf(signerAddress))).then(String),
         // Get token B balance:
-        multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
+        eco.multipass(p => (isTokenBNative ? p.getBalance(signerAddress) : tokenBContract.balanceOf(signerAddress))).then(String),
         // Get LP token balance:
-        multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress)).then(String)
+        eco.multipass(p => lpTokenContract.connect(p).balanceOf(signerAddress)).then(String)
       ])
 
       // 3. Use the conversion amounts to create the staked allocations

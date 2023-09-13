@@ -1,32 +1,21 @@
+import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { openSettings, PermissionStatus, request } from 'react-native-permissions'
-import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { asSortOption, SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import {
-  setAutoLogoutTimeInSecondsRequest as setAutoLogoutTimeInSecondsRequestAccountSettings,
-  setContactsPermissionOn as setContactsPermissionOnAccountSettings,
-  setDefaultFiatRequest as setDefaultFiatRequestAccountSettings,
-  setDenominationKeyRequest as setDenominationKeyRequestAccountSettings,
-  setDeveloperModeOn as setDeveloperModeOnAccountSettings,
-  setPreferredSwapPluginId as setPreferredSwapPluginIdAccountSettings,
-  setPreferredSwapPluginType as setPreferredSwapPluginTypeAccountSettings,
-  setSpamFilterOn as setSpamFilterOnAccountSettings,
-  setSpendingLimits as setSpendingLimitsAccountSettings
-} from '../modules/Core/Account/settings'
-import { permissionNames } from '../reducers/PermissionsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
-import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
+import { asMostRecentWallet, MostRecentWallet } from '../types/types'
 import { logActivity } from '../util/logger'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
+import { writeSpendingLimits } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
 export function updateOneSetting(setting: object): ThunkAction<void> {
@@ -48,7 +37,7 @@ export function setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds: numbe
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    await setAutoLogoutTimeInSecondsRequestAccountSettings(account, autoLogoutTimeInSeconds)
+    await writeAutoLogoutTimeInSeconds(account, autoLogoutTimeInSeconds)
     dispatch({
       type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
       data: { autoLogoutTimeInSeconds }
@@ -68,7 +57,7 @@ export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<Promise<
     const previousDefaultIsoFiat = state.ui.settings.defaultIsoFiat
 
     // update default fiat in account settings
-    await setDefaultFiatRequestAccountSettings(account, defaultFiat)
+    await writeDefaultFiatSetting(account, defaultFiat)
 
     // update default fiat in settings
     dispatch({
@@ -87,7 +76,7 @@ export function setDefaultFiatRequest(defaultFiat: string): ThunkAction<Promise<
     }
 
     // update spending limits in account settings
-    await setSpendingLimitsAccountSettings(account, nextSpendingLimits)
+    await writeSpendingLimits(account, nextSpendingLimits)
     // update spending limits in settings
     dispatch({
       type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
@@ -103,7 +92,7 @@ export function setPreferredSwapPluginId(pluginId: string | undefined): ThunkAct
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    setPreferredSwapPluginIdAccountSettings(account, pluginId)
+    writePreferredSwapPluginId(account, pluginId)
       .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
@@ -122,7 +111,7 @@ export function setPreferredSwapPluginType(swapPluginType: EdgeSwapPluginType | 
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    setPreferredSwapPluginTypeAccountSettings(account, swapPluginType)
+    writePreferredSwapPluginType(account, swapPluginType)
       .then(() => {
         dispatch({
           type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE',
@@ -143,7 +132,7 @@ export function setDenominationKeyRequest(pluginId: string, currencyCode: string
     const state = getState()
     const { account } = state.core
 
-    return await setDenominationKeyRequestAccountSettings(account, pluginId, currencyCode, denomination)
+    return await writeDenominationKeySetting(account, pluginId, currencyCode, denomination)
       .then(() =>
         dispatch({
           type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
@@ -272,71 +261,153 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
   }
 }
 
-export function setDeveloperModeOn(developerModeOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    setDeveloperModeOnAccountSettings(account, developerModeOn)
-      .then(() => {
-        if (developerModeOn) {
-          dispatch({ type: 'DEVELOPER_MODE_ON' })
-          return
-        }
-        dispatch({ type: 'DEVELOPER_MODE_OFF' })
-      })
-      .catch(showError)
-  }
-}
+export const asPasswordReminderLevels = asObject({
+  '20': asMaybe(asBoolean, false),
+  '200': asMaybe(asBoolean, false),
+  '2000': asMaybe(asBoolean, false),
+  '20000': asMaybe(asBoolean, false),
+  '200000': asMaybe(asBoolean, false)
+})
 
-export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    setSpamFilterOnAccountSettings(account, spamFilterOn)
-      .then(() => {
-        if (spamFilterOn) {
-          dispatch({ type: 'SPAM_FILTER_ON' })
-          return
-        }
-        dispatch({ type: 'SPAM_FILTER_OFF' })
-      })
-      .catch(showError)
-  }
-}
+export type PasswordReminderLevels = ReturnType<typeof asPasswordReminderLevels>
+export type PasswordReminderTime = keyof PasswordReminderLevels
 
-/**
- * Toggle the 'Contacts Access' Edge setting. Will request permissions if
- * toggled on/enabled AND system-level contacts permissions are not granted.
- * Does NOT modify system-level contacts permissions if toggling the 'Contacts
- * Access' setting OFF
- */
-export function setContactsPermissionOn(contactsPermissionOn: boolean): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
+export const asCurrencyCodeDenom = asObject({
+  name: asString,
+  multiplier: asString,
+  symbol: asOptional(asString)
+})
 
-    await setContactsPermissionOnAccountSettings(account, contactsPermissionOn)
+const asDenominationSettings = asObject(asMaybe(asObject(asMaybe(asCurrencyCodeDenom))))
 
-    if (contactsPermissionOn) {
-      // Initial prompt to inform the reason of the permissions request.
-      // Denying this prompt will cause permissionStatus to be 'blocked',
-      // regardless of the prior permissions state.
-      await request(permissionNames.contacts, {
-        title: lstrings.contacts_permission_modal_title,
-        message: sprintf(lstrings.contacts_permission_modal_body_1, config.appName),
-        buttonPositive: lstrings.string_allow,
-        buttonNegative: lstrings.string_deny
-      })
-        .then(async (permissionStatus: PermissionStatus) => {
-          // Can't request permission from within the app if previously blocked
-          if (permissionStatus === 'blocked') await openSettings()
-        })
-        // Handle any other potential failure in enabling the permission
-        // progmatically from within Edge by redirecting to the system settings
-        // instead. Any manual change in system settings causes an app restart.
-        .catch(async _e => await openSettings())
+export type DenominationSettings = ReturnType<typeof asDenominationSettings>
+export const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
+
+export type SecurityCheckedWallets = Record<string, { checked: boolean; modalShown: number }>
+
+const asSecurityCheckedWallets: Cleaner<SecurityCheckedWallets> = asObject(
+  asObject({
+    checked: asBoolean,
+    modalShown: asNumber
+  })
+)
+
+export const asSyncedAccountSettings = asObject({
+  autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
+  defaultFiat: asMaybe(asString, 'USD'),
+  defaultIsoFiat: asMaybe(asString, 'iso:USD'),
+  preferredSwapPluginId: asMaybe(asString),
+  preferredSwapPluginType: asMaybe(asSwapPluginType),
+  countryCode: asMaybe(asString, ''),
+  mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
+  passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
+  walletsSort: asMaybe(asSortOption, 'manual'),
+  denominationSettings: asMaybe<DenominationSettings>(asDenominationSettings, () => ({})),
+  securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
+})
+
+export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
+
+// Default Account Settings
+export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
+
+const SYNCED_SETTINGS_FILENAME = 'Settings.json'
+
+// Account Settings
+const writeAutoLogoutTimeInSeconds = async (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
+  await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = { ...settings, autoLogoutTimeInSeconds }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+
+const writeDefaultFiatSetting = async (account: EdgeAccount, defaultFiat: string) =>
+  await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = {
+      ...settings,
+      defaultFiat,
+      defaultIsoFiat: `iso:${defaultFiat}`
     }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
 
-    dispatch({ type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION', data: { contactsPermissionOn } })
+const writePreferredSwapPluginId = async (account: EdgeAccount, pluginId: string | undefined) => {
+  return await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = {
+      ...settings,
+      preferredSwapPluginId: pluginId == null ? '' : pluginId,
+      preferredSwapPluginType: undefined
+    }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+}
+
+const writePreferredSwapPluginType = async (account: EdgeAccount, swapPluginType: EdgeSwapPluginType | undefined) => {
+  return await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = {
+      ...settings,
+      preferredSwapPluginType: swapPluginType,
+      preferredSwapPluginId: ''
+    }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+}
+
+export const writeMostRecentWalletsSelected = async (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
+  await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = { ...settings, mostRecentWallets }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+
+export const writeWalletsSort = async (account: EdgeAccount, walletsSort: SortOption) =>
+  await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = { ...settings, walletsSort }
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+
+export async function writePasswordRecoveryReminders(account: EdgeAccount, level: PasswordReminderTime) {
+  const settings = await readSyncedSettings(account)
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown
   }
+  passwordRecoveryRemindersShown[level] = true
+  const updatedSettings = { ...settings, passwordRecoveryRemindersShown }
+  return await writeSyncedSettings(account, updatedSettings)
+}
+
+// Currency Settings
+const writeDenominationKeySetting = async (account: EdgeAccount, pluginId: string, currencyCode: string, denomination: EdgeDenomination) =>
+  await readSyncedSettings(account).then(async settings => {
+    const updatedSettings = updateCurrencySettings(settings, pluginId, currencyCode, denomination)
+    return await writeSyncedSettings(account, updatedSettings)
+  })
+
+// Helper Functions
+export async function readSyncedSettings(account: EdgeAccount): Promise<SyncedAccountSettings> {
+  try {
+    if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
+    const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
+    const settingsFromFile = JSON.parse(text)
+    return asSyncedAccountSettings(settingsFromFile)
+  } catch (e: any) {
+    console.log(e)
+    // If Settings.json doesn't exist yet, create it, and return it
+    await writeSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    return SYNCED_ACCOUNT_DEFAULTS
+  }
+}
+
+export async function writeSyncedSettings(account: EdgeAccount, settings: SyncedAccountSettings): Promise<void> {
+  const text = JSON.stringify(settings)
+  if (account?.disklet?.setText == null) return
+  await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
+}
+
+const updateCurrencySettings = (currentSettings: any, pluginId: string, currencyCode: string, denomination: EdgeDenomination) => {
+  // update with new settings
+  const updatedSettings = {
+    ...currentSettings
+  }
+  if (updatedSettings.denominationSettings[pluginId] == null) updatedSettings.denominationSettings[pluginId] = {}
+  updatedSettings.denominationSettings[pluginId][currencyCode] = denomination
+  return updatedSettings
 }

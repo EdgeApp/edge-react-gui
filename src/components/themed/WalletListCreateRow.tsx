@@ -55,6 +55,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const styles = getStyles(theme)
 
   const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
+  const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
 
   const handlePress = useHandler(() => {
     const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, currencyCode) : null)
@@ -115,7 +116,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     <TouchableOpacity style={styles.row} onPress={handlePress}>
       <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.nameColumn}>
-        <EdgeText style={styles.currencyText}>{currencyCode}</EdgeText>
+        <EdgeText style={styles.currencyText}>{`${currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>
       </View>
       <View style={styles.labelColumn}>

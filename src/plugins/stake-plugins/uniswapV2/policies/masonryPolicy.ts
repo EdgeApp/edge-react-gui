@@ -8,8 +8,8 @@ import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, S
 import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
-import { makeContract, makeSigner, multipass } from '../contracts'
 import { pluginInfo } from '../pluginInfo'
+import { fantomEcosystem as eco } from '../policyInfo/fantom'
 import { StakePluginPolicy } from '../types'
 
 const HOUR = 1000 * 60 * 60
@@ -25,8 +25,8 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
 
   // Get the pool contract necessary for the staking
   // TODO: Replace the hardcode with a configuration from initOptions
-  const poolContract = makeContract('TOMB_MASONRY')
-  const treasuryContract = makeContract('TOMB_TREASURY')
+  const poolContract = eco.makeContract('TOMB_MASONRY')
+  const treasuryContract = eco.makeContract('TOMB_TREASURY')
 
   /**
    * This method calculates and returns in a from to to format
@@ -36,13 +36,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
    * @returns Promise<Date | undefined>
    */
   async function getUserClaimRewardTime(accountAddress: string): Promise<Date | undefined> {
-    const nextEpochTimestamp = await multipass(p => poolContract.connect(p).nextEpochPoint()) // in unix timestamp
-    const currentEpoch = await multipass(p => poolContract.connect(p).epoch())
-    const mason = await multipass(p => poolContract.connect(p).masons(accountAddress))
+    const nextEpochTimestamp = await eco.multipass(p => poolContract.connect(p).nextEpochPoint()) // in unix timestamp
+    const currentEpoch = await eco.multipass(p => poolContract.connect(p).epoch())
+    const mason = await eco.multipass(p => poolContract.connect(p).masons(accountAddress))
     const startTimeEpoch = mason.epochTimerStart
-    const period = await multipass(p => treasuryContract.connect(p).PERIOD())
+    const period = await eco.multipass(p => treasuryContract.connect(p).PERIOD())
     const periodInHours = period / 60 / 60 // 6 hours, period is displayed in seconds which is 21600
-    const rewardLockupEpochs = await multipass(p => poolContract.connect(p).rewardLockupEpochs())
+    const rewardLockupEpochs = await eco.multipass(p => poolContract.connect(p).rewardLockupEpochs())
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(rewardLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
@@ -66,13 +66,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
    * @returns Promise<Date | undefined>
    */
   async function getUserUnstakeTime(accountAddress: string): Promise<Date | undefined> {
-    const nextEpochTimestamp = await multipass(p => poolContract.connect(p).nextEpochPoint())
-    const currentEpoch = await multipass(p => poolContract.connect(p).epoch())
-    const mason = await multipass(p => poolContract.connect(p).masons(accountAddress))
+    const nextEpochTimestamp = await eco.multipass(p => poolContract.connect(p).nextEpochPoint())
+    const currentEpoch = await eco.multipass(p => poolContract.connect(p).epoch())
+    const mason = await eco.multipass(p => poolContract.connect(p).masons(accountAddress))
     const startTimeEpoch = mason.epochTimerStart
-    const period = await multipass(p => treasuryContract.connect(p).PERIOD())
+    const period = await eco.multipass(p => treasuryContract.connect(p).PERIOD())
     const periodInHours = period / 60 / 60
-    const withdrawLockupEpochs = await multipass(p => poolContract.connect(p).withdrawLockupEpochs())
+    const withdrawLockupEpochs = await eco.multipass(p => poolContract.connect(p).withdrawLockupEpochs())
     const targetEpochForClaimUnlock = Number(startTimeEpoch) + Number(withdrawLockupEpochs)
 
     if (targetEpochForClaimUnlock - currentEpoch <= 0) return
@@ -103,7 +103,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
 
       // Get the signer for the wallet
       const signerSeed = await account.getDisplayPrivateKey(wallet.id)
-      const signerAddress = makeSigner(signerSeed).getAddress()
+      const signerAddress = eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
       if (policyInfo.stakeAssets.length > 1) throw new Error(`Multi-asset staking is not supported`)
@@ -131,7 +131,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       }
       // Calculate the claim asset native amounts:
       if (action === 'claim' || action === 'unstake') {
-        const earnedAmount = (await multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
+        const earnedAmount = (await eco.multipass(p => poolContract.connect(p).earned(signerAddress))).toString()
         allocations.push(
           ...policyInfo.rewardAssets.map<QuoteAllocation>(({ currencyCode, pluginId }) => {
             return {
@@ -152,9 +152,9 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const checkTxResponse = await (async () => {
         switch (action) {
           case 'unstake':
-            return await multipass(p => poolContract.connect(p).canWithdraw(signerAddress))
+            return await eco.multipass(p => poolContract.connect(p).canWithdraw(signerAddress))
           case 'claim':
-            return await multipass(p => poolContract.connect(p).canClaimReward(signerAddress))
+            return await eco.multipass(p => poolContract.connect(p).canClaimReward(signerAddress))
           default:
             return true
         }
@@ -168,13 +168,13 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
           const balanceResponse = await (async () => {
             switch (allocation.allocationType) {
               case 'stake': {
-                const tokenContract = makeContract(allocation.currencyCode)
-                return await multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+                const tokenContract = eco.makeContract(allocation.currencyCode)
+                return await eco.multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
               }
               case 'unstake':
-                return await multipass(p => poolContract.connect(p).balanceOf(signerAddress))
+                return await eco.multipass(p => poolContract.connect(p).balanceOf(signerAddress))
               case 'claim':
-                return await multipass(p => poolContract.connect(p).earned(signerAddress))
+                return await eco.multipass(p => poolContract.connect(p).earned(signerAddress))
               case 'networkFee':
                 // Don't do anything with fee
                 break
@@ -196,10 +196,10 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       //
 
       // Signer
-      const signer = makeSigner(signerSeed)
+      const signer = eco.makeSigner(signerSeed)
 
       // Get the gasPrice oracle data (from wallet)
-      const gasPrice = await multipass(p => p.getGasPrice())
+      const gasPrice = await eco.multipass(async p => await p.getGasPrice())
 
       // Accumulators
       const gasLimitAcc = makeBigAccumulator('0')
@@ -207,7 +207,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       const nextNonce = (): number => txCount++
 
       // Transaction builder
-      const txs = makeBuilder(async fn => await multipass(provider => fn({ signer: signer.connect(provider) })))
+      const txs = makeBuilder(async fn => await eco.multipass(provider => fn({ signer: signer.connect(provider) })))
 
       // Stake the Stake-Token Workflow:
       // 1. Send approve() TX on Stake-Token-Contract if allowance is not MaxUint256
@@ -217,7 +217,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
         allocations.map(async allocation => {
           // We don't need to approve the stake pool contract for the token earned token contract
           if (allocation.allocationType === 'claim') return
-          const tokenContract = makeContract(allocation.currencyCode)
+          const tokenContract = eco.makeContract(allocation.currencyCode)
           txs.build(
             (gasLimit =>
               async function approvePoolContract({ signer }) {
@@ -251,18 +251,11 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 category: 'Expense:Fees',
                 notes: 'Stake funds'
               })
-              cacheTxMetadata(
-                result.hash,
-                metadataStakeCurrencyCode,
-                { name: metadataName, category: 'Transfer:Staking', notes: 'Stake funds' },
-                request.nativeAmount
-              )
+              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, { name: metadataName, category: 'Transfer:Staking', notes: 'Stake funds' })
             })(gasLimitAcc('240000'))
         )
       }
 
-      // @ts-expect-error
-      const earnedAmount = allocations.find(allocation => allocation.allocationType === 'earned')?.nativeAmount
       if (action === 'unstake') {
         txs.build(
           (gasLimit =>
@@ -277,22 +270,12 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 category: 'Expense:Fees',
                 notes: 'Unstake funds'
               })
-              cacheTxMetadata(
-                result.hash,
-                metadataStakeCurrencyCode,
-                { name: metadataName, category: 'Transfer:Staking', notes: 'Unstake funds' },
-                request.nativeAmount
-              )
-              cacheTxMetadata(
-                result.hash,
-                metadataRewardCurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Income:Staking',
-                  notes: 'Reward for staked funds'
-                },
-                earnedAmount
-              )
+              cacheTxMetadata(result.hash, metadataStakeCurrencyCode, { name: metadataName, category: 'Transfer:Staking', notes: 'Unstake funds' })
+              cacheTxMetadata(result.hash, metadataRewardCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: 'Reward for staked funds'
+              })
             })(gasLimitAcc('240000'))
         )
       }
@@ -312,16 +295,11 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
                 category: 'Expense:Fees',
                 notes: 'Claiming reward'
               })
-              cacheTxMetadata(
-                result.hash,
-                metadataRewardCurrencyCode,
-                {
-                  name: metadataName,
-                  category: 'Income:Staking',
-                  notes: 'Reward for staked funds'
-                },
-                earnedAmount
-              )
+              cacheTxMetadata(result.hash, metadataRewardCurrencyCode, {
+                name: metadataName,
+                category: 'Income:Staking',
+                notes: 'Reward for staked funds'
+              })
             })(gasLimitAcc('240000'))
         )
       }
@@ -362,22 +340,22 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       if (policyInfo == null) throw new Error(`Stake policy '${stakePolicyId}' not found`)
 
       // Get the signer for the wallet
-      const signerAddress = makeSigner(signerSeed).getAddress()
-      const tokenContract = makeContract(policyInfo.stakeAssets[0].currencyCode)
+      const signerAddress = eco.makeSigner(signerSeed).getAddress()
+      const tokenContract = eco.makeContract(policyInfo.stakeAssets[0].currencyCode)
 
       const [stakedAmount, stakeAllocationLockTime, earnedAmount, earnedAllocationsLockTime, tokenBalance] = await Promise.all([
         // Get the amount of staked tokens:
-        multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
+        eco.multipass(p => poolContract.connect(p).balanceOf(signerAddress)),
         // Get the stake allocation lock time:
         // @ts-expect-error
         getUserUnstakeTime(signerAddress),
         // Get the earned token balance:
-        multipass(p => poolContract.connect(p).earned(signerAddress)),
+        eco.multipass(p => poolContract.connect(p).earned(signerAddress)),
         // Get the earned allocations lock time:
         // @ts-expect-error
         getUserClaimRewardTime(signerAddress),
         // Get the token balance:
-        multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
+        eco.multipass(p => tokenContract.connect(p).balanceOf(signerAddress))
       ])
 
       // Get staked allocations

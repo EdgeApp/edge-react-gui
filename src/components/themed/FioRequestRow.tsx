@@ -1,4 +1,4 @@
-import { mul } from 'biggystring'
+import { mul, toFixed } from 'biggystring'
 import { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -8,12 +8,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../modules/FioAddress/util'
-import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
-import { FioRequest } from '../../types/types'
+import { FioRequest, FioRequestStatus } from '../../types/types'
+import { getCryptoText } from '../../util/cryptoTextUtils'
+import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddressUtils'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -34,6 +34,7 @@ interface StateProps {
   fiatSymbol: string
   fiatAmount: string
   displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -67,17 +68,16 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
   }
 
-  showStatus = (status: string) => {
+  showStatus = (status: FioRequestStatus) => {
     const { theme } = this.props
     const styles = getStyles(theme)
 
     let statusStyle = styles.requestPartialConfirmation
     let label = lstrings.fragment_wallet_unconfirmed
-    if (isSentFioRequest(status)) {
+    if (status === 'sent_to_blockchain') {
       statusStyle = styles.requestDetailsReceivedTx
       label = lstrings.fragment_transaction_list_receive_prefix
-    }
-    if (isRejectedFioRequest(status)) {
+    } else if (status === 'rejected') {
       statusStyle = styles.requestPending
       label = lstrings.fio_reject_status
     }
@@ -85,11 +85,14 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { displayDenomination, fiatAmount, fiatSymbol, fioRequest, isSent, theme } = this.props
+    const { displayDenomination, exchangeDenomination, fiatAmount, fiatSymbol, fioRequest, isSent, theme } = this.props
     const styles = getStyles(theme)
 
-    const fiatValue = `${fiatSymbol} ${fiatAmount}`
-    const currencyValue = `${displayDenomination.symbol || ''} ${fioRequest.content.amount}`
+    const fiatText = `${fiatSymbol} ${fiatAmount}`
+    let nativeAmount = mul(fioRequest.content.amount, exchangeDenomination.multiplier)
+    nativeAmount = toFixed(nativeAmount, 0, 0)
+    const cryptoText = `${getCryptoText({ displayDenomination, exchangeDenomination, nativeAmount })}`
+
     // time_stamp is returned as UTC but doesn't always include the zulu
     const safeDate = fioRequest.time_stamp.includes('Z') ? fioRequest.time_stamp : `${fioRequest.time_stamp}Z`
     const dateValue = `${formatTime(new Date(safeDate))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
@@ -98,7 +101,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         ref={this.rowRef}
         renderRight={
           // We are only swipeable if we aren't already cancelled or rejected:
-          isSentFioRequest(fioRequest.status) || isRejectedFioRequest(fioRequest.status)
+          fioRequest.status === 'sent_to_blockchain' || fioRequest.status === 'rejected'
             ? undefined
             : (isActive: SharedValue<boolean>) => (
                 <TouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
@@ -118,13 +121,13 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
           <View style={styles.requestRight}>
             <View style={styles.requestDetailsRow}>
               <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
-              <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
+              <EdgeText style={styles.requestAmount}>{cryptoText}</EdgeText>
             </View>
             <View style={styles.requestDetailsRow}>
               <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
                 {dateValue}
               </EdgeText>
-              <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
+              <EdgeText style={styles.requestFiat}>{fiatText}</EdgeText>
             </View>
             <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
           </View>
@@ -189,15 +192,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const emptyDisplayDenomination = { name: '', multiplier: '0' }
+const emptyDenomination = { name: '', multiplier: '0' }
 
 export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
-    let displayDenomination = emptyDisplayDenomination
+    let displayDenomination = emptyDenomination
+    let exchangeDenomination = emptyDenomination
     const wallet = getSelectedCurrencyWallet(state)
     if (!wallet) {
       return {
+        exchangeDenomination,
         displayDenomination,
         fiatSymbol: '',
         fiatAmount: ''
@@ -217,6 +222,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
       const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(pluginId, fioRequest.content.chain_code.toUpperCase(), tokenCode)
       tokenCode = edgeTokenCode
       displayDenomination = getDisplayDenomination(state, pluginId, tokenCode)
+      exchangeDenomination = getExchangeDenomination(state, pluginId, tokenCode)
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
@@ -229,6 +235,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     const fiatAmount = formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
 
     return {
+      exchangeDenomination,
       displayDenomination,
       fiatSymbol,
       fiatAmount

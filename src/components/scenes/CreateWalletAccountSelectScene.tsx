@@ -1,32 +1,27 @@
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
+import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import {
-  createAccountTransaction,
-  createCurrencyWallet,
-  fetchAccountActivationInfo,
-  fetchWalletAccountActivationPaymentInfo
-} from '../../actions/CreateWalletActions'
+import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccountActivationPaymentInfo } from '../../actions/CreateWalletActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
-import { THEME } from '../../theme/variables/airbitz'
-import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { scale } from '../../util/scaling'
 import { logEvent } from '../../util/tracking'
-import { fixFiatCurrencyCode } from '../../util/utils'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
+import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { PrimaryButton } from '../legacy/Buttons/PrimaryButton.ui'
-import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
+import { IconDataRow } from '../data/row/IconDataRow'
 import { Airship, showError } from '../services/AirshipInstance'
+import { Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 export interface AccountPaymentParams {
   requestedAccountName: string
@@ -36,376 +31,174 @@ export interface AccountPaymentParams {
   requestedAccountCurrencyCode: string
 }
 
-interface OwnProps extends EdgeSceneProps<'createWalletAccountSelect'> {}
+interface Props extends EdgeSceneProps<'createWalletAccountSelect'> {}
 
-interface StateProps {
-  account: EdgeAccount
-  paymentCurrencyCode: string
-  amount: string
-  supportedAssets: EdgeTokenId[]
-  activationCost: string
-  paymentDenominationSymbol: string
-  existingCoreWallet?: EdgeCurrencyWallet
-  walletAccountActivationQuoteError: string
-}
+export const CreateWalletAccountSelectScene = (props: Props) => {
+  const { route } = props
+  const { selectedWalletType, accountName, existingWalletId } = route.params
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-interface DispatchProps {
-  createAccountBasedWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => Promise<EdgeCurrencyWallet>
-  fetchAccountActivationInfo: (walletType: string) => Promise<void>
-  createAccountTransaction: (navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) => Promise<void>
-  fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => void
-  setWalletAccountActivationQuoteError: (message: string) => void
-}
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const supportedAssets = useSelector(state => state.ui.createWallet.handleActivationInfo.supportedAssets)
+  const activationCost = useSelector(state => state.ui.createWallet.handleActivationInfo.activationCost)
+  const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
+  const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
+  const existingCoreWallet = currencyWallets[existingWalletId]
+  const paymentDenominationSymbol = useSelector(state =>
+    paymentCurrencyCode != null && existingCoreWallet != null
+      ? getExchangeDenomination(state, existingCoreWallet.currencyInfo.pluginId, paymentCurrencyCode).symbol ?? ''
+      : ''
+  )
+  const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
 
-type Props = OwnProps & DispatchProps & StateProps
+  const instructionSyntax = sprintf(
+    lstrings.create_wallet_account_select_instructions_with_cost_4s,
+    selectedWalletType.currencyCode,
+    selectedWalletType.currencyCode,
+    config.appNameShort,
+    `${activationCost} ${selectedWalletType.currencyCode}`
+  )
+  const confirmMessageSyntax = sprintf(lstrings.create_wallet_account_make_payment_2s, selectedWalletType.currencyCode, existingCoreWallet.name)
+  const { tokenId } = guessFromCurrencyCode(account, { currencyCode: selectedWalletType.currencyCode })
 
-interface State {
-  isCreatingWallet: boolean
-  walletId: string
-  error: string
-  createdWallet: Promise<EdgeCurrencyWallet>
-}
+  const [isCreatingWallet, setIsCreatingWallet] = React.useState(true)
+  const [walletId, setWalletId] = React.useState('')
 
-export class CreateWalletAccountSelect extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { createAccountBasedWallet, route } = this.props
-    const { selectedFiat, selectedWalletType, accountName } = route.params
-    let createdWallet: Promise<EdgeCurrencyWallet>
-    if (props.existingCoreWallet != null) {
-      createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
-    } else {
-      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value)).then(wallet => {
-        this.setState({ isCreatingWallet: false })
-        return wallet
-      })
-    }
-    this.state = {
-      isCreatingWallet: true,
-      error: '',
-      walletId: '',
-      createdWallet
-    }
-    props.fetchAccountActivationInfo(selectedWalletType.walletType).catch(err => showError(err))
-  }
+  const paymentWallet = account.currencyWallets[walletId]
+  const isRenderSelect = walletId === '' || walletAccountActivationQuoteError
 
-  renameAndReturnWallet = async (wallet: EdgeCurrencyWallet) => {
-    const { route } = this.props
-    const { accountName } = route.params
-    await wallet.renameWallet(accountName)
-    this.setState({ isCreatingWallet: false })
-    return wallet
-  }
+  const handleRenameAndReturnWallet = useHandler(async () => {
+    await existingCoreWallet.renameWallet(accountName)
+    setIsCreatingWallet(false)
+    return existingCoreWallet
+  })
 
-  componentDidMount() {
-    logEvent('Activate_Wallet_Select')
-  }
-
-  onPressSelect = () => {
-    const { supportedAssets } = this.props
-
+  const handleSelect = useHandler(() => {
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
+      <WalletListModal bridge={bridge} navigation={props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
       .then(async ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          await this.onSelectWallet(walletId, currencyCode)
+          dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: '' })
+          setWalletId(walletId)
+          const createdWalletInstance = await handleRenameAndReturnWallet()
+          const paymentInfo: AccountPaymentParams = {
+            requestedAccountName: accountName,
+            currencyCode,
+            ownerPublicKey: createdWalletInstance.publicWalletInfo.keys.ownerPublicKey,
+            activePublicKey: createdWalletInstance.publicWalletInfo.keys.publicKey,
+            requestedAccountCurrencyCode: selectedWalletType.currencyCode
+          }
+          dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWalletInstance))
         }
       })
       .catch(err => showError(err))
-  }
+  })
 
-  onPressSubmit = async () => {
-    const { createAccountTransaction, route, navigation } = this.props
-    const { accountName } = route.params
-    const { walletId } = this.state
-    this.state.createdWallet
-      .then(async createdWallet => {
-        const createdWalletId = createdWallet.id
-        // will grab data from state in actions
-        await createAccountTransaction(navigation, createdWalletId, accountName, walletId)
-      })
-      .catch(err => showError(err))
-  }
+  const handleSubmit = useHandler(async () => {
+    const createdWalletInstance = await handleRenameAndReturnWallet()
+    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId)).catch(err => showError(err))
+  })
 
-  onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, route } = this.props
-    const { accountName, selectedWalletType } = route.params
-    setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
-    this.setState({ walletId })
-    const createdWallet = await this.state.createdWallet
-    const paymentInfo: AccountPaymentParams = {
-      requestedAccountName: accountName,
-      currencyCode: paymentCurrencyCode,
-      ownerPublicKey: createdWallet.publicWalletInfo.keys.ownerPublicKey,
-      activePublicKey: createdWallet.publicWalletInfo.keys.publicKey,
-      requestedAccountCurrencyCode: selectedWalletType.currencyCode
-    }
+  const handleCancel = useHandler(() => setWalletId(''))
 
-    fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWallet)
-  }
+  React.useEffect(() => {
+    logEvent('Activate_Wallet_Select')
+    dispatch(fetchAccountActivationInfo(selectedWalletType.walletType)).catch(err => showError(err))
+  }, [selectedWalletType.walletType, dispatch])
 
-  renderSelectWallet = () => {
-    const { activationCost, route } = this.props
-    const { selectedWalletType } = route.params
-    const currencyCode = selectedWalletType.currencyCode
-    const isSelectWalletDisabled = !activationCost || activationCost === ''
-    return (
+  return (
+    <SceneWrapper>
+      <View style={styles.titleIconArea}>
+        <CryptoIcon sizeRem={4} pluginId={existingCoreWallet.currencyInfo.pluginId} tokenId={tokenId} />
+      </View>
+      <View style={styles.createWalletPromptArea}>
+        <EdgeText numberOfLines={10}>{isRenderSelect ? instructionSyntax : confirmMessageSyntax}</EdgeText>
+      </View>
+
       <View style={styles.selectPaymentLower}>
-        <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
-            {isSelectWalletDisabled ? (
-              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-            ) : (
-              <PrimaryButton.Text>{lstrings.create_wallet_account_select_wallet}</PrimaryButton.Text>
-            )}
-          </PrimaryButton>
-        </View>
-        <View style={styles.paymentArea}>
-          <Text style={styles.paymentLeft}>{lstrings.create_wallet_account_amount_due}</Text>
-          <Text style={styles.paymentRight}>
-            {activationCost} {currencyCode}
-          </Text>
-        </View>
-      </View>
-    )
-  }
-
-  renderPaymentReview = () => {
-    const { account, paymentCurrencyCode, amount, activationCost, paymentDenominationSymbol, route } = this.props
-    const { walletId, createdWallet, isCreatingWallet } = this.state
-    const { accountName, selectedWalletType, selectedFiat } = route.params
-
-    const wallet = account.currencyWallets[walletId]
-    if (!wallet) return null
-    const name = getWalletName(wallet)
-
-    // @ts-expect-error
-    const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
-
-    return (
-      <View>
-        <View style={styles.selectPaymentLower}>
-          <View style={styles.accountReviewWalletNameArea}>
-            <Text style={styles.accountReviewWalletNameText}>
-              {name}:{paymentCurrencyCode}
-            </Text>
-          </View>
-          <View style={styles.paymentAndIconArea}>
-            <View style={styles.paymentLeftIconWrap}>
-              <CryptoIcon pluginId={wallet.currencyInfo.pluginId} sizeRem={1.5} />
-            </View>
-            <View style={styles.paymentArea}>
-              <Text style={styles.paymentLeft}>
-                {paymentDenominationSymbol} {amount} {paymentCurrencyCode}
-              </Text>
-              <Text style={styles.paymentRight}>
+        {isRenderSelect ? (
+          <Card>
+            <View style={styles.paymentCostArea}>
+              <EdgeText>{lstrings.create_wallet_account_amount_due}</EdgeText>
+              <EdgeText style={styles.paymentRight}>
                 {activationCost} {selectedWalletType.currencyCode}
-              </Text>
+              </EdgeText>
             </View>
-          </View>
-        </View>
-        <View style={styles.accountReviewInfoArea}>
-          <Text style={styles.accountReviewInfoText}>
-            {lstrings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {lstrings.create_wallet_fiat_type_label} {selectedFiat.label}
-          </Text>
-          <Text style={styles.accountReviewInfoText}>
-            {lstrings.create_wallet_name_label} {accountName}
-          </Text>
-        </View>
-        <View style={styles.accountReviewConfirmArea}>
-          <Text style={styles.accountReviewConfirmText}>{lstrings.create_wallet_account_confirm}</Text>
-        </View>
-        <View style={styles.confirmButtonArea}>
-          <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
-            {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
-            {isContinueButtonDisabled ? (
-              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-            ) : (
-              <PrimaryButton.Text>{lstrings.legacy_address_modal_continue}</PrimaryButton.Text>
-            )}
-          </PrimaryButton>
-        </View>
+          </Card>
+        ) : (
+          <IconDataRow
+            icon={<CryptoIcon pluginId={paymentWallet.currencyInfo.pluginId} sizeRem={2} />}
+            leftText={getWalletName(paymentWallet)}
+            leftSubtext={`${lstrings.send_confirmation_balance}: ${paymentWallet.balances[paymentCurrencyCode]} ${paymentCurrencyCode}`}
+            rightText={`${paymentDenominationSymbol} ${amount} ${paymentCurrencyCode}`}
+            rightSubText={`≈ ${activationCost} ${selectedWalletType.currencyCode}`}
+          />
+        )}
       </View>
-    )
-  }
-
-  render() {
-    const { account, route, activationCost, walletAccountActivationQuoteError } = this.props
-    const { selectedWalletType } = route.params
-    const { walletId } = this.state
-
-    const instructionSyntax = sprintf(
-      lstrings.create_wallet_account_select_instructions_with_cost,
-      selectedWalletType.currencyCode,
-      selectedWalletType.currencyCode,
-      config.appNameShort,
-      `${activationCost} ${selectedWalletType.currencyCode}`
-    )
-    const confirmMessageSyntax = sprintf(lstrings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
-
-    const { tokenId } = guessFromCurrencyCode(account, { currencyCode: selectedWalletType.currencyCode })
-
-    return (
-      <SceneWrapper>
-        <View style={styles.scene}>
-          <ScrollView>
-            <View style={styles.scrollableView}>
-              <CryptoIcon marginRem={[1.5, 0, 0, 0]} sizeRem={4} tokenId={tokenId} />
-              <View style={styles.createWalletPromptArea}>
-                <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
-              </View>
-              {!walletId || walletAccountActivationQuoteError ? this.renderSelectWallet() : this.renderPaymentReview()}
-            </View>
-            <View style={{ paddingBottom: 200 }} />
-          </ScrollView>
-        </View>
-      </SceneWrapper>
-    )
-  }
+      <View style={styles.buttonArea}>
+        {isRenderSelect ? (
+          <ButtonsContainer
+            primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
+            layout="column"
+          />
+        ) : (
+          <>
+            <EdgeText style={styles.accountReviewConfirmText} numberOfLines={2}>
+              {lstrings.create_wallet_account_confirm}
+            </EdgeText>
+            <ButtonsContainer
+              primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
+              secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
+              layout="column"
+            />
+          </>
+        )}
+      </View>
+    </SceneWrapper>
+  )
 }
 
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  scrollableView: {
-    position: 'relative',
-    paddingHorizontal: 20
-  },
+const getStyles = cacheStyles((theme: Theme) => ({
   createWalletPromptArea: {
-    paddingTop: scale(16),
-    paddingBottom: scale(8)
-  },
-  instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
-  },
-  buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
-  },
-  next: {
-    marginLeft: scale(1),
-    flex: 1
+    paddingTop: theme.rem(1),
+    paddingBottom: theme.rem(0.5),
+    paddingHorizontal: theme.rem(1.25)
   },
   selectPaymentLower: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    width: '100%',
-    marginVertical: scale(8),
-    paddingHorizontal: scale(16)
+    marginTop: theme.rem(3),
+    marginVertical: theme.rem(0.5),
+    paddingHorizontal: theme.rem(1),
+    flex: 1,
+    justifyContent: 'space-between'
   },
-  paymentAndIconArea: {
-    flexDirection: 'row'
-  },
-  paymentArea: {
+  paymentCostArea: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: scale(12),
-    flex: 1
+    paddingVertical: theme.rem(0.5),
+    justifyContent: 'space-between'
   },
-  paymentLeft: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_2
-  },
-  paymentLeftIconWrap: {
-    paddingVertical: scale(12),
-    marginRight: 6
-  },
-
   paymentRight: {
-    fontFamily: THEME.FONTS.BOLD,
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_2
-  },
-  accountReviewWalletNameArea: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingTop: scale(14),
-    paddingBottom: scale(8),
-    alignItems: 'center'
-  },
-  accountReviewWalletNameText: {
-    fontFamily: THEME.FONTS.BOLD,
-    fontSize: scale(16),
-    color: THEME.COLORS.SECONDARY
-  },
-  accountReviewInfoArea: {
-    width: '100%',
-    marginVertical: scale(10),
-    paddingHorizontal: scale(10)
-  },
-  accountReviewInfoText: {
-    color: THEME.COLORS.GRAY_2
-  },
-  accountReviewConfirmArea: {
-    width: '100%',
-    marginTop: scale(12),
-    marginBottom: scale(12),
-    paddingHorizontal: scale(10)
+    fontFamily: theme.fontFaceBold
   },
   accountReviewConfirmText: {
-    color: THEME.COLORS.GRAY_2,
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.75),
     textAlign: 'center'
   },
-  confirmButtonArea: {
-    marginHorizontal: scale(30)
+  buttonArea: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    marginHorizontal: theme.rem(0.5),
+    flex: 1
   },
-  confirmButton: {}
-})
-
-export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => {
-    const { currencyWallets } = state.core.account
-    const { existingWalletId } = params
-
-    const handleActivationInfo = state.ui.createWallet.handleActivationInfo
-    const walletAccountActivationPaymentInfo = state.ui.createWallet.walletAccountActivationPaymentInfo
-    const { supportedAssets, activationCost } = handleActivationInfo
-    const { currencyCode, amount } = walletAccountActivationPaymentInfo
-    const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
-    const paymentDenomination =
-      currencyCode != null && existingCoreWallet != null ? getExchangeDenomination(state, existingCoreWallet.currencyInfo.pluginId, currencyCode) : {}
-
-    let paymentDenominationSymbol
-    if (paymentDenomination) {
-      // @ts-expect-error
-      paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
-    } else {
-      paymentDenominationSymbol = ''
-    }
-    const walletAccountActivationQuoteError = state.ui.createWallet.walletAccountActivationQuoteError
-    return {
-      account: state.core.account,
-      paymentCurrencyCode: currencyCode,
-      amount,
-      supportedAssets,
-      activationCost,
-      paymentDenominationSymbol,
-      existingCoreWallet,
-      walletAccountActivationQuoteError
-    }
-  },
-  dispatch => ({
-    async createAccountTransaction(navigation: NavigationBase, createdWalletId: string, accountName: string, paymentWalletId: string) {
-      await dispatch(createAccountTransaction(navigation, createdWalletId, accountName, paymentWalletId))
-    },
-    async fetchAccountActivationInfo(walletType: string) {
-      await dispatch(fetchAccountActivationInfo(walletType))
-    },
-    fetchWalletAccountActivationPaymentInfo(paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) {
-      dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))
-    },
-    async createAccountBasedWallet(walletName: string, walletType: string, fiatCurrencyCode: string) {
-      return await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
-    },
-    setWalletAccountActivationQuoteError(message) {
-      dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })
-    }
-  })
-)(CreateWalletAccountSelect)
+  titleIconArea: {
+    marginVertical: theme.rem(2),
+    flexDirection: 'row',
+    justifyContent: 'center'
+  }
+}))

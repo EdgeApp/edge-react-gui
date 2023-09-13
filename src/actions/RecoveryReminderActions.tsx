@@ -1,9 +1,9 @@
 import * as React from 'react'
 
+import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils'
@@ -30,7 +30,7 @@ export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<v
 
       // Mark this level as shown:
       dispatch({ type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: level })
-      setPasswordRecoveryRemindersAsync(account, level).catch(showError)
+      writePasswordRecoveryReminders(account, level).catch(showError)
       showReminderModal(navigation).catch(showError)
       return
     }

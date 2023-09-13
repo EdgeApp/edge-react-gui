@@ -3,12 +3,11 @@ import * as React from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
-import { getSubcategories, setNewSubcategory } from '../../actions/TransactionDetailsActions'
+import { Category, displayCategories, formatCategory, getSubcategories, joinCategory, setNewSubcategory, splitCategory } from '../../actions/CategoriesActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Category, displayCategories, formatCategory, joinCategory, splitCategory } from '../../util/categories'
 import { scale } from '../../util/scaling'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -97,18 +96,22 @@ export function CategoryModal(props: Props) {
     bridge.resolve(undefined)
   })
 
-  const handleSubmit = useHandler(async () => {
-    const result = joinCategory({ category, subcategory })
-    if (!categories.includes(result)) {
-      await dispatch(setNewSubcategory(result))
+  const handleCategoryUpdate = async (fullCategory: string) => {
+    if (!categories.includes(fullCategory)) {
+      await dispatch(setNewSubcategory(fullCategory))
     }
-    bridge.resolve(result)
+    bridge.resolve(fullCategory)
+  }
+
+  const handleSubmit = useHandler(async () => {
+    const fullCategory = joinCategory({ category, subcategory })
+    await handleCategoryUpdate(fullCategory)
   })
 
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={() => bridge.resolve(item.raw)}>
+    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={async () => await handleCategoryUpdate(item.raw)}>
       <>
         <View style={styles.rowContent}>
           <View style={styles.rowCategoryTextWrap}>
@@ -136,7 +139,7 @@ export function CategoryModal(props: Props) {
       <OutlinedTextInput
         autoFocus
         returnKeyType="done"
-        autoCapitalize="none"
+        autoCapitalize="words"
         label={lstrings.sub_category_label}
         onChangeText={setSubcategory}
         onSubmitEditing={handleSubmit}

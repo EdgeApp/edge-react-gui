@@ -2,10 +2,10 @@ import * as React from 'react'
 import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { setSpendingLimits } from '../../modules/Core/Account/settings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
@@ -47,7 +47,7 @@ export const SpendingLimitsScene = (props: Props) => {
         amount: parseFloat(transactionAmount)
       }
     }
-    await setSpendingLimits(account, spendingLimits)
+    await writeSpendingLimits(account, spendingLimits)
     dispatch({
       type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
       data: { spendingLimits }

@@ -5,6 +5,12 @@ import { View } from 'react-native'
 
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { CcWalletMap } from '../../../reducers/FioReducer'
+import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
+import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
+import { connect } from '../../../types/reactRedux'
+import { EdgeSceneProps } from '../../../types/routerTypes'
+import { emptyCurrencyInfo, GuiCurrencyInfo, GuiDenomination } from '../../../types/types'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -12,13 +18,7 @@ import {
   fioMakeSpend,
   fioSignAndBroadcast,
   getRemainingBundles
-} from '../../../modules/FioAddress/util'
-import { CcWalletMap } from '../../../reducers/FioReducer'
-import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
-import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
-import { connect } from '../../../types/reactRedux'
-import { EdgeSceneProps } from '../../../types/routerTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo, GuiDenomination } from '../../../types/types'
+} from '../../../util/FioAddressUtils'
 import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { AddressModal } from '../../modals/AddressModal'

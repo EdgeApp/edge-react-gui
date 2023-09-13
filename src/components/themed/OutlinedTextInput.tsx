@@ -1,5 +1,16 @@
 import * as React from 'react'
-import { ActivityIndicator, LayoutChangeEvent, Platform, TextInput, TextStyle, TouchableOpacity, TouchableWithoutFeedback, View, ViewStyle } from 'react-native'
+import {
+  ActivityIndicator,
+  LayoutChangeEvent,
+  Platform,
+  StyleProp,
+  TextInput,
+  TextStyle,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle
+} from 'react-native'
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -212,7 +223,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
   }
 
-  const containerStyle = {
+  const containerStyle: StyleProp<ViewStyle> = {
     ...containerPadding,
     ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
     flexGrow: multiline ? 1 : 0,
@@ -222,6 +233,10 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
         ? theme.rem(0.75)
         : theme.rem(0.625)
       : 0
+  }
+
+  if (multiline) {
+    containerStyle.alignItems = 'flex-start'
   }
 
   // Animated styles:

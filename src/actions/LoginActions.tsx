@@ -4,22 +4,14 @@ import * as React from 'react'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
+import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
 import { lstrings } from '../locales/strings'
-import {
-  getLocalSettings,
-  getSyncedSettings,
-  LOCAL_ACCOUNT_DEFAULTS,
-  LOCAL_ACCOUNT_TYPES,
-  PASSWORD_RECOVERY_REMINDERS_SHOWN,
-  setLocalSettings
-} from '../modules/Core/Account/settings'
-import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer'
-import { AccountInitPayload } from '../reducers/scenes/SettingsReducer'
+import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
@@ -30,6 +22,7 @@ import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
+import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 import { trackAccountEvent } from './TrackingActions'
 import { updateWalletsRequest } from './WalletActions'
@@ -56,7 +49,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
 export function initializeAccount(navigation: NavigationBase, account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Log in as quickly as possible, but we do need the sort order:
-    const syncedSettings = await getSyncedSettings(account)
+    const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
     await dispatch(loadAccountReferral(account))
@@ -156,25 +149,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
     // Merge and prepare settings files:
     let accountInitObject: AccountInitPayload = {
+      ...initialState,
       account,
-      autoLogoutTimeInSeconds: 3600,
-      contactsPermissionOn: true,
-      countryCode: '',
       currencyCode: '',
-      defaultFiat: '',
-      defaultIsoFiat: '',
-      denominationSettings: {},
-      developerModeOn: false,
-      isAccountBalanceVisible: false,
-      mostRecentWallets: [],
-      passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
-      passwordReminder: passwordReminderInitialState,
       pinLoginEnabled: false,
-      preferredSwapPluginId: undefined,
-      preferredSwapPluginType: undefined,
-      securityCheckedWallets: {},
-      spamFilterOn: true,
-      spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
       touchIdInfo,
       walletId: '',
       walletsSort: 'manual'
@@ -194,13 +172,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
-      const loadedLocalSettings = await getLocalSettings(account)
-      const localSettings = { ...loadedLocalSettings }
-      const mergedLocalSettings = mergeSettings(localSettings, LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES)
-      if (mergedLocalSettings.isOverwriteNeeded && syncedSettings != null) {
-        await setLocalSettings(account, syncedSettings)
-      }
-      accountInitObject = { ...accountInitObject, ...mergedLocalSettings.finalSettings }
+      const loadedLocalSettings = await readLocalSettings(account)
+      accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
 
       for (const userInfo of context.localUsers) {
         if (userInfo.loginId === account.rootLoginId && userInfo.pinLoginEnabled) {
@@ -238,52 +211,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     } catch (error: any) {
       showError(error)
     }
-  }
-}
-
-export const mergeSettings = (
-  loadedSettings: any,
-  defaults: any,
-  types: any
-): { finalSettings: AccountInitPayload; isOverwriteNeeded: boolean; isDefaultTypeIncorrect: boolean } => {
-  const finalSettings: any = {}
-  // begin process for repairing damaged settings data
-  let isOverwriteNeeded = false
-  let isDefaultTypeIncorrect = false
-  for (const key of Object.keys(defaults)) {
-    // if the of the setting default does not meet the enforced type
-    const defaultSettingType = typeof defaults[key]
-    if (defaultSettingType !== types[key]) {
-      isDefaultTypeIncorrect = true
-      console.error('MismatchedDefaultSettingType key: ', key, ' with defaultSettingType: ', defaultSettingType, ' and necessary type: ', types[key])
-    }
-
-    // if the of the loaded setting does not meet the enforced type
-    // eslint-disable-next-line valid-typeof
-    const loadedSettingType = typeof loadedSettings[key]
-    if (loadedSettingType !== types[key]) {
-      isOverwriteNeeded = true
-      console.warn(
-        'Settings overwrite was needed for: ',
-        key,
-        ' with loaded value: ',
-        loadedSettings[key],
-        ', but needed type: ',
-        types[key],
-        ' so replace with: ',
-        defaults[key]
-      )
-      // change that erroneous value to something that works (default)
-      finalSettings[key] = defaults[key]
-    } else {
-      finalSettings[key] = loadedSettings[key]
-    }
-  }
-
-  return {
-    finalSettings,
-    isOverwriteNeeded,
-    isDefaultTypeIncorrect
   }
 }
 

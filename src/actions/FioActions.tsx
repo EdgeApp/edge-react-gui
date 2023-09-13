@@ -5,6 +5,9 @@ import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
+import { NavigationBase } from '../types/routerTypes'
+import { FioDomain, FioObtRecord } from '../types/types'
 import {
   addToFioAddressCache,
   getExpiredSoonFioDomains,
@@ -14,10 +17,7 @@ import {
   refreshConnectedWalletsForFioAddress,
   refreshFioNames,
   setFioExpiredCheckToDisklet
-} from '../modules/FioAddress/util'
-import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
-import { NavigationBase } from '../types/routerTypes'
-import { FioDomain, FioObtRecord } from '../types/types'
+} from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
 
 const EXPIRE_CHECK_TIMEOUT = 30000
