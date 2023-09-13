@@ -667,6 +667,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
+    keysOnlyMode: true,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
