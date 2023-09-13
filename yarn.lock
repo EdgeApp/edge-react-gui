@@ -7619,9 +7619,9 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-"ecpair@git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
+"ecpair@https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
   version "2.1.0"
-  resolved "git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
+  resolved "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
   dependencies:
     "@types/bs58check" "^2.1.0"
     base-x "^4.0.0"
@@ -7774,10 +7774,10 @@ edge-exchange-plugins@^0.21.3:
     utf8 "^3.0.0"
     xrpl "^2.10.0"
 
-edge-login-ui-rn@^2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.9.1.tgz#552491a53f0d297a83be485b0572a1f438ae5fa1"
-  integrity sha512-MeDGhFZfNEJOewLtdcz942XsQUQI1Y9BsEdlzHXjVjbpT3dn648PgiHNr6Rz1eaR+va3fc2Bxu5SZ2pJJ+kcmQ==
+edge-login-ui-rn@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.10.0.tgz#b47c85c8e54deb66823d1f88b2f583de3525c889"
+  integrity sha512-4dHzpEPsx3PraNziZ/umlM3mG49dgibpUC8fLA5hDkZT3HxJLvcaiRjZd6TTWBc5KzRIOA/eEmjDif9KVaLOMQ==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"
