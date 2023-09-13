@@ -69,11 +69,7 @@ export const AutoLogoutModal = (props: Props) => {
           <Picker.Item color={textColor} label={lstrings.settings_days} value="days" />
         </Picker>
       </View>
-      <ButtonsContainer
-        primary={{ label: lstrings.string_save, onPress: handleDone }}
-        secondary={{ label: lstrings.string_cancel_cap, onPress: handleCancel }}
-        layout="column"
-      />
+      <ButtonsContainer primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
     </ThemedModal>
   )
 }
