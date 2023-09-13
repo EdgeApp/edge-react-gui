@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 3.17.1
+
+- fixed: Fix 'to' quotes in Thorchain using incorrect denomination
+
 ## 3.15.0
 
 - added: simplified Maestro scripts and use cleaner-config for testerConfig.json
