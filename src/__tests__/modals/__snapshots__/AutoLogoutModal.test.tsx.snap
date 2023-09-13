@@ -396,12 +396,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         "onPress": [Function],
       }
     }
-    secondary={
-      {
-        "label": "Cancel",
-        "onPress": [Function],
-      }
-    }
   />
 </ThemedModal>
 `;
