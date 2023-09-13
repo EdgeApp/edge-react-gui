@@ -20,8 +20,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
       - name: Automatic Rebase
-        uses: samholmes/rebase@1.7
+        uses: EdgeApp/rebase@changelog-resolver
         with:
           autosquash: ${{ true }}
+          changelogResolver: ${{ true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
