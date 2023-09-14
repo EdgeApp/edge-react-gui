@@ -1085,6 +1085,8 @@
   "stake_unstake_claim": "Togli dallo stake e richiedi ricompense",
   "stake_unstake": "Togli dallo stake",
   "stake_x_to_earn_y": "Metti in stake %1$s per guadagnare %2$s",
+  "stake_stable_yield": "(Stable APY)",
+  "stake_variable_yield": "(Variable APY)",
   "stake_amount_s_stake": "Importo di %s da mettere in stake",
   "stake_amount_claim": "Quantità di ricompensa da rivendicare",
   "stake_amount_s_unstake": "Importo di %s da togliere dallo stake",
