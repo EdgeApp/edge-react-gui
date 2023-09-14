@@ -106,6 +106,7 @@ function generateVelodromeV2StakePolicyInfo(poolContractKey: string): StakePolic
     stakeProviderInfo: velodromeProviderInfo,
     parentPluginId: 'optimism',
     parentCurrencyCode: 'ETH',
+    isStablePool,
     policy: makeVelodromeV2StakePolicy({
       isStablePool,
       lpTokenContract: eco.makeContract(poolContractKey),

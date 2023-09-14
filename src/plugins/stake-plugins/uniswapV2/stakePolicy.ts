@@ -8,6 +8,7 @@ export interface StakePolicyInfo {
   parentPluginId: string
   parentCurrencyCode: string
   policy: StakePluginPolicy
+  isStablePool?: boolean
   stakeAssets: AssetId[]
   rewardAssets: AssetId[]
 }
@@ -15,14 +16,16 @@ export interface StakePolicyInfo {
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { stakeProviderInfo, stakeAssets, rewardAssets } = policyInfo
+    const { isStablePool, stakeProviderInfo, stakeAssets, rewardAssets } = policyInfo
     const stakePolicyId = policyInfo.stakePolicyId
     const apy = infoResponse.policies[stakePolicyId]
+    const yieldType = isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
 
     return {
       stakePolicyId,
       stakeProviderInfo,
       apy,
+      yieldType,
       stakeAssets,
       rewardAssets
     }

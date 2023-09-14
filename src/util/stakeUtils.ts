@@ -46,7 +46,11 @@ export const getPolicyTitleName = (stakePolicy: StakePolicy) => {
   const stakeName = stakeCurrencyCodes.length > 1 ? `${stakeCurrencyCodes.join(' + ')}` : stakeCurrencyCodes[0]
   const rewardName = rewardCurrencyCodes.length > 1 ? `${rewardCurrencyCodes.join(' + ')}` : rewardCurrencyCodes[0]
 
-  return sprintf(lstrings.stake_x_to_earn_y, stakeName, rewardName)
+  const { yieldType } = stakePolicy
+
+  const yieldText = yieldType === 'stable' ? ` ${lstrings.stake_stable_yield}` : yieldType === 'variable' ? ` ${lstrings.stake_variable_yield}` : ''
+
+  return `${sprintf(lstrings.stake_x_to_earn_y, stakeName, rewardName)}${yieldText}`
 }
 
 /**
