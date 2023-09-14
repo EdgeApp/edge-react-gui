@@ -127,6 +127,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         accessible={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}

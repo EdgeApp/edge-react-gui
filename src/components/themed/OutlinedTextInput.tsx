@@ -105,6 +105,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     onChangeText,
     onClear,
     onFocus,
+    onSubmitEditing,
 
     // TextInput:
     autoFocus = !searchIcon,
@@ -153,6 +154,14 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const [labelWidth, setLabelWidth] = React.useState(0)
   const handleLabelLayout = (event: LayoutChangeEvent) => setLabelWidth(event.nativeEvent.layout.width)
 
+  // Hack around a glitch that sometimes makes the top line disappear:
+  const [topLineRerenderTrigger, setTopLineRerenderTrigger] = React.useState(0)
+  const handleContainerLayout = (event: LayoutChangeEvent) => {
+    setTimeout(() => {
+      setTopLineRerenderTrigger(Math.abs(topLineRerenderTrigger - 1))
+    }, 100)
+  }
+
   // Captures the width of the counter label:
   const [counterWidth, setCounterWidth] = React.useState(0)
   const handleCounterLayout = (event: LayoutChangeEvent) => setCounterWidth(event.nativeEvent.layout.width)
@@ -189,6 +198,9 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     focusAnimationAlt.value = withDelay(animationDelay, withTiming(1, { duration: baseDuration }))
     if (onFocus != null) onFocus()
+  }
+  const handleSubmitEditing = () => {
+    if (onSubmitEditing != null) onSubmitEditing()
   }
 
   // Label dimensions:
@@ -279,7 +291,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
     const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
       borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
-      left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
+      left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink)) - topLineRerenderTrigger
     }
   })
   const labelStyle = useAnimatedStyle(() => {
@@ -341,7 +353,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
 
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-      <View style={[styles.container, containerStyle]}>
+      <View style={[styles.container, containerStyle]} onLayout={handleContainerLayout}>
         {/* Absolutely positioned children */}
         <Animated.View style={[styles.bottomLine, bottomStyle]} />
         <Animated.View style={[styles.leftCap, leftStyle]} />
@@ -404,6 +416,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             onBlur={handleBlur}
             onChangeText={onChangeText}
             onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
             maxLength={maxLength}
           />
         ) : (
@@ -425,6 +438,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
             onBlur={handleBlur}
             onChangeText={onChangeText}
             onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
             maxLength={maxLength}
           />
         )}
