@@ -1085,6 +1085,8 @@
   "stake_unstake_claim": "Unstake e Reivindicar Recompensas",
   "stake_unstake": "Unstake",
   "stake_x_to_earn_y": "Stake %1$s para ganhar %2$s",
+  "stake_stable_yield": "(Stable APY)",
+  "stake_variable_yield": "(Variable APY)",
   "stake_amount_s_stake": "Quantidade de %s para Stake",
   "stake_amount_claim": "Quantidade de Recompensa para Reivindicar",
   "stake_amount_s_unstake": "Quantidade de %s para Unstake",
