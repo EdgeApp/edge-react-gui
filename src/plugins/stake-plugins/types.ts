@@ -72,6 +72,7 @@ export interface StakePolicy {
 
   // A percentage number representing the yield per year
   apy?: number
+  yieldType?: 'stable' | 'variable'
 
   // The assets which can be earned
   rewardAssets: AssetId[]
