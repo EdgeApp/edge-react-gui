@@ -1085,6 +1085,8 @@
   "stake_unstake_claim": "ステーク解除して報酬を獲得する",
   "stake_unstake": "ステーク解除",
   "stake_x_to_earn_y": "ステーク %1$s で %2$sを獲得",
+  "stake_stable_yield": "(Stable APY)",
+  "stake_variable_yield": "(Variable APY)",
   "stake_amount_s_stake": "ステークする%sの数量",
   "stake_amount_claim": "受け取る報酬の量",
   "stake_amount_s_unstake": "ステーク解除する%sの数量",
