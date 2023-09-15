@@ -7619,9 +7619,9 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-"ecpair@https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
+"ecpair@git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
   version "2.1.0"
-  resolved "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
+  resolved "git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
   dependencies:
     "@types/bs58check" "^2.1.0"
     base-x "^4.0.0"
@@ -7726,16 +7726,16 @@ edge-currency-monero@^1.1.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.2.0.tgz#c7767fad8b902c3f1049a61b75be6eed82bffe56"
-  integrity sha512-tz+UKcRlojVONn+Tp+luvsycFajoPW+Fdwu/gBjAsq8U3DM8Ez8WWSgi/kfdMOBSoDZ+DjWt1476WDrUV8wvGQ==
+edge-currency-plugins@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.2.1.tgz#49f57033f0297199aba7a83d35e36e1cfdd9a9c8"
+  integrity sha512-YKsysg7lf0V87pPZi21/Ifgt2VpYAtriZBQRtbkV/s01WCovNL7UqVgvj4AHMMPeQkjzJtGZQ3QWoo9jMrxl8Q==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
     async-mutex "^0.2.6"
     baselet "^0.2.4"
-    biggystring "^4.0.0"
+    biggystring "^4.1.3"
     bip32 "^2.0.5"
     bip32grs "^2.0.5"
     bip39 "^3.0.2"
