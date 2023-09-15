@@ -15,21 +15,30 @@ export interface ButtonInfo {
 }
 
 interface Props {
+  // Specifies whether the component should be positioned absolutely.
+  // Default value is false.
   absolute?: boolean
+
+  // If specified, fades visibility according to the value of fade.
+  // The component is always visible if fade is unset.
   fade?: boolean
+
+  // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
   escape?: ButtonInfo
+
+  // Row or column button layout. Defaults to column layout.
   layout: 'row' | 'column'
 }
 
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsContainer = React.memo(({ absolute = false, fade = false, primary, secondary, escape, layout = 'column' }: Props) => {
+export const ButtonsContainer = React.memo(({ absolute = false, fade, primary, secondary, escape, layout = 'column' }: Props) => {
   const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
 
-  const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: !fade })
+  const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
 
   const renderButton = (type: MainButtonType, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
@@ -40,17 +49,17 @@ export const ButtonsContainer = React.memo(({ absolute = false, fade = false, pr
   // HACK: Workaround for useFadeAnimation not working if visible=true is set
   // immediately
   React.useEffect(() => {
-    setFadeVisibleHack(true)
+    setFadeVisibleHack(fade == null ? true : fade)
   }, [fade])
 
   return (
-    <StyledButtonContainer absolute={absolute} layout={layout}>
-      <Animated.View style={fadeStyle}>
+    <Animated.View style={fadeStyle}>
+      <StyledButtonContainer absolute={absolute} layout={layout}>
         {renderButton('primary', primary)}
         {renderButton('secondary', secondary)}
         {renderButton('escape', escape)}
-      </Animated.View>
-    </StyledButtonContainer>
+      </StyledButtonContainer>
+    </Animated.View>
   )
 })
 
