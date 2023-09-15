@@ -261,6 +261,26 @@ export function showRestoreWalletsModal(navigation: NavigationBase): ThunkAction
   }
 }
 
+export const toggleUserPausedWallet =
+  (account: EdgeAccount, walletId: string): ThunkAction<Promise<void>> =>
+  async (dispatch, getState) => {
+    const settings = await readSyncedSettings(account)
+    const { userPausedWallets } = settings
+
+    const isPaused = userPausedWallets.includes(walletId)
+    const newPausedWallets = isPaused ? [...userPausedWallets.filter(id => id !== walletId)] : [...userPausedWallets, walletId]
+
+    await dispatch({
+      type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS',
+      data: { userPausedWallets: newPausedWallets }
+    })
+
+    return await writeSyncedSettings(account, {
+      ...settings,
+      userPausedWallets: [...newPausedWallets]
+    })
+  }
+
 export const asPasswordReminderLevels = asObject({
   '20': asMaybe(asBoolean, false),
   '200': asMaybe(asBoolean, false),
@@ -303,7 +323,8 @@ export const asSyncedAccountSettings = asObject({
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
   walletsSort: asMaybe(asSortOption, 'manual'),
   denominationSettings: asMaybe<DenominationSettings>(asDenominationSettings, () => ({})),
-  securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({}))
+  securityCheckedWallets: asMaybe<SecurityCheckedWallets>(asSecurityCheckedWallets, () => ({})),
+  userPausedWallets: asMaybe(asArray(asString), () => [])
 })
 
 export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
