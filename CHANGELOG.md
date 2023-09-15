@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 3.17.2
+
+- added: Dynamic fudge factors for UTXO fees
+
 ## 3.17.1
 
 - fixed: Fix 'to' quotes in Thorchain using incorrect denomination
