@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## Unreleased
+
+- fixed: Prevent setting invalid spending limits
+
+## 3.17.1
+
+- fixed: Fix 'to' quotes in Thorchain using incorrect denomination
+
 ## 3.16.0 (2023-08-28)
 
 - added: New swap provider XRP Decentralized Exchange

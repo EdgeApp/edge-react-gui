@@ -60,6 +60,8 @@ export const SpendingLimitsScene = (props: Props) => {
     handleSubmitAsync().catch(err => showError(err))
   })
 
+  const amount = parseFloat(transactionAmount)
+  const enableSlider = password.length > 8 && !isNaN(amount) && amount > 0
   return (
     <SceneWrapper hasHeader>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
@@ -86,7 +88,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
         <View style={styles.spacer} />
 
-        <MainButton label={lstrings.save} disabled={password.length === 0} onPress={handleSubmit} />
+        <MainButton label={lstrings.save} disabled={!enableSlider} onPress={handleSubmit} />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )
