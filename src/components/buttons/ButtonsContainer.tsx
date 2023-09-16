@@ -26,6 +26,7 @@ interface Props {
   // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
+  secondary2?: ButtonInfo // A secondary-styled button in the primary position (right/top side)
   escape?: ButtonInfo
 
   // Row or column button layout. Defaults to column layout.
@@ -35,7 +36,7 @@ interface Props {
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsContainer = React.memo(({ absolute = false, fade, primary, secondary, escape, layout = 'column' }: Props) => {
+export const ButtonsContainer = React.memo(({ absolute = false, fade, primary, secondary, secondary2, escape, layout = 'column' }: Props) => {
   const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
 
   const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
@@ -56,6 +57,7 @@ export const ButtonsContainer = React.memo(({ absolute = false, fade, primary, s
     <Animated.View style={fadeStyle}>
       <StyledButtonContainer absolute={absolute} layout={layout}>
         {renderButton('primary', primary)}
+        {renderButton('secondary', secondary2)}
         {renderButton('secondary', secondary)}
         {renderButton('escape', escape)}
       </StyledButtonContainer>
