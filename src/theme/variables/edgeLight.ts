@@ -346,8 +346,10 @@ export const edgeLight: Theme = {
   outlineTextInputTextColor: palette.black,
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.gray,
+  outlineTextInputBorderColorDisabled: palette.gray,
   outlineTextInputBorderColorFocused: palette.edgeBlue,
   outlineTextInputLabelColor: palette.gray,
+  outlineTextInputLabelColorDisabled: palette.gray,
   outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Animation
