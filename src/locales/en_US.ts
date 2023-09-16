@@ -821,7 +821,7 @@ const strings = {
   estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   search_region: 'Search region',
-  buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
+  buy_sell_crypto_no_provider_region: "We're sorry but there are no available providers for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_powered_by_space: 'Powered by ',
   tap_to_change_provider: 'Tap to Change Provider',

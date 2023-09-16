@@ -358,7 +358,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
             <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
-              {lstrings.buy_sell_crypto_no_plugin_region}
+              {lstrings.buy_sell_crypto_no_provider_region}
             </EdgeText>
           </View>
         ) : (
