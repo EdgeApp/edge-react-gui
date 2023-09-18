@@ -1,4 +1,4 @@
-import { asBoolean, asObject, asOptional, asValue } from 'cleaners'
+import { asObject, asOptional, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
 
@@ -19,9 +19,9 @@ const generateStickyConfigVal = (key: keyof typeof stickyDistribution): boolean 
 }
 
 const asStickyConfig = asObject({
-  swipeLastUsp: asOptional(asBoolean, generateStickyConfigVal('swipeLastUsp')),
+  swipeLastUsp: asOptional(asValue('true', 'false'), generateStickyConfigVal('swipeLastUsp') ? 'true' : 'false'),
   createAccountType: asOptional<CreateAccountType>(asValue('full', 'light'), generateStickyConfigVal('createAccountType') ? 'light' : 'full'),
-  legacyLanding: asOptional(asBoolean, generateStickyConfigVal('legacyLanding'))
+  legacyLanding: asOptional(asValue('true', 'false'), generateStickyConfigVal('legacyLanding') ? 'true' : 'false')
 })
 
 /**

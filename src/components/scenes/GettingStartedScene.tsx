@@ -150,7 +150,7 @@ export const GettingStartedScene = (props: Props) => {
 
   // Initialize variant config values
   useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled(await getStickyConfigValue('swipeLastUsp'))
+    setIsFinalSwipeEnabled((await getStickyConfigValue('swipeLastUsp')) === 'true')
     setCreateAccountType(await getStickyConfigValue('createAccountType'))
   }, [])
 
