@@ -94,7 +94,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .catch(e => showError(e))
       },
       onCardPress({ url }) {
-        showUi.openWebView({ url }).catch(err => showError(err))
+        showUi.openExternalWebView({ url }).catch(err => showError(err))
       },
       onHelpPress() {
         openBrowserUri(SUPPORT_URL)

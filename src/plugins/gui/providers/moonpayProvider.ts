@@ -263,7 +263,7 @@ export const moonpayProvider: FiatProviderFactory = {
             url.set('query', queryObj)
 
             console.log('Approving moonpay quote url=' + url.href)
-            await showUi.openWebView({ url: url.href })
+            await showUi.openExternalWebView({ url: url.href })
           },
           closeQuote: async (): Promise<void> => {}
         }

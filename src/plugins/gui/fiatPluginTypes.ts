@@ -82,7 +82,7 @@ export interface FiatPluginEnterAmountResponse {
   value1: string
   value2: string
 }
-export interface FiatPluginOpenWebViewParams {
+export interface FiatPluginOpenExternalWebViewParams {
   url: string
 }
 
@@ -95,7 +95,7 @@ export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
-  openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
+  openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
