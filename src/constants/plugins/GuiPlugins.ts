@@ -2,7 +2,6 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
-import { makeRewardsCardPlugin } from '../../plugins/gui/RewardsCardPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -157,14 +156,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
       'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,usdt_trc20,usdt_erc20,usdt_polygon,usdc_erc20,usdc_polygon,litecoin,dogecoin,dash',
     lockUriPath: true,
     displayName: 'Bitrefill'
-  },
-  rewardscard: {
-    pluginId: 'rewardscard',
-    storeId: 'rewardscard',
-    baseUri: '',
-    lockUriPath: true,
-    nativePlugin: makeRewardsCardPlugin,
-    displayName: 'Edge Reward Card'
   },
   xanpool: {
     pluginId: 'xanpool',

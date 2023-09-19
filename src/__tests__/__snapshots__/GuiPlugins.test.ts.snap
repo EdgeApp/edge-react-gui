@@ -244,22 +244,6 @@ exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
     "title": "ACH Bank Transfer",
   },
   {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Buy prepaid, single-load Visa® cards
-Fee: 0% / Settlement: Instant
-Limit: $1,000 per card, $10,000 per day
-",
-    "paymentType": "credit",
-    "paymentTypeLogoKey": "visa",
-    "paymentTypes": [
-      "credit",
-    ],
-    "pluginId": "rewardscard",
-    "title": "Visa® Card Program",
-  },
-  {
     "cryptoCodes": [
       "BTC",
       "DASH",
