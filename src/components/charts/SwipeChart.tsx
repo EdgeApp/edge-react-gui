@@ -3,7 +3,7 @@ import { asArray, asNumber, asObject, asTuple } from 'cleaners'
 import * as React from 'react'
 import { LayoutChangeEvent, Platform, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
-import Animated, { Easing, useAnimatedProps, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated'
 import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
 import { sprintf } from 'sprintf-js'
 
@@ -138,8 +138,6 @@ const SwipeChartComponent = (params: Props) => {
   const [queryFromTimeOffset, setQueryFromTimeOffset] = React.useState(UNIX_SECONDS_MONTH_OFFSET)
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const minPriceLabelPosition = React.useRef<{ x: number; y: number; origin: AlignOrigin }>({ x: 0, y: 0, origin: 'left' })
-  const maxPriceLabelPosition = React.useRef<{ x: number; y: number; origin: AlignOrigin }>({ x: 0, y: 0, origin: 'left' })
   const chartWidth = React.useRef(0)
   const chartHeight = React.useRef(0)
 
@@ -149,6 +147,11 @@ const SwipeChartComponent = (params: Props) => {
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
   const minPrice = Math.min(...prices)
   const maxPrice = Math.max(...prices)
+
+  const sMinPriceLabelX = useSharedValue(0)
+  const sMinPriceLabelY = useSharedValue(0)
+  const sMaxPriceLabelX = useSharedValue(0)
+  const sMaxPriceLabelY = useSharedValue(0)
 
   const sMinPriceString = useSharedValue(``)
   const sMaxPriceString = useSharedValue(``)
@@ -217,37 +220,14 @@ const SwipeChartComponent = (params: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTimespan])
 
-  const setMinMaxLabelCoords = () => {
-    if (
-      chartWidth.current != null &&
-      chartHeight.current != null &&
-      chartWidth.current > 0 &&
-      chartHeight.current > 0 &&
-      minPriceDataPoint != null &&
-      maxPriceDataPoint != null
-    ) {
-      const minXIndex = chartData.indexOf(minPriceDataPoint)
-      const minXPosition = (chartWidth.current / (chartData.length - 1)) * minXIndex
-      const minYPosition = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
-
-      const maxXIndex = chartData.indexOf(maxPriceDataPoint)
-      const maxXPosition = (chartWidth.current / (chartData.length - 1)) * maxXIndex
-      const maxYPosition = theme.rem(0)
-
-      // We want the alignment origin of the element to be on the right edge if
-      // it is located on the right half of the chart so that the contents
-      // remain visible, and vice versa for the left half of the chart.
-      minPriceLabelPosition.current = { x: minXPosition, y: minYPosition, origin: minXIndex > chartData.length / 2 ? 'right' : 'left' }
-      maxPriceLabelPosition.current = { x: maxXPosition, y: maxYPosition, origin: maxXIndex > chartData.length / 2 ? 'right' : 'left' }
-    }
-  }
-
   React.useEffect(() => {
-    sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
-    sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
-    setMinMaxLabelCoords()
+    if (chartData.length > 0) {
+      rCachedWidths.current = {}
+      sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
+      sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData, maxPriceDataPoint, minPriceDataPoint])
+  }, [chartData])
 
   // #endregion Chart setup
 
@@ -279,13 +259,13 @@ const SwipeChartComponent = (params: Props) => {
   // A delayed fadein for the max/min labels, to ensure the labels don't get
   // rendered before the price line. Also hidden when gesture is active
   const aMinLabelStyle = useAnimatedStyle(() => ({
-    left: minPriceLabelPosition.current.x,
-    top: minPriceLabelPosition.current.y,
+    left: sMinPriceLabelX.value,
+    top: sMinPriceLabelY.value,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
   const aMaxLabelStyle = useAnimatedStyle(() => ({
-    left: maxPriceLabelPosition.current.x,
-    top: maxPriceLabelPosition.current.y,
+    left: sMaxPriceLabelX.value,
+    top: sMaxPriceLabelY.value,
     opacity: sMinMaxOpacity.value * (1 - sCursorOpacity.value)
   }))
 
@@ -333,11 +313,14 @@ const SwipeChartComponent = (params: Props) => {
     )
   })
 
-  const handleShowMinMaxLabelCoords = useHandler((event: LayoutChangeEvent) => {
+  /**
+   * Handle the layout event on the chart, set the min price label Y value.
+   */
+  const handleSetChartDimensions = useHandler((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout
     chartWidth.current = width
     chartHeight.current = height
-    setMinMaxLabelCoords()
+    sMinPriceLabelY.value = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
   })
 
   // sIsShowCursor is used as an optimization since handleToolTipTextRenderer()
@@ -407,13 +390,26 @@ const SwipeChartComponent = (params: Props) => {
       }
     }
 
+  /**
+   * Set the X axis position of the min/max labels. Left or right justify the
+   * label according to its horizontal position on the chart
+   */
+  const setMinMaxLabelsX = (xSharedVal: SharedValue<number>, priceDatapoint?: ChartDataPoint) => (layoutChangeEvent: LayoutChangeEvent) => {
+    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null && minPriceDataPoint != null && chartData != null && priceDatapoint != null) {
+      const xIndex = chartData.indexOf(priceDatapoint)
+      const xPosition = (chartWidth.current / (chartData.length - 1)) * xIndex
+      const labelWidth = layoutChangeEvent.nativeEvent.layout.width
+      const isRightJustified = xPosition > chartData.length / 2
+
+      xSharedVal.value = isRightJustified ? xPosition - labelWidth : xPosition
+    }
+  }
+
   const handleAlignCursorLayout = useHandler(nativeAlignLayout('center', rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
-
-  const handleAlignMinPriceLabelLayout = useHandler(nativeAlignLayout(minPriceLabelPosition.current.origin, rMinPriceView, minPriceLabelPosition.current.x))
-
-  const handleAlignMaxPriceLabelLayout = useHandler(nativeAlignLayout(maxPriceLabelPosition.current.origin, rMaxPriceView, maxPriceLabelPosition.current.x))
-
   const handleAlignXTooltipLayout = useHandler(nativeAlignLayout('center', rXTooltipView))
+
+  const handleAlignMinPriceLabelLayout = useHandler(setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint))
+  const handleAlignMaxPriceLabelLayout = useHandler(setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint))
 
   const handleSetTimespanH = useHandler(() => {
     setSelectedTimespan('hour')
@@ -513,7 +509,7 @@ const SwipeChartComponent = (params: Props) => {
 
       {/* Chart */}
       {chartData.length === 0 || isLoading ? (
-        <View style={styles.loader} onLayout={handleShowMinMaxLabelCoords}>
+        <View style={styles.loader} onLayout={handleSetChartDimensions}>
           <FillLoader />
         </View>
       ) : (
