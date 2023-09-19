@@ -7619,9 +7619,9 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-"ecpair@git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
+"ecpair@https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4":
   version "2.1.0"
-  resolved "git+https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
+  resolved "https://github.com/EdgeApp/ecpair.git#b193eb8ea2ec0c93b528f4b0223a605407ff43e4"
   dependencies:
     "@types/bs58check" "^2.1.0"
     base-x "^4.0.0"
@@ -7654,10 +7654,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.6.0.tgz#3a381faa3a483f631b3380e00615a22b2004ed52"
-  integrity sha512-y6nfz49ALKmsnyAkjBn5s5UNS7hEU3PhtPEoXDo6sOVgidEplcMMwUa5vEw15qcZnTxYmvgDCaNbj2UAxzlhxg==
+edge-core-js@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.7.0.tgz#c728cc8b904193bf5fd32b6003672bcd0757cc5f"
+  integrity sha512-t88JaqM0X030/X2KGeJuIAqRlSfxI83Hg5+0V1q4bfaVXHRpmbdaiiWXliUteB7mlMePu3uuslzRVmAgGOpwdQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
