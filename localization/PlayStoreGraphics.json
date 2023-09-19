@@ -1,4 +1,13 @@
 {
-    "key": "value",
-    "key2": "value"
+    "play_store_graphic_title_app_description": "Secure & Private Crypto Wallet",
+    "play_store_graphic_title_manage_assets": "Manage Your Assets",
+    "play_store_graphic_subheading_asset_examples":"BTC, ETH, XMR, DOGE, and more",
+    "play_store_graphic_title_send_and_receive": "Send & Receive",
+    "play_store_graphic_subheading_anytime_anywhere":"Anytime, Anywhere",
+    "play_store_graphic_title_built_in_exchange":"Built-in Exchange",
+    "play_store_graphic_subheading_exchange":"Exchange Currencies in the App",
+    "play_store_graphic_title_transation_details":"Transaction Details",
+    "play_store_graphic_subheading_details":"Rich Details for Every Transaction",
+    "play_store_feature_graphic_app_description":"Secure & Privacy Crypto Wallet",
+    "play_store_feature_graphic _subheading_app_features":"Buy Bitcoin & Other Top Currencies"
 }
