@@ -4,7 +4,7 @@ import { FIRST_OPEN } from '../constants/constantSettings'
 
 const firstOpenDisklet = makeReactNativeDisklet()
 
-let isFirstOpen: boolean | undefined
+let isFirstOpen: 'true' | 'false'
 
 /**
  * Returns whether this session was the first time the user opened the app.
@@ -15,10 +15,10 @@ export const getIsFirstOpen = async () => {
   else {
     try {
       await firstOpenDisklet.getText(FIRST_OPEN)
-      isFirstOpen = false
+      isFirstOpen = 'false'
     } catch (error: any) {
       await firstOpenDisklet.setText(FIRST_OPEN, '')
-      isFirstOpen = true
+      isFirstOpen = 'true'
     }
     return isFirstOpen
   }

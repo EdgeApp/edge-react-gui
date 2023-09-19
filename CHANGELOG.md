@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+- changed: Replace text 'plugins' with 'providers' in Buy/Sell
 - fixed: Prevent setting invalid spending limits
+- fixed: Turning off 'Dark Mode' causes crash
+- fixed: Incorrect wording when disabling a token
+- removed: 'Add/Edit Tokens" option for token rows
 
 ## 3.17.2 (2023-09-15)
 
