@@ -23,7 +23,6 @@ import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
 
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
-type AlignOrigin = 'center' | 'right' | 'left'
 
 interface ChartDataPoint {
   x: Date
@@ -323,12 +322,18 @@ const SwipeChartComponent = (params: Props) => {
     sMinPriceLabelY.value = Platform.OS === 'ios' ? chartHeight.current - theme.rem(2.5) : chartHeight.current - theme.rem(2.75)
   })
 
-  // sIsShowCursor is used as an optimization since handleToolTipTextRenderer()
-  // is triggered repeatedly during the price line animation when chart dataset
-  // is updated during scene initialization or timespan changes. This can cause
-  // sluggishness during those updates.
-  // We only care about those callbacks when it's triggered by the gesture, not
-  // by the builtin price line entering animation sequence.
+  /**
+   * Handle the tap and hold gesture event on the chart.
+   *
+   * sIsShowCursor is used as an optimization since handleToolTipTextRenderer()
+   * is triggered repeatedly during the price line animation when chart dataset
+   * is updated during scene initialization or timespan changes.
+   *
+   * This can cause sluggishness during those updates.
+   *
+   * We only care about those callbacks when it's triggered by the gesture, not
+   * by each tick of the builtin price line entering animation sequence.
+   */
   const handleShowIndicatorCallback = useHandler((opacity: number) => {
     const isShowIndicator = opacity === 1
     rIsShowCursor.current = isShowIndicator
@@ -337,7 +342,9 @@ const SwipeChartComponent = (params: Props) => {
     })
   })
 
-  // Update a shared X position equal to that of the active slide gesture
+  /**
+   * Update a shared X position equal to that of the active slide gesture
+   */
   const handleToolTipTextRenderer = useHandler((toolTipTextRenderersInput: ToolTipTextRenderersInput) => {
     if (rIsShowCursor.current) sXTooltipPos.value = toolTipTextRenderersInput.x
 
@@ -345,7 +352,9 @@ const SwipeChartComponent = (params: Props) => {
     return { text: '' }
   })
 
-  // X axis date tooltip display value updates
+  /**
+   * X axis date tooltip display value updates
+   */
   const handleDateCallbackWithX = useHandler((x: number | Date) => {
     if (rIsShowCursor.current) {
       const newXTooltipText = formatTimestamp(new Date(x), selectedTimespan).xTooltip
@@ -353,7 +362,9 @@ const SwipeChartComponent = (params: Props) => {
     }
   })
 
-  // Price value tooltip display value updates
+  /**
+   * Price value tooltip display value updates
+   */
   const handlePriceCallbackWithY = useHandler((y: number) => {
     if (rIsShowCursor.current) {
       const newDisplayPrice = `${fiatSymbol}${formatFiatString({ fiatAmount: y.toString(), noGrouping: false, autoPrecision: true })}`
@@ -361,34 +372,23 @@ const SwipeChartComponent = (params: Props) => {
     }
   })
 
-  // Natively align a component based on a specified origin
-  const nativeAlignLayout =
-    (origin: AlignOrigin, ref: React.RefObject<View | Animated.View | undefined>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
-      if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
-        const target = layoutChangeEvent.target
+  /**
+   * Natively center align a component across the Y axis origin
+   */
+  const nativeCenterAlignLayout = (ref: React.RefObject<View | Animated.View | undefined>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
+    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
+      const target = layoutChangeEvent.target
 
-        // Store measurements and avoid over-updating if the size of the component
-        // doesn't change significantly
-        const currentWidth = rCachedWidths.current[target]
-        const newWidth = layoutChangeEvent.nativeEvent.layout.width
-        if (currentWidth == null || Math.abs(currentWidth - newWidth) > 1) {
-          rCachedWidths.current[target] = newWidth
-          if (ref.current != null) {
-            switch (origin) {
-              case 'center':
-                ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
-                break
-              case 'right':
-                ref.current.setNativeProps({ left: -newWidth + (offset ?? 0) })
-                break
-              case 'left': // The typical 'default' alignment
-                ref.current.setNativeProps({ left: 0 + (offset ?? 0) })
-                break
-            }
-          }
-        }
+      // Store measurements and avoid over-updating if the size of the component
+      // doesn't change significantly
+      const currentWidth = rCachedWidths.current[target]
+      const newWidth = layoutChangeEvent.nativeEvent.layout.width
+      if (currentWidth == null || Math.abs(currentWidth - newWidth) > 1) {
+        rCachedWidths.current[target] = newWidth
+        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
       }
     }
+  }
 
   /**
    * Set the X axis position of the min/max labels. Left or right justify the
@@ -405,8 +405,8 @@ const SwipeChartComponent = (params: Props) => {
     }
   }
 
-  const handleAlignCursorLayout = useHandler(nativeAlignLayout('center', rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
-  const handleAlignXTooltipLayout = useHandler(nativeAlignLayout('center', rXTooltipView))
+  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
+  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipView))
 
   const handleAlignMinPriceLabelLayout = useHandler(setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint))
   const handleAlignMaxPriceLabelLayout = useHandler(setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint))
