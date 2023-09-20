@@ -1215,7 +1215,7 @@ const strings = {
   wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
 
   // New Token TermsAgreement Modal
-  token_agreement_modal_title: '%s Needed To Send Tokens',
+  token_agreement_modal_title: '%s Needed to Send Tokens',
   token_agreement_modal_message:
     '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Buy or Exchange function.',
 
