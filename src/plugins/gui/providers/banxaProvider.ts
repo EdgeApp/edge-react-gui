@@ -151,15 +151,15 @@ const asBanxaPaymentMethods = asObject({
   })
 })
 
+interface BanxaPaymentIdLimit {
+  id: number
+  type: FiatPaymentType
+  min: string
+  max: string
+}
 interface BanxaPaymentMap {
   [fiatCode: string]: {
-    [cryptoCode: string]: {
-      [paymentType: string]: {
-        id: number
-        min: string
-        max: string
-      }
-    }
+    [cryptoCode: string]: { [id: number]: BanxaPaymentIdLimit }
   }
 }
 
@@ -276,24 +276,25 @@ export const banxaProvider: FiatProviderFactory = {
         // TODO: Support returning multiple quotes for each payment type. Right now return quote for just
         // the first matchine payment type. Only need to return multiple quotes if the quote amounts are different per
         // payment type
-        let paymentType
-        try {
-          paymentType = paymentTypes.find(t => banxaPaymentsMap[direction][fiat][banxaCoin][t] != null)
-        } catch (e: any) {
-          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+        let paymentObj: BanxaPaymentIdLimit | undefined
+        let paymentType: FiatPaymentType | undefined
+        for (const pt of paymentTypes) {
+          paymentObj = getPaymentIdLimit(direction, fiat, banxaCoin, pt)
+          if (paymentObj != null) {
+            paymentType = pt
+            break
+          }
         }
 
-        if (paymentType == null) {
+        if (paymentObj == null || paymentType == null) {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
-        const paymentObj = banxaPaymentsMap[direction][fiat][banxaCoin][paymentType ?? ''] ?? {}
-        if (paymentObj == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const checkMinMax = (amount: string, displayCurrencyCode?: string) => {
-          if (gt(amount, paymentObj.max)) {
-            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max), displayCurrencyCode })
-          } else if (lt(amount, paymentObj.min)) {
-            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min), displayCurrencyCode })
+        const checkMinMax = (amount: string, paymentIdLimit: BanxaPaymentIdLimit, displayCurrencyCode?: string) => {
+          if (gt(amount, paymentIdLimit.max)) {
+            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentIdLimit.max), displayCurrencyCode })
+          } else if (lt(amount, paymentIdLimit.min)) {
+            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentIdLimit.min), displayCurrencyCode })
           }
         }
 
@@ -307,7 +308,7 @@ export const banxaProvider: FiatProviderFactory = {
           queryParams.target = banxaCoin
           if (amountType === 'fiat') {
             queryParams.source_amount = exchangeAmount
-            checkMinMax(exchangeAmount)
+            checkMinMax(exchangeAmount, paymentObj)
           } else {
             queryParams.target_amount = exchangeAmount
           }
@@ -316,7 +317,7 @@ export const banxaProvider: FiatProviderFactory = {
           queryParams.target = fiat
           if (amountType === 'fiat') {
             queryParams.target_amount = exchangeAmount
-            checkMinMax(exchangeAmount)
+            checkMinMax(exchangeAmount, paymentObj)
           } else {
             queryParams.source_amount = exchangeAmount
           }
@@ -328,7 +329,7 @@ export const banxaProvider: FiatProviderFactory = {
         console.log('Got Banxa Quote:')
         consify(priceQuote)
 
-        checkMinMax(priceQuote.fiat_amount, fiat)
+        checkMinMax(priceQuote.fiat_amount, paymentObj, fiat)
         const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)
 
@@ -350,7 +351,7 @@ export const banxaProvider: FiatProviderFactory = {
             const receiveAddress = await coreWallet.getReceiveAddress()
 
             const bodyParams = {
-              payment_method_id: paymentObj.id,
+              payment_method_id: paymentObj?.id ?? '',
               account_reference: banxaUsername,
               source: fiat,
               target: banxaCoin,
@@ -465,8 +466,9 @@ const findLimit = (fiatCode: string, banxaLimits: BanxaTxLimit[]): BanxaTxLimit 
 const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: BanxaPaymentMap): void => {
   const { payment_methods: methods } = banxaPayments.data
   for (const pm of methods) {
-    // @ts-expect-error
-    const pt = typeMap[pm.paymentType]
+    const { paymentType } = pm
+    if (paymentType == null) continue
+    const pt = typeMap[paymentType]
     if (pt != null) {
       for (const fiat of pm.supported_fiat) {
         if (banxaPaymentsMap[fiat] == null) {
@@ -483,23 +485,32 @@ const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: 
             console.error(`Missing limits for id:${pm.id} ${pm.paymentType} ${fiat}`)
           } else {
             // There shouldn't be an existing payment for this fiat/coin combo
-            const newMap = {
+            const newMap: BanxaPaymentIdLimit = {
               id: pm.id,
               min: limit.min,
-              max: limit.max
+              max: limit.max,
+              type: pt
             }
-            if (banxaPaymentsMap[fiat][coin][pt] != null) {
-              if (JSON.stringify(banxaPaymentsMap[fiat][coin][pt]) !== JSON.stringify(newMap)) {
+            if (banxaPaymentsMap[fiat][coin][pm.id] != null) {
+              if (JSON.stringify(banxaPaymentsMap[fiat][coin][pm.id]) !== JSON.stringify(newMap)) {
                 console.error(`Payment already exists with different values: ${fiat} ${coin} ${pt}`)
                 continue
               }
             }
-            banxaPaymentsMap[fiat][coin][pt] = newMap
+            banxaPaymentsMap[fiat][coin][pm.id] = newMap
           }
         }
       }
     }
   }
+}
+
+const getPaymentIdLimit = (direction: FiatDirection, fiat: string, banxaCoin: string, type: FiatPaymentType): BanxaPaymentIdLimit | undefined => {
+  try {
+    const payments = banxaPaymentsMap[direction][fiat][banxaCoin]
+    const paymentId = Object.values(payments).find(p => p.type === type)
+    return paymentId
+  } catch (e) {}
 }
 
 // Takes an EdgeTokenId and returns the corresponding Banxa chain code and coin code
