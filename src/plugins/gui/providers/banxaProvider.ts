@@ -289,34 +289,37 @@ export const banxaProvider: FiatProviderFactory = {
         const paymentObj = banxaPaymentsMap[direction][fiat][banxaCoin][paymentType ?? ''] ?? {}
         if (paymentObj == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        let queryParams
-        if (amountType === 'fiat') {
-          if (gt(exchangeAmount, paymentObj.max)) {
-            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max) })
-          } else if (lt(exchangeAmount, paymentObj.min)) {
-            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min) })
+        const checkMinMax = (amount: string, displayCurrencyCode?: string) => {
+          if (gt(amount, paymentObj.max)) {
+            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max), displayCurrencyCode })
+          } else if (lt(amount, paymentObj.min)) {
+            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min), displayCurrencyCode })
           }
-          queryParams = {
-            account_reference: banxaUsername,
-            source: fiat,
-            target: banxaCoin,
-            source_amount: exchangeAmount,
-            payment_method_id: paymentObj.id
+        }
+
+        const queryParams: any = {
+          account_reference: banxaUsername,
+          payment_method_id: paymentObj.id
+        }
+
+        if (direction === 'buy') {
+          queryParams.source = fiat
+          queryParams.target = banxaCoin
+          if (amountType === 'fiat') {
+            queryParams.source_amount = exchangeAmount
+            checkMinMax(exchangeAmount)
+          } else {
+            queryParams.target_amount = exchangeAmount
           }
         } else {
-          // if (gt(exchangeAmount, paymentObj.max)) {
-          //   return { errorType: 'overLimit', errorAmount: parseFloat(paymentObj.max) }
-          // } else if (lt(exchangeAmount, paymentObj.min)) {
-          //   return { errorType: 'underLimit', errorAmount: parseFloat(paymentObj.min) }
-          // }
-          // body = JSON.stringify({
-          //   account_reference: banxaUsername,
-          //   source: fiat,
-          //   target: banxaCoin,
-          //   target_amount: exchangeAmount,
-          //   payment_method_id: paymentObj.id
-          // })
-          throw new Error('Banxa only supports fiat -> crypto quotes')
+          queryParams.source = banxaCoin
+          queryParams.target = fiat
+          if (amountType === 'fiat') {
+            queryParams.target_amount = exchangeAmount
+            checkMinMax(exchangeAmount)
+          } else {
+            queryParams.source_amount = exchangeAmount
+          }
         }
 
         const response = await banxaFetch({ method: 'GET', url, path: 'api/prices', apiKey, queryParams })
@@ -325,6 +328,7 @@ export const banxaProvider: FiatProviderFactory = {
         console.log('Got Banxa Quote:')
         consify(priceQuote)
 
+        checkMinMax(priceQuote.fiat_amount, fiat)
         const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)
 

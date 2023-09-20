@@ -67,13 +67,13 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string): stri
       errorText =
         error.errorAmount == null
           ? lstrings.fiat_plugin_buy_amount_under_undef_limit
-          : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+          : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
       break
     case 'overLimit':
       errorText =
         error.errorAmount == null
           ? lstrings.fiat_plugin_buy_amount_over_undef_limit
-          : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+          : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
       break
     case 'paymentUnsupported':
       errorText = lstrings.fiat_plugin_payment_unsupported

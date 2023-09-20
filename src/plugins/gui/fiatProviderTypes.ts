@@ -37,7 +37,7 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 // amountType
 export type FiatProviderQuoteError =
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
-  | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number; displayCurrencyCode?: string }
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 
 export class FiatProviderError extends Error {
