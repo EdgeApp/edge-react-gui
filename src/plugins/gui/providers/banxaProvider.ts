@@ -226,8 +226,23 @@ export const banxaProvider: FiatProviderFactory = {
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true)) return { crypto: {}, fiat: {} }
 
+        const fiats = allowedCurrencyCodes[direction].fiat
+        const cryptos = allowedCurrencyCodes[direction].fiat
+        if (Object.keys(fiats).length > 0 && Object.keys(cryptos).length > 0) {
+          return allowedCurrencyCodes[direction]
+        }
+
+        // XXX Hack. Banxa doesn't return any payment methods for sell unless the source asset is
+        // specified. BTC is most supported so we add that for the query of sell payment methods
+        let paymentMethodsPath
+        if (direction === 'buy') {
+          paymentMethodsPath = 'api/payment-methods'
+        } else {
+          paymentMethodsPath = 'api/payment-methods?source=BTC'
+        }
+
         const promises = [
-          banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
+          banxaFetch({ method: 'GET', url, path: `api/coins/${direction}`, apiKey }).then(response => {
             const cryptoCurrencies = asBanxaCryptoCoins(response)
             for (const coin of cryptoCurrencies.data.coins) {
               for (const chain of coin.blockchains) {
@@ -240,14 +255,14 @@ export const banxaProvider: FiatProviderFactory = {
             }
           }),
 
-          banxaFetch({ method: 'GET', url, path: 'api/fiats/buy', apiKey }).then(response => {
+          banxaFetch({ method: 'GET', url, path: `api/fiats/${direction}`, apiKey }).then(response => {
             const fiatCurrencies = asBanxaFiats(response)
             for (const fiat of fiatCurrencies.data.fiats) {
               allowedCurrencyCodes[direction].fiat['iso:' + fiat.fiat_code] = true
             }
           }),
 
-          banxaFetch({ method: 'GET', url, path: 'api/payment-methods', apiKey }).then(response => {
+          banxaFetch({ method: 'GET', url, path: paymentMethodsPath, apiKey }).then(response => {
             const banxaPayments = asBanxaPaymentMethods(response)
             buildPaymentsMap(banxaPayments, banxaPaymentsMap[direction])
           })
@@ -280,16 +295,31 @@ export const banxaProvider: FiatProviderFactory = {
         // payment type
         let paymentObj: BanxaPaymentIdLimit | undefined
         let paymentType: FiatPaymentType | undefined
-        for (const pt of paymentTypes) {
-          paymentObj = getPaymentIdLimit(direction, fiat, banxaCoin, pt)
-          if (paymentObj != null) {
-            paymentType = pt
+        let hasFetched = false
+        while (true) {
+          for (const pt of paymentTypes) {
+            paymentObj = getPaymentIdLimit(direction, fiat, banxaCoin, pt)
+            if (paymentObj != null) {
+              paymentType = pt
+              break
+            }
+          }
+
+          // Success
+          if (paymentObj != null && paymentType != null) {
             break
           }
-        }
 
-        if (paymentObj == null || paymentType == null) {
-          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          // If the user is buying, all the payment methods were already queried at getSupportedAssets
+          if (direction === 'buy' || hasFetched) {
+            throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+          } else {
+            // Fetch the payment methods for this specific source crypto asset
+            const pmResponse = await banxaFetch({ method: 'GET', url, path: `api/payment-methods?source=${banxaCoin}`, apiKey })
+            const banxaPayments = asBanxaPaymentMethods(pmResponse)
+            buildPaymentsMap(banxaPayments, banxaPaymentsMap.sell)
+            hasFetched = true
+          }
         }
 
         const checkMinMax = (amount: string, paymentIdLimit: BanxaPaymentIdLimit, displayCurrencyCode?: string) => {
