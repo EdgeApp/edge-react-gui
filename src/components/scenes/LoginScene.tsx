@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
-import { trackError } from '../../util/tracking'
+import { logEvent, trackError } from '../../util/tracking'
 import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
@@ -210,6 +210,7 @@ export function LoginSceneComponent(props: Props) {
         recoveryLogin={passwordRecoveryKey}
         skipSecurityAlerts
         onComplete={maybeHandleComplete}
+        onLogEvent={logEvent}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />

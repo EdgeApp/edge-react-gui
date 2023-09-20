@@ -6,6 +6,7 @@ import { StatusBar, StyleSheet, View } from 'react-native'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
 
 interface OwnProps extends EdgeSceneProps<'securityAlerts'> {}
 
@@ -22,7 +23,7 @@ class SecurityAlertsComponent extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <SecurityAlertsScreen account={account} context={context} onComplete={handleComplete} />
+        <SecurityAlertsScreen account={account} context={context} onLogEvent={logEvent} onComplete={handleComplete} />
       </View>
     )
   }
