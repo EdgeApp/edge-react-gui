@@ -8,25 +8,43 @@ export type StickyConfig = ReturnType<typeof asStickyConfig>
 
 const stickyConfigDisklet = makeReactNativeDisklet()
 
+// The probability of a feature config being set to the first value: the
+// configuration that differs from the default feature configuration
 const stickyDistribution = {
   swipeLastUsp: 0.5,
   createAccountType: 0.1,
   legacyLanding: 0.5
 }
 
+/**
+ * Generate a random boolean value according to the sticky distribution
+ */
 const generateStickyConfigVal = (key: keyof typeof stickyDistribution): boolean => {
   return Math.random() < stickyDistribution[key]
 }
 
+// It's important to define string literals instead of booleans as values so
+// that they are properly captured in the analytics dashboard reports. The first
+// values is the variant value that differs from the default feature
+// behavior/appearance, while the last value represents unchanged
+// behavior/appearance
 const asStickyConfig = asObject({
-  swipeLastUsp: asOptional(asValue('true', 'false'), generateStickyConfigVal('swipeLastUsp') ? 'true' : 'false'),
-  createAccountType: asOptional<CreateAccountType>(asValue('full', 'light'), generateStickyConfigVal('createAccountType') ? 'light' : 'full'),
-  legacyLanding: asOptional(asValue('true', 'false'), generateStickyConfigVal('legacyLanding') ? 'true' : 'false')
+  // Allow dismissing the last USP via swiping
+  swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), generateStickyConfigVal('swipeLastUsp') ? 'true' : 'false'),
+
+  // 'Light' username-less accounts vs full username'd accounts
+  createAccountType: asOptional<CreateAccountType>(asValue('light', 'full'), generateStickyConfigVal('createAccountType') ? 'light' : 'full'),
+
+  // Legacy landing page, replaces USP landing
+  legacyLanding: asOptional<'legacyLanding' | 'uspLanding'>(
+    asValue('legacyLanding', 'uspLanding'),
+    generateStickyConfigVal('legacyLanding') ? 'legacyLanding' : 'uspLanding'
+  )
 })
 
 /**
  * Immediately initialize the 'sticky config' as soon as the module loads.
- * This  config value is available through the module's getter functions.
+ * This config value is available through the module's getter functions.
  */
 const stickyConfigPromise: Promise<StickyConfig> = (async (): Promise<StickyConfig> => {
   try {
@@ -52,7 +70,7 @@ export const getStickyConfig = async (): Promise<StickyConfig> => {
 }
 
 /**
- * Returns the sticky  config value
+ * Returns the sticky config value
  */
 export const getStickyConfigValue = async <K extends keyof StickyConfig>(key: K): Promise<StickyConfig[K]> => {
   const config = await getStickyConfig()

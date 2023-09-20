@@ -254,7 +254,7 @@ export const Main = () => {
   // Wait for the sticky config to initialize before rendering anything
   useAsyncEffect(async () => {
     if (isMaestro()) return
-    setLegacyLanding((await getStickyConfigValue('legacyLanding')) === 'true')
+    setLegacyLanding((await getStickyConfigValue('legacyLanding')) === 'legacyLanding')
   }, [])
 
   return legacyLanding == null ? (
