@@ -109,7 +109,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const walletListResult = await showUi.walletPicker({
         headerTitle: direction === 'buy' ? lstrings.fiat_plugin_select_asset_to_purchase : lstrings.fiat_plugin_select_asset_to_sell,
         allowedAssets,
-        showCreateWallet: true
+        showCreateWallet: direction === 'buy'
       })
 
       const { walletId, currencyCode } = walletListResult
