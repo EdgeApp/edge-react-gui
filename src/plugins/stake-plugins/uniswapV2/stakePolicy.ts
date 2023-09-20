@@ -9,6 +9,7 @@ export interface StakePolicyInfo {
   parentCurrencyCode: string
   policy: StakePluginPolicy
   isStablePool?: boolean
+  poolAddress?: string
   stakeAssets: AssetId[]
   rewardAssets: AssetId[]
 }
