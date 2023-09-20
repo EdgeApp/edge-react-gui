@@ -100,6 +100,7 @@ function generateVelodromeV2StakePolicyInfo(poolContractKey: string): StakePolic
   const [keyType, poolType, tokenA, tokenB] = poolContractKey.split('_')
   if (keyType !== 'POOL') return null
   const isStablePool = poolType[0] === 's'
+  const lpTokenContract = eco.makeContract(poolContractKey)
 
   return {
     stakePolicyId: `optimism_velodrome_${poolType}_${tokenA}_${tokenB}`,
@@ -107,9 +108,10 @@ function generateVelodromeV2StakePolicyInfo(poolContractKey: string): StakePolic
     parentPluginId: 'optimism',
     parentCurrencyCode: 'ETH',
     isStablePool,
+    poolAddress: lpTokenContract.address,
     policy: makeVelodromeV2StakePolicy({
       isStablePool,
-      lpTokenContract: eco.makeContract(poolContractKey),
+      lpTokenContract,
       stakingContract: eco.makeContract(`GAUGE_${poolType}_${tokenA}_${tokenB}`),
       swapRouterContract: eco.makeContract(`ROUTER_VELODROME_V2`),
       tokenAContract: eco.makeContract(tokenA),

@@ -1,19 +1,10 @@
 import { EdgeCorePluginOptions } from 'edge-core-js'
 
 import { fetchInfo } from '../../../util/network'
-import {
-  ChangeQuote,
-  ChangeQuoteRequest,
-  filterStakePolicies,
-  StakePlugin,
-  StakePolicy,
-  StakePolicyFilter,
-  StakePosition,
-  StakePositionRequest
-} from '../types'
+import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
 import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
-import { toStakePolicy } from './stakePolicy'
+import { StakePolicyInfo, toStakePolicy } from './stakePolicy'
 
 export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
   const fetchResponse = await fetchInfo(`v1/apyValues`)
@@ -29,11 +20,32 @@ export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promis
   const fetchResponseJson = await fetchResponse.json()
   const infoServerResponse = asInfoServerResponse(fetchResponseJson)
 
-  const policies = pluginInfo.policyInfo.map(toStakePolicy(infoServerResponse))
-
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
-      return filterStakePolicies(policies, filter)
+      let out: StakePolicyInfo[] = [...pluginInfo.policyInfo]
+      const { currencyCode, wallet } = filter ?? {}
+
+      if (wallet != null) {
+        out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.pluginId === wallet.currencyInfo.pluginId))
+      }
+      if (currencyCode != null) {
+        out = out.filter(policy => [...policy.rewardAssets, ...policy.stakeAssets].some(asset => asset.currencyCode === currencyCode))
+
+        // Filter duplicate contracts
+        const poolSet = new Set<string>()
+        out = out.filter(info => {
+          const { poolAddress } = info ?? {}
+          if (poolAddress == null) return true
+          if (!poolSet.has(poolAddress)) {
+            poolSet.add(poolAddress)
+            return true
+          }
+          return false
+        })
+      }
+
+      const policies = out.map(toStakePolicy(infoServerResponse))
+      return policies
     },
     async fetchChangeQuote(request: ChangeQuoteRequest): Promise<ChangeQuote> {
       const { stakePolicyId } = request
