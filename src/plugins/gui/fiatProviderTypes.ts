@@ -68,6 +68,7 @@ export interface FiatProviderGetQuoteParams {
 }
 
 export interface FiatProviderGetSupportedAssetsParams {
+  direction: 'buy' | 'sell'
   paymentTypes: FiatPaymentType[]
   regionCode: FiatPluginRegionCode
 }

@@ -5,7 +5,7 @@ import URL from 'url-parse'
 
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
-import { FiatPaymentType } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -21,17 +21,22 @@ const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
 
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = {
-  applepay: true,
-  credit: true,
-  fasterpayments: true,
-  googlepay: true,
-  interac: true,
-  iobank: true,
-  payid: true,
-  pix: true,
-  sepa: false, // Leave this to Bity for now
-  turkishbank: true
+type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
+
+const allowedPaymentTypes: AllowedPaymentTypes = {
+  buy: {
+    applepay: true,
+    credit: true,
+    fasterpayments: true,
+    googlepay: true,
+    interac: true,
+    iobank: true,
+    payid: true,
+    pix: true,
+    sepa: false, // Leave this to Bity for now
+    turkishbank: true
+  },
+  sell: {}
 }
 
 const asBanxaApiKeys = asObject({
@@ -192,8 +197,8 @@ const CURRENCY_PLUGINID_MAP = {
 
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { fiat: {}, crypto: {} }
-const banxaPaymentsMap: BanxaPaymentMap = {}
+const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = { buy: { fiat: {}, crypto: {} }, sell: { fiat: {}, crypto: {} } }
+const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
 
 export const banxaProvider: FiatProviderFactory = {
   providerId,
@@ -215,9 +220,9 @@ export const banxaProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true)) return { crypto: {}, fiat: {} }
 
         const promises = [
           banxaFetch({ method: 'GET', url, path: 'api/coins/buy', apiKey }).then(response => {
@@ -227,7 +232,7 @@ export const banxaProvider: FiatProviderFactory = {
                 // @ts-expect-error
                 const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                 if (currencyPluginId != null) {
-                  addToAllowedCurrencies(currencyPluginId, coin.coin_code, coin)
+                  addToAllowedCurrencies(currencyPluginId, direction, coin.coin_code, coin)
                 }
               }
             }
@@ -236,22 +241,22 @@ export const banxaProvider: FiatProviderFactory = {
           banxaFetch({ method: 'GET', url, path: 'api/fiats/buy', apiKey }).then(response => {
             const fiatCurrencies = asBanxaFiats(response)
             for (const fiat of fiatCurrencies.data.fiats) {
-              allowedCurrencyCodes.fiat['iso:' + fiat.fiat_code] = true
+              allowedCurrencyCodes[direction].fiat['iso:' + fiat.fiat_code] = true
             }
           }),
 
           banxaFetch({ method: 'GET', url, path: 'api/payment-methods', apiKey }).then(response => {
             const banxaPayments = asBanxaPaymentMethods(response)
-            buildPaymentsMap(banxaPayments, banxaPaymentsMap)
+            buildPaymentsMap(banxaPayments, banxaPaymentsMap[direction])
           })
         ]
 
         await Promise.all(promises)
-        return allowedCurrencyCodes
+        return allowedCurrencyCodes[direction]
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
@@ -261,7 +266,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(pluginId, displayCurrencyCode)
+          banxaCrypto = edgeToBanxaCrypto(pluginId, direction, displayCurrencyCode)
         } catch (e: any) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
@@ -273,7 +278,7 @@ export const banxaProvider: FiatProviderFactory = {
         // payment type
         let paymentType
         try {
-          paymentType = paymentTypes.find(t => banxaPaymentsMap[fiat][banxaCoin][t] != null)
+          paymentType = paymentTypes.find(t => banxaPaymentsMap[direction][fiat][banxaCoin][t] != null)
         } catch (e: any) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
@@ -281,7 +286,7 @@ export const banxaProvider: FiatProviderFactory = {
         if (paymentType == null) {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
-        const paymentObj = banxaPaymentsMap[fiat][banxaCoin][paymentType ?? ''] ?? {}
+        const paymentObj = banxaPaymentsMap[direction][fiat][banxaCoin][paymentType ?? ''] ?? {}
         if (paymentObj == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         let queryParams
@@ -419,9 +424,9 @@ const banxaFetch = async (params: {
   return reply
 }
 
-const addToAllowedCurrencies = (pluginId: string, currencyCode: string, coin: BanxaCryptoCoin) => {
-  if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = {}
-  allowedCurrencyCodes.crypto[pluginId][currencyCode] = coin
+const addToAllowedCurrencies = (pluginId: string, direction: FiatDirection, currencyCode: string, coin: BanxaCryptoCoin) => {
+  if (allowedCurrencyCodes[direction].crypto[pluginId] == null) allowedCurrencyCodes[direction].crypto[pluginId] = {}
+  allowedCurrencyCodes[direction].crypto[pluginId][currencyCode] = coin
 }
 
 const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
@@ -494,8 +499,8 @@ const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: 
 }
 
 // Takes an EdgeTokenId and returns the corresponding Banxa chain code and coin code
-const edgeToBanxaCrypto = (pluginId: string, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
-  const tokens = allowedCurrencyCodes.crypto[pluginId]
+const edgeToBanxaCrypto = (pluginId: string, direction: FiatDirection, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
+  const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   if (tokens == null) throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)
   const banxaCoin = asBanxaCryptoCoin(tokens[displayCurrencyCode])
   if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${pluginId} ${displayCurrencyCode} not allowed`)
