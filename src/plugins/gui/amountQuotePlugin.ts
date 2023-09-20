@@ -107,7 +107,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Pop up modal to pick wallet/asset
       // TODO: Filter wallets according to fiats supported by allowed providers
       const walletListResult = await showUi.walletPicker({
-        headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
+        headerTitle: direction === 'buy' ? lstrings.fiat_plugin_select_asset_to_purchase : lstrings.fiat_plugin_select_asset_to_sell,
         allowedAssets,
         showCreateWallet: true
       })
@@ -206,9 +206,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             goodQuotes.push(quote)
           }
 
+          const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode, direction) ?? noQuoteText
             stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
             return
           }
@@ -216,7 +217,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            stateManager.update({ statusText: { content: lstrings.fiat_plugin_buy_no_quote, textType: 'error' } })
+            stateManager.update({ statusText: { content: noQuoteText, textType: 'error' } })
             return
           }
 
