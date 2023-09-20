@@ -15,7 +15,20 @@ import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
 
-export const asFiatPaymentType = asValue('sepa', 'credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue(
+  'applepay',
+  'credit',
+  'directtobank',
+  'fasterpayments',
+  'googlepay',
+  'iach',
+  'interac',
+  'iobank',
+  'payid',
+  'pix',
+  'sepa',
+  'turkishbank'
+)
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
 export interface FiatPluginAddressFormParams {
@@ -97,7 +110,6 @@ export interface FiatPluginUi {
   setClipboard: (value: string) => Promise<void>
   showToast: (message: string) => Promise<void>
   exitScene: () => {}
-  // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
 export interface FiatPluginFactoryArgs {

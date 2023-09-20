@@ -21,7 +21,18 @@ const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
 
-const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
+const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = {
+  applepay: true,
+  credit: true,
+  fasterpayments: true,
+  googlepay: true,
+  interac: true,
+  iobank: true,
+  payid: true,
+  pix: true,
+  sepa: false, // Leave this to Bity for now
+  turkishbank: true
+}
 
 const asBanxaApiKeys = asObject({
   partnerUrl: asString,
@@ -59,7 +70,23 @@ const asBanxaTxLimit = asObject({
   max: asString
 })
 
-const asBanxaPaymentType = asValue('CHECKOUTCREDIT', 'WORLDPAYAPPLE', 'WORLDPAYGOOGLE', 'WORLDPAYCREDIT')
+const asBanxaPaymentType = asValue(
+  'CHECKOUTCREDIT',
+  'CLEARJCNSELLFP',
+  'CLEARJCNSELLSEPA',
+  'CLEARJUNCTION',
+  'CLEARJUNCTIONFP',
+  'DCINTERAC',
+  'DCINTERACSELL',
+  'DIRECTCREDIT',
+  'DLOCALPIX',
+  'DLOCALZAIO',
+  'MANUALPAYMENT',
+  'MONOOVAPAYID',
+  'WORLDPAYAPPLE',
+  'WORLDPAYCREDIT',
+  'WORLDPAYGOOGLE'
+)
 
 const asBanxaPaymentMethod = asObject({
   id: asNumber,
@@ -398,10 +425,21 @@ const addToAllowedCurrencies = (pluginId: string, currencyCode: string, coin: Ba
 }
 
 const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
+  CHECKOUTCREDIT: 'credit',
+  CLEARJCNSELLFP: 'fasterpayments',
+  CLEARJCNSELLSEPA: 'sepa',
+  CLEARJUNCTION: 'sepa',
+  CLEARJUNCTIONFP: 'fasterpayments',
+  DCINTERAC: 'interac',
+  DCINTERACSELL: 'interac',
+  DIRECTCREDIT: 'directtobank',
+  DLOCALPIX: 'pix',
+  DLOCALZAIO: 'iobank',
+  MANUALPAYMENT: 'turkishbank',
+  MONOOVAPAYID: 'payid',
   WORLDPAYAPPLE: 'applepay',
-  WORLDPAYGOOGLE: 'googlepay',
   WORLDPAYCREDIT: 'credit',
-  CHECKOUTCREDIT: 'credit'
+  WORLDPAYGOOGLE: 'googlepay'
 }
 
 // While this could use Array.find(), this is an inner loop routine used hundreds of times interating over
