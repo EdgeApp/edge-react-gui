@@ -1,5 +1,6 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
+import { EdgeTransaction } from 'edge-core-js/types'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
@@ -104,7 +105,7 @@ export interface FiatPluginUi {
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
-  send: (params: SendScene2Params) => Promise<void>
+  send: (params: SendScene2Params) => Promise<EdgeTransaction>
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>

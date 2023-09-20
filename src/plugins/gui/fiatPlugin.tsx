@@ -141,12 +141,18 @@ export const executePlugin = async (params: {
         ...params.hiddenFeaturesMap,
         scamWarning: true
       }
-      return await new Promise<void>((resolve, reject) => {
+      return await new Promise<EdgeTransaction>((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('send2', {
           ...params,
-          onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
-            resolve()
+          onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+            if (error != null) {
+              reject(error)
+            } else if (edgeTransaction != null) {
+              resolve(edgeTransaction)
+            } else {
+              reject(new Error('Missing EdgeTransaction'))
+            }
           }
         })
       })
