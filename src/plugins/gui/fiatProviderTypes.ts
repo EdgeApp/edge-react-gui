@@ -58,6 +58,7 @@ export interface FiatProviderAssetMap {
 export interface FiatProviderGetQuoteParams {
   wallet?: EdgeCurrencyWallet
   pluginId: string
+  tokenId?: string
   displayCurrencyCode: string
   exchangeAmount: string
   fiatCurrencyCode: string

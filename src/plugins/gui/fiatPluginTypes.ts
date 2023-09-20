@@ -88,6 +88,7 @@ export interface FiatPluginOpenExternalWebViewParams {
 
 export interface FiatPluginWalletPickerResult {
   walletId?: string
+  tokenId?: string
   currencyCode?: string
 }
 

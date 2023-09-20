@@ -112,7 +112,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         showCreateWallet: direction === 'buy'
       })
 
-      const { walletId, currencyCode } = walletListResult
+      const { walletId, currencyCode, tokenId } = walletListResult
       if (walletId == null || currencyCode == null) return
 
       const coreWallet = account.currencyWallets[walletId]
@@ -167,6 +167,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'fiat',
@@ -180,6 +181,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'crypto',

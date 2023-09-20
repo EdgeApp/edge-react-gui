@@ -135,7 +135,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
-    const { walletId, currencyCode } = walletListResult
+    const { walletId, currencyCode, tokenId } = walletListResult
     if (walletId == null || currencyCode == null) return
 
     const wallet = account.currencyWallets[walletId]
@@ -166,6 +166,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
+            tokenId,
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
@@ -177,6 +178,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
+            tokenId,
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
