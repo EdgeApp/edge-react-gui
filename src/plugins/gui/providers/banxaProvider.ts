@@ -93,11 +93,13 @@ const asBanxaPaymentType = asValue(
   'WORLDPAYGOOGLE'
 )
 
+const asBanxaStatus = asValue('ACTIVE', 'INACTIVE')
+
 const asBanxaPaymentMethod = asObject({
   id: asNumber,
   paymentType: asMaybe(asBanxaPaymentType),
   name: asString,
-  status: asString,
+  status: asBanxaStatus,
   type: asString,
   supported_fiat: asArray(asString),
   supported_coin: asArray(asString),
@@ -469,6 +471,9 @@ const buildPaymentsMap = (banxaPayments: BanxaPaymentMethods, banxaPaymentsMap: 
     const { paymentType } = pm
     if (paymentType == null) continue
     const pt = typeMap[paymentType]
+    if (pm.status !== 'ACTIVE') {
+      continue
+    }
     if (pt != null) {
       for (const fiat of pm.supported_fiat) {
         if (banxaPaymentsMap[fiat] == null) {
