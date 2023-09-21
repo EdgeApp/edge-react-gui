@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
+- changed: Include stake plugin display name in error message on transaction list scene
 - fixed: Prevent setting invalid spending limits
 - fixed: Turning off 'Dark Mode' causes crash
 - fixed: Incorrect wording when disabling a token
