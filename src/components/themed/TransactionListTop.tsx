@@ -146,7 +146,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         })
         .catch(err => {
           console.error(err)
-          showWarning(lstrings.stake_unable_to_query_locked)
+          const { displayName } = stakePolicy.stakeProviderInfo
+          showWarning(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
         })
       if (amount == null) return
 
