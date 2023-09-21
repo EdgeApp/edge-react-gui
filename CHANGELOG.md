@@ -8,6 +8,7 @@
 - fixed: Min/max price label position on the Markets charts
 - fixed: Prevent setting invalid spending limits
 - fixed: Turning off 'Dark Mode' causes crash
+- fixed: Stuck showToastSpinner never going away
 - removed: 'Add/Edit Tokens" option for token rows
 
 ## 3.17.2 (2023-09-15)

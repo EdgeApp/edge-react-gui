@@ -64,8 +64,8 @@ export function showToast(message: string, autoHideMs?: number): void {
 export async function showToastSpinner<T>(message: string, activity: Promise<T>): Promise<T> {
   Airship.show(bridge => {
     activity.then(
-      () => bridge.resolve(),
-      () => bridge.resolve()
+      () => setTimeout(() => bridge.resolve(), 0),
+      () => setTimeout(() => bridge.resolve(), 0)
     )
     return (
       <AirshipToast bridge={bridge} message={message} autoHideMs={0}>
