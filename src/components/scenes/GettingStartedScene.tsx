@@ -21,11 +21,11 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import { getExperimentConfigValue } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getStickyConfigValue } from '../../stickyConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
@@ -150,8 +150,8 @@ export const GettingStartedScene = (props: Props) => {
 
   // Initialize variant config values
   useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled((await getStickyConfigValue('swipeLastUsp')) === 'true')
-    setCreateAccountType(await getStickyConfigValue('createAccountType'))
+    setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
+    setCreateAccountType(await getExperimentConfigValue('createAccountType'))
   }, [])
 
   // Redirect to login screen if device has memory of accounts
