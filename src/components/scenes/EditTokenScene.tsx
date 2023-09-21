@@ -197,7 +197,7 @@ function EditTokenSceneComponent(props: Props) {
  * In the future this scene may need to handle other weird networks
  * where the networkLocation has other contents.
  */
-const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
+export const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
 
 async function showMessage(message: string): Promise<void> {
   await Airship.show<'ok' | undefined>(bridge => (

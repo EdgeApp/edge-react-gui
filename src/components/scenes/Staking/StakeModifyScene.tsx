@@ -11,6 +11,7 @@ import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../.
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
@@ -321,12 +322,14 @@ const StakeModifySceneComponent = (props: Props) => {
 
     const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
+    const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
         type="questionable"
         title={title}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        tokenId={tokenId}
         walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressStakingFee(modification)}
@@ -346,12 +349,14 @@ const StakeModifySceneComponent = (props: Props) => {
     if (quoteAllocation == null) return null
 
     const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
         type="questionable"
         title={lstrings.stake_future_unstaking_fee}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        tokenId={tokenId}
         walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressFutureUnstakingFee}
