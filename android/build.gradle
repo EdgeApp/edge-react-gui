@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "33.0.0"
-        minSdkVersion = 27 // Edge modified from 21
+        minSdkVersion = 24 // Edge modified from 21, rnzcash needs 27
         compileSdkVersion = 33
         targetSdkVersion = 33
 
