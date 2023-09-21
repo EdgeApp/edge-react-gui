@@ -5,7 +5,7 @@ import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { getIsFirstOpen } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
-import { getStickyConfig, StickyConfig } from '../stickyConfig'
+import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
@@ -128,9 +128,9 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (error != null) params.error = makeErrorLog(error)
 
   // Add all 'sticky' remote config variant values:
-  const stickyConfig = await getStickyConfig()
+  const experimentConfig = await getExperimentConfig()
 
-  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof StickyConfig]
+  for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
 
   consify({ logEvent: { name, params } })
   // @ts-expect-error
