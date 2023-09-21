@@ -4,7 +4,7 @@ import { StakePluginPolicy } from './types'
 
 export interface StakePolicyInfo {
   stakePolicyId: string
-  stakeProviderInfo?: StakeProviderInfo
+  stakeProviderInfo: StakeProviderInfo
   parentPluginId: string
   parentCurrencyCode: string
   policy: StakePluginPolicy

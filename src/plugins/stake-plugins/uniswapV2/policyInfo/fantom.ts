@@ -123,6 +123,11 @@ const tombCemeteryV2ProviderInfo: StakeProviderInfo = {
 export const fantomPolicyInfo: StakePolicyInfo[] = [
   {
     stakePolicyId: 'ftm_tombswap_masonry_v1_0',
+    stakeProviderInfo: {
+      displayName: 'Masonry V1 (using TombSwap)',
+      pluginId: 'fantom',
+      stakeProviderId: 'tombswap_masonry_v1_0'
+    },
     parentPluginId: 'fantom',
     parentCurrencyCode: 'FTM',
     policy: makeMasonryPolicy({ disableStake: true }),

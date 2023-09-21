@@ -68,7 +68,7 @@ export interface StakePolicy {
 
   // Some unique grouping information to display in the policy card to
   // differentiate between stake policies that share the same input stakeAssets
-  stakeProviderInfo?: StakeProviderInfo
+  stakeProviderInfo: StakeProviderInfo
 
   // A percentage number representing the yield per year
   apy?: number
