@@ -20,7 +20,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (1.7.0):
     - React-Core
-  - edge-currency-accountbased (2.5.0):
+  - edge-currency-accountbased (2.5.1):
     - React-Core
   - edge-login-ui-rn (2.11.1):
     - React
@@ -1211,7 +1211,7 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 82972b10438ab46ea09e6127d67e8f8093fd623d
-  edge-currency-accountbased: 57b42ec093db592f04ee2aecdfc1e5061f9007e2
+  edge-currency-accountbased: d41dad49ad0b2c03fc8e2559d5f3129c55eb1c94
   edge-login-ui-rn: 378813264f4667bcfb5e6863b139d494056e946e
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
@@ -1341,6 +1341,6 @@ SPEC CHECKSUMS:
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 527db87cb1daaa8e7d5dc25d170568b224d5867b
+PODFILE CHECKSUM: 05dc3e3e330cf28ff2c3e6b3517d100d067246b6
 
 COCOAPODS: 1.12.1
