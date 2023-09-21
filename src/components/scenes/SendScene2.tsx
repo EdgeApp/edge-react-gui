@@ -672,48 +672,47 @@ const SendComponent = (props: Props) => {
   }
 
   const recordFioObtData = async (spendTarget: EdgeSpendTarget, currencyCode: string, txid: string) => {
+    if (fioSender == null) return
+    const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
+    if (skipRecord) return
+
     const { nativeAmount, publicAddress: payeePublicAddress = '', otherParams = {} } = spendTarget
     const { fioAddress: payeeFioAddress } = otherParams
-    if (fioSender != null) {
-      const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
-      if (payeeFioAddress != null && payerFioAddress != null && fioWallet != null) {
-        // if (guiMakeSpendInfo.fioPendingRequest != null) {
-        // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
-        // try {
-        //   await recordSend(fioWallet, fioAddress, {
-        //     fioRequestId: pendingRequest.fio_request_id,
-        //     payeeFioAddress: pendingRequest.payee_fio_address,
-        //     payerPublicAddress: pendingRequest.payer_fio_public_key,
-        //     payeePublicAddress: pendingRequest.content.payee_public_address,
-        //     amount: pendingRequest.content.amount,
-        //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
-        //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
-        //     txid: edgeSignedTransaction.txid,
-        //     memo
-        //   })
-        // } catch (e: any) {
-        //   const message = e?.message ?? ''
-        //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
-        // }
-        // } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
-        if (!skipRecord) {
-          const { publicAddress: payerPublicAddress } = await coreWallet.getReceiveAddress()
-          const amount = nativeAmount ?? '0'
-          const chainCode = coreWallet.currencyInfo.currencyCode
-
-          await recordSend(fioWallet, payerFioAddress, {
-            payeeFioAddress,
-            payerPublicAddress,
-            payeePublicAddress,
-            amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
-            currencyCode: currencyCode,
-            chainCode,
-            txid,
-            memo
-          })
-        }
-      }
+    if (payeeFioAddress == null || payerFioAddress == null || fioWallet == null) {
+      return
     }
+
+    // if (guiMakeSpendInfo.fioPendingRequest != null) {
+    // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
+    // try {
+    //   await recordSend(fioWallet, fioAddress, {
+    //     fioRequestId: pendingRequest.fio_request_id,
+    //     payeeFioAddress: pendingRequest.payee_fio_address,
+    //     payerPublicAddress: pendingRequest.payer_fio_public_key,
+    //     payeePublicAddress: pendingRequest.content.payee_public_address,
+    //     amount: pendingRequest.content.amount,
+    //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
+    //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
+    //     txid: edgeSignedTransaction.txid,
+    //     memo
+    //   })
+    // } catch (e: any) {
+    //   const message = e?.message ?? ''
+    //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+    // }
+
+    const { publicAddress: payerPublicAddress } = await coreWallet.getReceiveAddress()
+
+    await recordSend(fioWallet, payerFioAddress, {
+      amount: nativeAmount != null ? div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION) : '0',
+      chainCode: coreWallet.currencyInfo.currencyCode,
+      currencyCode: currencyCode,
+      memo,
+      payeeFioAddress,
+      payeePublicAddress,
+      payerPublicAddress,
+      txid
+    })
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
