@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 3.17.3
+
+- fixed: Allow the app to log in again on older OS's (iOS 12.4 and Android 7).
+
 ## 3.17.2
 
 - added: Dynamic fudge factors for UTXO fees
