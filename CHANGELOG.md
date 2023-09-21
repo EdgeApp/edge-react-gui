@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Support for depositing EVM tokens into Thorchain Savers
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
 - changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
