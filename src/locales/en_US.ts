@@ -1559,6 +1559,9 @@ const strings = {
   getting_started_welcome_prompt: `Swipe to Learn More`,
   getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
 
+  account_sign_up: 'Sign Up',
+  account_get_started: 'Get Started',
+
   // Accessibility Hints
   app_logo_hint: 'App logo',
   check_icon_hint: 'Confirmed',

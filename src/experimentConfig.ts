@@ -10,19 +10,32 @@ export type ExperimentConfig = ReturnType<typeof asExperimentConfig>
 
 const experimentConfigDisklet = makeReactNativeDisklet()
 
-// The probability of a feature config being set to the first value: the
-// configuration that differs from the default feature configuration
+// The probability (0-1) of a feature config being set to the first value(s):
+// the configuration that differs from the default feature configuration.
 const experimentDistribution = {
-  swipeLastUsp: 0.5,
-  createAccountType: 0.1,
-  legacyLanding: 0.5
+  swipeLastUsp: [0.5],
+  createAccountType: [0.1],
+  legacyLanding: [0.5],
+  createAccountText: [0.33, 0.33]
 }
 
 /**
- * Generate a random boolean value according to the experiment distribution
+ * Generate a random index value according to the experiment distribution to
+ * determine which variant gets used.
  */
-const generateExperimentConfigVal = (key: keyof typeof experimentDistribution): boolean => {
-  return Math.random() < experimentDistribution[key]
+const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution, configVals: T[]): T => {
+  const variantProbability = experimentDistribution[key]
+
+  // Generate a random number between 0 and 1
+  const random = Math.random()
+
+  // Check which index the random number falls into and return the configVal:
+  let lowerBound = 0
+  for (let i = 0; i < variantProbability.length; i++) {
+    if (random >= lowerBound && random < variantProbability[i]) return configVals[i]
+    lowerBound += variantProbability[i]
+  }
+  return configVals[configVals.length - 1]
 }
 
 // It's important to define string literals instead of booleans as values so
@@ -32,15 +45,21 @@ const generateExperimentConfigVal = (key: keyof typeof experimentDistribution): 
 // behavior/appearance
 const asExperimentConfig = asObject({
   // Allow dismissing the last USP via swiping
-  swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp') ? 'true' : 'false'),
+  swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
 
   // 'Light' username-less accounts vs full username'd accounts
-  createAccountType: asOptional<CreateAccountType>(asValue('light', 'full'), generateExperimentConfigVal('createAccountType') ? 'light' : 'full'),
+  createAccountType: asOptional<CreateAccountType>(asValue('light', 'full'), generateExperimentConfigVal('createAccountType', ['light', 'full'])),
 
   // Legacy landing page, replaces USP landing
   legacyLanding: asOptional<'legacyLanding' | 'uspLanding'>(
     asValue('legacyLanding', 'uspLanding'),
-    generateExperimentConfigVal('legacyLanding') ? 'legacyLanding' : 'uspLanding'
+    generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])
+  ),
+
+  // Replaces the "Create Account" button label
+  createAccountText: asOptional<'signUp' | 'getStarted' | 'createAccount'>(
+    asValue('signUp', 'getStarted', 'createAccount'),
+    generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
   )
 })
 
