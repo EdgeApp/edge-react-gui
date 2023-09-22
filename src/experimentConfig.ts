@@ -1,6 +1,7 @@
 import { asObject, asOptional, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 
@@ -10,9 +11,10 @@ export type ExperimentConfig = ReturnType<typeof asExperimentConfig>
 
 const experimentConfigDisklet = makeReactNativeDisklet()
 
-// The probability (0-1) of a feature config being set to the first value(s):
-// the configuration that differs from the default feature configuration.
-const experimentDistribution = {
+// The probability (0-1) of a feature config being set to the first value(s).
+// First value(s) are the configurations that differ from the default feature
+// configuration.
+const experimentDistribution: { [Key in keyof ExperimentConfig]: number[] } = {
   swipeLastUsp: [0.5],
   createAccountType: [0.1],
   legacyLanding: [0.5],
@@ -26,15 +28,20 @@ const experimentDistribution = {
 const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution, configVals: T[]): T => {
   const variantProbability = experimentDistribution[key]
 
-  // Generate a random number between 0 and 1
-  const random = Math.random()
+  if (variantProbability.length !== configVals.length - 1) {
+    console.error(`Misconfigured experimentDistribution for: '${key}'`)
+  } else {
+    // Generate a random number between 0 and 1
+    const random = Math.random()
 
-  // Check which index the random number falls into and return the configVal:
-  let lowerBound = 0
-  for (let i = 0; i < variantProbability.length; i++) {
-    if (random >= lowerBound && random < variantProbability[i]) return configVals[i]
-    lowerBound += variantProbability[i]
+    // Check which index the random number falls into and return the configVal:
+    let lowerBound = 0
+    for (let i = 0; i < variantProbability.length; i++) {
+      if (random >= lowerBound && random < variantProbability[i]) return configVals[i]
+      lowerBound += variantProbability[i]
+    }
   }
+
   return configVals[configVals.length - 1]
 }
 
@@ -45,23 +52,34 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // behavior/appearance
 const asExperimentConfig = asObject({
   // Allow dismissing the last USP via swiping
-  swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
+  swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), 'false'),
 
   // 'Light' username-less accounts vs full username'd accounts
-  createAccountType: asOptional<CreateAccountType>(asValue('light', 'full'), generateExperimentConfigVal('createAccountType', ['light', 'full'])),
+  createAccountType: asOptional<CreateAccountType>(asValue('light', 'full'), 'full'),
 
   // Legacy landing page, replaces USP landing
-  legacyLanding: asOptional<'legacyLanding' | 'uspLanding'>(
-    asValue('legacyLanding', 'uspLanding'),
-    generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])
-  ),
+  legacyLanding: asOptional<'legacyLanding' | 'uspLanding'>(asValue('legacyLanding', 'uspLanding'), 'uspLanding'),
 
   // Replaces the "Create Account" button label
-  createAccountText: asOptional<'signUp' | 'getStarted' | 'createAccount'>(
-    asValue('signUp', 'getStarted', 'createAccount'),
-    generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
-  )
+  createAccountText: asOptional<'signUp' | 'getStarted' | 'createAccount'>(asValue('signUp', 'getStarted', 'createAccount'), 'createAccount')
 })
+
+/**
+ * Create an ExperimentConfig object from an experiment distribution
+ * // TODO: BROKEN
+ */
+export const generateExperimentConfig = (configValues: Partial<Record<keyof ExperimentConfig, unknown>>): ExperimentConfig => {
+  const experimentConfig: Partial<Record<keyof ExperimentConfig, unknown>> = {}
+
+  for (const key of Object.keys(experimentConfig)) {
+    const expCfgKey = key as keyof ExperimentConfig
+    const configVals = experimentDistribution[expCfgKey]
+    const value = generateExperimentConfigVal(expCfgKey, configVals)
+    experimentConfig[expCfgKey] = value as ExperimentConfig[keyof ExperimentConfig]
+  }
+
+  return experimentConfig as ExperimentConfig
+}
 
 /**
  * Immediately initialize the experiment config as soon as the module loads.
@@ -74,7 +92,7 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
   } catch (err) {
     // Not found or incompatible. Re-generate with random values according to
     // the defined distribution.
-    const generatedExperimentConfig = asExperimentConfig({})
+    const generatedExperimentConfig = generateExperimentConfig(experimentDistribution)
     await experimentConfigDisklet.setText(LOCAL_EXPERIMENT_CONFIG, JSON.stringify(generatedExperimentConfig))
     return generatedExperimentConfig
   }
@@ -87,6 +105,7 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
  * 'stick' until the config type changes.
  */
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
+  if (isMaestro()) return await new Promise<ExperimentConfig>(() => asExperimentConfig({}))
   return await experimentConfigPromise
 }
 
