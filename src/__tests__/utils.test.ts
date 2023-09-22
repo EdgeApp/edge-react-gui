@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
 
 import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
-import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../selectors/DenominationSelectors'
+import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import {
   convertNativeToDenomination,
   convertNativeToDisplay,
@@ -436,81 +436,6 @@ describe('getDisplayDenomination', function () {
     test(`${title} ${currency.currencyCode}`, function () {
       // @ts-expect-error
       expect(getDisplayDenomination(state, currency.pluginId, currency.currencyCode)).toMatchObject(output[index])
-    })
-  })
-})
-
-describe('getExchangeDenomination', function () {
-  const tests = {
-    title: 'Exchange Denomination of',
-    input: ['BTC', 'ETH', 'TKN'],
-    output: [
-      {
-        multiplier: '100000000',
-        name: 'BTC',
-        symbol: '₿'
-      },
-      {
-        multiplier: '1000000000000000000',
-        name: 'ETH',
-        symbol: 'Ξ'
-      },
-      {
-        multiplier: '10000000000000000000000000000000000000000000000000',
-        name: 'TKN'
-      }
-    ]
-  }
-  const { title, input, output } = tests
-
-  const currencyInfos = {
-    BTC: {
-      currencyCode: 'BTC',
-      pluginId: 'bitcoin',
-      denominations: [
-        { name: 'BTC', multiplier: '100000000', symbol: '₿' },
-        { name: 'mBTC', multiplier: '100000', symbol: 'm₿' },
-        { name: 'bits', multiplier: '100', symbol: 'ƀ' },
-        { name: 'sats', multiplier: '1', symbol: 's' }
-      ],
-      metaTokens: []
-    },
-    ETH: {
-      currencyCode: 'ETH',
-      pluginId: 'ethereum',
-      denominations: [
-        {
-          name: 'ETH',
-          multiplier: '1000000000000000000',
-          symbol: 'Ξ'
-        },
-        {
-          name: 'mETH',
-          multiplier: '1000000000000000',
-          symbol: 'mΞ'
-        }
-      ],
-      metaTokens: [
-        {
-          currencyCode: 'TKN',
-          currencyName: 'Augur',
-          denominations: [
-            {
-              name: 'TKN',
-              multiplier: '10000000000000000000000000000000000000000000000000'
-            }
-          ],
-          contractAddress: '0x1985365e9f78359a9B6AD760e32412f4a445E862'
-        }
-      ]
-    }
-  }
-
-  input.forEach((currency, index) => {
-    test(`${title} ${currency}`, function () {
-      // @ts-expect-error
-      const currencyInfo = currencyInfos[currency] ?? currencyInfos.ETH
-      expect(getDenominationFromCurrencyInfo(currencyInfo, currency)).toMatchObject(output[index])
     })
   })
 })

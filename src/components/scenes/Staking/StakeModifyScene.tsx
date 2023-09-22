@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
-import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -280,7 +280,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, quoteCurrencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
 
     const title =
       allocationType === 'stake'
@@ -320,7 +320,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
     const tokenId = getTokenId(account, pluginId, currencyCode)
 
@@ -348,7 +348,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
     const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
