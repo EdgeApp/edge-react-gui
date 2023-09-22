@@ -7,6 +7,7 @@
 - changed: Include stake plugin display name in error message on transaction list scene
 - fixed: Incorrect wording when disabling a token
 - fixed: Min/max price label position on the Markets charts
+- fixed: Do not error when recording sends to FIO addresses.
 - fixed: Prevent setting invalid spending limits
 - fixed: Turning off 'Dark Mode' causes crash
 - fixed: Stuck showToastSpinner never going away

@@ -701,8 +701,6 @@ const SendComponent = (props: Props) => {
     //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
     // }
 
-    const { publicAddress: payerPublicAddress } = await coreWallet.getReceiveAddress()
-
     await recordSend(fioWallet, payerFioAddress, {
       amount: nativeAmount != null ? div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION) : '0',
       chainCode: coreWallet.currencyInfo.currencyCode,
@@ -710,7 +708,7 @@ const SendComponent = (props: Props) => {
       memo,
       payeeFioAddress,
       payeePublicAddress,
-      payerPublicAddress,
+      payerPublicAddress: fioWallet.publicWalletInfo.keys.publicKey,
       txid
     })
   }
