@@ -7,13 +7,11 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
-  setContactsPermissionOn,
-  setDeveloperModeOn,
-  setSpamFilterOn,
   showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
@@ -316,7 +314,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           )}
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
-          <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
+          {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} /> : null}
           <SettingsTappableRow label={lstrings.spending_limits} onPress={this.handleSpendingLimits} />
           <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />

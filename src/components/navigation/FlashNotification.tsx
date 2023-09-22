@@ -4,7 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
-import { nightText } from '../../styles/common/textStyles'
+import { THEME } from '../../theme/variables/airbitz'
 import { AirshipDropdown } from '../common/AirshipDropdown'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalFooter } from '../themed/ModalParts'
@@ -38,9 +38,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(1)
   },
   text: {
-    // @ts-expect-error
-    ...nightText('row-center'),
-    padding: theme.rem(0.25)
+    color: THEME.COLORS.WHITE,
+    flexShrink: 1,
+    fontFamily: THEME.FONTS.DEFAULT,
+    fontSize: THEME.rem(1),
+    padding: theme.rem(0.25),
+    textAlign: 'center'
   },
   icon: {
     alignSelf: 'center',

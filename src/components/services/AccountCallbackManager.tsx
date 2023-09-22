@@ -10,6 +10,7 @@ import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
+import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { snooze } from '../../util/utils'
@@ -86,6 +87,21 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       wallet.on('newTransactions', transactions => {
+        for (const tx of transactions) {
+          const txid = tx.txid.toLowerCase()
+          const cacheEntries = stakeMetadataCache[txid]
+          // Assign cached stake metadata
+          if (cacheEntries != null) {
+            cacheEntries.forEach(cacheEntry => {
+              const { currencyCode, metadata } = cacheEntry
+              if (tx.currencyCode !== currencyCode) return
+              wallet.saveTx({ ...tx, metadata }).catch(err => console.warn(err))
+            })
+
+            delete stakeMetadataCache[txid]
+          }
+        }
+
         console.log(`${walletPrefix(wallet)}: onNewTransactions: ${transactions.map(tx => tx.txid).join(' ')}`)
 
         // Check for incoming FIO requests:

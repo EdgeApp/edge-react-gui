@@ -2,8 +2,8 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../modules/FioAddress/util'
 import { ThunkAction } from '../types/reduxTypes'
+import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../util/FioAddressUtils'
 import { createCurrencyWallet } from './CreateWalletActions'
 
 export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {

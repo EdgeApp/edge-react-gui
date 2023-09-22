@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
-import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions'
+import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'

@@ -156,11 +156,7 @@ export function WalletListMenuModal(props: Props) {
           value: 'exportWalletTransactions'
         },
         {
-          label: lstrings.string_add_edit_tokens,
-          value: 'manageTokens'
-        },
-        {
-          label: lstrings.fragment_wallets_delete_wallet,
+          label: lstrings.fragment_wallets_delete_token,
           value: 'delete'
         }
       ])

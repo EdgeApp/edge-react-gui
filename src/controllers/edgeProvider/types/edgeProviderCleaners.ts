@@ -1,5 +1,5 @@
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
-import { EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
 import {
   EdgeGetWalletHistoryResult,
@@ -38,6 +38,12 @@ const asEdgeReceiveAddress = asObject<EdgeReceiveAddress>({
 
 const asConfirmation = asValue<['confirmed', 'unconfirmed', 'syncing', 'dropped']>('confirmed', 'unconfirmed', 'syncing', 'dropped')
 
+const asEdgeMemo = asObject<EdgeMemo>({
+  memoName: asString,
+  type: asValue('hex', 'number', 'text'),
+  value: asString
+})
+
 const asEdgeTransaction = asObject<EdgeTransaction>({
   walletId: asString,
 
@@ -55,6 +61,7 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
 
   // Transaction info:
   isSend: asBoolean,
+  memos: asArray(asEdgeMemo),
   ourReceiveAddresses: asArray(asString),
   signedTx: asString,
   txid: asString

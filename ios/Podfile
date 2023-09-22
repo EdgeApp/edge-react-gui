@@ -4,7 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 # Edge addition to disable advertising ID collection:
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
 
-platform :ios, min_ios_version_supported
+platform :ios, '13.0' # Edge changed from min_ios_version_supported
 prepare_react_native_project!
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.

@@ -2,34 +2,18 @@ import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { writeWalletsSort } from '../actions/SettingsActions'
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Core/Account/settings'
 import { GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { launchDeepLink } from './DeepLinkingActions'
-
-export function toggleAccountBalanceVisibility(): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
-    setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
-      .then(() => {
-        dispatch({
-          type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
-          data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
-        })
-      })
-      .catch(showError)
-  }
-}
 
 export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
   return (dispatch, getState) => {
@@ -40,7 +24,7 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
       type: 'UI/SETTINGS/SET_WALLETS_SORT',
       data: { walletsSort }
     })
-    setWalletsSort(account, walletsSort).catch(showError)
+    writeWalletsSort(account, walletsSort).catch(showError)
   }
 }
 

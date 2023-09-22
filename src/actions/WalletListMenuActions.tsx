@@ -91,16 +91,18 @@ export function walletListMenuAction(
 
         // Determine the modal's additional message
         let additionalMsg: string | undefined
+        let tokenCurrencyCode: string | undefined
         if (tokenId == null) {
           if (fioAddress) {
             additionalMsg = lstrings.fragmet_wallets_delete_fio_extra_message_mobile
           } else if (wallet.currencyInfo.metaTokens.length > 0) {
             additionalMsg = lstrings.fragmet_wallets_delete_eth_extra_message
           }
+        } else {
+          tokenCurrencyCode = getCurrencyCode(wallet, tokenId)
         }
-
         // Prompt user for action from modal
-        const resolveValue = await dispatch(showDeleteWalletModal(walletId, additionalMsg))
+        const resolveValue = await dispatch(showDeleteWalletModal(walletId, tokenCurrencyCode, additionalMsg))
 
         // Archive wallet or token if user confirmed action
         if (resolveValue === 'confirm') {

@@ -18,6 +18,7 @@ exports[`OutlinedTextInput should render with some props 1`] = `
           "paddingHorizontal": 22,
         },
         {
+          "alignItems": "flex-start",
           "flexGrow": 1,
           "marginBottom": 11,
           "marginLeft": 11,

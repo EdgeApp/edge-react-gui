@@ -14,6 +14,17 @@ function asCorePluginInit<T>(cleaner: Cleaner<T>): Cleaner<T | false> {
   }
 }
 
+const asEvmApiKeys = asObject({
+  alethioApiKey: asOptional(asString, ''),
+  amberdataApiKey: asOptional(asString, ''),
+  blockchairApiKey: asOptional(asString, ''),
+  evmScanApiKey: asOptional(asArray(asString), () => []),
+  gasStationApiKey: asOptional(asString, ''),
+  infuraProjectId: asOptional(asString, ''),
+  poktPortalApiKey: asOptional(asString, ''),
+  quiknodeApiKey: asOptional(asString, '')
+}).withRest
+
 export const asEnvConfig = asObject({
   // API keys:
   AIRBITZ_API_KEY: asOptional(asString, ''),
@@ -81,23 +92,8 @@ export const asEnvConfig = asObject({
   AZTECO_API_KEY: asNullable(asString),
 
   // Core plugin options:
-  AVALANCHE_INIT: asCorePluginInit(
-    asObject({
-      alethioApiKey: asOptional(asString, ''),
-      amberdataApiKey: asOptional(asString, ''),
-      blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      gasStationApiKey: asOptional(asString, ''),
-      infuraProjectId: asOptional(asString, ''),
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  BINANCE_SMART_CHAIN_INIT: asCorePluginInit(
-    asObject({
-      bscscanApiKey: asOptional(asArray(asString), () => []),
-      evmScanApiKey: asOptional(asArray(asString), () => [])
-    }).withRest
-  ),
+  AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
+  BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -108,40 +104,14 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  ETHEREUM_INIT: asCorePluginInit(
-    asObject({
-      alethioApiKey: asOptional(asString, ''),
-      amberdataApiKey: asOptional(asString, ''),
-      blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      gasStationApiKey: asOptional(asString, ''),
-      infuraProjectId: asOptional(asString, ''),
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
-  ETHEREUM_POW_INIT: asCorePluginInit(
-    asObject({
-      alethioApiKey: asOptional(asString, ''),
-      amberdataApiKey: asOptional(asString, ''),
-      blockchairApiKey: asOptional(asString, ''),
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      gasStationApiKey: asOptional(asString, ''),
-      infuraProjectId: asOptional(asString, ''),
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
+  ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
+  ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
   EXOLIX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  FANTOM_INIT: asCorePluginInit(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      ftmscanApiKey: asOptional(asString, ''),
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
+  FANTOM_INIT: asCorePluginInit(asEvmApiKeys),
   FIO_INIT: asEither(
     asOptional(asBoolean, true), // Defaults to true if missing.
     asObject({
@@ -163,12 +133,7 @@ export const asEnvConfig = asObject({
       integrator: asOptional(asString, 'edgeapp')
     }).withRest
   ),
-  KOVAN_INIT: asCorePluginInit(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      quiknodeApiKey: asOptional(asString, '')
-    }).withRest
-  ),
+  KOVAN_INIT: asCorePluginInit(asEvmApiKeys),
   LETSEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -179,23 +144,10 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
-  OPTIMISM_INIT: asCorePluginInit(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), () => [])
-    }).withRest
-  ),
-  PULSECHAIN_INIT: asCorePluginInit(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), () => [])
-    }).withRest
-  ),
+  OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
+  PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
 
-  POLYGON_INIT: asCorePluginInit(
-    asObject({
-      evmScanApiKey: asOptional(asArray(asString), () => []),
-      polygonscanApiKey: asOptional(asArray(asString), () => [])
-    }).withRest
-  ),
+  POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
       affiliateId: asOptional(asString, '')
@@ -257,6 +209,7 @@ export const asEnvConfig = asObject({
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
+  ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
     asObject({

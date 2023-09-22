@@ -14,6 +14,7 @@ const edgeTxs: EdgeTransaction[] = [
     date: 1524476980,
     deviceDescription: 'iphone12',
     isSend: false,
+    memos: [],
     metadata: {
       name: 'Crazy Person',
       category: 'Income:Mo Money',
@@ -34,6 +35,7 @@ const edgeTxs: EdgeTransaction[] = [
     date: 1524576980,
     deviceDescription: 'iphone12',
     isSend: true,
+    memos: [],
     metadata: {
       name: 'Crazy Person 2',
       category: 'Expense:Less Money',
@@ -53,6 +55,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1524676980,
     deviceDescription: 'iphone12',
+    memos: [],
     metadata: {
       name: 'Transfer',
       category: 'Transfer:Edge',
@@ -72,6 +75,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1524776980,
     deviceDescription: 'iphone12',
+    memos: [],
     metadata: {
       name: 'Transfer but actually income',
       category: 'Transfer:Edge',
@@ -92,6 +96,7 @@ const edgeTxs: EdgeTransaction[] = [
     date: 1524876980,
     deviceDescription: 'iphone12',
     isSend: true,
+    memos: [],
     metadata: {
       name: 'Transfer but no fee',
       category: 'Transfer:Edge',
@@ -111,6 +116,7 @@ const edgeTxs: EdgeTransaction[] = [
     currencyCode: 'BTC',
     date: 1524976980,
     deviceDescription: 'iphone12',
+    memos: [],
     metadata: {
       name: 'Transfer but no fiat amount',
       category: 'Transfer:Edge',
@@ -131,6 +137,7 @@ const edgeTxs: EdgeTransaction[] = [
     date: 1525076980,
     deviceDescription: 'iphone12',
     isSend: true,
+    memos: [],
     metadata: undefined,
     nativeAmount: '-321000000',
     networkFee: '2000',

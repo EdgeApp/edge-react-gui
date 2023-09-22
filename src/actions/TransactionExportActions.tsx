@@ -1,6 +1,7 @@
 import { abs, add, div, gt, lt, mul } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import shajs from 'sha.js'
 
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
@@ -407,13 +408,14 @@ export async function exportTransactionsToBitwave(
   }
 
   function edgeTxToCsv(edgeTx: EdgeTransaction) {
-    const { date, isSend, metadata, nativeAmount, networkFee, parentNetworkFee, txid } = edgeTx
+    const { date, isSend, metadata, nativeAmount, networkFee, ourReceiveAddresses, parentNetworkFee, spendTargets, txid } = edgeTx
     const amount: string = abs(div(nativeAmount, multiplier, DECIMAL_PRECISION))
     const time = makeBitwaveDateTime(date)
     let fee: string = ''
     let feeTicker: string = ''
     const { name = '', category = '', notes = '' } = metadata ?? {}
 
+    let toAddress = ''
     if (isSend) {
       if (parentNetworkFee != null) {
         feeTicker = parentCode
@@ -422,10 +424,19 @@ export async function exportTransactionsToBitwave(
         feeTicker = currencyCode
         fee = div(networkFee, multiplier, DECIMAL_PRECISION)
       }
+      if (spendTargets && spendTargets.length > 0) {
+        // We can only choose 1 `toAddress` so pick the first spendTarget
+        toAddress = spendTargets[0].publicAddress
+      }
+    } else {
+      // We can only choose 1 `toAddress` so pick the first receive address
+      toAddress = ourReceiveAddresses != null ? ourReceiveAddresses[0] : ''
     }
 
+    const id = shajs('sha256').update(`${txid}_${nativeAmount}_${networkFee}_${toAddress}`).digest('hex').slice(0, 16)
+
     items.push({
-      id: txid,
+      id,
       remoteContactId: '',
       amount,
       amountTicker: currencyCode,
@@ -435,7 +446,7 @@ export async function exportTransactionsToBitwave(
       feeTicker,
       time,
       blockchainId: txid,
-      memo: category,
+      memo: notes,
       transactionType: isSend ? 'withdrawal' : 'deposit',
       accountId,
       contactId: '',
@@ -444,9 +455,10 @@ export async function exportTransactionsToBitwave(
       tradeId: '',
       description: name,
       fromAddress: '',
-      toAddress: '',
+      toAddress,
       groupId: '',
-      'metadata:myCustomMetadata1': notes
+      'metadata:myCustomMetadata1': category,
+      'metadata:myCustomMetadata2': notes
     })
   }
 

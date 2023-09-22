@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Text as RNText, TextStyle, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
+import { StyleSheet, Text as RNText, TextStyle, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
 
-import { primaryButtonUnderlay, styles } from './style'
+import { THEME } from '../../../theme/variables/airbitz'
+import { scale } from '../../../util/scaling'
 
 interface TextProps {
   children: React.ReactNode
@@ -35,3 +36,29 @@ export class PrimaryButton extends React.Component<Props> {
     )
   }
 }
+
+const primaryButtonUnderlay = { color: THEME.COLORS.PRIMARY }
+
+const styles = StyleSheet.create({
+  button: {
+    padding: 14,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: -1
+  },
+  buttonText: {
+    fontFamily: THEME.FONTS.DEFAULT,
+    fontSize: scale(18),
+    lineHeight: scale(18),
+    position: 'relative',
+    top: 1
+  },
+  // PRIMARY BUTTON
+  primaryButton: {
+    backgroundColor: THEME.COLORS.SECONDARY
+  },
+  primaryButtonText: {
+    color: THEME.COLORS.WHITE
+  }
+})

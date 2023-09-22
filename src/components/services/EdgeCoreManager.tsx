@@ -7,6 +7,7 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -17,6 +18,10 @@ import { fakeUser } from '../../util/fake-user'
 import { LoadingScene } from '../scenes/LoadingScene'
 import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
+
+const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
+const INFO_TEST_SERVER = 'https://info-tester.edge.app'
+const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 
 interface Props {}
 
@@ -110,6 +115,18 @@ export function EdgeCoreManager(props: Props) {
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
     ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
   ]
+
+  let infoServer: string | undefined
+  let loginServer: string | undefined
+  let syncServer: string | undefined
+
+  if ((ENV.ENABLE_TEST_SERVERS == null && isMaestro()) || ENV.ENABLE_TEST_SERVERS === true) {
+    console.log('Using test servers')
+    infoServer = INFO_TEST_SERVER
+    loginServer = LOGIN_TEST_SERVER
+    syncServer = SYNC_TEST_SERVER
+  }
+
   return (
     <>
       {ENV.USE_FAKE_CORE ? (
@@ -132,6 +149,9 @@ export function EdgeCoreManager(props: Props) {
           pluginUris={pluginUris}
           onLoad={handleContext}
           onError={handleError}
+          authServer={loginServer}
+          infoServer={infoServer}
+          syncServer={syncServer}
         />
       )}
       {context == null ? <LoadingScene /> : <Providers key={`redux${counter.current}`} context={context} />}

@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 3.18.0
+
+- changed: Replace text 'plugins' with 'providers' in Buy/Sell
+- changed: Include stake plugin display name in error message on transaction list scene
+- fixed: Prevent setting invalid spending limits
+- fixed: Turning off 'Dark Mode' causes crash
+- fixed: Incorrect wording when disabling a token
+- removed: 'Add/Edit Tokens" option for token rows
+
 ## 3.17.3
 
 - fixed: Allow the app to log in again on older OS's (iOS 12.4 and Android 7).
@@ -12,7 +21,48 @@
 
 - fixed: Fix 'to' quotes in Thorchain using incorrect denomination
 
-## 3.15.0
+## 3.16.0 (2023-08-28)
+
+- added: New swap provider XRP Decentralized Exchange
+- added: AXL wrapped tokens on Fantom
+- added: Support spending to Taproot bech32m addresses
+- added: Allow user to update permissions in-app
+- added: Monero custom node support
+- added: Cancel button to exchange quote processing scene
+- changed: Overhauled side menu and help modal UI
+- changed: Update AAVE BTC->WBTC swap minimums
+- changed: Replace Moonpay logo
+- removed: Disabled ETC transaction history
+- removed: Removed navigation buttons from new account wallet creation scene
+- fixed: Prevent crash when entering Markets scene
+- Upgrade edge-core-js to v1.4.1
+  - changed: Reduced YAOB throttle to 50ms and apply throttle to return bridge calls
+  - added: canBePartial and maxFulfillmentSeconds to EdgeSwapQuote
+  - added: skipBlockHeight config option
+  - changed: Throttle the react-native bridge to 500ms. This will create some lag, but should improve overall performance.
+  - changed: Move the Android namespace definition out of the AndroidMaifest.xml and into the build.gradle file.
+- Upgrade edge-currency-accountbased to v1.5.2
+  - fixed: Correctly parse more types of Ripple transactions, including DEX transactions.
+  - changed: Removed blockscout API server from ETC info (disabling transaction list retrieval)
+  - added: Support for XRP OfferCreate txs
+  - added: Fantom tokens listed on Axelarscan (AXLUSDC, AXLUSDT, AXLETH, AXLWBTC)
+  - Fixed: Bug in FIO causing missing historical transactions (first page of transactions).
+  - Fixed: Improve FIO transaction history fetching from history nodes by using the nodes with the highest action sequence number.
+- Upgrade edge-currency-monero to v1.1.1
+  - fixed: Fixed address transaction cleaner broken for wallets with no transaction history.
+  - added: Support custom servers via enableCustomServers and moneroLightwalletServer user settings.
+- Upgrade edge-currency-plugins to v2.1.0
+  - Changed: Upgraded AltcoinJS to first published version based on BitcoinJS v6.1.3
+  - Added: Support for pay-to-taproot address support (P2TR) for Bitcoin wallets.
+- Upgrade edge-exchange-plugins to v0.20.2
+  - Fixed: XRP DEX max swaps
+  - Fixed: LI.FI on-chain transactions no longer revert due to missing bridge fees
+  - added: XRP DEX support (Requires minimum of edge-currency-accountbased 1.5.0)
+- Upgrade edge-login-ui-rn to v2.7.0
+  - added: Tracking event for logins
+  - changed: Update translations
+
+## 3.15.0 (2023-08-11)
 
 - added: simplified Maestro scripts and use cleaner-config for testerConfig.json
 - changed: updated style sheet caching in the `styled` HOC
@@ -21,7 +71,7 @@
 - Upgrade edge-login-ui-rn to v2.6.6
   - changed: Update translations
 
-## 3.14.0
+## 3.14.0 (2023-08-01)
 
 - added: Light account support
 - added: PulseChain (PLS)
@@ -102,7 +152,7 @@
   - fixed: Password login scene errors were not localized
   - changed: Allow biometric logins for accounts without usernames.
 
-## 3.13.0
+## 3.13.0 (2023-07-12)
 
 - Add WalletConnect v2 support
 - Refactor transaction list scene to reduce redux use and implement streamTransactions method
@@ -151,7 +201,7 @@ ZEC: Update checkpoints
   - changed: Allow the PIN scene to log into username-less accounts.
   - removed: Remove OTP support for PIN logins. The login server will never return OTP errors for PIN logins, so this capability is not needed.
 
-## 3.12.0
+## 3.12.0 (2023-07-05)
 
 - Core refactor removes private key properties from EdgeCurrencyWallet
 - Add USDC (ETH/MATIC) support for Bitrefill
@@ -218,7 +268,7 @@ ZEC: Update checkpoints
   - TRX: Fix memo handling
   - Fixed: Added transaction processing for FIO name registration actions
 
-## 3.11.0
+## 3.11.0 (2023-06-07)
 
 - Add in-app A/B testing
 - Refresh market scene on default fiat code change

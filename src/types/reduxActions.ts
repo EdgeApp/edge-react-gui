@@ -3,10 +3,10 @@ import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSpe
 
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
+import { PasswordReminderTime, SecurityCheckedWallets } from '../actions/SettingsActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
 import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
-import { PasswordReminderTime, SecurityCheckedWallets } from '../modules/Core/Account/settings'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
 import { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer'
