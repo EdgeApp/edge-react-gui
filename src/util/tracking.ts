@@ -101,46 +101,48 @@ export function trackError(
  * Send a raw event to all backends.
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, ...rest } = values
+  getExperimentConfig()
+    .then(async (experimentConfig: ExperimentConfig) => {
+      // Persistent & Unchanged params:
+      const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...rest }
+
+      // Adjust params:
+      if (accountDate != null) params.adate = accountDate
+      if (currencyCode != null) params.currency = currencyCode
+      if (dollarValue != null) {
+        params.currency = 'USD'
+        params.value = Number(dollarValue.toFixed(2))
+        params.items = [String(event)]
+      }
+      if (installerId != null) params.aid = installerId
+      if (pluginId != null) params.plugin = pluginId
+      if (error != null) params.error = makeErrorLog(error)
+
+      // Add all 'sticky' remote config variant values:
+      for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+      consify({ logEvent: { event, params } })
+
+      Promise.all([logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+    })
+    .catch(console.error)
 }
 
 /**
  * Send a raw event to Firebase.
  */
-async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, ...rest } = values
-
+async function logToFirebase(name: TrackingEventName, params: any) {
   // @ts-expect-error
   if (!global.firebase) return
 
-  // Persistent & Unchanged params:
-  const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...rest }
-
-  // Adjust params:
-  if (accountDate != null) params.adate = accountDate
-  if (currencyCode != null) params.currency = currencyCode
-  if (dollarValue != null) {
-    params.currency = 'USD'
-    params.value = Number(dollarValue.toFixed(2))
-  }
-  if (installerId != null) params.aid = installerId
-  if (pluginId != null) params.plugin = pluginId
-  if (error != null) params.error = makeErrorLog(error)
-
-  // Add all 'sticky' remote config variant values:
-  const experimentConfig = await getExperimentConfig()
-
-  for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
-
-  consify({ logEvent: { name, params } })
-  // @ts-expect-error
-  global.firebase.analytics().logEvent(name, params)
-
   // If we get passed a dollarValue, translate the event into a purchase:
-  if (dollarValue != null) {
-    params.items = [name]
+  if (params.dollarValue != null) {
     // @ts-expect-error
     global.firebase.analytics().logEvent('purchase', params)
+  } else {
+    // @ts-expect-error
+    global.firebase.analytics().logEvent(name, params)
   }
 }
 
