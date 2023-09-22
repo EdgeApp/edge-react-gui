@@ -13,6 +13,10 @@
 - fixed: Stuck showToastSpinner never going away
 - removed: 'Add/Edit Tokens" option for token rows
 
+## 3.17.3 (2023-09-21)
+
+- fixed: Allow the app to log in again on older OS's (iOS 12.4 and Android 7).
+
 ## 3.17.2 (2023-09-15)
 
 - Upgrade edge-currency-plugins to v2.1.1
