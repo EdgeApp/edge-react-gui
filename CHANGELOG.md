@@ -5,6 +5,7 @@
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
 - changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
+- fixed: Error showing in some cases during auto logout
 - fixed: Incorrect wording when disabling a token
 - fixed: Min/max price label position on the Markets charts
 - fixed: Do not error when recording sends to FIO addresses.
