@@ -1,8 +1,8 @@
 Titel: Edge - Bitcoin-, Ethereum-, Monero-, Ripple-Wallet
 -----
-Kurze Beschreibung: Privat, sicher & einfach zu nutzen. Bitcoin & andere Kryptowährungen kaufen, verkaufen, senden & empfangen.
--------
-Privatsphäre und Sicherheit in unserer einfachen, blockchain Wallet zu verwenden.
+Short description: Buy BTC, AVAX, Monero & more
+-----
+Privatsphäre und Sicherheit in unserer einfachen, blockchain Wallet zu verwenden. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Die Verwaltung Ihrer Kryptowährungen war nie einfacher. Die Edge-Wallet bietet maximale Sicherheit bei gleichzeitiger Einfachheit und ermöglicht es allen Nutzern, ihre Währungen einfach zu verwalten, zu transferieren und zu tauschen.
 
