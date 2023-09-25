@@ -2,7 +2,7 @@ Titolo: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
 -----
 Breve descrizione: privato, sicuro e di facile utilizzo. Compra, vendi, invia e ricevi Bitcoin e altre cripto.
 -----
-Privacy totale e sicurezza nel nostro portafoglio blockchain semplice da utilizzare.
+Privacy totale e sicurezza nel nostro portafoglio blockchain semplice da utilizzare. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Gestire le tue criptovalute non è mai stato così semplice. Edge Wallet fornisce la massima sicurezza mantenendo le cose semplici: permette a qualunque tipo di utente di gestire con facilità le proprie criptovalute, trasferirle e scambiarle.
 
