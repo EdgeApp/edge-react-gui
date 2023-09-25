@@ -129,6 +129,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
     forceFiatCurrencyCode: 'iso:TRY',
+    defaultFiatAmount: '2000',
     displayName: ''
   },
   simplex: {

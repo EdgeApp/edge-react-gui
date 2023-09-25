@@ -41,7 +41,7 @@ export const executePlugin = async (params: {
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
   const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
-  const { forceFiatCurrencyCode, pluginId } = guiPlugin
+  const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
 
   const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
   const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
@@ -201,6 +201,7 @@ export const executePlugin = async (params: {
     regionCode,
     paymentTypes,
     forceFiatCurrencyCode,
+    defaultFiatAmount,
     providerId
   }
   plugin.startPlugin(startPluginParams).catch(showError)

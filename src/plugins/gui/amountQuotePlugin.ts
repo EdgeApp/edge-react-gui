@@ -35,6 +35,8 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
+const DEFAULT_FIAT_AMOUNT = '500'
+
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, showUi } = params
   const { pluginId } = guiPlugin
@@ -47,7 +49,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
+      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -137,7 +139,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         initState: {
-          value1: '500'
+          value1: defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),

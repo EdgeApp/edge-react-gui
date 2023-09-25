@@ -25,6 +25,11 @@ export interface GuiPlugin {
   // Is a native plugin written in React Native
   nativePlugin?: FiatPluginFactory
 
+  // Fiat amount to default using in the buy quote screen. If not specified,
+  // 500 is used which will be in units of the fiat currency chosen for that
+  // plugin
+  defaultFiatAmount?: string
+
   // Force plugin to use specific fiat currencyCode. Only applicable for
   // native plugins
   forceFiatCurrencyCode?: string

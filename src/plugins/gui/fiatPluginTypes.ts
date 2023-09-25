@@ -135,6 +135,7 @@ export interface FiatPluginStartParams {
   paymentTypes: FiatPaymentType[]
   regionCode: FiatPluginRegionCode
   forceFiatCurrencyCode?: string
+  defaultFiatAmount?: string
   providerId?: string
 }
 export interface FiatPlugin {
