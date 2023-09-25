@@ -2,7 +2,7 @@ Título: Edge - Cartera de Bitcoin, Ethereum, Monero, Ripple
 -----
 Descripción corta: Privada, segura y fácil de usar. Compra, vende, envía y recibe Bitcoin y otras criptomonedas.
 -----
-Una cartera blockchain con total seguridad y privacidad fácil de usar.
+Una cartera blockchain con total seguridad y privacidad fácil de usar. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Gestionar tus criptomonedas nunca ha sido tan fácil. Edge Wallet proporciona la máxima seguridad a la vez que mantiene la simplicidad, permitiendo a todos los tipos de usuarios administrar, transferir e intercambiar fácilmente sus monedas.
 
