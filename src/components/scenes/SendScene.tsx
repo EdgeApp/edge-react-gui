@@ -18,7 +18,7 @@ import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWalletToken } from '../../actions/WalletActions'
-import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
@@ -28,7 +28,7 @@ import { GuiExchangeRates, GuiMakeSpendInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../util/FioAddressUtils'
-import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { WarningCard } from '../cards/WarningCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -725,23 +725,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { nativeAmount, transaction, transactionMetadata, error, guiMakeSpendInfo, isSendUsingFioAddress } = state.ui.sendConfirmation
+    const currencyWallets = state.core.account.currencyWallets
+    const defaultSelectedWalletId = state.ui.wallets.selectedWalletId
 
     return {
       account: state.core.account,
       authRequired: state.ui.sendConfirmation.authRequired,
-      defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
+      defaultSelectedWalletId,
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
       exchangeRates: state.exchangeRates,
       nativeAmount,
       pin: state.ui.sendConfirmation.pin,
-      sliderDisabled: !transaction,
+      sliderDisabled:
+        !transaction || (zeroString(nativeAmount) && !SPECIAL_CURRENCY_INFO[currencyWallets[defaultSelectedWalletId].currencyInfo.pluginId].allowZeroTx),
       transaction,
       transactionMetadata,
       isSendUsingFioAddress,
       guiMakeSpendInfo,
       maxSpendSet: state.ui.sendConfirmation.maxSpendSet,
-      currencyWallets: state.core.account.currencyWallets
+      currencyWallets
     }
   },
   dispatch => ({

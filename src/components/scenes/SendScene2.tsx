@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
@@ -35,7 +35,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { WarningCard } from '../cards/WarningCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
@@ -962,7 +962,12 @@ const SendComponent = (props: Props) => {
   let disableSlider = false
   let disabledText: string | undefined
 
-  if (edgeTransaction == null || processingAmountChanged || error != null) {
+  if (
+    edgeTransaction == null ||
+    processingAmountChanged ||
+    error != null ||
+    (zeroString(spendInfo.spendTargets[0].nativeAmount) && !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
+  ) {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true
