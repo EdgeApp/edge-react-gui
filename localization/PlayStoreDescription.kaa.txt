@@ -1,0 +1,35 @@
+Title: Edge - Bitcoin & Crypto Wallet
+-----
+Short description: Privacy & security in an easy to use crypto wallet. Buy & sell bitcoin!
+
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> uy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+
+Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
+
+Managing your cryptocurrency & Bitcoin wallet has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their crypto & Bitcoin. Edge is the best bitcoin wallet and crypto wallet for keeping things simple and secure! With Edge, we make it simple to buy bitcoin, sell bitcoin, and exchange many of the top cryptocurrencies.
+
+<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Monero (XMR), Polygon (MATIC), Hedera (HBAR), Bitcoin Cash (BCH), Litecoin (LTC), Binance Coin (BNB), Tezos, Ethereum (ETH), Ripple (XRP), Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). Want to see other cryptos in our wallet? Send us a request!
+
+Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+
+Take control of your funds! With Edge Crypto Wallet, only YOU have access to your funds or transaction data. 
+
+Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
+
+<b>Edge Bitcoin Wallet Features</b>
+• Secure crypto wallet and blockchain app
+• Easy to use Bitcoin & cryptocurrency wallet app with support for top crypto assets like Bitcoin Cash, Ethereum (ETH), Litecoin (LTC), Binance Coin (BNB), Ripple (XRP), Avalanche (AVAX), Monero (XMR), Polygon (MATIC), Hedera (HBAR), and more
+• Zero-knowledge & zero-access to user funds, keys, or transaction data by Edge or 3rd parties
+• Simple account creation using just a login & password
+• Hierarchical Deterministic crypto wallets wallets with changing addresses per transaction
+• Decentralized server architecture. Crypto wallets work even if Edge servers are down.
+• Open-source code. Available at https://github.com/Airbitz
+• Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
+
+Privacy Notice
+The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+
+1. Autocomplete contacts from the user's address book after a transaction
+2. Autocomplete contacts from the user's address book to send Email or SMS payment requests
+
+No personal info or contact list info ever leaves the device without first being encrypted by the user's credentials (username/password). Neither Edge nor any 3rd party can access the information requested by the application.
