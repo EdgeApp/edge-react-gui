@@ -1,0 +1,97 @@
+# Priority: High
+# Test ID: C209308
+# Title: Settings list visuals
+# Expected Result:
+#   1. Visuals of Settings are correct for each item in Settings scene
+#   2. Excludes "assets" as they will be changed in the near future and to later add assertion
+# in progress blocked settings targetability/scroll for ios
+
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C209308
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- assertVisible:
+    id: "sideMenuButton"
+- tapOn:
+    id: "sideMenuButton"
+- assertVisible: "Settings"
+- tapOn: "Settings"
+- assertVisible: "Settings"
+- assertVisible:
+    id: "sideMenuButton"
+- assertVisible:
+    id: "chevronBack"
+- assertVisible: "Tap to Unlock Account Settings"
+- assertVisible: "Change Password"
+- assertVisible: "Change PIN"
+- scrollUntilVisible:
+    element: "Set Up 2-Factor Security"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Set Up Password Recovery"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Delete Account"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Options"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Exchange Settings"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Spending Limits"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Auto Log Off After"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Default Currency"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "PIN Re-login"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Contacts Access"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Hide spam transactions"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Notifications"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Promotion Settings"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Developer Mode"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Restore Wallets"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Migrate Wallets"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Terms of Service"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Verbose Logging"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Export Logs"
+    direction: "DOWN"
+- scrollUntilVisible:
+    element: "Clear Logs"
+    direction: "DOWN"
+

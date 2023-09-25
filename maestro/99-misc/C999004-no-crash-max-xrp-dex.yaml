@@ -1,0 +1,32 @@
+# Priority: Critical
+# Test ID: C999004
+# Title: No crash on Exchange Max XRP with XRP DEX
+# Expected Result:
+#   1. No crash when doing a max exchange of XRP with XRP DEX enabled
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C999004
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_XRP_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_XRP_PASSWORD}
+
+- assertVisible:
+    text: "Exchange"
+- tapOn: "Exchange"
+- tapOn: "Select Source Wallet"
+- tapOn:
+    text: "XRP"
+- tapOn: "Select Receiving Wallet"
+- tapOn: "Gatehub EUR"
+- tapOn: "MAX"
+- assertVisible:
+    text: "Exchange"
+
+- stopApp
