@@ -321,7 +321,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </View>
           <View style={styles.balanceContainer}>
-            <TouchableOpacity onPress={this.toggleBalanceVisibility}>
+            <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </TouchableOpacity>
             <EdgeText style={styles.exchangeRate}>
@@ -501,6 +501,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: theme.rem(0.5)
+  },
+  balanceAmountContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    marginRight: theme.rem(0.25)
   },
   exchangeRate: {
     textAlign: 'right',
