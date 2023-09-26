@@ -1069,7 +1069,7 @@
   "wc_smartcontract_confirmed": "Smart Contract Call confirmed",
   "wc_scan_modal_text_modal_title": "Enter Wallet Connect URI",
   "wc_scan_modal_text_modal_hint": "Wallet Connect URI",
-  "token_agreement_modal_title": "%s Needed To Send Tokens",
+  "token_agreement_modal_title": "%s Needed to Send Tokens",
   "token_agreement_modal_message": "%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Buy or Exchange function.",
   "confirm_continue_modal_body": "Please confirm your understanding below:",
   "confirm_continue_modal_button_text": "I understand and agree to the terms",
