@@ -1069,7 +1069,7 @@
   "wc_smartcontract_confirmed": "Chamada de Smart Contract Confirmada",
   "wc_scan_modal_text_modal_title": "Insira o URI do Wallet Connect",
   "wc_scan_modal_text_modal_hint": "URI Wallet Connect",
-  "token_agreement_modal_title": "%s Necessário para enviar tokens",
+  "token_agreement_modal_title": "%s Needed to Send Tokens",
   "token_agreement_modal_message": "É necessário %1$s para pagar as taxas de mineração ao enviar tokens. A carteira associada a %1$s deve conter uma quantidade suficiente de fundos.\n\nSe você não possui %1$s, pode adquiri-lo em %2$s usando a função Comprar ou Trocar.",
   "confirm_continue_modal_body": "Por favor, confirme abaixo que você compreendeu:",
   "confirm_continue_modal_button_text": "Eu entendo e concordo com os termos",
