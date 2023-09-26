@@ -618,6 +618,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
     noChangeMiningFee: true,
     allowZeroTx: true,
+    noMaxSpend: true,
     minimumPopupModals: {
       minimumNativeBalance: '1000000000000',
       modalMessage: lstrings.request_lld_minimum_notification_body,
