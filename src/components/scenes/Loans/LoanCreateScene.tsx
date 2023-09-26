@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
-import { PaymentMethod } from '../../../controllers/action-queue/WyreClient'
+import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { useAllTokens } from '../../../hooks/useAllTokens'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'

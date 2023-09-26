@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/WyreClient'
+import { PaymentMethod, PaymentMethodsMap } from '../../controllers/action-queue/PaymentMethod'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'

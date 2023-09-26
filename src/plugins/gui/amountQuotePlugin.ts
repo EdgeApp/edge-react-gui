@@ -35,6 +35,8 @@ type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
 const providerFactories = [bityProvider, simplexProvider, moonpayProvider, banxaProvider]
 
+const DEFAULT_FIAT_AMOUNT = '500'
+
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, showUi } = params
   const { pluginId } = guiPlugin
@@ -47,7 +49,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, regionCode, paymentTypes, providerId } = params
+      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -72,7 +74,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
       for (const provider of providers) {
-        assetPromises.push(provider.getSupportedAssets({ regionCode, paymentTypes }))
+        assetPromises.push(provider.getSupportedAssets({ direction, regionCode, paymentTypes }))
       }
 
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {
@@ -107,12 +109,12 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // Pop up modal to pick wallet/asset
       // TODO: Filter wallets according to fiats supported by allowed providers
       const walletListResult = await showUi.walletPicker({
-        headerTitle: lstrings.fiat_plugin_select_asset_to_purchase,
+        headerTitle: direction === 'buy' ? lstrings.fiat_plugin_select_asset_to_purchase : lstrings.fiat_plugin_select_asset_to_sell,
         allowedAssets,
-        showCreateWallet: true
+        showCreateWallet: direction === 'buy'
       })
 
-      const { walletId, currencyCode } = walletListResult
+      const { walletId, currencyCode, tokenId } = walletListResult
       if (walletId == null || currencyCode == null) return
 
       const coreWallet = account.currencyWallets[walletId]
@@ -127,7 +129,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
       // wallet fiat selection regardless of region.
       // TODO: Remove when Fiat selection is designed.
-      const fiatCurrencyCode = paymentTypes[0] === 'sepa' ? 'iso:EUR' : coreWallet.fiatCurrencyCode
+      const fiatCurrencyCode = forceFiatCurrencyCode ?? coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
 
@@ -137,7 +139,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         initState: {
-          value1: '500'
+          value1: defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
@@ -167,6 +169,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'fiat',
@@ -180,6 +183,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             quoteParams = {
               pluginId: currencyPluginId,
               displayCurrencyCode: currencyCode,
+              tokenId,
               exchangeAmount: value,
               fiatCurrencyCode,
               amountType: 'crypto',
@@ -206,9 +210,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             goodQuotes.push(quote)
           }
 
+          const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode) ?? lstrings.fiat_plugin_buy_no_quote
+            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode, direction) ?? noQuoteText
             stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
             return
           }
@@ -216,7 +221,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            stateManager.update({ statusText: { content: lstrings.fiat_plugin_buy_no_quote, textType: 'error' } })
+            stateManager.update({ statusText: { content: noQuoteText, textType: 'error' } })
             return
           }
 

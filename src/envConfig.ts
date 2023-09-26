@@ -51,6 +51,7 @@ export const asEnvConfig = asObject({
       banxa: asOptional(
         asObject({
           partnerUrl: asString,
+          hmacUser: asString,
           apiKey: asString
         })
       ),

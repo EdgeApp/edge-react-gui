@@ -8,18 +8,9 @@ import * as React from 'react'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { getAccounts, getWalletIdFromSessionNamespace } from '../../hooks/useWalletConnect'
+import { getAccounts, getClient, getWalletIdFromSessionNamespace, waitingClients, walletConnectClient } from '../../hooks/useWalletConnect'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
-
-export let walletConnectClient: Web3Wallet | undefined
-
-export const getClient = async (): Promise<Web3Wallet> => {
-  if (walletConnectClient != null) return walletConnectClient
-  return await new Promise(resolve => waitingClients.push(resolve))
-}
-
-const waitingClients: Array<(client: Web3Wallet) => void> = []
 
 interface Props {
   account: EdgeAccount
@@ -70,13 +61,13 @@ export const WalletConnectService = (props: Props) => {
   }
 
   useAsyncEffect(async () => {
-    if (walletConnectClient == null) {
+    if (walletConnectClient.client == null) {
       let projectId: string | undefined
       if (typeof ENV.WALLET_CONNECT_INIT === 'object' && ENV.WALLET_CONNECT_INIT.projectId != null) {
         projectId = ENV.WALLET_CONNECT_INIT.projectId
       }
 
-      walletConnectClient = await Web3Wallet.init({
+      walletConnectClient.client = await Web3Wallet.init({
         core: new Core({
           projectId
         }),
@@ -93,14 +84,14 @@ export const WalletConnectService = (props: Props) => {
       handleSessionRequest(event).catch(err => showError(err))
     }
 
-    if (walletConnectClient.events.listenerCount('session_request') === 0) {
-      walletConnectClient.on('session_request', handleSessionRequestSync)
+    if (walletConnectClient.client?.events.listenerCount('session_request') === 0) {
+      walletConnectClient.client.on('session_request', handleSessionRequestSync)
     }
     console.log('WalletConnect initialized')
-    waitingClients.forEach(f => f(walletConnectClient as Web3Wallet))
+    waitingClients.forEach(f => f(walletConnectClient.client as Web3Wallet))
 
     return () => {
-      walletConnectClient?.events.removeListener('session_request', handleSessionRequestSync)
+      walletConnectClient.client?.events.removeListener('session_request', handleSessionRequestSync)
     }
   }, [])
 

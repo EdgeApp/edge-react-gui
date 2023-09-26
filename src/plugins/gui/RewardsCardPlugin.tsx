@@ -45,7 +45,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   const provider = providers[0]
 
   // Get supported crypto assets:
-  const supportedAssetMap = await provider.getSupportedAssets({ paymentTypes: [], regionCode: { countryCode: 'US' } })
+  const supportedAssetMap = await provider.getSupportedAssets({ direction: 'sell', paymentTypes: [], regionCode: { countryCode: 'US' } })
   const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
 
   //
@@ -94,7 +94,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .catch(e => showError(e))
       },
       onCardPress({ url }) {
-        showUi.openWebView({ url }).catch(err => showError(err))
+        showUi.openExternalWebView({ url }).catch(err => showError(err))
       },
       onHelpPress() {
         openBrowserUri(SUPPORT_URL)
@@ -135,7 +135,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
-    const { walletId, currencyCode } = walletListResult
+    const { walletId, currencyCode, tokenId } = walletListResult
     if (walletId == null || currencyCode == null) return
 
     const wallet = account.currencyWallets[walletId]
@@ -166,6 +166,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
+            tokenId,
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
@@ -177,6 +178,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           quoteParams = {
             wallet,
             pluginId: wallet.currencyInfo.pluginId,
+            tokenId,
             displayCurrencyCode: currencyCode,
             exchangeAmount: value,
             fiatCurrencyCode,
