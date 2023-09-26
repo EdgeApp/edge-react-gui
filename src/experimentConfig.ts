@@ -20,7 +20,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // the configuration that differs from the default feature configuration.
 const experimentDistribution = {
   swipeLastUsp: [0.5],
-  createAccountType: [0.1],
+  createAccountType: [0.5],
   legacyLanding: [0.5],
   createAccountText: [0.33, 0.33]
 }
