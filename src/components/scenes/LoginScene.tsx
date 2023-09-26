@@ -12,18 +12,18 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
+import { ExperimentConfig, getExperimentConfig } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getStickyConfigValue } from '../../stickyConfig'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
-import { trackError } from '../../util/tracking'
+import { logEvent, trackError } from '../../util/tracking'
 import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
@@ -62,6 +62,7 @@ export function LoginSceneComponent(props: Props) {
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
   const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
+  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig>()
 
   const fontDescription = React.useMemo(
     () => ({
@@ -183,13 +184,14 @@ export function LoginSceneComponent(props: Props) {
     dispatch(showSendLogsModal()).catch(err => showError(err))
   })
 
-  // Wait for the sticky config to initialize before rendering anything
+  // Wait for the experiment config to initialize before rendering anything
   useAsyncEffect(async () => {
-    if (isMaestro()) return
-    setLegacyLanding((await getStickyConfigValue('legacyLanding')) === 'true')
+    const experimentConfig = await getExperimentConfig()
+    setExperimentConfig(experimentConfig)
+    setLegacyLanding(experimentConfig.legacyLanding === 'legacyLanding')
   }, [])
 
-  return loggedIn ? (
+  return loggedIn || experimentConfig == null ? (
     <LoadingScene />
   ) : (
     <View style={styles.container} testID="edge: login-scene">
@@ -209,7 +211,9 @@ export function LoginSceneComponent(props: Props) {
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
         skipSecurityAlerts
+        experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
+        onLogEvent={logEvent}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />

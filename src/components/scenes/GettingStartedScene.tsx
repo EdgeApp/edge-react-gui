@@ -21,11 +21,11 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import { getExperimentConfigValue } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getStickyConfigValue } from '../../stickyConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
@@ -84,6 +84,7 @@ export const GettingStartedScene = (props: Props) => {
 
   const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(true)
   const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>('full')
+  const [createAccountText, setCreateAccountText] = React.useState<string>(lstrings.create_wallet_create_account)
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -150,8 +151,12 @@ export const GettingStartedScene = (props: Props) => {
 
   // Initialize variant config values
   useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled((await getStickyConfigValue('swipeLastUsp')) === 'true')
-    setCreateAccountType(await getStickyConfigValue('createAccountType'))
+    setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
+    setCreateAccountType(await getExperimentConfigValue('createAccountType'))
+
+    const createAccTextVar = await getExperimentConfigValue('createAccountText')
+    if (createAccTextVar === 'signUp') setCreateAccountText(lstrings.account_sign_up)
+    else if (createAccTextVar === 'getStarted') setCreateAccountText(lstrings.account_get_started)
   }, [])
 
   // Redirect to login screen if device has memory of accounts
@@ -216,7 +221,7 @@ export const GettingStartedScene = (props: Props) => {
               })}
             </Sections>
             <Space horizontal={2}>
-              <MainButton onPress={handlePressSignUp} label={lstrings.create_wallet_create_account} />
+              <MainButton onPress={handlePressSignUp} label={createAccountText} />
               <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
             </Space>
           </SectionCoverAnimated>

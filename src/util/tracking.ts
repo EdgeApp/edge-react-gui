@@ -1,10 +1,11 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
+import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { getIsFirstOpen } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
-import { getStickyConfig, StickyConfig } from '../stickyConfig'
+import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
@@ -42,8 +43,9 @@ export type TrackingEventName =
   | 'Visa_Card_Launch'
   // No longer used:
   | 'Earn_Spend_Launch'
+  | LoginTrackingEventName
 
-export interface TrackingValues {
+export interface TrackingValues extends LoginTrackingValues {
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
@@ -106,13 +108,13 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
  * Send a raw event to Firebase.
  */
 async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, ...rest } = values
 
   // @ts-expect-error
   if (!global.firebase) return
 
-  // Persistent params:
-  const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen() }
+  // Persistent & Unchanged params:
+  const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...rest }
 
   // Adjust params:
   if (accountDate != null) params.adate = accountDate
@@ -126,9 +128,9 @@ async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
   if (error != null) params.error = makeErrorLog(error)
 
   // Add all 'sticky' remote config variant values:
-  const stickyConfig = await getStickyConfig()
+  const experimentConfig = await getExperimentConfig()
 
-  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof StickyConfig]
+  for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
 
   consify({ logEvent: { name, params } })
   // @ts-expect-error
