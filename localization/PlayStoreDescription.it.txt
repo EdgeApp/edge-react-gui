@@ -2,7 +2,7 @@ Title: Edge - Bitcoin & Crypto Wallet
 -----
 Short description: Privacy e sicurezza in un portafoglio criptovalute facile da usare. Compra e vendi bitcoin!
 
-<b>Totale privacy e sicurezza nel nostro portafoglio blockchain.</b> Compra, vendi, invia e ricevi Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e molte altre criptovalute.
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Edge Wallet fornisce il 100% di sicurezza — Né Edge né terze parti possono accedere al tuo portafoglio di criptovalute o ai tuoi dati. Ottieni la privacy e l'autonomia finanziaria per cui sono state progettate le criptovalute e la blockchain.
 
@@ -23,7 +23,7 @@ Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmen
 • Creazione dell'account semplificata, usando solo un nome utente e una password
 • Portafogli cripto gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
 • Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
-• Codice open-source. Disponibile su https://github.com/Airbitz
+• Codice open-source. Available at https://github.com/EdgeApp
 • Sistema di scambio interno per comprare e vendere Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Poligono (MATIC), Hedera (HBAR) e molto altro!
 
 Informativa sulla privacy
