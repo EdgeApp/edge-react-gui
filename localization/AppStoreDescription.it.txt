@@ -27,4 +27,4 @@ L'applicazione Edge Wallet richiede l'accesso alla lista contatti del dispositiv
 1. Completamento automatico dei contatti dalla rubrica dell'utente dopo una transazione
 2. Completamento automatico dei contatti dalla rubrica dell'utente per inviare richieste di pagamento tramite email o SMS
 
-Nessuna informazione personale o lista contatti lascerà mai questo dispositivo. Edge e terze parti non possono accedere alle informazioni richieste dall'applicazione.
+Nessuna informazione personale o lista contatti lascerà mai questo dispositivo. Né Edge né tantomeno terze parti possono accedere alle informazioni richieste dall'applicazione.
