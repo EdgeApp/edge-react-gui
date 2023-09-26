@@ -1,8 +1,8 @@
 Título: Carteira Edge - Bitcoin, Ethereum, Monero e Ripple
 -----
-Breve descrição: Privado, seguro & fácil de usar. Compre, venda, envie e receba Bitcoin & outras criptos.
+Short description: Buy BTC, AVAX, Monero & more
 -----
-Privacidade total e segurança em nossa carteira fácil de usar.
+Privacidade total e segurança em nossa carteira fácil de usar. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Nunca foi tão fácil gerenciar seus criptoativos. A Carteira Edge fornece segurança máxima mesmo mantendo a simplicidade, permitindo que todos os tipos de usuários a utilizem com facilidade, façam transferências e troquem suas moedas.
 
