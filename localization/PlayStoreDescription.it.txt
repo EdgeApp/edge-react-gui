@@ -1,10 +1,10 @@
-Titolo: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+Title: Edge - Bitcoin & Crypto Wallet
 -----
-Breve descrizione: privato, sicuro e di facile utilizzo. Compra, vendi, invia e ricevi Bitcoin e altre cripto.
+Short description: Privacy e sicurezza in un portafoglio criptovalute facile da usare. Compra e vendi bitcoin!
 
 <b>Totale privacy e sicurezza nel nostro portafoglio blockchain.</b> Compra, vendi, invia e ricevi Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e molte altre criptovalute.
 
-Edge e terze parti non possono accedere al tuo denaro o ai tuoi dati. Ottieni la privacy e l'autonomia finanziaria per cui sono state progettate le criptovalute e la blockchain.
+Edge Wallet fornisce il 100% di sicurezza — Né Edge né terze parti possono accedere al tuo portafoglio di criptovalute o ai tuoi dati. Ottieni la privacy e l'autonomia finanziaria per cui sono state progettate le criptovalute e la blockchain.
 
 Gestire le tue criptovalute non è mai stato così facile. Edge Wallet fornisce la massima sicurezza mantenendo la semplicità d'uso e permettendo a qualunque tipo di utente di gestire, trasferire e scambiare le loro criptovalute con estrema facilità. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna. Con Edge, rendiamo semplice acquistare bitcoin, vendere bitcoin, e scambiare molte delle criptovalute più note.
 
