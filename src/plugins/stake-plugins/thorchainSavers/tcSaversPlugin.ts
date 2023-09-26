@@ -2,6 +2,7 @@ import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 
+import { StringMap } from '../../../types/types'
 import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
 import {
   ChangeQuote,
@@ -101,6 +102,37 @@ const asQuoteDeposit = asEither(
     error: asString
   })
 )
+
+const tcChainCodePluginIdMap: StringMap = {
+  AVAX: 'avalanche',
+  BTC: 'bitcoin',
+  BCH: 'bitcoincash',
+  ETH: 'ethereum',
+  LTC: 'litecoin'
+}
+
+const asThorNodePool = asObject({
+  asset: asString, // "AVAX.AVAX",
+  // short_code: asString, // "a",
+  // status: asString, // "Available",
+  // pending_inbound_asset: asString, // "600000000",
+  // pending_inbound_rune: asString, // "0",
+  // balance_asset: asString, // "5605433676415",
+  // balance_rune: asString, // "35388343579663",
+  // pool_units: asString, // "27673425589789",
+  // LP_units: asString, // "23256888219750",
+  // synth_units: asString, // "4416537370039",
+  // synth_supply: asString, // "1789197165117",
+  savers_depth: asString // "1731265656406",
+  // savers_units: asString, // "1632808946580",
+  // synth_mint_paused: asBoolean, // false,
+  // synth_supply_remaining: asString, // "4937323246581",
+  // loan_collateral: asString, //  "0",
+  // loan_cr: asString, // "20000",
+  // derived_depth_bps: asString // "9110"
+})
+const asThorNodePools = asArray(asThorNodePool)
+
 type Savers = ReturnType<typeof asSavers>
 type Pools = ReturnType<typeof asPools>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
@@ -141,44 +173,9 @@ const policyDefault = {
   claimWarning: null
 }
 
-const policies: StakePolicy[] = [
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/bitcoin:btc=bitcoin:btc',
-    rewardAssets: [{ pluginId: 'bitcoin', currencyCode: 'BTC' }],
-    stakeAssets: [{ pluginId: 'bitcoin', currencyCode: 'BTC' }]
-  },
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/litecoin:ltc=litecoin:ltc',
-    rewardAssets: [{ pluginId: 'litecoin', currencyCode: 'LTC' }],
-    stakeAssets: [{ pluginId: 'litecoin', currencyCode: 'LTC' }]
-  },
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/bitcoincash:bch=bitcoincash:bch',
-    rewardAssets: [{ pluginId: 'bitcoincash', currencyCode: 'BCH' }],
-    stakeAssets: [{ pluginId: 'bitcoincash', currencyCode: 'BCH' }]
-  },
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/dogecoin:doge=dogecoin:doge',
-    rewardAssets: [{ pluginId: 'dogecoin', currencyCode: 'DOGE' }],
-    stakeAssets: [{ pluginId: 'dogecoin', currencyCode: 'DOGE' }]
-  },
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/ethereum:eth=ethereum:eth',
-    rewardAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }],
-    stakeAssets: [{ pluginId: 'ethereum', currencyCode: 'ETH' }]
-  },
-  {
-    ...policyDefault,
-    stakePolicyId: 'tcsavers/avalanche:avax=avalanche:avax',
-    rewardAssets: [{ pluginId: 'avalanche', currencyCode: 'AVAX' }],
-    stakeAssets: [{ pluginId: 'avalanche', currencyCode: 'AVAX' }]
-  }
-]
+const policies: StakePolicy[] = []
+let policiesInitialized = false
+let initializingPolicies = false
 
 const MAINNET_CODE_TRANSCRIPTION: { [cc: string]: string } = {
   bitcoin: 'BTC',
@@ -201,7 +198,46 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 let inboundAddressesLastUpdate: number = 0
 
 export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
-  asInitOptions(opts.initOptions)
+  const { ninerealmsClientId } = asInitOptions(opts.initOptions)
+
+  if (!policiesInitialized && !initializingPolicies) {
+    try {
+      initializingPolicies = true
+      const poolsResponse = await fetchWaterfall(thornodeServers, `thorchain/pools`, { headers: { 'x-client-id': ninerealmsClientId } })
+
+      if (!poolsResponse.ok) {
+        const responseText = await poolsResponse.text()
+        throw new Error(`Thorchain could not fetch thornode pools: ${responseText}`)
+      }
+      const poolsJson = await poolsResponse.json()
+      const pools = asThorNodePools(poolsJson)
+      pools.forEach(pool => {
+        if (gt(pool.savers_depth, '0')) {
+          const [chain, currency] = pool.asset.split('.')
+
+          // Only support mainnet coins. Remove for token support
+          if (!currency.startsWith(chain)) return
+          const edgeAsset = tcAssetToEdge(pool.asset)
+          if (edgeAsset == null) return
+          const { pluginId, currencyCode } = edgeAsset
+          const lowerCc = currencyCode.toLowerCase()
+
+          policies.push({
+            ...policyDefault,
+            stakePolicyId: `tcsavers/${pluginId}:${lowerCc}=${pluginId}:${lowerCc}`,
+            rewardAssets: [{ pluginId, currencyCode }],
+            stakeAssets: [{ pluginId, currencyCode }]
+          })
+        }
+      })
+      policiesInitialized = true
+    } catch (e) {
+      console.log('Error initializing Thorchain Savers policies', String(e))
+    } finally {
+      initializingPolicies = false
+    }
+  }
+
   const fetchResponse = await fetchInfo(`v1/apyValues`)
     .then(async res => {
       if (!res.ok) {
@@ -527,6 +563,14 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       await wallet.saveTx(broadcastedTx)
     }
   }
+}
+
+const tcAssetToEdge = (asset: string): { pluginId: string; currencyCode: string } | undefined => {
+  const [chainCode, currency] = asset.split('.')
+  const [currencyCode] = currency.split('-')
+  const pluginId = tcChainCodePluginIdMap[chainCode]
+
+  if (pluginId != null && currencyCode != null) return { currencyCode, pluginId }
 }
 
 const unstakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequest): Promise<ChangeQuote> => {
