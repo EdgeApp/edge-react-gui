@@ -19,6 +19,7 @@ import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
+import { toggleUserPausedWallet } from './SettingsActions'
 import { showSplitWalletModal } from './SplitWalletModalActions'
 
 export type WalletListMenuKey =
@@ -31,6 +32,7 @@ export type WalletListMenuKey =
   | 'viewXPub'
   | 'getRawKeys'
   | 'rawDelete'
+  | 'togglePause'
   | string // for split keys like splitbitcoincash, splitethereum, etc.
 
 export function walletListMenuAction(
@@ -291,6 +293,14 @@ export function walletListMenuAction(
             }}
           />
         ))
+      }
+    }
+
+    case 'togglePause': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { account } = state.core
+        await dispatch(toggleUserPausedWallet(account, walletId))
       }
     }
 

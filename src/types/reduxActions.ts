@@ -128,6 +128,7 @@ export type Action =
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN_TYPE'; data: EdgeSwapPluginType | undefined }
   | { type: 'UI/SETTINGS/SET_SECURITY_CHECKED_WALLETS'; data: SecurityCheckedWallets }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK'; data: boolean }
+  | { type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS'; data: { userPausedWallets: string[] } }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT'; data: { walletsSort: SortOption } }
   | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'; data: { pinLoginEnabled: boolean } }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS'; data: { settings: SettingsState } }
