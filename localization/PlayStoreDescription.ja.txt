@@ -2,7 +2,7 @@
 -----
 短い説明：プライベート・安全・使いやすい。 ビットコインや他の仮装通貨の購入、売却、送金、受取。 Buy & sell bitcoin!
 
-<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> uy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
 
@@ -23,7 +23,7 @@ Edge also provides a cryptocurrency exchange. Easily swap your currencies for ot
 • Simple account creation using just a login & password
 トランザクションごとにアドレスが更新される階層的決定性ウォレット
 • Decentralized server architecture. ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
-• Open-source code. Available at https://github.com/Airbitz
+• Open-source code. Available at https://github.com/EdgeApp
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
 プライバシーについて
