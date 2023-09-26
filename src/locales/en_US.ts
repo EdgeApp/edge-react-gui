@@ -366,6 +366,7 @@ const strings = {
   search_tokens: 'Search Tokens',
   search_assets: 'Search Assets',
   select_wallet: 'Select Wallet',
+  select_wallet_to_send_from: 'Select Wallet to Send From',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
@@ -1372,6 +1373,16 @@ const strings = {
   tap_to_learn_more: 'Tap to learn more.',
 
   // #endregion Light Account
+
+  // #region Transfer Modal
+  transfer_from_bank_title: 'From Bank/Cash',
+  transfer_from_wallet_title: 'From Another Wallet/Exchange',
+  transfer_to_bank_title: 'To Bank/Cash',
+  transfer_to_another_wallet_title: 'To Another Wallet/Exchange',
+  transfer_to_from_bank_title_1s: 'To %1$s From Bank/Cash',
+  select_receive_asset: 'Select Asset to Receive',
+
+  // #endregion Transfer Modal
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

@@ -4,203 +4,266 @@ exports[`WalletListFooter should render with loading props 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "borderTopColor": "rgba(255, 255, 255, .1)",
       "borderTopWidth": 1,
-      "flex": 1,
-      "flexDirection": "row",
-      "marginLeft": 22,
-      "marginVertical": 22,
-      "paddingRight": 22,
-      "paddingTop": 17,
+      "paddingVertical": 17,
     }
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "rgba(255, 255, 255, 0)",
-        "flex": 1,
-        "flexDirection": "row",
-        "height": 73,
-        "justifyContent": "center",
         "opacity": 1,
       }
     }
   >
-    <Text
-      allowFontScaling={false}
+    <View
+      absolute={false}
+      layout="row"
       style={
-        [
-          {
-            "color": "#00f1a2",
-            "fontSize": 34,
-          },
-          {
-            "color": "#00f1a2",
-            "fontFamily": "Quicksand-Medium",
-            "margin": 6,
-          },
-          {
-            "fontFamily": "Ionicons",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-          },
-          {},
-        ]
+        {
+          "bottom": undefined,
+          "flexDirection": "row-reverse",
+          "justifyContent": "space-evenly",
+          "left": undefined,
+          "margin": 11,
+          "marginHorizontal": 0,
+          "position": undefined,
+          "right": undefined,
+        }
       }
     >
-      
-    </Text>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
-        [
+      <View
+        accessibilityState={
           {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          [
-            {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Medium",
-              "margin": 6,
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "elevation": 0,
+            "opacity": 1,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 0,
+              "width": 0,
             },
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            [
+              16777215,
+              16777215,
+            ]
+          }
+          endPoint={
             {
-              "flexShrink": 1,
-            },
-          ],
-          null,
-        ]
-      }
-    >
-      Add Wallet
-    </Text>
-  </View>
-  <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      {
-        "alignItems": "center",
-        "backgroundColor": "rgba(255, 255, 255, 0)",
-        "flex": 1,
-        "flexDirection": "row",
-        "height": 73,
-        "justifyContent": "center",
-        "opacity": 1,
-      }
-    }
-  >
-    <Text
-      allowFontScaling={false}
-      style={
-        [
-          {
-            "color": "#00f1a2",
-            "fontSize": 34,
-          },
-          {
-            "color": "#00f1a2",
-            "fontFamily": "Quicksand-Medium",
-            "margin": 6,
-          },
-          {
-            "fontFamily": "Ionicons",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-          },
-          {},
-        ]
-      }
-    >
-      
-    </Text>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          [
+              "x": 1,
+              "y": 1,
+            }
+          }
+          locations={null}
+          startPoint={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Medium",
-              "margin": 6,
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderColor": "#00f1a2",
+                "borderRadius": 6,
+                "borderWidth": 1.5,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 67,
+                "minWidth": 202,
+              },
+              {
+                "alignSelf": "auto",
+                "marginBottom": 11,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
+              },
+              {
+                "borderRadius": 6,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
+            style={
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 0,
+                "paddingBottom": 11,
+                "paddingLeft": 17,
+                "paddingRight": 17,
+                "paddingTop": 11,
+              }
+            }
+          >
+            Send
+          </Text>
+        </BVLinearGradient>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "elevation": 0,
+            "opacity": 1,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 0,
+              "width": 0,
             },
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            [
+              16777215,
+              16777215,
+            ]
+          }
+          endPoint={
             {
-              "flexShrink": 1,
-            },
-          ],
-          null,
-        ]
-      }
-    >
-      Add Token
-    </Text>
+              "x": 1,
+              "y": 1,
+            }
+          }
+          locations={null}
+          startPoint={
+            {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderColor": "#00f1a2",
+                "borderRadius": 6,
+                "borderWidth": 1.5,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 67,
+                "minWidth": 202,
+              },
+              {
+                "alignSelf": "auto",
+                "marginBottom": 11,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
+              },
+              {
+                "borderRadius": 6,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
+            style={
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 0,
+                "paddingBottom": 11,
+                "paddingLeft": 17,
+                "paddingRight": 17,
+                "paddingTop": 11,
+              }
+            }
+          >
+            Deposit
+          </Text>
+        </BVLinearGradient>
+      </View>
+    </View>
   </View>
 </View>
 `;
