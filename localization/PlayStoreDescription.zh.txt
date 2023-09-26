@@ -2,7 +2,7 @@
 -----
 简短描述: 私密、安全 和 易于使用。 购买、出售、发送 和 接收比特币和其他加密货币。 Buy & sell bitcoin!
 
-<b>区块链钱包： 易于使用和全面的隐私和安全。</b> 购买、出售、发送和接收比特币 (btc)、比特币现金 (bch)、莱特币(ltc)、以太币(eth) 和其他顶级加密资产。
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
 
@@ -23,7 +23,7 @@ Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易�
 • 轻松创建帐户，只需使用登入名和密码 (无需打印 pdf 文件，抄写密码或添加任何加密设置）
 • 分层确定性钱包随每笔交易更换地址
 • Decentralized server architecture. • 分散式服务器架构。 即使 Edge 服务器发生故障，钱包依然可以运作。
-• Open-source code. • 开源代码。 可到 http://github.com/Airbitz 下载
+• Open-source code. Available at https://github.com/EdgeApp
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
 隐私声明
