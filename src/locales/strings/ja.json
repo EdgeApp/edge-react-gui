@@ -1069,7 +1069,7 @@
   "wc_smartcontract_confirmed": "スマートコントラクトコールが確認されました",
   "wc_scan_modal_text_modal_title": "ウォレット接続URIを入力",
   "wc_scan_modal_text_modal_hint": "ウォレット接続URI",
-  "token_agreement_modal_title": "トークンを送信するために%sが必要です",
+  "token_agreement_modal_title": "%s Needed to Send Tokens",
   "token_agreement_modal_message": "トークンを送信する際のマイニング手数料を支払うために%1$sが必要です。関連する%1$sウォレットには十分な資金が含まれている必要があります。\n\nもし%1$sを持っていない場合、%2$s内でBuyまたは交換機能を使用して取得することができます。",
   "confirm_continue_modal_body": "以下を確認してください：",
   "confirm_continue_modal_button_text": "利用規約を理解し、同意します",
