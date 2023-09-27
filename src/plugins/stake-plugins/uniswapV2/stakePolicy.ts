@@ -26,6 +26,7 @@ export const toStakePolicy =
       stakePolicyId,
       stakeProviderInfo,
       apy,
+      hideUnstakeAction: true,
       yieldType,
       stakeAssets,
       rewardAssets

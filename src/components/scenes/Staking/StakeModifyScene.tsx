@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -165,6 +165,7 @@ const StakeModifySceneComponent = (props: Props) => {
     const message = {
       stake: lstrings.stake_change_stake_success,
       unstake: lstrings.stake_change_unstake_success,
+      unstakeAndClaim: lstrings.stake_change_claim_success,
       claim: lstrings.stake_change_claim_success,
       unstakeExact: ''
     }
@@ -426,7 +427,7 @@ const StakeModifySceneComponent = (props: Props) => {
         }
         {
           // Render claim amount tile
-          stakePolicy.rewardsNotClaimable || (modification !== 'claim' && modification !== 'unstake')
+          stakePolicy.hideClaimAction || (modification !== 'claim' && modification !== 'unstake')
             ? null
             : stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset))
         }
@@ -454,12 +455,11 @@ const StakeModifySceneComponent = (props: Props) => {
   }
 
   const sceneTitleMap = React.useMemo(() => {
-    const unstakeText = getUnstakeText(stakePolicy)
-
     return {
       stake: getPolicyTitleName(stakePolicy),
       claim: lstrings.stake_claim_rewards,
-      unstake: unstakeText,
+      unstake: lstrings.stake_unstake,
+      unstakeAndClaim: lstrings.stake_unstake_claim,
       unstakeExact: '' // Only for internal use
     }
   }, [stakePolicy])

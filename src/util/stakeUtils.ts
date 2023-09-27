@@ -86,7 +86,3 @@ export const getPolicyIconUris = (
 export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
   return stakePlugins.find(plugin => plugin.getPolicies().find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
 }
-
-export const getUnstakeText = (policy: StakePolicy): string => {
-  return policy.rewardsNotClaimable ? lstrings.stake_unstake : lstrings.stake_unstake_claim
-}
