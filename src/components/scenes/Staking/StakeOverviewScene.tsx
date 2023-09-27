@@ -114,7 +114,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       </SceneWrapper>
     )
 
-  const { canStake = true, canClaim = true, canUnstakeAndClaim = true, canUnstake = true } = stakePosition ?? {}
+  const { canStake = false, canClaim = false, canUnstakeAndClaim = false, canUnstake = false } = stakePosition ?? {}
 
   return (
     <SceneWrapper scroll background="theme">
@@ -134,7 +134,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       />
       <MainButton
         label={lstrings.stake_stake_more_funds}
-        disabled={canStake}
+        disabled={!canStake}
         type="primary"
         onPress={handleModifyPress('stake')}
         marginRem={[0.5, 0.5, 0.25, 0.5]}
@@ -142,7 +142,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       {stakePolicy.hideClaimAction ? null : (
         <MainButton
           label={lstrings.stake_claim_rewards}
-          disabled={canClaim}
+          disabled={!canClaim}
           type="secondary"
           onPress={handleModifyPress('claim')}
           marginRem={[0.25, 0.5, 0.25, 0.5]}
@@ -151,7 +151,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       {stakePolicy.hideUnstakeAndClaimAction ? null : (
         <MainButton
           label={lstrings.stake_unstake_claim}
-          disabled={canUnstakeAndClaim}
+          disabled={!canUnstakeAndClaim}
           type="escape"
           onPress={handleModifyPress('unstakeAndClaim')}
           marginRem={[0.25, 0.5, 0.25, 0.5]}
@@ -160,7 +160,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
       {stakePolicy.hideUnstakeAction ? null : (
         <MainButton
           label={lstrings.stake_unstake}
-          disabled={canUnstake}
+          disabled={!canUnstake}
           type="escape"
           onPress={handleModifyPress('unstake')}
           marginRem={[0.25, 0.5, 0.25, 0.5]}
