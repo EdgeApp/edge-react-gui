@@ -2,7 +2,7 @@ Titre: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
 -----
 Description courte : Privé, securisé & facile à utiliser. Acheter, vendre, envoyer & recevoir les Bitcoins & les autremonnaies cryptos.
 
-<b> Protegé vos infomations privés et sécurisé votre Wallet de Blockchain qui est facile à utiliser.
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Vous aurez la confidentialité et autonomie financière pour laquelle Bitcoin a été conçu avec la facilité d’utilisation que même une personne âgés pourrait gérer.
 
@@ -23,7 +23,7 @@ Edge offert égalment les échange des cryptomonnaies. Il est facile à effacer 
 • Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions)
 • Portefeuilles déterministes hiérarchiques avec adresses changeantes par transaction
 • Architecture de serveur décentralisé. Les Walletes fonctionnent même si les serveurs Edge sont indisponibles.
-• Code source ouvert. Disponible sur http://github.com/Airbitz
+• Code source ouvert. Available at https://github.com/EdgeApp
 • Etablis les échanges de crypto pour acheter et vendre les cryptomonnaies
 
 Notification de confidentialité
