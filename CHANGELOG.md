@@ -5,6 +5,7 @@
 - added: Experiment config support between gui and login-ui
 - added: Experiment config for "Create Account" and "Login" button labels
 - changed: Always show gas warning when enabling tokens
+- changed: Dynamically determine supported Thorchain Savers assets
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
 - changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
