@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.19.0
+
 - added: Experiment config support between gui and login-ui
 - added: Experiment config for "Create Account" and "Login" button labels
 - added: Toast message when pausing or unpausing wallets
