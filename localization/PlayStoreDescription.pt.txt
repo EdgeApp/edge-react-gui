@@ -2,7 +2,7 @@ Título: Carteira Edge - Bitcoin, Ethereum, Monero e Ripple
 -----
 Breve descrição: Privado, seguro & fácil de usar. Compre, venda, envie e receba Bitcoin & outras criptos.
 
-<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> uy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Nem a Edge nem quaisquer terceiros podem acessar seu dinheiro ou dados. Você terá a privacidade financeira e a autonomia para as quais a Blockchain foi criada, com a facilidade de uso que até sua avó poderia utilizar.
 
@@ -23,7 +23,7 @@ Aplicativo de carteira de Bitcoin fácil de usar com suporte a criptomoedas de p
 • Simples criação de conta usando apenas login e senha (sem impressão de PDFs, escrever frases de passe, ou adicionar configurações de criptografia)
 • Carteiras determinísticas hierárquicas com mudança de endereço para cada transação
 • Arquitetura de servidor descentralizada. As carteiras funcionam mesmo se os servidores da Edge estiverem fora do ar.
-• Código aberto. Disponível em https://github.com/Airbitz
+• Código aberto. Available at https://github.com/EdgeApp
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
 Aviso de Privacidade
