@@ -2,7 +2,7 @@ Title: Edge - Bitcoin & Crypto Wallet
 -----
 짧은 설명: 프라이빗, 안전하고 간편한 월렛. Buy & sell bitcoin!
 
-<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> uy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
 
 Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
 
@@ -23,7 +23,7 @@ Edge also provides a cryptocurrency exchange. 화면을 몇번 탭하는것 만�
 • 로그인과 암호만을 사용하는 간단한 계정 만들기 (PDF파일의 인쇄, 암호문 적기, 또는 암호화설정 불필요)
 • 거래마다 주소가 변경되는 계층적 결정성 월렛
 • Decentralized server architecture. Crypto wallets work even if Edge servers are down.
-• 오픈 소스 코드. https://github.com/Airbitz 에서 열람 가능.
+• 오픈 소스 코드. Available at https://github.com/EdgeApp
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
 프라이버시에 관하여
