@@ -10,6 +10,7 @@
 - changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
 - changed: Include stake plugin display name in error message on transaction
+- fixed: Deposit/Send footer buttons for native currencies
 - fixed: Error showing in some cases during auto logout
   list scene
 - fixed: Possible balance text overflow in Receive scene
