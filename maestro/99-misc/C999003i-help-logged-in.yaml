@@ -1,0 +1,63 @@
+# Priority: Critical
+# Test ID: C999003i
+# Title: Help modal is correct
+# Expected Result:
+#   1. Able to tap on Help button while logged into an account
+#   2. Help modal visually correct
+#   3. Able to tap into each Help item
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- ios
+- C184035i
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "FIRO"
+    timeout: 120000
+- assertVisible: "Help"
+- tapOn: "Help"
+- assertVisible: "Thanks for using Edge!"
+- assertVisible: "Knowledge Base"
+- assertVisible: "Submit a Support Ticket"
+- assertVisible: "Call for Assistance"
+- assertVisible: "More info on Edge"
+- assertVisible: "Terms of Service"
+- tapOn: "Knowledge Base"
+- extendedWaitUntil:
+    visible: "Knowledge Base"
+    timeout: 120000
+- assertVisible:
+    id: "chevronBack"
+- tapOn:
+    id: "chevronBack"
+- tapOn: "Help"
+- tapOn: "Submit a Support Ticket"
+- assertVisible: "Submit a Support Ticket"
+- tapOn:
+    id: "chevronBack"
+#- tapOn: "Help"
+#- tapOn: "More info on Edge"
+#- assertVisible: "More info on Edge"
+#- tapOn:
+#    id: "chevronBack"
+- tapOn: "Help"
+- tapOn: "Terms of Service"
+- assertVisible: "Terms of Service"
+- tapOn:
+    id: "chevronBack"
+#- tapOn: "Help"
+#- tapOn: "Call for Assistance"
+#- assertVisible: "+1 619-777-5688"
+
+- stopApp
+
+# help more info - does not work for iOS since a full video is played when tapped into
+# call and asset # does not work for iOS. Only on Android functional

@@ -537,8 +537,7 @@ interface RecordObtDataParams {
   chainCode: string
   obtId: string
   memo: string
-  maxFee: number
-  status: string
+  status?: 'cancelled' | 'rejected' | 'requested' | 'sent_to_blockchain'
   fioRequestId?: number
 }
 
@@ -558,32 +557,27 @@ export const recordSend = async (
   }
 ) => {
   const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo, fioRequestId } = params
-  if (senderFioAddress && senderWallet && payeePublicAddress) {
-    let actionParams: RecordObtDataParams = {
-      payerFioAddress: senderFioAddress,
-      payeeFioAddress,
-      payerPublicAddress,
-      payeePublicAddress,
-      amount,
-      tokenCode: currencyCode,
-      chainCode,
-      obtId: txid,
-      memo,
-      maxFee: 0,
-      status: 'sent_to_blockchain'
-    }
-    if (fioRequestId) {
-      actionParams = { ...actionParams, fioRequestId }
-    }
-    try {
-      let edgeTx = await fioMakeSpend(senderWallet, 'recordObtData', actionParams)
-      edgeTx = await fioSignAndBroadcast(senderWallet, edgeTx)
-      await senderWallet.saveTx(edgeTx)
-    } catch (e: any) {
-      //
-      throw new Error(e.message)
-    }
+  if (senderFioAddress === '' || payeePublicAddress === '') return
+
+  let actionParams: RecordObtDataParams = {
+    payerFioAddress: senderFioAddress,
+    payeeFioAddress,
+    payerPublicAddress,
+    payeePublicAddress,
+    amount,
+    tokenCode: currencyCode,
+    chainCode,
+    obtId: txid,
+    memo,
+    status: 'sent_to_blockchain'
   }
+  if (fioRequestId) {
+    actionParams = { ...actionParams, fioRequestId }
+  }
+  const edgeTx = await fioMakeSpend(senderWallet, 'recordObtData', actionParams)
+  const signedTx = await senderWallet.signTx(edgeTx)
+  await senderWallet.broadcastTx(signedTx)
+  await senderWallet.saveTx(signedTx)
 }
 
 export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {

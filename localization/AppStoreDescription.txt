@@ -1,12 +1,12 @@
-Title: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+Title: Edge - Crypto & Bitcoin Wallet
 -----
-Short description: Private, secure & easy to use. Buy, sell, send & receive Bitcoin & other crypto.
+Short description: Buy BTC, AVAX, Monero & more
 -----
-Total privacy and security in our easy to use blockchain wallet.
+Total privacy and security in our easy to use blockchain wallet and cryptocurrency exchange. The Edge app has open-source code to ensure the highest level of security and privacy.
 
-Managing your cryptocurrency assets has never been easier. Edge Wallet provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
+Managing your cryptocurrency assets has never been easier. Edge provides maximum security while keeping simplicity, allowing all types of users to easily manage, transfer & exchange their currencies.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
 
 Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
 

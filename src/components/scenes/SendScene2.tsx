@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
@@ -35,7 +35,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { WarningCard } from '../cards/WarningCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
@@ -672,48 +672,45 @@ const SendComponent = (props: Props) => {
   }
 
   const recordFioObtData = async (spendTarget: EdgeSpendTarget, currencyCode: string, txid: string) => {
+    if (fioSender == null) return
+    const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
+    if (skipRecord) return
+
     const { nativeAmount, publicAddress: payeePublicAddress = '', otherParams = {} } = spendTarget
     const { fioAddress: payeeFioAddress } = otherParams
-    if (fioSender != null) {
-      const { fioAddress: payerFioAddress, fioWallet, memo, skipRecord = false } = fioSender
-      if (payeeFioAddress != null && payerFioAddress != null && fioWallet != null) {
-        // if (guiMakeSpendInfo.fioPendingRequest != null) {
-        // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
-        // try {
-        //   await recordSend(fioWallet, fioAddress, {
-        //     fioRequestId: pendingRequest.fio_request_id,
-        //     payeeFioAddress: pendingRequest.payee_fio_address,
-        //     payerPublicAddress: pendingRequest.payer_fio_public_key,
-        //     payeePublicAddress: pendingRequest.content.payee_public_address,
-        //     amount: pendingRequest.content.amount,
-        //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
-        //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
-        //     txid: edgeSignedTransaction.txid,
-        //     memo
-        //   })
-        // } catch (e: any) {
-        //   const message = e?.message ?? ''
-        //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
-        // }
-        // } else if ((guiMakeSpendInfo.publicAddress != null || publicAddress != null) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
-        if (!skipRecord) {
-          const { publicAddress: payerPublicAddress } = await coreWallet.getReceiveAddress()
-          const amount = nativeAmount ?? '0'
-          const chainCode = coreWallet.currencyInfo.currencyCode
-
-          await recordSend(fioWallet, payerFioAddress, {
-            payeeFioAddress,
-            payerPublicAddress,
-            payeePublicAddress,
-            amount: amount && div(amount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION),
-            currencyCode: currencyCode,
-            chainCode,
-            txid,
-            memo
-          })
-        }
-      }
+    if (payeeFioAddress == null || payerFioAddress == null || fioWallet == null) {
+      return
     }
+
+    // if (guiMakeSpendInfo.fioPendingRequest != null) {
+    // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
+    // try {
+    //   await recordSend(fioWallet, fioAddress, {
+    //     fioRequestId: pendingRequest.fio_request_id,
+    //     payeeFioAddress: pendingRequest.payee_fio_address,
+    //     payerPublicAddress: pendingRequest.payer_fio_public_key,
+    //     payeePublicAddress: pendingRequest.content.payee_public_address,
+    //     amount: pendingRequest.content.amount,
+    //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
+    //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
+    //     txid: edgeSignedTransaction.txid,
+    //     memo
+    //   })
+    // } catch (e: any) {
+    //   const message = e?.message ?? ''
+    //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+    // }
+
+    await recordSend(fioWallet, payerFioAddress, {
+      amount: nativeAmount != null ? div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION) : '0',
+      chainCode: coreWallet.currencyInfo.currencyCode,
+      currencyCode: currencyCode,
+      memo,
+      payeeFioAddress,
+      payeePublicAddress,
+      payerPublicAddress: fioWallet.publicWalletInfo.keys.publicKey,
+      txid
+    })
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
@@ -965,7 +962,12 @@ const SendComponent = (props: Props) => {
   let disableSlider = false
   let disabledText: string | undefined
 
-  if (edgeTransaction == null || processingAmountChanged || error != null) {
+  if (
+    edgeTransaction == null ||
+    processingAmountChanged ||
+    error != null ||
+    (zeroString(spendInfo.spendTargets[0].nativeAmount) && !SPECIAL_CURRENCY_INFO[pluginId].allowZeroTx)
+  ) {
     disableSlider = true
   } else if (pinSpendingLimitsEnabled && spendingLimitExceeded && (pinValue?.length ?? 0) < PIN_MAX_LENGTH) {
     disableSlider = true

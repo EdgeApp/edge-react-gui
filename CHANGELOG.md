@@ -2,16 +2,96 @@
 
 ## Unreleased
 
+## 3.19.0
+
+- added: Experiment config support between gui and login-ui
+- added: Experiment config for "Create Account" and "Login" button labels
+- added: Toast message when pausing or unpausing wallets
+- changed: Always show gas warning when enabling tokens
+- changed: Dynamically determine supported Thorchain Savers assets
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
+- changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
+- changed: Include stake plugin display name in error message on transaction
+- fixed: Extra close (x) button on FIO modal
+- fixed: Deposit/Send footer buttons for native currencies
+- fixed: Error showing in some cases during auto logout
+  list scene
+- fixed: Possible balance text overflow in Receive scene
+- fixed: Incorrect wording when disabling a token
+- fixed: Min/max price label position on the Markets charts
+- fixed: Do not error when recording sends to FIO addresses.
 - fixed: Prevent setting invalid spending limits
 - fixed: Turning off 'Dark Mode' causes crash
-- fixed: Incorrect wording when disabling a token
+- fixed: Stuck showToastSpinner never going away
 - removed: 'Add/Edit Tokens" option for token rows
 
-## 3.17.1
+## 3.17.3 (2023-09-21)
 
-- fixed: Fix 'to' quotes in Thorchain using incorrect denomination
+- fixed: Allow the app to log in again on older OS's (iOS 12.4 and Android 7).
+
+## 3.17.2 (2023-09-15)
+
+- Upgrade edge-currency-plugins to v2.1.1
+  - added: Dynamic fudge factors for UTXO fees
+
+## 3.17.1 (2023-09-15)
+
+- Upgrade edge-exchange-plugins to v0.21.5
+  - fixed: Fix 'to' quotes in Thorchain using incorrect denomination
+
+## 3.17.0 (2023-09-11)
+
+- added: Add Filecoin support
+- added: Add Liberland Dollars (LLD) and Merits (LLM) support
+- added: Add BUSD, PAXG, and PYUSD tokens
+- added: Add disableSwaps option to app config
+- added: Export Bitwave format CSV
+- added: Tracking event for "Already have an account? Sign-in" tap
+- added: Tracking event for logins
+- changed: Modal UI adjustments
+- changed: Show date in swap transaction notes
+- changed: Allow custom tokens to overwrite built-in tokens
+- changed: Show warning when user overrides a built-in token with a custom token
+- changed: When sending to a FIO address, and something goes wrong on the FIO chain, don't show the send itself as having failed
+- fixed: Send scene crash due to null spending limits
+- fixed: Blank space at bottom of txdetails
+- fixed: Save new categories on row tap
+- fixed: Set word capitalization on category entry
+- fixed: Align TX Details notes entry to top of OutlineTextInput
+- fixed: Set returnKeyType of Notes entry to "return"
+- fixed: Crash entering spending limits settings
+- fixed: Updated translations
+- fixed: Various text and visual improvements
+- removed: Deprecate new BSV wallet creation
+- Upgrade edge-currency-accountbased to v2.2.4
+  - added: USDT token to Avalanche
+  - added: PYUSD token to Ethereum
+  - added: Integrate Filfox for Filecoin transaction scanning
+  - added: Add new ETH tokens ARB, BUSD, and PAXG
+  - added: Add new BSC token BUSD
+  - added: Add new RPC server, Pocket Network
+  - changed: Use Filfox exclusively for Filecoin transaction querying
+  - changed: Revert usage of queryMulti in Polkadot engine balance query
+  - changed: Use separate code path for calculating token max spendable (Polkadot)
+  - changed: Allow user to spend entire token balance (Polkadot)
+  - changed: Add early exit to transaction query (Polkadot)
+  - changed: Parameterize apikey replacement in node urls and remove url-specific apikey logic in engines
+  - fixed: Bug prevent Filecoin spend transactions from being saved in the wallet (by saveTx)
+  - fixed: Filecoin network fee query issue
+  - fixed: Incorrectly identifying send-to-self transactions as receives from the network
+  - fixed: Use Filscan as the block explorer for Filecoin
+  - fixed: Used correct balance in when sending tokens (Polkadot)
+  - fixed: Update Liberland length fee cost
+  - fixed: Skip Liberland transaction history query if subscan url isn't present
+  - fixed: Correctly report transaction history query status for new empty Filecoin wallets
+- Upgrade edge-exchange-plugins to v0.21.4
+  - fixed: Uniswap plugin uses backup gasLimit in case estimateGas fails
+  - fixed: Thorchain failed quotes from ETH>BTC
+  - changed: Use RPC gas estimates for Uniswap plugin
+  - fixed: Separate Thorchain volatility spreads between streaming and non-streaming
+- Upgrade edge-login-ui-rn to v2.8.1
+  - fixed: Always show the username in PIN login scene
 
 ## 3.16.0 (2023-08-28)
 

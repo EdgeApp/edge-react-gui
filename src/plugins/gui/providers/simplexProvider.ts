@@ -191,7 +191,11 @@ export const simplexProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
+        if (direction !== 'buy') {
+          return { crypto: {}, fiat: {} }
+        }
+
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
 
@@ -333,7 +337,7 @@ export const simplexProvider: FiatProviderFactory = {
             const url = `https://partners.simplex.com/?partner=${partner}&t=${token}`
 
             console.log('Approving simplex quote url=' + url)
-            await showUi.openWebView({ url })
+            await showUi.openExternalWebView({ url })
           },
           closeQuote: async (): Promise<void> => {}
         }

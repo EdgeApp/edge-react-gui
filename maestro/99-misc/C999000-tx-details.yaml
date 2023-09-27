@@ -12,20 +12,20 @@ tags:
 - runFlow:
     file: ../common/login-password.yaml
     env:
-      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
-      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+      USERNAME: ${MAESTRO_EDGE_TXDETAILS_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_TXDETAILS_PASSWORD}
 
 - extendedWaitUntil:
-    visible: FIRO
+    visible: My Bitcoin
     timeout: 120000
-- tapOn: FIRO
+- tapOn: My Bitcoin
 - extendedWaitUntil:
-    visible: 0.369074 FIRO
+    visible: 0.00003462 BTC
     timeout: 120000
-- tapOn: "Sent Firo"
+- tapOn: "Sent Bitcoin"
 
 - assertVisible: "Recipient Name"
-- assertVisible: "Firo Amount"
+- assertVisible: "Bitcoin Amount"
 - assertVisible: "Amount in USD"
 - assertVisible: "Amount at Current Price"
 - assertVisible: "Category"

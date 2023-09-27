@@ -1,4 +1,4 @@
-import { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeDenomination } from 'edge-core-js'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 
@@ -35,7 +35,15 @@ export function getExchangeDenominationFromState(pluginId: string, currencyCode:
  * This would match "BTC" but not "sats".
  */
 export const getExchangeDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
-  const { allTokens, currencyInfo } = state.core.account.currencyConfig[pluginId]
+  return getExchangeDenominationFromAccount(state.core.account, pluginId, currencyCode)
+}
+
+/**
+ * Finds the primary denomination for the given currencyCode and account
+ * This would match "BTC" but not "sats".
+ */
+export const getExchangeDenominationFromAccount = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeDenomination => {
+  const { allTokens, currencyInfo } = account.currencyConfig[pluginId]
 
   if (currencyInfo.currencyCode === currencyCode) return currencyInfo.denominations[0]
   for (const tokenId of Object.keys(allTokens)) {
@@ -44,19 +52,4 @@ export const getExchangeDenomination = (state: RootState, pluginId: string, curr
   }
 
   return { ...emptyEdgeDenomination }
-}
-
-/**
- * @deprecated Use `getExchangeDenomination` instead.
- * This is buggy, since it does not include custom tokens.
- */
-export const getDenominationFromCurrencyInfo = (currencyInfo: EdgeCurrencyInfo, currencyCode: string): EdgeDenomination => {
-  const mainDenom = currencyInfo.denominations.find(denom => denom.name === currencyCode)
-  if (mainDenom != null) return mainDenom
-
-  const metaToken = currencyInfo.metaTokens.find(token => token.currencyCode === currencyCode)
-  const metaTokenDenoms = metaToken?.denominations ?? []
-  const metaTokenDenom = metaTokenDenoms.find(denom => denom.name === currencyCode)
-  if (metaTokenDenom != null) return metaTokenDenom
-  return emptyEdgeDenomination
 }

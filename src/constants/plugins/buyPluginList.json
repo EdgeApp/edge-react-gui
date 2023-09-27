@@ -309,64 +309,49 @@
     "deepPath": "/"
   },
   {
-    "id": "banxa.bank",
-    "pluginId": "banxa",
-    "paymentTypes": ["bank"],
-    "description": "Fee: 5.5% / Settlement: 5 min - 24 hours\nLimit: $50000/day",
-    "title": "POLi Bank Transfer",
-    "partnerIconPath": "banxa.png",
-    "forCountries": ["GB", "AU", "CA", "NL", "TR"],
-    "cryptoCodes": ["BTC", "LTC", "ETH", "USDT"],
-    "paymentTypeLogoKey": "poli",
-    "deepQuery": {
-      "country": "AU",
-      "payment_id": "5021"
-    }
+    "id": "interac",
+    "pluginId": "interac",
+    "paymentType": "interac",
+    "paymentTypes": ["interac"],
+    "title": "Interac e-Transfer",
+    "description": "Fee: 4-5%\nSettlement: 1 - 2 days",
+    "forCountries": ["CA"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "interac"
   },
   {
-    "id": "banxa.payid",
-    "pluginId": "banxa",
-    "paymentTypes": ["bank"],
-    "description": "Fee: 5.5%\nSettlement: Instant",
+    "id": "payid",
+    "pluginId": "payid",
+    "paymentType": "payid",
+    "paymentTypes": ["payid"],
     "title": "PayID",
-    "partnerIconPath": "banxa.png",
+    "description": "Fee: 4-5%\nSettlement: Instant",
     "forCountries": ["AU"],
-    "cryptoCodes": ["BTC", "LTC", "ETH", "USDT"],
-    "paymentTypeLogoKey": "payid",
-    "deepQuery": {
-      "country": "AU",
-      "payment_id": "5035"
-    }
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "payid"
   },
   {
-    "id": "banxa.auspost",
-    "pluginId": "banxa",
-    "paymentTypes": ["cash"],
-    "description": "Fee: 5.5%\nSettlement: Instant",
-    "title": "Australia Post",
-    "partnerIconPath": "banxa.png",
-    "forCountries": ["AU"],
-    "cryptoCodes": ["BTC", "LTC", "ETH", "USDT"],
-    "paymentTypeLogoKey": "auspost",
-    "deepQuery": {
-      "country": "AU",
-      "payment_id": "5033"
-    }
+    "id": "pix",
+    "pluginId": "pix",
+    "paymentType": "pix",
+    "paymentTypes": ["pix"],
+    "description": "Fee: 3-4%\nSettlement: 5 min - 24 hours",
+    "title": "Pix",
+    "// Do not enable until we have a Pix logo": "",
+    "forCountries": ["BR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "pix"
   },
   {
-    "id": "banxa.sofort",
-    "pluginId": "banxa",
-    "paymentTypes": ["bank"],
-    "description": "Fee: 5.5%\nSettlement: Instant - 3 days",
-    "title": "Sofort - Klarna",
-    "partnerIconPath": "banxa.png",
-    "forCountries": ["DE", "AT", "CH", "BE"],
-    "cryptoCodes": ["BTC", "LTC", "ETH", "BSV", "USDT", "USDC"],
-    "paymentTypeLogoKey": "sofort",
-    "deepQuery": {
-      "country": "DE",
-      "payment_id": "6045"
-    }
+    "id": "turkishbank",
+    "pluginId": "turkishbank",
+    "paymentType": "turkishbank",
+    "paymentTypes": ["turkishbank"],
+    "title": "Turkish Bank Transfer",
+    "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
+    "forCountries": ["TR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
   },
   {
     "id": "bits of gold",
@@ -471,22 +456,6 @@
   {
     "id": "sepa",
     "sortIndex": 6
-  },
-  {
-    "id": "banxa.bank",
-    "sortIndex": 4.5
-  },
-  {
-    "id": "banxa.sofort",
-    "sortIndex": 1.5
-  },
-  {
-    "id": "banxa.payid",
-    "sortIndex": 3
-  },
-  {
-    "id": "banxa.auspost",
-    "sortIndex": 4
   },
   {
     "id": "libertyx",
@@ -990,45 +959,6 @@
   },
   "----- Country Specifics -----",
   {
-    "id": "banxa.bank",
-    "forCountries": ["GB"],
-    "cryptoCodes": ["BTC", "ETH"],
-    "deepQuery": {
-      "country": "GB",
-      "payment_id": "6059"
-    },
-    "title": "Faster Payments",
-    "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 5.5%\nSettlement: Instant - 1 hour",
-    "sortIndex": 1
-  },
-  {
-    "id": "banxa.bank",
-    "forCountries": ["CA"],
-    "cryptoCodes": ["BTC", "LTC", "ETH", "USDT"],
-    "deepQuery": {
-      "country": "CA",
-      "payment_id": "6046"
-    },
-    "title": "Interac e-Transfer",
-    "paymentTypeLogoKey": "interac",
-    "description": "Fee: 3%\nSettlement: 1 - 2 days",
-    "sortIndex": 1
-  },
-  {
-    "id": "banxa.bank",
-    "forCountries": ["TR"],
-    "cryptoCodes": ["BTC"],
-    "deepQuery": {
-      "country": "TR",
-      "payment_id": "6068"
-    },
-    "title": "Turkish Bank Transfer",
-    "paymentTypeLogoKey": "bank",
-    "description": "Fee: 2% / Settlement: Instant - 1 hour\nDaily Limit: ₺228,000",
-    "sortIndex": 1
-  },
-  {
     "id": "sepa",
     "forCountries": ["GB"],
     "sortIndex": 2
@@ -1039,41 +969,5 @@
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
     "description": "Fee: 5.95%\nSettlement: 1 - 48 hours"
-  },
-  {
-    "id": "banxa.bank",
-    "forCountries": ["NL"],
-    "deepQuery": {
-      "country": "nl",
-      "payment_id": "6024"
-    },
-    "title": "iDEAL",
-    "paymentTypeLogoKey": "ideal",
-    "description": "Fee: 5.5%\nSettlement: Instant",
-    "sortIndex": 1
-  },
-  {
-    "id": "banxa.sofort",
-    "forCountries": ["AT"],
-    "deepQuery": {
-      "country": "AT",
-      "payment_id": "6045"
-    }
-  },
-  {
-    "id": "banxa.sofort",
-    "forCountries": ["CH"],
-    "deepQuery": {
-      "country": "CH",
-      "payment_id": "6045"
-    }
-  },
-  {
-    "id": "banxa.sofort",
-    "forCountries": ["BE"],
-    "deepQuery": {
-      "country": "BE",
-      "payment_id": "6045"
-    }
   }
 ]

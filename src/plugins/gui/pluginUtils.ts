@@ -4,6 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { FiatDirection } from './fiatPluginTypes'
 import { FiatProviderError, FiatProviderQuote, FiatProviderQuoteError, FiatProviderQuoteErrorTypes, FiatProviderStore } from './fiatProviderTypes'
 
 export const createStore = (storeId: string, store: EdgeDataStore): FiatProviderStore => {
@@ -30,7 +31,7 @@ export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): st
   return exchangeRateText
 }
 
-export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string): string | undefined => {
+export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): string | undefined => {
   let bestError: FiatProviderQuoteError | undefined
   for (const eq of errorQuotes) {
     const errorQuote = eq.quoteError
@@ -56,30 +57,50 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
     }
   }
   if (bestError == null) return
-  return getErrorText(bestError, currencyCode)
+  return getErrorText(bestError, currencyCode, direction)
 }
 
-const getErrorText = (error: FiatProviderQuoteError, currencyCode: string): string => {
+const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {
   let errorText = ''
 
   switch (error.errorType) {
     case 'underLimit':
-      errorText =
-        error.errorAmount == null
-          ? lstrings.fiat_plugin_buy_amount_under_undef_limit
-          : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+      if (direction === 'buy') {
+        errorText =
+          error.errorAmount == null
+            ? lstrings.fiat_plugin_buy_amount_under_undef_limit
+            : sprintf(lstrings.fiat_plugin_buy_amount_under_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+      } else {
+        errorText =
+          error.errorAmount == null
+            ? lstrings.fiat_plugin_sell_amount_under_undef_limit
+            : sprintf(
+                lstrings.fiat_plugin_sell_amount_under_limit,
+                `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`
+              )
+      }
       break
     case 'overLimit':
-      errorText =
-        error.errorAmount == null
-          ? lstrings.fiat_plugin_buy_amount_over_undef_limit
-          : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${currencyCode}`)
+      if (direction === 'buy') {
+        errorText =
+          error.errorAmount == null
+            ? lstrings.fiat_plugin_buy_amount_over_undef_limit
+            : sprintf(lstrings.fiat_plugin_buy_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+      } else {
+        errorText =
+          error.errorAmount == null
+            ? lstrings.fiat_plugin_sell_amount_over_undef_limit
+            : sprintf(lstrings.fiat_plugin_sell_amount_over_limit, `${formatNumber(error.errorAmount.toString())} ${error.displayCurrencyCode ?? currencyCode}`)
+      }
       break
     case 'paymentUnsupported':
       errorText = lstrings.fiat_plugin_payment_unsupported
       break
     case 'regionRestricted':
-      errorText = sprintf(lstrings.fiat_plugin_buy_region_restricted, error.displayCurrencyCode)
+      errorText = sprintf(
+        direction === 'buy' ? lstrings.fiat_plugin_buy_region_restricted : lstrings.fiat_plugin_sell_region_restricted,
+        error.displayCurrencyCode
+      )
       break
     case 'assetUnsupported':
       errorText = lstrings.fiat_plugin_asset_unsupported

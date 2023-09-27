@@ -3,13 +3,13 @@ import '@walletconnect/react-native-compat'
 import { SessionTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError, parseUri } from '@walletconnect/utils'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
+import { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
 import { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship } from '../components/services/AirshipInstance'
-import { getClient } from '../components/services/WalletConnectService'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
@@ -28,6 +28,17 @@ interface WalletConnect {
   approveRequest: (topic: string, requestId: number, result: JsonObject | string) => Promise<void>
   rejectRequest: (topic: string, requestId: number) => Promise<void>
 }
+
+export const walletConnectClient: { client: Web3Wallet | undefined } = {
+  client: undefined
+}
+
+export const getClient = async (): Promise<Web3Wallet> => {
+  if (walletConnectClient.client != null) return walletConnectClient.client
+  return await new Promise(resolve => waitingClients.push(resolve))
+}
+
+export const waitingClients: Array<(client: Web3Wallet) => void> = []
 
 /**
  * Access Wallet Connect

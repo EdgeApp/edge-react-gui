@@ -1,6 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import { asArray, asNumber, asObject, asString } from 'cleaners'
-import { EdgeAccount, EdgeDataStore, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -25,10 +24,10 @@ import {
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
+  FiatPluginStartParams,
   FiatPluginUi,
   FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
-import { createStore } from './pluginUtils'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
@@ -42,7 +41,7 @@ export const executePlugin = async (params: {
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
   const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
-  const { pluginId } = guiPlugin
+  const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
 
   const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
   const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
@@ -61,7 +60,7 @@ export const executePlugin = async (params: {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },
     showToastSpinner,
-    openWebView: async (params): Promise<void> => {
+    openExternalWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
     },
@@ -142,12 +141,18 @@ export const executePlugin = async (params: {
         ...params.hiddenFeaturesMap,
         scamWarning: true
       }
-      return await new Promise<void>((resolve, reject) => {
+      return await new Promise<EdgeTransaction>((resolve, reject) => {
         maybeNavigateToCorrectTabScene()
         navigation.navigate('send2', {
           ...params,
-          onDone: (_error: Error | null, edgeTransaction?: EdgeTransaction) => {
-            resolve()
+          onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
+            if (error != null) {
+              reject(error)
+            } else if (edgeTransaction != null) {
+              resolve(edgeTransaction)
+            } else {
+              reject(new Error('Missing EdgeTransaction'))
+            }
           }
         })
       })
@@ -191,120 +196,13 @@ export const executePlugin = async (params: {
   // here. The 'paymentTypes' defined in buy/sellList.json gets ignored, causing
   // confusion.
   const paymentTypes = paymentType != null ? [paymentType] : []
-  const startPluginParams = {
+  const startPluginParams: FiatPluginStartParams = {
     direction,
     regionCode,
     paymentTypes,
+    forceFiatCurrencyCode,
+    defaultFiatAmount,
     providerId
   }
   plugin.startPlugin(startPluginParams).catch(showError)
-}
-
-// ****************************************************************************
-// XXX Hack. We don't have a clean API to see if the user has a linked bank
-// account. For now hard code to ask Wyre. This will change hopefully in the
-// next couple months
-//
-// Most of code below was stolen from edge-plugins-wyre
-// ****************************************************************************
-
-const asBlockchainMap = asObject(asString)
-export const asGetPaymentMethods = asObject({
-  data: asArray(
-    asObject({
-      status: asString,
-      waitingPrompts: asArray(
-        asObject({
-          type: asString
-        })
-      ),
-      owner: asString,
-      id: asString,
-      createdAt: asNumber,
-      name: asString,
-      blockchains: asBlockchainMap
-    })
-  )
-})
-const asGetAccount = asObject({ status: asString })
-
-type GetPaymentMethods = ReturnType<typeof asGetPaymentMethods>
-type GetAccount = ReturnType<typeof asGetAccount>
-
-export const checkWyreHasLinkedBank = async (dataStore: EdgeDataStore): Promise<boolean | undefined> => {
-  try {
-    const store = createStore('co.edgesecure.wyre', dataStore)
-    let key = await store.getItem('wyreSecret').catch(e => undefined)
-    if (key == null) {
-      key = await store.getItem('wyreAccountId')
-    }
-    if (key == null) return false
-    const paymentMethods = await getWyrePaymentMethods(key)
-    if (paymentMethods.data.length < 1) return false
-    const accountName = paymentMethods.data[0].owner.substring(8)
-    const wyreAccount = await getWyreAccount(accountName, key)
-    return checkWyreActive(wyreAccount, paymentMethods)
-  } catch (e: any) {
-    if (typeof e.message === 'string' && e.message.includes('No item named')) {
-      return false
-    }
-    console.error(e.message)
-  }
-}
-
-export function checkWyreActive(account: GetAccount, paymentMethods: GetPaymentMethods): boolean {
-  if (account.status !== 'APPROVED') return false
-
-  // Gather payment methods
-  for (let i = 0; i < paymentMethods.data.length; i++) {
-    // Skip all inactive payment methods
-    if (paymentMethods.data[i].status !== 'ACTIVE') {
-      continue
-    }
-
-    if (paymentMethods.data[i].waitingPrompts.length > 0) {
-      const prompt = paymentMethods.data[i].waitingPrompts.find(wp => wp.type === 'RECONNECT_BANK')
-      if (prompt != null) {
-        continue
-      }
-    }
-    return true
-  }
-
-  return false
-}
-
-async function getWyreAccount(account: string, token: string): Promise<GetAccount> {
-  const timestamp = new Date().getMilliseconds()
-  const data = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
-      'Content-Type': 'application/json'
-    }
-  }
-  const url = 'https://api.sendwyre.com/v2/account/' + account + '?timestamp=' + timestamp
-  // @ts-expect-error
-  const result = await window.fetch(url, data)
-  if (!result.ok) throw new Error('fetchError')
-  if (result.status === 204) throw new Error('emptyResponse')
-  const newData = asGetAccount(await result.json())
-  return newData
-}
-
-async function getWyrePaymentMethods(token: string): Promise<GetPaymentMethods> {
-  const request = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
-      'Content-Type': 'application/json'
-    }
-  }
-  const url = 'https://api.sendwyre.com/v2/paymentMethods' // V2_API_URL + 'apiKeys'
-  const result = await fetch(url, request)
-  if (!result.ok) throw new Error('fetchError')
-  if (result.status === 204) throw new Error('emptyResponse')
-  return asGetPaymentMethods(await result.json())
 }

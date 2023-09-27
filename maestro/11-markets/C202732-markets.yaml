@@ -1,0 +1,60 @@
+# Priority: Medium
+# Test ID: C202732
+# Title: Partial Create account flow
+# Expected Result:
+#   1. Visuals and functionality of the Markets and Assets scene
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C202748
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
+
+- assertVisible: "Markets"
+- tapOn: "Markets"
+- assertVisible: "Help"
+- assertVisible:
+    id: "sideMenuButton"
+- assertVisible: "Rank"
+- assertVisible: "MCap"
+- assertVisible: "24hr"
+- assertVisible: "Price"
+- assertVisible: "Search Assets"
+- tapOn: "MCap"
+- assertVisible: "Vol 24h"
+- tapOn: "24hr"
+- assertVisible: "7d"
+- tapOn: "7d"
+- assertVisible: "30d"
+- tapOn: "30d"
+- assertVisible: "1y"
+- tapOn: "1y"
+- assertVisible: "1hr"
+- tapOn: "Vol 24h"
+- assertVisible: "MCap"
+- tapOn: "1hr"
+- assertVisible: "24hr"
+- assertVisible: "BTC"
+- assertVisible: "1"
+- tapOn: "BTC"
+- assertVisible: "Bitcoin (BTC)"
+- assertVisible: "1H"
+- assertVisible: "24H"
+- assertVisible: "7D"
+- assertVisible: "1Y"
+- tapOn: "1H"
+- tapOn: "24H"
+- tapOn: "30D"
+- tapOn: "7D"
+- tapOn: "1Y"
+- assertVisible: "Price"
+- assertVisible: "Rank"
+
+- stopApp

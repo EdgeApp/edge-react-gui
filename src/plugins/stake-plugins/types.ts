@@ -47,6 +47,7 @@ export class StakePoolFullError extends Error {
 export interface AssetId {
   pluginId: string
   currencyCode: string
+  internalCurrencyCode?: string
   displayName?: string
   cdnName?: string
 }
@@ -76,7 +77,11 @@ export interface StakePolicy {
 
   // The assets which can be earned
   rewardAssets: AssetId[]
-  rewardsNotClaimable?: boolean
+
+  // Actions
+  hideClaimAction?: boolean
+  hideUnstakeAction?: boolean
+  hideUnstakeAndClaimAction?: boolean
 
   // The assets which must be staked
   stakeAssets: AssetId[]
@@ -102,7 +107,7 @@ export interface StakePolicy {
 // Change Quote
 // -----------------------------------------------------------------------------
 export interface ChangeQuoteRequest {
-  action: 'stake' | 'unstake' | 'claim' | 'unstakeExact'
+  action: 'stake' | 'unstake' | 'unstakeAndClaim' | 'claim' | 'unstakeExact'
   stakePolicyId: string
   currencyCode: string
   nativeAmount: string
@@ -159,6 +164,7 @@ export interface StakePosition {
   allocations: PositionAllocation[]
   canStake: boolean
   canUnstake: boolean
+  canUnstakeAndClaim: boolean
   canClaim: boolean
 }
 

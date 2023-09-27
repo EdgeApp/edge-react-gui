@@ -70,6 +70,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isAccountBalanceVisible,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        userPausedWallets,
         pinLoginEnabled,
         preferredSwapPluginId,
         preferredSwapPluginType,
@@ -92,6 +93,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
+        userPausedWallets,
         pinLoginEnabled,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
@@ -200,6 +202,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         isAccountBalanceVisible: action.data.isAccountBalanceVisible
+      }
+    }
+
+    case 'UI/SETTINGS/SET_USER_PAUSED_WALLETS': {
+      return {
+        ...state,
+        userPausedWallets: action.data.userPausedWallets
       }
     }
 

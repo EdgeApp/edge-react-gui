@@ -384,13 +384,14 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
       // Action flags
       //
       const canStake = !disableStake && gt(tokenBalance.toString(), '0')
-      const canUnstake = !disableUnstake && gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
+      const canUnstakeAndClaim = !disableUnstake && gt(stakedAllocations[0].nativeAmount, '0') && stakedAllocations[0].locktime == null
       const canClaim = !disableClaim && gt(earnedAllocations[0].nativeAmount, '0') && earnedAllocations[0].locktime == null
 
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],
         canStake,
-        canUnstake,
+        canUnstake: false,
+        canUnstakeAndClaim,
         canClaim
       }
     }

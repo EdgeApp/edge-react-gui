@@ -13,6 +13,7 @@ import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { ENV } from '../env'
+import { getExperimentConfigValue } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
@@ -22,7 +23,6 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
-import { getStickyConfigValue } from '../stickyConfig'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -251,10 +251,10 @@ export const Main = () => {
     }, 0)
   }, [])
 
-  // Wait for the sticky config to initialize before rendering anything
+  // Wait for the experiment config to initialize before rendering anything
   useAsyncEffect(async () => {
     if (isMaestro()) return
-    setLegacyLanding((await getStickyConfigValue('legacyLanding')) === 'true')
+    setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
   }, [])
 
   return legacyLanding == null ? (

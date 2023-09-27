@@ -1,0 +1,33 @@
+# Priority: Critical
+# Test ID: C190284
+# Title: Login from Edgy WiFi into an account created with 2FA enabled- Blocked 2FA
+# Expected Result:
+#   1. User is blocked and prevented from being able to login due to 2FA
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C190284
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_2FA_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_2FA_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Username and password are correct. This device cannot log in because\
+    \ it does not have the right 2-factor code."
+    timeout: 120000
+- assertVisible: "Enter Backup Code"
+- tapOn: "Enter Backup Code"
+- inputText: "W2GMZ53PT2QBSZZE"
+- assertVisible: "Submit"
+- tapOn: "Submit"
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+
+- stopApp

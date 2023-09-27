@@ -7,6 +7,7 @@ import { config } from '../../theme/appConfig'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
 
 interface OwnProps extends EdgeSceneProps<'otpRepair'> {}
 
@@ -24,7 +25,14 @@ class OtpRepairComponent extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <OtpRepairScreen account={account} branding={{ appName: config.appName }} context={context} onComplete={handleComplete} otpError={otpError} />
+        <OtpRepairScreen
+          account={account}
+          branding={{ appName: config.appName }}
+          context={context}
+          onComplete={handleComplete}
+          otpError={otpError}
+          onLogEvent={logEvent}
+        />
       </View>
     )
   }
