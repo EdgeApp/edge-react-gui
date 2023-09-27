@@ -1148,6 +1148,8 @@
   "select_src_wallet": "소스 월렛 선택",
   "deposit_to_bank": "Deposit to Bank",
   "your_wallets": "Your Wallets",
+  "pause_wallet_toast": "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes",
+  "unpause_wallet_toast": "This wallet will now synchronize with the blockchain and detect new transactions and balance changes.",
   "coin_rank_price": "Price",
   "coin_rank_rank": "Rank",
   "coin_rank_title_market_cap": "Market Cap",
