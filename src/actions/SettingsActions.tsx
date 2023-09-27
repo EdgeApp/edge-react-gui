@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { asSortOption, SortOption } from '../components/modals/WalletListSortModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
@@ -269,6 +269,8 @@ export const toggleUserPausedWallet =
 
     const isPaused = userPausedWallets.includes(walletId)
     const newPausedWallets = isPaused ? [...userPausedWallets.filter(id => id !== walletId)] : [...userPausedWallets, walletId]
+
+    showToast(isPaused ? lstrings.unpause_wallet_toast : lstrings.pause_wallet_toast)
 
     await dispatch({
       type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS',

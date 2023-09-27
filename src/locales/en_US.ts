@@ -1313,6 +1313,8 @@ const strings = {
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
+  pause_wallet_toast: 'This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes',
+  unpause_wallet_toast: 'This wallet will now synchronize with the blockchain and detect new transactions and balance changes.',
 
   // #region CoinRanking
 
@@ -1384,6 +1386,7 @@ const strings = {
   // #endregion Light Account
 
   // #region Transfer Modal
+
   transfer_from_bank_title: 'From Bank/Cash',
   transfer_from_wallet_title: 'From Another Wallet/Exchange',
   transfer_to_bank_title: 'To Bank/Cash',
