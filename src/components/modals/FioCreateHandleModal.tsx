@@ -38,7 +38,7 @@ export const FioCreateHandleModal = (props: Props) => {
   })
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ThemedModal bridge={bridge} closeButton={false} onCancel={handleCancel}>
       <View style={styles.container}>
         <FastImage source={{ uri: getFioNewHandleImage(theme) }} style={styles.icon} />
         <GetFioHandleTitle>{parseMarkedText(lstrings.fio_free_handle_title_m)}</GetFioHandleTitle>
@@ -55,7 +55,7 @@ export const FioCreateHandleModal = (props: Props) => {
         </EdgeText>
       ) : null}
       <MainButton type="primary" label={lstrings.get_started_button} onPress={handleConfirm} marginRem={[1, 1, 0.5, 1]} />
-      <MainButton type="escape" label={lstrings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 1, 1]} />
+      <MainButton type="escape" label={lstrings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 0.5, 1]} />
     </ThemedModal>
   )
 }
