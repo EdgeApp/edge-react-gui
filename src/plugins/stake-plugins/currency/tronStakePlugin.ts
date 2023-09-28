@@ -247,7 +247,14 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
       if (stakedAmount == null) {
         return {
-          allocations: [],
+          allocations: [
+            {
+              pluginId,
+              currencyCode,
+              allocationType: 'staked',
+              nativeAmount: '0'
+            }
+          ],
           canStake,
           canUnstake: false,
           canUnstakeAndClaim: false,
