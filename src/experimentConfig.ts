@@ -94,9 +94,20 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
  * generated variant values. This is used for variant values that are required
  * prior to the initialization of the fetched config. Once generated, values
  * 'stick' until the config type changes.
+ *
+ * Can be overridden by isMaestro or env config: 'EXPERIMENT_CONFIG_OVERRIDE'
  */
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
   if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
+  else if (ENV.EXPERIMENT_CONFIG_OVERRIDE != null && Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0) {
+    try {
+      return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
+    } catch (err) {
+      console.error('Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ', String(err))
+      console.warn('Reverting to default experiment config.')
+      return DEFAULT_EXPERIMENT_CONFIG
+    }
+  }
   return await experimentConfigPromise
 }
 
