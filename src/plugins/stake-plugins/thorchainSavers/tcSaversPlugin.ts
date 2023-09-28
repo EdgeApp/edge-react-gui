@@ -110,6 +110,7 @@ const tcChainCodePluginIdMap: StringMap = {
   AVAX: 'avalanche',
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
+  DOGE: 'dogecoin',
   ETH: 'ethereum',
   LTC: 'litecoin'
 }
