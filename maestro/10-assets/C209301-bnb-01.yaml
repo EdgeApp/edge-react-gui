@@ -1,0 +1,29 @@
+# Priority: Critical
+# Test ID: C209301
+# Title: BNB Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for BNB only
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- all
+- C209301
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_BNB_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_BNB_PASSWORD}
+
+- extendedWaitUntil:
+    visible: BNB
+    timeout: 120000
+- tapOn: BNB
+- extendedWaitUntil:
+    visible: 0.00349 BNB
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
