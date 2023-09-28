@@ -748,7 +748,7 @@ const strings = {
 
   memo_destination_tag_title: 'Destination Tag',
   memo_memo_title: 'Memo',
-  memo_note_title: 'Note',
+  memo_tx_note_title: 'Tx Note',
   memo_op_return_title: 'OP_RETURN',
   memo_destination_tag_label: 'destination tag',
   memo_memo_label: 'memo',

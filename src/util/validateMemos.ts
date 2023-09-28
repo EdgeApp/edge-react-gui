@@ -58,6 +58,6 @@ const memoLabels: { [name: string]: string } = {
 const memoTitles: { [name: string]: string } = {
   'destination tag': lstrings.memo_destination_tag_title,
   op_return: lstrings.memo_op_return_title,
-  note: lstrings.memo_note_title,
+  note: lstrings.memo_tx_note_title,
   memo: lstrings.memo_memo_title
 }

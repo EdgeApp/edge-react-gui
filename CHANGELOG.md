@@ -7,6 +7,7 @@
 - added: Experiment config support between gui and login-ui
 - added: Experiment config for "Create Account" and "Login" button labels
 - added: Toast message when pausing or unpausing wallets
+- changed: 'Note' in tx details renamed to 'Tx Note'
 - changed: Always show gas warning when enabling tokens
 - changed: Dynamically determine supported Thorchain Savers assets
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
