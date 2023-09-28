@@ -1,0 +1,83 @@
+# Priority: Critical
+# Test ID: C826
+# Title: Buy Scene - No crash going into each USA supported Buy Partner
+# Expected Result:
+#   1. User is able to access each supported Buy Partner in the USA without crashing
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C826
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_USA_PARTNERS_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_USA_PARTNERS_PASSWORD}
+
+- extendedWaitUntil:
+    visible: Buy
+    timeout: 120000
+- tapOn: "Buy"
+- extendedWaitUntil:
+    visible: Google Pay
+    timeout: 120000
+- tapOn: "Google Pay"
+- extendedWaitUntil:
+    visible: My Bitcoin
+    timeout: 120000
+- tapOn: "My Bitcoin"
+- tapOn: "Tap to Change Provider"
+- extendedWaitUntil:
+    visible: Simplex
+    timeout: 120000
+- tapOn:
+    text: "Simplex"
+    index: 0
+- tapOn: "Next"
+- extendedWaitUntil:
+    visible: Order Summary
+    timeout: 120000
+- tapOn: "Close tab"
+- tapOn: "Tap to Change Provider"
+- tapOn: "Moonpay"
+- tapOn: "Next"
+- assertVisible: "Checkout with MoonPay"
+- tapOn: "Close tab"
+- tapOn: "Tap to Change Provider"
+- tapOn: "Banxa"
+- tapOn: "Next"
+- assertVisible: "Let's verify your details."
+- tapOn: "Close tab"
+- tapOn:
+    id: "chevronBack"
+- tapOn: "Credit and Debit Card"
+- tapOn: "My Bitcoin"
+- tapOn: "Tap to Change Provider"
+- tapOn:
+    text: "Simplex"
+    index: 0
+- tapOn: "Next"
+- assertVisible: "Order summary"
+- tapOn: "Close tab"
+- tapOn: "Tap to Change Provider"
+- tapOn: "Moonpay"
+- tapOn: "Next"
+- assertVisible: "Checkout with MoonPay"
+- tapOn: "Close tab"
+- tapOn: "Tap to Change Provider"
+- tapOn: "Banxa"
+- tapOn: "Next"
+- assertVisible: "Let's verify your details."
+- tapOn: "Close tab"
+- tapOn:
+    id: "chevronBack"
+- tapOn: "In-person Cash and Debit Card"
+- assertVisible: "LibertyX"
+- tapOn:
+    id: "chevronBack"
+- assertVisible: "Buy Cryptocurrency"
+
+- stopApp

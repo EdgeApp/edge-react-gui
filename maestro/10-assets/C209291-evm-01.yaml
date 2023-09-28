@@ -1,0 +1,131 @@
+# Priority: Critical
+# Test ID: C209291
+# Title: EVM Asset balances load and show correctly for iOS
+# Expected Result:
+#   1. User is able to login and see correct balances for EVM only
+# Notes: iOS cannot properly scroll so we only validate the first asset (EVM)
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C209291
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_EVM_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_EVM_PASSWORD}
+
+- extendedWaitUntil:
+    visible: My zkSync
+    timeout: 120000
+- tapOn: My zkSync
+- extendedWaitUntil:
+    visible: 0.00181648025 ETH
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Optimism ETH
+    direction: DOWN
+- tapOn: My Optimism ETH
+- extendedWaitUntil:
+    visible: 0.0009298100803297 ETH
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Rootstock
+    direction: DOWN
+- tapOn: My Rootstock
+- extendedWaitUntil:
+    visible: 0.00004471 RBTC
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Polygon
+    direction: DOWN
+- tapOn: My Polygon
+- extendedWaitUntil:
+    visible: 2.243799729 MATIC
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Fantom
+    direction: DOWN
+- tapOn: My Fantom
+- extendedWaitUntil:
+    visible: 5.181418485626010141 FTM
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Avalanche
+    direction: DOWN
+- tapOn: My Avalanche
+- extendedWaitUntil:
+    visible: 0.103936764 AVAX
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Binance Smart Chain
+    direction: DOWN
+- tapOn: My Binance Smart Chain
+- extendedWaitUntil:
+    visible: 0.0042 BNB
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Ethereum Classic
+    direction: DOWN
+- tapOn: My Ethereum Classic
+- extendedWaitUntil:
+    visible: 0.042069 ETC
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Celo
+    direction: DOWN
+- tapOn: My Celo
+- extendedWaitUntil:
+    visible: 1.18928686650883056 CELO
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My PulseChain
+    direction: DOWN
+- tapOn: My PulseChain
+- extendedWaitUntil:
+    visible: 1,011 PLS
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Ethereum POW
+    direction: DOWN
+- tapOn: My Ethereum POW
+- extendedWaitUntil:
+    visible: 0.0123122 ETHW
+    timeout: 120000
+- tapOn: Wallets
+
+- scrollUntilVisible:
+    element: My Liberland
+    direction: DOWN
+- tapOn: My Liberland
+- extendedWaitUntil:
+    visible: 1.0123 LLD
+    timeout: 120000
+- tapOn: Wallets
+
+- stopApp
+
+# iOS blocked scrollability (need to create separate accounts for each specific EVM)

@@ -1,0 +1,73 @@
+# Priority: Critical
+# Test ID: C703
+# Title: Change PIN - Able to change PIN and login
+# Expected Result:
+#   1. Able to change PIN and login with new PIN and then set to old PIN and login with old PIN
+
+appId: ${MAESTRO_APP_ID}
+tags:
+- android
+- C703
+---
+- runFlow:
+    file: ../common/launch-cleared.yaml
+- runFlow:
+    file: ../common/login-password.yaml
+    env:
+      USERNAME: ${MAESTRO_EDGE_MUTATE_CHANGEPIN_USERNAME}
+      PASSWORD: ${MAESTRO_EDGE_MUTATE_CHANGEPIN_PASSWORD}
+
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- tapOn: "Tap to Unlock Account Settings"
+- inputText: "Bluetable01"
+- tapOn: "Submit"
+- tapOn: "Change PIN"
+- tapOn: "2"
+- tapOn: "2"
+- tapOn: "2"
+- tapOn: "2"
+- tapOn: "Back"
+- tapOn: "Done"
+- assertVisible: "PIN Changed"
+- tapOn: "OK"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "2"
+- tapOn: "2"
+- tapOn: "2"
+- tapOn: "2"
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- tapOn: "Tap to Unlock Account Settings"
+- inputText: "Bluetable01"
+- tapOn: "Submit"
+- tapOn: "Change PIN"
+- tapOn: "1"
+- tapOn: "1"
+- tapOn: "1"
+- tapOn: "1"
+- tapOn: "Back"
+- tapOn: "Done"
+- tapOn: "OK"
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Logout"
+- tapOn: "1"
+- tapOn: "1"
+- tapOn: "1"
+- tapOn: "1"
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+
+- stopApp
