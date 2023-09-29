@@ -122,6 +122,9 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
       // Add all 'sticky' remote config variant values:
       for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
 
+      // TEMP HACK: Add renamed var for legacyLanding
+      params.svar_newLegacyLanding = experimentConfig.legacyLanding
+
       consify({ logEvent: { event, params } })
 
       Promise.all([logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
