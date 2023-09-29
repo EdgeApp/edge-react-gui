@@ -747,8 +747,8 @@ const strings = {
   restore_wallets_modal_cancel: 'Cancel',
 
   memo_destination_tag_title: 'Destination Tag',
-  memo_memo_title: 'Memo',
-  memo_note_title: 'Note',
+  memo_memo_title: 'Transaction Memo',
+  memo_note_title: 'Transaction Note',
   memo_op_return_title: 'OP_RETURN',
   memo_destination_tag_label: 'destination tag',
   memo_memo_label: 'memo',

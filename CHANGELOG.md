@@ -13,6 +13,7 @@
 - changed: Tweak the boot background color on Android.
 - changed: Include stake plugin display name in error message on transaction list scene
 - changed: Include stake plugin display name in error message on transaction
+- changed: Rename on-chain "Note" or "Memo" to "Transaction Note" or "Transaction Memo"
 - fixed: Extra close (x) button on FIO modal
 - fixed: Deposit/Send footer buttons for native currencies
 - fixed: Error showing in some cases during auto logout
