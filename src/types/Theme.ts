@@ -372,6 +372,7 @@ export interface Theme {
   paymentTypeLogoInterac: ImageProp
   paymentTypeLogoPayid: ImageProp
   paymentTypeLogoPaynow: ImageProp
+  paymentTypeLogoPix: ImageProp
   paymentTypeLogoPoli: ImageProp
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
