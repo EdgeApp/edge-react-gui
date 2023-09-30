@@ -20,6 +20,7 @@ const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
+const RETURN_URL_SUCCESS = 'https://edge.app/'
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -392,7 +393,7 @@ export const banxaProvider: FiatProviderFactory = {
               source_amount: exchangeAmount,
               // target_amount: targetAmount,
               blockchain: banxaChain,
-              return_url_on_success: 'https://deep.edge.app' // TODO: fix
+              return_url_on_success: RETURN_URL_SUCCESS
             }
             const response = await banxaFetch({ method: 'POST', url, hmacUser, path: 'api/orders', apiKey, bodyParams })
             const banxaQuote = asBanxaQuoteResponse(response)
