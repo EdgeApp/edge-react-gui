@@ -950,6 +950,15 @@ const SendComponent = (props: Props) => {
       flipInputModalRef.current?.setError(null)
       setError(undefined)
     } catch (e: any) {
+      const insufficientFunds = asMaybeInsufficientFundsError(e)
+      if (insufficientFunds != null) {
+        if (insufficientFunds.currencyCode != null) {
+          e.message = sprintf(lstrings.stake_error_insufficient_s, insufficientFunds.currencyCode)
+        } else {
+          e.message = lstrings.exchange_insufficient_funds_title
+        }
+      }
+
       setError(e)
       setEdgeTransaction(null)
       flipInputModalRef.current?.setError(e.message)
