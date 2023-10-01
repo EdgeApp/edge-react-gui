@@ -291,7 +291,10 @@ const StakeModifySceneComponent = (props: Props) => {
         : sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
-    const earnedAmount = existingAllocations.earned[0]?.nativeAmount ?? '0'
+    const { nativeAmount: earnedAmount = '0', locktime } = existingAllocations.earned[0] ?? {}
+    if (allocationType === 'claim' && locktime != null && Date.now() < new Date(locktime).valueOf()) {
+      return null
+    }
 
     const isClaim = allocationType === 'claim'
     return (
