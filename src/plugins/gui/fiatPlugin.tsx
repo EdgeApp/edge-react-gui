@@ -164,8 +164,8 @@ export const executePlugin = async (params: {
     setClipboard: async (value: string) => {
       Clipboard.setString(value)
     },
-    showToast: async (message: string) => {
-      showToast(message)
+    showToast: async (message: string, autoHideMs?: number) => {
+      showToast(message, autoHideMs)
     },
     exitScene: async () => {
       navigation.pop()

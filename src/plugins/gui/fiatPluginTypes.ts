@@ -110,7 +110,7 @@ export interface FiatPluginUi {
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   setClipboard: (value: string) => Promise<void>
-  showToast: (message: string) => Promise<void>
+  showToast: (message: string, autoHideMs?: number) => Promise<void>
   exitScene: () => {}
 }
 
