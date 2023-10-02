@@ -233,6 +233,7 @@ exports[`initialState 1`] = `
         },
       },
       "userPausedWallets": [],
+      "userPausedWalletsSet": null,
       "walletsSort": "manual",
     },
     "subcategories": [],

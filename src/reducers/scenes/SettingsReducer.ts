@@ -13,7 +13,8 @@ export const initialState: SettingsState = {
   isTouchEnabled: false,
   isTouchSupported: false,
   pinLoginEnabled: false,
-  settingsLoaded: null
+  settingsLoaded: null,
+  userPausedWalletsSet: null
 }
 
 export interface SettingsState extends LocalAccountSettings, SyncedAccountSettings {
@@ -22,6 +23,10 @@ export interface SettingsState extends LocalAccountSettings, SyncedAccountSettin
   isTouchSupported: boolean
   pinLoginEnabled: boolean
   settingsLoaded: boolean | null
+
+  // A copy of `userPausedWallets`, but as a set.
+  // This is `null` until we load the setting from disk.
+  userPausedWalletsSet: Set<string> | null
 }
 
 export interface AccountInitPayload extends SettingsState {
@@ -94,6 +99,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,
+        userPausedWalletsSet: new Set(userPausedWallets),
         pinLoginEnabled,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         preferredSwapPluginType,
@@ -206,9 +212,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_USER_PAUSED_WALLETS': {
+      const { userPausedWallets } = action.data
       return {
         ...state,
-        userPausedWallets: action.data.userPausedWallets
+        userPausedWallets,
+        userPausedWalletsSet: new Set(userPausedWallets)
       }
     }
 

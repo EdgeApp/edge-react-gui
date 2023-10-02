@@ -125,7 +125,7 @@ export function WalletListMenuModal(props: Props) {
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const pausedWallets = useSelector(state => state.ui.settings.userPausedWallets)
+  const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
 
   const wallet = useWatch(account, 'currencyWallets')[walletId]
 
@@ -169,10 +169,12 @@ export function WalletListMenuModal(props: Props) {
     const result: Option[] = []
 
     const { pluginId } = wallet.currencyInfo
-    result.push({
-      label: pausedWallets.includes(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
-      value: 'togglePause'
-    })
+    if (pausedWallets != null) {
+      result.push({
+        label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
+        value: 'togglePause'
+      })
+    }
 
     for (const option of WALLET_LIST_MENU) {
       const { pluginIds, label, value } = option
