@@ -29,6 +29,9 @@ import {
   FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
 
+export const SendErrorNoTransaction = 'SendErrorNoTransaction'
+export const SendErrorBackPressed = 'SendErrorBackPressed'
+
 export const executePlugin = async (params: {
   account: EdgeAccount
   deviceId: string
@@ -151,8 +154,11 @@ export const executePlugin = async (params: {
             } else if (edgeTransaction != null) {
               resolve(edgeTransaction)
             } else {
-              reject(new Error('Missing EdgeTransaction'))
+              reject(new Error(SendErrorNoTransaction))
             }
+          },
+          onBack: () => {
+            reject(new Error(SendErrorBackPressed))
           }
         })
       })
