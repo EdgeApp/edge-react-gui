@@ -4,7 +4,6 @@ import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTyp
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
-import { isMaestro } from 'react-native-is-maestro'
 import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -61,7 +60,6 @@ export function LoginSceneComponent(props: Props) {
   const [counter, setCounter] = React.useState<number>(0)
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
-  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
   const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig>()
 
   const fontDescription = React.useMemo(
@@ -156,7 +154,7 @@ export function LoginSceneComponent(props: Props) {
   )
 
   const maybeHandleComplete =
-    ENV.USE_WELCOME_SCREENS && !legacyLanding
+    ENV.USE_WELCOME_SCREENS && experimentConfig != null && !experimentConfig.legacyLanding
       ? () => {
           navigation.navigate('gettingStarted', {})
         }
@@ -188,7 +186,6 @@ export function LoginSceneComponent(props: Props) {
   useAsyncEffect(async () => {
     const experimentConfig = await getExperimentConfig()
     setExperimentConfig(experimentConfig)
-    setLegacyLanding(experimentConfig.legacyLanding === 'legacyLanding')
   }, [])
 
   return loggedIn || experimentConfig == null ? (
