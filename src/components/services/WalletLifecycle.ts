@@ -10,7 +10,7 @@ interface StateProps {
   account: EdgeAccount
   context: EdgeContext
   sortedWalletList: WalletListItem[]
-  userPausedWallets: string[]
+  userPausedWalletsSet: Set<string> | null
 }
 type Props = StateProps
 
@@ -58,7 +58,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
    * Figures out what has changed and adapts.
    */
   handleChange = () => {
-    const { account, context, sortedWalletList, userPausedWallets } = this.props
+    const { account, context, sortedWalletList, userPausedWalletsSet } = this.props
 
     // Check for login / logout:
     if (account !== this.edgeAccount || context !== this.edgeContext) {
@@ -88,7 +88,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     this.paused = paused
 
     // The next steps only apply if we are active:
-    if (paused) return
+    if (paused || userPausedWalletsSet == null) return
 
     // Check for boots that have completed, and for deleted wallets:
     this.booting = this.booting.filter(boot => {
@@ -114,7 +114,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       if (token != null || tokenId != null || wallet == null) continue
       if (!wallet.paused) continue
       if (this.booting.find(boot => boot.walletId === walletId) != null) continue
-      if (userPausedWallets.includes(walletId)) continue
+      if (userPausedWalletsSet.has(walletId)) continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
     }
@@ -192,7 +192,7 @@ export const WalletLifecycle = connect<StateProps, {}, {}>(
     account: state.core.account,
     context: state.core.context,
     sortedWalletList: state.sortedWalletList,
-    userPausedWallets: state.ui.settings.userPausedWallets
+    userPausedWalletsSet: state.ui.settings.userPausedWalletsSet
   }),
   dispatch => ({})
 )(WalletLifecycleComponent)
