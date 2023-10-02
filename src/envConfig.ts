@@ -224,5 +224,6 @@ export const asEnvConfig = asObject({
       port: asOptional(asString, '8008')
     }),
     { host: 'localhost', port: '8008' }
-  )
+  ),
+  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {})
 }).withRest

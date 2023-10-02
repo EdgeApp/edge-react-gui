@@ -4,6 +4,7 @@ import { CreateAccountType } from 'edge-login-ui-rn'
 import { isMaestro } from 'react-native-is-maestro'
 
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
+import { ENV } from './env'
 
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
@@ -12,6 +13,13 @@ export interface ExperimentConfig {
   createAccountType: CreateAccountType
   legacyLanding: 'legacyLanding' | 'uspLanding'
   createAccountText: 'signUp' | 'getStarted' | 'createAccount'
+}
+
+const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
+  swipeLastUsp: 'false',
+  createAccountType: 'full',
+  legacyLanding: 'uspLanding',
+  createAccountText: 'createAccount'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
@@ -54,24 +62,15 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // values are the variant values that differ from the default feature
 // behavior/appearance, while the last value represents unchanged
 // behavior/appearance.
-// If no generateCfgValFn given, returns defined defaults
-// Error: Return type annotation circularly references itself.
-const asExperimentConfig: (isDefault?: boolean) => Cleaner<ExperimentConfig> = isDefault =>
-  asObject({
-    swipeLastUsp: asOptional<'true' | 'false'>(asValue('true', 'false'), isDefault ? 'false' : generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
-    createAccountType: asOptional<CreateAccountType>(
-      asValue('light', 'full'),
-      isDefault ? 'full' : generateExperimentConfigVal('createAccountType', ['light', 'full'])
-    ),
-    legacyLanding: asOptional<'legacyLanding' | 'uspLanding'>(
-      asValue('legacyLanding', 'uspLanding'),
-      isDefault ? 'uspLanding' : generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])
-    ),
-    createAccountText: asOptional<'signUp' | 'getStarted' | 'createAccount'>(
-      asValue('signUp', 'getStarted', 'createAccount'),
-      isDefault ? 'createAccount' : generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
-    )
-  })
+const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
+  swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
+  createAccountType: asOptional(asValue('light', 'full'), generateExperimentConfigVal('createAccountType', ['light', 'full'])),
+  legacyLanding: asOptional(asValue('legacyLanding', 'uspLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
+  createAccountText: asOptional(
+    asValue('signUp', 'getStarted', 'createAccount'),
+    generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
+  )
+})
 
 /**
  * Immediately initialize the experiment config as soon as the module loads.
@@ -80,11 +79,11 @@ const asExperimentConfig: (isDefault?: boolean) => Cleaner<ExperimentConfig> = i
 const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<ExperimentConfig> => {
   try {
     const experimentConfigJson = await experimentConfigDisklet.getText(LOCAL_EXPERIMENT_CONFIG)
-    return asExperimentConfig(false)(JSON.parse(experimentConfigJson))
+    return asExperimentConfig(JSON.parse(experimentConfigJson))
   } catch (err) {
     // Not found or incompatible. Re-generate with random values according to
     // the defined distribution.
-    const generatedExperimentConfig = asExperimentConfig(false)({})
+    const generatedExperimentConfig = asExperimentConfig({})
     await experimentConfigDisklet.setText(LOCAL_EXPERIMENT_CONFIG, JSON.stringify(generatedExperimentConfig))
     return generatedExperimentConfig
   }
@@ -95,9 +94,20 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
  * generated variant values. This is used for variant values that are required
  * prior to the initialization of the fetched config. Once generated, values
  * 'stick' until the config type changes.
+ *
+ * Can be overridden by isMaestro or env config: 'EXPERIMENT_CONFIG_OVERRIDE'
  */
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
-  if (isMaestro()) return asExperimentConfig(true)({}) // Test with forced defaults
+  if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
+  else if (ENV.EXPERIMENT_CONFIG_OVERRIDE != null && Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0) {
+    try {
+      return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
+    } catch (err) {
+      console.error('Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ', String(err))
+      console.warn('Reverting to default experiment config.')
+      return DEFAULT_EXPERIMENT_CONFIG
+    }
+  }
   return await experimentConfigPromise
 }
 
