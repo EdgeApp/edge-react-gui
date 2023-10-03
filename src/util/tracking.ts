@@ -101,11 +101,11 @@ export function trackError(
  * Send a raw event to all backends.
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error, ...rest } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
   getExperimentConfig()
     .then(async (experimentConfig: ExperimentConfig) => {
       // Persistent & Unchanged params:
-      const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...rest }
+      const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...values }
 
       // Adjust params:
       if (accountDate != null) params.adate = accountDate

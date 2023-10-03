@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Send all event tracking params to logging servers
+
 ## 3.19.0
 
 - added: Experiment config support between gui and login-ui
