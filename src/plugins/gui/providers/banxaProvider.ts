@@ -5,6 +5,7 @@ import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
+import { StringMap } from '../../../types/types'
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
@@ -27,6 +28,9 @@ const RETURN_URL_SUCCESS = 'https://edge.app/'
 const RETURN_URL_FAIL = 'https://edge.app/fail/'
 const RETURN_URL_CANCEL = 'https://edge.app/cancel/'
 const NOT_SUCCESS_TOAST_HIDE_MS = 5000
+
+const TESTNET_ADDRESS = 'bc1qv752cnr3rcht3yyfq2nn6nv7zwczqjmcm80y6w'
+let testnet = false
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -266,6 +270,8 @@ const CURRENCY_PLUGINID_MAP = {
   XTZ: 'tezos'
 }
 
+const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
+
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = { buy: { fiat: {}, crypto: {} }, sell: { fiat: {}, crypto: {} } }
@@ -280,6 +286,11 @@ export const banxaProvider: FiatProviderFactory = {
       io: { store }
     } = params
     const { apiKey, hmacUser, partnerUrl: url } = asBanxaApiKeys(apiKeys)
+    if (url.includes('sandbox')) {
+      testnet = true
+      CURRENCY_PLUGINID_MAP.BTC = 'bitcointestnet'
+      COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
+    }
 
     let banxaUsername = await store.getItem('username').catch(e => undefined)
     if (banxaUsername == null || banxaUsername === '') {
@@ -318,7 +329,8 @@ export const banxaProvider: FiatProviderFactory = {
                 // @ts-expect-error
                 const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                 if (currencyPluginId != null) {
-                  addToAllowedCurrencies(currencyPluginId, direction, coin.coin_code, coin)
+                  const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                  addToAllowedCurrencies(currencyPluginId, direction, edgeCurrencyCode, coin)
                 }
               }
             }
@@ -460,9 +472,17 @@ export const banxaProvider: FiatProviderFactory = {
               return_url_on_failure: RETURN_URL_FAIL
             }
             if (direction === 'buy') {
-              bodyParams.wallet_address = receiveAddress.publicAddress
+              if (testnet && banxaChain === 'BTC') {
+                bodyParams.wallet_address = TESTNET_ADDRESS
+              } else {
+                bodyParams.wallet_address = receiveAddress.publicAddress
+              }
             } else {
-              bodyParams.refund_address = receiveAddress.publicAddress
+              if (testnet && banxaChain === 'BTC') {
+                bodyParams.refund_address = TESTNET_ADDRESS
+              } else {
+                bodyParams.refund_address = receiveAddress.publicAddress
+              }
             }
 
             if (queryParams.source_amount != null) {
