@@ -78,6 +78,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
+  directtobank: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:AUD',
+    displayName: ''
+  },
   fasterpayments: {
     pluginId: 'amountquote',
     storeId: '',

@@ -11,6 +11,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
 import { TrackingEventName } from '../../util/tracking'
+import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
@@ -84,6 +85,7 @@ export interface FiatPluginEnterAmountResponse {
   value1: string
   value2: string
 }
+
 export interface FiatPluginOpenExternalWebViewParams {
   url: string
 }
@@ -98,6 +100,7 @@ export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
+  openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>

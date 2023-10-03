@@ -67,6 +67,11 @@ export const executePlugin = async (params: {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },
     showToastSpinner,
+    openWebView: async (params): Promise<void> => {
+      maybeNavigateToCorrectTabScene()
+      navigation.navigate('guiPluginWebView', params)
+    },
+
     openExternalWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
