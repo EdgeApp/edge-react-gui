@@ -10,6 +10,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { TrackingEventName } from '../../util/tracking'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
@@ -111,6 +112,20 @@ export interface FiatPluginUi {
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   setClipboard: (value: string) => Promise<void>
   showToast: (message: string, autoHideMs?: number) => Promise<void>
+  trackConversion: (
+    event: TrackingEventName,
+    opts: {
+      destCurrencyCode: string
+      destExchangeAmount: string
+      destPluginId?: string
+      sourceCurrencyCode: string
+      sourceExchangeAmount: string
+      sourcePluginId?: string
+      pluginId: string
+      orderId?: string
+    }
+  ) => Promise<void>
+
   exitScene: () => {}
 }
 

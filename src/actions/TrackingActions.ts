@@ -1,6 +1,7 @@
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { AccountReferral } from '../types/ReferralTypes'
+import { getHistoricalRate } from '../util/exchangeRates'
 import { logEvent, TrackingEventName, TrackingValues } from '../util/tracking'
 
 /**
@@ -31,6 +32,41 @@ export function trackConversion(
       ...makeTrackingValues(accountReferral)
     })
   }
+}
+
+export async function trackConversionWithReferral(
+  event: TrackingEventName,
+  opts: {
+    destCurrencyCode: string
+    destExchangeAmount: string
+    destPluginId?: string
+    sourceCurrencyCode: string
+    sourceExchangeAmount: string
+    sourcePluginId?: string
+    orderId?: string
+    pluginId: string
+  },
+  accountReferral: AccountReferral
+): Promise<void> {
+  const { destCurrencyCode, destExchangeAmount, destPluginId, pluginId, sourceCurrencyCode, sourceExchangeAmount, sourcePluginId, orderId } = opts
+
+  // Look up the dollar value:
+  const rate = await getHistoricalRate(`${destCurrencyCode}_iso:USD`, new Date().toISOString())
+  const dollarValue = Number(destExchangeAmount) * rate
+
+  // Record the event:
+  logEvent(event, {
+    dollarValue,
+    pluginId,
+    orderId,
+    destCurrencyCode,
+    destExchangeAmount,
+    destPluginId,
+    sourceCurrencyCode,
+    sourceExchangeAmount,
+    sourcePluginId,
+    ...makeTrackingValues(accountReferral)
+  })
 }
 
 /**
