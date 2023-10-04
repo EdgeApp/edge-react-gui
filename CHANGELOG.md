@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Asset status card to remotely communicate known issues or important info
 - changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
 - changed: Re-enable Piratechain
