@@ -3,7 +3,7 @@ import analytics from '@react-native-firebase/analytics'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
-import { getIsFirstOpen } from '../actions/FirstOpenActions'
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { fetchReferral } from './network'
@@ -105,7 +105,8 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
   getExperimentConfig()
     .then(async (experimentConfig: ExperimentConfig) => {
       // Persistent & Unchanged params:
-      const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen(), ...values }
+      const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
+      const params: any = { edgeVersion: getVersion(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
 
       // Adjust params:
       if (accountDate != null) params.adate = accountDate
@@ -121,6 +122,9 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
 
       // Add all 'sticky' remote config variant values:
       for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+      // TEMP HACK: Add renamed var for legacyLanding
+      params.svar_newLegacyLanding = experimentConfig.legacyLanding
 
       consify({ logEvent: { event, params } })
 
