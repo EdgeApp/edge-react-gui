@@ -18,6 +18,7 @@ import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
+import { FiatPluginWebViewComponent } from '../plugins/gui/scenes/FiatPluginWebView'
 import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
@@ -830,6 +831,13 @@ const EdgeSellTabScreen = () => {
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
       <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="guiPluginWebView"
+        options={{
+          headerTitle: () => <EdgeLogoHeader />
+        }}
+        component={FiatPluginWebViewComponent}
+      />
       <Stack.Screen
         name="rewardsCardDashboard"
         options={{

@@ -3,8 +3,12 @@ import { gt, lt } from 'biggystring'
 import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
+import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import { lstrings } from '../../../locales/strings'
+import { StringMap } from '../../../types/types'
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
+import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -20,6 +24,13 @@ const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
+const RETURN_URL_SUCCESS = 'https://edge.app/'
+const RETURN_URL_FAIL = 'https://edge.app/fail/'
+const RETURN_URL_CANCEL = 'https://edge.app/cancel/'
+const NOT_SUCCESS_TOAST_HIDE_MS = 5000
+
+const TESTNET_ADDRESS = 'bc1qv752cnr3rcht3yyfq2nn6nv7zwczqjmcm80y6w'
+let testnet = false
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -36,7 +47,16 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   },
-  sell: {}
+  sell: {
+    directtobank: true,
+    fasterpayments: true,
+    interac: true,
+    iobank: true,
+    payid: true,
+    pix: true,
+    sepa: false, // Leave this to Bity for now
+    turkishbank: true
+  }
 }
 
 const asBanxaApiKeys = asObject({
@@ -128,7 +148,7 @@ const asBanxaPricesResponse = asObject({
 })
 
 const asBanxaQuote = asObject({
-  // id: asString,
+  id: asString,
   // account_id: asString,
   // account_reference: asString,
   // order_type: asString,
@@ -145,6 +165,58 @@ const asBanxaQuote = asObject({
 const asBanxaQuoteResponse = asObject({
   data: asObject({
     order: asBanxaQuote
+  })
+})
+
+const asBanxaOrderStatus = asValue(
+  'pendingPayment',
+  'waitingPayment',
+  'paymentReceived',
+  'inProgress',
+  'coinTransferred',
+  'cancelled',
+  'declined',
+  'expired',
+  'complete',
+  'refunded'
+)
+
+const asBanxaOrderResponse = asObject({
+  data: asObject({
+    order: asObject({
+      id: asString, // "b445de966b55fa23c79aaeeb0f75577d",
+      // account_id: asString, // "9fa7a88710e2265c532e87aade064a9e",
+      // account_reference: asString, // "0f060f09-0009-4800-800a-05030b0f0207",
+      // order_type: asString, // "CRYPTO-SELL",
+      // payment_type: asString, // null,
+      // ref: asMaybe(asNumber), // null,
+      // fiat_code: asString, // "AUD",
+      // fiat_amount: asNumber, // 500,
+      // coin_code: asString, // "BTC",
+      coin_amount: asNumber, // 0,
+      wallet_address: asMaybe(asString), // null,
+      wallet_address_tag: asMaybe(asString), // null,
+      // fee: asMaybe(asNumber), // null,
+      // fee_tax: asMaybe(asNumber), // null,
+      // payment_fee: asMaybe(asNumber), // null,
+      // payment_fee_tax: asMaybe(asNumber), // null,
+      // commission: asMaybe(asNumber), // null,
+      // tx_hash: asString, // null,
+      // tx_confirms: asMaybe(asNumber), // null,
+      // created_date: asString, // "20-Sep-2023",
+      // created_at: asString, // "20-Sep-2023 23:01:19",
+      status: asBanxaOrderStatus, // "pendingPayment",
+      // completed_at: asString, // null,
+      // merchant_fee: asMaybe(asNumber), // null,
+      // merchant_commission: asMaybe(asNumber), // null,
+      // meta_data: asString, // null,
+      blockchain: asObject({
+        id: asNumber, // 1,
+        code: asString, // "BTC",
+        description: asString // "Bitcoin"
+      })
+      // network_fee: asMaybe(asNumber) // null
+    })
   })
 })
 
@@ -198,6 +270,8 @@ const CURRENCY_PLUGINID_MAP = {
   XTZ: 'tezos'
 }
 
+const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
+
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = { buy: { fiat: {}, crypto: {} }, sell: { fiat: {}, crypto: {} } }
@@ -212,6 +286,11 @@ export const banxaProvider: FiatProviderFactory = {
       io: { store }
     } = params
     const { apiKey, hmacUser, partnerUrl: url } = asBanxaApiKeys(apiKeys)
+    if (url.includes('sandbox')) {
+      testnet = true
+      CURRENCY_PLUGINID_MAP.BTC = 'bitcointestnet'
+      COIN_TO_CURRENCY_CODE_MAP.BTC = 'TESTBTC'
+    }
 
     let banxaUsername = await store.getItem('username').catch(e => undefined)
     if (banxaUsername == null || banxaUsername === '') {
@@ -250,7 +329,8 @@ export const banxaProvider: FiatProviderFactory = {
                 // @ts-expect-error
                 const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                 if (currencyPluginId != null) {
-                  addToAllowedCurrencies(currencyPluginId, direction, coin.coin_code, coin)
+                  const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
+                  addToAllowedCurrencies(currencyPluginId, direction, edgeCurrencyCode, coin)
                 }
               }
             }
@@ -273,11 +353,9 @@ export const banxaProvider: FiatProviderFactory = {
         return allowedCurrencyCodes[direction]
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
+        const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction, tokenId } = params
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
-
-        if (direction !== 'buy') throw new Error('Only buy supported by Banxa')
 
         // Check if the region, payment type, and fiat/crypto codes are supported
         const fiat = fiatCurrencyCode.replace('iso:', '')
@@ -383,21 +461,144 @@ export const banxaProvider: FiatProviderFactory = {
             const { showUi, coreWallet } = approveParams
             const receiveAddress = await coreWallet.getReceiveAddress()
 
-            const bodyParams = {
+            const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
               account_reference: banxaUsername,
-              source: fiat,
-              target: banxaCoin,
-              wallet_address: receiveAddress?.publicAddress,
-              source_amount: exchangeAmount,
-              // target_amount: targetAmount,
+              source: queryParams.source,
+              target: queryParams.target,
               blockchain: banxaChain,
-              return_url_on_success: 'https://deep.edge.app' // TODO: fix
+              return_url_on_success: RETURN_URL_SUCCESS,
+              return_url_on_cancelled: RETURN_URL_CANCEL,
+              return_url_on_failure: RETURN_URL_FAIL
+            }
+            if (direction === 'buy') {
+              if (testnet && banxaChain === 'BTC') {
+                bodyParams.wallet_address = TESTNET_ADDRESS
+              } else {
+                bodyParams.wallet_address = receiveAddress.publicAddress
+              }
+            } else {
+              if (testnet && banxaChain === 'BTC') {
+                bodyParams.refund_address = TESTNET_ADDRESS
+              } else {
+                bodyParams.refund_address = receiveAddress.publicAddress
+              }
+            }
+
+            if (queryParams.source_amount != null) {
+              bodyParams.source_amount = queryParams.source_amount
+            } else {
+              bodyParams.target_amount = queryParams.target_amount
             }
             const response = await banxaFetch({ method: 'POST', url, hmacUser, path: 'api/orders', apiKey, bodyParams })
             const banxaQuote = asBanxaQuoteResponse(response)
 
-            await showUi.openExternalWebView({ url: banxaQuote.data.order.checkout_url })
+            let interval: ReturnType<typeof setInterval> | undefined
+            let insideInterval = false
+
+            if (direction === 'buy') {
+              await showUi.openExternalWebView({ url: banxaQuote.data.order.checkout_url })
+            } else {
+              const { checkout_url: checkoutUrl, id } = banxaQuote.data.order
+              const banxaUrl = new URL(checkoutUrl)
+              const { origin: banxaOrigin } = banxaUrl
+              await showUi.openWebView({
+                url: checkoutUrl,
+                onClose: () => {
+                  clearInterval(interval)
+                },
+                onUrlChange: async (changeUrl: string) => {
+                  console.log(`onUrlChange url=${changeUrl}`)
+                  if (changeUrl === RETURN_URL_SUCCESS) {
+                    clearInterval(interval)
+
+                    await showUi.exitScene()
+                  } else if (changeUrl === RETURN_URL_CANCEL) {
+                    clearInterval(interval)
+                    await showUi.showToast(lstrings.fiat_plugin_sell_cancelled, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                  } else if (changeUrl === RETURN_URL_FAIL) {
+                    clearInterval(interval)
+                    await showUi.showToast(lstrings.fiat_plugin_sell_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                    await showUi.exitScene()
+                  } else if (changeUrl.startsWith(`${banxaOrigin}/status/`)) {
+                    if (interval == null) {
+                      interval = setInterval(async () => {
+                        try {
+                          if (insideInterval) return
+                          insideInterval = true
+                          const orderResponse = await banxaFetch({ method: 'GET', url, hmacUser, path: `api/orders/${id}`, apiKey })
+                          const order = asBanxaOrderResponse(orderResponse)
+                          const { coin_amount: coinAmount, status, wallet_address: publicAddress } = order.data.order
+                          const nativeAmount = await coreWallet.denominationToNative(coinAmount.toString(), displayCurrencyCode)
+                          if (status === 'waitingPayment') {
+                            // Launch the SendScene to make payment
+                            const sendParams: SendScene2Params = {
+                              walletId: coreWallet.id,
+                              tokenId,
+                              spendInfo: {
+                                spendTargets: [
+                                  {
+                                    nativeAmount,
+                                    publicAddress
+                                  }
+                                ]
+                              },
+                              lockTilesMap: {
+                                address: true,
+                                amount: true,
+                                wallet: true
+                              },
+                              hiddenFeaturesMap: {
+                                address: true
+                              }
+                            }
+                            const edgeTx = await showUi.send(sendParams)
+
+                            // At this point we'll call it success
+                            clearInterval(interval)
+                            interval = undefined
+
+                            await showUi.trackConversion('Sell_Success', {
+                              destCurrencyCode: fiatCurrencyCode,
+                              destExchangeAmount: priceQuote.fiat_amount,
+                              sourceCurrencyCode: displayCurrencyCode,
+                              sourceExchangeAmount: coinAmount.toString(),
+                              sourcePluginId: coreWallet.currencyInfo.pluginId,
+                              pluginId: providerId,
+                              orderId: id
+                            })
+
+                            // Below is an optional step
+                            const { txid } = edgeTx
+                            // Post the txid back to Banxa
+                            const bodyParams = {
+                              tx_hash: txid,
+                              source_address: receiveAddress.publicAddress,
+                              destination_address: publicAddress
+                            }
+                            await banxaFetch({ method: 'POST', url, hmacUser, path: `api/orders/${id}/confirm`, apiKey, bodyParams }).catch(e =>
+                              console.error(String(e))
+                            )
+                          }
+                          insideInterval = false
+                        } catch (e: any) {
+                          if (e.message === SendErrorBackPressed) {
+                            await showUi.exitScene()
+                          } else if (e.message === SendErrorNoTransaction) {
+                            await showUi.exitScene()
+                            await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again)
+                          } else {
+                            await showUi.showError(e)
+                          }
+                          insideInterval = false
+                        }
+                      }, 3000)
+                    }
+                  }
+                }
+              })
+            }
           },
           closeQuote: async (): Promise<void> => {}
         }

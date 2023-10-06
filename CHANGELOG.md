@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Send all event tracking params to logging servers
+- changed: Banxa sell to use new widget
 
 ## 3.19.0
 

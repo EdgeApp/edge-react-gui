@@ -32,6 +32,7 @@ export type TrackingEventName =
   | 'Sell_Quote'
   | 'Sell_Quote_Change_Provider'
   | 'Sell_Quote_Next'
+  | 'Sell_Success'
   | 'Signup_Welcome'
   | 'Welcome_Signin'
   | 'Signup_Wallets_Created_Failed'
@@ -54,6 +55,12 @@ export interface TrackingValues extends LoginTrackingValues {
   orderId?: string // Unique order identifier provided by plugin
   pluginId?: string // Plugin that provided the conversion
   numSelectedWallets?: number // Number of wallets to be created
+  destCurrencyCode?: string
+  destExchangeAmount?: string
+  destPluginId?: string // currency pluginId of source asset
+  sourceCurrencyCode?: string
+  sourceExchangeAmount?: string
+  sourcePluginId?: string // currency pluginId of dest asset
 }
 
 // Set up the global Firebase instance at boot:
