@@ -5,6 +5,7 @@ import * as React from 'react'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 interface OwnProps extends EdgeSceneProps<'changePin'> {}
@@ -24,7 +25,7 @@ export class ChangePinComponent extends React.Component<Props> {
     }
     return (
       <SceneWrapper hasTabs={false} background="theme">
-        <ChangePinScreen account={account} context={context} onComplete={handleComplete} />
+        <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
       </SceneWrapper>
     )
   }

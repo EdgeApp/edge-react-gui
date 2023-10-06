@@ -1772,10 +1772,10 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@expo/config-plugins@^4.1.1":
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.1.4.tgz#08e1a6314dc0f96cd165a748b5997b5ec75a84d0"
-  integrity sha512-fkOjXnSieQfVSWVLKhst0DnCAyeHksvWky1CldFCQllhDB1HHBiP09Z8pamVB783n3qr/1HNZiSp6k2iUcaSoA==
+"@expo/config-plugins@^4.1.5":
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.1.5.tgz#9d357d2cda9c095e511b51583ede8a3b76174068"
+  integrity sha512-RVvU40RtZt12HavuDAe+LDIq9lHj7sheOfMEHdmpJ/uTA8pgvkbc56XF6JHQD+yRr6+uhhb+JnAasGq49dsQbw==
   dependencies:
     "@expo/config-types" "^45.0.0"
     "@expo/json-file" "8.2.36"
@@ -2968,26 +2968,26 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-8.3.0.tgz#e3d19381c7d9f885b44ea1785ed892bc39c4b0f1"
   integrity sha512-VlmjD7Vg1BacbNhwuJCel1eeD8N2Ps6BEcZe9qoSoeIptpCbC86o4ZqD0meSjJzioKSvgalrkmPgMaVYsVipKw==
 
-"@react-native-firebase/analytics@^14.9.1":
-  version "14.9.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-14.9.1.tgz#0f756da8a90f4c1a296b9e73803cf8dc9aa00be8"
-  integrity sha512-FlvzqSoDNcrtH2ZYIMi3Wq70dXJtJrf4WcUpHFyNVijIdEWRnI2zuCzXCnnXstPogwdUBqoQs4qboi9K4toSUQ==
+"@react-native-firebase/analytics@^14.12.0":
+  version "14.12.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-14.12.0.tgz#a95ed34187018704d1c0aa7a05c02c1711fac94f"
+  integrity sha512-1ulisJVqpCVs+c3wukG7PCRyipBNqzWVzzC/WB+zaFLXu5gtYZU1RXbzuIUTQLLvVM4v+Yl1wdqcuhybjm+BQA==
 
-"@react-native-firebase/app@^14.9.1":
-  version "14.9.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-14.9.1.tgz#8a40af4dcea88a1c41d8c1a9b179e8260999bdb0"
-  integrity sha512-EmBFJnlpG8uhJhAwh624Q/1Ta+bvoKZjFckpt7uuJZ51wH3CzYudt+DmLbV6E/Frc1z2ogmcZnET7ELSxr6BOg==
+"@react-native-firebase/app@^14.12.0":
+  version "14.12.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-14.12.0.tgz#d9706973489485d8705ce8344e3b255115b381a8"
+  integrity sha512-r/4eP96U3StUs9t3QSlNwCIjjZpEAzI0u8GF8VlNNgrFxUKQXmwe63dRXQXVrI03MxnHgg87OpoWgIxhRlC9Rg==
   dependencies:
-    "@expo/config-plugins" "^4.1.1"
+    "@expo/config-plugins" "^4.1.5"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/messaging@^14.9.1":
-  version "14.9.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.9.1.tgz#cb0c14f38d6ac1804b24f72b7c1a281997ebe523"
-  integrity sha512-hmRkCUa2crwfL0mGQ1zOPRkpRunEkjvkLNn0Lo0SN1QSkI1dSTOtkwtt1Pl2XJlY+5KNsvggKiBuq/kPEyADOg==
+"@react-native-firebase/messaging@^14.12.0":
+  version "14.12.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.12.0.tgz#02cad59f2cf52b68d9cdeed3f1206fe6f84c068f"
+  integrity sha512-4JF93pYLyFiLjwU2RYlHMKSjI7DKLuqQrqCnC3M2yhgTDeYaJsqnYnTSDMfmmh9vZHfHjTztc6E2scwr/Mw8tg==
 
-"@react-native-firebase/remote-config@^14.9.1":
+"@react-native-firebase/remote-config@^14.12.0":
   version "14.12.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-14.12.0.tgz#9417d126d298cbec094be67dad86aa074cd61f6d"
   integrity sha512-WASOY12cwdiWUPgaaeKH2jfSpIhtDG/Xu8y0Ws5+RZYu9pox6/pTUkWUdXnJpWnR9Cg3FdOhzKxijMovsezbpw==
@@ -7679,10 +7679,10 @@ edge-core-js@^1.7.0:
     yaob "^0.3.11"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.5.2.tgz#4d47b4d7cb1284fad7e82737c20f1243d2df6288"
-  integrity sha512-4/iF+CfRK2hFl5OQ7iRfmhlUk32Qi/scpHip6if/6vZuYfBaJX0i7M0FnDecFUqV0gtINQjEvqrC34xmnpwj0w==
+edge-currency-accountbased@^2.5.5:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.5.5.tgz#73715b01d7a194df645b32ee93713c8329ff6adb"
+  integrity sha512-Y0qI20fz8OsNjX6T3QY6rMlN9fjIlLBv7v12W8fKWjn780SCBsjNdnAsJ/56WVFhCssbgfnfkJefeCHIHr2//g==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7726,10 +7726,10 @@ edge-currency-monero@^1.1.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.2.1.tgz#49f57033f0297199aba7a83d35e36e1cfdd9a9c8"
-  integrity sha512-YKsysg7lf0V87pPZi21/Ifgt2VpYAtriZBQRtbkV/s01WCovNL7UqVgvj4AHMMPeQkjzJtGZQ3QWoo9jMrxl8Q==
+edge-currency-plugins@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.3.0.tgz#746577de8b7c6a5723e53d98e17e9ad06a632662"
+  integrity sha512-cqGPxWqvuhJh7EC2L8uWWDd8OKLGaVerUemDMx5RcVd43VHpGjrTWlqVzf0Tq2Wxwcop+UV5uYNME//Wj7tJiw==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
@@ -7756,10 +7756,10 @@ edge-currency-plugins@^2.2.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.21.6:
-  version "0.21.6"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.21.6.tgz#db8c838fa6192ba7e28e7872d99bb7b582ca5585"
-  integrity sha512-wb6+7g8Rp3gR9qTyiC/9e/U9wF6c7lSbgBGOzVv7nmPJcklO/DMWoJqKM19uGR8ttybjyUv+yiFWFVx/5SJ+gQ==
+edge-exchange-plugins@^0.21.9:
+  version "0.21.9"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.21.9.tgz#9eac8c074e89d5c6d7756026ae4220cf6e567dc1"
+  integrity sha512-sxDKGWq7slsEUQJsVnjJeq68ydV4lhLIDonRbk7H/XDPh885+2puFX7Wj9ot0PLX82sUZSnMcsxl56P8wQNIrA==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -7774,10 +7774,10 @@ edge-exchange-plugins@^0.21.6:
     utf8 "^3.0.0"
     xrpl "^2.10.0"
 
-edge-login-ui-rn@^2.11.1:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.11.1.tgz#74d5a0c786caceafa074055355887b28c7949da6"
-  integrity sha512-mGqF8LBRUGVSbvO+Xm0fYo84CoGRGBw6xmDp9RsUio3Kc6RMTrkkDDkihA9FH4S9DoCfbXuOrkvtVrQUEY5ibg==
+edge-login-ui-rn@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.14.1.tgz#a2fe5b2465ad15a39eed46b79df569e227be8bc5"
+  integrity sha512-2x4JzBt4o5gVfp56Gl9m5txEU1ayzU45ZbZkY+3fKCRyXs9hqL8B1ft2jyRX+DBF51KJK+5Z9Btb8fGEPKnalQ==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"

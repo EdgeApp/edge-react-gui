@@ -260,6 +260,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "paymentTypeLogoPaynow": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
               },
+              "paymentTypeLogoPix": {
+                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPix.png",
+              },
               "paymentTypeLogoPoli": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",
               },
@@ -707,6 +710,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               },
               "paymentTypeLogoPaynow": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPaynow.png",
+              },
+              "paymentTypeLogoPix": {
+                "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPix.png",
               },
               "paymentTypeLogoPoli": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoPoli.png",

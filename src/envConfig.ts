@@ -51,6 +51,7 @@ export const asEnvConfig = asObject({
       banxa: asOptional(
         asObject({
           partnerUrl: asString,
+          hmacUser: asString,
           apiKey: asString
         })
       ),
@@ -195,7 +196,7 @@ export const asEnvConfig = asObject({
   KEYS_ONLY_PLUGINS: asOptional(asObject(asBoolean), {}),
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
-  USE_WELCOME_SCREENS: asOptional(asBoolean, true),
+  USE_WELCOME_SCREENS: asOptional(asBoolean, true), // Used by whitelabels
 
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
@@ -223,5 +224,6 @@ export const asEnvConfig = asObject({
       port: asOptional(asString, '8008')
     }),
     { host: 'localhost', port: '8008' }
-  )
+  ),
+  EXPERIMENT_CONFIG_OVERRIDE: asOptional(asObject(asString), {})
 }).withRest

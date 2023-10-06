@@ -7,7 +7,6 @@ import { getLocales } from 'react-native-localize'
 
 import { ENV } from '../env'
 import { pickLanguage } from '../locales/intl'
-import { checkWyreHasLinkedBank } from '../plugins/gui/fiatPlugin'
 import { config } from '../theme/appConfig'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
@@ -207,7 +206,9 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
 
 export interface ValidateFuncs {
   getCountryCodeByIp: () => Promise<string>
-  checkWyreHasLinkedBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
+
+  // Placeholder dummy routine we can fill in with real plugin when we have one
+  checkDummyPluginHasBank: (dataStore: EdgeDataStore) => Promise<boolean | undefined>
   getBuildNumber: () => string
   getLanguageTag: () => string
   getOs: () => string
@@ -232,13 +233,15 @@ const getLanguageTag = (): string => {
 }
 const getOs = (): string => Platform.OS
 
+const checkDummyPluginHasBank = async (): Promise<boolean> => false
+
 async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
-  const funcs: ValidateFuncs = { getCountryCodeByIp, checkWyreHasLinkedBank, getBuildNumber, getLanguageTag, getOs, getVersion }
+  const funcs: ValidateFuncs = { getCountryCodeByIp, checkDummyPluginHasBank, getBuildNumber, getLanguageTag, getOs, getVersion }
   return await validatePromoCardsInner(account.dataStore, cards, funcs)
 }
 export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
   const out: MessageTweak[] = []
-  let wyreHasLinkedBank
+  let dummyPluginHasLinkedBank
 
   for (const card of cards) {
     // Validate OS type
@@ -282,11 +285,11 @@ export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: M
     if (card.hasLinkedBankMap != null) {
       let useCard = true
       for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
-        if (pluginId === 'co.edgesecure.wyre') {
-          if (wyreHasLinkedBank == null) {
-            wyreHasLinkedBank = await funcs.checkWyreHasLinkedBank(dataStore)
+        if (pluginId === 'com.dummyplugin.app') {
+          if (dummyPluginHasLinkedBank == null) {
+            dummyPluginHasLinkedBank = await funcs.checkDummyPluginHasBank(dataStore)
           }
-          if (wyreHasLinkedBank !== hasLinkedBank) {
+          if (dummyPluginHasLinkedBank !== hasLinkedBank) {
             useCard = false
             break
           }

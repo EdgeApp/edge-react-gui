@@ -10,6 +10,7 @@ interface StateProps {
   account: EdgeAccount
   context: EdgeContext
   sortedWalletList: WalletListItem[]
+  userPausedWalletsSet: Set<string> | null
 }
 type Props = StateProps
 
@@ -57,7 +58,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
    * Figures out what has changed and adapts.
    */
   handleChange = () => {
-    const { account, context, sortedWalletList } = this.props
+    const { account, context, sortedWalletList, userPausedWalletsSet } = this.props
 
     // Check for login / logout:
     if (account !== this.edgeAccount || context !== this.edgeContext) {
@@ -79,8 +80,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // Grab the mutable core state:
     const { paused } = context
     const { currencyWallets } = account
-
-    // If we have become paused, shut down all wallets:
+    // If we have become paused (app into background), shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
       Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(showError)
@@ -88,7 +88,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     this.paused = paused
 
     // The next steps only apply if we are active:
-    if (paused) return
+    if (paused || userPausedWalletsSet == null) return
 
     // Check for boots that have completed, and for deleted wallets:
     this.booting = this.booting.filter(boot => {
@@ -109,10 +109,12 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       if (this.booting.length >= BOOT_LIMIT) break
       const { token, tokenId, wallet, walletId } = walletItem
 
-      // Ignore missing wallets, token rows, started wallets, and already-booting wallets:
+      // Ignore missing wallets, token rows, started wallets, already-booting
+      // wallets, and user-paused wallets:
       if (token != null || tokenId != null || wallet == null) continue
       if (!wallet.paused) continue
       if (this.booting.find(boot => boot.walletId === walletId) != null) continue
+      if (userPausedWalletsSet.has(walletId)) continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
     }
@@ -189,7 +191,8 @@ export const WalletLifecycle = connect<StateProps, {}, {}>(
   state => ({
     account: state.core.account,
     context: state.core.context,
-    sortedWalletList: state.sortedWalletList
+    sortedWalletList: state.sortedWalletList,
+    userPausedWalletsSet: state.ui.settings.userPausedWalletsSet
   }),
   dispatch => ({})
 )(WalletLifecycleComponent)

@@ -709,6 +709,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         allocations: [...stakedAllocations, ...earnedAllocations],
         canStake,
         canUnstake,
+        canUnstakeAndClaim: false,
         canClaim
       }
     }

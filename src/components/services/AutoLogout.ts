@@ -7,7 +7,6 @@ import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { showError } from './AirshipInstance'
 
 export const AutoLogout = () => {
   const dispatch = useDispatch()
@@ -28,8 +27,7 @@ export const AutoLogout = () => {
     // Logout If all the conditions for autoLogout are met
     if (appForegrounded && settingsLoaded && timeExpired)
       dispatch(logoutRequest(navigation)).catch(err => {
-        console.warn(err)
-        showError(sprintf(lstrings.auto_log_off_failed_message_s, String(err)))
+        console.warn(sprintf(lstrings.auto_log_off_failed_message_s, String(err)))
       })
     // Update the new appState
     stateRef.current = { timestamp, isAppForeground }

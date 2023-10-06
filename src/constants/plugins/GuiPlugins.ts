@@ -2,7 +2,6 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
-import { makeRewardsCardPlugin } from '../../plugins/gui/RewardsCardPlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
@@ -79,6 +78,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
+  fasterpayments: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:AUD',
+    displayName: ''
+  },
   iach: {
     pluginId: 'amountquote',
     storeId: '',
@@ -86,6 +94,43 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'ACH Bank Transfer'
+  },
+  interac: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:CAD',
+    displayName: ''
+  },
+  payid: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:AUD',
+    displayName: ''
+  },
+  pix: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:BRL',
+    displayName: ''
+  },
+  turkishbank: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:TRY',
+    defaultFiatAmount: '2000',
+    displayName: ''
   },
   simplex: {
     pluginId: 'simplex',
@@ -102,6 +147,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     needsCountryCode: true,
     queryPromoCode: 'client_value',
     nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:EUR',
     displayName: 'Bity'
   },
   bitrefill: {
@@ -111,14 +157,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
       'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,usdt_trc20,usdt_erc20,usdt_polygon,usdc_erc20,usdc_polygon,litecoin,dogecoin,dash',
     lockUriPath: true,
     displayName: 'Bitrefill'
-  },
-  rewardscard: {
-    pluginId: 'rewardscard',
-    storeId: 'rewardscard',
-    baseUri: '',
-    lockUriPath: true,
-    nativePlugin: makeRewardsCardPlugin,
-    displayName: 'Edge Reward Card'
   },
   xanpool: {
     pluginId: 'xanpool',

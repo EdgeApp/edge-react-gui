@@ -5,6 +5,7 @@ import * as React from 'react'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 interface OwnProps extends EdgeSceneProps<'passwordRecovery'> {}
@@ -26,6 +27,7 @@ class ChangeRecoveryComponent extends React.Component<Props> {
           branding={{ appName: config.appName }}
           account={account}
           context={context}
+          onLogEvent={logEvent}
           onComplete={handleComplete}
           // @ts-expect-error
           onCancel={handleComplete}

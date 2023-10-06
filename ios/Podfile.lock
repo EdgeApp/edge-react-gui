@@ -20,9 +20,9 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (1.7.0):
     - React-Core
-  - edge-currency-accountbased (2.5.2):
+  - edge-currency-accountbased (2.5.4):
     - React-Core
-  - edge-login-ui-rn (2.11.1):
+  - edge-login-ui-rn (2.14.1):
     - React
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -614,14 +614,14 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (14.9.1):
+  - RNFBAnalytics (14.12.0):
     - Firebase/AnalyticsWithoutAdIdSupport (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (14.9.1):
+  - RNFBApp (14.12.0):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
-  - RNFBMessaging (14.9.1):
+  - RNFBMessaging (14.12.0):
     - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
@@ -1211,8 +1211,8 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 82972b10438ab46ea09e6127d67e8f8093fd623d
-  edge-currency-accountbased: b1f2f3b46b55f0b04891b868e1c627fc7bcf19ac
-  edge-login-ui-rn: 378813264f4667bcfb5e6863b139d494056e946e
+  edge-currency-accountbased: 6395e70014b3a104b36d9614ec65eb1abac4c647
+  edge-login-ui-rn: 7ecda4499b7cfba19b4f87775f7980d88a1b2d7a
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -1301,9 +1301,9 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
-  RNFBAnalytics: fae7572493095e19d22498650c97507f988e627d
-  RNFBApp: fd23737680ed2bdde41ca27d8bfb171b6d668c6b
-  RNFBMessaging: cd273b4dcacf98c83a25ce1711c8c85511573990
+  RNFBAnalytics: c5740a00a436398796639189f82b58b1ebe4c705
+  RNFBApp: e4439717c23252458da2b41b81b4b475c86f90c4
+  RNFBMessaging: 40dac204b4197a2661dec5be964780c6ec39bf65
   RNFBRemoteConfig: 92fbb75ceb69fec44ae727b70d23c5d1798f7648
   RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
@@ -1343,4 +1343,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 05dc3e3e330cf28ff2c3e6b3517d100d067246b6
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0

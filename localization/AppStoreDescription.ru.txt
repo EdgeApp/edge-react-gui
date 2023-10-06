@@ -1,12 +1,12 @@
 Название: Edge - Bitcoin, Ethereum, Monero, Ripple Кошелёк
 -----
-Краткое описание: конфиденциальный, безопасный и простой в использовании. Покупка, продажа, отправление и получение Bitcoin и других криптовалют.
+Short description: Buy BTC, AVAX, Monero & more
 -----
-Полная конфиденциальность и безопасность в нашем блокчейн кошельке, удобном для использования.
+Полная конфиденциальность и безопасность в нашем блокчейн кошельке, удобном для использования. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Управление вашими криптоактивами никогда не было проще. Edge кошелек обеспечивает максимальную безопасность при сохранении простоты, позволяя всем типам пользователей легко управлять, переводить и обменивать криптоактивы.
 
-Кошелек Edge в настоящее время поддерживает: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) и Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
 
 Edge мощный и простой в использовании криптовалютный кошелек, позволяющий пользователям контролировать собственные приватные ключи с простотой, как в мобильном банке. 
 

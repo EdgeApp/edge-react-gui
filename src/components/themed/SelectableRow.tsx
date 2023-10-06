@@ -12,6 +12,7 @@ interface Props {
 
   subTitle?: string
   icon?: React.ReactNode
+  autoHeight?: boolean
   autoWidth?: boolean
   autoWidthContent?: boolean
   arrowTappable?: boolean
@@ -29,6 +30,7 @@ export class SelectableRowComponent extends React.PureComponent<Props & ThemePro
       subTitle,
       arrowTappable,
       underline,
+      autoHeight,
       autoWidth = false,
       autoWidthContent = autoWidth,
       marginRem,
@@ -39,7 +41,7 @@ export class SelectableRowComponent extends React.PureComponent<Props & ThemePro
     const styles = getStyles(theme)
 
     return (
-      <ClickableRow marginRem={marginRem} paddingRem={paddingRem} underline={underline} onPress={onPress}>
+      <ClickableRow autoHeight={autoHeight} marginRem={marginRem} paddingRem={paddingRem} underline={underline} onPress={onPress}>
         <View style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}>
           <View style={autoWidthContent ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
             {icon}

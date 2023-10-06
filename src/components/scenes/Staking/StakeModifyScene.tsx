@@ -7,12 +7,13 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
 import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
-import { getDenominationFromCurrencyInfo, getDisplayDenomination } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations, getUnstakeText } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -164,6 +165,7 @@ const StakeModifySceneComponent = (props: Props) => {
     const message = {
       stake: lstrings.stake_change_stake_success,
       unstake: lstrings.stake_change_unstake_success,
+      unstakeAndClaim: lstrings.stake_change_claim_success,
       claim: lstrings.stake_change_claim_success,
       unstakeExact: ''
     }
@@ -279,7 +281,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, quoteCurrencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
 
     const title =
       allocationType === 'stake'
@@ -289,7 +291,10 @@ const StakeModifySceneComponent = (props: Props) => {
         : sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
-    const earnedAmount = existingAllocations.earned[0]?.nativeAmount ?? '0'
+    const { nativeAmount: earnedAmount = '0', locktime } = existingAllocations.earned[0] ?? {}
+    if (allocationType === 'claim' && locktime != null && Date.now() < new Date(locktime).valueOf()) {
+      return null
+    }
 
     const isClaim = allocationType === 'claim'
     return (
@@ -319,14 +324,16 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
+    const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
         type="questionable"
         title={title}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        tokenId={tokenId}
         walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressStakingFee(modification)}
@@ -345,13 +352,15 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getDenominationFromCurrencyInfo(wallet.currencyInfo, currencyCode)
+    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
+    const tokenId = getTokenId(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
         type="questionable"
         title={lstrings.stake_future_unstaking_fee}
         nativeCryptoAmount={quoteAllocation?.nativeAmount ?? '0'}
+        tokenId={tokenId}
         walletId={wallet.id}
         denomination={quoteDenom}
         onPress={handlePressFutureUnstakingFee}
@@ -421,7 +430,7 @@ const StakeModifySceneComponent = (props: Props) => {
         }
         {
           // Render claim amount tile
-          stakePolicy.rewardsNotClaimable || (modification !== 'claim' && modification !== 'unstake')
+          stakePolicy.hideClaimAction || (modification !== 'claim' && modification !== 'unstake')
             ? null
             : stakePolicy.rewardAssets.map(asset => renderEditableQuoteAmountRow('claim', asset))
         }
@@ -449,12 +458,11 @@ const StakeModifySceneComponent = (props: Props) => {
   }
 
   const sceneTitleMap = React.useMemo(() => {
-    const unstakeText = getUnstakeText(stakePolicy)
-
     return {
       stake: getPolicyTitleName(stakePolicy),
       claim: lstrings.stake_claim_rewards,
-      unstake: unstakeText,
+      unstake: lstrings.stake_unstake,
+      unstakeAndClaim: lstrings.stake_unstake_claim,
       unstakeExact: '' // Only for internal use
     }
   }, [stakePolicy])

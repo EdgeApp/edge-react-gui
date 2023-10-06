@@ -1,10 +1,11 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
+import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
-import { getIsFirstOpen } from '../actions/FirstOpenActions'
+import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
-import { getStickyConfig, StickyConfig } from '../stickyConfig'
+import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
@@ -42,8 +43,9 @@ export type TrackingEventName =
   | 'Visa_Card_Launch'
   // No longer used:
   | 'Earn_Spend_Launch'
+  | LoginTrackingEventName
 
-export interface TrackingValues {
+export interface TrackingValues extends LoginTrackingValues {
   accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
@@ -99,46 +101,52 @@ export function trackError(
  * Send a raw event to all backends.
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
+  getExperimentConfig()
+    .then(async (experimentConfig: ExperimentConfig) => {
+      // Persistent & Unchanged params:
+      const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
+      const params: any = { edgeVersion: getVersion(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
+
+      // Adjust params:
+      if (accountDate != null) params.adate = accountDate
+      if (currencyCode != null) params.currency = currencyCode
+      if (dollarValue != null) {
+        params.currency = 'USD'
+        params.value = Number(dollarValue.toFixed(2))
+        params.items = [String(event)]
+      }
+      if (installerId != null) params.aid = installerId
+      if (pluginId != null) params.plugin = pluginId
+      if (error != null) params.error = makeErrorLog(error)
+
+      // Add all 'sticky' remote config variant values:
+      for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+      // TEMP HACK: Add renamed var for legacyLanding
+      params.svar_newLegacyLanding = experimentConfig.legacyLanding
+
+      consify({ logEvent: { event, params } })
+
+      Promise.all([logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+    })
+    .catch(console.error)
 }
 
 /**
  * Send a raw event to Firebase.
  */
-async function logToFirebase(name: TrackingEventName, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
-
+async function logToFirebase(name: TrackingEventName, params: any) {
   // @ts-expect-error
   if (!global.firebase) return
 
-  // Persistent params:
-  const params: any = { edgeVersion: getVersion(), isFirstOpen: await getIsFirstOpen() }
-
-  // Adjust params:
-  if (accountDate != null) params.adate = accountDate
-  if (currencyCode != null) params.currency = currencyCode
-  if (dollarValue != null) {
-    params.currency = 'USD'
-    params.value = Number(dollarValue.toFixed(2))
-  }
-  if (installerId != null) params.aid = installerId
-  if (pluginId != null) params.plugin = pluginId
-  if (error != null) params.error = makeErrorLog(error)
-
-  // Add all 'sticky' remote config variant values:
-  const stickyConfig = await getStickyConfig()
-
-  for (const key of Object.keys(stickyConfig)) params[`svar_${key}`] = stickyConfig[key as keyof StickyConfig]
-
-  consify({ logEvent: { name, params } })
-  // @ts-expect-error
-  global.firebase.analytics().logEvent(name, params)
-
   // If we get passed a dollarValue, translate the event into a purchase:
-  if (dollarValue != null) {
-    params.items = [name]
+  if (params.dollarValue != null) {
     // @ts-expect-error
     global.firebase.analytics().logEvent('purchase', params)
+  } else {
+    // @ts-expect-error
+    global.firebase.analytics().logEvent(name, params)
   }
 }
 

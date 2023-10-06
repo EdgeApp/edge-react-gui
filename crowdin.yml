@@ -1,3 +1,11 @@
 files:
   - source: /src/locales/strings/enUS.json
     translation: /src/locales/strings/%two_letters_code%.json
+  - source: /localization/AppStoreDescription.txt
+    translation: /localization/AppStoreDescription.%two_letters_code%.txt
+  - source: /localization/PlayStoreDescription.txt
+    translation: /localization/PlayStoreDescription.%two_letters_code%.txt
+  - source: /localization/AppStoreGraphics.json
+    translation: /localization/AppStoreGraphics.%two_letters_code%.json
+  - source: /localization/PlayStoreGraphics.json
+    translation: /localization/PlayStoreGraphics.%two_letters_code%.json

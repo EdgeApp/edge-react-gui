@@ -55,6 +55,13 @@ exports[`Request should render with loaded props 1`] = `
     >
       <TouchableOpacity
         onPress={[Function]}
+        style={
+          {
+            "flex": 1,
+            "justifyContent": "center",
+            "marginRight": 6,
+          }
+        }
       >
         <WithTheme(EdgeTextComponent)>
           You have 0 undefined

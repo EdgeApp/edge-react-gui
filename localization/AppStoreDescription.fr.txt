@@ -1,21 +1,21 @@
 Titre: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
-----
-Description courte : Privée, sécurisé & facile à utiliser. Acheter, vendre, envoyer & recevoir Bitcoin & les autres crypotos. 
 -----
-Il est complétement privée et sécurisé d'utiliser notre Wallet de Blockchain.
+Description courte : Privée, sécurisé & facile à utiliser. Acheter, vendre, envoyer & recevoir Bitcoin & les autres crypotos.
+-----
+Il est complétement privée et sécurisé d'utiliser notre Wallet de Blockchain. The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Gérer votre cryptomonnaies qui ont été jamais facile à utiliser. Edge Portefeuille offert la sécurité maximum avec la simplicité, cela permet au tous les utilisateurs à gérer, transfer, faire l'échange leurs monnaies facilement.
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
 
-Edge est un portefeuille de crypto monnaies puissance et facile à utiliser qui permet aux utilisateurs de contrôler facilement leurs clés privées avec la familiarité et l’aisance d’une banque en ligne mobile.  
+Edge est un portefeuille de crypto monnaies puissance et facile à utiliser qui permet aux utilisateurs de contrôler facilement leurs clés privées avec la familiarité et l’aisance d’une banque en ligne mobile. 
 
 Prennez tous le contrôl sur vos fonds! Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données. Grâce à la politique Bitcoin, vous bénéficierez d’une confidentialité et d’une autonomie financière ainsi qu’une facilité d’utilisation telle que même une personne âgée est capable de s’y retrouver
 
-Edge offer les échanges de cryptomonnaies. Il est facile d'effacer vos monnaies complétement en quelques clics.  
+Edge offer les échanges de cryptomonnaies. Easily swap your currencies for others with a few taps. 
 
 • Zéro connaissance de cryptomonnaies ou zéro accès aux fonds, clés ou données de transaction de l’utilisateur par Edge ou des parties tierces
-• Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions) 
+• Il est facile de créer un compte en utilisant son identifiant & le mot de passee ( pas de papier à imprimer PDFs, aucun remplissage ou aucune configurations d'encryptions)
 • La connexion biométrique TouchID et FaceID
 • Portefeuilles déterministes hiérarchiques avec adresses changeantes par transaction
 • Architecture de serveur décentralisé. Les Walletes fonctionnent même si les serveurs Edge sont indisponibles.
@@ -27,4 +27,4 @@ L’application Edge Wallet vous demande l’accès à la liste de contacts de l
 1. Remplissage automatique des coordonnées des contacts de l’utilisateur après une transaction.
 2. Remplissage automatique des coordonnées des contacts de l’utilisateur pour une demande de paiement par e-mail ou sms
 
-Aucune information personenelle ou le list du contrat restera dans l'appareil  Ni Edge ni une tierce personne ne pourra accéder à votre porte monnaie ou à vos données.
+No personal info or contact list info ever leaves the device. Neither Edge nor any 3rd party can access the information requested by the application.

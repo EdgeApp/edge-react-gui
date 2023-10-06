@@ -676,7 +676,7 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstake = !disableUnstake && gt(stakedLpTokenBalance, '0')
+      const canUnstakeAndClaim = !disableUnstake && gt(stakedLpTokenBalance, '0')
 
       // You can claim so long as there is some reward balance (there are no timelocks)
       const canClaim = !disableClaim && gt(rewardNativeAmount, '0')
@@ -684,7 +684,8 @@ export const makeCemeteryPolicy = (options: CemeteryPolicyOptions): StakePluginP
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],
         canStake,
-        canUnstake,
+        canUnstake: false,
+        canUnstakeAndClaim,
         canClaim
       }
     }

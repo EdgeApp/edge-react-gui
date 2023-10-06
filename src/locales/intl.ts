@@ -45,6 +45,9 @@ setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
 export function formatNumberInput(input: string, options?: IntlNumberFormatOptionsType): string {
   const _options: IntlNumberFormatOptionsType = {}
 
+  if (typeof input !== 'string') {
+    console.error('no string')
+  }
   if (input.endsWith('.') || input.endsWith(',')) {
     return formatNumber(input.slice(0, -1)) + locale.decimalSeparator
   }

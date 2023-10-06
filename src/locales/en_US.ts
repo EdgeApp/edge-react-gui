@@ -220,6 +220,8 @@ const strings = {
   fragment_wallets_copy_seed: 'Copy Seed',
   fragment_wallets_copied_seed: 'Copied Seed',
   fragment_wallets_get_seed_wallet: 'Get Seed',
+  fragment_wallets_pause_wallet: 'Pause Wallet',
+  fragment_wallets_unpause_wallet: 'Unpause Wallet',
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
@@ -366,6 +368,7 @@ const strings = {
   search_tokens: 'Search Tokens',
   search_assets: 'Search Assets',
   select_wallet: 'Select Wallet',
+  select_wallet_to_send_from: 'Select Wallet to Send From',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
@@ -1215,7 +1218,7 @@ const strings = {
   wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
 
   // New Token TermsAgreement Modal
-  token_agreement_modal_title: '%s Needed To Send Tokens',
+  token_agreement_modal_title: '%s Needed to Send Tokens',
   token_agreement_modal_message:
     '%1$s is required to pay the mining fees when sending tokens. The associated %1$s wallet must contain a sufficient amount of funds.\n\nIf you do not have %1$s, you can acquire it within %2$s using the Buy or Exchange function.',
 
@@ -1285,6 +1288,7 @@ const strings = {
   stake_resource_energy: 'Energy',
 
   fiat_plugin_select_asset_to_purchase: 'Select Asset to Purchase',
+  fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
   fiat_plugin_buy_currencycode: 'Buy %s', // TODO: string key convention
   fiat_plugin_sell_currencycode_s: 'Sell %s',
   fiat_plugin_amount_currencycode: 'Amount %s',
@@ -1292,10 +1296,16 @@ const strings = {
   fiat_plugin_buy_amount_over_undef_limit: 'Purchase amount is over maximum',
   fiat_plugin_buy_amount_under_limit: 'Minimum purchase amount is %s',
   fiat_plugin_buy_amount_under_undef_limit: 'Purchase amount is under minimum',
+  fiat_plugin_sell_amount_over_limit: 'Max sell amount is %s',
+  fiat_plugin_sell_amount_over_undef_limit: 'Sell amount is over maximum',
+  fiat_plugin_sell_amount_under_limit: 'Minimum sell amount is %s',
+  fiat_plugin_sell_amount_under_undef_limit: 'Sell amount is under minimum',
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
   fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',
+  fiat_plugin_sell_region_restricted: 'Region restricted from selling %s',
+  fiat_plugin_sell_no_quote: 'Unable to get sell quote',
   fiat_plugin_fetching_assets: 'Fetching supported assets',
 
   // Wallet List Modal
@@ -1303,6 +1313,8 @@ const strings = {
   select_src_wallet: 'Select Source Wallet',
   deposit_to_bank: 'Deposit to Bank',
   your_wallets: 'Your Wallets',
+  pause_wallet_toast: 'This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes',
+  unpause_wallet_toast: 'This wallet will now synchronize with the blockchain and detect new transactions and balance changes.',
 
   // #region CoinRanking
 
@@ -1372,6 +1384,17 @@ const strings = {
   tap_to_learn_more: 'Tap to learn more.',
 
   // #endregion Light Account
+
+  // #region Transfer Modal
+
+  transfer_from_bank_title: 'From Bank/Cash',
+  transfer_from_wallet_title: 'From Another Wallet/Exchange',
+  transfer_to_bank_title: 'To Bank/Cash',
+  transfer_to_another_wallet_title: 'To Another Wallet/Exchange',
+  transfer_to_from_bank_title_1s: 'To %1$s From Bank/Cash',
+  select_receive_asset: 'Select Asset to Receive',
+
+  // #endregion Transfer Modal
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
@@ -1558,6 +1581,9 @@ const strings = {
   getting_started_welcome_message: `Edge is the open source tool you need\nto invest, secure, and put your crypto in action.`,
   getting_started_welcome_prompt: `Swipe to Learn More`,
   getting_started_welcome_title: `Welcome to\nFinancial *Freedom*`,
+
+  account_sign_up: 'Sign Up',
+  account_get_started: 'Get Started',
 
   // Accessibility Hints
   app_logo_hint: 'App logo',

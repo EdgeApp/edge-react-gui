@@ -33,7 +33,6 @@ const activateWalletName: MapObject<{ name: string; notes: string }> = {
     notes: lstrings.activate_wallet_token_transaction_notes_xrp
   }
 }
-
 const ACTIVATION_TOAST_AUTO_HIDE_MS = 5000
 
 export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivate }: SelectWalletTokenParams): ThunkAction<Promise<boolean>> {

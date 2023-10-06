@@ -1,29 +1,30 @@
-Titolo: Edge - Bitcoin, Ethereum, Monero, Ripple Wallet
+Title: Edge - Bitcoin & Crypto Wallet
 -----
-Breve descrizione: privato, sicuro e di facile utilizzo. Compra, vendi, invia e ricevi Bitcoin e altre cripto.
+Short description: Privacy e sicurezza in un portafoglio criptovalute facile da usare. Compra e vendi bitcoin!
 
-<b>Totale privacy e sicurezza nel nostro portafoglio blockchain.</b> Compra, vendi, invia e ricevi Bitcoin (BTC), Bitcoin Cash (BCH), Litecoin (LTC), Ethereum (ETH) e molte altre criptovalute.
+<b>Totale privacy e sicurezza nel nostro portafoglio Bitcoin e cripto, facile da utilizzare.</b> Compra & vendi Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) e molte altre criptovalute.
 
-Gestire le tue criptovalute non è mai stato così facile. Edge Wallet fornisce la massima sicurezza mantenendo la semplicità d'uso e permettendo a qualunque tipo di utente di gestire, trasferire e scambiare le loro criptovalute con estrema facilità.
+Edge Wallet fornisce il 100% di sicurezza — Né Edge né terze parti possono accedere al tuo portafoglio di criptovalute o ai tuoi dati. Ottieni la privacy e l'autonomia finanziaria per cui sono state progettate le criptovalute e la blockchain.
 
-<b>Edge Wallet attualmente supporta:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) e Feathercoin (FTC). Vuoi vedere altre crypto nel nostro portafoglio? Inviaci una richiesta!
+Gestire i tuoi portafogli Bitcoin e cripto non è mai stato così facile. Edge Wallet fornisce la massima sicurezza mantenendo la semplicità d'uso e permettendo a qualunque tipo di utente di gestire, trasferire e scambiare i propri bitcoin e le proprie criptovalute con estrema facilità. Edge è il miglior wallet bitcoin e cripto per mantenere le cose semplici e sicure! Con Edge, rendiamo semplice acquistare e vendere bitcoin, ma anche scambiare molte delle criptovalute più note.
+
+<b>Edge Crypto Wallet attualmente supporta:</b> Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Monero (XMR), Polygon (MATIC), Hedera (HBAR), Bitcoin Cash (BCH), Litecoin (LTC), Binance Coin (BNB), Tezos, Ethereum (ETH), Ripple (XRP), Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE) e Feathercoin (FTC). Vuoi vedere altre crypto nella nostra app? Inviaci una richiesta!
 
 Edge è un portafoglio di criptovalute potente e di semplice utilizzo che permette agli utenti di controllare con facilità le loro chiavi private con la familiarità del mobile banking. 
 
-Mantieni il controllo dei tuoi fondi! Con Edge solo TU hai accesso ai tuoi fondi o ai dati delle transazioni. Edge e terze parti non possono accedere al tuo denaro o ai tuoi dati. Ottieni la privacy e l'autonomia per le quali la blockchain è stata creata, con una facilità d'uso a prova di nonna.
+Mantieni il controllo dei tuoi fondi! Con Edge solo TU hai accesso ai tuoi fondi o ai dati delle transazioni. 
 
-Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmente le tue valute con altre in pochi click. Scambia BTC per Ethereum, ETH per BCH e molti altri.
+Edge fornisce al suo interno anche un cambio valuta (exchange). Scambia facilmente le tue valute con altre in pochi click. Scambia BTC per Ethereum, ETH per BCH e molti altri. Creare nuovi portafogli Avalanche (AVAX), Solana (SOL) e più crypto è facile con gli scambi!
 
-<b>Caratteristiche</b>
-• Portafoglio criptovalute sicuro e app blockchain
-• Portafoglio Bitcoin con in più il supporto alle criptovalute più utilizzate, come ad esempio Bitcoin Cash, Litecoin e Ripple (XRP)
-• Zero-knowledge & zero-access ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
-• Creazione dell'account semplificata, usando solo un nome utente e una password (niente documenti da stampare, passphrase da scrivere o altre impostazioni di criptaggio)
-* Login tramite TouchID e FaceID
-• Portafogli gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
+<b>Funzionalità di Edge Bitcoin Wallet</b>
+• App di portafogli cripto e blockchain sicura
+• App Bitcoin & cripto con supporto per i più noti cripto asset quali Bitcoin Cash, Ethereum (ETH), Litecoin (LTC), Binance Coin (BNB), Ripple (XRP), Avalanche (AVAX), Monero (XMR), Polygon (MATIC), Hedera (HBAR), e moltri altri
+• Zero-knowledge & nessun accesso ai fondi degli utenti, chiavi private o dati sulle transazioni da parte di Edge o di terze parti
+• Creazione dell'account semplificata, usando solo un nome utente e una password
+• Portafogli cripto gerarchici deterministici con cambio automatico degli indirizzi a ogni transazione
 • Architettura server decentralizzata. I portafogli funzionano anche quando i sever di Edge sono offline.
-• Codice open-source. Disponibile su https://github.com/Airbitz
-• Cambio (exchange) integrato, per comprare e vendere criptovalute
+• Codice open-source. Disponibile su https://github.com/EdgeApp
+• Sistema di scambio interno per comprare e vendere Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Poligono (MATIC), Hedera (HBAR) e molto altro!
 
 Informativa sulla privacy
 L'applicazione Edge Wallet richiede l'accesso alla lista contatti del dispositivo e alle informazioni personali. Queste informazioni sono usate sul dispositivo per fornire un esperienza d'uso migliore nei seguenti modi:

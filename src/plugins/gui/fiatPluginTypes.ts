@@ -1,5 +1,6 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
+import { EdgeTransaction } from 'edge-core-js/types'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
@@ -15,7 +16,20 @@ import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
 
-export const asFiatPaymentType = asValue('sepa', 'credit', 'applepay', 'googlepay', 'iach')
+export const asFiatPaymentType = asValue(
+  'applepay',
+  'credit',
+  'directtobank',
+  'fasterpayments',
+  'googlepay',
+  'iach',
+  'interac',
+  'iobank',
+  'payid',
+  'pix',
+  'sepa',
+  'turkishbank'
+)
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
 
 export interface FiatPluginAddressFormParams {
@@ -69,12 +83,13 @@ export interface FiatPluginEnterAmountResponse {
   value1: string
   value2: string
 }
-export interface FiatPluginOpenWebViewParams {
+export interface FiatPluginOpenExternalWebViewParams {
   url: string
 }
 
 export interface FiatPluginWalletPickerResult {
   walletId?: string
+  tokenId?: string
   currencyCode?: string
 }
 
@@ -82,7 +97,7 @@ export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
-  openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
+  openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
@@ -90,14 +105,13 @@ export interface FiatPluginUi {
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
-  send: (params: SendScene2Params) => Promise<void>
+  send: (params: SendScene2Params) => Promise<EdgeTransaction>
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   setClipboard: (value: string) => Promise<void>
   showToast: (message: string) => Promise<void>
   exitScene: () => {}
-  // showWebView: (params: { webviewUrl: string }) => Promise<void>
 }
 
 export interface FiatPluginFactoryArgs {
@@ -120,6 +134,8 @@ export interface FiatPluginStartParams {
   direction: 'buy' | 'sell'
   paymentTypes: FiatPaymentType[]
   regionCode: FiatPluginRegionCode
+  forceFiatCurrencyCode?: string
+  defaultFiatAmount?: string
   providerId?: string
 }
 export interface FiatPlugin {

@@ -1,30 +1,30 @@
 标题: Edge - 比特币, 以太币, 门罗币, 瑞波幣 钱包
 -----
-简短描述: 私密、安全 和 易于使用。 购买、出售、发送 和 接收比特币和其他加密货币。
+Short description: Buy BTC, AVAX, Monero & more
 -----
-我们易于使用的区块链钱包为您提供全面的隐私和安全。
+我们易于使用的区块链钱包为您提供全面的隐私和安全。 The Edge app has open-source code to ensure the highest level of security and privacy.
 
-管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。
+Managing your cryptocurrency assets has never been easier. 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Bitcoin SV, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Ripple/XRP.
+Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
 
 Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 
 
-控制您的资金! 在 Edge 中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。
+控制您的资金! With Edge, only YOU have access to your funds or transaction data. 在 Edge 中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
 
-Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 
+Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 Easily swap your currencies for others with a few taps. 
 
 • Edge 或第三方对用户的资金，密匙或交易数据完全没有任何的使用权
 • 轻松创建帐户，只需使用登入名和密码 (无需打印 pdf 文件，抄写密码或添加任何加密设置）
 • 使用生物识别（触控ID 和 面容ID） 登入
 • 分层确定性钱包随每笔交易更换地址
-• 分散式服务器架构。 即使 Edge 服务器发生故障，钱包依然可以运作。
-• 开源代码。 可到 https://github.com/EdgeApp 下载
+• Decentralized server architecture. • 分散式服务器架构。 即使 Edge 服务器发生故障，钱包依然可以运作。
+• Open-source code. • 开源代码。 可到 https://github.com/EdgeApp 下载
 
 隐私声明
-Edge钱包应用程序要求应用装置中的联系人列表、位置和个人信息。 这些资讯将应用在装置中以便提升使用者的体验，例如：
+Edge钱包应用程序要求应用装置中的联系人列表、位置和个人信息。 这些资讯将应用在装置中以便提升使用者的体验，例如： This information is used on the device to provide an improved user experience in the following ways:
 
 1. 在进行交易后，在使用者的通讯录当中自动完成联系人资料的填写
 2. 自动完成使用者通讯录中的联系人资料，以便通过电邮或短信发送付款请求
 
-任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。
+任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 Neither Edge nor any 3rd party can access the information requested by the application.

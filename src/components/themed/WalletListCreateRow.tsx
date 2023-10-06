@@ -141,15 +141,11 @@ function createAndSelectToken({
 }): ThunkAction<Promise<string>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { account, disklet } = state.core
+    const { account } = state.core
     const { defaultIsoFiat } = state.ui.settings
     const { walletType } = account.currencyConfig[pluginId].currencyInfo
-    const parentCurrencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
     try {
-      // Show the user the token terms modal only once
-      await approveTokenTerms(disklet, parentCurrencyCode)
-
       // Try to find existing Parent Edge Wallet, if no specific wallet was given
       const { currencyWallets } = account
       const parentWalletId = createWalletId ?? Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
@@ -167,6 +163,10 @@ function createAndSelectToken({
                 })
               })()
             )
+
+      // Show the user the token terms modal only once
+      await approveTokenTerms(wallet)
+
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
       return wallet.id

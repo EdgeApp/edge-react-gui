@@ -17,6 +17,7 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoInterac from '../../assets/images/paymentTypes/paymentTypeLogoInterac.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPaynow from '../../assets/images/paymentTypes/paymentTypeLogoPaynow.png'
+import paymentTypeLogoPix from '../../assets/images/paymentTypes/paymentTypeLogoPix.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
@@ -358,23 +359,24 @@ export const edgeLight: Theme = {
   // Images
   iconServerBaseUri: EDGE_CONTENT_SERVER_URI,
 
-  paymentTypeLogoApplePay: paymentTypeLogoApplePay,
-  paymentTypeLogoAuspost: paymentTypeLogoAuspost,
-  paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
-  paymentTypeLogoCash: paymentTypeLogoCash,
-  paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
-  paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
-  paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
-  paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
+  paymentTypeLogoApplePay,
+  paymentTypeLogoAuspost,
+  paymentTypeLogoBankTransfer,
+  paymentTypeLogoCash,
+  paymentTypeLogoCreditCard,
+  paymentTypeLogoDebitCard,
+  paymentTypeLogoFasterPayments,
+  paymentTypeLogoGiftCard,
   paymentTypeLogoGooglePay,
-  paymentTypeLogoIdeal: paymentTypeLogoIdeal,
-  paymentTypeLogoInterac: paymentTypeLogoInterac,
-  paymentTypeLogoPayid: paymentTypeLogoPayid,
+  paymentTypeLogoIdeal,
+  paymentTypeLogoInterac,
+  paymentTypeLogoPayid,
   paymentTypeLogoPaynow,
-  paymentTypeLogoPoli: paymentTypeLogoPoli,
-  paymentTypeLogoSofort: paymentTypeLogoSofort,
-  paymentTypeLogoUpi: paymentTypeLogoUpi,
-  paymentTypeVisa: paymentTypeVisa,
+  paymentTypeLogoPix,
+  paymentTypeLogoPoli,
+  paymentTypeLogoSofort,
+  paymentTypeLogoUpi,
+  paymentTypeVisa,
 
   primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,

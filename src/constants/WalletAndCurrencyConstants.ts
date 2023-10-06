@@ -585,6 +585,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_fantom_wallet_name,
     chainCode: 'FTM',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
     isCustomTokensSupported: true
@@ -617,6 +618,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '16gmDVJdCaij79PwzCisu7GRudJKABFB8fB5RWpjKX8H4Eh8',
     noChangeMiningFee: true,
     allowZeroTx: true,
+    noMaxSpend: true,
     minimumPopupModals: {
       minimumNativeBalance: '1000000000000',
       modalMessage: lstrings.request_lld_minimum_notification_body,

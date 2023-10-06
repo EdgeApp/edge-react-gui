@@ -232,6 +232,8 @@ exports[`initialState 1`] = `
           "isEnabled": false,
         },
       },
+      "userPausedWallets": [],
+      "userPausedWalletsSet": null,
       "walletsSort": "manual",
     },
     "subcategories": [],
