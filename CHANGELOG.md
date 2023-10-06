@@ -2,33 +2,31 @@
 
 ## Unreleased
 
-- fixed: Send all event tracking params to logging servers
 - changed: Banxa sell to use new widget
 
 ## 3.19.0
 
 - added: env.json experiment config override
-- added: Experiment config support between gui and login-ui
 - added: Experiment config for "Create Account" and "Login" button labels
+- added: Experiment config support between gui and login-ui
 - added: Toast message when pausing or unpausing wallets
 - changed: Always show gas warning when enabling tokens
 - changed: Dynamically determine supported Thorchain Savers assets
+- changed: Include stake plugin display name in error message on transaction list scene
+- changed: Rename on-chain "Note" or "Memo" to "Transaction Note" or "Transaction Memo"
 - changed: Replace text 'plugins' with 'providers' in Buy/Sell
 - changed: Tweak the boot background color on Android.
-- changed: Include stake plugin display name in error message on transaction list scene
-- changed: Include stake plugin display name in error message on transaction
-- changed: Rename on-chain "Note" or "Memo" to "Transaction Note" or "Transaction Memo"
-- fixed: Extra close (x) button on FIO modal
 - fixed: Deposit/Send footer buttons for native currencies
+- fixed: Do not error when recording sends to FIO addresses.
 - fixed: Error showing in some cases during auto logout
-  list scene
-- fixed: Possible balance text overflow in Receive scene
+- fixed: Extra close (x) button on FIO modal
 - fixed: Incorrect wording when disabling a token
 - fixed: Min/max price label position on the Markets charts
-- fixed: Do not error when recording sends to FIO addresses.
+- fixed: Possible balance text overflow in Receive scene
 - fixed: Prevent setting invalid spending limits
-- fixed: Turning off 'Dark Mode' causes crash
+- fixed: Send all event tracking params to logging servers
 - fixed: Stuck showToastSpinner never going away
+- fixed: Turning off 'Dark Mode' causes crash
 - removed: 'Add/Edit Tokens" option for token rows
 
 ## 3.17.3 (2023-09-21)
