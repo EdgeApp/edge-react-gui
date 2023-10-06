@@ -5,6 +5,7 @@
 ## 3.20.0
 
 - added: Asset status card to remotely communicate known issues or important info
+- added: Paybis buy with credit card
 - changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
 - changed: Re-enable Piratechain

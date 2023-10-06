@@ -1,5 +1,5 @@
 import { div, toFixed } from 'biggystring'
-import { EdgeDataStore } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDataStore } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatNumber } from '../../locales/intl'
@@ -131,4 +131,13 @@ export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {
 
 export const assert = (condition: boolean, message: string) => {
   if (!condition) throw new Error(message)
+}
+
+const TESNET_KEYWORDS = ['test', 'goerli', 'kovan', 'rinkby']
+// Rough approximation of whether this wallet is a testnet
+export const isWalletTestnet = (wallet: EdgeCurrencyWallet): boolean => {
+  const { pluginId } = wallet.currencyConfig.currencyInfo
+
+  const match = TESNET_KEYWORDS.some(word => pluginId.includes(word))
+  return match
 }

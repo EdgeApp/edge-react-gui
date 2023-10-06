@@ -1,13 +1,15 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions } from 'edge-core-js'
+import { EdgeFetchOptions, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
+import { locale } from '../../../locales/intl'
 import { EdgeTokenId, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
+  FiatProviderApproveQuoteParams,
   FiatProviderAssetMap,
   FiatProviderError,
   FiatProviderFactory,
@@ -15,7 +17,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
-import { assert } from '../pluginUtils'
+import { assert, isWalletTestnet } from '../pluginUtils'
 const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
@@ -130,6 +132,10 @@ interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
 }
 
+const WIDGET_URL = 'https://content.edge.app/html/paybis.html'
+// const WIDGET_URL_SANDBOX = 'https://content.edge.app/html/paybisSandbox.html'
+const WIDGET_URL_SANDBOX = 'http://localhost:8080/scripts/html/paybisSandbox.html'
+
 const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
 
@@ -192,10 +198,10 @@ export const paybisProvider: FiatProviderFactory = {
     } = params
     const { apiKey, partnerUrl: url } = asApiKeys(apiKeys)
 
-    let username = await store.getItem('username').catch(e => undefined)
-    if (username == null || username === '') {
-      username = makeUuid()
-      await store.setItem('username', username)
+    let partnerUserId = await store.getItem('partnerUserId').catch(e => undefined)
+    if (partnerUserId == null || partnerUserId === '') {
+      partnerUserId = makeUuid()
+      await store.setItem('partnerUserId', partnerUserId)
     }
 
     const out: FiatProvider = {
@@ -339,7 +345,7 @@ export const paybisProvider: FiatProviderFactory = {
           paymentMethod
         }
         const response = await paybisFetch({ method: 'POST', url, path: 'v2/quote', apiKey, bodyParams })
-        const { paymentMethods, paymentMethodErrors } = asQuote(response)
+        const { id: quoteId, paymentMethods, paymentMethodErrors } = asQuote(response)
 
         if (paymentMethodErrors != null) {
           let lastError
@@ -360,7 +366,7 @@ export const paybisProvider: FiatProviderFactory = {
         assert(paymentMethod.length === 1, 'Invalid number of quoted payment methods')
 
         const pmQuote = paymentMethods[0]
-        const { amountFrom, amountTo } = pmQuote
+        const { id: paymentMethodId, amountFrom, amountTo } = pmQuote
 
         let cryptoAmount: string
         let fiatAmount: string
@@ -391,7 +397,31 @@ export const paybisProvider: FiatProviderFactory = {
           direction,
           regionCode,
           paymentTypes,
-          approveQuote: async () => {},
+          approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
+            const { coreWallet, showUi } = approveParams
+            const receiveAddress = await coreWallet.getReceiveAddress()
+
+            const bodyParams = {
+              cryptoWalletAddress: {
+                currencyCode: paybisCc,
+                address: receiveAddress.segwitAddress ?? receiveAddress.publicAddress
+              },
+              partnerUserId,
+              locale: locale.localeIdentifier.slice(0, 2),
+              passwordless: false,
+              trustedKyc: false,
+              quoteId,
+              flow: 'buyCrypto',
+              paymentMethod: paymentMethodId
+            }
+            const response = await paybisFetch({ method: 'POST', url, path: 'v2/request', apiKey, bodyParams })
+            const { requestId } = response
+
+            const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
+            await showUi.openExternalWebView({
+              url: `${widgetUrl}?requestId=${requestId}`
+            })
+          },
           closeQuote: async () => {}
         }
       },
@@ -408,7 +438,7 @@ const paybisFetch = async (params: {
   apiKey: string
   bodyParams?: object
   queryParams?: object
-}): Promise<string> => {
+}): Promise<JsonObject> => {
   const { method, url, path, apiKey, bodyParams, queryParams } = params
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
