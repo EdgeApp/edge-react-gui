@@ -28,7 +28,7 @@ export const SHORT_DATE_FMT: string = 'PP' // Apr 29, 1453
 
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
-let locale = EN_US_LOCALE
+export const locale: IntlLocaleType = { ...EN_US_LOCALE }
 
 // Set the locale at boot:
 const [firstLocale = { languageTag: 'en_US' }] = getLocales()
@@ -238,9 +238,9 @@ export function setIntlLocale(l: IntlLocaleType): void {
 
   if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
     console.warn('Cannot recognize user locale preferences. Default will be used.')
-    locale = EN_US_LOCALE
+    Object.assign(locale, EN_US_LOCALE)
   } else {
-    locale = l
+    Object.assign(locale, l)
   }
 }
 
