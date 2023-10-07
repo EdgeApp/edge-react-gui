@@ -6,9 +6,9 @@
 
 暗号通貨＆ビットコインウォレットの管理がかつてないほど簡単になりました。 エッジウォレットは、シンプルでありながら最大限のセキュリティを提供し、あらゆるタイプのユーザーが暗号通貨やビットコインを簡単に管理、送金、交換できるようにします。
 
-Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, and Ripple/XRP.
+現在エッジウォレットは次の暗号通貨に対応しています: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, Ripple/XRP
 
-馴染みのあるモバイルバンキングを使うように簡単に自分の秘密鍵を管理できるパワフルで使いやすい仮想通貨ウォレットです。 エッジウォレットアプリケーションはデバイスのアドレス帳と個人情報にアクセスします。 この情報はユーザーエクスペリエンス向上のために以下の用途でデバイス上でのみ使われます。 
+エッジは強力で使いやすい暗号通貨ウォレットで、ユーザーはモバイルバンキングの使いやすさで自分の秘密鍵を簡単にコントロールできます。 
 
 Take control of your funds! With Edge, only YOU have access to your funds or transaction data. 自分の手で資産管理を始めましょう！ エッジウォレットでは、自分の資産や取引データにアクセスできるのは、唯一あなただけです。 エッジでも、他の第三者もあなたのお金やデータにアクセスすることはできません。 おばあちゃんでも使うことができるような操作性でありながら、本来ブロックチェーンが生まれた理由であるファイナンシャルプライバシーと自律性を得ることができます。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
 
