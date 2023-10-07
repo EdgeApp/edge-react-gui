@@ -1,28 +1,28 @@
-タイトル：エッジ - ビットコイン、イーサリアム、モネロ、リップルウォレット
+題名：エッジ - ビットコイン＆暗号通貨ウォレット
 -----
-短い説明：プライベート・安全・使いやすい。 ビットコインや他の仮装通貨の購入、売却、送金、受取。 Buy & sell bitcoin!
+簡単な説明: 簡単に使用できる暗号通貨ウォレットで、プライバシーと安全性。 Bitcoin を購入 & 販売！
 
-<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+<b>使いやすい暗号通貨＆ビットコインウォレットで、完全なプライバシーと安全性を。</b> Bitcoin（BTC）、Avalanche（AVAX）、Solana（SOL）、Litecoin（LTC）、Ethereum（ETH）、Monero（XMR）、Polygon（MATIC）、Hedera（HBAR）、その他トップクラスの暗号通貨を購入及び売却できます。
 
-Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
+エッジウォレットは100%の安全性を提供します - エッジや第三者はあなたの暗号通貨ウォレットやデータにアクセスすることはできません。 暗号通貨とブロックチェーンの設計である、経済的なプライバシーと自律性を得ます。
 
-Managing your cryptocurrency & Bitcoin wallet has never been easier. 仮想通貨の資産を管理することは今まで決して簡単ではありませんでした。 エッジウォレットはどんなタイプのユーザーも、通貨を簡単に管理、送金、両替できます。シンプルさを維持しながら最大限のセキュリティーを提供します。 エッジウォレットアプリケーションはデバイスのアドレス帳と個人情報にアクセスします。 この情報はユーザーエクスペリエンス向上のために以下の用途でデバイス上でのみ使われます。 With Edge, we make it simple to buy bitcoin, sell bitcoin, and exchange many of the top cryptocurrencies.
+暗号通貨＆ビットコインウォレットの管理がかつてないほど簡単になりました。 エッジウォレットは、シンプルでありながら最大限のセキュリティを提供し、あらゆるタイプのユーザーが暗号通貨やビットコインを簡単に管理、送金、交換できるようにします。 エッジは、シンプルさと安全さに関して、ナンバーワンのビットコイン＆暗号通貨ウォレットです！ エッジを使うと、ビットコインの購入及び販売、トップ暗号通貨の多くを交換することが簡単になります。
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). その他の暗号通貨も私たちのウォレットで管理したいですか？ リクエストをお待ちしています！ Send us a request!
+<b>現在エッジウォレットは次の暗号通貨に対応しています:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), Feathercoin (FTC) その他の暗号通貨も私たちのウォレットで管理したいですか？ リクエストをお待ちしています！ リクエストをお待ちしています！
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+エッジは強力で使いやすい暗号通貨ウォレットで、ユーザーはモバイルバンキングの使いやすさで自分の秘密鍵を簡単にコントロールできます。 
 
-Take control of your funds! With Edge Crypto Wallet, only YOU have access to your funds or transaction data. 
+自分の手で資産管理を始めましょう！ エッジウォレットでは、自分の資産やトランザクションデータにアクセスできるのは、唯一あなただけです。 
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
+エッジはまた、暗号通貨交換を提供します。 数回タップするだけで、あなたの通貨を他の通貨と簡単に交換できます。 BTCをEthereum、ETHをBCHなどに交換できます。 新しいAvalanche(AVAX)、Solana(SOL)、その他より多くの暗号ウォレットを作成することは交換で簡単です!
 
-<b>機能</b>
-・安全な仮想通貨ウォレット・ブロックチェーンアプリ。
-・ビットコインやビットコインキャッシュ、ライトコイン、リップル(XRP) など他の上位仮想通貨をサポートする、使いやすいウォレット。
-・エッジまたは他のどの第三者もユーザーの資金や鍵、取引データに関しての情報へアクセスできない設計。
-• Simple account creation using just a login & password
+<b>エッジビットコインウォレットの機能</b>
+・安全な暗号通貨ウォレット・ブロックチェーンアプリ
+・Bitcoin Cash, Ethereum (ETH), Litecoin (LTC), Binance Coin (BNB), Ripple (XRP), Avalanche (AVAX), Monero (XMR), Polygon (MATIC), Hedera (HBAR) など他のトップ通貨をサポートする、使いやすいビットコイン＆暗号通貨ウォレット
+• エッジまたは第三者によるユーザーの資金、鍵、またはトランザクションデータへのゼロ知識とゼロアクセス
+• ログインとパスワードだけを使用したシンプルなアカウント作成
 トランザクションごとにアドレスが更新される階層的決定性ウォレット
-• Decentralized server architecture. ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
+•分散型サーバーアーキテクチャ ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
 • Open-source code. Available at https://github.com/EdgeApp
 • Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
 
