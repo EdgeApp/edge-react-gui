@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
 
 ## 3.19.0
