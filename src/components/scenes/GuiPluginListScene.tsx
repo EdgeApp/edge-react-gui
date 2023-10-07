@@ -284,7 +284,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.pluginRowContainer}>
-        <TouchableOpacity onPress={async () => await this.openPlugin(item).catch(showError)}>
+        <TouchableOpacity accessible={false} onPress={async () => await this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
             <Image
               style={styles.logo}
