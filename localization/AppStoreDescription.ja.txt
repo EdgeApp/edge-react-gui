@@ -1,6 +1,6 @@
-タイトル：エッジ - ビットコイン、イーサリアム、モネロ、リップルウォレット
+題名：エッジ - ビットコイン＆暗号通貨ウォレット
 -----
-Short description: Buy BTC, AVAX, Monero & more
+簡単な説明: BTC、AVAX、Moneroなどを購入
 -----
 完全なプライバシーとセキュリティーを兼ね備えた使いやすいブロックチェーンウォレット。 The Edge app has open-source code to ensure the highest level of security and privacy.
 
