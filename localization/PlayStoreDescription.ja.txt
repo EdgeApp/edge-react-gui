@@ -22,14 +22,14 @@
 • エッジまたは第三者によるユーザーの資金、鍵、またはトランザクションデータへのゼロ知識とゼロアクセス
 • ログインとパスワードだけを使用したシンプルなアカウント作成
 トランザクションごとにアドレスが更新される階層的決定性ウォレット
-•分散型サーバーアーキテクチャ ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
-• Open-source code. Available at https://github.com/EdgeApp
-• Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
+•分散型サーバーアーキテクチャ エッジサーバーがダウンしていても暗号通貨ウォレットは動作します。
+•オープンソースコード Https://github.com/EdgeApp でご覧いただけます。
+•Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) などの暗号通貨を売買できる交換所搭載。
 
 プライバシーについて
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+Edgeウォレットアプリケーションは、デバイスの連絡先リストと個人情報へのアクセスを要求します。 この情報は、以下の方法でユーザーエクスペリエンスを向上させるためにデバイス上で使用されます。
 
 1. トランザクション後にユーザーのアドレス帳から連絡先を自動補完します。
 2. EメールやSMSで支払いリクエストを送るためにアドレス帳から連絡先を自動補完します。
 
-No personal info or contact list info ever leaves the device without first being encrypted by the user's credentials (username/password). Neither Edge nor any 3rd party can access the information requested by the application.
+個人情報または連絡先リスト情報は、ユーザーログイン情報(ユーザー名/パスワード) によって最初に暗号化されることなくデバイスから離れることはありません。 Edgeも第三者も、アプリケーションが要求する情報にアクセスすることはできません。
