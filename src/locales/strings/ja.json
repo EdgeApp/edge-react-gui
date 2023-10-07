@@ -1,5 +1,5 @@
 {
-  "action_queue_display_unknown_title": "Unknown action",
+  "action_queue_display_unknown_title": "不明なアクション",
   "action_queue_display_unknown_message": "Edgeは実行中のアクションの種類を識別できません。",
   "aciton_queue_display_close_title": "ローンを閉じる",
   "action_queue_display_close_message": "Edgeは元金を全額支払い、残りの担保を引き出します。",
