@@ -18,11 +18,11 @@
 
 <b>エッジBitcoinウォレットの機能</b>
 ・安全な暗号通貨ウォレット＆ブロックチェーンアプリ
-・Bitcoin Cash、Ethereum (ETH)、Litecoin (LTC)、Binance Coin (BNB)、Ripple (XRP)、Avalanche (AVAX)、Monero (XMR)、Polygon (MATIC)、Hedera (HBAR) 他、人気資産対応の使いやすいビットコイン＆暗号通貨ウォレット
+・Bitcoin Cash、Ethereum (ETH)、Litecoin (LTC)、Binance Coin (BNB)、Ripple (XRP)、Avalanche (AVAX)、Monero (XMR)、Polygon (MATIC)、Hedera (HBAR) 他、人気暗号資産対応の使いやすいBitcoin＆暗号通貨ウォレット
 • エッジまたは第三者機関によるユーザーの資金、鍵、またはトランザクションデータへのゼロ知識とゼロアクセス
 • ログインとパスワードだけを使用したシンプルなアカウント作成
 • トランザクションごとにアドレスが更新される階層的決定性ウォレット
-•分散型サーバーアーキテクチャ 万が一エッジサーバーがダウンしても暗号通貨ウォレットは動作します。
+•分散型サーバーアーキテクチャ エッジサーバーがダウンしたとしても暗号通貨ウォレットは動作します。
 •オープンソースコード https://github.com/EdgeApp でご覧いただけます。
 •Bitcoin (BTC)、Ethereum (ETH)、Litecoin (LTC)、Binance, Avalanche (AVAX)、Monero (XMR)、Solana (SOL)、 Polygon (MATIC)、Hedera (HBAR) などの暗号通貨を売買できる交換所を搭載。
 
