@@ -8,11 +8,11 @@
 
 現在エッジウォレットは次の暗号通貨に対応しています: Bitcoin, Bitcoin Cash, Litecoin, Dash, Ethereum, Stellar, Monero, Digibyte, Ripple/XRP
 
-エッジは強力で使いやすい暗号通貨ウォレットで、ユーザーはモバイルバンキングの使いやすさで自分の秘密鍵を簡単にコントロールできます。 
+エッジは強力で使いやすい暗号通貨ウォレットで、モバイルバンキングのように使いやすく、ユーザーは自分の秘密鍵を簡単にコントロールできます。 
 
-Take control of your funds! With Edge, only YOU have access to your funds or transaction data. 自分の手で資産管理を始めましょう！ エッジウォレットでは、自分の資産や取引データにアクセスできるのは、唯一あなただけです。 エッジでも、他の第三者もあなたのお金やデータにアクセスすることはできません。 おばあちゃんでも使うことができるような操作性でありながら、本来ブロックチェーンが生まれた理由であるファイナンシャルプライバシーと自律性を得ることができます。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+自分の手で資産管理を行いましょう！ エッジでは、自分の資産やトランザクションデータにアクセスできるのは、唯一あなただけです。 自分の手で資産管理を始めましょう！ エッジウォレットでは、自分の資産や取引データにアクセスできるのは、唯一あなただけです。 エッジでも、他の第三者もあなたのお金やデータにアクセスすることはできません。 おばあちゃんでも使うことができるような操作性でありながら、本来ブロックチェーンが生まれた理由であるファイナンシャルプライバシーと自律性を得ることができます。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
 
-エッジは通貨の交換も提供します。 数タップするだけで、あなたの通貨を他の通貨と簡単に交換することができます。 Easily swap your currencies for others with a few taps. 
+エッジでは、暗号通貨交換もできます。 数回タップするだけで、あなたの通貨を他の通貨と簡単に交換できます。 
 
 ・エッジまたは他のどの第三者もユーザーの資金や鍵、取引データに関しての情報へアクセスできない設計。
 ログインとパスワードだけを使用したシンプルなアカウント作成 (PDFのプリントアウト、パスフレーズの書きとめ、暗号化設定を必要としません)
