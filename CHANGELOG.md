@@ -4,6 +4,7 @@
 
 - changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
+- changed: Re-enable Piratechain
 - fixed: Crash in react-native-linear-gradient when app built with Xcode 15
 
 ## 3.19.0
