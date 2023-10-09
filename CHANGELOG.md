@@ -32,6 +32,79 @@
 - fixed: Turning off 'Dark Mode' causes crash
 - removed: 'Add/Edit Tokens" option for token rows
 
+## 3.18.0 (2023-09+22)
+
+- added: Velodrome v2 staking poolsdded: Display memos in transaction details scene
+- added: Buy PEPE from Simplex
+- added: Add ability to launch webview from tab row
+- added: Implement "first open" tracking param
+- changed: Migrate auto logout modal and wallet activation scene sway from legacy visuals
+- changed: Show yield type for Velodrome staking pools
+- changed: Add stake plugin name to thrown error messages
+- changed: Display network name next to token in wallet create rows
+- changed: Show amounts in selected display denomination in FIO Requests scene
+- changed: Upgrade react-native-zcash to v0.5.0
+- changed: Set minimum supported iOS version to 13
+- changed: Set minimum supported Android version to 8.1
+- changed: Enable keysOnlyMode for Piratechain
+- fixed: Cleanup src/modules files and settings
+- fixed: Prevent saving spending limits with no amount
+- fixed: Bitwave CSV export fields
+- fixed: Blank space at bottom of txdetails
+- fixed: Save new categories on row tap
+- fixed: Set word capitalization on category entry
+- fixed: Align TX Details notes entry to top of OutlineTextInput
+- fixed: Set returnKeyType of Notes entry to "return"
+- fixed: Crash entering spending limits settings
+- Upgrade edge-core-js to v1.7.0
+  - added: Add a ChallengeError and related types, which will allow the login server to request CAPTCHA validation.
+  - added: Currency-info support for multiple memos per transaction.
+  - added: EdgeCurrencyInfo.memoOptions, lists acceptable memo types.
+  - added: EdgeCurrencyInfo.multipleMemos, set if a currency supports multiple memos in the same transaction.
+  - added: Spending support for multiple memos.
+  - added: EdgeSpendInfo.memos
+  - added: Transaction history support for on-chain memos.
+  - added: EdgeTransaction.memos
+  - added: New infoServer and syncServer options for EdgeContextOptions
+  - deprecated: EdgeCurrencyInfo.memoMaxLength
+  - deprecated: EdgeCurrencyInfo.memoMaxValue
+  - deprecated: EdgeCurrencyInfo.memoType. Note: If it is not set correctly, legacy plugins will no longer receive memos. Some buggy plugins forgot to do this, so those plugins will stop receiving memos. This is not a breaking change, though, since this field was always mandatory.
+  - deprecated: EdgeSpendTarget.memo
+  - deprecated: EdgeTransaction.spendTargets.memo
+  - fixed: Correctly pass EdgeSpendTarget.memos through to currency plugins.
+  - fixed: Do not let EdgeTransaction.memos be undefined, even for legacy plugins.
+  - fixed: Restore "0x" prefix support for legacy hex memos.
+- Upgrade edge-currency-accountbased to v2.5.2
+  - added: Support the latest core memo API's.
+  - changed: Update Zcash address explorer
+  - changed: Remove the maximum memo length on Tron
+  - changed: Upgrade react-native-zcash to v0.5.0
+  - changed: Update Zcash address explorer
+  - changed: Update react-native-zcash to v0.4.2
+  - changed: Upgrade react-native-zcash to v0.4.1 changed: Split Zcash and Piratechain into their own engines and tools changed: Update Pulsechain explorer URL removed: Disabled all Piratechain synchronizer functionality. This is a temporary removal due to incompatibility between latest react-native-zcash and react-native-piratechain. Engine will still load but it only useful for retrieving private keys.
+  - removed: Temporarily disable non-functionaly zcash memos, pending an updated SDK with correct fee math.
+  - fixed: Rename Tron memos to "note".
+  - fixed: Use EdgeMemo for WalletConnect data payloads
+  - fixed: Do not crash if BigInt is not present
+  - fixed: Block Filecoin when BigInt is not present
+  - fixed: Fixed Zcash transaction memos array handling
+  - fixed: Add 0x prefix to EVM data created outside the engine
+  - fixed: Roundup fee nativeAmount returned from L1 so it is an integer
+- Upgrade edge-currency-plugins to v2.2.1
+  - added: Dynamic fudge factors for UTXO fees
+  - added: Support the latest core memo API's.
+- Upgrade edge-exchange-plugins to v0.21.6
+  - changed: Move EVM data from spendTarget otherParams to memo
+  - fixed: `gasLimit`` param typo
+- Upgrade edge-login-ui-rn to v2.11.1
+  - added: Show a CAPTCHA modal when the core returns a ChallengeError for password login.
+  - changed: Update translations
+  - removed: Redundant recovery question
+  - changed: Remove the Account Review Scene from Light Account creation flow
+  - fixed: Clean up error handling, particularly for incorrect CAPTCHA solutions.
+  - fixed: Remove visual glitches in the CAPTCHA modal.
+  - fixed: Testability of "Enter Backup Code" modal tile
+
 ## 3.17.3 (2023-09-21)
 
 - fixed: Allow the app to log in again on older OS's (iOS 12.4 and Android 7).
