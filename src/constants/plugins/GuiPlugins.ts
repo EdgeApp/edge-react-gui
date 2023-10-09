@@ -63,13 +63,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Bits of Gold',
     permissions: ['camera']
   },
-  banxa: {
-    pluginId: 'banxa',
-    storeId: 'banxa',
-    baseUri: 'https://edge.banxa.com',
-    displayName: 'Banxa',
-    permissions: ['camera']
-  },
   creditcard: {
     pluginId: 'amountquote',
     storeId: '',
@@ -93,7 +86,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: '',
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
-    forceFiatCurrencyCode: 'iso:AUD',
+    forceFiatCurrencyCode: 'iso:GBP',
     displayName: ''
   },
   iach: {
