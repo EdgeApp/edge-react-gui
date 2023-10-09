@@ -20,7 +20,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (1.7.0):
     - React-Core
-  - edge-currency-accountbased (2.5.5):
+  - edge-currency-accountbased (2.6.0):
     - React-Core
   - edge-login-ui-rn (2.14.1):
     - React
@@ -497,6 +497,11 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
+  - react-native-piratechain (0.4.0):
+    - gRPC-Swift (~> 1.8)
+    - MnemonicSwift (~> 2.2)
+    - React-Core
+    - SQLite.swift (~> 0.12)
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (4.6.4):
@@ -913,6 +918,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1105,6 +1111,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-piratechain:
+    :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -1211,7 +1219,7 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 82972b10438ab46ea09e6127d67e8f8093fd623d
-  edge-currency-accountbased: a5d161bfeeee123a52b0b32401ef13a187231ebf
+  edge-currency-accountbased: 2e445748480abdd84241c1ec14dbc03c1239f8a9
   edge-login-ui-rn: 7ecda4499b7cfba19b4f87775f7980d88a1b2d7a
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
@@ -1276,6 +1284,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-piratechain: da117c2a088cb6af7b9aa0ec1dba8f78a490a526
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d

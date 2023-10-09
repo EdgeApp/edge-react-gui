@@ -7679,10 +7679,10 @@ edge-core-js@^1.7.0:
     yaob "^0.3.11"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^2.5.5:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.5.5.tgz#73715b01d7a194df645b32ee93713c8329ff6adb"
-  integrity sha512-Y0qI20fz8OsNjX6T3QY6rMlN9fjIlLBv7v12W8fKWjn780SCBsjNdnAsJ/56WVFhCssbgfnfkJefeCHIHr2//g==
+edge-currency-accountbased@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.6.0.tgz#1139331a52ee1f1eb709a6eb991980a6f16725b9"
+  integrity sha512-cEuL9jK+O8kQkBNBEUZPmQVRHhbOeQeC+trpBkv8E+wcC2IL+CPOCWMtIPjbKH+6f4ixNKqz9XHNgXbnasY6Xw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -13833,6 +13833,13 @@ react-native-permissions@^3.8.3:
   dependencies:
     picocolors "^1.0.0"
     pkg-dir "^5.0.0"
+
+react-native-piratechain@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.0.tgz#0a42204ddd28142b6a703ea91ba06ae5ecb04abb"
+  integrity sha512-iZuh7ST6TtSsGklO9Q08gJP/7OnmJ4afraLiOPmMgysTpY+M28umGTZK4Yg0t7gwudE5j46MWn51X6m46wjUzA==
+  dependencies:
+    rfc4648 "^1.3.0"
 
 react-native-popup-menu@^0.16.1:
   version "0.16.1"
