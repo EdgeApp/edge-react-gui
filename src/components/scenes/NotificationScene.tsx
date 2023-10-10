@@ -63,15 +63,16 @@ export const NotificationScene = (props: Props) => {
         {pluginIds.map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]
 
-          const onPress = () =>
-            !settings.ignorePriceChanges
-              ? navigation.navigate('currencyNotificationSettings', {
-                  currencyInfo
-                })
-              : undefined
+          const handlePress = () => {
+            if (!settings.ignorePriceChanges) {
+              navigation.navigate('currencyNotificationSettings', {
+                currencyInfo
+              })
+            }
+          }
 
           return (
-            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={onPress}>
+            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
               <CryptoIcon pluginId={pluginId} />
             </SettingsTappableRow>
           )
