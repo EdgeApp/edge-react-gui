@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { newPriceChangeEvent, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
-import { NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
@@ -24,30 +23,23 @@ export const CurrencyNotificationScene = (props: Props) => {
   const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
   const settings = useSelector((state: RootState) => state.notificationSettings)
 
-  const handleHourlyPress = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings.plugins[pluginId].hourlyChange, !!settings.plugins[pluginId].dailyChange)
-    await updateSettings(newEvent)
-  })
+  const updateSettings = (settingChange: 'hourly' | 'daily') => async () => {
+    const hourly = settingChange === 'hourly' ? !settings.plugins[pluginId].hourlyChange : !!settings.plugins[pluginId].hourlyChange
+    const daily = settingChange === 'daily' ? !settings.plugins[pluginId].dailyChange : !!settings.plugins[pluginId].dailyChange
+    const event = newPriceChangeEvent(currencyInfo, defaultIsoFiat, hourly, daily)
+    try {
+      const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
+      dispatch({
+        type: 'NOTIFICATION_SETTINGS_UPDATE',
+        data: serverSettingsToNotificationSettings(newSettings)
+      })
+    } catch (e: any) {
+      showError(`Failed to reach notification server: ${e}`)
+    }
+  }
 
-  const handleDailyPress = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings.plugins[pluginId].hourlyChange, !settings.plugins[pluginId].dailyChange)
-    await updateSettings(newEvent)
-  })
-
-  const updateSettings = React.useCallback(
-    async (event: NewPushEvent) => {
-      try {
-        const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
-        dispatch({
-          type: 'NOTIFICATION_SETTINGS_UPDATE',
-          data: serverSettingsToNotificationSettings(newSettings)
-        })
-      } catch (e: any) {
-        showError(`Failed to reach notification server: ${e}`)
-      }
-    },
-    [dispatch]
-  )
+  const handleHourlyPress = useHandler(updateSettings('hourly'))
+  const handleDailyPress = useHandler(updateSettings('daily'))
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
