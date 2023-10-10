@@ -70,15 +70,13 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         // v2 settings exist already, see if we need to add new ones
         for (const currencyInfo of activeCurrencyInfos) {
           if (
-            !serverSettings.events.some(event => {
-              if (event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId) {
-                // An event for this plugin exists already we need to check if the user is changing the default fiat currency
-                if (changeFiat && !event.trigger.currencyPair.includes(defaultIsoFiat)) return false
-                return true
-              } else {
-                return false
-              }
-            })
+            !serverSettings.events.some(
+              event =>
+                event.trigger.type === 'price-change' &&
+                event.trigger.pluginId === currencyInfo.pluginId &&
+                // An event for this plugin exists already, so we need to check if the user is changing the default fiat currency
+                (!changeFiat || event.trigger.currencyPair.includes(defaultIsoFiat))
+            )
           ) {
             // Add new push event
             createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
