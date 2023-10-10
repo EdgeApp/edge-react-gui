@@ -33,7 +33,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings
-    let v2Settings: DevicePayload = {
+    let serverSettings: DevicePayload = {
       loginIds: [],
       events: [],
       ignoreMarketing: false,
@@ -59,19 +59,19 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       }
       const response = await fetchPush('v2/device/', opts)
 
-      v2Settings = asDevicePayload(await response.text())
+      serverSettings = asDevicePayload(await response.text())
 
       const currencyWallets = state.core.account.currencyWallets
       const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
 
       const createEvents: NewPushEvent[] = []
 
-      if (v2Settings.events.length !== 0) {
+      if (serverSettings.events.length !== 0) {
         // v2 settings exist already, see if we need to add new ones
         const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
         for (const currencyInfo of activeCurrencyInfos) {
           if (
-            !v2Settings.events.some(event => {
+            !serverSettings.events.some(event => {
               if (event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId) {
                 // An event for this plugin exists already we need to check if the user is changing the default fiat currency
                 if (changeFiat && !event.trigger.currencyPair.includes(defaultIsoFiat)) return false
@@ -126,7 +126,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       }
 
       if (createEvents.length > 0) {
-        v2Settings = await updateServerSettings(state.core.context, { createEvents })
+        serverSettings = await updateServerSettings(state.core.context, { createEvents })
       }
     } catch (e: any) {
       // If this fails we don't need to bother the user just log and move on.
@@ -135,7 +135,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
 
     dispatch({
       type: 'NOTIFICATION_SETTINGS_UPDATE',
-      data: serverSettingsToNotificationSettings(v2Settings)
+      data: serverSettingsToNotificationSettings(serverSettings)
     })
   }
 }
