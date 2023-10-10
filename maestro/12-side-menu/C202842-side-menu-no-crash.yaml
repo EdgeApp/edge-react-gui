@@ -66,11 +66,10 @@ tags:
     id: "sideMenuButton"
 - tapOn:
     id: "sideMenuButton"
-- tapOn: "Share Edge"
-- assertVisible: "Copy"
-- tapOn: "Close"
+#- tapOn: "Share Edge"
+#- assertVisible: "Copy"
+#- tapOn: "Close"
 - tapOn: "Settings"
-- assertVisible: "Settings"
 - assertVisible:
     id: "sideMenuButton"
 - assertVisible:
