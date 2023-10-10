@@ -1,18 +1,21 @@
-import { asArray, asMaybe, asObject, asString, asValue } from 'cleaners'
+import { eq, round } from 'biggystring'
+import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeFetchOptions } from 'edge-core-js'
 import URL from 'url-parse'
 
-import { EdgeTokenId } from '../../../types/types'
+import { EdgeTokenId, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderAssetMap,
+  FiatProviderError,
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { assert } from '../pluginUtils'
 const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
@@ -74,6 +77,50 @@ const asPaybisPairs = asObject({
   data: asArray(asPaymentMethodPairs)
 })
 
+const asAmountCurrency = asObject({
+  amount: asString, // "0",
+  currencyCode: asString // "BTC"
+})
+
+const asQuote = asObject({
+  id: asString, // "4ddd2465-4713-40b3-84d2-9a08d7bdcd09",
+  currencyCodeTo: asString, // "BTC",
+  currencyCodeFrom: asString, // "USD",
+  requestedAmount: asObject({
+    amount: asString, // "1.00",
+    currencyCode: asString // "USD"
+  }),
+  requestedAmountType: asValue('from', 'to'), // "from",
+  paymentMethods: asArray(
+    asObject({
+      id: asPaymentMethodId, // "early-access-credit-card",
+      // "name": asString, // "Credit/Debit Card",
+      amountTo: asAmountCurrency,
+      amountFrom: asAmountCurrency,
+      // "amountToEquivalent": asAmountCurrency,
+      fees: asObject({
+        networkFee: asAmountCurrency,
+        serviceFee: asAmountCurrency,
+        totalFee: asAmountCurrency
+      }),
+      expiration: asDate, // "2023-10-04T04:26:51+00:00",
+      expiresAt: asDate // "2023-10-04T04:26:51+00:00"
+    })
+  ),
+  paymentMethodErrors: asOptional(
+    asArray(
+      asObject({
+        paymentMethod: asPaymentMethodId, // "early-access-credit-card",
+        error: asObject({
+          message: asString // "Minimum amount is 5.00 USD",
+          // "message": asString // "Amount must be less than 20000.00 USD",
+          // "code": asString, // "d20d4269-5e95-4234-9e4b-64e3279017b6"
+        })
+      })
+    )
+  )
+})
+
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisPairs = ReturnType<typeof asPaybisPairs>
 
@@ -82,6 +129,10 @@ let paybisPairs: PaybisPairs | undefined
 interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
 }
+
+const FIAT_DECIMALS = -2
+const CRYPTO_DECIMALS = -8
+
 const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   // ADA: { pluginId: 'cardano' },
   BNB: { pluginId: 'binancechain' },
@@ -115,8 +166,16 @@ const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   BUSD: { pluginId: 'binancesmartchain', tokenId: 'e9e7cea3dedca5984780bafc599bd69add087d56' }
 }
 
+const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CURRENCY_MAP).reduce((prev, [paybisCc, edgeToken]) => {
+  return { ...prev, [`${edgeToken.pluginId}_${edgeToken.tokenId ?? ''}`]: paybisCc }
+}, {})
+
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'early-access-credit-card': 'credit'
+}
+
+const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
+  credit: 'early-access-credit-card'
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
@@ -218,17 +277,117 @@ export const paybisProvider: FiatProviderFactory = {
         return out
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
-        const { regionCode, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction } = params
+        const {
+          amountType,
+          exchangeAmount,
+          regionCode,
+          paymentTypes,
+          pluginId: currencyPluginId,
+          fiatCurrencyCode,
+          displayCurrencyCode,
+          direction,
+          tokenId
+        } = params
+        const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
+        if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+
+        const pairs = paybisPairs?.data
+        if (pairs == null) {
+          throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
+        }
+
+        // Check if the region, payment type, and fiat/crypto codes are supported
+        const fiat = fiatCurrencyCode.replace('iso:', '')
+
+        const paymentMethod = REVERSE_PAYMENT_METHOD_MAP[paymentType]
+        const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
+
+        if (paymentMethod == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+
+        let currencyCodeFrom
+        let currencyCodeTo
+        let directionChange: 'from' | 'to'
+        let amount
+
+        if (direction === 'buy') {
+          currencyCodeFrom = fiat
+          currencyCodeTo = paybisCc
+          if (amountType === 'fiat') {
+            directionChange = 'from'
+            amount = round(exchangeAmount, FIAT_DECIMALS)
+          } else {
+            directionChange = 'to'
+            amount = round(exchangeAmount, CRYPTO_DECIMALS)
+          }
+        } else {
+          currencyCodeFrom = paybisCc
+          currencyCodeTo = fiat
+          if (amountType === 'fiat') {
+            amount = round(exchangeAmount, FIAT_DECIMALS)
+            directionChange = 'to'
+          } else {
+            amount = round(exchangeAmount, CRYPTO_DECIMALS)
+            directionChange = 'from'
+          }
+        }
+        const bodyParams = {
+          currencyCodeFrom,
+          amount,
+          currencyCodeTo,
+          directionChange,
+          isReceivedAmount: directionChange === 'to',
+          paymentMethod
+        }
+        const response = await paybisFetch({ method: 'POST', url, path: 'v2/quote', apiKey, bodyParams })
+        const { paymentMethods, paymentMethodErrors } = asQuote(response)
+
+        if (paymentMethodErrors != null) {
+          let lastError
+          for (const e of paymentMethodErrors) {
+            lastError = e
+            const maxMatch = e.error.message.match(/^Amount must be less than (\d+\.\d+) ([A-Z]+)/)
+            const minMatch = e.error.message.match(/^Minimum amount is (\d+\.\d+) ([A-Z]+)/)
+            if (maxMatch != null) {
+              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: Number(maxMatch[1]), displayCurrencyCode: maxMatch[2] })
+            } else if (minMatch != null) {
+              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: Number(minMatch[1]), displayCurrencyCode: minMatch[2] })
+            }
+          }
+          throw new Error(lastError?.error.message ?? 'Paybis Unknown paymentMethodError')
+        }
+
+        // Should only have one payment method
+        assert(paymentMethod.length === 1, 'Invalid number of quoted payment methods')
+
+        const pmQuote = paymentMethods[0]
+        const { amountFrom, amountTo } = pmQuote
+
+        let cryptoAmount: string
+        let fiatAmount: string
+
+        if (direction === 'buy') {
+          fiatAmount = amountFrom.amount
+          cryptoAmount = amountTo.amount
+          if (directionChange === 'from') {
+            // Sanity check the quote
+            assert(eq(amount, amountFrom.amount), 'Quote not equal to requested from amount')
+          } else {
+            assert(eq(amount, amountTo.amount), 'Quote not equal to requested to amount')
+          }
+        } else {
+          // XXX Todo
+          throw new Error('Sell not supported')
+        }
 
         return {
           providerId,
           partnerIcon: 'dummy.png',
           pluginDisplayName: 'Paybis',
           displayCurrencyCode,
-          cryptoAmount: '1',
+          cryptoAmount,
           isEstimate: false,
           fiatCurrencyCode,
-          fiatAmount: '1',
+          fiatAmount,
           direction,
           regionCode,
           paymentTypes,
