@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { newPriceChangeEvent, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
+import { newPriceChangeEvent, updateNotificationSettings } from '../../actions/NotificationActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
@@ -28,11 +28,7 @@ export const CurrencyNotificationScene = (props: Props) => {
     const daily = settingChange === 'daily' ? !settings.plugins[pluginId].dailyChange : !!settings.plugins[pluginId].dailyChange
     const event = newPriceChangeEvent(currencyInfo, defaultIsoFiat, hourly, daily)
     try {
-      const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
-      dispatch({
-        type: 'NOTIFICATION_SETTINGS_UPDATE',
-        data: serverSettingsToNotificationSettings(newSettings)
-      })
+      await dispatch(updateNotificationSettings({ createEvents: [event] }))
     } catch (e: any) {
       showError(`Failed to reach notification server: ${e}`)
     }

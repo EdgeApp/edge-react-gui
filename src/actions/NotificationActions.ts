@@ -140,7 +140,16 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   }
 }
 
-export const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): NotificationSettings => {
+export function updateNotificationSettings(data: DeviceUpdatePayload): ThunkAction<Promise<void>> {
+  return async dispatch => {
+    dispatch({
+      type: 'NOTIFICATION_SETTINGS_UPDATE',
+      data: serverSettingsToNotificationSettings(await dispatch(setDeviceSettings(data)))
+    })
+  }
+}
+
+const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): NotificationSettings => {
   const data: NotificationSettings = {
     ignoreMarketing: serverSettings.ignoreMarketing,
     ignorePriceChanges: serverSettings.ignorePriceChanges,
@@ -163,7 +172,7 @@ export const serverSettingsToNotificationSettings = (serverSettings: DevicePaylo
   return data
 }
 
-export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<DevicePayload>> {
+function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<DevicePayload>> {
   return async (dispatch, getState) => {
     const state = getState()
 

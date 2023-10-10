@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
-import { NotificationSettings, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
+import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
@@ -28,11 +28,7 @@ export const NotificationScene = (props: Props) => {
 
   const handlePressToggleSetting = async (toggleSetting: NotificationSettingToggleSetting) => {
     try {
-      const newSettings = await dispatch(setDeviceSettings({ [toggleSetting]: !settings[toggleSetting] }))
-      dispatch({
-        type: 'NOTIFICATION_SETTINGS_UPDATE',
-        data: serverSettingsToNotificationSettings(newSettings)
-      })
+      await dispatch(updateNotificationSettings({ [toggleSetting]: !settings[toggleSetting] }))
     } catch (e: any) {
       showError(`Failed to reach notification server: ${e}`)
     }
