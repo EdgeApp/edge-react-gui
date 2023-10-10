@@ -5,7 +5,7 @@ import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
-import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
+import { asDevicePayload, DevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
@@ -33,7 +33,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings
-    let v2Settings: ReturnType<typeof asDevicePayload> = {
+    let v2Settings: DevicePayload = {
       loginIds: [],
       events: [],
       ignoreMarketing: false,
@@ -140,7 +140,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   }
 }
 
-export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<typeof asDevicePayload>): NotificationSettings => {
+export const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): NotificationSettings => {
   const data: NotificationSettings = {
     ignoreMarketing: serverSettings.ignoreMarketing,
     ignorePriceChanges: serverSettings.ignorePriceChanges,
@@ -163,7 +163,7 @@ export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<
   return data
 }
 
-export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<ReturnType<typeof asDevicePayload>>> {
+export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<DevicePayload>> {
   return async (dispatch, getState) => {
     const state = getState()
 
