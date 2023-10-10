@@ -5,6 +5,7 @@ import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { asDevicePayload, DevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
@@ -65,21 +66,35 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
 
       const createEvents: NewPushEvent[] = []
+      const removeEvents: string[] = []
 
       if (serverSettings.events.length !== 0) {
         // v2 settings exist already, see if we need to add new ones
         for (const currencyInfo of activeCurrencyInfos) {
           if (
+            // Must not be deprecated
+            !SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode &&
+            // Must not already be present with current fiat setting
             !serverSettings.events.some(
               event =>
                 event.trigger.type === 'price-change' &&
                 event.trigger.pluginId === currencyInfo.pluginId &&
-                // An event for this plugin exists already, so we need to check if the user is changing the default fiat currency
                 (!changeFiat || event.trigger.currencyPair.includes(defaultIsoFiat))
             )
           ) {
             // Add new push event
             createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
+          }
+        }
+
+        // See if we need to remove any deprecated currencies (keys-only)
+        for (const event of serverSettings.events) {
+          const { trigger } = event
+          if (trigger.type === 'price-change') {
+            const currencyInfo = activeCurrencyInfos.find(currencyInfo => currencyInfo.pluginId === trigger.pluginId)
+            if (currencyInfo != null && SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode) {
+              removeEvents.push(event.eventId)
+            }
           }
         }
       } else {
@@ -122,8 +137,8 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         }
       }
 
-      if (createEvents.length > 0) {
-        serverSettings = await updateServerSettings(state.core.context, { createEvents })
+      if (createEvents.length > 0 || removeEvents.length > 0) {
+        serverSettings = await updateServerSettings(state.core.context, { createEvents, removeEvents })
       }
     } catch (e: any) {
       // If this fails we don't need to bother the user just log and move on.

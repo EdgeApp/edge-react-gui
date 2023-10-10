@@ -20,6 +20,7 @@
 - changed: Banxa sell to use new widget
 - changed: Replace deprecated memo handling with `EdgeMemo` in SendScene2
 - changed: Re-enable Piratechain
+- changed: Remove price-change push notification subscriptions for keys-only currencies
 - fixed: Crash in react-native-linear-gradient when app built with Xcode 15
 
 ## 3.19.0
