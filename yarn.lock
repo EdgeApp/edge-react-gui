@@ -7774,6 +7774,13 @@ edge-exchange-plugins@^0.21.10:
     utf8 "^3.0.0"
     xrpl "^2.10.0"
 
+edge-info-server@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.1.tgz#3cdb4c8e017fd3a674a145264291cb81d78ec404"
+  integrity sha512-/CrEQ7eSCOkPuFhrOGQm304WvyRQsrvgKIQSCMEjoiEO9yL83S5fTCrcbwDj5LY2t+fhRp5bKwXNlo2xOqzVJQ==
+  dependencies:
+    cleaners "^0.3.16"
+
 edge-login-ui-rn@^2.14.1:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.14.1.tgz#a2fe5b2465ad15a39eed46b79df569e227be8bc5"
