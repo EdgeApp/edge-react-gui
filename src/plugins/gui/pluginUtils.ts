@@ -128,3 +128,7 @@ export const debugSpewStore = async (store: EdgeDataStore): Promise<void> => {
   console.log('*** theStore ***')
   console.log(JSON.stringify(theStore, null, 2))
 }
+
+export const assert = (condition: boolean, message: string) => {
+  if (!condition) throw new Error(message)
+}
