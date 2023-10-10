@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging'
 import { asMaybe } from 'cleaners'
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
@@ -126,7 +126,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       }
 
       if (createEvents.length > 0) {
-        v2Settings = await dispatch(setDeviceSettings({ createEvents }))
+        v2Settings = await updateServerSettings(state.core.context, { createEvents })
       }
     } catch (e: any) {
       // If this fails we don't need to bother the user just log and move on.
@@ -141,10 +141,11 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
 }
 
 export function updateNotificationSettings(data: DeviceUpdatePayload): ThunkAction<Promise<void>> {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const state = getState()
     dispatch({
       type: 'NOTIFICATION_SETTINGS_UPDATE',
-      data: serverSettingsToNotificationSettings(await dispatch(setDeviceSettings(data)))
+      data: serverSettingsToNotificationSettings(await updateServerSettings(state.core.context, data))
     })
   }
 }
@@ -172,32 +173,30 @@ const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): No
   return data
 }
 
-function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<DevicePayload>> {
-  return async (dispatch, getState) => {
-    const state = getState()
+async function updateServerSettings(context: EdgeContext, data: DeviceUpdatePayload): Promise<DevicePayload> {
+  const deviceId = context.clientId
+  const loginIds = context.localUsers.map(row => base64.stringify(base58.parse(row.loginId)))
+  const deviceToken = await messaging()
+    .getToken()
+    .catch(() => '')
 
-    const deviceToken = await messaging()
-      .getToken()
-      .catch(() => '')
-
-    const body = {
-      apiKey: ENV.AIRBITZ_API_KEY,
-      deviceId: state.core.context.clientId,
-      deviceToken,
-      data: { ...data, loginIds: state.core.context.localUsers.map(row => base64.stringify(base58.parse(row.loginId))) }
-    }
-    const opts = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }
-
-    const response = await fetchPush('v2/device/update/', opts)
-
-    return asDevicePayload(await response.text())
+  const body = {
+    apiKey: ENV.AIRBITZ_API_KEY,
+    deviceId,
+    deviceToken,
+    data: { ...data, loginIds }
   }
+  const opts = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }
+
+  const response = await fetchPush('v2/device/update/', opts)
+
+  return asDevicePayload(await response.text())
 }
 
 export const newPriceChangeEvent = (
