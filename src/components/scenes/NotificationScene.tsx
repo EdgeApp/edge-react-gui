@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native'
 
 import { NotificationSettings, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -62,6 +63,7 @@ export const NotificationScene = (props: Props) => {
         />
         {pluginIds.map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
           const handlePress = () => {
             if (!settings.ignorePriceChanges) {
@@ -70,6 +72,8 @@ export const NotificationScene = (props: Props) => {
               })
             }
           }
+
+          if (keysOnlyMode) return null
 
           return (
             <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
