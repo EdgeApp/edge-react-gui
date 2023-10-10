@@ -68,7 +68,6 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
 
       if (serverSettings.events.length !== 0) {
         // v2 settings exist already, see if we need to add new ones
-        const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
         for (const currencyInfo of activeCurrencyInfos) {
           if (
             !serverSettings.events.some(event => {
@@ -81,10 +80,10 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
               }
             })
           ) {
-            missingInfos[currencyInfo.pluginId] = currencyInfo
+            // Add new push event
+            createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
           }
         }
-        Object.keys(missingInfos).forEach(pluginId => createEvents.push(newPriceChangeEvent(missingInfos[pluginId], defaultIsoFiat, true, true)))
       } else {
         // No v2 settings exist so let's check v1
         const userId = state.core.account.rootLoginId
