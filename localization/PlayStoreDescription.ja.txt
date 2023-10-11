@@ -1,35 +1,35 @@
-タイトル：エッジ - ビットコイン、イーサリアム、モネロ、リップルウォレット
+題名：エッジ - ビットコイン＆暗号通貨ウォレット
 -----
-短い説明：プライベート・安全・使いやすい。 ビットコインや他の仮装通貨の購入、売却、送金、受取。 Buy & sell bitcoin!
+簡単な説明: 簡単に使用できる暗号通貨ウォレットで、プライバシーと安全性。 Bitcoin を購入 & 販売！
 
-<b>Total privacy and security in our easy to use cryptocurrency & Bitcoin wallet.</b> Buy & sell Bitcoin (BTC), Avalanche (AVAX), Solana (SOL), Litecoin (LTC), Ethereum (ETH), Monero (XMR), Polygon (MATIC), Hedera (HBAR) and other top crypto currency.
+<b>使いやすい暗号通貨＆ビットコインウォレットで、完全なプライバシーと安全性を。</b> Bitcoin（BTC）、Avalanche（AVAX）、Solana（SOL）、Litecoin（LTC）、Ethereum（ETH）、Monero（XMR）、Polygon（MATIC）、Hedera（HBAR）、その他トップクラスの暗号通貨を購入及び売却できます。
 
-Edge Wallet provides 100% security — Neither Edge or any 3rd party can access your cryptocurrency wallet or data. You get the financial privacy and autonomy that crypto & blockchain were designed for.
+エッジウォレットは100%の安全性を提供します - エッジや第三者機関はあなたの暗号通貨ウォレットやデータにアクセスすることはできません。 暗号通貨とブロックチェーンの設計である、経済的プライバシーと自律性を実現。
 
-Managing your cryptocurrency & Bitcoin wallet has never been easier. 仮想通貨の資産を管理することは今まで決して簡単ではありませんでした。 エッジウォレットはどんなタイプのユーザーも、通貨を簡単に管理、送金、両替できます。シンプルさを維持しながら最大限のセキュリティーを提供します。 エッジウォレットアプリケーションはデバイスのアドレス帳と個人情報にアクセスします。 この情報はユーザーエクスペリエンス向上のために以下の用途でデバイス上でのみ使われます。 With Edge, we make it simple to buy bitcoin, sell bitcoin, and exchange many of the top cryptocurrencies.
+暗号通貨＆Bitcoinウォレットの管理がかつてないほど簡単になりました。 エッジウォレットは、シンプルでありながら最大限の安全性を提供し、あらゆるタイプのユーザーが通貨を簡単に管理、送金、交換できるようにします。 エッジは、シンプルさと安全さに関して、ナンバーワンのBitcoin＆暗号通貨ウォレットです！ エッジを使うと、Bitcoinの購入及び販売、人気暗号通貨の多くを交換することが簡単になります。
 
-<b>Edge Crypto Wallet currently supports:</b> Bitcoin (BTC), Bitcoin Cash (BCH), Bitcoin SV (BSV), Litecoin (LTC), Qtum (QTUM), Dash (DASH), Ethereum (ETH), Monero (XMR), Ripple (XRP), Digibyte (DGB), EOS, Binance Chain (BNB), RSK (RBTC), Stellar (XLM), Tezos (XTZ), Ravencoin (RVN), SmartCash (SMART), Zcoin (XZC), Dogecoin (DOGE), and Feathercoin (FTC). その他の暗号通貨も私たちのウォレットで管理したいですか？ リクエストをお待ちしています！ Send us a request!
+<b>現在エッジウォレットは次の暗号通貨に対応しています：</b> Bitcoin (BTC)、Bitcoin Cash (BCH)、Bitcoin SV (BSV)、Litecoin (LTC)、Qtum (QTUM)、Dash (DASH)、Ethereum (ETH)、Monero (XMR)、Ripple (XRP)、Digibyte (DGB)、EOS、Binance Chain (BNB)、RSK (RBTC)、Stellar (XLM)、Tezos (XTZ)、Ravencoin (RVN)、SmartCash (SMART)、Zcoin (XZC)、Dogecoin (DOGE)、Feathercoin (FTC) 他の暗号通貨も私たちのウォレットで管理したいですか？ リクエストをお待ちしています！
 
-Edge is a powerful and easy to use cryptocurrency wallet that allows users to easily control their own private keys with the familiarity and ease of mobile banking. 
+エッジは強力で使いやすい暗号通貨ウォレットで、モバイルバンキングのような親しみやすさと手軽さで、ユーザーは自分の秘密鍵を簡単にコントロールできます。 
 
-Take control of your funds! With Edge Crypto Wallet, only YOU have access to your funds or transaction data. 
+自分で資金をコントロールしましょう！ エッジの暗号通貨ウォレットでは、あなたの資産やトランザクションデータにアクセスできるのは、あなただけです。 
 
-Edge also provides a cryptocurrency exchange. Easily swap your currencies for others with a few taps. Exchange BTC for Ethereum, ETH for BCH and many more. Creating new Avalanche (AVAX), Solana (SOL) & more crypto wallets is easy with exchanges!
+エッジでは、暗号通貨交換もできます。 数回タップするだけで、あなたの通貨を他の通貨と簡単に交換できます。 BTCをEthereumに、ETHをBCHになど、その他沢山の通貨に交換できます。 Avalanche(AVAX)、Solana(SOL)、その他の暗号通貨ウォレットを交換機能を使って簡単に作成できます！
 
-<b>機能</b>
-・安全な仮想通貨ウォレット・ブロックチェーンアプリ。
-・ビットコインやビットコインキャッシュ、ライトコイン、リップル(XRP) など他の上位仮想通貨をサポートする、使いやすいウォレット。
-・エッジまたは他のどの第三者もユーザーの資金や鍵、取引データに関しての情報へアクセスできない設計。
-• Simple account creation using just a login & password
-トランザクションごとにアドレスが更新される階層的決定性ウォレット
-• Decentralized server architecture. ・非中央集権的サーバー設計 たとえエッジサーバーがダウンしてもウォレットは動作可能。
-• Open-source code. Available at https://github.com/EdgeApp
-• Built-in crypto exchange to buy & sell cryptocurrency like Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Binance, Avalanche (AVAX), Monero (XMR), Solana (SOL), Polygon (MATIC), Hedera (HBAR) and more!
+<b>エッジBitcoinウォレットの機能</b>
+・安全な暗号通貨ウォレット＆ブロックチェーンアプリ
+・Bitcoin Cash、Ethereum (ETH)、Litecoin (LTC)、Binance Coin (BNB)、Ripple (XRP)、Avalanche (AVAX)、Monero (XMR)、Polygon (MATIC)、Hedera (HBAR) 他、人気暗号資産対応の使いやすいBitcoin＆暗号通貨ウォレット
+• エッジまたは第三者機関によるユーザーの資金、鍵、またはトランザクションデータへのゼロ知識とゼロアクセス
+• ログインとパスワードだけを使用したシンプルなアカウント作成
+• トランザクションごとにアドレスが更新される階層的決定性ウォレット
+•分散型サーバーアーキテクチャ エッジサーバーがダウンしたとしても暗号通貨ウォレットは動作します。
+•オープンソースコード https://github.com/EdgeApp でご覧いただけます。
+•Bitcoin (BTC)、Ethereum (ETH)、Litecoin (LTC)、Binance, Avalanche (AVAX)、Monero (XMR)、Solana (SOL)、 Polygon (MATIC)、Hedera (HBAR) などの暗号通貨を売買できる交換所を搭載。
 
 プライバシーについて
-The Edge Wallet application requests access to the device contact list, and personal information. This information is used on the device to provide an improved user experience in the following ways:
+エッジウォレットアプリケーションは、デバイスの連絡先リストと個人情報へのアクセスを要求します。 この情報は、以下のようにユーザーエクスペリエンスを向上させるためにデバイス上で使用されます：
 
-1. トランザクション後にユーザーのアドレス帳から連絡先を自動補完します。
-2. EメールやSMSで支払いリクエストを送るためにアドレス帳から連絡先を自動補完します。
+1. トランザクション後にユーザーのアドレス帳から連絡先をオートコンプリートします。
+2. EメールやSMSで支払いリクエストを送るためにユーザーのアドレス帳から連絡先をオートコンプリートします。
 
-No personal info or contact list info ever leaves the device without first being encrypted by the user's credentials (username/password). Neither Edge nor any 3rd party can access the information requested by the application.
+個人情報または連絡先リスト情報は、ユーザー認証情報(ユーザー名/パスワード) によって最初に暗号化されることなくデバイスから離れることはありません。 エッジも第三者機関も、アプリケーションが要求する情報にアクセスすることはできません。
