@@ -75,7 +75,7 @@ const asPaymentMethodPairs = asObject({
   pairs: asArray(asPaymentMethodPair)
 })
 
-const asPaybisPairs = asObject({
+const asPaybisBuyPairs = asObject({
   data: asArray(asPaymentMethodPairs)
 })
 
@@ -124,9 +124,9 @@ const asQuote = asObject({
 })
 
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
-type PaybisPairs = ReturnType<typeof asPaybisPairs>
+type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 
-let paybisPairs: PaybisPairs | undefined
+let paybisBuyPairs: PaybisBuyPairs | undefined
 
 interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
@@ -225,11 +225,11 @@ export const paybisProvider: FiatProviderFactory = {
           }
         }
 
-        if (paybisPairs == null) {
+        if (paybisBuyPairs == null) {
           const promises = [
             paybisFetch({ method: 'GET', url, path: `v1/currency/pairs`, apiKey })
               .then(response => {
-                paybisPairs = asPaybisPairs(response)
+                paybisBuyPairs = asPaybisBuyPairs(response)
               })
               .catch(e => {
                 console.error(String(e))
@@ -238,8 +238,8 @@ export const paybisProvider: FiatProviderFactory = {
           await Promise.all(promises)
         }
 
-        if (paybisPairs != null) {
-          for (const paymentMethodPairs of paybisPairs.data) {
+        if (paybisBuyPairs != null) {
+          for (const paymentMethodPairs of paybisBuyPairs.data) {
             const { name, pairs } = paymentMethodPairs
             if (name == null) continue
             const edgePaymentType = PAYMENT_METHOD_MAP[name]
@@ -297,7 +297,7 @@ export const paybisProvider: FiatProviderFactory = {
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
         if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const pairs = paybisPairs?.data
+        const pairs = paybisBuyPairs?.data
         if (pairs == null) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
