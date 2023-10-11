@@ -57,6 +57,12 @@ export const asEnvConfig = asObject({
       ),
       Bitrefill: asOptional(asString),
       moonpay: asOptional(asString),
+      paybis: asOptional(
+        asObject({
+          partnerUrl: asString,
+          apiKey: asString
+        })
+      ),
       simplex: asOptional(
         asObject({
           partner: asString,
@@ -78,6 +84,7 @@ export const asEnvConfig = asObject({
       banxa: undefined,
       Bitrefill: undefined,
       moonpay: undefined,
+      paybis: undefined,
       simplex: undefined,
       ionia: undefined
     })
