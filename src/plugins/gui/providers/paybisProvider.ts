@@ -126,6 +126,11 @@ const asQuote = asObject({
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 
+interface InittializePairs {
+  url: string
+  apiKey: string
+}
+
 interface PaybisPairs {
   buy: PaybisBuyPairs | undefined
 }
@@ -229,59 +234,7 @@ export const paybisProvider: FiatProviderFactory = {
           }
         }
 
-        if (paybisPairs.buy == null) {
-          const promises = [
-            paybisFetch({ method: 'GET', url, path: `v1/currency/pairs`, apiKey })
-              .then(response => {
-                paybisPairs.buy = asPaybisBuyPairs(response)
-              })
-              .catch(e => {
-                console.error(String(e))
-              })
-          ]
-          await Promise.all(promises)
-        }
-
-        if (paybisPairs.buy != null) {
-          for (const paymentMethodPairs of paybisPairs.buy.data) {
-            const { name, pairs } = paymentMethodPairs
-            if (name == null) continue
-            const edgePaymentType = PAYMENT_METHOD_MAP[name]
-            if (edgePaymentType == null) continue
-            for (const pair of pairs) {
-              const { from, to } = pair
-
-              // Add the fiat
-              let paymentMethodObj = allowedCurrencyCodes.buy[edgePaymentType]
-              if (paymentMethodObj == null) {
-                paymentMethodObj = { crypto: {}, fiat: {} }
-                allowedCurrencyCodes.buy[edgePaymentType] = paymentMethodObj
-              }
-              paymentMethodObj.fiat[`iso:${from}`] = true
-
-              // Add the cryptos
-              for (const code of to) {
-                const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[code.currencyCode]
-                if (edgeTokenId != null) {
-                  const { pluginId: currencyPluginId } = edgeTokenId
-                  let { currencyCode: ccode } = edgeTokenId
-
-                  if (ccode == null) {
-                    ccode = code.currencyCode
-                  }
-                  // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
-                  // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-                  let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-                  if (tokenMap == null) {
-                    tokenMap = {}
-                    paymentMethodObj.crypto[currencyPluginId] = tokenMap
-                  }
-                  tokenMap[ccode] = true
-                }
-              }
-            }
-          }
-        }
+        await initializeBuyPairs({ url, apiKey })
 
         const out = allowedCurrencyCodes[direction][paymentType] ?? { fiat: {}, crypto: {} }
         return out
@@ -469,4 +422,60 @@ const paybisFetch = async (params: {
 
   const reply = await response.json()
   return reply
+}
+
+const initializeBuyPairs = async ({ url, apiKey }: InittializePairs): Promise<void> => {
+  if (paybisPairs.buy == null) {
+    const promises = [
+      paybisFetch({ method: 'GET', url, path: `v1/currency/pairs`, apiKey })
+        .then(response => {
+          paybisPairs.buy = asPaybisBuyPairs(response)
+        })
+        .catch(e => {
+          console.error(String(e))
+        })
+    ]
+    await Promise.all(promises)
+  }
+
+  if (paybisPairs.buy != null) {
+    for (const paymentMethodPairs of paybisPairs.buy.data) {
+      const { name, pairs } = paymentMethodPairs
+      if (name == null) continue
+      const edgePaymentType = PAYMENT_METHOD_MAP[name]
+      if (edgePaymentType == null) continue
+      for (const pair of pairs) {
+        const { from, to } = pair
+
+        // Add the fiat
+        let paymentMethodObj = allowedCurrencyCodes.buy[edgePaymentType]
+        if (paymentMethodObj == null) {
+          paymentMethodObj = { crypto: {}, fiat: {} }
+          allowedCurrencyCodes.buy[edgePaymentType] = paymentMethodObj
+        }
+        paymentMethodObj.fiat[`iso:${from}`] = true
+
+        // Add the cryptos
+        for (const code of to) {
+          const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[code.currencyCode]
+          if (edgeTokenId != null) {
+            const { pluginId: currencyPluginId } = edgeTokenId
+            let { currencyCode: ccode } = edgeTokenId
+
+            if (ccode == null) {
+              ccode = code.currencyCode
+            }
+            // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
+            // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
+            let tokenMap = paymentMethodObj.crypto[currencyPluginId]
+            if (tokenMap == null) {
+              tokenMap = {}
+              paymentMethodObj.crypto[currencyPluginId] = tokenMap
+            }
+            tokenMap[ccode] = true
+          }
+        }
+      }
+    }
+  }
 }
