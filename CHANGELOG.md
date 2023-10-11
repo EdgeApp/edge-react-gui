@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
+- added: EdgeTxAction information to Transaction List
 - added: "Paused Wallet" visual indicator on wallet list
 - added: Paybis sell to debit card
 - added: Signup captcha experiment.

@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { formatCategory, splitCategory } from '../../actions/CategoriesActions'
+import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
@@ -48,6 +49,7 @@ const TransactionRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const { canReplaceByFee = false } = wallet.currencyInfo
+  const { action } = transaction
 
   const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
@@ -58,12 +60,20 @@ const TransactionRowComponent = (props: Props) => {
   let transactionText, transactionIcon, transactionStyle
   if (isSentTransaction) {
     transactionText =
-      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
+      action != null
+        ? TX_ACTION_LABEL_MAP[action.type]
+        : transaction.metadata && transaction.metadata.name
+        ? transaction.metadata.name
+        : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
     transactionStyle = styles.iconSent
   } else {
     transactionText =
-      transaction.metadata && transaction.metadata.name ? transaction.metadata.name : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
+      action != null
+        ? TX_ACTION_LABEL_MAP[action.type]
+        : transaction.metadata && transaction.metadata.name
+        ? transaction.metadata.name
+        : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
     transactionStyle = styles.iconRequest
   }
