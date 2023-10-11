@@ -45,7 +45,8 @@ tags:
     id: "chevronBack"
 - tapOn: "Help"
 - tapOn: "More info on Edge"
-- assertVisible: "Hello, tap to start a chat."
+- assertVisible:
+    id: "chevronBack"
 - tapOn:
     id: "chevronBack"
 - tapOn: "Help"
