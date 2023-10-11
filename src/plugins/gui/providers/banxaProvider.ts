@@ -308,7 +308,8 @@ export const banxaProvider: FiatProviderFactory = {
 
         const fiats = allowedCurrencyCodes[direction].fiat
         const cryptos = allowedCurrencyCodes[direction].fiat
-        if (Object.keys(fiats).length > 0 && Object.keys(cryptos).length > 0) {
+        const paymentsMap = banxaPaymentsMap[direction]
+        if (Object.keys(fiats).length > 0 && Object.keys(cryptos).length > 0 && Object.keys(paymentsMap).length > 0) {
           return allowedCurrencyCodes[direction]
         }
 
@@ -345,7 +346,7 @@ export const banxaProvider: FiatProviderFactory = {
 
           banxaFetch({ method: 'GET', url, hmacUser, path: paymentMethodsPath, apiKey }).then(response => {
             const banxaPayments = asBanxaPaymentMethods(response)
-            buildPaymentsMap(banxaPayments, banxaPaymentsMap[direction])
+            buildPaymentsMap(banxaPayments, paymentsMap)
           })
         ]
 
