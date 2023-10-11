@@ -126,7 +126,11 @@ const asQuote = asObject({
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 
-let paybisBuyPairs: PaybisBuyPairs | undefined
+interface PaybisPairs {
+  buy: PaybisBuyPairs | undefined
+}
+
+const paybisPairs: PaybisPairs = { buy: undefined }
 
 interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
@@ -225,11 +229,11 @@ export const paybisProvider: FiatProviderFactory = {
           }
         }
 
-        if (paybisBuyPairs == null) {
+        if (paybisPairs.buy == null) {
           const promises = [
             paybisFetch({ method: 'GET', url, path: `v1/currency/pairs`, apiKey })
               .then(response => {
-                paybisBuyPairs = asPaybisBuyPairs(response)
+                paybisPairs.buy = asPaybisBuyPairs(response)
               })
               .catch(e => {
                 console.error(String(e))
@@ -238,8 +242,8 @@ export const paybisProvider: FiatProviderFactory = {
           await Promise.all(promises)
         }
 
-        if (paybisBuyPairs != null) {
-          for (const paymentMethodPairs of paybisBuyPairs.data) {
+        if (paybisPairs.buy != null) {
+          for (const paymentMethodPairs of paybisPairs.buy.data) {
             const { name, pairs } = paymentMethodPairs
             if (name == null) continue
             const edgePaymentType = PAYMENT_METHOD_MAP[name]
@@ -297,7 +301,7 @@ export const paybisProvider: FiatProviderFactory = {
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
         if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const pairs = paybisBuyPairs?.data
+        const pairs = paybisPairs.buy?.data
         if (pairs == null) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
